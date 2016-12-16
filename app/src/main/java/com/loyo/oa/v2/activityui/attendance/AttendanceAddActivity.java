@@ -174,8 +174,9 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         /*完成加班*/
         if (outKind == 2) {
             et_reason.setHint("请输入加班原因");
-            String time = (DateTool.timet(extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
-                    + "-" + DateTool.timet(serverTime + "", DateTool.DATE_FORMATE_TRANSACTION));
+//            String time = (DateTool.timet(extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
+//                    + "-" + DateTool.timet(serverTime + "", DateTool.DATE_FORMATE_TRANSACTION));
+            String time= com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(extraWorkStartTime)+"-"+ com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(serverTime);
             SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
             tv_time_kind.setText(tvTimeName);
             tv_time.setText(builder);
@@ -183,7 +184,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         }
         /*正常上下班*/
         else {
-            String time = tvTimeName.concat(app.df6.format(new Date(mAttendanceRecord.getCreatetime() * 1000)));
+//            String time = tvTimeName.concat(app.df6.format(new Date(mAttendanceRecord.getCreatetime() * 1000)));
+            String time = tvTimeName.concat(com.loyo.oa.common.utils.DateTool.getHourMinute(mAttendanceRecord.getCreatetime()));
             SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
             tv_time.setText(builder);
             if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE || mAttendanceRecord.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {

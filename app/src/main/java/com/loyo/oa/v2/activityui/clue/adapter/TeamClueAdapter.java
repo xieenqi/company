@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.application.MainApp;
@@ -82,8 +83,8 @@ public class TeamClueAdapter extends BaseAdapter {
             tv_company_name.setText(clueListItem.companyName);
             tv_customer.setText(clueListItem.responsorName);
             if (clueListItem.lastActAt != 0) {
-                tv_time.setText(MainApp.getMainApp().df3.format(new Date(Long.valueOf(clueListItem.lastActAt + "") * 1000)));
-//            app.df3.format(new Date(Long.valueOf(sales.updateAt + "") * 1000))
+//                tv_time.setText(MainApp.getMainApp().df3.format(new Date(Long.valueOf(clueListItem.lastActAt + "") * 1000)));
+                tv_time.setText(DateTool.getDateTimeFriendly(clueListItem.lastActAt ));
             } else {
                 tv_time.setText("--");
             }

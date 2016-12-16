@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
+import com.loyo.oa.common.utils.*;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
@@ -84,7 +85,8 @@ public class LocationUtilGD {
     void notifyLocation(AMapLocation location) {
         //友盟统计定位失败的信息
         UMengTools.sendCustomErroInfo(context, location);
-        String time = MainApp.getMainApp().df10.format(new Date(location.getTime()));
+//        String time = MainApp.getMainApp().df10.format(new Date(location.getTime()));
+        String time = com.loyo.oa.common.utils.DateTool.getDateTimeReal(location.getTime()/1000);
         LogUtil.d("定位回调数据：" + "时间 : " + time +
                 " 模式 : " + location.getProvider()
                 + " 地址是否有效 : " + (!TextUtils.isEmpty(location.getAddress()))

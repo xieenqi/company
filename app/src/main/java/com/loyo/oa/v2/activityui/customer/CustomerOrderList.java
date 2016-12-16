@@ -270,7 +270,7 @@ public class CustomerOrderList extends BaseLoadingActivity implements View.OnCli
             holder.tv_name.setText(mData.directorName);
 
             holder.tv_product.setText(mData.proName);
-            holder.tv_time.setText(DateTool.getDiffTime(Long.valueOf(mData.createdAt + "")));
+            holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(mData.createdAt + "")));
             return convertView;
         }
 

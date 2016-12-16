@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfNodes;
-import com.loyo.oa.v2.tool.DateTool;
 
 import java.util.ArrayList;
 
@@ -97,7 +96,8 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                 item_info.tv_content.setTextColor(Color.parseColor("#333333"));
                 item_info.tv_content.setText(actionName + ":" + (TextUtils.isEmpty(actionInfo) ? "同意" : actionInfo));
                 item_info.tv_time.setVisibility(View.VISIBLE);
-                item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+//                item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+                item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
             } else {
                 if (wfNodes.getActive() == 1) {
                     item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
@@ -114,13 +114,16 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                         item_info.tv_content.setText(actionName + ":" + (TextUtils.isEmpty(actionInfo) ? (wfNodes.isNeedApprove() ? "同意" : "已办结") :
                                 actionInfo));
                         item_info.tv_time.setVisibility(View.VISIBLE);
-                        item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+//                        item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+                        item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
                     } else {
                         item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree);
                         item_info.tv_content.setTextColor(Color.parseColor("#333333"));
                         item_info.tv_content.setText(actionName + ":" + actionInfo);
                         item_info.tv_time.setVisibility(View.VISIBLE);
-                        item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+//                        item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+                        item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
+                        item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
                     }
                 }
             }

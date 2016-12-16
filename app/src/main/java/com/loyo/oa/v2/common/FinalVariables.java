@@ -199,6 +199,7 @@ public final class FinalVariables {
     public static final String TOKEN = "token";
 
     public static final String LAST_TRACKLOG = "last_track_log";
+
     public static final String LAST_CHECK_TRACKLOG = "last_check_track_log";
 
     public static final String ACTION_DATA_CHANGE = "com.loyo.oa.v2.ACTION_DATA_CHANGE";

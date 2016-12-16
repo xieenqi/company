@@ -18,6 +18,7 @@ import com.loyo.oa.v2.tool.DateTool;
 import java.util.ArrayList;
 
 /**
+ * 客户详情——拜访签到——适配器
  * Created by yyy on 16/12/5.
  */
 
@@ -70,7 +71,7 @@ public class CustomerSigninNewGroupAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         if (crolView.getBottomMenuLayout().getVisibility() == View.GONE) {
-            holder.tv_title.setText(DateTool.getDiffNoMs(Long.parseLong(groupModel.timeStamp)));
+            holder.tv_title.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(Long.parseLong(groupModel.timeStamp)));
             if (null != groupModel.activities && groupModel.activities.size() > 0) {
                 mAdapter = new CustomerSigninNewListAdapter(mContext, groupModel.activities, crolView, audioCb);
                 holder.layout_listview.setAdapter(mAdapter);

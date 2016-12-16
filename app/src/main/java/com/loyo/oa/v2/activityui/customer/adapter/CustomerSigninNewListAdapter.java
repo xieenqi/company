@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
+
 import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
 import com.loyo.oa.v2.application.MainApp;
@@ -116,7 +117,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         holder.iv_comment.setOnTouchListener(Global.GetTouch());
         holder.tv_contact.setText(signinNewListModel.contactName);
         holder.tv_position.setText(signinNewListModel.address);
-        holder.tv_create_time.setText(DateTool.getDiffTime(signinNewListModel.createdAt));
+        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(signinNewListModel.createdAt));
         holder.tv_name.setText(signinNewListModel.creator.name);
         ImageLoader.getInstance().displayImage(signinNewListModel.creator.avatar, holder.iv_heading);
 

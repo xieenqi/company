@@ -26,6 +26,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.Config_project;
@@ -265,8 +266,8 @@ public final class Global {
             Global.Toast("内存卡不可用");
             return null;
         }
-        String timepath = new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date());
-        String photoPath = Environment.getExternalStorageDirectory() + File.separator + "KuaiQi" + timepath;
+//        String timepath = new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date());
+        String photoPath = Environment.getExternalStorageDirectory() + File.separator + "KuaiQi" + DateTool.getYear();
 //        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
 //                "/KuaiQi" + timepath);
         File mediaStorageDir = new File(photoPath);
@@ -279,8 +280,8 @@ public final class Global {
             }
         }
 
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + DateTool.getFileNameByTime()
                 + ".jpg");
 
         // bugfix
@@ -403,8 +404,8 @@ public final class Global {
     private static File getTempFile(Context context) {
         File file = null;
         try {
-            String fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            file = File.createTempFile(fileName, ".jpg", context.getCacheDir());
+//            String fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            file = File.createTempFile(DateTool.getFileNameByTime(), ".jpg", context.getCacheDir());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
@@ -36,7 +37,8 @@ public class ViewSaleDetailsExtra extends LinearLayout {
         value = (TextView) convertView.findViewById(R.id.saledetils_value);
         name.setText(mData.label + "：");
         if (!TextUtils.isEmpty(mData.val)&&"long".equals(mData.type)) {
-            value.setText(MainApp.getMainApp().df3.format(new Date(Long.valueOf(mData.val) * 1000)));
+//            value.setText(MainApp.getMainApp().df3.format(new Date(Long.valueOf(mData.val) * 1000)));
+            value.setText(DateTool.getDateTimeFriendly(Long.valueOf(mData.val)));
         } else {
             value.setText(mData.val);
         }

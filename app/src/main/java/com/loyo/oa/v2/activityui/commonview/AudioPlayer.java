@@ -129,7 +129,7 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
         musicProgress.setProgress(0);
 
         this.nowsView = nowsView;
-        tv_audio_endtime.setText(DateTool.stringForTime((int) audioModel.length * 1000));
+        tv_audio_endtime.setText(com.loyo.oa.common.utils.DateTool.int2time((int) audioModel.length * 1000));
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         cachedThreadPool.execute(new Runnable() {
             @Override
@@ -248,7 +248,7 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
                                       boolean fromUser) {
             if(null != player)
             this.progress = progress * player.mediaPlayer.getDuration() / seekBar.getMax();
-            playTime = DateTool.stringForTime(this.progress);
+            playTime = com.loyo.oa.common.utils.DateTool.int2time(this.progress);
             mHandler.sendEmptyMessage(0x03);
         }
 
@@ -259,7 +259,7 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            playTime = DateTool.stringForTime(progress);
+            playTime = com.loyo.oa.common.utils.DateTool.int2time(progress);
             player.mediaPlayer.seekTo(progress);
             mHandler.sendEmptyMessage(0x03);
         }

@@ -14,14 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
+import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
-import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
-import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
@@ -46,7 +46,6 @@ import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -325,7 +324,7 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
         tv_address.setText(TextUtils.isEmpty(mSigninDelModel.address) ? "无地址数据" : mSigninDelModel.address);
         tv_customer_name.setText(mSigninDelModel.customerName);
         tv_position.setText(mSigninDelModel.position);
-        tv_time.setText(DateTool.getDiffTime(mSigninDelModel.createdAt));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mSigninDelModel.createdAt));
 
         /** 备注内容 */
         if (null != mSigninDelModel.memo && !TextUtils.isEmpty(mSigninDelModel.memo)) {

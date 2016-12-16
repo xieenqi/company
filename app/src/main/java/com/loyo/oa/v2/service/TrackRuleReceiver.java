@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -29,14 +30,17 @@ public class TrackRuleReceiver extends BroadcastReceiver {
                 new Intent(TrackRule.RequestAction),
                 PendingIntent.FLAG_NO_CREATE) != null);
 
-        int hours = 0;
-
-        if (!StringUtil.isEmpty(strLastCheck)) {
-            hours = Hours.hoursBetween(DateTime.parse(strLastCheck, DateTimeFormat.forPattern(format)), DateTime.now()).getHours();
-        }
+//        int hours = 0;
+//
+//        if (!StringUtil.isEmpty(strLastCheck)) {
+////            hours = Hours.hoursBetween(DateTime.parse(strLastCheck, DateTimeFormat.forPattern(format)), DateTime.now()).getHours();
+//
+//            hours= (int) (System.currentTimeMillis() - DateTool.getSecondStamp(strLastCheck)/(3600000));//用时间差除以一个小时的时差
+//        }
 
         //3个小时重新获取TrackRule
-        if (!alarmUp || StringUtil.isEmpty(strLastCheck) || hours >= 3) {
+        if (!alarmUp || StringUtil.isEmpty(strLastCheck) ||
+                (System.currentTimeMillis() - DateTool.getSecondStamp(strLastCheck)>(3*3600000))) {//时差大于3小时
             TrackRule.StartTrackRule(30*1000);
         }
     }

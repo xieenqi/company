@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -261,7 +262,8 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
             ll_edit.setOnTouchListener(Global.GetTouch());
             ll_add.setOnTouchListener(Global.GetTouch());
             ll_function.setVisibility(isAdd ? View.VISIBLE : View.GONE);
-            tv_time.setText(app.df4.format(new Date(Long.valueOf(planEstimateList.planAt + "") * 1000)));
+//            tv_time.setText(app.df4.format(new Date(Long.valueOf(planEstimateList.planAt + "") * 1000)));
+            tv_time.setText(DateTool.getDateFriendly(planEstimateList.planAt));
             tv_money.setText("￥" + planEstimateList.planMoney);
 
             switch (planEstimateList.payeeMethod) {

@@ -18,28 +18,28 @@ public class OrderCommon {
     public static void getEstimateStatus(TextView view, int status) {
         if (status > 0) {
             String statusText = "";
-            int statusBj = R.drawable.retange_blue;
+            int statusBj = R.drawable.order_retange_blue;
             switch (status) {
                 case 1:
                     statusText = "待审核";
-                    statusBj = R.drawable.retange_purple;
+                    statusBj = R.drawable.order_retange_purple;
                     break;
                 case 2:
                     statusText = "审批中";
-                    statusBj = R.drawable.retange_blue;
+                    statusBj = R.drawable.order_retange_blue;
                     break;
                 case 3:
                     statusText = "未通过";
-                    statusBj = R.drawable.retange_red;
+                    statusBj = R.drawable.order_retange_red;
                     break;
                 case 4:
                 case 5:
                     statusText = "已通过";
-                    statusBj = R.drawable.retange_green;
+                    statusBj = R.drawable.order_retange_green;
                     break;
                 case 6://未生成审批
                     statusText = "--";
-                    statusBj = R.drawable.retange_gray;
+                    statusBj = R.drawable.order_retange_gray;
                     break;
             }
             view.setText(statusText);
@@ -54,31 +54,32 @@ public class OrderCommon {
     public static void getOrderDetailsStatus(TextView view, int status) {
         if (status > 0) {
             String statusText = "";
-            int statusBj = R.drawable.retange_blue;
+            //资源在res_loyo/order/drawable
+            int statusBj = R.drawable.order_retange_blue;
             switch (status) {
                 case 1:
                     statusText = "待审核";
-                    statusBj = R.drawable.retange_purple;
+                    statusBj = R.drawable.order_retange_purple;
                     break;
                 case 2:
                     statusText = "未通过";
-                    statusBj = R.drawable.retange_red;
+                    statusBj = R.drawable.order_retange_red;
                     break;
                 case 3:
                     statusText = "进行中";
-                    statusBj = R.drawable.retange_blue;
+                    statusBj = R.drawable.order_retange_blue;
                     break;
                 case 4:
                     statusText = "已完成";
-                    statusBj = R.drawable.retange_green;
+                    statusBj = R.drawable.order_retange_green;
                     break;
                 case 5:
                     statusText = "意外终止";
-                    statusBj = R.drawable.retange_gray;
+                    statusBj = R.drawable.order_retange_gray;
                     break;
                 case 6://回款记录的状态
                     statusText = "--";
-                    statusBj = R.drawable.retange_gray;
+                    statusBj = R.drawable.order_retange_gray;
                     break;
             }
             view.setText(statusText);

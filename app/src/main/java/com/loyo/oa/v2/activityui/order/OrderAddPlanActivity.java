@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
@@ -25,7 +26,6 @@ import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -49,7 +49,7 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
     private ImageView iv_submit;
     private EditText et_remake, et_estprice;
 
-    private int estimatedTime;
+    private long estimatedTime;
     private int payeeMethod;
     private int remindType = 5;
     private int formPage;
@@ -115,8 +115,10 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
         if (null != planEstimateList) {
             editData();
         } else {
-            tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
-            estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+//            tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
+//            estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+            estimatedTime= com.loyo.oa.common.utils.DateTool.getStamp(false);
+            tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(estimatedTime));
         }
     }
 
@@ -126,7 +128,8 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
     public void editData() {
 
         estimatedTime = planEstimateList.planAt;
-        tv_time.setText(app.df4.format(new Date(Long.valueOf(planEstimateList.planAt + "") * 1000)));
+//        tv_time.setText(app.df4.format(new Date(Long.valueOf(planEstimateList.planAt + "") * 1000)));
+        tv_time.setText(DateTool.getDateFriendly(planEstimateList.planAt));
         et_estprice.setText(planEstimateList.planMoney + "");
         payeeMethod = planEstimateList.payeeMethod;
         remindType = planEstimateList.remindType;
@@ -266,8 +269,12 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
                 int year = datePicker.getYear();
                 int month = datePicker.getMonth();
                 int day = datePicker.getDayOfMonth();
-                tv_time.setText(year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day));
-                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+//                tv_time.setText(year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day));
+//                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+                estimatedTime= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day);
+                tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(estimatedTime));
+
+
             }
         });
 
