@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -86,10 +87,10 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     /*录音播放相关*/
     private LinearLayout layout_bottom_voice;
     private int playVoiceSize = 0;
-    private AudioPlayer audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
     private LoadingLayout ll_loading;
+    private AudioPlayerView audioPlayer;
 
 
     @SuppressLint("InflateParams")
@@ -108,13 +109,13 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     public void onPause() {
         super.onPause();
         if (null != voiceView)
-            audioPlayer.audioPause(voiceView);
+            audioPlayer.onStop();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        audioPlayer.killPlayer();
+        audioPlayer.onStop();
         layout_bottom_voice.setVisibility(View.GONE);
         layout_bottom_voice.removeAllViews();
     }
@@ -145,8 +146,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 //        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
         mTags = FolloUpConfig.getFolloUpStageCache();
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
-        audioPlayer = new AudioPlayer(getActivity());
-        audioPlayer.initPlayer();
+        audioPlayer = new AudioPlayerView(getActivity());
+        audioPlayer.onInit();
         btn_add = (Button) view.findViewById(R.id.btn_add);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
 
@@ -424,23 +425,23 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        audioPlayer.initPlayer();
+        audioPlayer.onInit();
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
                 MainApp.getMainApp().stopAnim(textView);
-                audioPlayer.audioPause(textView);
+                audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.audioStart(textView);
-                audioPlayer.threadPool(audioModel, textView);
+                audioPlayer.onResume(textView);
+                audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel, textView);
+            audioPlayer.onResume(textView);
+            audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }
