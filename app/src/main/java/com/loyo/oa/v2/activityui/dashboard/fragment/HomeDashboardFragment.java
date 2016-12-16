@@ -56,10 +56,6 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (null == mView) {
-            /*final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppStartLoadTranslucent);
-            LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-            mView =  localInflater.inflate(R.layout.fragment_dashboard, container, false);*/
-
             mView =  inflater.inflate(R.layout.fragment_dashboard, container, false);
         }
         initUI();

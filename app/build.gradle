@@ -139,7 +139,7 @@ android {
         compile 'com.github.instacart.truetime-android:library:1.5'
         compile 'org.jsoup:jsoup:1.10.1'//解析HTML
         compile "com.andkulikov:transitionseverywhere:1.7.0"
-        compile 'me.itangqi.waveloadingview:library:0.3.1'
+        compile 'me.itangqi.waveloadingview:library:0.3.2'
 
         //compile 'cn.fanrunqi:waveprogress:1.0.0'
         //compile 'com.lai.weavey:loadinglayout:1.2'//loading加载库

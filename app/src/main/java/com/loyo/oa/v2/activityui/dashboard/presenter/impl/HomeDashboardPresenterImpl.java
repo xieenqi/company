@@ -32,9 +32,10 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
         wv1.setBorderColor(Color.GRAY);         //边框颜色
         wv1.setBorderWidth(2);                  //边框宽度
         wv1.setProgressValue(29);               //涨幅范围
-        wv1.setWaveColor(mContext.getResources().getColor(R.color.dashBoradbg)); //波浪颜色
+        wv1.setWaveColor(mContext.getResources().getColor(R.color.dashborad)); //波浪颜色
+        wv1.setWaveBgColor(mContext.getResources().getColor(R.color.dashbg));  //背景颜色
         wv1.setBottomTitleSize(18);
-        wv1.setAmplitudeRatio(60);
+        wv1.setAmplitudeRatio(55);              //波浪弧度
         wv1.setTopTitleStrokeWidth(3);
         wv1.setCenterTitle("29%");
 
@@ -45,9 +46,10 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
         wv2.setBorderColor(Color.GRAY);         //边框颜色
         wv2.setBorderWidth(2);                  //边框宽度
         wv2.setProgressValue(90);               //涨幅范围
-        wv2.setWaveColor(mContext.getResources().getColor(R.color.dashBoradbg)); //波浪颜色
+        wv2.setWaveColor(mContext.getResources().getColor(R.color.dashborad)); //波浪颜色
+        wv2.setWaveBgColor(mContext.getResources().getColor(R.color.dashbg));  //背景颜色
         wv2.setBottomTitleSize(18);
-        wv2.setAmplitudeRatio(60);
+        wv2.setAmplitudeRatio(55);              //波浪弧度
         wv2.setTopTitleStrokeWidth(3);
         wv2.setCenterTitle("29%");
     }
