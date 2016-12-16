@@ -4,6 +4,7 @@ import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -201,6 +202,24 @@ public class CustomerService {
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(I2Customer.class)
                         .toPublic(id)
+                        .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
+    }
+
+    public static Observable<ArrayList<CustomerExtraData>> getCustomerDynamic(HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getDynamic(map)
+                        .compose(RetrofitAdapterFactory.<ArrayList<CustomerExtraData>>compatApplySchedulers());
+    }
+
+    public static Observable<Customer> updateCustomer(String id, HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .updateCustomer(id, map)
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
 
