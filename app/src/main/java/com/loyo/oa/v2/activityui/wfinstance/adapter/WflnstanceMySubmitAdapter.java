@@ -126,9 +126,9 @@ public class WflnstanceMySubmitAdapter extends BaseExpandableListAdapter {
         }
 
 //        time.setText("提交时间: " + MainApp.getMainApp().df3.format(new Date(wfInstance.createdAt * 1000)));
-        time.setText("提交时间: " + DateTool.getDateTimeFriendly(wfInstance.createdAt));
+        time.setText("提交时间：" + DateTool.getDateTimeFriendly(wfInstance.createdAt));
         if (wfInstance.nextExecutorName != null) {
-            content.setText("审批人: " + wfInstance.nextExecutorName);
+            content.setText("审批人：" + wfInstance.nextExecutorName);
         }
         ack.setVisibility(wfInstance.viewed ? View.GONE : View.VISIBLE);
         return convertView;

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:layout_marginTop="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/wfinstance_text_line_space"
         >
 
         <TextView
@@ -17,9 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
-            android:textSize="@dimen/text_sp15"
-            android:text=""
-            android:textColor="@color/text33"
+            style="@style/wfinstance_line_text_other_3"
+            android:text="0132121231"
             />
 
         <EditText

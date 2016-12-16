@@ -92,7 +92,8 @@ public class DateTool {
         try {
             timestamp = sdfOut.parse(timeStr).getTime();
         } catch (Exception e) {
-            Global.ProcException(e);
+            //避免报不必要的错误
+//            Global.ProcException(e);
         }
         return timestamp;
     }
@@ -104,7 +105,7 @@ public class DateTool {
      * @return 返回月份和天 eg:12.01
      */
     public static String getMonthDay(long time) {
-        return DateFormatSet.daySdf.format(new Date(time*1000));
+        return DateFormatSet.daySdf.format(new Date(time * 1000));
     }
 
     /**
@@ -113,11 +114,15 @@ public class DateTool {
      * 2、本年不显示年：03-04 15:30
      * 3、非本年显示完整的年月日时分：2016-03-04 15:30
      *
-     * @param seconds     时间
+     * @param seconds     时间 10位,秒级别的
      * @param includeTime 是否显示详细的时间 eg  false:今天   true:今天 14:90
      * @return
      */
     private static String getFriendlyTime(long seconds, boolean includeTime) {
+        if(0==seconds||10!=(seconds+"").length()){
+            //时间格式不合法
+            return "--";
+        }
         seconds *= 1000;//这里要乘1000,把秒转换成毫秒
         Date time = new Date(seconds);
         Calendar cal = Calendar.getInstance();
@@ -135,18 +140,18 @@ public class DateTool {
             } else {
                 cal.add(Calendar.DAY_OF_MONTH, -2);//前面+1天,这里-2天
                 if (getDateReal(cal.getTimeInMillis() / 1000).equals(getDateReal(System.currentTimeMillis() / 1000))) {
-                    day="明天";
+                    day = "明天";
                 }
             }
         }
-        if (null==day){//为空就不直接格式化时间显示
+        if (null == day) {//为空就不直接格式化时间显示
             if (includeTime) {//如果包括时分秒
                 if (getYear(time).equals(getYear())) {//同一年
                     return DateFormatSet.dateNoYear.format(time);
                 } else {
                     return DateFormatSet.minuteSdf.format(time);
                 }
-            }else{
+            } else {
                 //本年不显示年  eg：03-04
                 if (getYear(time).equals(getYear())) {//同一年
                     return DateFormatSet.dateMonthDay.format(time);
@@ -154,7 +159,7 @@ public class DateTool {
                     return DateFormatSet.dateSdf.format(time);
                 }
             }
-        }else{
+        } else {
             return includeTime ? day + " " + DateFormatSet.dateHourMinute.format(time) : day;
         }
     }
@@ -315,6 +320,7 @@ public class DateTool {
         calendar.set(Calendar.SECOND, 0);
         return calendar.getTime().getTime();
     }
+
 
     /**
      * 获取过去某星期 结束时间
