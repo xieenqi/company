@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.dashboard.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -24,10 +23,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.tool.BaseFragment;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
