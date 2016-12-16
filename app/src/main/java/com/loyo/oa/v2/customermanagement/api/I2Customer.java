@@ -166,7 +166,7 @@ public interface I2Customer {
     Observable<PaginationX<CustomerFollowUpModel>> getSaleactivity(@Path("cusId") String cusId, @QueryMap HashMap<String, Object> map);
 
     @GET("/saleactivitytype/")
-    Observable<CommonTag> getSaleactivitytypes();
+    Observable<ArrayList<CommonTag>> getSaleactivitytypes();
 
     /*客户 写跟进
      * @param map
@@ -175,7 +175,7 @@ public interface I2Customer {
     Observable<SaleActivity> addSaleactivity(@Body HashMap<String, Object> map);
 
     @GET("/losereason/")
-    Observable<CommonTag> getLoseReasons();
+    Observable<ArrayList<CommonTag>> getLoseReasons();
 
 
     @GET("/product")

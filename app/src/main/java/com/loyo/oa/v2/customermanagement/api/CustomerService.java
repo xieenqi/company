@@ -9,7 +9,9 @@ import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.model.Tag;
+import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.tool.Config_project;
@@ -243,5 +245,33 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<Contact>compatApplySchedulers());
     }
 
+
+    public static Observable<ArrayList<CommonTag>> getLoseReasons() {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getLoseReasons()
+                        .compose(RetrofitAdapterFactory.<ArrayList<CommonTag>>compatApplySchedulers());
+    }
+
+    public static Observable<ArrayList<CommonTag>> getSaleactivitytypes(){
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getSaleactivitytypes()
+                        .compose(RetrofitAdapterFactory.<ArrayList<CommonTag>>compatApplySchedulers());
+    }
+
+    public static Observable<SaleActivity> addSaleactivity(HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .addSaleactivity(map)
+                        .compose(RetrofitAdapterFactory.<SaleActivity>compatApplySchedulers());
+
+    }
 
 }

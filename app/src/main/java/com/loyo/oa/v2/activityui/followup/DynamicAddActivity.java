@@ -34,6 +34,7 @@ import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
@@ -41,7 +42,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.CommonIdName;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.beans.SaleActivity;
@@ -50,15 +50,14 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -356,27 +355,28 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         map.put("atUserIds", atUserIds);
 
         LogUtil.dee("新建跟进:" + MainApp.gson.toJson(map));
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
-            @Override
-            public void success(final SaleActivity saleActivity, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建跟进动态",response);
-                new Handler().postDelayed(new Runnable() {
+        CustomerService.addSaleactivity(map)
+                .subscribe(new DefaultSubscriber<SaleActivity>() {
                     @Override
-                    public void run() {
+                    public void onError(Throwable e) {
+                        // TODO: HttpErrorCheck.checkCommitEro(error);
                         cancelStatusLoading();
-                        AppBus.getInstance().post(new FollowUpRushEvent());
-                        app.finishActivity(DynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                     }
-                },1000);
-            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+                    @Override
+                    public void onNext(SaleActivity saleActivity) {
+                        // TODO: HttpErrorCheck.checkCommitSus("新建跟进动态",response);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelStatusLoading();
+                                AppBus.getInstance().post(new FollowUpRushEvent());
+                                app.finishActivity(DynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                            }
+                        },1000);
+
+                    }
+                });
     }
 
     /**
