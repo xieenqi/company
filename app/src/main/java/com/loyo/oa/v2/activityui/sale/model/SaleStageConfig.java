@@ -4,35 +4,25 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.ArrayList;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class SaleStageConfig {
 
     /* 从网络获取 */
     public static void getSaleStage() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
-            @Override
-            public void success(ArrayList<SaleStage> result, Response response) {
-                HttpErrorCheck.checkResponse("销售机会 config销售阶段:", response);
-                String json = MainApp.gson.toJson(result);
-                SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE);
-                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE, json);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-            }
-        });
+        CustomerService.getSaleStges()
+                .subscribe(new DefaultSubscriber<SaleStage>() {
+                    @Override
+                    public void onNext(SaleStage saleStage) {
+                        String json = MainApp.gson.toJson(saleStage);
+                        SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE);
+                        SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE, json);
+                    }
+                });
     }
 
     /* 读取缓存 */

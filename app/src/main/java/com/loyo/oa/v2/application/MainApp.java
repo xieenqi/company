@@ -28,17 +28,16 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.GlideManager;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -65,7 +64,6 @@ import java.util.TimerTask;
 import cn.jpush.android.api.JPushInterface;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.client.Response;
 
 
 public class MainApp extends Application {
@@ -173,12 +171,12 @@ public class MainApp extends Application {
 
     void loadIndustryCodeTable() {
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getIndustry(new RCallback<ArrayList<Industry>>() {
-            @Override
-            public void success(ArrayList<Industry> industries, Response response) {
-                mIndustries = industries;
-            }
-        });
+        CustomerService.getIndustry()
+                .subscribe(new DefaultSubscriber<ArrayList<Industry>>() {
+                    public void onNext(ArrayList<Industry> industryArrayList) {
+                        mIndustries = industryArrayList;
+                    }
+                });
 
     }
     //-------这些数据需要保存在本地-------------

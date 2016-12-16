@@ -3,17 +3,16 @@ package com.loyo.oa.v2.activityui.followup.persenter;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.point.IClue;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
@@ -69,37 +68,35 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
         params.put("pageIndex", pageCus);
         params.put("pageSize", 15);
         LogUtil.d("我的客户查询参数：" + MainApp.gson.toJson(params));
-        RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_MY).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
+        CustomerService.getMyCustomers(params)
+                .subscribe(new DefaultSubscriber<PaginationX<Customer>>() {
                     @Override
-                    public void success(PaginationX<Customer> result, Response response) {
-                        HttpErrorCheck.checkResponse("我的客户", response, vControl.getLoadingLayout());
-                        if (null == result.records || result.records.size() == 0) {
+                    public void onError(Throwable e) {
+                        vControl.getLoadingLayout().setStatus(LoadingLayout.Error); // TODO: 2016/12/16
+                    }
+
+                    @Override
+                    public void onNext(PaginationX<Customer> customerPaginationX) {
+                        vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+                        if (PaginationX.isEmpty(customerPaginationX)) {
                             if (isPullCus) {
                                 vControl.showMsg("没有更多数据了!");
                             } else {
                                 mCustomers.clear();
                                 vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
                             }
-                            vControl.getDataComplete();
                         } else {
                             if (isPullCus) {
-                                mCustomers.addAll(result.records);
+                                mCustomers.addAll(customerPaginationX.records);
                             } else {
                                 mCustomers.clear();
-                                mCustomers = result.records;
+                                mCustomers = customerPaginationX.records;
                             }
                         }
                         vControl.getDataComplete();
                         vControl.bindCustomerData(mCustomers);
                     }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        vControl.getDataComplete();
-                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
-                    }
-                }
-        );
+                });
     }
 
     /**

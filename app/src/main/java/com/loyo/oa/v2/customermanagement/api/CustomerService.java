@@ -6,6 +6,7 @@ import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
+import com.loyo.oa.v2.activityui.customer.model.Industry;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
@@ -13,6 +14,7 @@ import com.loyo.oa.v2.activityui.customer.model.Product;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -333,6 +335,25 @@ public class CustomerService {
                         .create(I2Customer.class)
                         .addSignIn(map)
                         .compose(RetrofitAdapterFactory.<LegWork>compatApplySchedulers());
+
+    }
+
+    public static Observable<SaleStage> getSaleStges() {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getSaleStges()
+                        .compose(RetrofitAdapterFactory.<SaleStage>compatApplySchedulers());
+    }
+
+    public static Observable<ArrayList<Industry>> getIndustry() {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getIndustry()
+                        .compose(RetrofitAdapterFactory.<ArrayList<Industry>>compatApplySchedulers());
 
     }
 

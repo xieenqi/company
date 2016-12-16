@@ -10,30 +10,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.customview.DateTimePickDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 新建跟进动态
@@ -197,19 +190,15 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                     map.put("contactId", contactId);
                     map.put("contactName", contactName);
                 }
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
-                    @Override
-                    public void success(final SaleActivity saleActivity, final Response response) {
-                        HttpErrorCheck.checkResponse("新建跟进动态", response);
-                        app.finishActivity(SaleActivitiesAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
-                    }
+                CustomerService.addSaleactivity(map)
+                        .subscribe(new DefaultSubscriber<SaleActivity>() {
+                            @Override
+                            public void onNext(SaleActivity saleActivity) {
+                                app.finishActivity(SaleActivitiesAddActivity.this,
+                                        MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                            }
+                        });
 
                 break;
 //选择客户

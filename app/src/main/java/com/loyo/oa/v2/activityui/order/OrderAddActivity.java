@@ -11,8 +11,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
@@ -24,17 +26,16 @@ import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.activityui.worksheet.OrderWorksheetListActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.OrderAddforExtraData;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -267,20 +268,14 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         showLoading("", false);
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 104);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
-            @Override
-            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse("新建订单动态字段", response);
-                mCusList = cuslist;
-                bindExtraView(cuslist);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        CustomerService.getAddCustomerJur(map)
+                .subscribe(new DefaultSubscriber<ArrayList<ContactLeftExtras>>() {
+                    @Override
+                    public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
+                        mCusList = contactLeftExtrasArrayList;
+                        bindExtraView(contactLeftExtrasArrayList);
+                    }
+                });
     }
 
     /**
