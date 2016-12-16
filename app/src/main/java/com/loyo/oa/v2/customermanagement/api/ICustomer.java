@@ -42,7 +42,7 @@ import rx.Observable;
  * Updated by EthanGong on 2016/12/15.
  */
 
-public interface I2Customer {
+public interface ICustomer {
 
     /** 我负责的客户 */
     @GET("/")

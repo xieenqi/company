@@ -40,7 +40,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/FinalVariables.QUERY_CUSTOMERS_RESPON)
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getCustomers(params)
                         .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers());
     }
@@ -49,7 +49,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/FinalVariables.QUERY_NEAR_CUSTOMERS_COUNT_SELF)
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getNearbySelfCustomerCount(position)
                         .compose(RetrofitAdapterFactory.<NearCount>compatApplySchedulers());
     }
@@ -58,7 +58,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/FinalVariables.QUERY_CUSTOMERS_TEAM)
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getCustomers(params)
                         .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers());
     }
@@ -67,7 +67,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/FinalVariables.QUERY_NEAR_CUSTOMERS_COUNT_TEAM)
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getNearbySelfCustomerCount(position)
                         .compose(RetrofitAdapterFactory.<NearCount>compatApplySchedulers());
     }
@@ -76,7 +76,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/FinalVariables.QUERY_CUSTOMERS_MEMBER)
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getCustomers(params)
                         .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers());
     }
@@ -85,7 +85,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/FinalVariables.QUERY_CUSTOMERS_PUBLIC)
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getCustomers(params)
                         .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers());
     }
@@ -94,7 +94,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .pickInCustomer(id)
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
@@ -103,7 +103,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getAddCustomerJur(map)
                         .compose(RetrofitAdapterFactory.<ArrayList<ContactLeftExtras>>compatApplySchedulers());
     }
@@ -112,7 +112,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .addNewCustomer(map)
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
@@ -121,7 +121,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getContactsField()
                         .compose(RetrofitAdapterFactory.<ArrayList<ContactLeftExtras>>compatApplySchedulers());
     }
@@ -130,7 +130,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getCustomerContacts(id)
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
@@ -139,7 +139,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .requestCallBack(map)
                         .compose(RetrofitAdapterFactory.<CallBackCallid>compatApplySchedulers());
     }
@@ -148,7 +148,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .deleteContact(id, consid)
                         .compose(RetrofitAdapterFactory.<Contact>compatApplySchedulers());
     }
@@ -157,7 +157,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .setDefaultContact(id, consid)
                         .compose(RetrofitAdapterFactory.<Contact>compatApplySchedulers());
     }
@@ -166,7 +166,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .addContact(id, map)
                         .compose(RetrofitAdapterFactory.<Contact>compatApplySchedulers());
     }
@@ -175,7 +175,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .updateContact(id, consid, map)
                         .compose(RetrofitAdapterFactory.<Contact>compatApplySchedulers());
     }
@@ -184,7 +184,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getCustomerById(id)
                         .compose(RetrofitAdapterFactory.<Customer>applySchedulers());
     }
@@ -193,7 +193,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getMembersRoot()
                         .compose(RetrofitAdapterFactory.<MembersRoot>compatApplySchedulers());
 
@@ -203,7 +203,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .delete(id)
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
@@ -212,7 +212,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .toPublic(id)
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
@@ -221,7 +221,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getDynamic(map)
                         .compose(RetrofitAdapterFactory.<ArrayList<CustomerExtraData>>compatApplySchedulers());
     }
@@ -230,7 +230,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .updateCustomer(id, map)
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
@@ -239,7 +239,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .GetTags()
                         .compose(RetrofitAdapterFactory.<ArrayList<Tag>>compatApplySchedulers());
     }
@@ -248,7 +248,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .setCusLabel(id, map)
                         .compose(RetrofitAdapterFactory.<Contact>compatApplySchedulers());
     }
@@ -258,7 +258,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getLoseReasons()
                         .compose(RetrofitAdapterFactory.<ArrayList<CommonTag>>compatApplySchedulers());
     }
@@ -267,7 +267,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getSaleactivitytypes()
                         .compose(RetrofitAdapterFactory.<ArrayList<CommonTag>>compatApplySchedulers());
     }
@@ -276,7 +276,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .addSaleactivity(map)
                         .compose(RetrofitAdapterFactory.<SaleActivity>compatApplySchedulers());
 
@@ -286,7 +286,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getSerachRepeat(map)
                         .compose(RetrofitAdapterFactory.<PaginationX<CustomerRepeatList>>compatApplySchedulers());
 
@@ -296,7 +296,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getProducts()
                         .compose(RetrofitAdapterFactory.<ArrayList<Product>>compatApplySchedulers());
     }
@@ -305,7 +305,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .cancelCallBack(id)
                         .compose(RetrofitAdapterFactory.<String>applySchedulers());
     }
@@ -314,7 +314,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getCutomerOrder(id, map)
                         .compose(RetrofitAdapterFactory.<PaginationX<OrderListItem>>compatApplySchedulers());
     }
@@ -323,7 +323,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getSetInfo(map)
                         .compose(RetrofitAdapterFactory.<SigninPictures>compatApplySchedulers());
     }
@@ -332,7 +332,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .addSignIn(map)
                         .compose(RetrofitAdapterFactory.<LegWork>compatApplySchedulers());
 
@@ -342,7 +342,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getSaleStges()
                         .compose(RetrofitAdapterFactory.<SaleStage>compatApplySchedulers());
     }
@@ -351,7 +351,7 @@ public class CustomerService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-                        .create(I2Customer.class)
+                        .create(ICustomer.class)
                         .getIndustry()
                         .compose(RetrofitAdapterFactory.<ArrayList<Industry>>compatApplySchedulers());
 

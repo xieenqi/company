@@ -7,7 +7,7 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.customermanagement.api.I2Customer;
+import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
@@ -85,7 +85,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
         }
         RetrofitAdapterFactory.getInstance()
                 .build(/*TODO:*/url)
-                .create(I2Customer.class)
+                .create(ICustomer.class)
                 .getCustomers(params)
                 .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers())
                 .subscribe(new DefaultSubscriber<PaginationX<Customer>>() {

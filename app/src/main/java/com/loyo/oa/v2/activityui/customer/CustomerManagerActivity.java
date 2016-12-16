@@ -130,7 +130,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
 //     */
 //    public void getStageData() {
 //        showLoading("");
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(I2Customer.class).
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
 //                GetTags(new RCallback<ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>>() {
 //                    @Override
 //                    public void success(ArrayList<Tag> tags, Response response) {

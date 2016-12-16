@@ -19,7 +19,7 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.customermanagement.api.I2Customer;
+import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -146,7 +146,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
 
         RetrofitAdapterFactory.getInstance()
                 .build(url)
-                .create(I2Customer.class)
+                .create(ICustomer.class)
                 .getCustomers(params)
                 .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers())
                 .subscribe(new DefaultSubscriber<PaginationX<Customer>>() {
