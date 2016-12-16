@@ -13,6 +13,8 @@ import com.loyo.oa.v2.activityui.customer.model.Product;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
+import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -24,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import retrofit.http.Path;
+import retrofit.http.QueryMap;
 import rx.Observable;
 
 /**
@@ -312,6 +315,25 @@ public class CustomerService {
                         .create(I2Customer.class)
                         .getCutomerOrder(id, map)
                         .compose(RetrofitAdapterFactory.<PaginationX<OrderListItem>>compatApplySchedulers());
+    }
+
+    public static Observable<SigninPictures> getSigninUploadPhotoConfig(@QueryMap Map<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getSetInfo(map)
+                        .compose(RetrofitAdapterFactory.<SigninPictures>compatApplySchedulers());
+    }
+
+    public static Observable<LegWork> addSignIn(HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .addSignIn(map)
+                        .compose(RetrofitAdapterFactory.<LegWork>compatApplySchedulers());
+
     }
 
 }
