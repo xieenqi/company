@@ -165,7 +165,7 @@
                         android:layout_marginBottom="@dimen/dimen_4"
                         android:gravity="left|center"
                         android:maxLines="1"
-                        android:text="无跟进丢公海 dtmnot"
+                        android:text="无跟进丢公海"
                         android:textColor="@color/text99"
                         android:textSize="13sp"
                         android:visibility="gone" />
@@ -176,7 +176,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="left|center"
                         android:maxLines="1"
-                        android:text="无订单丢规划j9wb9ejb"
+                        android:text="无订单丢"
                         android:textColor="@color/text99"
                         android:textSize="13sp"
                         android:visibility="gone" />
