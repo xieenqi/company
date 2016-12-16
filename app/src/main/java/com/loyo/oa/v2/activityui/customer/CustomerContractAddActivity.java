@@ -12,30 +12,24 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.event.ContactMaillistRushEvent;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.ContactRequestParam;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.ViewUtil;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ContactAddforExtraData;
+import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 客户管理联系人列表，【新增联系人】
@@ -422,41 +416,43 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
                 LogUtil.dee("添加联系人发送map：" + MainApp.gson.toJson(maps));
 
-               if (mCustomer != null) {
-                    if (mContact == null) {
-                        /*新建联系人*/
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                                addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
-                                    @Override
-                                    public void success(final Contact contact, final Response response) {
-                                        HttpErrorCheck.checkResponse("添加联系人：", response);
-                                        mContact = contact;
-                                        sendBack();
-                                    }
-
-                                    @Override
-                                    public void failure(final RetrofitError error) {
-                                        HttpErrorCheck.checkError(error);
-                                    }
-                                });
-                    } else {
-                        /*修改联系人*/
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                                create(ICustomer.class).updateContact(mCustomer.getId(), mContact.getId(), maps, new RCallback<Contact>() {
-                            @Override
-                            public void success(final Contact contact, final Response response) {
-                                HttpErrorCheck.checkResponse("修改联系人", response);
-                                mContact = contact;
-                                sendBack();
-                            }
-
-                            @Override
-                            public void failure(final RetrofitError error) {
-                                HttpErrorCheck.checkError(error);
-                            }
-                        });
-                    }
+                if (mCustomer == null) {
+                   return;
                 }
+                if (mContact == null) {
+                        /*新建联系人*/
+                    CustomerService.addContact(mCustomer.getId(), maps)
+                            .subscribe(new DefaultSubscriber<Contact>() {
+                                @Override
+                                public void onError(Throwable e) {
+                                    super.onError(e);
+                                }
+
+                                @Override
+                                public void onNext(Contact contact) {
+                                    super.onNext(contact);
+                                    mContact = contact;
+                                    sendBack();
+                                }
+                            });
+                } else {
+                        /*修改联系人*/
+                    CustomerService.updateContact(mCustomer.getId(), mContact.getId(), maps)
+                            .subscribe(new DefaultSubscriber<Contact>() {
+                                @Override
+                                public void onError(Throwable e) {
+                                    super.onError(e);
+                                }
+
+                                @Override
+                                public void onNext(Contact contact) {
+                                    super.onNext(contact);
+                                    mContact = contact;
+                                    sendBack();
+                                }
+                            });
+                }
+
                 break;
 
             default:
@@ -468,20 +464,20 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      * 获取联系人的动态字段
      */
     private void getContactsFields() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getContactsField(new RCallback<ArrayList<ContactLeftExtras>>() {
-            @Override
-            public void success(ArrayList<ContactLeftExtras> ContactLeftExtras, Response response) {
-                HttpErrorCheck.checkResponse("联系人动态字段", response);
-                mContactLeftExtras = ContactLeftExtras;
-                bindData();
-            }
+        CustomerService.getContactsField()
+                .subscribe(new DefaultSubscriber<ArrayList<ContactLeftExtras>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
 
-            @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                    @Override
+                    public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
+                        super.onNext(contactLeftExtrasArrayList);
+                        mContactLeftExtras = contactLeftExtrasArrayList;
+                        bindData();
+                    }
+                });
     }
 
     void sendBack() {

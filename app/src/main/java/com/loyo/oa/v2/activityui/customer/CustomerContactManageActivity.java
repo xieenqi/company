@@ -14,28 +14,25 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ContactViewGroup;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.voip.VoIPCallActivity;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.activity
@@ -93,20 +90,18 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 获取最新 左侧动态字段
      */
     private void getContactsFields() {
-//        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getContactsField(new RCallback<ArrayList<ContactLeftExtras>>() {
+        CustomerService.getContactsField()
+                .subscribe(new DefaultSubscriber<ArrayList<ContactLeftExtras>>() {
                     @Override
-                    public void success(ArrayList<ContactLeftExtras> fiedListData, Response response) {
-                        HttpErrorCheck.checkResponse("联系人动态字段", response);
-                        leftExtrases = fiedListData;
-                        getData();
+                    public void onError(Throwable e) {
+                        super.onError(e);
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error,ll_loading);
+                    public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
+                        super.onNext(contactLeftExtrasArrayList);
+                        leftExtrases = contactLeftExtrasArrayList;
+                        getData();
                     }
                 });
     }
@@ -115,20 +110,21 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 获取客户详情
      */
     private void getData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerContacts(customerId, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkResponse("联系人详情：", response,ll_loading);
-                customerContact = customer;
-                initData();
-            }
+        CustomerService.getCustomerContacts(customerId)
+                .subscribe(new DefaultSubscriber<Customer>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        ll_loading.setStatus(LoadingLayout.Empty);
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error,ll_loading);
-            }
-        });
+                    @Override
+                    public void onNext(Customer customer) {
+                        super.onNext(customer);
+                        customerContact = customer;
+                        initData();
+                    }
+                });
     }
 
 
@@ -141,6 +137,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             ll_loading.setStatus(LoadingLayout.Empty);
             return;
         }
+        ll_loading.setStatus(LoadingLayout.Success);
 
         layout_container.removeAllViews();
         ArrayList<Contact> contactsCopy = new ArrayList<>();
@@ -226,11 +223,16 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         map.put("type", callType);
         map.put("mobile", callNum);
         LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).requestCallBack(map,
-                new RCallback<CallBackCallid>() {
+        CustomerService.requestCallBack(map)
+                .subscribe(new DefaultSubscriber<CallBackCallid>() {
                     @Override
-                    public void success(final CallBackCallid callBackCallid, final Response response) {
-                        HttpErrorCheck.checkResponse("请求回拨", response);
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(CallBackCallid callBackCallid) {
+                        super.onNext(callBackCallid);
                         try{
                             switch (callBackCallid.errcode){
                                 case 0:
@@ -262,14 +264,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                             finish();
                         }
                     }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
                 });
-            }
+    }
+
+
 
     /**
      * 拨打商务电话回调
@@ -311,10 +309,16 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      */
     @Override
     public void onDel(final Contact contact) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                deleteContact(customerContact.getId(), contact.getId(), new RCallback<Contact>() {
+        CustomerService.deleteContact(customerContact.getId(), contact.getId())
+                .subscribe(new DefaultSubscriber<Contact>() {
                     @Override
-                    public void success(Contact contact, Response response) {
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(Contact contact1) {
+                        super.onNext(contact1);
                         for (int i = 0; i < customerContact.contacts.size(); i++) {
                             Contact newContact = customerContact.contacts.get(i);
                             if (newContact.equals(contact)) {
@@ -324,12 +328,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                             }
                         }
                         refresh();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
                     }
                 });
     }
@@ -345,11 +343,15 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      */
     @Override
     public void onSetDefault(final Contact contact) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                setDefaultContact(customerContact.getId(), contact.getId(), new RCallback<Contact>() {
+        CustomerService.setDefaultContact(customerContact.getId(), contact.getId())
+                .subscribe(new DefaultSubscriber<Contact>() {
                     @Override
-                    public void success(final Contact _contact, final Response response) {
-                        HttpErrorCheck.checkResponse("设置默认联系人",response);
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(Contact contact1) {
                         Intent intent = new Intent();
                         CustomerContactManageActivity.this.setResult(Activity.RESULT_OK, intent);//回调刷新界面
 
