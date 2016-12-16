@@ -92,7 +92,8 @@ public class DateTool {
         try {
             timestamp = sdfOut.parse(timeStr).getTime();
         } catch (Exception e) {
-            Global.ProcException(e);
+            //避免报不必要的错误
+//            Global.ProcException(e);
         }
         return timestamp;
     }

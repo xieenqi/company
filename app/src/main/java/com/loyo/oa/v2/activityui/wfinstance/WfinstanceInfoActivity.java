@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -317,7 +318,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             ll_order_content.addView(view_value);
         }
         tv_product.setText(order.proName);
-        tv_plan_value.setText("¥" + order.backMoney + "(" + order.ratePayment + "%)");
+        tv_plan_value.setText("¥" + order.backMoney + "（" + order.ratePayment + "%)");
         AttachmentUUId = order.attachmentUUId;
         AttachmentCount = order.attachmentCount;
     }
@@ -453,7 +454,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 layout_memo.setVisibility(View.GONE);
             }
         }
-        tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + ")");
+        tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + "）");
         tv_projectName.setText(null == mWfInstance.ProjectInfo || TextUtils.isEmpty(mWfInstance.ProjectInfo.title) ? "无" : mWfInstance.ProjectInfo.title);
         if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode
                 || 500 == mWfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件  订单审批  回款审批
@@ -516,7 +517,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     //tv_value.setEnabled(false);
                     //tv_value.setText(wfinstanceInfoValue(jsonObject.get(field.getId())));
                     TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
-                    tv_key.setText(field.getName() + ": " + wfinstanceInfoValue(jsonObject.get(field.getId())));
+                    tv_key.setText(field.getName() + ":" + wfinstanceInfoValue(jsonObject.get(field.getId())));
                     layout_wfinstance_content.addView(view_value);
                 }
             }
@@ -607,8 +608,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
             BigDecimal bigDecimal = new BigDecimal(obj + "");
             return bigDecimal.doubleValue() + "";
         } else {
+            //判断是时间,就转换成友好的格式现实
+            Long stamp = DateTool.getMinuteStamp(obj + "");
+            if(0!=stamp){
+                return  DateTool.getDateTimeFriendly(stamp/1000);
+            }
             return obj + "";
         }
+
     }
 
     private String getWfNodesTitle() {
@@ -622,7 +629,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     actives++;
                 }
             }
-            builder.append("(" + actives + "/" + mWfInstance.workflowNodes.size() + ")");
+            builder.append("（" + actives + "/" + mWfInstance.workflowNodes.size() + "）");
         } else {
             builder.append("(0/0)");
         }
@@ -651,7 +658,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("comment", comment);
         map.put("type", type);
-        LogUtil.dll("请求内容:" + MainApp.gson.toJson(map));
+        LogUtil.dll("请求内容：" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(mWfInstance.getId(), map, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance_current, final Response response) {
@@ -882,7 +889,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
                 mWfInstance.attachments = attachments;
                 if (null != attachments) {
-                    tv_attachment_count.setText("附件 " + "(" + attachments.size() + ")");
+                    tv_attachment_count.setText("附件" + "（" + attachments.size() + "）");
                 }
                 break;
 
