@@ -110,7 +110,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_bottom, layout_wfinstance_content;
     @ViewById
-    ImageView img_wfinstance_status;
+    TextView tv_status;
     @ViewById
     LinearLayout ll_sale;
     @ViewById
@@ -463,19 +463,24 @@ public class WfinstanceInfoActivity extends BaseActivity {
         switch (mWfInstance.status) {
 
             case WfInstance.STATUS_NEW:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status1);
+                tv_status.setText("待审批");
+                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_blue);
                 break;
             case WfInstance.STATUS_PROCESSING:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status2);
+                tv_status.setText("审批中");
+                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_purple);
                 break;
             case WfInstance.STATUS_ABORT:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status3);
+                tv_status.setText("未通过");
+                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_red);
                 break;
             case WfInstance.STATUS_APPROVED:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4);
+                tv_status.setText("已通过");
+                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_green);
                 break;
             case WfInstance.STATUS_FINISHED:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4); //状态4，5都归类为 已通过
+                tv_status.setText("已通过");
+                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_green); //状态4，5都归类为 已通过
                 break;
             default:
                 break;

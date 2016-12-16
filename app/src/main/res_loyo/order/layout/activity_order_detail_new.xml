@@ -49,7 +49,7 @@
                             android:id="@+id/tv_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginLeft="10dp"
                             android:gravity="center"
                             android:layout_gravity="center_vertical"
                             android:paddingLeft="4dp"
@@ -141,7 +141,7 @@
                             android:src="@drawable/order_right_arrow" />
                     </LinearLayout>
 
-                    <include layout="@layout/include_solid_line_space" />
+                    <include layout="@layout/include_order_line_space" />
 
                     <LinearLayout
                         android:id="@+id/ll_record"
@@ -177,7 +177,7 @@
 
                     </LinearLayout>
 
-                    <include layout="@layout/include_solid_line_space" />
+                    <include layout="@layout/include_order_line_space" />
 
                     <LinearLayout
                         android:id="@+id/ll_worksheet"
@@ -212,7 +212,7 @@
                             android:src="@drawable/order_right_arrow" />
                     </LinearLayout>
 
-                    <include layout="@layout/include_solid_line_space" />
+                    <include layout="@layout/include_order_line_space" />
 
                     <LinearLayout
                         android:id="@+id/ll_product"
@@ -247,7 +247,7 @@
                             android:src="@drawable/order_right_arrow" />
                     </LinearLayout>
 
-                    <include layout="@layout/include_solid_line_space" />
+                    <include layout="@layout/include_order_line_space" />
 
                     <LinearLayout
                         android:id="@+id/ll_enclosure"
