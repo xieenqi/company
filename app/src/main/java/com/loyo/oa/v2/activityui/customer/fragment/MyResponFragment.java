@@ -154,7 +154,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
 
     private void loadFilterOptions() {
         List<FilterModel> options = new ArrayList<>();
-        options.add(TimeFilterModel.getFilterModel());
+        options.add(TimeFilterModel.getFilterModel2());
         options.add(TagMenuModel.getTagFilterModel(mTags));
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
