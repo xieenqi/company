@@ -37,7 +37,9 @@ import retrofit.http.QueryMap;
 import rx.Observable;
 
 /**
- * Created by EthanGong on 2016/12/15.
+ * Created by pj on 15/5/28.
+ *
+ * Updated by EthanGong on 2016/12/15.
  */
 
 public interface I2Customer {

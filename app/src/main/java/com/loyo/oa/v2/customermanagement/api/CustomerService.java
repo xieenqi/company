@@ -5,6 +5,7 @@ import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
+import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
@@ -271,6 +272,16 @@ public class CustomerService {
                         .create(I2Customer.class)
                         .addSaleactivity(map)
                         .compose(RetrofitAdapterFactory.<SaleActivity>compatApplySchedulers());
+
+    }
+
+    public static Observable<PaginationX<CustomerRepeatList>> getCustomerDuplicates(Map<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getSerachRepeat(map)
+                        .compose(RetrofitAdapterFactory.<PaginationX<CustomerRepeatList>>compatApplySchedulers());
 
     }
 
