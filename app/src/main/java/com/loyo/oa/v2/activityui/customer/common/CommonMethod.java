@@ -22,7 +22,7 @@ public class CommonMethod {
                 tView1.setVisibility(View.VISIBLE);
                 String tt1 = "无跟进丢公海：";
                 String time = DateTool.getDateTimeFriendly(customer.activityRecycleAt);
-                tView1.setText(isOutCurrentTime(customer.orderRemindAt) ?
+                tView1.setText(isOutCurrentTime(customer.activityRemindAt) ?
                         Utils.modifyTextColor(tt1 + time, Color.parseColor("#f5625a"), tt1.length(), (tt1 + time).length())
                         : tt1 + time);
             } else {

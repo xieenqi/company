@@ -95,6 +95,8 @@ public class Customer extends BaseBeans {
     public long activityRemindAt; //跟进行为丢公海提醒时间
     public long orderRemindAt;   //订单丢公海提醒时间
 
+    public long recycledAt;//丢公海的时间
+
     @Override
     public String getOrderStr() {
         return null;
