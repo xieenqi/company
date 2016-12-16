@@ -31,6 +31,7 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -42,6 +43,8 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit.RetrofitError;
 
 /**
  * 【公海客户】列表
@@ -128,7 +131,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
 
     private void loadFilterOptions() {
         List<FilterModel> options = new ArrayList<>();
-        options.add(TimeFilterModel.getFilterModel());
+        options.add(TimeFilterModel.getFilterModel3());
         options.add(TagMenuModel.getTagFilterModel(mTags));
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
@@ -145,8 +148,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
-                }
-                else if (menuIndex == 1) { // TagFilter
+                } else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
@@ -248,9 +250,9 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 刷新列表回调
-     * */
+     */
     @Subscribe
-    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event){
+    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
         getData();
     }
 

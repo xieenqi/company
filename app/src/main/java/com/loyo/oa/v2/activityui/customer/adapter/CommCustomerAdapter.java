@@ -95,7 +95,7 @@ public class CommCustomerAdapter extends BaseAdapter {
         tv_title.setText(customer.name);
         String tagItems = Utils.getTagItems(customer);
 //        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
-        String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
+        String recycledAt = customer.recycledAt != 0 ? DateTool.getDateTimeFriendly(customer.recycledAt) : "--";
         img_public.setVisibility(View.INVISIBLE);
         permissionTest(img_public);
         layout_go_where.setVisibility(View.GONE);
@@ -104,7 +104,7 @@ public class CommCustomerAdapter extends BaseAdapter {
         img1.setImageResource(R.drawable.icon_customer_tag);
         img2.setImageResource(R.drawable.icon_customer_follow_time);
         tv_content1.setText("标签：" + tagItems);
-        tv_content2.setText("跟进时间：" + lastActivityAt);
+        tv_content2.setText("丢公海时间：" + recycledAt);
 
 
         img_public.setOnTouchListener(Global.GetTouch());

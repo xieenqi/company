@@ -16,6 +16,7 @@ import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
+import com.loyo.oa.v2.activityui.customer.common.CommonMethod;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
@@ -65,11 +66,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @ViewById
     ViewGroup img_title_left, img_title_right, layout_customer_info, layout_contact, layout_send_sms,
             layout_call, layout_wiretel_call, layout_sale_activity, layout_visit, layout_task, layout_attachment,
-            ll_sale, ll_order;
+            ll_sale, ll_order,layout_4;
     @ViewById
     TextView tv_title_1, tv_customer_name, tv_address, tv_tags, tv_contact_name,
             tv_contact_tel, customer_detail_wiretel, tv_sale_number, tv_visit_times, tv_task_count, tv_attachment_count,
-            tv_follow_content, tv_follow_crecter_type, tv_contact_Number, tv_sale_count, tv_order_count;
+            tv_follow_content, tv_follow_crecter_type, tv_contact_Number, tv_sale_count, tv_order_count,
+            tv_content41,tv_content42;
     @ViewById
     ImageView img_public;
     @ViewById
@@ -197,6 +199,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_task.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
 
+        CommonMethod.commonCustomerRecycleTime(mCustomer, layout_4, tv_content41, tv_content42);
 
         tv_customer_name.setText(mCustomer.name);
         if (null != mCustomer.loc) {

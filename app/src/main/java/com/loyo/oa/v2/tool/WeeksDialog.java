@@ -6,9 +6,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
+import android.util.Log;
 import android.util.SparseArray;
 import android.widget.TextView;
-
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity;
 
 import java.util.ArrayList;
@@ -99,11 +100,15 @@ public class WeeksDialog {
                 long begin = item.get("begin");
                 long end = item.get("end");
 
+                String weekBegin= DateTool.getMonthDay(begin/1000);
+                String weekEnd= DateTool.getMonthDay(end/1000);
+                String weekString=weekBegin.concat("-").concat(weekEnd);
+
                 /*周报补签，取消本周显示*/
                 if (i == 0) {
                     //exList.add(DateTool.getMonthDay(begin).concat(" - ").concat(DateTool.getMonthDay(end)).concat(" (本周)"));
                 } else {
-                    exList.add(com.loyo.oa.common.utils.DateTool.getMonthDay(begin).concat(" - ").concat(com.loyo.oa.common.utils.DateTool.getMonthDay(end)));
+                    exList.add(weekString);
                 }
             }
             sourseArray = exList.toArray(new String[exList.size()]);
@@ -115,11 +120,14 @@ public class WeeksDialog {
                 long begin = item.get("begin");
                 long end = item.get("end");
 
-                /*周报补签，取消本周显示*/
+                String weekBegin= DateTool.getMonthDay(begin/1000);
+                String weekEnd= DateTool.getMonthDay(end/1000);
+                String weekString=weekBegin.concat("-").concat(weekEnd);
+
                 if (i == 0) {
-                    exListToWeek.add(com.loyo.oa.common.utils.DateTool.getMonthDay(begin).concat(" - ").concat(com.loyo.oa.common.utils.DateTool.getMonthDay(end)).concat(" (本周)"));
+                    exListToWeek.add(weekString.concat(" (本周)"));
                 } else {
-                    exListToWeek.add(com.loyo.oa.common.utils.DateTool.getMonthDay(begin).concat(" - ").concat(com.loyo.oa.common.utils.DateTool.getMonthDay(end)));
+                    exListToWeek.add(weekString);
                 }
             }
             sourseToWeek = exListToWeek.toArray(new String[exList.size()]);
