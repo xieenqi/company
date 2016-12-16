@@ -181,7 +181,7 @@ public interface I2Customer {
 
 
     @GET("/product")
-    Observable<Product> getProducts();
+    Observable<ArrayList<Product>> getProducts();
 
     @GET("/salestage")
     Observable<SaleStage> getSaleStges();
@@ -265,5 +265,5 @@ public interface I2Customer {
      * 通知服务器取消回拨
      */
     @GET("/ipvoice/callCancel/{callLogId}")
-    Observable<CallBackCallid> cancelCallBack(@Path("callLogId") String id);
+    Observable<BaseResponse<String>> cancelCallBack(@Path("callLogId") String id);
 }

@@ -9,6 +9,8 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
+import com.loyo.oa.v2.activityui.customer.model.Product;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -283,6 +285,33 @@ public class CustomerService {
                         .getSerachRepeat(map)
                         .compose(RetrofitAdapterFactory.<PaginationX<CustomerRepeatList>>compatApplySchedulers());
 
+    }
+
+    public static Observable<ArrayList<Product>> getProducts() {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getProducts()
+                        .compose(RetrofitAdapterFactory.<ArrayList<Product>>compatApplySchedulers());
+    }
+
+    public static Observable<String> cancelCallBack(String id) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .cancelCallBack(id)
+                        .compose(RetrofitAdapterFactory.<String>applySchedulers());
+    }
+
+    public static Observable<PaginationX<OrderListItem>> getCutomerOrder(String id, HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getCutomerOrder(id, map)
+                        .compose(RetrofitAdapterFactory.<PaginationX<OrderListItem>>compatApplySchedulers());
     }
 
 }

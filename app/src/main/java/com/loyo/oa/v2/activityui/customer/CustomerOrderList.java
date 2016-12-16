@@ -22,25 +22,17 @@ import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 客户详情 【订单】列表
@@ -162,32 +154,31 @@ public class CustomerOrderList extends BaseLoadingActivity implements View.OnCli
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getCutomerOrder(customerId, map, new RCallback<PaginationX<OrderListItem>>() {
+        CustomerService.getCutomerOrder(customerId, map)
+                .subscribe(new DefaultSubscriber<PaginationX<OrderListItem>>() {
                     @Override
-                    public void success(PaginationX<OrderListItem> resultData, Response response) {
-                        HttpErrorCheck.checkResponse(" 客户 订单 列表：", response);
+                    public void onError(Throwable e) {
+                        super.onError(e);
                         listView_demands.onRefreshComplete();
-                        if (null == resultData || null == resultData.records) {
+                        ll_loading.setStatus(LoadingLayout.Error);// TODO:
+                    }
+
+                    @Override
+                    public void onNext(PaginationX<OrderListItem> orderListItemPaginationX) {
+                        listView_demands.onRefreshComplete();
+                        if (PaginationX.isEmpty(orderListItemPaginationX)) {
                             Toast("没有数据");
                             return;
                         }
                         if (!isPullDown) {
-                            listData.addAll(resultData.records);
+                            listData.addAll(orderListItemPaginationX.records);
                         } else {
-                            listData = resultData.records;
+                            listData = orderListItemPaginationX.records;
                         }
                         listAdapter.setData(listData);
                         ll_loading.setStatus(LoadingLayout.Success);
                         if (isPullDown && listData.size() == 0)
                             ll_loading.setStatus(LoadingLayout.Empty);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
-                        listView_demands.onRefreshComplete();
-                        super.failure(error);
                     }
                 });
     }

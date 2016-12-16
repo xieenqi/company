@@ -6,7 +6,8 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activityui.sale.contract.AddIntentionProductContract;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
@@ -32,20 +33,19 @@ public class AddIntentionProductModelImpl implements AddIntentionProductContract
 
     @Override
     public void getProductData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getProducts(new RCallback<ArrayList<Product>>() {
-            @Override
-            public void success(final ArrayList<Product> products, final Response response) {
-                HttpErrorCheck.checkResponse("意向产品##的产品", response);
-                mPersenter.setProduct(products);
-            }
+        CustomerService.getProducts()
+                .subscribe(new DefaultSubscriber<ArrayList<Product>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        mPersenter.closePage();
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                mPersenter.closePage();
-            }
-        });
+                    @Override
+                    public void onNext(ArrayList<Product> products) {
+                        mPersenter.setProduct(products);
+                    }
+                });
     }
 
     @Override
