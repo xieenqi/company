@@ -55,6 +55,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
+import com.loyo.oa.v2.tool.Utils;
 import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.AfterViews;
@@ -492,6 +493,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*提交*/
             case R.id.img_title_right:
+
+                if(!Utils.isNetworkAvailable(mContext)){
+                    Toast("请检查您的网络连接");
+                    return;
+                }
 
                 uuid = StringUtil.getUUID();
                 customer_name = edt_name.getText().toString().trim();
