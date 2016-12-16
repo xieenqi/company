@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
@@ -190,14 +192,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         ll_loading.setStatus(LoadingLayout.Success);
                         mCustomerExtraDatas = customerExtraDatas;
                         initData();
-//                        Utils.dialogDismiss();
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
                         HttpErrorCheck.checkError(error,ll_loading);
-//                        Utils.dialogDismiss();
                         finish();
                     }
                 });
@@ -232,7 +232,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-//                Utils.dialogDismiss();
             }
         });
     }
@@ -241,7 +240,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 获取用户信息
      */
     void getCustomer() {
-//        Utils.dialogShow(this, "请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getCustomerById(mCustomerId, new RCallback<BaseResponse<Customer>>() {
                     @Override
@@ -258,7 +256,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     public void failure(final RetrofitError error) {
                         super.failure(error);
                         HttpErrorCheck.checkError(error,ll_loading);
-//                        Utils.dialogDismiss();
                         finish();
                     }
                 });
@@ -408,7 +405,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             tv_district.setText(regional.province + " " + regional.city + " " + regional.county + " ");
         }
         edt_customer_memo.setText(mCustomer.summary);
-        tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.createdAt * 1000)));
+//        tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.createdAt * 1000)));
+        tv_customer_create_at.setText(DateTool.getDateTimeFriendly(mCustomer.createdAt));
 
         if (mCustomer.tags != null && mCustomer.tags.size() > 0) {
             mTagItems = mCustomer.tags;
@@ -478,19 +476,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 显示修改负责任 对话框
      */
     private void showLeaveDialog() {
-
-//        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-//            @Override
-//            public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                dismissSweetAlert();
-//            }
-//        }, new SweetAlertDialog.OnSweetClickListener() {
-//            @Override
-//            public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                dismissSweetAlert();
-//
-//            }
-//        },"提示",getString(R.string.app_userdetalis_message));
 
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
@@ -647,7 +632,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             adrDetailsData.addr = addressDetails;
         }
 
-        showLoading("");
+        showStatusLoading(false);
         mLocate.addr = customerAddress;
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", customerName);
@@ -665,18 +650,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
                     public void success(final Customer customer, final Response response) {
-                        HttpErrorCheck.checkResponse("更新客户信息", response);
-                        app.isCutomerEdit = true;
-                        customer.loc = mLocate;
-                        AppBus.getInstance().post(new EditCustomerEvent());
-                        finish();
-
+                        HttpErrorCheck.checkCommitSus("更新客户信息", response);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelStatusLoading();
+                                app.isCutomerEdit = true;
+                                customer.loc = mLocate;
+                                AppBus.getInstance().post(new EditCustomerEvent());
+                                finish();
+                            }
+                        },1000);
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
     }

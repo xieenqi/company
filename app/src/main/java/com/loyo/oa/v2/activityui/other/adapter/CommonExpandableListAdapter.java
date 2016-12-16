@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.beans.WorkReportRecord;
@@ -22,7 +23,6 @@ import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.activityui.project.adapter.BasePagingGroupDataAdapter_;
 
@@ -67,7 +67,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 title.setText(wfInstance.title);
             }
 
-            time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
+//            time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
+            time.setText("提交时间: " + DateTool.getDateTimeFriendly(wfInstance.createdAt));
             if (wfInstance.nextExecutorName != null) {
                 content.setText("审批人: " + wfInstance.nextExecutorName);
             }
@@ -166,13 +167,16 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 } else {
                     isOk = false;
                     textColor = R.color.text66;
-                    Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(DateTool.DATE_FORMATE_SPLITE_BY_POINT), "yyyy.MM.dd HH:mm"));
+//                    Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(DateTool.DATE_FORMATE_SPLITE_BY_POINT), "yyyy.MM.dd HH:mm"));
+                    long nowTime = com.loyo.oa.common.utils.DateTool.getStamp(true);
                     if (nowTime > task.planendAt && task.status == Task.STATUS_PROCESSING) {
                         timeOut.setVisibility(View.VISIBLE);
                     } else {
                         timeOut.setVisibility(View.GONE);
                     }
-                    time.setText("任务截止时间: " + MainApp.getMainApp().df3.format(new Date(task.planendAt * 1000)) + "");
+//                    time.setText("任务截止时间: " + MainApp.getMainApp().df3.format(new Date(task.planendAt * 1000)) + "");
+                    time.setText("任务截止时间: " +DateTool.getDateTimeFriendly(task.planendAt));
+
                 }
             } catch (Exception e) {
                 Global.ProcException(e);
@@ -226,7 +230,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             String isDelayedTitle = workReport.isDelayed ? "(补签)" : " ";
             title.setText(workReport.title + " " + isDelayedTitle);
 
-            String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
+//            String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
+            String end = "提交时间: " + DateTool.getDateTimeFriendly(workReport.createdAt);
             time.setText(end);
             ack.setVisibility(workReport.viewed ? View.GONE : View.VISIBLE);
 

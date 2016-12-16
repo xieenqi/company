@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.worksheet.common;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -50,7 +49,7 @@ public class EventHandleInfoList extends LinearLayout {
         lv_listview = (CustomerListView) view.findViewById(R.id.lv_listview);
         ll_address = (LinearLayout) view.findViewById(R.id.ll_address);
         tv_content.setText(data.content);
-        tv_time.setText(data.creatorName + "  " + DateTool.getDiffTime(data.createdAt) + (data.type == 1 ? " 提交完成" : " 打回重做"));
+        tv_time.setText(data.creatorName + "  " + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(data.createdAt) + (data.type == 1 ? " 提交完成" : " 打回重做"));
 
         if (null != data.attachments && data.attachments.size() > 0) {
             WorkSheetListNestingAdapter mAdapter = new WorkSheetListNestingAdapter(data.attachments, context);

@@ -9,6 +9,7 @@ import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.os.Environment;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
@@ -65,7 +66,7 @@ public class RecordUtils {
         if (!ff.exists()) {
             ff.mkdirs();
         }
-        fileName = getDate() + ".wav";
+        fileName = DateTool.getFileNameByTime() + ".wav";
         outPath = AUDIO_ROOTPATH + File.separator + fileName;
         sp.play(shoot, 1f, 1f, 0, 0, 0.8f);
         recorder = OmRecorder.wav(
@@ -190,15 +191,15 @@ public class RecordUtils {
         }
     }
 
-    public String getFormat(long time) {
-        SimpleDateFormat fromat = new SimpleDateFormat("ss", Locale.CHINA);
-        return fromat.format(new Date(time));
-    }
+//    public String getFormat(long time) {
+//        SimpleDateFormat fromat = new SimpleDateFormat("ss", Locale.CHINA);
+//        return fromat.format(new Date(time));
+//    }
 
-    public String getDate() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
-        return format.format(new Date());
-    }
+//    public String getDateFriendly() {
+//        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+//        return format.format(new Date());
+//    }
 
 
     /**

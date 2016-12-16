@@ -9,18 +9,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
-import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerFollowUpListView;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerSigninNewListView;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.tool.DateTool;
 
 import java.util.ArrayList;
 
 /**
+ * 客户详情——拜访签到——适配器
  * Created by yyy on 16/12/5.
  */
 
@@ -73,7 +71,7 @@ public class CustomerSigninNewGroupAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         if (crolView.getBottomMenuLayout().getVisibility() == View.GONE) {
-            holder.tv_title.setText(DateTool.getDiffNoMs(Long.parseLong(groupModel.timeStamp)));
+            holder.tv_title.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(Long.parseLong(groupModel.timeStamp)));
             if (null != groupModel.activities && groupModel.activities.size() > 0) {
                 mAdapter = new CustomerSigninNewListAdapter(mContext, groupModel.activities, crolView, audioCb);
                 holder.layout_listview.setAdapter(mAdapter);

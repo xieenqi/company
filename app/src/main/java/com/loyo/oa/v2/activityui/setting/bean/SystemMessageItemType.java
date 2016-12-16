@@ -15,7 +15,7 @@ import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
-import com.loyo.oa.v2.activityui.signinnew.SigninNewDetailsActivity;
+import com.loyo.oa.v2.activityui.signin.SigninDetailsActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
@@ -175,7 +175,7 @@ public enum SystemMessageItemType {
         }
 
         public Class<?> getItemClass() {
-            return SigninNewDetailsActivity.class;
+            return SigninDetailsActivity.class;
         }
 
         public String getExtraName() {
@@ -188,7 +188,7 @@ public enum SystemMessageItemType {
         }
 
         public Class<?> getItemClass() {
-            return SigninNewDetailsActivity.class;
+            return SigninDetailsActivity.class;
         }
 
         public String getExtraName() {

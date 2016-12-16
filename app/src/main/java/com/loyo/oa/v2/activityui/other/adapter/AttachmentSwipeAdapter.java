@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateFormatSet;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -22,6 +23,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -54,14 +56,15 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
     private ArrayList<User> users = new ArrayList<>();
     private MainApp app;
     private AttachmentAction mAction;
-    private OnRightClickCallback callback;
+    //    private OnRightClickCallback callback;
     private int bizType;
     private boolean isOver;
     private String uuid;
+    private SwipeListView listView;
 
-    public interface OnRightClickCallback {
-        void onRightClick(Bundle b);
-    }
+//    public interface OnRightClickCallback {
+//        void onRightClick(Bundle b);
+//    }
 
     public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments,
                                   ArrayList<User> _users, int bizType, String uuid, boolean isOver) {
@@ -82,12 +85,13 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
     public AttachmentSwipeAdapter(final Context _context,
                                   final ArrayList<Attachment> _attachments,
                                   final ArrayList<User> _users,
-                                  final OnRightClickCallback _callback,
+                                  final SwipeListView listView,
                                   final int _bizType,
                                   final String _uuid,
                                   final boolean _isOver) {
         this(_context, _attachments, _users, _bizType, _uuid, _isOver);
-        callback = _callback;
+//        callback = _callback;
+        this.listView = listView;
     }
 
     public void setData(final ArrayList<Attachment> attachments) {
@@ -174,8 +178,11 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         }
 
         holder.tv_title.setText(attachment.getOriginalName());
-        holder.tv_creator.setText(String.format("%s %s 上传", attachment.getCreator().getRealname(), DateTool.getDate(attachment.getCreatedAt(), app.df_api_get, app.df3)));
-        holder.tv_time.setText(MainApp.getMainApp().df14.format(new Date(Integer.parseInt(attachment.getCreatedAt()) * 1000L)));
+//        holder.tv_creator.setText(String.format("%s %s 上传", attachment.getCreator().getRealname(), DateTool.getDateFriendly(attachment.getCreatedAt(), app.df_api_get, app.df3)));
+        holder.tv_creator.setText(String.format("%s %s 上传", attachment.getCreator().getRealname(), com.loyo.oa.common.utils.DateTool.convertDate(attachment.getCreatedAt(), DateFormatSet.specialMinuteSdf)));
+
+//        holder.tv_time.setText(MainApp.getMainApp().df14.format(new Date(Integer.parseInt(attachment.getCreatedAt()) * 1000L)));
+        holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.parseLong(attachment.getCreatedAt())));
         holder.img_attachment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -184,7 +191,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
 
                     for (int i = 0; i < mAttachments.size(); i++) {
                         String path = mAttachments.get(i).getUrl();
-                        if (path !=null) {
+                        if (path != null) {
                             selectedPhotos.add(path);
                         }
                     }
@@ -262,7 +269,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                             });
 
                             sweetAlertDialog.dismiss();
-
+                            listView.closeOpenedItems();
                         }
                     }, "提示", "是否删除附件?");
 

@@ -8,6 +8,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
@@ -124,7 +125,8 @@ public class WflnstanceMySubmitAdapter extends BaseExpandableListAdapter {
             title.setText(wfInstance.title);
         }
 
-        time.setText("提交时间: " + MainApp.getMainApp().df3.format(new Date(wfInstance.createdAt * 1000)));
+//        time.setText("提交时间: " + MainApp.getMainApp().df3.format(new Date(wfInstance.createdAt * 1000)));
+        time.setText("提交时间: " + DateTool.getDateTimeFriendly(wfInstance.createdAt));
         if (wfInstance.nextExecutorName != null) {
             content.setText("审批人: " + wfInstance.nextExecutorName);
         }

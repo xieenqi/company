@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.attendance.presenter.impl;
 
 import android.app.Activity;
 
+import com.loyo.oa.common.utils.DateFormatSet;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceList;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceList;
@@ -126,6 +127,7 @@ public class AttendanceListPresenterImpl implements AttendanceListPresenter {
     }
 
     private int getDateTime(long qtime) {
-        return Integer.valueOf(MainApp.getMainApp().df4.format(new Date((qtime * 1000))).replace(".", ""));
+//        return Integer.valueOf(MainApp.getMainApp().df4.format(new Date((qtime * 1000))).replace(".", ""));
+        return Integer.valueOf(DateFormatSet.dateNumSdf.format(qtime*1000));
     }
 }

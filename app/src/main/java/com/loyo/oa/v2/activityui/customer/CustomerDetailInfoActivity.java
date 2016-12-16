@@ -11,7 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
+
 import com.library.module.widget.loading.LoadingLayout;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -250,8 +253,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             tv_follow_crecter_type.setVisibility(View.VISIBLE);
             tv_follow_content.setText(mCustomer.saleActivityInfo.content.contains("<p>") ?
                     CommonHtmlUtils.Instance().checkContent(mCustomer.saleActivityInfo.content) : mCustomer.saleActivityInfo.content);
-            tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +
-                    mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
+//            tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
+            tv_follow_crecter_type.setText(DateTool.getDateTimeFriendly(mCustomer.saleActivityInfo.createAt) + " " +mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
         } else {
             tv_follow_content.setVisibility(View.GONE);
             tv_follow_crecter_type.setVisibility(View.GONE);

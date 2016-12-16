@@ -12,6 +12,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.loopj.android.http.RequestParams;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.contact.presenter.ContactInfoEditPresenter;
@@ -148,13 +149,19 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
                 int month = datePicker.getMonth();
                 int day = datePicker.getDayOfMonth();
 
+
                 int age = Utils.getAge(year + "");
                 if (age > 0) {
-                    String birthStr = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day);
-                    crolView.setBrithday(mHandler, birthStr);
+//                    String birthStr = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day);
+                    long time= DateTool.getStamp(year,month,day);
+
+                    crolView.setBrithday(mHandler, DateTool.getDateReal(time));
                 } else {
                     Toast("出生日期不能是未来时间，请重新设置");
                 }
+
+
+
             }
         });
 

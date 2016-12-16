@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--activity背景颜色-->
+    <color name="order_activity_bg">#f4f4f4</color>
+
+
+</resources>

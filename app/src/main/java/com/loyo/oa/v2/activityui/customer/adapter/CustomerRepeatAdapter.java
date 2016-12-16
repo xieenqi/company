@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
 import com.loyo.oa.v2.application.MainApp;
@@ -82,7 +84,8 @@ public class CustomerRepeatAdapter extends BaseAdapter {
             holder = (viewHolder) convertView.getTag();
         }
 
-        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customerRepeatList.getCreatedAt() * 1000));
+//        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customerRepeatList.getCreatedAt() * 1000));
+        String lastActivityAt = DateTool.getDateTimeFriendly(customerRepeatList.getCreatedAt());
 
         holder.tv_title.setText(customerRepeatList.getName());
         holder.tv_content2.setText("创建时间:"+lastActivityAt);

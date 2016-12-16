@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
@@ -33,7 +34,6 @@ import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -189,7 +189,8 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
         salesAmount.setText("" + Utils.setValueDouble(mSaleDetails.estimatedAmount));
-        estimatedAmount.setText(mSaleDetails.estimatedTime != 0 ? app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)) : "无");
+//        estimatedAmount.setText(mSaleDetails.estimatedTime != 0 ? app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)) : "无");
+        estimatedAmount.setText(mSaleDetails.estimatedTime != 0 ? DateTool.getDateFriendly(mSaleDetails.estimatedTime) : "无");
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());
         memo.setText(mSaleDetails.getMemo());
@@ -199,8 +200,10 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
             director.setText("无");
         }
         creator.setText(mSaleDetails.getCreatorName());
-        creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt() + "") * 1000)));
-        updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt() + "") * 1000)));
+//        creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt() + "") * 1000)));
+        creatorTime.setText(DateTool.getDateTimeFriendly(mSaleDetails.getCreatedAt()));
+//        updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt() + "") * 1000)));
+        updateTime.setText(DateTool.getDateTimeFriendly(mSaleDetails.getUpdatedAt()));
         text_stagename.setText(mSaleDetails.getStageName());
         productBuffer = new StringBuffer();
         if (null != mSaleDetails.getProInfos()) {
@@ -248,17 +251,17 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
                     break;
                 case 4:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status4);
-                    winTime.setText(DateTool.timet(mSaleDetails.getWinTime() + "", "yyyy.MM.dd HH:mm"));
+                    winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mSaleDetails.getWinTime()));
                     sale_wintime.setVisibility(View.VISIBLE);
                     break;
                 case 5:
                     iv_wfstatus.setImageResource(R.drawable.img_task_status_finish);
-                    winTime.setText(DateTool.timet(mSaleDetails.getWinTime() + "", "yyyy.MM.dd HH:mm"));
+                    winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mSaleDetails.getWinTime()));
                     sale_wintime.setVisibility(View.VISIBLE);
                     break;
             }
         } else if (0 == mSaleDetails.wfState && mSaleDetails.stageName.contains("赢单")) {
-            winTime.setText(DateTool.timet(mSaleDetails.getUpdatedAt() + "", "yyyy.MM.dd HH:mm"));
+            winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mSaleDetails.getUpdatedAt()));
             sale_wintime.setVisibility(View.VISIBLE);
         }
         //计算产品总金额

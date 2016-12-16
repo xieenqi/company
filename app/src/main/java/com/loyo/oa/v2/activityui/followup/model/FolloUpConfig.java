@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ISigninNeworFollowUp;
+import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -20,7 +20,7 @@ public class FolloUpConfig {
 
     /* 从网络获取 */
     public static void getFolloUpStage() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).
                 getFollupFilters(new RCallback<ArrayList<FollowFilter>>() {
             @Override
             public void success(ArrayList<FollowFilter> result, Response response) {

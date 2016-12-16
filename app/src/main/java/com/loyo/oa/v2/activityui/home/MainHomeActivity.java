@@ -31,7 +31,7 @@ import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
-import com.loyo.oa.v2.activityui.signinnew.SigninNewDetailsActivity;
+import com.loyo.oa.v2.activityui.signin.SigninDetailsActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
@@ -241,6 +241,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
      * 检查定位权限是否打开
      */
     private void permissionLocation() {
+        //TODO 权限可以完善
         if (PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
         } else {
@@ -333,7 +334,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     break;
                 case 22://拜访的推送
                 case 24://拜访的评论
-                    intent.setClass(MainHomeActivity.this, SigninNewDetailsActivity.class);
+                    intent.setClass(MainHomeActivity.this, SigninDetailsActivity.class);
                     intent.putExtra("id", MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
