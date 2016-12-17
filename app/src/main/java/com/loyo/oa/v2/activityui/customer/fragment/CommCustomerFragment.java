@@ -31,9 +31,9 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -43,8 +43,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
 
 /**
  * 【公海客户】列表
@@ -203,17 +201,17 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         params.put("tagsParams", tagsParams);
         LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
         CustomerService.getDumpedCustomers(params)
-                .subscribe(new DefaultSubscriber<PaginationX<Customer>>() {
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
                     public void onError(Throwable e) {
-                        super.onError(e);
-                        // TODO:
+                        /* 重写父类方法，不调用super */
+                        @LoyoErrorChecker.CheckType
+                        int type = mCustomers.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         listView.onRefreshComplete();
-                        ll_loading.setStatus(LoadingLayout.Error);
                     }
 
                     public void onNext(PaginationX<Customer> customerPaginationX) {
-                        super.onNext(customerPaginationX);
-                        // TODO:
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);

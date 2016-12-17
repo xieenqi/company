@@ -19,7 +19,7 @@ import com.loyo.oa.v2.activityui.customer.model.TagItem;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 
 import org.androidannotations.annotations.AfterViews;
@@ -104,7 +104,7 @@ public class CustomerLabelActivity extends BaseActivity {
             });
         }
         CustomerService.getCustomerTags()
-                .subscribe(new DefaultSubscriber<ArrayList<Tag>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Tag>>() {
                     @Override
                     public void onNext(ArrayList<Tag> tagArrayList) {
                         tags = tagArrayList;

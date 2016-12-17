@@ -18,7 +18,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.service.BroadcastReceiverMgr;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -130,12 +130,11 @@ public class CallPhoneBackActivity extends BaseActivity implements View.OnClickL
     void requestCallBack2() {
         showLoading("");
         CustomerService.cancelCallBack(callLogId)
-                .subscribe(new DefaultSubscriber<String>() {
+                .subscribe(new DefaultLoyoSubscriber<String>() {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
                         cancelLoading();
-                        Toast(e.toString());// TODO:
                         finish();
                     }
 

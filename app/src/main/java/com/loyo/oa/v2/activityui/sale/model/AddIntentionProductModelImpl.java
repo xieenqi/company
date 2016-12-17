@@ -7,7 +7,7 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activityui.sale.contract.AddIntentionProductContract;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
@@ -34,7 +34,7 @@ public class AddIntentionProductModelImpl implements AddIntentionProductContract
     @Override
     public void getProductData() {
         CustomerService.getProducts()
-                .subscribe(new DefaultSubscriber<ArrayList<Product>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Product>>() {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);

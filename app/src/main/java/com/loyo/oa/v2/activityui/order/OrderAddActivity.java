@@ -31,7 +31,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.OrderAddforExtraData;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -269,7 +269,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 104);
         CustomerService.getAddCustomerJur(map)
-                .subscribe(new DefaultSubscriber<ArrayList<ContactLeftExtras>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         mCusList = contactLeftExtrasArrayList;

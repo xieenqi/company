@@ -36,7 +36,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -356,14 +356,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*挑入*/
             case R.id.img_public:
                 CustomerService.pickInCustomer(id)
-                        .subscribe(new DefaultSubscriber<Customer>() {
-                            @Override
-                            public void onError(Throwable e) {
-                                super.onError(e);
-                                // TODO: 挑入失败，提醒
-                                finish();
-                            }
-
+                        .subscribe(new DefaultLoyoSubscriber<Customer>() {
                             @Override
                             public void onNext(Customer customer) {
                                 AppBus.getInstance().post(new MyCustomerListRushEvent());

@@ -5,7 +5,8 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class SaleStageConfig {
     /* 从网络获取 */
     public static void getSaleStage() {
         CustomerService.getSaleStges()
-                .subscribe(new DefaultSubscriber<SaleStage>() {
+                .subscribe(new DefaultLoyoSubscriber<SaleStage>(LoyoErrorChecker.SILENCE) {
                     @Override
                     public void onNext(SaleStage saleStage) {
                         String json = MainApp.gson.toJson(saleStage);

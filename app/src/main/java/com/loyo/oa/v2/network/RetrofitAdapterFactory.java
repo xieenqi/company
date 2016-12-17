@@ -75,8 +75,7 @@ public class RetrofitAdapterFactory {
                     request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
                     request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
                     request.addHeader("LoyoVersionName", Global.getVersionName());
-                    request.addHeader("LoyoVersionCode", "2016120501");
-                    //request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
+                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
                 }
             };
             adapter = new RestAdapter.Builder()
@@ -138,7 +137,8 @@ public class RetrofitAdapterFactory {
                     }
                 } else {
                     if (!subscriber.isUnsubscribed()) {
-                        subscriber.onError(new APIException(response.errcode, response.errmsg));
+                        subscriber.onError(new APIException(response.errcode, response.errmsg,
+                                response.data));
                     }
                     return;
                 }
@@ -162,7 +162,8 @@ public class RetrofitAdapterFactory {
                     }
                 } else {
                     if (!subscriber.isUnsubscribed()) {
-                        subscriber.onError(new APIException(-1000/* TODO: */, "请求出错"/* TODO: */));
+                        subscriber.onError(new APIException(-1000/* TODO: */, "请求出错"/* TODO: */,
+                                response));
                     }
                     return;
                 }

@@ -9,7 +9,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -88,7 +88,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
                 .create(ICustomer.class)
                 .getCustomers(params)
                 .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers())
-                .subscribe(new DefaultSubscriber<PaginationX<Customer>>() {
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);

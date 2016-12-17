@@ -22,7 +22,7 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 
 import java.util.ArrayList;
@@ -122,12 +122,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         }
 
         CustomerService.getCustomerTags()
-                .subscribe(new DefaultSubscriber<ArrayList<Tag>>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Tag>>() {
                     @Override
                     public void onNext(ArrayList<Tag> tagArrayList) {
                         tags = tagArrayList;
@@ -192,7 +187,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
     private void setLabel(){
         showLoading("");
         CustomerService.setCusLabel(mCustomerId, convertNewTags())
-                .subscribe(new DefaultSubscriber<Contact>() {
+                .subscribe(new DefaultLoyoSubscriber<Contact>() {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
@@ -201,7 +196,6 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
 
                     @Override
                     public void onNext(Contact contact) {
-                        super.onNext(contact);
                         cancelLoading();
                         finish();
                     }

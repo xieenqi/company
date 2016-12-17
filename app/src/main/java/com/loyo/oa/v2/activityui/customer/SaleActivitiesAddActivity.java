@@ -20,7 +20,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -191,7 +191,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                     map.put("contactName", contactName);
                 }
                 CustomerService.addSaleactivity(map)
-                        .subscribe(new DefaultSubscriber<SaleActivity>() {
+                        .subscribe(new DefaultLoyoSubscriber<SaleActivity>() {
                             @Override
                             public void onNext(SaleActivity saleActivity) {
                                 app.finishActivity(SaleActivitiesAddActivity.this,

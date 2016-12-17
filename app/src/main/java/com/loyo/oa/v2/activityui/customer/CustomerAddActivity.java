@@ -45,7 +45,8 @@ import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -548,8 +549,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         return;
                     }
                 }*/
-
-                showStatusLoading(false);
                 requestCommitTask();
                 break;
 
@@ -611,7 +610,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
         CustomerService.getAddCustomerJur(map)
-                .subscribe(new DefaultSubscriber<ArrayList<ContactLeftExtras>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
@@ -620,7 +619,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
-                        super.onNext(contactLeftExtrasArrayList);
                         cancelLoading();
                         mCustomerExtraDatas = contactLeftExtrasArrayList;
                         for (ContactLeftExtras customerJur : contactLeftExtrasArrayList) {
@@ -687,6 +685,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 新建客户请求
      */
     public void requestCommitTask() {
+
+        showStatusLoading(false);
+
         HttpAddCustomer positionData = new HttpAddCustomer();
         positionData.loc.addr = customerAddress;
         positionData.loc.loc.add(loPosition);
@@ -734,16 +735,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
 
         CustomerService.addNewCustomer(map)
-                .subscribe(new DefaultSubscriber<Customer>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelStatusLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Customer>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
                     public void onNext(final Customer customer) {
-                        super.onNext(customer);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {

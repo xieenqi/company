@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
@@ -23,7 +22,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -66,15 +65,9 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
     @Override
     public void toPublic(String id) {
         CustomerService.dumpCustomer(id)
-                .subscribe(new DefaultSubscriber<Customer>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
                     @Override
                     public void onNext(Customer customer) {
-                        super.onNext(customer);
                         crolView.toPublicEmbl();
                     }
                 });
@@ -86,7 +79,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
     @Override
     public void delete(String id) {
         CustomerService.deleteCustomer(id)
-                .subscribe(new DefaultSubscriber<Customer>() {
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
@@ -95,7 +88,6 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
 
                     @Override
                     public void onNext(Customer customer) {
-                        super.onNext(customer);
                         crolView.deleteEmbl();
                     }
                 });
@@ -107,13 +99,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
     @Override
     public void getMembersRoot() {
         CustomerService.getMembersRoot()
-                .subscribe(new DefaultSubscriber<MembersRoot>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        crolView.getLoadigLayout().setStatus(LoadingLayout.Error);
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<MembersRoot>(crolView.getLoadigLayout()) {
                     @Override
                     public void onNext(MembersRoot membersRoot) {
                         crolView.getMembersRootEmbl(membersRoot);
@@ -127,7 +113,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
     @Override
     public void getData(String id) {
         CustomerService.getCustomerDetailById(id)
-                .subscribe(new DefaultSubscriber<Customer>() {
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);

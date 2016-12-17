@@ -21,7 +21,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ContactAddforExtraData;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -422,15 +422,9 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 if (mContact == null) {
                         /*新建联系人*/
                     CustomerService.addContact(mCustomer.getId(), maps)
-                            .subscribe(new DefaultSubscriber<Contact>() {
-                                @Override
-                                public void onError(Throwable e) {
-                                    super.onError(e);
-                                }
-
+                            .subscribe(new DefaultLoyoSubscriber<Contact>() {
                                 @Override
                                 public void onNext(Contact contact) {
-                                    super.onNext(contact);
                                     mContact = contact;
                                     sendBack();
                                 }
@@ -438,15 +432,9 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 } else {
                         /*修改联系人*/
                     CustomerService.updateContact(mCustomer.getId(), mContact.getId(), maps)
-                            .subscribe(new DefaultSubscriber<Contact>() {
-                                @Override
-                                public void onError(Throwable e) {
-                                    super.onError(e);
-                                }
-
+                            .subscribe(new DefaultLoyoSubscriber<Contact>() {
                                 @Override
                                 public void onNext(Contact contact) {
-                                    super.onNext(contact);
                                     mContact = contact;
                                     sendBack();
                                 }
@@ -465,15 +453,9 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      */
     private void getContactsFields() {
         CustomerService.getContactsField()
-                .subscribe(new DefaultSubscriber<ArrayList<ContactLeftExtras>>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
-                        super.onNext(contactLeftExtrasArrayList);
                         mContactLeftExtras = contactLeftExtrasArrayList;
                         bindData();
                     }

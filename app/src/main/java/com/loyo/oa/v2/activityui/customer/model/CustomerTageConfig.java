@@ -5,7 +5,8 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class CustomerTageConfig {
     /* 从网络获取 */
     public static void getTage() {
         CustomerService.getCustomerTags()
-                .subscribe(new DefaultSubscriber<ArrayList<Tag>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Tag>>(LoyoErrorChecker.SILENCE) {
                     @Override
                     public void onNext(ArrayList<Tag> tagArrayList) {
                         String json = MainApp.gson.toJson(tagArrayList);

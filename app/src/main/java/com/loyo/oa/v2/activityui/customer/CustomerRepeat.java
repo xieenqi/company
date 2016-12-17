@@ -24,7 +24,7 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 
 import java.util.HashMap;
@@ -147,7 +147,7 @@ public class CustomerRepeat extends BaseActivity implements CustomerRepeatAdapte
         map.put("pageSize", 20);
         map.put("keyWords", name);
         CustomerService.getCustomerDuplicates(map)
-                .subscribe(new DefaultSubscriber<PaginationX<CustomerRepeatList>>() {
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<CustomerRepeatList>>() {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);

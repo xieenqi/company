@@ -23,7 +23,8 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
@@ -33,6 +34,8 @@ import com.loyo.oa.v2.tool.ViewUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.loyo.oa.v2.R.id.listView;
 
 /**
  * 客户详情 【订单】列表
@@ -155,12 +158,15 @@ public class CustomerOrderList extends BaseLoadingActivity implements View.OnCli
         map.put("pageIndex", page);
         map.put("pageSize", 15);
         CustomerService.getCutomerOrder(customerId, map)
-                .subscribe(new DefaultSubscriber<PaginationX<OrderListItem>>() {
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<OrderListItem>>() {
                     @Override
                     public void onError(Throwable e) {
-                        super.onError(e);
+                        /* 重写父类方法，不调用super */
+                        @LoyoErrorChecker.CheckType
+                        int type = listData.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         listView_demands.onRefreshComplete();
-                        ll_loading.setStatus(LoadingLayout.Error);// TODO:
                     }
 
                     @Override

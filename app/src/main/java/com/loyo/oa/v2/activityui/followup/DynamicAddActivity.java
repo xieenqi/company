@@ -45,6 +45,7 @@ import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -53,7 +54,8 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -356,16 +358,10 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
 
         LogUtil.dee("新建跟进:" + MainApp.gson.toJson(map));
         CustomerService.addSaleactivity(map)
-                .subscribe(new DefaultSubscriber<SaleActivity>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        // TODO: HttpErrorCheck.checkCommitEro(error);
-                        cancelStatusLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<SaleActivity>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
                     public void onNext(SaleActivity saleActivity) {
-                        // TODO: HttpErrorCheck.checkCommitSus("新建跟进动态",response);
+                        DialogHelp.successStatusLoad();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {

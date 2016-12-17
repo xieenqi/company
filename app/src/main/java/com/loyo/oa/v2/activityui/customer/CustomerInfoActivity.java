@@ -33,15 +33,16 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -59,8 +60,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
 
 /**
  * 【客户信息】 页面
@@ -150,11 +149,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
         CustomerService.getCustomerDynamic(map)
-                .subscribe(new DefaultSubscriber<ArrayList<CustomerExtraData>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<CustomerExtraData>>(ll_loading) {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        ll_loading.setStatus(LoadingLayout.Error);
                         finish();
                     }
 
@@ -175,7 +173,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
         CustomerService.getAddCustomerJur(map)
-                .subscribe(new DefaultSubscriber<ArrayList<ContactLeftExtras>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         for (ContactLeftExtras customerJur : contactLeftExtrasArrayList) {
@@ -199,11 +197,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      */
     void getCustomer() {
         CustomerService.getCustomerDetailById(mCustomerId)
-                .subscribe(new DefaultSubscriber<Customer>() {
+                .subscribe(new DefaultLoyoSubscriber<Customer>(ll_loading) {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        ll_loading.setStatus(LoadingLayout.Error);
                         finish();
                     }
 
@@ -595,7 +592,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             adrDetailsData.addr = addressDetails;
         }
 
-        showStatusLoading(false);
+
         mLocate.addr = customerAddress;
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", customerName);
@@ -609,17 +606,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         map.put("regional", regional);
 
         LogUtil.d("提交客户信息，发送的数据:" + MainApp.gson.toJson(map));
-        CustomerService.updateCustomer(mCustomer.getId(), map)
-                .subscribe(new DefaultSubscriber<Customer>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        //HttpErrorCheck.checkCommitEro(error);
-                    }
 
+        showStatusLoading(false);
+
+        CustomerService.updateCustomer(mCustomer.getId(), map)
+                .subscribe(new DefaultLoyoSubscriber<Customer>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
                     public void onNext(final Customer customer) {
-                        //HttpErrorCheck.checkCommitSus("更新客户信息", response);
+                        DialogHelp.successStatusLoad();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {

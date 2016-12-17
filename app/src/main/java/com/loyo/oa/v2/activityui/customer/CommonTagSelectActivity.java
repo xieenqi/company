@@ -17,7 +17,7 @@ import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 
 import org.androidannotations.annotations.AfterViews;
@@ -85,7 +85,7 @@ public class CommonTagSelectActivity extends BaseActivity {
     void getData() {
         if (type == SELECT_TYPE_LOSE_REASON) {
             CustomerService.getLoseReasons()
-                    .subscribe(new DefaultSubscriber<ArrayList<CommonTag>>() {
+                    .subscribe(new DefaultLoyoSubscriber<ArrayList<CommonTag>>() {
                         @Override
                         public void onNext(ArrayList<CommonTag> commonTagArrayList) {
                             processData(commonTagArrayList);
@@ -94,7 +94,7 @@ public class CommonTagSelectActivity extends BaseActivity {
 
         } else if (type == SELECT_TYPE_SALE_ACTIVE_ACTION) {//跟进方式
             CustomerService.getSaleactivitytypes()
-                    .subscribe(new DefaultSubscriber<ArrayList<CommonTag>>() {
+                    .subscribe(new DefaultLoyoSubscriber<ArrayList<CommonTag>>() {
                         @Override
                         public void onNext(ArrayList<CommonTag> commonTagArrayList) {
                             processData(commonTagArrayList);

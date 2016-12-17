@@ -9,7 +9,8 @@ import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
@@ -44,7 +45,7 @@ public class SigninModelImpl implements SigninContract.Model {
         HashMap<String, Object> map = new HashMap<>();
         map.put("key", "need_pictures_switcher");
         CustomerService.getSigninUploadPhotoConfig(map)
-                .subscribe(new DefaultSubscriber<SigninPictures>() {
+                .subscribe(new DefaultLoyoSubscriber<SigninPictures>(LoyoErrorChecker.SILENCE) {
                     @Override
                     public void onNext(SigninPictures signinPictures) {
                         presenter.isPhoto(signinPictures);
@@ -55,17 +56,11 @@ public class SigninModelImpl implements SigninContract.Model {
     @Override
     public void creatSigninSend(HashMap<String, Object> map) {
         CustomerService.addSignIn(map)
-                .subscribe(new DefaultSubscriber<LegWork>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        DialogHelp.cancelStatusLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<LegWork>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
                     public void onNext(LegWork legWork) {
                         presenter.creatSuccess(legWork);
-                        DialogHelp.cancelStatusLoading();
+                        DialogHelp.successStatusLoad();
                     }
                 });
     }

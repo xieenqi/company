@@ -37,7 +37,8 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -216,16 +217,8 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                 LocationUtilGD.sotpLocation();
                 position = String.valueOf(longitude).concat(",").concat(String.valueOf(latitude));
                 CustomerService.getNearbyTeamCustomerCount(position)
-                        .subscribe(new DefaultSubscriber<NearCount>() {
-
-                            public void onError(Throwable e) {
-                                super.onError(e);
-                                // TODO:
-                            }
-
+                        .subscribe(new DefaultLoyoSubscriber<NearCount>() {
                             public void onNext(NearCount count) {
-                                super.onNext(count);
-                                // TODO:
                                 nearCount = count;
                                 if (null != nearCount) {
                                     nearTv.setText("发现" + nearCount.total + "个附近客户");
@@ -266,17 +259,17 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
 
         CustomerService.getTeamCustomers(params)
-                .subscribe(new DefaultSubscriber<PaginationX<Customer>>() {
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
                     public void onError(Throwable e) {
-                        super.onError(e);
-                        // TODO:
+                        /* 重写父类方法，不调用super */
+                        @LoyoErrorChecker.CheckType
+                        int type = mCustomers.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         listView.onRefreshComplete();
-                        ll_loading.setStatus(LoadingLayout.Error);
                     }
 
                     public void onNext(PaginationX<Customer> customerPaginationX) {
-                        super.onNext(customerPaginationX);
-                        // TODO:
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);

@@ -9,7 +9,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -69,10 +69,11 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
         params.put("pageSize", 15);
         LogUtil.d("我的客户查询参数：" + MainApp.gson.toJson(params));
         CustomerService.getMyCustomers(params)
-                .subscribe(new DefaultSubscriber<PaginationX<Customer>>() {
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>(vControl.getLoadingLayout()) {
                     @Override
                     public void onError(Throwable e) {
-                        vControl.getLoadingLayout().setStatus(LoadingLayout.Error); // TODO: 2016/12/16
+                        super.onError(e);
+                        vControl.getDataComplete();
                     }
 
                     @Override

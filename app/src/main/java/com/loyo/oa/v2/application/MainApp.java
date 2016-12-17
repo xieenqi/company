@@ -32,7 +32,8 @@ import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.GlideManager;
@@ -172,7 +173,7 @@ public class MainApp extends Application {
     void loadIndustryCodeTable() {
 
         CustomerService.getIndustry()
-                .subscribe(new DefaultSubscriber<ArrayList<Industry>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Industry>>(LoyoErrorChecker.SILENCE) {
                     public void onNext(ArrayList<Industry> industryArrayList) {
                         mIndustries = industryArrayList;
                     }

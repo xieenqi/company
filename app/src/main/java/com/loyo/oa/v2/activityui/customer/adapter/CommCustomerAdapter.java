@@ -14,17 +14,15 @@ import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * 【公海客户】适配器
@@ -112,10 +110,9 @@ public class CommCustomerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {//挑入公海客户
                 CustomerService.pickInCustomer(customer.getId())
-                        .subscribe(new DefaultSubscriber<Customer>() {
+                        .subscribe(new DefaultLoyoSubscriber<Customer>() {
                             @Override
                             public void onNext(Customer customer) {
-                                super.onNext(customer);
                                 mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
                             }
                         });

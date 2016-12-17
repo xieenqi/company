@@ -20,7 +20,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ContactViewGroup;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.voip.VoIPCallActivity;
@@ -91,15 +91,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      */
     private void getContactsFields() {
         CustomerService.getContactsField()
-                .subscribe(new DefaultSubscriber<ArrayList<ContactLeftExtras>>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(ll_loading) {
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
-                        super.onNext(contactLeftExtrasArrayList);
                         leftExtrases = contactLeftExtrasArrayList;
                         getData();
                     }
@@ -107,20 +101,13 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     }
 
     /**
-     * 获取客户详情
+     * 获取客户联系人列表
      */
     private void getData() {
         CustomerService.getCustomerContacts(customerId)
-                .subscribe(new DefaultSubscriber<Customer>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        ll_loading.setStatus(LoadingLayout.Empty);
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Customer>(ll_loading) {
                     @Override
                     public void onNext(Customer customer) {
-                        super.onNext(customer);
                         customerContact = customer;
                         initData();
                     }
@@ -224,15 +211,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         map.put("mobile", callNum);
         LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
         CustomerService.requestCallBack(map)
-                .subscribe(new DefaultSubscriber<CallBackCallid>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<CallBackCallid>() {
                     @Override
                     public void onNext(CallBackCallid callBackCallid) {
-                        super.onNext(callBackCallid);
                         try{
                             switch (callBackCallid.errcode){
                                 case 0:
@@ -310,15 +291,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     @Override
     public void onDel(final Contact contact) {
         CustomerService.deleteContact(customerContact.getId(), contact.getId())
-                .subscribe(new DefaultSubscriber<Contact>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Contact>() {
                     @Override
                     public void onNext(Contact contact1) {
-                        super.onNext(contact1);
+
                         for (int i = 0; i < customerContact.contacts.size(); i++) {
                             Contact newContact = customerContact.contacts.get(i);
                             if (newContact.equals(contact)) {
@@ -344,12 +320,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     @Override
     public void onSetDefault(final Contact contact) {
         CustomerService.setDefaultContact(customerContact.getId(), contact.getId())
-                .subscribe(new DefaultSubscriber<Contact>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Contact>() {
                     @Override
                     public void onNext(Contact contact1) {
                         Intent intent = new Intent();

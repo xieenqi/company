@@ -37,7 +37,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -206,7 +206,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         HashMap<String,Object> map = new HashMap<>();
         map.put("bizType",100);
         CustomerService.getAddCustomerJur(map)
-                .subscribe(new DefaultSubscriber<ArrayList<ContactLeftExtras>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         mCusList = contactLeftExtrasArrayList;
                         for (ContactLeftExtras customerJur : contactLeftExtrasArrayList) {
@@ -356,12 +356,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         map.put("salesleadId", mCluesales.id);
         LogUtil.dee("转移客户发送数据:"+MainApp.gson.toJson(map));
         CustomerService.addNewCustomer(map)
-                .subscribe(new DefaultSubscriber<Customer>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
                     @Override
                     public void onNext(Customer customer) {
                         try {

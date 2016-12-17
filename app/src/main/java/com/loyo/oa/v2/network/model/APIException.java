@@ -7,10 +7,12 @@ package com.loyo.oa.v2.network.model;
 public class APIException extends Exception {
     public int code;
     public String message;
+    public Object response;
 
-    public APIException(int code, String message) {
+    public APIException(int code, String message, Object response) {
         this.code = code;
         this.message = message;
+        this.response = response;
     }
 
     @Override

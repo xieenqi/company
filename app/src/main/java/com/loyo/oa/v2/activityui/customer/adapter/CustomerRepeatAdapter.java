@@ -15,7 +15,7 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.network.DefaultSubscriber;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 
 /**
  * 【客户查重】适配器
@@ -101,7 +101,7 @@ public class CustomerRepeatAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {//挑入公海客户
                 CustomerService.pickInCustomer(customerRepeatList.getId())
-                        .subscribe(new DefaultSubscriber<Customer>() {
+                        .subscribe(new DefaultLoyoSubscriber<Customer>() {
                             public void onNext(Customer customer) {
                                 pickInOnCallBack.pickEmbl();
                             }
