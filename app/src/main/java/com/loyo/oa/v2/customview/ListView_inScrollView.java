@@ -9,6 +9,7 @@ public class ListView_inScrollView extends ListView {
 	public ListView_inScrollView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
+		this.setOverScrollMode(OVER_SCROLL_NEVER);
 	}
 
 	@Override
