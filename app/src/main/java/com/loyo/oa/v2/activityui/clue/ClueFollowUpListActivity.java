@@ -57,12 +57,9 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private TextView voiceView;
     private PullToRefreshListView listView;
     private ViewGroup layout_add;
-    private Customer mCustomer;
     private boolean isMyUser;
     private boolean isPullOrDown;
-    private boolean isChanged;
     private String id;
-    private Customer customer;
 
     private String name, responsorName;
     private String clueId;
@@ -197,11 +194,6 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
 
     @Override
     public void onBackPressed() {
-        if (isChanged) {
-            Intent intent = new Intent();
-            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, FinalVariables.REQUEST_CREATE_TASK, intent);
-            return;
-        }
         super.onBackPressed();
     }
 
