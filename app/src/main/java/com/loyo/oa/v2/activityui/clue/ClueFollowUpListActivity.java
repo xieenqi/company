@@ -189,7 +189,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     @Override
@@ -355,7 +355,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         }
         bindData();
         ll_loading.setStatus(LoadingLayout.Success);
-        if (isPullOrDown && listModel.size() == 0)
+        if (listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
     }
 

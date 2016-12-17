@@ -70,7 +70,7 @@ public class MyDisscussPControl implements MyDiscussPersenter {
 
                     @Override
                     public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
+                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout(),pageIndex==1?true:false);
                         super.failure(error);
                         vControl.hideProgress();
                     }

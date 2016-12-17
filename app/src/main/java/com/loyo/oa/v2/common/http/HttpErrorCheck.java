@@ -183,7 +183,7 @@ public class HttpErrorCheck {
             e.printStackTrace();
         } catch (NullPointerException e) {
             LogUtil.d("Body空err:" + error.getUrl());
-            errorStatus(loadingLayout, "没有获取到数据", isLoading);
+            errorStatus(loadingLayout, "无网 或 没有获取到数据", isLoading);
             e.printStackTrace();
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
