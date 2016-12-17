@@ -185,7 +185,7 @@ public class CustomerOrderList extends BaseLoadingActivity implements View.OnCli
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
+                        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
                         listView_demands.onRefreshComplete();
                         super.failure(error);
                     }

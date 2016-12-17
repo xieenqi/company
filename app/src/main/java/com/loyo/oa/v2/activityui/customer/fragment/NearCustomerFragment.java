@@ -102,9 +102,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
-//        showLoading("");
         onPullDownToRefresh(listView);
-//        DialogHelp.cancelLoading();
     }
 
 
@@ -178,13 +176,13 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
                         ll_loading.setStatus(LoadingLayout.Success);
-                        if(!isPullUp&&mCustomers.size()==0)
+                        if (!isPullUp && mCustomers.size() == 0)
                             ll_loading.setStatus(LoadingLayout.Empty);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error,ll_loading);
+                        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
                         listView.onRefreshComplete();
                     }
                 }

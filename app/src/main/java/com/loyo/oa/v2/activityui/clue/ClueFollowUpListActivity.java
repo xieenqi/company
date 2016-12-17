@@ -57,12 +57,9 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private TextView voiceView;
     private PullToRefreshListView listView;
     private ViewGroup layout_add;
-    private Customer mCustomer;
     private boolean isMyUser;
     private boolean isPullOrDown;
-    private boolean isChanged;
     private String id;
-    private Customer customer;
 
     private String name, responsorName;
     private String clueId;
@@ -192,16 +189,11 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     @Override
     public void onBackPressed() {
-        if (isChanged) {
-            Intent intent = new Intent();
-            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, FinalVariables.REQUEST_CREATE_TASK, intent);
-            return;
-        }
         super.onBackPressed();
     }
 
@@ -363,7 +355,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         }
         bindData();
         ll_loading.setStatus(LoadingLayout.Success);
-        if (isPullOrDown && listModel.size() == 0)
+        if (listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
     }
 

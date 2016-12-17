@@ -93,7 +93,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 获取最新 左侧动态字段
      */
     private void getContactsFields() {
-//        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getContactsField(new RCallback<ArrayList<ContactLeftExtras>>() {
                     @Override

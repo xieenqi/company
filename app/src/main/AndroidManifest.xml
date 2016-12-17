@@ -693,15 +693,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".activityui.clue.ClueDynamicAddActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activityui.clue.ClueDynamicManagerActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <!-- 工单 -->
         <activity
             android:name=".activityui.worksheet.OrderWorksheetListActivity"
