@@ -306,7 +306,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
+                        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
                         listView.onRefreshComplete();
                     }
                 }
@@ -350,7 +350,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
      */
     @Override
     public void intentAutoInsert(PopupWindow popupWindow) {
-        if(!Utils.isNetworkAvailable(getActivity())){
+        if (!Utils.isNetworkAvailable(getActivity())) {
             Toast("请检查您的网络连接");
             return;
         }
@@ -367,7 +367,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
      */
     @Override
     public void intentHandInsert(PopupWindow popupWindow) {
-        if(!Utils.isNetworkAvailable(getActivity())){
+        if (!Utils.isNetworkAvailable(getActivity())) {
             Toast("请检查您的网络连接");
             return;
         }

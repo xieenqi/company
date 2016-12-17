@@ -169,10 +169,8 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      * 获取列表
      */
     private void getData() {
-//        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("startAt", "2014-01-01");
-//        map.put("endAt", DateTool.getCurrentDayEndMillis(app.df5));
         map.put("endAt", DateFormatSet.dateSdf.format(com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis()));
         map.put("customerId", mCustomer.getId());
         map.put("pageIndex", taskPaginationX.getPageIndex());
@@ -183,15 +181,12 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             @Override
             public void onCompleted() {
                 lv.onRefreshComplete();
-//                ll_loading.setStatus(LoadingLayout.Success);
-//                cancelLoading();
             }
 
             @Override
             public void onError(final Throwable e) {
                 lv.onRefreshComplete();
                 ll_loading.setStatus(LoadingLayout.Success);
-//                cancelLoading();
             }
 
             @Override

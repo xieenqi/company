@@ -25,13 +25,13 @@ public class SigninListFragPresenterImpl implements SigninListFragPresenter {
 
     private CustomerSigninNewListView crolView;
 
-    public SigninListFragPresenterImpl(CustomerSigninNewListView crolView){
+    public SigninListFragPresenterImpl(CustomerSigninNewListView crolView) {
         this.crolView = crolView;
     }
 
     /**
      * 删除评论
-     * */
+     */
     @Override
     public void deleteComment(String id) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
@@ -51,9 +51,9 @@ public class SigninListFragPresenterImpl implements SigninListFragPresenter {
 
     /**
      * 发送评论
-     * */
+     */
     @Override
-    public void requestComment(HashMap<String,Object> map) {
+    public void requestComment(HashMap<String, Object> map) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
@@ -71,19 +71,19 @@ public class SigninListFragPresenterImpl implements SigninListFragPresenter {
 
     /**
      * 获取拜访列表数据
-     * */
+     */
     @Override
-    public void getListData(HashMap<String, Object> map) {
+    public void getListData(HashMap<String, Object> map, final int page) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).getCustomerSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewGroupModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<SigninNewGroupModel>> paginationX, Response response) {
-                HttpErrorCheck.checkResponse("客户下拜访", response,crolView.getLoading());
+                HttpErrorCheck.checkResponse("客户下拜访", response);
                 crolView.getListDataSuccesseEmbl(paginationX);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error,crolView.getLoading());
+                HttpErrorCheck.checkError(error, crolView.getLoading(), page == 1 ? true : false);
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }
