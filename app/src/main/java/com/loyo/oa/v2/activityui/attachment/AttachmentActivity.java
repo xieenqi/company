@@ -133,7 +133,7 @@ public class AttachmentActivity extends BaseActivity {
 
         Attachment.Sort(mListAttachment);
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList, bizType, uuid, isOver);
+            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList,mListViewAttachment, bizType, uuid, isOver);
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
                 @Override
                 public void afterDelete(final Attachment attachment) {

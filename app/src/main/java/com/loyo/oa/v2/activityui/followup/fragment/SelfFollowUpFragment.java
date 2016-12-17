@@ -279,7 +279,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.d("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map,mPagination.getPageIndex());
     }
 
     /**

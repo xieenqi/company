@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -197,6 +198,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             public void success(final WfInstance wfInstance_current, final Response response) {
                 HttpErrorCheck.checkResponse("审批详情返回的数据：", response);
                 mWfInstance = wfInstance_current;
+                Log.i("MSG_ATTACHMENT","date"+mWfInstance.attachments);
                 if (null != wfInstance_current && null != wfInstance_current.workflowNodes) {
                     lstData_WfNodes.clear();
                     lstData_WfNodes.addAll(wfInstance_current.workflowNodes);
@@ -872,7 +874,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 if (data.getBooleanExtra("edit", false)) {
                     mBundle = new Bundle();
                     mBundle.putSerializable("data", mWfInstance);
-                    app.startActivityForResult(WfinstanceInfoActivity.this, WfInEditActivity.class, MainApp.ENTER_TYPE_RIGHT, 0, mBundle);
+                    app.startActivityForResult(WfinstanceInfoActivity.this, WfInEditActivity.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, mBundle);
                     isUpdate = true;
                 }
                 //选择删除回调
@@ -886,11 +888,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 if (data == null || data.getExtras() == null) {
                     return;
                 }
-                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                mWfInstance.attachments = attachments;
-                if (null != attachments) {
-                    tv_attachment_count.setText("附件" + "（" + attachments.size() + "）");
+                int fileNum=data.getIntExtra("attachFileNum",0);
+                //这里判断!0才设置,因为back按键返回,是没有的,也就不需要设置。
+                if(0!=fileNum){
+                    tv_attachment_count.setText("附件" + "（" + fileNum + "）");
+                    //更新存储的附件数量,避免跳转页面,携带过去,参数是错误的
+                    mWfInstance.bizExtData.setAttachmentCount(fileNum);
                 }
+
                 break;
 
             default:

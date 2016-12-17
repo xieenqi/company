@@ -76,7 +76,7 @@ public class ClueFollowUpListPresenterImpl implements ClueFollowUpListPresenter 
      * 获取列表数据
      */
     @Override
-    public void getListData(HashMap<String, Object> map) {
+    public void getListData(HashMap<String, Object> map, final int page) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).followUp(map, new RCallback<PaginationX<ClueFollowGroupModel>>() {
             @Override
             public void success(PaginationX<ClueFollowGroupModel> paginationX, Response response) {
@@ -87,7 +87,7 @@ public class ClueFollowUpListPresenterImpl implements ClueFollowUpListPresenter 
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error,crolView.getLoading());
+                HttpErrorCheck.checkError(error, crolView.getLoading(), page == 1 ? true : false);
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }

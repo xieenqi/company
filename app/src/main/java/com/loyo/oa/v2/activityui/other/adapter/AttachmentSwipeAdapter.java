@@ -271,7 +271,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                             sweetAlertDialog.dismiss();
                             listView.closeOpenedItems();
                         }
-                    }, "提示", "是否删除附件?");
+                    }, "提示", "附件删除后不能恢复，你确定要删除吗？");
 
 /*                    final GeneralPopView generalPopView = new GeneralPopView(mContext, true);
                     generalPopView.show();

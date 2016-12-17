@@ -76,7 +76,7 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
      * 获取列表数据
      */
     @Override
-    public void getListData(HashMap<String, Object> map) {
+    public void getListData(HashMap<String, Object> map, final int page) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).followUp(map, new RCallback<BaseBeanT<PaginationX<FollowUpListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<FollowUpListModel>> paginationX, Response response) {
@@ -86,7 +86,7 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, crolView.getLoadingLayout());
+                HttpErrorCheck.checkError(error, crolView.getLoadingLayout(), page == 1 ? true : false);
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }

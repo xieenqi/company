@@ -9,11 +9,11 @@ public enum FilterByTime {
     CREATE("创建时间", "createdAt"),
     FOLLOW_RECYCLE("无跟进丢公海时间", "activityRecycleAt"),
     ORDER_RECYCLE("无订单丢公海时间", "orderRecycleAt"),
-    RECYCLED_AT("按丢公海时间", "recycledAt")
-    ;
+    RECYCLED_AT("按丢公海时间", "recycledAt");
 
     public String key;
     public String value;
+
     FilterByTime(String value, String key) {
         this.key = key;
         this.value = value;
@@ -22,6 +22,7 @@ public enum FilterByTime {
     public String getKey() {
         return key;
     }
+
     public String getValue() {
         return value;
     }

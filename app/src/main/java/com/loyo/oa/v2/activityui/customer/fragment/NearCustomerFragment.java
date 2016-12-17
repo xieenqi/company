@@ -21,6 +21,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
@@ -94,9 +95,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
-//        showLoading("");
         onPullDownToRefresh(listView);
-//        DialogHelp.cancelLoading();
     }
 
 
@@ -151,15 +150,15 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                 .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers())
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
                     public void onError(Throwable e) {
-                        super.onError(e);
-                        // TODO:
+                        /* 重写父类方法，不调用super */
+                        @LoyoErrorChecker.CheckType
+                        int type = mCustomers.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         listView.onRefreshComplete();
-                        ll_loading.setStatus(LoadingLayout.Error);
                     }
 
                     public void onNext(PaginationX<Customer> customerPaginationX) {
-                        super.onNext(customerPaginationX);
-                        // TODO:
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);
@@ -180,6 +179,9 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                         }
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        if (!isPullUp && mCustomers.size() == 0)
+                            ll_loading.setStatus(LoadingLayout.Empty);
                     }
                 });
     }

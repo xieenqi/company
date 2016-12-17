@@ -10,6 +10,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -72,7 +73,11 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>(vControl.getLoadingLayout()) {
                     @Override
                     public void onError(Throwable e) {
-                        super.onError(e);
+                        /* 重写父类方法，不调用super */
+                        @LoyoErrorChecker.CheckType
+                        int type = mCustomers.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        LoyoErrorChecker.checkLoyoError(e, type, vControl.getLoadingLayout());
                         vControl.getDataComplete();
                     }
 
@@ -98,6 +103,7 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
                         vControl.bindCustomerData(mCustomers);
                     }
                 });
+
     }
 
     /**
@@ -136,7 +142,7 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
             @Override
             public void failure(RetrofitError error) {
                 vControl.getDataComplete();
-                HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
+                HttpErrorCheck.checkError(error, vControl.getLoadingLayout(), pageCus == 1 ? true : false);
             }
         });
     }
