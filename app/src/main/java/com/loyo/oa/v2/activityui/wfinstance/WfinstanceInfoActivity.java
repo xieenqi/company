@@ -5,19 +5,19 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -61,7 +61,6 @@ import org.androidannotations.annotations.ViewById;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -110,7 +109,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_bottom, layout_wfinstance_content;
     @ViewById
-    ImageView img_wfinstance_status;
+    TextView tv_status;
     @ViewById
     LinearLayout ll_sale;
     @ViewById
@@ -199,6 +198,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             public void success(final WfInstance wfInstance_current, final Response response) {
                 HttpErrorCheck.checkResponse("审批详情返回的数据：", response);
                 mWfInstance = wfInstance_current;
+                Log.i("MSG_ATTACHMENT","date"+mWfInstance.attachments);
                 if (null != wfInstance_current && null != wfInstance_current.workflowNodes) {
                     lstData_WfNodes.clear();
                     lstData_WfNodes.addAll(wfInstance_current.workflowNodes);
@@ -259,6 +259,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         SaleDetails chanceData = wfData.chance;
         saleId = chanceData.id;
         ll_sale.setVisibility(View.VISIBLE);
+        layout_wfinstance_content.setVisibility(View.GONE);
         ll_sale.setOnTouchListener(Global.GetTouch());
         tv_sale.setText(chanceData.name);
         List<String> wfList = new ArrayList<>();
@@ -287,6 +288,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             tv_key.setText(text);
             layout_wfinstance_content.addView(view_value);
         }
+        layout_wfinstance_content.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -317,7 +319,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             ll_order_content.addView(view_value);
         }
         tv_product.setText(order.proName);
-        tv_plan_value.setText("¥" + order.backMoney + "(" + order.ratePayment + "%)");
+        tv_plan_value.setText("¥" + order.backMoney + "（" + order.ratePayment + "%)");
         AttachmentUUId = order.attachmentUUId;
         AttachmentCount = order.attachmentCount;
     }
@@ -453,7 +455,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 layout_memo.setVisibility(View.GONE);
             }
         }
-        tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + ")");
+        tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + "）");
         tv_projectName.setText(null == mWfInstance.ProjectInfo || TextUtils.isEmpty(mWfInstance.ProjectInfo.title) ? "无" : mWfInstance.ProjectInfo.title);
         if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode
                 || 500 == mWfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件  订单审批  回款审批
@@ -463,19 +465,24 @@ public class WfinstanceInfoActivity extends BaseActivity {
         switch (mWfInstance.status) {
 
             case WfInstance.STATUS_NEW:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status1);
+                tv_status.setText("待审批");
+                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_blue);
                 break;
             case WfInstance.STATUS_PROCESSING:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status2);
+                tv_status.setText("审批中");
+                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_purple);
                 break;
             case WfInstance.STATUS_ABORT:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status3);
+                tv_status.setText("未通过");
+                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_red);
                 break;
             case WfInstance.STATUS_APPROVED:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4);
+                tv_status.setText("已通过");
+                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_green);
                 break;
             case WfInstance.STATUS_FINISHED:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4); //状态4，5都归类为 已通过
+                tv_status.setText("已通过");
+                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_green); //状态4，5都归类为 已通过
                 break;
             default:
                 break;
@@ -511,8 +518,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     //tv_value.setEnabled(false);
                     //tv_value.setText(wfinstanceInfoValue(jsonObject.get(field.getId())));
                     TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
-                    tv_key.setText(field.getName() + ": " + wfinstanceInfoValue(jsonObject.get(field.getId())));
+                    tv_key.setText(field.getName() + "：" + wfinstanceInfoValue(jsonObject.get(field.getId())));
                     layout_wfinstance_content.addView(view_value);
+                    layout_wfinstance_content.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -602,8 +610,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
             BigDecimal bigDecimal = new BigDecimal(obj + "");
             return bigDecimal.doubleValue() + "";
         } else {
+            //判断是时间,就转换成友好的格式现实
+            Long stamp = DateTool.getMinuteStamp(obj + "");
+            if(0!=stamp){
+                return  DateTool.getDateTimeFriendly(stamp/1000);
+            }
             return obj + "";
         }
+
     }
 
     private String getWfNodesTitle() {
@@ -617,7 +631,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     actives++;
                 }
             }
-            builder.append("(" + actives + "/" + mWfInstance.workflowNodes.size() + ")");
+            builder.append("（" + actives + "/" + mWfInstance.workflowNodes.size() + "）");
         } else {
             builder.append("(0/0)");
         }
@@ -646,7 +660,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("comment", comment);
         map.put("type", type);
-        LogUtil.dll("请求内容:" + MainApp.gson.toJson(map));
+        LogUtil.dll("请求内容：" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(mWfInstance.getId(), map, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance_current, final Response response) {
@@ -860,7 +874,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 if (data.getBooleanExtra("edit", false)) {
                     mBundle = new Bundle();
                     mBundle.putSerializable("data", mWfInstance);
-                    app.startActivityForResult(WfinstanceInfoActivity.this, WfInEditActivity.class, MainApp.ENTER_TYPE_RIGHT, 0, mBundle);
+                    app.startActivityForResult(WfinstanceInfoActivity.this, WfInEditActivity.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, mBundle);
                     isUpdate = true;
                 }
                 //选择删除回调
@@ -874,11 +888,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 if (data == null || data.getExtras() == null) {
                     return;
                 }
-                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                mWfInstance.attachments = attachments;
-                if (null != attachments) {
-                    tv_attachment_count.setText("附件 " + "(" + attachments.size() + ")");
+                int fileNum=data.getIntExtra("attachFileNum",0);
+                //这里判断!0才设置,因为back按键返回,是没有的,也就不需要设置。
+                if(0!=fileNum){
+                    tv_attachment_count.setText("附件" + "（" + fileNum + "）");
+                    //更新存储的附件数量,避免跳转页面,携带过去,参数是错误的
+                    mWfInstance.bizExtData.setAttachmentCount(fileNum);
                 }
+
                 break;
 
             default:
