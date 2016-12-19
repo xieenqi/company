@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.customer;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.MyContactInfoListAdapter;
 import com.loyo.oa.v2.activityui.customer.event.ContactMaillistRushEvent;
@@ -35,6 +38,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MyContactMailList extends BaseActivity implements View.OnClickListener {
 
+    private static final int CONTACT_REQUEST=0x1; //通讯录权限申请
     private ContactInfoUtil contactInfoUtil;
     private List<MyContactInfo> contactInfoList;
 
@@ -54,7 +58,27 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myphonemaillist);
-        initUI();
+        if(PermissionTool.requestPermission(this, new String[]{Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_CONTACTS},"通讯录被禁用",CONTACT_REQUEST)){
+            initUI();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(requestCode==CONTACT_REQUEST){
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                    initUI();
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了读写通讯录的权限，无法完成操作！");
+                    finish();
+                }
+            });
+        }
     }
 
     /**
@@ -62,28 +86,30 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
      */
     private void initUI() {
 
-        if (PackageManager.PERMISSION_GRANTED ==
-                getPackageManager().checkPermission("android.permission.READ_CONTACTS", "com.loyo.oa.v2")
-                && PackageManager.PERMISSION_GRANTED ==
-                getPackageManager().checkPermission("android.permission.WRITE_CONTACTS", "com.loyo.oa.v2")) {
-        } else {
-            final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
-            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    sDialog.sweetAlertDialog.dismiss();
-                    finish();
-                }
-            }, new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    sDialog.sweetAlertDialog.dismiss();
-                    Utils.doSeting(MyContactMailList.this);
-                    finish();
-                }
-            },"提示","需要使用通讯录读写权限\n请在”设置”>“应用”>“权限”中配置权限");
-            return;
-        }
+//        if (PackageManager.PERMISSION_GRANTED ==
+//                getPackageManager().checkPermission("android.permission.READ_CONTACTS", "com.loyo.oa.v2")
+//                && PackageManager.PERMISSION_GRANTED ==
+//                getPackageManager().checkPermission("android.permission.WRITE_CONTACTS", "com.loyo.oa.v2")) {
+//        } else {
+//            final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
+//            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+//                @Override
+//                public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                    sDialog.sweetAlertDialog.dismiss();
+//                    finish();
+//                }
+//            }, new SweetAlertDialog.OnSweetClickListener() {
+//                @Override
+//                public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                    sDialog.sweetAlertDialog.dismiss();
+//                    Utils.doSeting(MyContactMailList.this);
+//                    finish();
+//                }
+//            },"提示","需要使用通讯录读写权限\n请在”设置”>“应用”>“权限”中配置权限");
+//            return;
+//        }
+
+
 
         pageForm = getIntent().getIntExtra(ExtraAndResult.EXTRA_NAME,0);
         isEdit   = getIntent().getBooleanExtra(ExtraAndResult.EXTRA_OBJ,false);
