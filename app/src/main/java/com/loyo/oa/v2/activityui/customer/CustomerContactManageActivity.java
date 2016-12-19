@@ -19,16 +19,11 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.voip.VoIPCallActivity;
 
@@ -40,16 +35,6 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.client.Response;
-import retrofit.http.HEAD;
-
-<<<<<<<HEAD
-        =======
-        >>>>>>>develop
-        <<<<<<<HEAD
-        =======
-        >>>>>>>develop
 
 /**
  * com.loyo.oa.v2.activity
@@ -272,7 +257,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         map.put("contactId", contactId);
         map.put("type", callType);
         map.put("mobile", callNum);
-<<<<<<< HEAD
         LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
         CustomerService.requestCallBack(map)
                 .subscribe(new DefaultLoyoSubscriber<CallBackCallid>() {
@@ -280,16 +264,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     public void onNext(CallBackCallid callBackCallid) {
                         try{
                             switch (callBackCallid.errcode){
-=======
-        LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).requestCallBack(map,
-                new RCallback<CallBackCallid>() {
-                    @Override
-                    public void success(final CallBackCallid callBackCallid, final Response response) {
-                        HttpErrorCheck.checkResponse("请求回拨", response);
-                        try {
-                            switch (callBackCallid.errcode) {
->>>>>>> develop
                                 case 0:
                                     Bundle mBundle = new Bundle();
                                     mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
@@ -321,11 +295,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     }
                 });
     }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> develop
 
     /**
      * 拨打商务电话回调
@@ -400,12 +369,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         CustomerService.setDefaultContact(customerContact.getId(), contact.getId())
                 .subscribe(new DefaultLoyoSubscriber<Contact>() {
                     @Override
-<<<<<<< HEAD
                     public void onNext(Contact contact1) {
-=======
-                    public void success(final Contact _contact, final Response response) {
-                        HttpErrorCheck.checkResponse("设置默认联系人", response);
->>>>>>> develop
                         Intent intent = new Intent();
                         CustomerContactManageActivity.this.setResult(Activity.RESULT_OK, intent);//回调刷新界面
 
