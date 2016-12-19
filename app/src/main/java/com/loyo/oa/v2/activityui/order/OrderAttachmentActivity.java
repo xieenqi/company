@@ -92,13 +92,15 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
         if (null != mIntent) {
             mUserList = (ArrayList<User>) mIntent.getSerializableExtra("users");
             bizType = mIntent.getIntExtra("bizType", 0);
-            isOver = mIntent.getBooleanExtra("isOver", false);
-            isAdd = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, true);
+            isOver = mIntent.getBooleanExtra("isOver", false);//也就是附件能不能删除
+            isAdd = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, true);//附件能不能添加
             if (null != mIntent.getStringExtra("uuid") && mIntent.getStringExtra("uuid").length() > 5) {
                 uuid = mIntent.getStringExtra("uuid");
                 isPic = true;
             }
             isCreat = bizType == 0 ? false : true;//biztype有值就是要创建上传附件的
+            Log.i("Attachments", "getPageData: isPic:"+isPic+"isCreat:"+(!isCreat)+",isAdd:"+isAdd);
+
         }
 
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
@@ -111,11 +113,14 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
         tv_upload.setOnClickListener(this);
         img_title_left.setOnClickListener(this);
         if (!isAdd) {
-            // tv_upload.setVisibility(View.GONE);
+             tv_upload.setVisibility(View.GONE);//原来是注释掉的，但是，不知道为什么要注释。如果注释了，会导致任何状态的附件，都可以上传
         }
 
         if (isPic && !isCreat) {
+            Log.i("Attachments", "getPageData: uuid:"+uuid);
+
             getPageData();
+
         } else if (isCreat) {//上传附件就取消loading
             ll_loading.setStatus(LoadingLayout.Success);
         }
@@ -162,6 +167,7 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
      * 获取附件列表信息
      */
     void getAttachments() {
+        Log.i("Attachments", "getAttachments: uuid:"+uuid);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {

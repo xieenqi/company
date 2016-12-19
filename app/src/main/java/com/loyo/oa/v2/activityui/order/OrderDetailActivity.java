@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -234,7 +235,15 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             case R.id.ll_enclosure://附件
                 mBundle = new Bundle();
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
-                mBundle.putBoolean("isOver", true);
+                Log.i("Attachments", "onClick: mData.status:"+mData.status);
+                if(2==mData.status){
+                    //订单没有通过,可以编辑附件
+                    mBundle.putBoolean("isOver", false);
+                    mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
+                }else{
+                    mBundle.putBoolean("isOver", true);
+                    mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
+                }
                 mBundle.putString("uuid", mData.attachmentUUId);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;

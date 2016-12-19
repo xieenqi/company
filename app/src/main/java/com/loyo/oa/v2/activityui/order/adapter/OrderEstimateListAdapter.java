@@ -159,7 +159,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 mBundle = new Bundle();
-                mBundle.putInt("bizType", 26);
+//                mBundle.putInt("bizType", 26);//删除的时候用了，但是，添加以后，就不会自动加载数据，其他模块都没有传，所以，注释掉
                 mBundle.putBoolean("isOver", true);
                 mBundle.putString("uuid", mEstimateAdd.attachmentUUId);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
