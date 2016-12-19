@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.attendance.event.AttendanceAddEevent;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceAddPresenterImpl;
@@ -24,8 +25,8 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -40,7 +41,6 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -339,6 +339,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     @Override
     public void attendanceSuccess() {
         Toast("打卡成功!");
+        AppBus.getInstance().post(new AttendanceAddEevent());
         onBackPressed();
     }
 

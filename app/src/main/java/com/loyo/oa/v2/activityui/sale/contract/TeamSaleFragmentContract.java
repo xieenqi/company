@@ -36,7 +36,7 @@ public interface TeamSaleFragmentContract {
     }
 
     interface Model {
-        void getData(HashMap<String, Object> map);
+        void getData(HashMap<String, Object> map,int page);
     }
 
 

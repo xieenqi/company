@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.CustomerContactManageActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.application.MainApp;
@@ -77,7 +79,7 @@ public class ContactInfoActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_action;
     @Extra
-    String  userId;
+    String userId;
 
     private DBUser user;
 
@@ -92,7 +94,7 @@ public class ContactInfoActivity extends BaseActivity {
         }
     };
 
-    public void registerBroadcastReceiver(){
+    public void registerBroadcastReceiver() {
         IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
         registerReceiver(mReceiver, filter);
     }
@@ -107,7 +109,7 @@ public class ContactInfoActivity extends BaseActivity {
         layout_msg.setOnTouchListener(Global.GetTouch());
         layout_back.setOnTouchListener(Global.GetTouch());
         tv_edit.setOnTouchListener(Global.GetTouch());
-        if (userId!=null && userId.equals(MainApp.user.id)) {
+        if (userId != null && userId.equals(MainApp.user.id)) {
             tv_edit.setVisibility(View.VISIBLE);
             layout_action.setVisibility(View.GONE);
         }
@@ -116,7 +118,7 @@ public class ContactInfoActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         initData();
 
@@ -225,13 +227,13 @@ public class ContactInfoActivity extends BaseActivity {
             if (age >= 150) {
                 return;
             }
-            Utils.setContent(tv_birthday, user.birthDay.substring(0,10));
+            Utils.setContent(tv_birthday, user.birthDay.substring(0, 10));
             Utils.setContent(tv_age, age + "");
         }
 
     }
 
-    public void updateUIWithUser(DBUser user){
+    public void updateUIWithUser(DBUser user) {
         if (null == user) {
             return;
         }
@@ -300,5 +302,34 @@ public class ContactInfoActivity extends BaseActivity {
             return;
         }
         Utils.call(ContactInfoActivity.this, user.mobile);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (Utils.CALL_REQUEST == requestCode) {
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                    Utils.call(mContext, user.mobile);
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了打电话权限，无法拨出电话");
+                }
+            });
+        } else if (Utils.SEND_SMS_REQUEST == requestCode) {
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                    Utils.sendSms(ContactInfoActivity.this, user.mobile);
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了发短信权限，无法发送短信");
+                }
+            });
+        }
     }
 }

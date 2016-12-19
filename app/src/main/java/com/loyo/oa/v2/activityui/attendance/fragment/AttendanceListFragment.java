@@ -19,8 +19,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceDetailsActivity_;
 import com.loyo.oa.v2.activityui.attendance.adapter.AttendanceListAdapter;
-import com.loyo.oa.v2.activityui.attendance.adapter.CustomerDataManager;
 import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
+import com.loyo.oa.v2.activityui.attendance.event.AttendanceAddEevent;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceList;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.DataSelect;
@@ -38,16 +38,16 @@ import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.CustomRecyclerView;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -612,5 +612,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     @Override
     public LoadingLayout getLoading() {
         return ll_loading;
+    }
+
+
+    /**
+     * 添加考勤回调
+     */
+    @Subscribe
+    public void onAddAttendance(AttendanceAddEevent event) {
+        getData(1);
     }
 }

@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
+import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.beans.CustomerFollowUpModel;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -117,7 +118,11 @@ public interface ICustomer {
      * @param id
      */
     @PUT("/customer/{id}/pick")
+//<<<<<<< HEAD:app/src/main/java/com/loyo/oa/v2/customermanagement/api/ICustomer.java
     Observable<Customer> pickInCustomer(@Path("id") String id);
+//=======
+//    void pickedIn(@Path("id") String id, Callback<BaseBean> callback);
+//>>>>>>> develop:app/src/main/java/com/loyo/oa/v2/point/ICustomer.java
 
     /**
      * 客户详情,编辑跟进标签

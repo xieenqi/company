@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -29,18 +30,24 @@ import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -53,6 +60,16 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.http.HEAD;
+
+<<<<<<<HEAD
+        =======
+        >>>>>>>develop
+        <<<<<<<HEAD
+        =======
+        >>>>>>>develop
 
 /**
  * com.loyo.oa.v2.activity
@@ -66,12 +83,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @ViewById
     ViewGroup img_title_left, img_title_right, layout_customer_info, layout_contact, layout_send_sms,
             layout_call, layout_wiretel_call, layout_sale_activity, layout_visit, layout_task, layout_attachment,
-            ll_sale, ll_order,layout_4;
+            ll_sale, ll_order, layout_4;
     @ViewById
     TextView tv_title_1, tv_customer_name, tv_address, tv_tags, tv_contact_name,
             tv_contact_tel, customer_detail_wiretel, tv_sale_number, tv_visit_times, tv_task_count, tv_attachment_count,
             tv_follow_content, tv_follow_crecter_type, tv_contact_Number, tv_sale_count, tv_order_count,
-            tv_content41,tv_content42;
+            tv_content41, tv_content42;
     @ViewById
     ImageView img_public;
     @ViewById
@@ -89,10 +106,14 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private RelativeLayout layout_wirete, layout_phone;
     private LinearLayout layout_gj, layout_sign;
     private LinearLayout layout_menu;
+    private LinearLayout layout_defaultname;
+    private TextView default_name;
+
     private ImageView iv_select_tag;
     private CustomerDetailinfoPresenterimpl mPresenter;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
 
+    private String PhoneNum;
 
     @AfterViews
     void initViews() {
@@ -110,7 +131,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_gj = (LinearLayout) findViewById(R.id.layout_gj);
         layout_sign = (LinearLayout) findViewById(R.id.layout_sign);
         layout_menu = (LinearLayout) findViewById(R.id.layout_menu);
+        layout_defaultname = (LinearLayout) findViewById(R.id.layout_defaultname);
         iv_select_tag = (ImageView) findViewById(R.id.iv_select_tag);
+        default_name = (TextView) findViewById(R.id.default_name);
 
         iv_select_tag.setOnTouchListener(Global.GetTouch());
         layout_sign.setOnTouchListener(Global.GetTouch());
@@ -137,6 +160,34 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         mPresenter.getData(id);
     }
 
+    /**
+     * 默认联系人设置
+     * */
+    private void initContact(){
+        mContact = Utils.findDeault(mCustomer);
+        if (null != mContact) {
+            mPresenter.setDefaultContact(mContact.getId(), mCustomer.id);
+            if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
+                tv_contact_tel.setText("无");
+            } else {
+                tv_contact_tel.setText(mContact.getTel());
+            }
+
+            if (null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())) {
+                customer_detail_wiretel.setText("无");
+            } else {
+                customer_detail_wiretel.setText(mContact.getWiretel());
+            }
+            default_name.setText(mContact.getName());
+            layout_phone.setVisibility(View.VISIBLE);
+            layout_wirete.setVisibility(View.VISIBLE);
+            layout_defaultname.setVisibility(View.VISIBLE);
+        } else {
+            layout_phone.setVisibility(View.GONE);
+            layout_wirete.setVisibility(View.GONE);
+            layout_defaultname.setVisibility(View.GONE);
+        }
+    }
 
     /**
      * 数据初始化
@@ -198,36 +249,15 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_visit.setOnTouchListener(Global.GetTouch());
         layout_task.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
-
-        CommonMethod.commonCustomerRecycleTime(mCustomer, layout_4, tv_content41, tv_content42);
+        if (mCustomer.state != Customer.DumpedCustomer)
+            CommonMethod.commonCustomerRecycleTime(mCustomer, layout_4, tv_content41, tv_content42);
 
         tv_customer_name.setText(mCustomer.name);
         if (null != mCustomer.loc) {
             tv_address.setText("地址：" + mCustomer.loc.addr);
         }
         tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
-        mContact = Utils.findDeault(mCustomer);
-        if (null != mContact) {
-            mPresenter.setDefaultContact(mContact.getId(), mCustomer.id);
-
-            if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
-                layout_phone.setVisibility(View.GONE);
-            } else {
-                tv_contact_tel.setText(mContact.getTel());
-            }
-
-            if (null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())) {
-                layout_wirete.setVisibility(View.GONE);
-            } else {
-                customer_detail_wiretel.setText(mContact.getWiretel());
-            }
-
-            tv_contact_name.setText(mContact.getName());
-
-        } else {
-            layout_phone.setVisibility(View.GONE);
-            layout_wirete.setVisibility(View.GONE);
-        }
+        initContact();
         mTagItems.clear();
         mTagItems.addAll(mCustomer.tags);
 
@@ -249,7 +279,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             tv_follow_content.setText(mCustomer.saleActivityInfo.content.contains("<p>") ?
                     CommonHtmlUtils.Instance().checkContent(mCustomer.saleActivityInfo.content) : mCustomer.saleActivityInfo.content);
 //            tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
-            tv_follow_crecter_type.setText(DateTool.getDateTimeFriendly(mCustomer.saleActivityInfo.createAt) + " " +mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
+            tv_follow_crecter_type.setText(DateTool.getDateTimeFriendly(mCustomer.saleActivityInfo.createAt) + " " + mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
         } else {
             tv_follow_content.setVisibility(View.GONE);
             tv_follow_crecter_type.setVisibility(View.GONE);
@@ -359,11 +389,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                         .subscribe(new DefaultLoyoSubscriber<Customer>() {
                             @Override
                             public void onNext(Customer customer) {
-                                AppBus.getInstance().post(new MyCustomerListRushEvent());
-                                finish();
+                                mPresenter.getData(id);
+                                /*跳转到列表,并刷新列表
+                                  AppBus.getInstance().post(new MyCustomerListRushEvent());
+                                  finish();
+                                 */
                             }
                         });
-
                 break;
             /*联系人*/
             case R.id.layout_contact:
@@ -383,25 +415,40 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             case R.id.layout_send_sms:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
                     Utils.sendSms(this, mCustomer.contacts.get(0).getTel());
+                    PhoneNum = mCustomer.contacts.get(0).getTel();
                 } else {
                     Toast("没有号码");
                 }
                 break;
             /*拨打手机*/
             case R.id.layout_call:
-                if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    mPresenter.isMobile(CustomerDetailInfoActivity.this, mContact.getTel(), 0, mContact.getName());
-                } else {
-                    Toast("没有号码");
+                if (null == mCustomer.contacts && mCustomer.contacts.size() == 0) {
+                    Toast("手机号为空");
+
+                    return;
                 }
+
+                if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
+                    Toast("手机号为空");
+                    return;
+                }
+                PhoneNum = mContact.getTel();
+                mPresenter.isMobile(CustomerDetailInfoActivity.this, mContact.getTel(), 0, mContact.getName());
                 break;
+
             /*拨打座机*/
             case R.id.layout_wiretel_call:
-                if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    mPresenter.isMobile(CustomerDetailInfoActivity.this, mContact.getWiretel(), 1, mContact.getName());
-                } else {
-                    Toast("没有号码");
+                if (null == mCustomer.contacts && mCustomer.contacts.size() == 0) {
+                    Toast("座机号为空");
+                    return;
                 }
+
+                if (null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())) {
+                    Toast("座机号为空");
+                    return;
+                }
+                PhoneNum = mContact.getWiretel();
+                mPresenter.isMobile(CustomerDetailInfoActivity.this, mContact.getWiretel(), 1, mContact.getName());
                 break;
             /*跟进动态列表*/
             case R.id.layout_sale_activity:
@@ -476,6 +523,37 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         }
         if (null != _class && requestCode != -1) {
             goToChild(bundle, _class, requestCode);
+        }
+    }
+
+
+    //用来处理打电话权限申请
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (Utils.CALL_REQUEST == requestCode) {
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                    Utils.call(CustomerDetailInfoActivity.this, PhoneNum);
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了打电话权限，无法拨出电话");
+                }
+            });
+        } else if (Utils.SEND_SMS_REQUEST == requestCode) {
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                    Utils.sendSms(CustomerDetailInfoActivity.this, PhoneNum);
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了发短信权限，无法发送短信");
+                }
+            });
         }
     }
 

@@ -94,7 +94,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 //附件数量刷新
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
                     if (attamentSize != 0) {
-                        tv_attachment.setText("附件(" + attamentSize + ")");
+                        tv_attachment.setText("附件（" + attamentSize + "）");
                     }
                     break;
             }
@@ -157,7 +157,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
 //        tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
 //        estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
-        estimatedTime = Integer.parseInt(com.loyo.oa.common.utils.DateTool.getDateStamp(tv_time.getText().toString()) + "");
+        estimatedTime =com.loyo.oa.common.utils.DateTool.getStamp(false);
         tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(com.loyo.oa.common.utils.DateTool.getStamp(false)));
 
         if (fromPage == OrderEstimateListActivity.OADD_EST_EDIT || fromPage == OrderEstimateListActivity.ODET_EST_EDIT) {
@@ -471,7 +471,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     }
 
     /**
-     * 截至日期选择框
+     * 回款日期选择框
      */
     void setDeadLine() {
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null, true);
@@ -485,7 +485,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 //                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
 
                 long time= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,min,0);
-                String str= com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time);
+                String str= com.loyo.oa.common.utils.DateTool.getDateFriendly(time);
                 tv_time.setText(str);
                 estimatedTime=time;
 

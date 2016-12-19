@@ -5,6 +5,8 @@ import android.content.Context;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
+import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IClue;
@@ -57,11 +59,11 @@ public class ClueFollowUpListPresenterImpl implements ClueFollowUpListPresenter 
      */
     @Override
     public void requestComment(HashMap<String, Object> map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(Object object, Response response) {
+            public void success(BaseBeanT<CommentModel> object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
-                crolView.commentSuccessEmbl();
+                crolView.commentSuccessEmbl(object.data);
             }
 
             @Override

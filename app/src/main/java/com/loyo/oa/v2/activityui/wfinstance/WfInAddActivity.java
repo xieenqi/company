@@ -75,6 +75,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
     private ImageGridViewAdapter imageGridViewAdapter;
     private WfinAddPresenter mPresenter;
 
+    private LinearLayout ll_attach_file;
     private BizForm mBizForm;
     private List<String> mSelectPath;
     private ArrayList<ImageInfo> pickPhotsResult;
@@ -114,6 +115,11 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
         gridView_photo = (CusGridView) findViewById(R.id.gridView_photo);
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         tv_title = (EditText) findViewById(R.id.tv_title);
+
+        //隐藏附件上传
+        ll_attach_file = (LinearLayout) findViewById(R.id.ll_attach_file);
+        ll_attach_file.setVisibility(View.GONE);
+
 
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerContactManageActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerContractAddActivity;
@@ -22,9 +23,11 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -35,13 +38,16 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class ContactViewGroup extends LinearLayout {
 
-    public static final int CallbackPhone    = 0;
+
+    public static final int CallbackPhone = 0;
     public static final int NormalPhone = 1;
-    public static final int DirectPhone     = 2;
+    public static final int DirectPhone = 2;
+
 
     @IntDef({CallbackPhone, NormalPhone, DirectPhone})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface CallPhoneType {}
+    public @interface CallPhoneType {
+    }
 
     public interface OnContactProcessCallback {
         void onDel(Contact contact);
@@ -51,6 +57,8 @@ public class ContactViewGroup extends LinearLayout {
         void onCallBack(String callNum, String id, String name, @CallPhoneType int callType, int phoneType);
 
         void onPhoneError();
+
+        void setPhone(String phone);
     }
 
     private Context context;
@@ -115,11 +123,14 @@ public class ContactViewGroup extends LinearLayout {
                 if (phoneType == 0) {
                     if (RegularCheck.isMobilePhone(phone)) {
                         Utils.call(context, phone);
+                        contactProcessCallback.setPhone(phone);
                     } else {
                         contactProcessCallback.onPhoneError();
                     }
                 } else {
                     Utils.call(context, phone);
+                    contactProcessCallback.setPhone(phone);
+
                 }
 
                 callPhonePopView.dismiss();
@@ -132,6 +143,8 @@ public class ContactViewGroup extends LinearLayout {
             }
         });
     }
+
+
 
     /**
      * 判断本账号是否有电话
@@ -158,8 +171,8 @@ public class ContactViewGroup extends LinearLayout {
 
     /**
      * 绑定打座机
-     * */
-    private void setWriteOnClick(LinearLayout callLayout, final String telNum){
+     */
+    private void setWriteOnClick(LinearLayout callLayout, final String telNum) {
         /*拨打座机*/
         callLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -204,6 +217,8 @@ public class ContactViewGroup extends LinearLayout {
         smgLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                //保存一下要使用的电话号码
+                contactProcessCallback.setPhone(telNum);
                 Utils.sendSms(context, telNum);
             }
         });
@@ -236,9 +251,9 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView default_ = (ImageView) findViewById(R.id.img_default);
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
 
-            edit.setVisibility( canEdit?View.VISIBLE: View.GONE);
-            del.setVisibility( canEdit?View.VISIBLE: View.GONE);
-            default_.setVisibility( canEdit?View.VISIBLE: View.GONE);
+            edit.setVisibility(canEdit ? View.VISIBLE : View.GONE);
+            del.setVisibility(canEdit ? View.VISIBLE : View.GONE);
+            default_.setVisibility(canEdit ? View.VISIBLE : View.GONE);
 
             /*手机ui*/
             LinearLayout layout_phone1 = (LinearLayout) findViewById(R.id.layout_phone1);
@@ -299,7 +314,7 @@ public class ContactViewGroup extends LinearLayout {
             tv_depart.setText(mContact.deptName);
 
             /*绑定手机号数据*/
-            if(null != mContact.telGroup && mContact.telGroup.size() != 0){
+            if (null != mContact.telGroup && mContact.telGroup.size() != 0) {
                 switch (mContact.telGroup.size()) {
 
                     case 1:
@@ -332,13 +347,13 @@ public class ContactViewGroup extends LinearLayout {
                         break;
 
                 }
-            }else{
+            } else {
                 setTelOnClick(layout_phone_call1, layout_send_sms1, mContact.getTel());
             }
 
 
              /*绑定座机号数据*/
-            if(null != mContact.wiretelGroup && mContact.wiretelGroup.size() != 0){
+            if (null != mContact.wiretelGroup && mContact.wiretelGroup.size() != 0) {
                 switch (mContact.wiretelGroup.size()) {
 
                     case 1:
@@ -373,7 +388,7 @@ public class ContactViewGroup extends LinearLayout {
                         break;
 
                 }
-            }else{
+            } else {
                 setWriteOnClick(layout_call_wiretel1, mContact.getWiretel());
             }
 

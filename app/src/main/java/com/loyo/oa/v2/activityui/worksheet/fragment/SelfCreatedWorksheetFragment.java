@@ -122,7 +122,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
                     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                         Worksheet ws = (Worksheet) adapter.getChild(groupPosition, childPosition);
-                        String wsId = ws.id != null ? ws.id:"";
+                        String wsId = ws.id != null ? ws.id : "";
 
                         mIntent = new Intent();
                         mIntent.putExtra(ExtraAndResult.EXTRA_ID, wsId);
@@ -159,8 +159,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
 
                 if (menuIndex == 0) {
                     statusParam = key;
-                }
-                else if (menuIndex == 1) {
+                } else if (menuIndex == 1) {
                     typeParam = key;
                 }
                 refresh();
@@ -171,7 +170,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
     @Override
     public void initAdapter() {
         if (null == adapter) {
-            adapter = new WorksheetListAdapter(mActivity, groupsData,true,false);
+            adapter = new WorksheetListAdapter(mActivity, groupsData, true, false);
             mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
     }
@@ -198,7 +197,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
             @Override
             public void success(WorksheetListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我创建的工单列表：", response,ll_loading);
+                HttpErrorCheck.checkResponse("我创建的工单列表：", response, ll_loading);
 
                 if (isPullDown) {
                     groupsData.clear();
@@ -211,7 +210,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
             @Override
             public void failure(RetrofitError error) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error,ll_loading);
+                HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
             }
         });
 
@@ -223,11 +222,10 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
             groupsData.addItem(iterator.next());
         }
         groupsData.sort();
-        try{
+        try {
             adapter.notifyDataSetChanged();
             expand();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
