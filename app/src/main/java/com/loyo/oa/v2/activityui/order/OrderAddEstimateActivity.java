@@ -157,7 +157,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
 //        tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
 //        estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
-        estimatedTime = Integer.parseInt(com.loyo.oa.common.utils.DateTool.getDateStamp(tv_time.getText().toString()) + "");
+        estimatedTime =com.loyo.oa.common.utils.DateTool.getStamp(false);
         tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(com.loyo.oa.common.utils.DateTool.getStamp(false)));
 
         if (fromPage == OrderEstimateListActivity.OADD_EST_EDIT || fromPage == OrderEstimateListActivity.ODET_EST_EDIT) {
