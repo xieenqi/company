@@ -61,12 +61,15 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
     private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
+    private int parentIndex;
 
-    public CustomerSigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, CustomerSigninNewListView viewCrol, AudioPlayCallBack audioPlayCallBack) {
+    public CustomerSigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel,
+                                        CustomerSigninNewListView viewCrol, AudioPlayCallBack audioPlayCallBack, int parentIndex) {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
         this.audioPlayCallBack = audioPlayCallBack;
+        this.parentIndex = parentIndex;
     }
 
     @Override
@@ -123,9 +126,9 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
 
 
         /** 偏差距离,当未知显示红色 */
-        if(signinNewListModel.distance.equals("未知")){
+        if (signinNewListModel.distance.equals("未知")) {
             holder.tv_offset.setTextColor(mContext.getResources().getColor(R.color.red));
-        }else{
+        } else {
             holder.tv_offset.setTextColor(mContext.getResources().getColor(R.color.text99));
         }
         holder.tv_offset.setText(signinNewListModel.distance);
@@ -142,45 +145,45 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
 
 
         /** 客户地址 */
-        if(null != signinNewListModel.address && !TextUtils.isEmpty(signinNewListModel.address)){
+        if (null != signinNewListModel.address && !TextUtils.isEmpty(signinNewListModel.address)) {
             holder.layout_address.setVisibility(View.VISIBLE);
             holder.tv_address.setText(signinNewListModel.position);
             holder.layout_address.setOnTouchListener(Global.GetTouch());
-        }else{
+        } else {
             holder.layout_address.setVisibility(View.GONE);
         }
 
         /** 备注内容 */
-        if(null != signinNewListModel.memo && !TextUtils.isEmpty(signinNewListModel.memo)){
+        if (null != signinNewListModel.memo && !TextUtils.isEmpty(signinNewListModel.memo)) {
             holder.tv_memo.setVisibility(View.VISIBLE);
             holder.tv_memo.setText(signinNewListModel.memo);
-        }else{
+        } else {
             holder.tv_memo.setVisibility(View.GONE);
         }
 
         /** @的相关人员 */
-        if(null != signinNewListModel.atNameAndDepts){
+        if (null != signinNewListModel.atNameAndDepts) {
             holder.tv_toast.setVisibility(View.VISIBLE);
             holder.tv_toast.setText("@" + signinNewListModel.atNameAndDepts);
-        }else{
+        } else {
             holder.tv_toast.setVisibility(View.GONE);
         }
 
         /** 录音语音 */
-        if(null != signinNewListModel.audioInfo){
+        if (null != signinNewListModel.audioInfo) {
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,signinNewListModel.audioInfo,audioPlayCallBack);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext, signinNewListModel.audioInfo, audioPlayCallBack);
             holder.lv_audio.setAdapter(audioAdapter);
-        }else{
+        } else {
             holder.lv_audio.setVisibility(View.GONE);
         }
 
         /** 文件列表 数据绑定 */
-        if(null != signinNewListModel.attachments && signinNewListModel.attachments.size() > 0){
+        if (null != signinNewListModel.attachments && signinNewListModel.attachments.size() > 0) {
             holder.lv_options.setVisibility(View.VISIBLE);
-            optionAdapter = new ListOrDetailsOptionsAdapter(mContext,signinNewListModel.attachments);
+            optionAdapter = new ListOrDetailsOptionsAdapter(mContext, signinNewListModel.attachments);
             holder.lv_options.setAdapter(optionAdapter);
-        }else{
+        } else {
             holder.lv_options.setVisibility(View.GONE);
         }
 
@@ -202,14 +205,14 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
                             MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
                 }
             });
-        }else{
+        } else {
             holder.layout_gridview.setVisibility(View.GONE);
         }
 
         /** 绑定评论数据 */
         if (null != signinNewListModel.comments && signinNewListModel.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, signinNewListModel.comments,audioPlayCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, signinNewListModel.comments, audioPlayCallBack);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -229,7 +232,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         holder.iv_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewCrol.commentEmbl(signinNewListModel.id);
+                viewCrol.commentEmbl(signinNewListModel.id,parentIndex,position);
             }
         });
 
@@ -237,18 +240,18 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         holder.layout_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(null != signinNewListModel.gpsInfo && !TextUtils.isEmpty(signinNewListModel.gpsInfo)){
+                if (null != signinNewListModel.gpsInfo && !TextUtils.isEmpty(signinNewListModel.gpsInfo)) {
                     Intent mIntent = new Intent(mContext, MapSingleView.class);
                     String[] gps = signinNewListModel.gpsInfo.split(",");
-                    mIntent.putExtra("la",Double.valueOf(gps[1]));
-                    mIntent.putExtra("lo",Double.valueOf(gps[0]));
-                    mIntent.putExtra("address",signinNewListModel.position);
-                    mIntent.putExtra("title","签到地址");
-                    LogUtil.dee("la:"+ Double.valueOf(gps[1]));
-                    LogUtil.dee("lo:"+ Double.valueOf(gps[0]));
+                    mIntent.putExtra("la", Double.valueOf(gps[1]));
+                    mIntent.putExtra("lo", Double.valueOf(gps[0]));
+                    mIntent.putExtra("address", signinNewListModel.position);
+                    mIntent.putExtra("title", "签到地址");
+                    LogUtil.dee("la:" + Double.valueOf(gps[1]));
+                    LogUtil.dee("lo:" + Double.valueOf(gps[0]));
                     mContext.startActivity(mIntent);
-                }else{
-                    Toast.makeText(mContext,"GPS坐标不全!",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "GPS坐标不全!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

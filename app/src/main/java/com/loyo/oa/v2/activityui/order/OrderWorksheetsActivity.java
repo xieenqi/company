@@ -180,7 +180,7 @@ public class OrderWorksheetsActivity extends BaseLoadingActivity implements View
             @Override
             public void failure(RetrofitError error) {
                 expandableListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading);
+                HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
             }
         });
     }

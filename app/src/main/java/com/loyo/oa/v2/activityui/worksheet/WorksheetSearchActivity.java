@@ -227,7 +227,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                 @Override
                 public void success(WorksheetListWrapper listWrapper, Response response) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkResponse("我的工单列表：", response,ll_loading);
+                    HttpErrorCheck.checkResponse("我的工单列表：", response, ll_loading);
                     if (isPullDown) {
                         groupsData.clear();
                         if (listWrapper != null && listWrapper.isEmpty())
@@ -239,7 +239,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                 @Override
                 public void failure(RetrofitError error) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error,ll_loading);
+                    HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
                 }
             });
         } else if (searchType == WorksheetListType.RESPONSABLE) {
@@ -253,7 +253,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                 @Override
                 public void success(WorksheetEventListWrapper listWrapper, Response response) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkResponse("我负责的工单列表：", response,ll_loading);
+                    HttpErrorCheck.checkResponse("我负责的工单列表：", response, ll_loading);
                     if (isPullDown) {
                         groupsData.clear();
                         if (listWrapper != null && listWrapper.isEmpty())
@@ -265,7 +265,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                 @Override
                 public void failure(RetrofitError error) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error,ll_loading);
+                    HttpErrorCheck.checkError(error, ll_loading,page == 1 ? true : false);
                 }
             });
 
@@ -280,7 +280,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                 @Override
                 public void success(WorksheetListWrapper listWrapper, Response response) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkResponse("团队工单列表：", response,ll_loading);
+                    HttpErrorCheck.checkResponse("团队工单列表：", response, ll_loading);
                     if (isPullDown) {
                         groupsData.clear();
                         if (listWrapper != null && listWrapper.isEmpty())
@@ -292,7 +292,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                 @Override
                 public void failure(RetrofitError error) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error,ll_loading);
+                    HttpErrorCheck.checkError(error, ll_loading,page == 1 ? true : false);
                 }
             });
         }
