@@ -43,7 +43,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/10/17.
  */
 
-public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
+public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
 
     private Context mContext;
     private DropDownMenu filterMenu;
@@ -57,7 +57,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
     private String bizFormId = "";
 
 
-    public WfinMyApprovePresenterImpl(DropDownMenu mMenu,WfinMyApproveView crolView,Context mContext){
+    public WfinMyApprovePresenterImpl(DropDownMenu mMenu, WfinMyApproveView crolView, Context mContext) {
         this.crolView = crolView;
         this.mContext = mContext;
         this.filterMenu = mMenu;
@@ -66,7 +66,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
 
     /**
      * 获取审批类型数据
-     * */
+     */
     @Override
     public void getWfBizForms() {
         HashMap<String, Object> params = new HashMap<>();
@@ -80,12 +80,10 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
                     mBizForms = bizFormPaginationX.getRecords();
                     if (null != mBizForms && !mBizForms.isEmpty()) {
                         _loadFilterOptions(mBizForms);
-                    }
-                    else {
+                    } else {
                         _loadFilterOptions(null);
                     }
-                }
-                else {
+                } else {
                     _loadFilterOptions(null);
                 }
             }
@@ -94,9 +92,9 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
 
     /**
      * 获取审批列表数据
-     * */
+     */
     @Override
-    public void getApproveWfInstancesList(int page, final boolean isTopAdd) {
+    public void getApproveWfInstancesList(final int page, final boolean isTopAdd) {
 //        crolView.showProgress("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
@@ -130,7 +128,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error,crolView.getLoading());
+                        HttpErrorCheck.checkError(error, crolView.getLoading(), page == 1 ? true : false);
                         crolView.setListRefreshComplete();
                     }
                 });
@@ -138,7 +136,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
 
     /**
      * 初始化顶部菜单
-     * */
+     */
 
     public void _loadFilterOptions(List<BizForm> bizForms) {
         List<FilterModel> options = new ArrayList<>();
@@ -159,8 +157,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
 
                 if (menuIndex == 0) {
                     status = key;
-                }
-                else if (menuIndex == 1) {
+                } else if (menuIndex == 1) {
                     bizFormId = key;
                 }
                 crolView.setPullDownToRefresh();
@@ -175,7 +172,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
 
     /**
      * ListView监听与初始化
-     * */
+     */
     @Override
     public void initListView(ExpandableListView mListView, Button btn_add) {
         mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {

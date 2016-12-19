@@ -265,7 +265,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                 @Override
                 public void failure(RetrofitError error) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error, ll_loading);
+                    HttpErrorCheck.checkError(error, ll_loading,page == 1 ? true : false);
                 }
             });
 
@@ -292,7 +292,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                 @Override
                 public void failure(RetrofitError error) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error, ll_loading);
+                    HttpErrorCheck.checkError(error, ll_loading,page == 1 ? true : false);
                 }
             });
         }

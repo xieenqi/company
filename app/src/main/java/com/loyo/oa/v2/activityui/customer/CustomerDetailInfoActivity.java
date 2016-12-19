@@ -207,8 +207,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_visit.setOnTouchListener(Global.GetTouch());
         layout_task.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
-
-        CommonMethod.commonCustomerRecycleTime(mCustomer, layout_4, tv_content41, tv_content42);
+        if (mCustomer.state != Customer.DumpedCustomer)
+            CommonMethod.commonCustomerRecycleTime(mCustomer, layout_4, tv_content41, tv_content42);
 
         tv_customer_name.setText(mCustomer.name);
         if (null != mCustomer.loc) {
