@@ -1,19 +1,10 @@
 package com.loyo.oa.audio.player;
 
-import android.content.Context;
 import android.media.MediaPlayer;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.common.utils.DateTool;
-import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Player;
 
@@ -26,35 +17,33 @@ import java.util.concurrent.Executors;
  */
 public class AudioPlayer implements PlayCallback {
 
-    private View mView;
     private Player player;
-    private Context mContext;
-    private SeekBar musicProgress;
-
-    private static AudioPlayer ourInstance = new AudioPlayer();
-    public static AudioPlayer getInstance() {
-        return ourInstance;
-    }
 
     // View
     private WeakReference<AudioPlayerView> playerViewRef;
     private AudioPlayerView attachedView;
+    private SeekBar mSeekbar;
+
+    private static AudioPlayer ourInstance = new AudioPlayer();
 
     private AudioPlayer() {
     }
 
+    public static AudioPlayer getInstance() {
+        return ourInstance;
+    }
 
     public void bindView(AudioPlayerView view) {
         if (view == null) {
             return;
         }
 
-/*      if (playerViewRef != null && playerViewRef.get()!=null) {
-            playerViewRef.get().removePlayCallbackHandler();
-        }*/
+        if (playerViewRef != null && playerViewRef.get() != null) {
+            //playerViewRef.get().removePlayCallbackHandler();
+        }
 
         playerViewRef = new WeakReference<AudioPlayerView>(view);
-        if (playerViewRef != null && playerViewRef.get()!=null) {
+        if (playerViewRef != null && playerViewRef.get() != null) {
             playerViewRef.get().setPlayCallbackHandler(this);
         }
 
@@ -63,7 +52,7 @@ public class AudioPlayer implements PlayCallback {
 
 
     private AudioPlayerView getAttachView() {
-        if (playerViewRef != null && playerViewRef.get()!=null) {
+        if (playerViewRef != null && playerViewRef.get() != null) {
             return playerViewRef.get();
         }
         return null;
@@ -71,8 +60,8 @@ public class AudioPlayer implements PlayCallback {
 
     /**
      * Player监听
-     * */
-    class PlayerComplte implements MediaPlayer.OnCompletionListener{
+     */
+    class PlayerComplte implements MediaPlayer.OnCompletionListener {
         @Override
         public void onCompletion(MediaPlayer mp) {
             if (mp.getDuration() != 0) {
@@ -83,11 +72,11 @@ public class AudioPlayer implements PlayCallback {
 
     /**
      * Player播放失败监听
-     * */
-    class PlayerError implements MediaPlayer.OnErrorListener{
+     */
+    class PlayerError implements MediaPlayer.OnErrorListener {
         @Override
         public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-            Toast.makeText(mContext,"录音文件损坏!",Toast.LENGTH_SHORT).show();
+            attachedView.updateUI(AudioPlayUpdate.errorState());
             return false;
         }
     }
@@ -97,12 +86,18 @@ public class AudioPlayer implements PlayCallback {
      */
     class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener {
         int progress;
+
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress,
                                       boolean fromUser) {
+
+            this.progress = progress;
             if(null != player)
+                attachedView.updateUI(AudioPlayUpdate.progressState(DateTool.int2time((progress)*1000)));
+
+            /*if (null != player)
                 this.progress = progress * player.mediaPlayer.getDuration() / seekBar.getMax();
-            attachedView.updateUI(AudioPlayUpdate.progressState(DateTool.int2time(this.progress)));
+            attachedView.updateUI(AudioPlayUpdate.progressState(DateTool.int2time(this.progress)));*/
         }
 
         @Override
@@ -112,14 +107,23 @@ public class AudioPlayer implements PlayCallback {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            player.mediaPlayer.seekTo(progress);
-            attachedView.updateUI(AudioPlayUpdate.progressState(DateTool.int2time(this.progress)));
+            LogUtil.dee("progress:" + progress);
+            player.mediaPlayer.seekTo(progress*1000);
+            attachedView.updateUI(AudioPlayUpdate.progressState(DateTool.int2time(this.progress*1000)));
         }
     }
 
     /**
+     * 获取音频时长
+     */
+    public int getAudioSize(MediaPlayer mediaPlayer) {
+            int timelong = (int) Math.ceil((mediaPlayer.getDuration() / 1000));
+            return timelong;
+    }
+
+    /**
      * 是否正在播放
-     * */
+     */
     @Override
     public boolean onPlaying() {
         return player.mediaPlayer.isPlaying();
@@ -127,14 +131,14 @@ public class AudioPlayer implements PlayCallback {
 
     /**
      * 初始化
-     * */
+     */
     @Override
     public void onInit(SeekBar musicProgress) {
         if (player != null) {
             player.stop();
         }
 
-        this.musicProgress = musicProgress;
+        this.mSeekbar = musicProgress;
         if (musicProgress != null) {
             musicProgress.setOnSeekBarChangeListener(null);
         }
@@ -146,16 +150,16 @@ public class AudioPlayer implements PlayCallback {
 
     /**
      * 第一次播放
-     * */
+     */
     @Override
     public void onStart(AudioPlayerView view, final AudioModel audioModel) {
-        if(null == player){
-            player = new Player(musicProgress);
+        if (null == player) {
+            player = new Player(mSeekbar);
             player.mediaPlayer.setOnCompletionListener(new PlayerComplte());
             player.mediaPlayer.setOnErrorListener(new PlayerError());
         }
 
-        musicProgress.setProgress(0);
+        mSeekbar.setProgress(0);
         if (attachedView != null) {
             attachedView.updateUI(AudioPlayUpdate.startState());
         }
@@ -166,7 +170,8 @@ public class AudioPlayer implements PlayCallback {
             public void run() {
                 try {
                     player.playUrl(audioModel.url);
-                }catch (NullPointerException e){
+                    mSeekbar.setMax(getAudioSize(player.mediaPlayer)+1);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -175,17 +180,18 @@ public class AudioPlayer implements PlayCallback {
 
     /**
      * 继续播放
-     * */
+     */
     @Override
     public void onResume(AudioPlayerView view) {
         if (player != null) {
             player.play();
+            mSeekbar.setMax(getAudioSize(player.mediaPlayer)+1);
         }
     }
 
     /**
      * 暂停
-     * */
+     */
     @Override
     public void onPause(AudioPlayerView view) {
         if (player != null) {
@@ -198,7 +204,7 @@ public class AudioPlayer implements PlayCallback {
 
     /**
      * 停止销毁
-     * */
+     */
     @Override
     public void onStop(AudioPlayerView view) {
         if (player != null) {

@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
@@ -33,7 +34,7 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
     private LinearLayout layout_audio_close;
     private RelativeLayout layout_audioplayer;
 
-    private String playTime;
+    //private String playTime;
     private boolean isOnPlay;
 
 
@@ -93,15 +94,20 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
             // 停止
             case AudioPlayUpdate.STOP:
                 isOnPlay = true;
-                startTimeRest();
+                //startTimeRest();
                 musicProgress.setProgress(0);
                 layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
                 MainApp.getMainApp().stopAnim(nowsView);
                 break;
 
-            // 拖动条刷新
+            // 拖动条..开始时间
             case AudioPlayUpdate.PROGRESS:
                 tv_audio_starttime.setText(updateState.progress);
+                break;
+
+            // 播放错误
+            case AudioPlayUpdate.ERROR:
+                Toast.makeText(mContext,"录音文件损坏!",Toast.LENGTH_SHORT).show();
                 break;
 
         }
@@ -127,7 +133,7 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
         if (callbackHandler != null) {
             isOnPlay = false;
             this.nowsView = nowsView;
-            startTimeRest();
+            //startTimeRest();
             tv_audio_endtime.setText(com.loyo.oa.common.utils.DateTool.int2time((int) audioModel.length * 1000));
             callbackHandler.onStart(this,audioModel);
         }
@@ -148,7 +154,7 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
     public void onPause(TextView textView) {
         if(callbackHandler != null){
             isOnPlay = true;
-            startTimeRest();
+            //startTimeRest();
             musicProgress.setProgress(0);
             layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
             MainApp.getMainApp().stopAnim(textView);
@@ -162,9 +168,9 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
         callbackHandler.onStop(this);
     }
 
-    public void startTimeRest(){
+/*    public void startTimeRest(){
         playTime = "00:00:00";
-    }
+    }*/
 
     @Override
     public void onClick(View view) {

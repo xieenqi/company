@@ -15,8 +15,9 @@ public class AudioPlayUpdate {
     public final static String PAUSE = "PAUSE";
     public final static String STOP = "STOP";
     public final static String PROGRESS = "PROGRESS";
+    public final static String ERROR = "ERROR";
 
-    @StringDef({START, RESUME, PAUSE, STOP, PROGRESS})
+    @StringDef({START, RESUME, PAUSE, STOP, PROGRESS,ERROR})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
     }
@@ -48,6 +49,10 @@ public class AudioPlayUpdate {
 
     public static AudioPlayUpdate progressState(String progress) {
         return new AudioPlayUpdate(PROGRESS, progress);
+    }
+
+    public static AudioPlayUpdate errorState(){
+        return new AudioPlayUpdate(ERROR, "0");
     }
 
 

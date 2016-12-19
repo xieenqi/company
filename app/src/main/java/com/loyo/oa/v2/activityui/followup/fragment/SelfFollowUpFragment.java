@@ -143,7 +143,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                 initPageData();
             }
         });
-//        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
         mTags = FolloUpConfig.getFolloUpStageCache();
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayerView(getActivity());
