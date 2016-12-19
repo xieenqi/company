@@ -118,6 +118,7 @@ public class AudioPlayer implements PlayCallback {
      */
     public int getAudioSize(MediaPlayer mediaPlayer) {
             int timelong = (int) Math.ceil((mediaPlayer.getDuration() / 1000));
+            attachedView.updateUI(AudioPlayUpdate.audioSize(timelong+""));
             return timelong;
     }
 

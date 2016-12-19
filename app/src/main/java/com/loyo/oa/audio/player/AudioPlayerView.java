@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Player;
 
 import static com.loyo.oa.v2.R.id.tv_audio_endtime;
@@ -94,7 +95,6 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
             // 停止
             case AudioPlayUpdate.STOP:
                 isOnPlay = true;
-                //startTimeRest();
                 musicProgress.setProgress(0);
                 layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
                 MainApp.getMainApp().stopAnim(nowsView);
@@ -102,12 +102,17 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
 
             // 拖动条..开始时间
             case AudioPlayUpdate.PROGRESS:
-                tv_audio_starttime.setText(updateState.progress);
+                tv_audio_starttime.setText(updateState.msg);
                 break;
 
             // 播放错误
             case AudioPlayUpdate.ERROR:
                 Toast.makeText(mContext,"录音文件损坏!",Toast.LENGTH_SHORT).show();
+                break;
+
+            // 录音时长
+            case AudioPlayUpdate.SIZE:
+                LogUtil.dee("SIZE:"+updateState.msg);
                 break;
 
         }

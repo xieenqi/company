@@ -16,19 +16,20 @@ public class AudioPlayUpdate {
     public final static String STOP = "STOP";
     public final static String PROGRESS = "PROGRESS";
     public final static String ERROR = "ERROR";
+    public final static String SIZE  = "SIZE";
 
-    @StringDef({START, RESUME, PAUSE, STOP, PROGRESS,ERROR})
+    @StringDef({START, RESUME, PAUSE, STOP, PROGRESS,ERROR,SIZE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
     }
 
     @Type
     public String type;
-    public String progress;
+    public String msg;
 
-    private AudioPlayUpdate(@Type String type, String progress) {
+    private AudioPlayUpdate(@Type String type, String msg) {
         this.type = type;
-        this.progress = progress;
+        this.msg = msg;
     }
 
     public static AudioPlayUpdate startState() {
@@ -53,6 +54,10 @@ public class AudioPlayUpdate {
 
     public static AudioPlayUpdate errorState(){
         return new AudioPlayUpdate(ERROR, "0");
+    }
+
+    public static AudioPlayUpdate audioSize(String size){
+        return new AudioPlayUpdate(SIZE, size);
     }
 
 
