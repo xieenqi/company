@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.followup;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMember;
@@ -80,6 +82,8 @@ import retrofit.client.Response;
  */
 public class DynamicAddActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
 
+    private static final int RECORD_REQUEST = 0x10;//获取录音需要的权限
+
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
@@ -103,6 +107,9 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
     private List<String> atUserIds = new ArrayList<>();//@的人员
     private StaffMemberCollection collection;//选人返回的数据
     private boolean isCustom, isDetail, isRecordRun;//是否是客户写跟进 否则就是是线索写跟进
+
+    private View view;//用来处理权限动态申请
+    private MultiFunctionModule mfmodule;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -194,34 +201,80 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         }
         controller.loadView(gridView);
         initMultiFunctionModule();
+
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(RECORD_REQUEST==requestCode){
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                   startRecord(view);
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了所需权限，不能完成操作");
+                }
+            });
+        }
+    }
+
+    //开始录音
+    private void startRecord(View v){
+        if (ll_record.getChildCount() >= 3) {
+            Toast("最多只能添加3条语音");
+            return;
+        }
+        if ((boolean) v.getTag()) {
+            showInputKeyboard(edt);
+            mfmodule.setIsRecording(false);
+            v.setTag(false);
+        } else {
+            hideInputKeyboard(edt);
+            mfmodule.setIsRecording(true);
+            v.setTag(true);
+        }
+    }
     /**
      * 初始化底部多功能部件
      */
     private void initMultiFunctionModule() {
-        final MultiFunctionModule mfmodule = new MultiFunctionModule(this);
+        mfmodule = new MultiFunctionModule(this);
         /*录音*/
         mfmodule.setRecordClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (RecordUtils.permissionRecord()) {
-                    if (ll_record.getChildCount() >= 3) {
-                        Toast("最多只能添加3条语音");
-                        return;
-                    }
-                    if ((boolean) v.getTag()) {
-                        showInputKeyboard(edt);
-                        mfmodule.setIsRecording(false);
-                        v.setTag(false);
-                    } else {
-                        hideInputKeyboard(edt);
-                        mfmodule.setIsRecording(true);
-                        v.setTag(true);
-                    }
-                } else {
-                    Toast("你没有配置录音或者储存权限");
+//                添加对安卓6.0的权限动态申请，避免直接提示没权限
+//                if (RecordUtils.permissionRecord()) {
+//                    if (ll_record.getChildCount() >= 3) {
+//                        Toast("最多只能添加3条语音");
+//                        return;
+//                    }
+//                    if ((boolean) v.getTag()) {
+//                        showInputKeyboard(edt);
+//                        mfmodule.setIsRecording(false);
+//                        v.setTag(false);
+//                    } else {
+//                        hideInputKeyboard(edt);
+//                        mfmodule.setIsRecording(true);
+//                        v.setTag(true);
+//                    }
+//                } else {
+//                    Toast("你没有配置录音或者储存权限");
+//                }
+                view=v;
+                if (PermissionTool.requestPermission(DynamicAddActivity.this, new String[]{
+                                Manifest.permission.RECORD_AUDIO, //录音权限
+                                Manifest.permission.READ_PHONE_STATE,//读取设备权限
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,//写入外存权限
+                                Manifest.permission.READ_EXTERNAL_STORAGE}//读取外存权限
+                        , "麦克风或者存储权限被禁用", RECORD_REQUEST)) {
+
+                    startRecord(v);
                 }
+
 
             }
         });
@@ -360,7 +413,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
             @Override
             public void success(final SaleActivity saleActivity, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建跟进动态",response);
+                HttpErrorCheck.checkCommitSus("新建跟进动态", response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -368,7 +421,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                         AppBus.getInstance().post(new FollowUpRushEvent());
                         app.finishActivity(DynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                     }
-                },1000);
+                }, 1000);
             }
 
             @Override
@@ -389,7 +442,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                 .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
                     @Override
                     public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        HttpErrorCheck.checkCommitSus("上传附件信息",response);
+                        HttpErrorCheck.checkCommitSus("上传附件信息", response);
                         cancelStatusLoading();
                         commitDynamic();
                     }
@@ -428,7 +481,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
 //                String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
 //                tv_remain_time.setText(str);
-                long time= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,hour,min);
+                long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, hour, min);
                 tv_remain_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time));
 
             }

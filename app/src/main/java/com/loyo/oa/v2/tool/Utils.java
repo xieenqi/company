@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.tool;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -24,6 +25,7 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
@@ -46,6 +48,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Member;
@@ -102,6 +105,9 @@ import rx.Observable;
  */
 public class Utils {
 
+    public static final int CALL_REQUEST=0x1;//打电话的权限申请
+    public static final int SEND_SMS_REQUEST=0x2;//发短信的权限申请
+
     static ProgressDialog progressDialog;
     static ProgressDialog progressDialogAtt;
     static WindowManager windowManager;
@@ -122,7 +128,7 @@ public class Utils {
      *
      */
 
-    private static String getCheckTimeBySeconds(float progress,float totalSeconds2, String startTimeStr) {
+    private static String getCheckTimeBySeconds(float progress, float totalSeconds2, String startTimeStr) {
 
         String return_h = "", return_m = "", return_s = "";
         float ms = (progress * totalSeconds2) / 100;
@@ -239,11 +245,11 @@ public class Utils {
         return return_h + ":" + return_m + ":" + return_s;
     }
 
-    public static String getStringTime(int cnt,String timeData) {
-        int hour = cnt/3600;
+    public static String getStringTime(int cnt, String timeData) {
+        int hour = cnt / 3600;
         int min = cnt % 3600 / 60;
         int second = cnt % 60;
-        return String.format(Locale.CHINA,timeData,hour,min,second);
+        return String.format(Locale.CHINA, timeData, hour, min, second);
     }
 
 
@@ -639,28 +645,33 @@ public class Utils {
             Global.Toast("电话号码为空");
             return;
         }
-        if (PackageManager.PERMISSION_GRANTED ==
-                context.getPackageManager().checkPermission("android.permission.SEND_SMS", "com.loyo.oa.v2")) {
+// 用写好的权限工具类处理
+//        if (PackageManager.PERMISSION_GRANTED ==
+//                context.getPackageManager().checkPermission("android.permission.SEND_SMS", "com.loyo.oa.v2")) {
+//
+//        } else {
+//
+//            final SweetAlertDialogView sDialog = new SweetAlertDialogView(context);
+//            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+//                @Override
+//                public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                    sDialog.sweetAlertDialog.dismiss();
+//                }
+//            }, new SweetAlertDialog.OnSweetClickListener() {
+//                @Override
+//                public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                    sDialog.sweetAlertDialog.dismiss();
+//                    doSeting(context);
+//                }
+//            }, "提示", "需要使用短信权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
+//        }
+
+        if(PermissionTool.requestPermission(context,Manifest.permission.SEND_SMS,"发短信功能被禁用",SEND_SMS_REQUEST)){
             Uri uri = Uri.parse("smsto:" + tel);
             Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
             sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             sendIntent.putExtra("sms_body", "");
             context.startActivity(sendIntent);
-        } else {
-
-            final SweetAlertDialogView sDialog = new SweetAlertDialogView(context);
-            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    sDialog.sweetAlertDialog.dismiss();
-                }
-            }, new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    sDialog.sweetAlertDialog.dismiss();
-                    doSeting(context);
-                }
-            },"提示","需要使用短信权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 
@@ -675,26 +686,31 @@ public class Utils {
             Global.Toast("号码为空");
             return;
         }
-
-        if (PackageManager.PERMISSION_GRANTED ==
-                context.getPackageManager().checkPermission("android.permission.CALL_PHONE", "com.loyo.oa.v2")) {
+//注释原来的代码，主要做了针对安卓 6.0 权限申请的优化
+//        if (PackageManager.PERMISSION_GRANTED ==
+//                context.getPackageManager().checkPermission("android.permission.CALL_PHONE", "com.loyo.oa.v2")) {
+//            Intent sendIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
+//            sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            context.startActivity(sendIntent);
+//        } else {
+//            final SweetAlertDialogView sDialog = new SweetAlertDialogView(context);
+//            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+//                @Override
+//                public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                    sDialog.sweetAlertDialog.dismiss();
+//                }
+//            }, new SweetAlertDialog.OnSweetClickListener() {
+//                @Override
+//                public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                    sDialog.sweetAlertDialog.dismiss();
+//                    doSeting(context);
+//                }
+//            },"提示","需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
+//        }
+        if (PermissionTool.requestPermission(context, Manifest.permission.CALL_PHONE, "打电话被禁用",CALL_REQUEST)) {
             Intent sendIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
             sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(sendIntent);
-        } else {
-            final SweetAlertDialogView sDialog = new SweetAlertDialogView(context);
-            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    sDialog.sweetAlertDialog.dismiss();
-                }
-            }, new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    sDialog.sweetAlertDialog.dismiss();
-                    doSeting(context);
-                }
-            },"提示","需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
+            context.startActivity(sendIntent);//这里显红，不管他，工具类已经处理，IDE的问题
         }
     }
 
