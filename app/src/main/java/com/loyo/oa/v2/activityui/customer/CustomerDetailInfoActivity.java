@@ -45,6 +45,7 @@ import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -98,6 +99,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private RelativeLayout layout_wirete, layout_phone;
     private LinearLayout layout_gj, layout_sign;
     private LinearLayout layout_menu;
+    private LinearLayout layout_defaultname;
+    private TextView default_name;
+
     private ImageView iv_select_tag;
     private CustomerDetailinfoPresenterimpl mPresenter;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
@@ -119,7 +123,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_gj = (LinearLayout) findViewById(R.id.layout_gj);
         layout_sign = (LinearLayout) findViewById(R.id.layout_sign);
         layout_menu = (LinearLayout) findViewById(R.id.layout_menu);
+        layout_defaultname = (LinearLayout) findViewById(R.id.layout_defaultname);
         iv_select_tag = (ImageView) findViewById(R.id.iv_select_tag);
+        default_name = (TextView) findViewById(R.id.default_name);
 
         iv_select_tag.setOnTouchListener(Global.GetTouch());
         layout_sign.setOnTouchListener(Global.GetTouch());
@@ -146,6 +152,34 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         mPresenter.getData(id);
     }
 
+    /**
+     * 默认联系人设置
+     * */
+    private void initContact(){
+        mContact = Utils.findDeault(mCustomer);
+        if (null != mContact) {
+            mPresenter.setDefaultContact(mContact.getId(), mCustomer.id);
+            if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
+                tv_contact_tel.setText("无");
+            } else {
+                tv_contact_tel.setText(mContact.getTel());
+            }
+
+            if (null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())) {
+                customer_detail_wiretel.setText("无");
+            } else {
+                customer_detail_wiretel.setText(mContact.getWiretel());
+            }
+            default_name.setText(mContact.getName());
+            layout_phone.setVisibility(View.VISIBLE);
+            layout_wirete.setVisibility(View.VISIBLE);
+            layout_defaultname.setVisibility(View.VISIBLE);
+        } else {
+            layout_phone.setVisibility(View.GONE);
+            layout_wirete.setVisibility(View.GONE);
+            layout_defaultname.setVisibility(View.GONE);
+        }
+    }
 
     /**
      * 数据初始化
@@ -215,28 +249,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             tv_address.setText("地址：" + mCustomer.loc.addr);
         }
         tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
-        mContact = Utils.findDeault(mCustomer);
-        if (null != mContact) {
-            mPresenter.setDefaultContact(mContact.getId(), mCustomer.id);
-
-            if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
-                layout_phone.setVisibility(View.GONE);
-            } else {
-                tv_contact_tel.setText(mContact.getTel());
-            }
-
-            if (null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())) {
-                layout_wirete.setVisibility(View.GONE);
-            } else {
-                customer_detail_wiretel.setText(mContact.getWiretel());
-            }
-
-            tv_contact_name.setText(mContact.getName());
-
-        } else {
-            layout_phone.setVisibility(View.GONE);
-            layout_wirete.setVisibility(View.GONE);
-        }
+        initContact();
         mTagItems.clear();
         mTagItems.addAll(mCustomer.tags);
 
@@ -369,8 +382,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     @Override
                     public void success(final BaseBean newCustomer, final Response response) {
                         if (newCustomer.errcode == 0) {
-                            AppBus.getInstance().post(new MyCustomerListRushEvent());
-                            finish();
+                            mPresenter.getData(id);
+                            /*跳转到列表,并刷新列表
+                             AppBus.getInstance().post(new MyCustomerListRushEvent());
+                             finish();
+                             */
                         } else {
                             Toast(newCustomer.errmsg);
                         }
@@ -408,19 +424,32 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*拨打手机*/
             case R.id.layout_call:
-                if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    mPresenter.isMobile(CustomerDetailInfoActivity.this, mContact.getTel(), 0, mContact.getName());
-                } else {
-                    Toast("没有号码");
+                if (null == mCustomer.contacts && mCustomer.contacts.size() == 0) {
+                    Toast("手机号为空");
+                    return;
                 }
+
+                if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
+                    Toast("手机号为空");
+                    return;
+                }
+
+                mPresenter.isMobile(CustomerDetailInfoActivity.this, mContact.getTel(), 0, mContact.getName());
                 break;
+
             /*拨打座机*/
             case R.id.layout_wiretel_call:
-                if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    mPresenter.isMobile(CustomerDetailInfoActivity.this, mContact.getWiretel(), 1, mContact.getName());
-                } else {
-                    Toast("没有号码");
+                if (null == mCustomer.contacts && mCustomer.contacts.size() == 0) {
+                    Toast("座机号为空");
+                    return;
                 }
+
+                if (null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())) {
+                    Toast("座机号为空");
+                    return;
+                }
+
+                mPresenter.isMobile(CustomerDetailInfoActivity.this, mContact.getWiretel(), 1, mContact.getName());
                 break;
             /*跟进动态列表*/
             case R.id.layout_sale_activity:
