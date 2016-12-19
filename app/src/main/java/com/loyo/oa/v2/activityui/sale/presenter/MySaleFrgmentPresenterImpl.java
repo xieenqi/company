@@ -54,7 +54,7 @@ public class MySaleFrgmentPresenterImpl implements MySaleFrgmentContract.Present
         map.put("pageSize", 15);
         map.put("stageId", stageId);
         map.put("sortType", sortType);
-        model.getData(map);
+        model.getData(map,(int) pag[0]);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.signin.persenter;
 
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninListView;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -52,11 +53,11 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
      */
     @Override
     public void requestComment(HashMap<String, Object> map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(Object object, Response response) {
+            public void success(BaseBeanT<CommentModel> object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
-                crolView.commentSuccessEmbl();
+                crolView.commentSuccessEmbl(object.data);
             }
 
             @Override
@@ -68,7 +69,7 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
     }
 
     @Override
-    public void getListData(HashMap<String, Object> map) {
+    public void getListData(HashMap<String, Object> map, final int page) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).selfSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<SigninNewListModel>> paginationX, Response response) {
@@ -78,7 +79,7 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, crolView.getLoadingView());
+                HttpErrorCheck.checkError(error, crolView.getLoadingView(), page == 1 ? true : false);
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }

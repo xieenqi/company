@@ -29,6 +29,7 @@ import static com.loyo.oa.v2.permission.CustomerAction.RESPONSIBLE_PERSON_CHANGE
 import static com.loyo.oa.v2.permission.CustomerAction.SALE_OPPORTUNITY_ADD;
 import static com.loyo.oa.v2.permission.CustomerAction.TASK_ADD;
 import static com.loyo.oa.v2.permission.CustomerAction.VISIT;
+import static com.loyo.oa.v2.permission.CustomerAuthority.ADMIN_LEVEL;
 import static com.loyo.oa.v2.permission.CustomerAuthority.INVOLVED_VISITOR_LEVEL;
 import static com.loyo.oa.v2.permission.CustomerAuthority.PARTICIPATED_PERSON_LEVEL;
 import static com.loyo.oa.v2.permission.CustomerAuthority.RESPONSIBLE_PERSON_LEVEL;
@@ -160,6 +161,19 @@ public class PermissionManager {
     {
         EnumSet[][] table = {
                 {
+                        /* 超级管理员, 正常客户 */
+                        EnumSet.of(PREVIEW,      EDIT,         PARTICIPATED_PERSON_CHANGE,
+                                CONTACT_ADD,  FOLLOWUP_ADD, SALE_OPPORTUNITY_ADD,
+                                ORDER_ADD,    TASK_ADD,     ATTACHMENT_ADD,
+                                REMINDER_ADD, VISIT,        PICK_IN,
+                                DUMP,         IMPORT,       EXPORT,
+                                RESPONSIBLE_PERSON_CHANGE,  DELETE),
+                        /* 超级管理员, 公海客户 */
+                        EnumSet.of(PREVIEW,      PICK_IN,      DELETE),
+                        /* 超级管理员, 回收客户 */
+                        EnumSet.of(PREVIEW)
+                },
+                {
                         /* 负责人level, 正常客户 */
                         EnumSet.of(PREVIEW,      EDIT,         PARTICIPATED_PERSON_CHANGE,
                                    CONTACT_ADD,  FOLLOWUP_ADD, SALE_OPPORTUNITY_ADD,
@@ -170,7 +184,7 @@ public class PermissionManager {
                         /* 负责人level, 公海客户 */
                         EnumSet.of(PREVIEW,      PICK_IN,      DELETE),
                         /* 负责人level, 回收客户 */
-                        EnumSet.of(DELETE)
+                        EnumSet.noneOf(CustomerAction.class)
                 },
                 {
                         /* 参与人level, 正常客户 */
@@ -181,7 +195,7 @@ public class PermissionManager {
                         /* 参与人level, 公海客户 */
                         EnumSet.of(PREVIEW,      PICK_IN,      DELETE),
                         /* 参与人level, 回收客户 */
-                        EnumSet.of(DELETE)
+                        EnumSet.noneOf(CustomerAction.class)
                 },
                 {
                         /* 相关level, 正常客户 */
@@ -189,7 +203,7 @@ public class PermissionManager {
                         /* 相关level, 公海客户 */
                         EnumSet.of(PREVIEW,      PICK_IN,      DELETE),
                         /* 相关level, 回收客户 */
-                        EnumSet.of(DELETE)
+                        EnumSet.noneOf(CustomerAction.class)
                 },
                 {
                         /* 功能模块关闭, 正常客户 */
@@ -209,7 +223,11 @@ public class PermissionManager {
 
         /* 超级管理员 */
         if (hasSuperPriority()) {
-            return true;
+            EnumSet<CustomerAction> set = TABLE[ADMIN_LEVEL.ordinal()][state-1];
+            if (set.contains(action)) {
+                return true;
+            }
+            return false;
         }
 
         /* 功能模块关闭 */

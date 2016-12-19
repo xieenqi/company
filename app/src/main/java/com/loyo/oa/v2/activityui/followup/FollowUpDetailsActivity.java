@@ -31,6 +31,7 @@ import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Record;
@@ -487,9 +488,9 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         map.put("bizzType", 2);   //1拜访 2跟进
 //        map.put("audioInfo", "");//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(Object object, Response response) {
+            public void success(BaseBeanT<CommentModel> object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
                 msgAudiomMenu.closeMenu();
                 requestDetails();
@@ -513,9 +514,9 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         map.put("bizzType", 2);   //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(Object object, Response response) {
+            public void success(BaseBeanT<CommentModel> object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
                 msgAudiomMenu.closeMenu();
                 requestDetails();

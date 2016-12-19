@@ -31,6 +31,7 @@ import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -377,11 +378,15 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*挑入*/
             case R.id.img_public:
 
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<BaseBean>() {
                     @Override
-                    public void success(final Customer newCustomer, final Response response) {
-                        AppBus.getInstance().post(new MyCustomerListRushEvent());
-                        finish();
+                    public void success(final BaseBean newCustomer, final Response response) {
+                        if (newCustomer.errcode == 0) {
+                            AppBus.getInstance().post(new MyCustomerListRushEvent());
+                            finish();
+                        } else {
+                            Toast(newCustomer.errmsg);
+                        }
                     }
 
                     @Override
