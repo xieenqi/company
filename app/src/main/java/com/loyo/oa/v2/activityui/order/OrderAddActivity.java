@@ -99,8 +99,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             switch (msg.what) {
 
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
-                    if (attamentSize != 0) {
-                        tv_source.setText("附件(" + attamentSize + ")");
+                     if (attamentSize != 0) {
+
+                    tv_source.setText("附件（" + attamentSize + "）");
                     }
                     break;
                 case ExtraAndResult.MSG_WHAT_HIDEDIALOG:

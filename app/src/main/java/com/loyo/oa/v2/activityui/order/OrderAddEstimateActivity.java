@@ -94,7 +94,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 //附件数量刷新
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
                     if (attamentSize != 0) {
-                        tv_attachment.setText("附件(" + attamentSize + ")");
+                        tv_attachment.setText("附件（" + attamentSize + "）");
                     }
                     break;
             }
@@ -442,7 +442,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //附件
             case R.id.ll_attachment:
                 mBundle = new Bundle();
-//                mBundle.putInt("bizType", 26);//删除的时候用了，但是，添加以后，就不会自动加载数据，其他模块都没有传，所以，注释掉
+                mBundle.putInt("bizType", 26);
                 mBundle.putString("uuid", uuid);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;

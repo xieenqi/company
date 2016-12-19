@@ -56,6 +56,7 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
     private boolean isAdd;          //操作权限
     private boolean isCreat;//是否要创建附件
 
+
     private LinearLayout img_title_left;
     private TextView tv_title;
     private TextView tv_upload;
@@ -116,14 +117,15 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
              tv_upload.setVisibility(View.GONE);//原来是注释掉的，但是，不知道为什么要注释。如果注释了，会导致任何状态的附件，都可以上传
         }
 
-        if (isPic && !isCreat) {
-            Log.i("Attachments", "getPageData: uuid:"+uuid);
+        //因为客户可能上传附件，返回，然后，再进来上传，所以，进入本页，就要拉去数据
+//        if (isPic && !isCreat) {
+//            Log.i("Attachments", "getPageData: uuid:"+uuid);
 
             getPageData();
-
-        } else if (isCreat) {//上传附件就取消loading
-            ll_loading.setStatus(LoadingLayout.Success);
-        }
+//
+//        } else if (isCreat) {//上传附件就取消loading
+//            ll_loading.setStatus(LoadingLayout.Success);
+//        }
     }
 
     private void buildAttachment() {
@@ -202,7 +204,7 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
 
         //Attachment.Sort(mListAttachment);
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList, bizType, uuid, isOver);
+            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList,mListViewAttachment, bizType, uuid, isOver);
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
                 @Override
                 public void afterDelete(final Attachment attachment) {
