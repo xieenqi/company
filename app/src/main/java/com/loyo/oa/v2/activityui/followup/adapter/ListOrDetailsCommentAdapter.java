@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
+import com.loyo.oa.v2.common.Global;
 
 import java.util.ArrayList;
 
@@ -66,6 +67,7 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter {
         holder.tv_title.setText(commentModel.title);
 
         final TextView tv_calls = (TextView) convertView.findViewById(R.id.iv_calls);
+        tv_calls.setOnTouchListener(Global.GetTouch());
 
         /** 如果有语音 */
         if (null != commentModel.audioInfo) {

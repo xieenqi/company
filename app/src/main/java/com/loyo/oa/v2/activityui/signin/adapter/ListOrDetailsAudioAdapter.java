@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class ListOrDetailsAudioAdapter extends BaseAdapter {
         }
 
         final TextView tv_calls = (TextView) convertView.findViewById(R.id.iv_calls);
+        tv_calls.setOnTouchListener(Global.GetTouch());
         /*判断是否有录音*/
         if (null != audioModel.url && !TextUtils.isEmpty(audioModel.url)) {
             long audioLength = audioModel.length;
