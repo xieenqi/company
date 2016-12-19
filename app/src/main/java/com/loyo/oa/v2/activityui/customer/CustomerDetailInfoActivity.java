@@ -31,6 +31,7 @@ import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -74,12 +75,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @ViewById
     ViewGroup img_title_left, img_title_right, layout_customer_info, layout_contact, layout_send_sms,
             layout_call, layout_wiretel_call, layout_sale_activity, layout_visit, layout_task, layout_attachment,
-            ll_sale, ll_order,layout_4;
+            ll_sale, ll_order, layout_4;
     @ViewById
     TextView tv_title_1, tv_customer_name, tv_address, tv_tags, tv_contact_name,
             tv_contact_tel, customer_detail_wiretel, tv_sale_number, tv_visit_times, tv_task_count, tv_attachment_count,
             tv_follow_content, tv_follow_crecter_type, tv_contact_Number, tv_sale_count, tv_order_count,
-            tv_content41,tv_content42;
+            tv_content41, tv_content42;
     @ViewById
     ImageView img_public;
     @ViewById
@@ -257,7 +258,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             tv_follow_content.setText(mCustomer.saleActivityInfo.content.contains("<p>") ?
                     CommonHtmlUtils.Instance().checkContent(mCustomer.saleActivityInfo.content) : mCustomer.saleActivityInfo.content);
 //            tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
-            tv_follow_crecter_type.setText(DateTool.getDateTimeFriendly(mCustomer.saleActivityInfo.createAt) + " " +mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
+            tv_follow_crecter_type.setText(DateTool.getDateTimeFriendly(mCustomer.saleActivityInfo.createAt) + " " + mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
         } else {
             tv_follow_content.setVisibility(View.GONE);
             tv_follow_crecter_type.setVisibility(View.GONE);
@@ -364,11 +365,15 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*挑入*/
             case R.id.img_public:
 
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<BaseBean>() {
                     @Override
-                    public void success(final Customer newCustomer, final Response response) {
-                        AppBus.getInstance().post(new MyCustomerListRushEvent());
-                        finish();
+                    public void success(final BaseBean newCustomer, final Response response) {
+                        if (newCustomer.errcode == 0) {
+                            AppBus.getInstance().post(new MyCustomerListRushEvent());
+                            finish();
+                        } else {
+                            Toast(newCustomer.errmsg);
+                        }
                     }
 
                     @Override
