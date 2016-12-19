@@ -193,7 +193,7 @@ public class HttpErrorCheck {
     }
 
     private static void errorStatus(LoadingLayout loadingLayout, String errorText, boolean isLoading) {
-        if (isLoading) {
+        if (isLoading && loadingLayout.getStatus() == LoadingLayout.Loading) {
             loadingLayout.setStatus(LoadingLayout.No_Network);
             loadingLayout.setNoNetworkText(errorText);
             return;

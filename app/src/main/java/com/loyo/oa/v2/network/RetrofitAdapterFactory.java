@@ -89,6 +89,31 @@ public class RetrofitAdapterFactory {
         return adapter;
     }
 
+    static final Observable.Transformer syncTransformer = new Observable.Transformer() {
+        @Override
+        public Object call(Object observable) {
+            return ((Observable) observable).flatMap(new Func1() {
+                        @Override
+                        public Object call(Object response) {
+                            return flatResponse((BaseResponse<Object>)response);
+                        }
+                    });
+        }
+    };
+
+    static final Observable.Transformer compatSyncTransformer = new Observable.Transformer() {
+        @Override
+        public Object call(Object observable) {
+            return ((Observable) observable).flatMap(new Func1() {
+                        @Override
+                        public Object call(Object response) {
+                            return compatFlatResponse(response);
+                        }
+                    })
+                    ;
+        }
+    };
+
     static final Observable.Transformer transformer = new Observable.Transformer() {
         @Override
         public Object call(Object observable) {
@@ -120,6 +145,14 @@ public class RetrofitAdapterFactory {
 
     public static <T> Observable.Transformer<BaseResponse<T>, T> applySchedulers() {
         return (Observable.Transformer<BaseResponse<T>, T>) transformer;
+    }
+
+    public static <T> Observable.Transformer<T, T> compatApplySyncSchedulers() {
+        return (Observable.Transformer<T, T>) compatSyncTransformer;
+    }
+
+    public static <T> Observable.Transformer<BaseResponse<T>, T> applySyncSchedulers() {
+        return (Observable.Transformer<BaseResponse<T>, T>) syncTransformer;
     }
 
     public static <T> Observable.Transformer<T, T> compatApplySchedulers() {
