@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
@@ -64,6 +65,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     private boolean isPullOrDown;
     private boolean isChanged;
     private String id;
+    private int parent, child;
 
     /*录音 评论 播放相关*/
     private LinearLayout layout_bottom_voice;
@@ -193,7 +195,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map, mCustomer.id,mPagination.getPageIndex());
+        mPresenter.getListData(map, mCustomer.id, mPagination.getPageIndex());
     }
 
     @Override
@@ -299,11 +301,13 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
      * 点击评论回调
      */
     @Override
-    public void commentEmbl(String id) {
+    public void commentEmbl(String id, int parent, int child) {
         this.id = id;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         layout_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        this.parent = parent;
+        this.child = child;
     }
 
     /**
@@ -331,14 +335,16 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel model) {
         if (canAdd) {
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(parent).activities.get(child).comments.add(model);
+        mAdapter.notifyDataSetChanged();
+//        isPullOrDown = true;
+//        getData(false);
     }
 
     /**
