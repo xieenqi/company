@@ -165,7 +165,7 @@ public class SigninSelectCustomerSearch extends BaseLoadingActivity implements P
 
                     @Override
                     public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
+                        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
                         expandableListView_search.onRefreshComplete();
                     }
                 });

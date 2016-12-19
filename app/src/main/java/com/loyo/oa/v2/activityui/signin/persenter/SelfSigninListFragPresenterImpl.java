@@ -68,7 +68,7 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
     }
 
     @Override
-    public void getListData(HashMap<String, Object> map) {
+    public void getListData(HashMap<String, Object> map, final int page) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).selfSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<SigninNewListModel>> paginationX, Response response) {
@@ -78,7 +78,7 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, crolView.getLoadingView());
+                HttpErrorCheck.checkError(error, crolView.getLoadingView(), page == 1 ? true : false);
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }

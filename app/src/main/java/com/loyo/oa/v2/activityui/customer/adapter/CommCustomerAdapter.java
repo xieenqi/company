@@ -15,6 +15,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.permission.BusinessOperation;
@@ -118,11 +119,15 @@ public class CommCustomerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {//挑入公海客户
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                        create(ICustomer.class).pickedIn(customer.getId(), new RCallback<Customer>() {
+                        create(ICustomer.class).pickedIn(customer.getId(), new RCallback<BaseBean>() {
                     @Override
-                    public void success(Customer customer, Response response) {
+                    public void success(BaseBean customer, Response response) {
                         HttpErrorCheck.checkResponse(response);
-                        mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
+                        if (customer.errcode == 0) {
+                            mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
+                        } else {
+                            Global.Toast(customer.errmsg);
+                        }
                     }
 
                     @Override

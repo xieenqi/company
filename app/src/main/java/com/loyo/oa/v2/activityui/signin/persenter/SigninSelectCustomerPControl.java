@@ -85,7 +85,7 @@ public class SigninSelectCustomerPControl implements SigninSelectCustomerPersent
                     @Override
                     public void failure(RetrofitError error) {
                         vControl.getDataComplete();
-                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
+                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout(), ((int) pag[0]) == 1 ? true : false);
                     }
                 });
     }
