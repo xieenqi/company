@@ -15,6 +15,7 @@ import com.loyo.oa.common.utils.DateTool;
 
 import com.library.module.widget.loading.LoadingLayout;
 
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -58,7 +59,6 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
@@ -106,6 +106,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private CustomerDetailinfoPresenterimpl mPresenter;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
 
+    private String PhoneNum;
 
     @AfterViews
     void initViews() {
@@ -418,6 +419,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             case R.id.layout_send_sms:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
                     Utils.sendSms(this, mCustomer.contacts.get(0).getTel());
+                    PhoneNum = mCustomer.contacts.get(0).getTel();
                 } else {
                     Toast("没有号码");
                 }
@@ -426,6 +428,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             case R.id.layout_call:
                 if (null == mCustomer.contacts && mCustomer.contacts.size() == 0) {
                     Toast("手机号为空");
+
                     return;
                 }
 
@@ -433,7 +436,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     Toast("手机号为空");
                     return;
                 }
-
+                PhoneNum = mContact.getTel();
                 mPresenter.isMobile(CustomerDetailInfoActivity.this, mContact.getTel(), 0, mContact.getName());
                 break;
 
@@ -448,7 +451,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     Toast("座机号为空");
                     return;
                 }
-
+                PhoneNum = mContact.getWiretel();
                 mPresenter.isMobile(CustomerDetailInfoActivity.this, mContact.getWiretel(), 1, mContact.getName());
                 break;
             /*跟进动态列表*/
@@ -524,6 +527,37 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         }
         if (null != _class && requestCode != -1) {
             goToChild(bundle, _class, requestCode);
+        }
+    }
+
+
+    //用来处理打电话权限申请
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (Utils.CALL_REQUEST == requestCode) {
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                    Utils.call(CustomerDetailInfoActivity.this, PhoneNum);
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了打电话权限，无法拨出电话");
+                }
+            });
+        } else if (Utils.SEND_SMS_REQUEST == requestCode) {
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                    Utils.sendSms(CustomerDetailInfoActivity.this, PhoneNum);
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了发短信权限，无法发送短信");
+                }
+            });
         }
     }
 
