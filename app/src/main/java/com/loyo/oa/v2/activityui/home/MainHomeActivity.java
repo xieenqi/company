@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +14,7 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
@@ -88,8 +90,26 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         SaleStageConfig.getSaleStage();
         FolloUpConfig.getFolloUpStage();
         CustomerTageConfig.getTage();
-    }
 
+        //兼容android6.0使用新的方式申请
+        PermissionTool.requestPermission(this,new String[]{"android.permission.ACCESS_FINE_LOCATION"},"请打开定位服务，允许快启使用你的位置",1);
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (1==requestCode){
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                }
+
+                @Override
+                public void fail() {
+                    Toast("没有定位权限,某些功能模块将不能使用!");
+                }
+            });
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -104,7 +124,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         }
 
         startService(new Intent(this, InitDataService_.class));
-        permissionLocation();
+
     }
 
     @Subscribe
@@ -195,6 +215,8 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 //        }
 //    }
 
+
+
     private void changeContent(Fragment fragment) {
         if (selectCurrentFragment != fragment) {
             FragmentTransaction transaction = getSupportFragmentManager()
@@ -215,7 +237,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.getAction() == KeyEvent.ACTION_DOWN) {
             if (selectIndex != 0) {
@@ -236,26 +257,28 @@ public class MainHomeActivity extends SlidingFragmentActivity {
     protected void onNetworkChanged(boolean available) {
         super.onNetworkChanged(available);
     }
+//已经把本方法放到onCreate模块中,避免一直提示,只是在打开软件的时候提示权限申请
+//    /**
+//     * 检查定位权限是否打开
+//     */
+//    private void permissionLocation() {
+////        if (PackageManager.PERMISSION_GRANTED ==
+////                getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
+////        } else {
+////            ActivityCompat.requestPermissions(MainHomeActivity.this,
+////                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+////                    1);
+////        }
+////        if (PackageManager.PERMISSION_GRANTED ==
+////                getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
+////        } else {
+////            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
+////                    1);
+////        }
+//        //兼容android6.0使用新的方式申请
+//        PermissionTool.requestPermission(this,new String[]{"android.permission.ACCESS_FINE_LOCATION"},"某些功能模块,比如考勤管理需要地位权限.",1);
+//    }
 
-    /**
-     * 检查定位权限是否打开
-     */
-    private void permissionLocation() {
-        //TODO 权限可以完善
-        if (PackageManager.PERMISSION_GRANTED ==
-                getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
-        } else {
-            ActivityCompat.requestPermissions(MainHomeActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
-        }
-        if (PackageManager.PERMISSION_GRANTED ==
-                getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
-                    1);
-        }
-    }
 
 
     /**
