@@ -9,7 +9,9 @@ import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -21,13 +23,13 @@ public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresen
 
     private SigninListView crolView;
 
-    public TeamSigninListFragPresenterImpl(SigninListView crolView){
+    public TeamSigninListFragPresenterImpl(SigninListView crolView) {
         this.crolView = crolView;
     }
 
     /**
      * 删除评论
-     * */
+     */
     @Override
     public void deleteComment(String id) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
@@ -47,9 +49,9 @@ public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresen
 
     /**
      * 发送评论
-     * */
+     */
     @Override
-    public void requestComment(HashMap<String,Object> map) {
+    public void requestComment(HashMap<String, Object> map) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
@@ -66,7 +68,7 @@ public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresen
     }
 
     @Override
-    public void getListData(HashMap<String, Object> map) {
+    public void getListData(HashMap<String, Object> map, final int page) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).teamSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<SigninNewListModel>> paginationX, Response response) {
@@ -76,7 +78,7 @@ public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresen
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error,crolView.getLoadingView());
+                HttpErrorCheck.checkError(error, crolView.getLoadingView(), page == 1 ? true : false);
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }

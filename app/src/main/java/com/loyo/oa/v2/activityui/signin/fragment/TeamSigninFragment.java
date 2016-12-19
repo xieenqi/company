@@ -137,7 +137,6 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
     }
 
     public void initView(View view) {
-//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
         mPresenter = new TeamSigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayer(getActivity());
         audioPlayer.initPlayer();
@@ -301,7 +300,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("团队拜访,发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map,mPagination.getPageIndex());
     }
 
     /**
