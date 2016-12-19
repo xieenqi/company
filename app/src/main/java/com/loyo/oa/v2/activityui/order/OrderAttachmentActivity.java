@@ -100,7 +100,6 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
                 isPic = true;
             }
             isCreat = bizType == 0 ? false : true;//biztype有值就是要创建上传附件的
-            Log.i("Attachments", "getPageData: isPic:"+isPic+"isCreat:"+(!isCreat)+",isAdd:"+isAdd);
 
         }
 
@@ -169,7 +168,6 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
      * 获取附件列表信息
      */
     void getAttachments() {
-        Log.i("Attachments", "getAttachments: uuid:"+uuid);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {

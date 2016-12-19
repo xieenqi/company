@@ -235,7 +235,6 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             case R.id.ll_enclosure://附件
                 mBundle = new Bundle();
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
-                Log.i("Attachments", "onClick: mData.status:"+mData.status);
                 if(2==mData.status){
                     //订单没有通过,可以编辑附件
                     mBundle.putBoolean("isOver", false);
