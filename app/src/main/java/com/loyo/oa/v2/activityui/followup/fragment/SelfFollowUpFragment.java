@@ -228,12 +228,14 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 数据绑定
      */
     public void bindData() {
+        LogUtil.d("开始: " + System.currentTimeMillis());
         if (null == mAdapter) {
             mAdapter = new FollowUpListAdapter(getActivity(), listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }
+        LogUtil.d("结束: " + System.currentTimeMillis());
     }
 
 
@@ -349,6 +351,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
+        LogUtil.d("数据: " + System.currentTimeMillis());
         listView.onRefreshComplete();
         if (isPullOrDown) {
             listModel.clear();
