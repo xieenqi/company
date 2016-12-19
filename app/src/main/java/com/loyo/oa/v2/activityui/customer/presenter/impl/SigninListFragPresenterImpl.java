@@ -59,7 +59,7 @@ public class SigninListFragPresenterImpl implements SigninListFragPresenter {
             @Override
             public void success(BaseBeanT<CommentModel> object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
-                crolView.commentSuccessEmbl();
+                crolView.commentSuccessEmbl(object.data);
             }
 
             @Override
