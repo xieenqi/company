@@ -306,7 +306,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             if (!extra.isSystem && extra.required && TextUtils.isEmpty(extra.val)) {
                 Toast("请填写必填项!");
                 return;
-            } else if (!extra.isSystem && extra.required && !TextUtils.isEmpty(extra.val)) {
+            } else if (!extra.isSystem && !TextUtils.isEmpty(extra.val)) {
                 fieldData.add(extra);
             }
         }
