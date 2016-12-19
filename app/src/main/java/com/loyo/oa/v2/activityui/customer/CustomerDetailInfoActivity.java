@@ -382,8 +382,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     @Override
                     public void success(final BaseBean newCustomer, final Response response) {
                         if (newCustomer.errcode == 0) {
-                            AppBus.getInstance().post(new MyCustomerListRushEvent());
-                            finish();
+                            mPresenter.getData(id);
+                            /*跳转到列表,并刷新列表
+                             AppBus.getInstance().post(new MyCustomerListRushEvent());
+                             finish();
+                             */
                         } else {
                             Toast(newCustomer.errmsg);
                         }
