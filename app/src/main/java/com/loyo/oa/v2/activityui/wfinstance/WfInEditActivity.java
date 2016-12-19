@@ -3,7 +3,9 @@ package com.loyo.oa.v2.activityui.wfinstance;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
@@ -50,12 +53,13 @@ import retrofit.client.Response;
  * 【编辑审批】界面
  * Restruture by yyy on 16/10/21
  */
-public class WfInEditActivity extends BaseActivity implements WfinEditView{
+public class WfInEditActivity extends BaseActivity implements WfinEditView {
 
     /**
      * 部门选择 请求码
      */
     public static final int RESULT_DEPT_CHOOSE = 5;
+    public static final int MSG_ATTACHMENT = 200;//上传完了附件的回调code
 
     private String projectId;
     private String deptId;
@@ -88,6 +92,9 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
     private SignInGridViewAdapter signInGridViewAdapter;
     private WfinEditPresenter mPresenter;
 
+    private LinearLayout ll_attch_file;//附件
+    private TextView tv_attch_file;//显示附件数量
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +107,11 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
         mWfInstance = (WfInstance) getIntent().getExtras().getSerializable("data");
         uuid = mWfInstance.attachmentUUId;
         initData_WorkflowValues();
+        //附件上传
+        tv_attch_file = (TextView) findViewById(R.id.tv_attach_file);
+        ll_attch_file = (LinearLayout) findViewById(R.id.ll_attach_file);
+        ll_attch_file.setOnClickListener(onClick);
+
         wfinstance_data_container = (LinearLayout) findViewById(R.id.wfinstance_data_container);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
@@ -126,11 +138,11 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
         img_title_right.setOnClickListener(onClick);
         ll_dept.setOnClickListener(onClick);
         edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
-        mPresenter = new WfinEditPresenterImpl(mContext,this,WfInEditActivity.this);
+        mPresenter = new WfinEditPresenterImpl(mContext, this, WfInEditActivity.this);
 
         if (null != mWfInstance.bizForm) {
             mBizForm = mWfInstance.bizForm;
-            mPresenter.setStartendTime(wfInstanceValuesDatas,mBizForm,layout_wfinstance_data,wfinstance_data_container);
+            mPresenter.setStartendTime(wfInstanceValuesDatas, mBizForm, layout_wfinstance_data, wfinstance_data_container);
         }
         if (null != mWfInstance.title) {
             cusTitle = mWfInstance.title;
@@ -148,6 +160,9 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
         tv_title.setText(cusTitle);
         edt_memo.setText(memo);
         gridView_photo.setVisibility(View.GONE);
+
+        //设置附件
+        tv_attch_file.setText("附件" + "（" + mWfInstance.bizExtData.getAttachmentCount() + "）");
 
         //init_gridView_photo();
         projectAddWfinstance();
@@ -180,7 +195,7 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
 
     /**
      * adapter初始化
-     * */
+     */
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
@@ -189,6 +204,16 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        //为了再返回的时候,更新附件数量.
+        Intent intent = new Intent();
+        if (null != mWfInstance.attachments) {
+            intent.putExtra("attachFileNum", mWfInstance.attachments.size());
+        }
+        app.finishActivity(WfInEditActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, intent);
+        super.onBackPressed();
+    }
 
     private View.OnClickListener onClick = new View.OnClickListener() {
         @Override
@@ -196,7 +221,12 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
             switch (v.getId()) {
                 //返回
                 case R.id.img_title_left:
-                    app.finishActivity(WfInEditActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                    //为了再返回的时候,更新附件数量.
+                    Intent intent = new Intent();
+                    if (null != mWfInstance.attachments) {
+                        intent.putExtra("attachFileNum", mWfInstance.attachments.size());
+                    }
+                    app.finishActivity(WfInEditActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, intent);
                     break;
 
                 //所属部门选择
@@ -222,7 +252,17 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
                 case R.id.btn_add:
                     mPresenter.addTypeData(wfinstance_data_container);
                     break;
+                //附件上传
+                case R.id.ll_attach_file:
 
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("data", mWfInstance.attachments);
+                    bundle.putSerializable("uuid", mWfInstance.attachmentUUId);//因为只有自己提交的请求审批,才可以修改,所以,不需要判断订单,汇款之类的传过来的id
+                    bundle.putBoolean("isOver", false);//表示可以编辑
+                    bundle.putInt("bizType", 12);
+                    app.startActivityForResult(WfInEditActivity.this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
+
+                    break;
                 default:
                     break;
             }
@@ -231,7 +271,7 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
 
     /**
      * 获取审批内容
-     * */
+     */
     void initData_WorkflowValues() {
         if (null == mWfInstance || null == mWfInstance.workflowValues) {
             return;
@@ -263,7 +303,7 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                mPresenter.newUploadAttachement(uuid,newFile);
+                                mPresenter.newUploadAttachement(uuid, newFile);
                             }
                         }
                     }
@@ -294,6 +334,17 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
                         super.failure(error);
                     }
                 });
+                break;
+            case MSG_ATTACHMENT:
+                if (data == null || data.getExtras() == null) {
+                    return;
+                }
+                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
+                mWfInstance.attachments = attachments;
+                if (null != attachments) {
+                    tv_attch_file.setText("附件" + "（" + attachments.size() + "）");
+                }
+
                 break;
 
             /*选择部门回调*/
@@ -364,7 +415,7 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
 
     /**
      * 获取附件成功处理
-     * */
+     */
     @Override
     public void getAttachmentsEmbl(ArrayList<Attachment> attachments) {
         lstData_Attachment = attachments;
@@ -373,18 +424,18 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
 
     /**
      * 请求编辑验证
-     * */
+     */
     @Override
     public void requestEditVeriEmbl(ArrayList<HashMap<String, Object>> workflowValues) {
         mPresenter.requestEditWfin(mWfInstance.id,
                 tv_title.getText().toString(),
-                deptId,workflowValues,
-                projectId,edt_memo.getText().toString().trim());
+                deptId, workflowValues,
+                projectId, edt_memo.getText().toString().trim());
     }
 
     /**
      * 请求编辑成功处理
-     * */
+     */
     @Override
     public void requestEditWfinEmbl(WfInstance wfInstance) {
         Toast("编辑成功");

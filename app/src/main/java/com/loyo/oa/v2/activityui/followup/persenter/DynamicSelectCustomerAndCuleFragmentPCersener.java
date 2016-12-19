@@ -96,7 +96,7 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
                     @Override
                     public void failure(RetrofitError error) {
                         vControl.getDataComplete();
-                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
+                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout(), pageCus == 1 ? true : false);
                     }
                 }
         );
@@ -138,7 +138,7 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
             @Override
             public void failure(RetrofitError error) {
                 vControl.getDataComplete();
-                HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
+                HttpErrorCheck.checkError(error, vControl.getLoadingLayout(), pageCus == 1 ? true : false);
             }
         });
     }

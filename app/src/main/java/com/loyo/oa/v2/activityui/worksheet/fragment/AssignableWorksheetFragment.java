@@ -117,7 +117,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
                     @Override
                     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                         Worksheet ws = (Worksheet) adapter.getChild(groupPosition, childPosition);
-                        String wsId = ws.id != null ? ws.id:"";
+                        String wsId = ws.id != null ? ws.id : "";
 
                         mIntent = new Intent();
                         mIntent.putExtra(ExtraAndResult.EXTRA_ID, wsId);
@@ -131,7 +131,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
         initAdapter();
         expand();
 
-        Utils.btnHideForListView(expandableListView,btn_add);
+        Utils.btnHideForListView(expandableListView, btn_add);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
         getData();
     }
@@ -154,8 +154,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
 
                 if (menuIndex == 0) {
                     statusParam = key;
-                }
-                else if (menuIndex == 1) {
+                } else if (menuIndex == 1) {
                     typeParam = key;
                 }
                 refresh();
@@ -166,14 +165,14 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
     @Override
     public void initAdapter() {
         if (null == adapter) {
-            adapter = new WorksheetListAdapter(mActivity, groupsData,false,false);
+            adapter = new WorksheetListAdapter(mActivity, groupsData, false, false);
             mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
     }
 
 
     @Override
-    protected  void getData() {
+    protected void getData() {
 
 //        * templateId  工单类型id
 //        * status      1:待分派 2:处理中 3:待审核 4:已完成 5:意外中止
@@ -193,7 +192,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
             @Override
             public void success(WorksheetListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我分派的的工单列表：", response,ll_loading);
+                HttpErrorCheck.checkResponse("我分派的的工单列表：", response, ll_loading);
 
                 if (isPullDown) {
                     groupsData.clear();
@@ -206,7 +205,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
             @Override
             public void failure(RetrofitError error) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error,ll_loading);
+                HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
             }
         });
 
@@ -225,11 +224,10 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
             groupsData.addItem(iterator.next());
         }
         groupsData.sort();
-        try{
+        try {
             adapter.notifyDataSetChanged();
             expand();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
     }

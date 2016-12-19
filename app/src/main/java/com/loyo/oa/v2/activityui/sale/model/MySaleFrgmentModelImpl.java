@@ -25,7 +25,7 @@ public class MySaleFrgmentModelImpl implements MySaleFrgmentContract.Model {
     }
 
     @Override
-    public void getData(HashMap<String, Object> map) {
+    public void getData(HashMap<String, Object> map, final int page) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleMyList(map, new RCallback<SaleList>() {
             @Override
             public void success(SaleList saleMyLists, Response response) {
@@ -36,7 +36,7 @@ public class MySaleFrgmentModelImpl implements MySaleFrgmentContract.Model {
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, presenter.getLoadingView());
+                HttpErrorCheck.checkError(error, presenter.getLoadingView(), page == 1 ? true : false);
                 presenter.refreshComplete();
             }
         });

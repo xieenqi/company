@@ -49,7 +49,8 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, CustomerFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
+public class CustomerFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2,
+        CustomerFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     public static final int ACTIVITIES_ADD = 101;
 
@@ -192,7 +193,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map, mCustomer.id);
+        mPresenter.getListData(map, mCustomer.id,mPagination.getPageIndex());
     }
 
     @Override

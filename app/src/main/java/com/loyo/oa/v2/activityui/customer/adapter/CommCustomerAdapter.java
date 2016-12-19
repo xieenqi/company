@@ -15,6 +15,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.permission.BusinessOperation;
@@ -101,7 +102,7 @@ public class CommCustomerAdapter extends BaseAdapter {
         tv_title.setText(customer.name);
         String tagItems = Utils.getTagItems(customer);
 //        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
-        String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
+        String recycledAt = customer.recycledAt != 0 ? DateTool.getDateTimeFriendly(customer.recycledAt) : "--";
         img_public.setVisibility(View.INVISIBLE);
         permissionTest(img_public);
         layout_go_where.setVisibility(View.GONE);
@@ -110,7 +111,7 @@ public class CommCustomerAdapter extends BaseAdapter {
         img1.setImageResource(R.drawable.icon_customer_tag);
         img2.setImageResource(R.drawable.icon_customer_follow_time);
         tv_content1.setText("标签：" + tagItems);
-        tv_content2.setText("跟进时间：" + lastActivityAt);
+        tv_content2.setText("丢公海时间：" + recycledAt);
 
 
         img_public.setOnTouchListener(Global.GetTouch());
@@ -118,11 +119,15 @@ public class CommCustomerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {//挑入公海客户
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                        create(ICustomer.class).pickedIn(customer.getId(), new RCallback<Customer>() {
+                        create(ICustomer.class).pickedIn(customer.getId(), new RCallback<BaseBean>() {
                     @Override
-                    public void success(Customer customer, Response response) {
+                    public void success(BaseBean customer, Response response) {
                         HttpErrorCheck.checkResponse(response);
-                        mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
+                        if (customer.errcode == 0) {
+                            mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
+                        } else {
+                            Global.Toast(customer.errmsg);
+                        }
                     }
 
                     @Override

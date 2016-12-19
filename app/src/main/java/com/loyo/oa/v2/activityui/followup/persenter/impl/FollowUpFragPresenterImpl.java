@@ -5,6 +5,7 @@ import android.content.Context;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -40,7 +41,7 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
-                HttpErrorCheck.checkResponse("评论", response);
+                HttpErrorCheck.checkResponse("删除评论", response);
                 crolView.rushListData(false);
             }
 
@@ -57,11 +58,11 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
      */
     @Override
     public void requestComment(HashMap<String, Object> map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(Object object, Response response) {
+            public void success(BaseBeanT<CommentModel> object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
-                crolView.commentSuccessEmbl();
+                crolView.commentSuccessEmbl(object.data);
             }
 
             @Override
@@ -76,7 +77,7 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
      * 获取列表数据
      */
     @Override
-    public void getListData(HashMap<String, Object> map) {
+    public void getListData(HashMap<String, Object> map, final int page) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).followUp(map, new RCallback<BaseBeanT<PaginationX<FollowUpListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<FollowUpListModel>> paginationX, Response response) {
@@ -86,7 +87,7 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, crolView.getLoadingLayout());
+                HttpErrorCheck.checkError(error, crolView.getLoadingLayout(), page == 1 ? true : false);
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }

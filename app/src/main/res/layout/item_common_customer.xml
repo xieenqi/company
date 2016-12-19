@@ -22,8 +22,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_side_edge"
                 android:layout_marginBottom="@dimen/dimen_2"
+                android:layout_marginLeft="@dimen/margin_side_edge"
                 android:orientation="horizontal">
 
                 <TextView
@@ -112,7 +112,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_14"
                 android:layout_marginTop="@dimen/dimen_6"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/img_3"
@@ -132,6 +133,56 @@
                     android:textSize="13sp" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_14"
+                android:layout_marginTop="@dimen/dimen_6"
+                android:gravity="top"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img_4"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_gravity="top"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_customer_remind" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_6"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_content41"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_4"
+                        android:gravity="left|center"
+                        android:maxLines="1"
+                        android:text="无跟进丢公海"
+                        android:textColor="@color/text99"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_content42"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left|center"
+                        android:maxLines="1"
+                        android:text="无订单丢"
+                        android:textColor="@color/text99"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

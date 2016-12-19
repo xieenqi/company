@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.followup.viewcontrol;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 
@@ -21,7 +22,7 @@ public interface FollowUpListView {
     void rushListData(boolean shw);
 
     /*发送评论成功操作*/
-    void commentSuccessEmbl();
+    void commentSuccessEmbl(CommentModel modle);
 
     /*获取列表数据成功*/
     void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX);

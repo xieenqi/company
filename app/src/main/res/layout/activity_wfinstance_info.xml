@@ -555,7 +555,7 @@
                     style="@style/image_label"
                     android:gravity="center_vertical"
                     android:scaleType="centerInside"
-                    android:src="@drawable/img_wfinstance_agree" />
+                    android:src="@drawable/img_wfinstance_agree_new" />
 
                 <TextView
                     style="@style/text_title"
@@ -583,7 +583,7 @@
                     style="@style/image_label"
                     android:gravity="center_vertical"
                     android:scaleType="centerInside"
-                    android:src="@drawable/img_wfinstance_notagree" />
+                    android:src="@drawable/img_wfinstance_notagree_new" />
 
                 <TextView
                     style="@style/text_title"

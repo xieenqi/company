@@ -341,7 +341,6 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      * @param isPull 是否是上拉
      */
     private void loadMessage(final boolean isPull) {
-//        showLoading("");
         HashMap<String, Object> body = new HashMap<>();
         body.put("pageIndex", pageIndex + "");
         body.put("pageSize", 5);
@@ -351,9 +350,6 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             @Override
             public void success(final PaginationX<HttpDiscussDet> d, final Response response) {
                 HttpErrorCheck.checkResponse("讨论详情：", response);
-//                if (d == null || d.getRecords().size() == 0) {
-//                    Toast("没有更多信息");
-//                }
                 Collections.reverse(d.getRecords());
                 if (isPull) {
                     mPageDiscussion.getRecords().clear();
@@ -374,7 +370,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             @Override
             public void failure(final RetrofitError error) {
                 lv_notice.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading);
+                HttpErrorCheck.checkError(error, ll_loading,pageIndex==1?true:false);
                 super.failure(error);
             }
         });

@@ -163,7 +163,7 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
 
         @Override
         public void afterTextChanged(final Editable s) {
-            Log.e(getClass().getSimpleName(), "afterTextChanged, s : " + s.toString());
+            Log.e(getClass().getSimpleName(), "afterTextChanged, s ： " + s.toString());
             if (s.toString().length() > 0) {
                 map_Values.put(lstData.get(position).getId(), s.toString());
             } else {

@@ -388,13 +388,13 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
             lstData.addAll(lstDataTemp);
         }
         changeAdapter();
-
     }
 
 
     @Override
     public void failure(RetrofitError error) {
-        HttpErrorCheck.checkError(error, ll_loading);
+        HttpErrorCheck.checkError(error, ll_loading, isTopAdd);
+        expandableListView_search.onRefreshComplete();
     }
 
     protected void changeAdapter() {
@@ -403,8 +403,6 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
 
     protected void openDetail(int position) {
     }
-
-    ;
 
     public void getData() {
     }
@@ -510,7 +508,7 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
                 Project project = (Project) o;
                 try {
 //                    time.setText("提交时间: " + app.df9.format(new Date(project.getCreatedAt())));
-                    time.setText("提交时间: " + DateTool.getDateTimeFriendly(project.getCreatedAt()/1000));
+                    time.setText("提交时间: " + DateTool.getDateTimeFriendly(project.getCreatedAt() / 1000));
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }

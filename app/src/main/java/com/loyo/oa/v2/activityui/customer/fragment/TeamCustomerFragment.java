@@ -158,7 +158,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
         List<FilterModel> options = new ArrayList<>();
         options.add(new OrganizationFilterModel(depts, title));
-        options.add(TimeFilterModel.getFilterModel());
+        options.add(TimeFilterModel.getFilterModel2());
         options.add(TagMenuModel.getTagFilterModel(mTags));
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
@@ -302,7 +302,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
+                        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
                         listView.onRefreshComplete();
                     }
                 }

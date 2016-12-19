@@ -35,6 +35,7 @@ import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterIm
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -314,7 +315,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map,mPagination.getPageIndex());
     }
 
     /**
@@ -355,11 +356,11 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel modle) {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(commentPosition).comments.add(modle);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

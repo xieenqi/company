@@ -128,11 +128,23 @@ public class HttpErrorCheck {
 
     /**
      * loading 报错 error信息走Error返回的
+     *
      * @param error
      * @param loadingLayout
      */
     public static void checkError(RetrofitError error, LoadingLayout loadingLayout) {
-//        DialogHelp.cancelLoading();
+        checkError(error, loadingLayout, true);
+    }
+
+    /**
+     * loading 报错 error信息走Error返回的
+     *
+     * @param error
+     * @param loadingLayout
+     * @param isLoading     true 只显示loading  false Toast
+     */
+    public static void checkError(RetrofitError error, LoadingLayout loadingLayout, boolean isLoading) {
+        DialogHelp.cancelLoading();
         LogUtil.d("loading网络异常: " + error.getMessage());
         LogUtil.d("error接口URL：" + error.getUrl());
 
@@ -144,41 +156,49 @@ public class HttpErrorCheck {
                             .in());
             LogUtil.d("error获得的：", msg);
             JSONObject job = new JSONObject(msg);
-            if (500 == error.getResponse().getStatus()) {
-                loadingLayout.setStatus(LoadingLayout.No_Network);
-                loadingLayout.setNoNetworkText(job.getString("error"));
-            } else if (401 == error.getResponse().getStatus()) {
-                loadingLayout.setStatus(LoadingLayout.No_Network);
-                loadingLayout.setNoNetworkText(job.getString("error"));
-            } else if (404 == error.getResponse().getStatus()) {
-                loadingLayout.setStatus(LoadingLayout.No_Network);
-                loadingLayout.setNoNetworkText(job.getString("error"));
-            } else if (406 == error.getResponse().getStatus()) {
+//            if (500 == error.getResponse().getStatus()) {
+//                loadingLayout.setStatus(LoadingLayout.No_Network);
+//                loadingLayout.setNoNetworkText(job.getString("error"));
+//            } else if (401 == error.getResponse().getStatus()) {
+//                loadingLayout.setStatus(LoadingLayout.No_Network);
+//                loadingLayout.setNoNetworkText(job.getString("error"));
+//            } else if (404 == error.getResponse().getStatus()) {
+//                loadingLayout.setStatus(LoadingLayout.No_Network);
+//                loadingLayout.setNoNetworkText(job.getString("error"));
+//            } else
+            if (406 == error.getResponse().getStatus()) {
                 Toast(job.getString("error"));
-                //到侧边栏 退出系统到登录界面
+                /*到侧边栏 退出系统到登录界面*/
                 Intent in = new Intent();
                 in.setAction(ExtraAndResult.ACTION_USER_VERSION);
                 in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
                 LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
             } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                Toast("请检查您的网络连接");
+                errorStatus(loadingLayout, "请检查您的网络连接", isLoading);
             } else {
-                loadingLayout.setStatus(LoadingLayout.No_Network);
-                loadingLayout.setNoNetworkText(job.getString("error"));
+                errorStatus(loadingLayout, job.getString("error"), isLoading);
             }
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
             LogUtil.d("Body空err:" + error.getUrl());
+            errorStatus(loadingLayout, "无网 或 没有获取到数据", isLoading);
             e.printStackTrace();
-            loadingLayout.setStatus(LoadingLayout.No_Network);
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
-            loadingLayout.setStatus(LoadingLayout.Error);
-            loadingLayout.setErrorText("服务端数据异常");
+            errorStatus(loadingLayout, "服务端数据异常", isLoading);
             e.printStackTrace();
         }
+    }
+
+    private static void errorStatus(LoadingLayout loadingLayout, String errorText, boolean isLoading) {
+        if (isLoading) {
+            loadingLayout.setStatus(LoadingLayout.No_Network);
+            loadingLayout.setNoNetworkText(errorText);
+            return;
+        }
+        Toast(errorText);
     }
 
     public static void checkResponse(String tag, Response response) {
@@ -200,17 +220,18 @@ public class HttpErrorCheck {
 
     /**
      * loading 报错 error信息走success返回的
+     *
      * @param tag
      * @param response
      * @param loadingLayout
      */
-    public static void checkResponse(String tag, Response response,LoadingLayout loadingLayout) {
+    public static void checkResponse(String tag, Response response, LoadingLayout loadingLayout) {
         DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(tag + " 接口成功result：" + result);
             LogUtil.d(tag + " 接口成功URL：" + response.getUrl());
-            checkResponseError(result,loadingLayout);
+            checkResponseError(result, loadingLayout);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
@@ -220,6 +241,7 @@ public class HttpErrorCheck {
             e.printStackTrace();
         }
     }
+
     public static void checkResponse(Response response) {
         DialogHelp.cancelLoading();
         try {
@@ -238,17 +260,15 @@ public class HttpErrorCheck {
     }
 
 
-
-
     /**
      * 所有提交,成功检查(2.7.4新版提交方案)
-     * */
-    public static void checkCommitSus(String tag,Response response) {
+     */
+    public static void checkCommitSus(String tag, Response response) {
         DialogHelp.successStatusLoad();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
-            LogUtil.d(tag+" 接口成功result：" + result);
-            LogUtil.d(tag+" 接口成功URL：" + response.getUrl());
+            LogUtil.d(tag + " 接口成功result：" + result);
+            LogUtil.d(tag + " 接口成功URL：" + response.getUrl());
             checkResponseError(result);
         } catch (IOException e) {
             e.printStackTrace();
@@ -262,7 +282,7 @@ public class HttpErrorCheck {
 
     /**
      * 所有提交,失败检查(2.7.4新版提交方案)
-     * */
+     */
     public static void checkCommitEro(RetrofitError error) {
         String errorMsg = "提交失败!";
         LogUtil.d("网络异常" + error.getMessage());
@@ -313,9 +333,9 @@ public class HttpErrorCheck {
             //Toast("服务端数据异常");
             errorMsg = "服务端数据异常";
             e.printStackTrace();
-        }finally {
+        } finally {
             DialogHelp.errorStatusLoading(errorMsg);
-            new Handler().postDelayed(new Runnable(){
+            new Handler().postDelayed(new Runnable() {
                 public void run() {
                     DialogHelp.cancelStatusLoading();
                 }
@@ -351,12 +371,13 @@ public class HttpErrorCheck {
             }
         }
     }
+
     /**
      * 检查response 的错误信息loading 报错 error信息走success返回的
      *
      * @param result
      */
-    private static void checkResponseError(String result,LoadingLayout loadingLayout) throws JsonSyntaxException {
+    private static void checkResponseError(String result, LoadingLayout loadingLayout) throws JsonSyntaxException {
         BaseBean data = MainApp.gson.fromJson(result, BaseBean.class);
         switch (data.errcode) {
             case 0:

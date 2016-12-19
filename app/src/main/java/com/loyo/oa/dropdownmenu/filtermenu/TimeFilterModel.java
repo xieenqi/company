@@ -24,8 +24,32 @@ public class TimeFilterModel {
         FilterModel model = new FilterModel(list, "时间", MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
+    public static FilterModel getFilterModel2() {
 
+        List<MenuModel> list = new ArrayList<>();
+        list.add(new MenuFilterByTimeModel(FilterByTime.FOLLOW, SortOrder.DESC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.FOLLOW, SortOrder.ASC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.CREATE, SortOrder.DESC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.CREATE, SortOrder.ASC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.FOLLOW_RECYCLE, SortOrder.ASC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.ORDER_RECYCLE, SortOrder.ASC));
 
+        FilterModel model = new FilterModel(list, "时间", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        return model;
+    }
+    public static FilterModel getFilterModel3() {
+
+        List<MenuModel> list = new ArrayList<>();
+        list.add(new MenuFilterByTimeModel(FilterByTime.RECYCLED_AT, SortOrder.DESC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.RECYCLED_AT, SortOrder.ASC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.FOLLOW, SortOrder.DESC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.FOLLOW, SortOrder.ASC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.CREATE, SortOrder.DESC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.CREATE, SortOrder.ASC));
+
+        FilterModel model = new FilterModel(list, "时间", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        return model;
+    }
     static private class MenuFilterByTimeModel implements MenuModel {
         private FilterByTime time;
         private SortOrder order;

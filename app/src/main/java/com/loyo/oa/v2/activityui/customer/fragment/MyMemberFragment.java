@@ -56,10 +56,13 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -101,9 +104,9 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
         super.onAttach(activity);
         try {
             memberCallback = (MemberCallback) activity;
-        }catch (ClassCastException e) {
+        } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().getClass().getName()
-                    +" must implements interface MyListener");
+                    + " must implements interface MyListener");
         }
     }
 
@@ -169,7 +172,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
 
     private void loadFilterOptions() {
         List<FilterModel> options = new ArrayList<>();
-        options.add(TimeFilterModel.getFilterModel());
+        options.add(TimeFilterModel.getFilterModel2());
         options.add(TagMenuModel.getTagFilterModel(mTags));
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
@@ -186,8 +189,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
-                }
-                else if (menuIndex == 1) { // TagFilter
+                } else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
@@ -209,6 +211,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
         } else {
             adapter.notifyDataSetChanged();
         }
+        ll_loading.setStatus(LoadingLayout.Success);
         if (!isPullUp && mCustomers.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
         /**
@@ -295,7 +298,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
         RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_MEMBER).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        HttpErrorCheck.checkResponse("我负责的", response,ll_loading);
+                        HttpErrorCheck.checkResponse("我参与的", response);
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);
@@ -322,7 +325,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error,ll_loading);
+                        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
                         listView.onRefreshComplete();
                     }
                 }
@@ -354,18 +357,18 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
 
     /**
      * 新建回调 重启Manager
-     * */
+     */
     @Subscribe
-    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event){
+    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
         memberCallback.comeBackHeadPage();
     }
 
     /**
      * 编辑回调 刷新列表
-     * */
+     */
     @Subscribe
-    public void onEditCustomerRushEvent(EditCustomerRushEvent event){
-       getData();
+    public void onEditCustomerRushEvent(EditCustomerRushEvent event) {
+        getData();
     }
 
     /**
@@ -376,8 +379,8 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
         popupWindow.dismiss();
         Intent mIntent = new Intent();
         mIntent.setClass(getActivity(), MyContactMailList.class);
-        mIntent.putExtra(ExtraAndResult.EXTRA_NAME,2);
-        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ,false);
+        mIntent.putExtra(ExtraAndResult.EXTRA_NAME, 2);
+        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, false);
         startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
     }
 

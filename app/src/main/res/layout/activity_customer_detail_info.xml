@@ -102,6 +102,39 @@
                                     android:background="@drawable/icon_edittag" />
 
                             </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/layout_4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="top"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/tv_content41"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left|center"
+                                    android:maxLines="1"
+                                    android:lineSpacingExtra="@dimen/dimen_3"
+                                    android:text="无跟进丢公海"
+                                    android:textColor="@color/text99"
+                                    android:textSize="12sp"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/tv_content42"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left|center"
+                                    android:maxLines="1"
+                                    android:text="无订单丢"
+                                    android:lineSpacingExtra="@dimen/dimen_5"
+                                    android:textColor="@color/text99"
+                                    android:textSize="12sp"
+                                    android:visibility="gone" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <RelativeLayout
@@ -266,6 +299,35 @@
                                 android:layout_alignParentRight="true"
                                 android:src="@drawable/right_arrow" />
                         </RelativeLayout>
+
+                        <include layout="@layout/include_solid_line_left" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_defaultname"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dimen_48"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            >
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/margin_other_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="默认联系人: "
+                                android:textColor="@color/text33"
+                                android:textSize="@dimen/text_sp15"
+                                />
+                            <TextView
+                                android:id="@+id/default_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/text33"
+                                android:textSize="@dimen/text_sp15"
+                                />
+
+                        </LinearLayout>
 
                         <RelativeLayout
                             android:id="@+id/layout_phone"
