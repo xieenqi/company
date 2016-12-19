@@ -4,6 +4,7 @@ package com.loyo.oa.v2.point;
 import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
@@ -52,7 +53,7 @@ public interface ISigninOrFollowUp {
      * 评论
      */
     @POST("/comment")
-    void requestComment(@Body Map<String, Object> params, Callback<Object> callback);
+    void requestComment(@Body Map<String, Object> params, Callback<BaseBeanT<CommentModel>> callback);
 
     /**
      * 删除评论
@@ -73,7 +74,7 @@ public interface ISigninOrFollowUp {
      * 客户下的跟进数据
      */
     @GET("/saleactivity/{id}/")
-    void getCustomerFollowUpList(@Path("id") String id,@QueryMap Map<String, Object> params, Callback<PaginationX<FollowUpGroupModel>> cb);
+    void getCustomerFollowUpList(@Path("id") String id, @QueryMap Map<String, Object> params, Callback<PaginationX<FollowUpGroupModel>> cb);
 
     /**
      * 拜访详情数据

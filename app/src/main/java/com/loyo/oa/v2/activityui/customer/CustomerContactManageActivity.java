@@ -142,11 +142,17 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 初始化数据
      */
     private void initData() {
-        if (null == leftExtrases || null == customerContact || null == customerContact.contacts
+        /*if (null == leftExtrases || null == customerContact || null == customerContact.contacts
                 || customerContact.contacts.isEmpty()) {
             ll_loading.setStatus(LoadingLayout.Empty);
             return;
+        }*/
+
+        if (null == customerContact.contacts && customerContact.contacts.size() == 0) {
+            ll_loading.setStatus(LoadingLayout.Empty);
+            return;
         }
+
 
         layout_container.removeAllViews();
         ArrayList<Contact> contactsCopy = new ArrayList<>();
@@ -236,6 +242,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
                 Contact contact = (Contact) data.getSerializableExtra("data");
                 customerContact.contacts.add(contact);
+                LogUtil.dee("contacts:"+MainApp.gson.toJson(customerContact.contacts));
                 initData();
                 break;
 

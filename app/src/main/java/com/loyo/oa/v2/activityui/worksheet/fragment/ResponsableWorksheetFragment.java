@@ -245,7 +245,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
             @Override
             public void failure(RetrofitError error) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading);
+                HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
             }
         });
 

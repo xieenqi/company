@@ -202,7 +202,7 @@ public class OrderSearchActivity extends BaseLoadingActivity implements PullToRe
     @Override
     public void failure(RetrofitError error) {
         expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkError(error, ll_loading);
+        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
     }
 
 

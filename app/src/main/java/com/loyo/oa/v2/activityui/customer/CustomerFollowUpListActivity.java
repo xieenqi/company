@@ -49,7 +49,8 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, CustomerFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
+public class CustomerFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2,
+        CustomerFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     public static final int ACTIVITIES_ADD = 101;
 

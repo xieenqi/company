@@ -30,6 +30,7 @@ import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.adapter.SigninListAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signin.persenter.TeamSigninListFragPresenter;
 import com.loyo.oa.v2.activityui.signin.persenter.TeamSigninListFragPresenterImpl;
@@ -342,11 +343,11 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel model) {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(commentPosition).comments.add(model);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

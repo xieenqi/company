@@ -86,9 +86,6 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         mPresenter.loadFilterOptions();
         initList();
         initAdapter();
-//        page = 1;
-//        isTopAdd = true;
-//        mPresenter.getApproveWfInstancesList(page, isTopAdd);
         onPullDownToRefresh(expandableListView);
     }
 
