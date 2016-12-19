@@ -50,7 +50,7 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
      * 请求列表数据
      */
     @Override
-    public void requestListData(int pageIndex, final int pageSize, final boolean isTopAdd) {
+    public void requestListData(final int pageIndex, final int pageSize, final boolean isTopAdd) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
@@ -82,7 +82,7 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error, crolView.getLoadingLayout(),pageSize==1?true:false);
+                HttpErrorCheck.checkError(error, crolView.getLoadingLayout(),pageIndex==1?true:false);
                 super.failure(error);
                 crolView.refreshCmpl();
             }
