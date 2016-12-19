@@ -35,6 +35,7 @@ import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -59,7 +60,8 @@ import java.util.List;
  * 【我的跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
+public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,
+        FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
     private View mView;
     private Button btn_add;
@@ -279,7 +281,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.d("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map,mPagination.getPageIndex());
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     /**
@@ -335,11 +337,13 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel modle) {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(true);
+//        isPullOrDown = true;
+        listModel.get(commentPosition).comments.add(modle);
+//        getData(true);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
