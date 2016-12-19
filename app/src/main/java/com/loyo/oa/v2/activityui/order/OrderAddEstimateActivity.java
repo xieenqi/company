@@ -471,7 +471,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     }
 
     /**
-     * 截至日期选择框
+     * 回款日期选择框
      */
     void setDeadLine() {
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null, true);
@@ -485,7 +485,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 //                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
 
                 long time= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,min,0);
-                String str= com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time);
+                String str= com.loyo.oa.common.utils.DateTool.getDateFriendly(time);
                 tv_time.setText(str);
                 estimatedTime=time;
 
