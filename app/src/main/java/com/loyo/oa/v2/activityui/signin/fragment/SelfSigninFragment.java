@@ -29,6 +29,7 @@ import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SigninListAdapter;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
@@ -223,7 +224,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map,mPagination.getPageIndex());
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     /**
@@ -320,11 +321,11 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel modle) {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(commentPosition).comments.add(modle);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

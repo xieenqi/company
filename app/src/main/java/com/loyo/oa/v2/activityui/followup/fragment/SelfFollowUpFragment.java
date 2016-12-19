@@ -340,9 +340,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     public void commentSuccessEmbl(CommentModel modle) {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-//        isPullOrDown = true;
         listModel.get(commentPosition).comments.add(modle);
-//        getData(true);
         mAdapter.notifyDataSetChanged();
     }
 
