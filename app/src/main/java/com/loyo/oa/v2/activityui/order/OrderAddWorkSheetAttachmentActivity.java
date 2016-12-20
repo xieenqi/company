@@ -113,7 +113,7 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
         showLoading("");
         buildAttachment();
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<AttachmentForNew>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>() {
 
                     @Override
                     public void onError(Throwable e) {
@@ -123,7 +123,7 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
                     }
 
                     @Override
-                    public void onNext(AttachmentForNew aNew) {
+                    public void onNext(ArrayList<AttachmentForNew> news) {
                         cancelLoading();
                         getAttachments();
                         controller.removeAllTask();

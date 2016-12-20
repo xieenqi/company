@@ -29,7 +29,6 @@ import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -268,14 +267,14 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         showStatusLoading(false);
         buildAttachment();
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<AttachmentForNew>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>() {
                     @Override
-                    public void onNext(AttachmentForNew aNew) {
+                    public void onNext(final ArrayList<AttachmentForNew> news) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 cancelStatusLoading();
-                                BulletinAddActivity.this.attachmentForNew = attachmentForNew;
+                                BulletinAddActivity.this.attachmentForNew = news;
                                 commitAnnouncement();
                             }
                         },1000);

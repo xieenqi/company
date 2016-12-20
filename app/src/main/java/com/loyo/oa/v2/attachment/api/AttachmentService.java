@@ -23,7 +23,7 @@ public class AttachmentService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_ATTACHMENT())
-                        .create(I2Attachment.class)
+                        .create(IAttachment.class)
                         .getServerToken()
                         .compose(RetrofitAdapterFactory.<OssToken>compatApplySchedulers());
     }
@@ -32,7 +32,7 @@ public class AttachmentService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_ATTACHMENT())
-                        .create(I2Attachment.class)
+                        .create(IAttachment.class)
                         .syncGetServerToken();
     }
 
@@ -40,7 +40,7 @@ public class AttachmentService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_ATTACHMENT())
-                        .create(I2Attachment.class)
+                        .create(IAttachment.class)
                         .getAttachments(uuid)
                         .compose(RetrofitAdapterFactory.<ArrayList<Attachment>>compatApplySchedulers());
     }
@@ -49,7 +49,7 @@ public class AttachmentService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_ATTACHMENT())
-                        .create(I2Attachment.class)
+                        .create(IAttachment.class)
                         .newUpload(uuid, biz, attachments)
                         .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers());
     }
@@ -58,7 +58,7 @@ public class AttachmentService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_ATTACHMENT())
-                        .create(I2Attachment.class)
+                        .create(IAttachment.class)
                         .pub(id, isOpen)
                         .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers());
     }
@@ -67,7 +67,7 @@ public class AttachmentService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_ATTACHMENT())
-                        .create(I2Attachment.class)
+                        .create(IAttachment.class)
                         .removeViewer(id, userId)
                         .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers());
     }
@@ -76,7 +76,7 @@ public class AttachmentService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_ATTACHMENT())
-                        .create(I2Attachment.class)
+                        .create(IAttachment.class)
                         .addViewer(id, userId)
                         .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers());
     }
@@ -85,17 +85,17 @@ public class AttachmentService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_ATTACHMENT())
-                        .create(I2Attachment.class)
+                        .create(IAttachment.class)
                         .remove(id, map)
                         .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers());
     }
 
-    public static Observable<AttachmentForNew> setAttachementData(ArrayList<AttachmentBatch> attachment) {
+    public static Observable<ArrayList<AttachmentForNew>> setAttachementData(ArrayList<AttachmentBatch> attachment) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_ATTACHMENT())
-                        .create(I2Attachment.class)
+                        .create(IAttachment.class)
                         .setAttachementData(attachment)
-                        .compose(RetrofitAdapterFactory.<AttachmentForNew>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<ArrayList<AttachmentForNew>>compatApplySchedulers());
     }
 }

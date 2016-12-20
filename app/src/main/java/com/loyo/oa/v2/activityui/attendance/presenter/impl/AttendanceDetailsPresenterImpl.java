@@ -2,21 +2,23 @@ package com.loyo.oa.v2.activityui.attendance.presenter.impl;
 
 import android.app.Activity;
 import android.text.TextUtils;
+
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceDetial;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceDetailsPresenter;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceDetailsView;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
+
 import java.util.ArrayList;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -44,19 +46,13 @@ public class AttendanceDetailsPresenterImpl implements AttendanceDetailsPresente
             return;
         }
 
-        Utils.getAttachments(attachementuuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> mAttachment, final Response response) {
-                HttpErrorCheck.checkResponse("考勤详情-获取附件", response);
-                crolView.initGridView(mAttachment);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
+        AttachmentService.getAttachments(attachementuuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        crolView.initGridView(attachments);
+                    }
+                });
     }
 
     /**

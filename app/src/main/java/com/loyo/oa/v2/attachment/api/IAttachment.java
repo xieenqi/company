@@ -1,14 +1,13 @@
-package com.loyo.oa.v2.point;
+package com.loyo.oa.v2.attachment.api;
 
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.upload.alioss.OssToken;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
@@ -27,22 +26,22 @@ public interface IAttachment {
 
     //附件增加viewer
     @POST("/attachment/{id}/viewers/{userId}")
-    void addViewer(@Path("id") String id, @Path("userId") String userId, retrofit.Callback<Attachment> cb);
+    Observable<Attachment> addViewer(@Path("id") String id, @Path("userId") String userId);
 
     //附件删除viewer
     @DELETE("/attachment/{id}/viewers/{userId}")
-    void removeViewer(@Path("id") String id, @Path("userId") String userId, retrofit.Callback<Attachment> cb);
+    Observable<Attachment> removeViewer(@Path("id") String id, @Path("userId") String userId);
 
     //设置附件公开
     @PUT("/attachment/{id}/public/{isopen}")
-    void pub(@Path("id") String id,@Path("isopen") int isOpen, retrofit.Callback<Attachment> cb);
+    Observable<Attachment> pub(@Path("id") String id, @Path("isopen") int isOpen);
 
     //删除附件(新加入UUID)
     @DELETE("/attachment/{id}")
-    void remove(@Path("id") String id,@QueryMap HashMap<String,Object> map, retrofit.Callback<Attachment> cb);
+    Observable<Attachment> remove(@Path("id") String id, @QueryMap HashMap<String, Object> map);
 
     @GET("/attachment/uuid/{uuid}")
-    void getAttachments(@Path("uuid") String uuid, Callback<ArrayList<Attachment>> cb);
+    Observable<ArrayList<Attachment>> getAttachments(@Path("uuid") String uuid);
 
     /**
      * 上传附件
@@ -51,17 +50,17 @@ public interface IAttachment {
      */
     @Multipart
     @POST("/attachment/")
-    Observable<Attachment> upload(@Part("uuid") TypedString uuid,@Part("bizType")int biz,@Part("attachments")TypedFile attachments);
+    Observable<Attachment> upload(@Part("uuid") TypedString uuid, @Part("bizType") int biz, @Part("attachments") TypedFile attachments);
 
     @Multipart
     @POST("/attachment/")
-    void newUpload(@Part("uuid") TypedString uuid,@Part("bizType")int biz,@Part("attachments")TypedFile attachments,Callback<Attachment> callback);
+    Observable<Attachment> newUpload(@Part("uuid") TypedString uuid, @Part("bizType") int biz, @Part("attachments") TypedFile attachments);
 
     /**
      * 获取阿里云附件Token
      * */
     @POST("/attachment/sign")
-    void getServerToken(Callback<OssToken> callback);
+    Observable<OssToken> getServerToken();
 
     @POST("/attachment/sign")
     OssToken syncGetServerToken();
@@ -70,6 +69,6 @@ public interface IAttachment {
      * 上传附件信息
      * */
     @POST("/attachment/batch")
-    void setAttachementData(@Body ArrayList<AttachmentBatch> attachment,Callback<ArrayList<AttachmentForNew>> callback);
+    Observable<ArrayList<AttachmentForNew>> setAttachementData(@Body ArrayList<AttachmentBatch> attachment);
 
 }

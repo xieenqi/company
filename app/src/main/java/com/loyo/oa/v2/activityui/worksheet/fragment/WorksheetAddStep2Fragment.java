@@ -256,9 +256,9 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
 //        });
 
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<AttachmentForNew>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
-                    public void onNext(AttachmentForNew aNew) {
+                    public void onNext(ArrayList<AttachmentForNew> news) {
                         cancelStatusLoading();
                         commitWorksheet();
                     }

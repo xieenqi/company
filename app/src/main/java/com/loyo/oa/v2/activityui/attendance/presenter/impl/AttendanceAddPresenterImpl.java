@@ -156,19 +156,13 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
      * */
     @Override
     public void getAttachments(String uuid) {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> mAttachment, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                crolView.setAttachmentEmbl(mAttachment);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        crolView.setAttachmentEmbl(attachments);
+                    }
+                });
     }
 
     /**

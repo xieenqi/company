@@ -86,23 +86,8 @@ public class OrderWorksheetAddPresenterImpl implements OrderWorksheetAddPresente
     @Override
     public void uploadAttachmentAt(UploadController controller,String uuid,int bizType) {
         buildAttachment(controller,uuid,bizType);
-//        IAttachment service = RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT())
-//                .create(IAttachment.class);
-//        service.setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
-//            @Override
-//            public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-//                HttpErrorCheck.checkResponse("上传附件信息", response);
-//                crolView.setUploadAttachmentEmbl(attachmentForNew.size(),mFilePath);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<AttachmentForNew>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>() {
 
                     @Override
                     public void onError(Throwable e) {
@@ -111,8 +96,8 @@ public class OrderWorksheetAddPresenterImpl implements OrderWorksheetAddPresente
                     }
 
                     @Override
-                    public void onNext(AttachmentForNew aNew) {
-                        crolView.setUploadAttachmentEmbl(1,mFilePath);
+                    public void onNext(ArrayList<AttachmentForNew> news) {
+                        crolView.setUploadAttachmentEmbl(news.size(),mFilePath);
                     }
                 });
 

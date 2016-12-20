@@ -168,26 +168,10 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
      */
     void postAttaData() {
         buildAttachment();
-//        RestAdapterFactory.getInstance()
-//                .build(Config_project.API_URL_ATTACHMENT())
-//                .create(IAttachment.class)
-//                .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
-//                    @Override
-//                    public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-//                        //HttpErrorCheck.checkCommitSus("上传附件信息", response);
-//                        commitDynamic();
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkCommitEro(error);
-//                    }
-//                });
-
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<AttachmentForNew>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
-                    public void onNext(AttachmentForNew aNew) {
+                    public void onNext(ArrayList<AttachmentForNew> news) {
                         commitDynamic();
                     }
                 });
