@@ -25,6 +25,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
+import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.application.MainApp;
@@ -32,6 +33,8 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -218,37 +221,69 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         map.put("order", order);
         map.put("xpath", xPath);
         map.put("userId", userId);
-        LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IClue.class).getTeamCluelist(map, new Callback<ClueList>() {
-            @Override
-            public void success(ClueList clueList, Response response) {
-                lv_list.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
-                if (isPullDown && clueList.data.records == null)
-                    ll_loading.setStatus(LoadingLayout.Empty);
-                if (null == clueList.data || clueList.data.records == null) {
-                    if (isPullDown && listData.size() > 0) {
-                        listData.clear();
-                    } else {
-//                        Toast("没有相关数据");
-                        return;
-                    }
-                } else {
-                    if (isPullDown) {
-                        listData.clear();
-                    }
-                    listData.addAll(clueList.data.records);
-                }
-                adapter.setData(listData);
-            }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+//                create(IClue.class).getTeamCluelist(map, new Callback<ClueList>() {
+//            @Override
+//            public void success(ClueList clueList, Response response) {
+//                lv_list.onRefreshComplete();
+//                HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
+//                if (isPullDown && clueList.data.records == null)
+//                    ll_loading.setStatus(LoadingLayout.Empty);
+//                if (null == clueList.data || clueList.data.records == null) {
+//                    if (isPullDown && listData.size() > 0) {
+//                        listData.clear();
+//                    } else {
+////                        Toast("没有相关数据");
+//                        return;
+//                    }
+//                } else {
+//                    if (isPullDown) {
+//                        listData.clear();
+//                    }
+//                    listData.addAll(clueList.data.records);
+//                }
+//                adapter.setData(listData);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                lv_list.onRefreshComplete();
+//                HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
+//            }
+//        });
 
-            @Override
-            public void failure(RetrofitError error) {
-                lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading,page == 1 ? true : false);
-            }
-        });
+        ClueService.getTeamClueList(map)
+                .subscribe(new DefaultLoyoSubscriber<ClueList>() {
+                    @Override
+                    public void onError(Throwable e) {
+                         /* 重写父类方法，不调用super */
+                        @LoyoErrorChecker.CheckType
+                        int type = page != 1 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                    }
+
+                    @Override
+                    public void onNext(ClueList clueList) {
+                        lv_list.onRefreshComplete();
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        if (isPullDown && clueList.data.records == null)
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        if (null == clueList.data || clueList.data.records == null) {
+                            if (isPullDown && listData.size() > 0) {
+                                listData.clear();
+                            } else {
+                                return;
+                            }
+                        } else {
+                            if (isPullDown) {
+                                listData.clear();
+                            }
+                            listData.addAll(clueList.data.records);
+                        }
+                        adapter.setData(listData);
+                    }
+                });
     }
 
     @Override

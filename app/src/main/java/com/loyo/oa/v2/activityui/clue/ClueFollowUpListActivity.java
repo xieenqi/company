@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.clue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -359,6 +360,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
             dateIndex = model.date;
         }
         bindData();
+        Log.i("httpjie", "getListDataSuccesseEmbl: ");
         ll_loading.setStatus(LoadingLayout.Success);
         if (listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);

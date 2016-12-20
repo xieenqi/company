@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -265,45 +266,75 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
         map.put("contactId", contactId);
         map.put("type", callType);
         map.put("mobile", phone);
-        LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getCallReturnInfo(map,
-                new RCallback<CallBackCallid>() {
-                    @Override
-                    public void success(final CallBackCallid callBackCallid, final Response response) {
-                        HttpErrorCheck.checkResponse("线索请求回拨", response);
-                        try {
-                            switch (callBackCallid.errcode) {
-                                case 0:
-                                    Bundle mBundle = new Bundle();
-                                    mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
-                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
-                                    MainApp.getMainApp().startActivity((Activity) mContext, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-                                    break;
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getCallReturnInfo(map,
+//                new RCallback<CallBackCallid>() {
+//                    @Override
+//                    public void success(final CallBackCallid callBackCallid, final Response response) {
+//                        HttpErrorCheck.checkResponse("线索请求回拨", response);
+//                        try {
+//                            switch (callBackCallid.errcode) {
+//                                case 0:
+//                                    Bundle mBundle = new Bundle();
+//                                    mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
+//                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
+//                                    MainApp.getMainApp().startActivity((Activity) mContext, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+//                                    break;
+//
+//                                case 50000:
+//                                    Toast("主叫与被叫号码不能相同!");
+//                                    break;
+//
+//                                case 50001:
+//                                    Toast("余额不足!");
+//                                    break;
+//
+//                                case 50002:
+//                                    Toast("号码格式错误!");
+//                                    break;
+//                            }
+//                        } catch (NullPointerException e) {
+//                            e.printStackTrace();
+//                            Toast(e.getMessage());
+////                            finish();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        super.failure(error);
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
 
-                                case 50000:
-                                    Toast("主叫与被叫号码不能相同!");
-                                    break;
+        ClueService.getCallReturnInfo(map).subscribe(new DefaultLoyoSubscriber<CallBackCallid>() {
+            @Override
+            public void onNext(CallBackCallid callBackCallid) {
+                try {
+                    switch (callBackCallid.errcode) {
+                        case 0:
+                            Bundle mBundle = new Bundle();
+                            mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
+                            mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
+                            MainApp.getMainApp().startActivity((Activity) mContext, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                            break;
 
-                                case 50001:
-                                    Toast("余额不足!");
-                                    break;
+                        case 50000:
+                            Toast("主叫与被叫号码不能相同!");
+                            break;
 
-                                case 50002:
-                                    Toast("号码格式错误!");
-                                    break;
-                            }
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                            Toast(e.getMessage());
-//                            finish();
-                        }
+                        case 50001:
+                            Toast("余额不足!");
+                            break;
+
+                        case 50002:
+                            Toast("号码格式错误!");
+                            break;
                     }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    Toast(e.getMessage());
+                }
+            }
+        });
     }
 }

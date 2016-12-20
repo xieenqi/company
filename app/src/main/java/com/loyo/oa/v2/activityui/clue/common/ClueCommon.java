@@ -1,10 +1,13 @@
 package com.loyo.oa.v2.activityui.clue.common;
 
+import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.model.IdName;
 import com.loyo.oa.v2.activityui.clue.model.SourcesData;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -27,10 +30,28 @@ public class ClueCommon {
      */
     public static void getSourceData() {
         final List<String> data = new ArrayList<>();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getSource(new Callback<SourcesData>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getSource(new Callback<SourcesData>() {
+//            @Override
+//            public void success(SourcesData idName, Response response) {
+//                HttpErrorCheck.checkResponse("线索来源：", response);
+//                if(null != idName){
+//                    for (IdName ele : idName.data) {
+//                        data.add(ele.name);
+//                    }
+//                    SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA);
+//                    SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA, MainApp.gson.toJson(data.toArray(new String[data.size()])));
+//                }
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+
+        ClueService.getSource().subscribe(new DefaultLoyoSubscriber<SourcesData>(LoyoErrorChecker.SILENCE) {
             @Override
-            public void success(SourcesData idName, Response response) {
-                HttpErrorCheck.checkResponse("线索来源：", response);
+            public void onNext(SourcesData idName) {
                 if(null != idName){
                     for (IdName ele : idName.data) {
                         data.add(ele.name);
@@ -39,11 +60,7 @@ public class ClueCommon {
                     SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA, MainApp.gson.toJson(data.toArray(new String[data.size()])));
                 }
             }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
         });
+
     }
 }

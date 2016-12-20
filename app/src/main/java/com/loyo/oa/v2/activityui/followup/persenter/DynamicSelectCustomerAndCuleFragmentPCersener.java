@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.followup.persenter;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -69,6 +70,7 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
         params.put("pageIndex", pageCus);
         params.put("pageSize", 15);
         LogUtil.d("我的客户查询参数：" + MainApp.gson.toJson(params));
+
         CustomerService.getMyCustomers(params)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>(vControl.getLoadingLayout()) {
                     @Override
@@ -103,7 +105,6 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
                         vControl.bindCustomerData(mCustomers);
                     }
                 });
-
     }
 
     /**
@@ -113,11 +114,53 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageClue);
         map.put("pageSize", 15);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+//                create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
+//            @Override
+//            public void success(ClueList clueList, Response response) {
+//                HttpErrorCheck.checkResponse("我的线索列表：", response, vControl.getLoadingLayout());
+//                ArrayList<ClueListItem> data = clueList.data.records;
+//                if (null == data || data.size() == 0) {
+//                    if (isPullClue) {
+//                        vControl.showMsg("没有更多数据了!");
+//                    } else {
+//                        mCule.clear();
+//                        vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
+//                    }
+//                    vControl.getDataComplete();
+//                } else {
+//                    if (isPullClue) {
+//                        mCule.addAll(data);
+//                    } else {
+//                        mCule.clear();
+//                        mCule = data;
+//                    }
+//                }
+//                vControl.getDataComplete();
+//                vControl.bindClueData(mCule);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                vControl.getDataComplete();
+//                HttpErrorCheck.checkError(error, vControl.getLoadingLayout(), pageCus == 1 ? true : false);
+//            }
+//        });
+
+        //新的网络层
+        ClueService.getMyClueList(map).subscribe(new DefaultLoyoSubscriber<ClueList>() {
             @Override
-            public void success(ClueList clueList, Response response) {
-                HttpErrorCheck.checkResponse("我的线索列表：", response, vControl.getLoadingLayout());
+            public void onError(Throwable e) {
+                /* 重写父类方法，不调用super */
+                @LoyoErrorChecker.CheckType
+                int type = pageCus != 1 ?
+                        LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                LoyoErrorChecker.checkLoyoError(e, type, vControl.getLoadingLayout());
+            }
+
+            @Override
+            public void onNext(ClueList clueList) {
+                vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
                 ArrayList<ClueListItem> data = clueList.data.records;
                 if (null == data || data.size() == 0) {
                     if (isPullClue) {
@@ -138,13 +181,8 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
                 vControl.getDataComplete();
                 vControl.bindClueData(mCule);
             }
-
-            @Override
-            public void failure(RetrofitError error) {
-                vControl.getDataComplete();
-                HttpErrorCheck.checkError(error, vControl.getLoadingLayout(), pageCus == 1 ? true : false);
-            }
         });
+
     }
 
     @Override
