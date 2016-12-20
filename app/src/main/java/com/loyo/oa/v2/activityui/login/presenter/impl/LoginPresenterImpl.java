@@ -71,11 +71,11 @@ public class LoginPresenterImpl implements LoginPresenter {
                 .setEndpoint(FinalVariables.GET_TOKEN) //URL
                 .setLogLevel(RestAdapter.LogLevel.FULL) //是否Debug
                 .build();
-        adapter.create(ILogin.class).login(body, new RCallback<BaseBeanT<Token>>() {
+        adapter.create(ILogin.class).login(body, new RCallback<BaseBeanT<String>>() {
             @Override
-            public void success(final BaseBeanT<Token> token, final Response response) {
-                HttpErrorCheck.checkResponse("登录: ",response);
-                if (null == token || TextUtils.isEmpty(token.data.access_token)) {
+            public void success(final BaseBeanT<String> token, final Response response) {
+                HttpErrorCheck.checkResponse("登录: ", response);
+                if (null == token || token.data == null || TextUtils.isEmpty(token.data)) {
                     crolView.onError();
                     return;
                 } else {
@@ -96,7 +96,7 @@ public class LoginPresenterImpl implements LoginPresenter {
      * 登录成功后操作
      */
     @Override
-    public void onSuccessEmbl(final Token token, final Activity mActivity) {
+    public void onSuccessEmbl(final String token, final Activity mActivity) {
         mWaveView.setText("登录成功");
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         cachedThreadPool.execute(new Runnable() {
@@ -109,8 +109,8 @@ public class LoginPresenterImpl implements LoginPresenter {
                 }
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "openOne");
                 //登录成功
-                MainApp.setToken(token.access_token);
-                SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);
+                MainApp.setToken(token);
+                SharedUtil.put(mContext, FinalVariables.TOKEN, token);
                 SharedUtil.putBoolean(mContext, ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
                 MainApp.getMainApp().startActivity(mActivity, MainHomeActivity.class, MainApp.ENTER_TYPE_RIGHT, true, new Bundle());
                 SharedUtil.putBoolean(mContext, ExtraAndResult.WELCOM_KEY, true);

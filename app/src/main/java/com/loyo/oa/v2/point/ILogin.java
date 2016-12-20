@@ -25,7 +25,7 @@ public interface ILogin {
      * @param cb   返回对象
      */
     @POST("/")
-    void login(@Body HashMap<String, Object> body, retrofit.Callback<BaseBeanT<Token>> cb);
+    void login(@Body HashMap<String, Object> body, retrofit.Callback<BaseBeanT<String>> cb);
 
     /**
      * 更新unionid

@@ -381,7 +381,7 @@ public class HttpErrorCheck {
     }
 
     private static void showDilog(String msg) {
-        final SweetAlertDialogView doalog = new SweetAlertDialogView(MainApp.getMainApp());
+        final SweetAlertDialogView doalog = new SweetAlertDialogView(MainApp.getMainApp().getApplicationContext());
         doalog.alertMessageClick(new OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
