@@ -160,7 +160,7 @@ public class TasksEditActivity extends BaseActivity {
         member = new Members();
 
         UpdateUI();
-        //getEditAttachments();
+        getEditAttachments();
 //        setTouchView(-1);
 
     }
@@ -212,27 +212,27 @@ public class TasksEditActivity extends BaseActivity {
         setCornBodyinfo();
     }
 
-//    /**
-//     * 获取附件(编辑)
-//     */
-//    void getEditAttachments() {
-//        showLoading("");
-//        Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
-//            @Override
-//            public void success(final ArrayList<Attachment> _attachments, final Response response) {
-//                cancelLoading();
-//                mTask.setAttachments(_attachments);
-//                init_gridView_photo();
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                cancelLoading();
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-//    }
+    /**
+     * 获取附件(编辑)
+     */
+    void getEditAttachments() {
+        showLoading("");
+        AttachmentService.getAttachments(mTask.getAttachmentUUId())
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        cancelLoading();
+                        mTask.setAttachments(attachments);
+                        init_gridView_photo();
+                    }
+                });
+    }
 
     /**
      * 重复任务数据拆解
@@ -407,13 +407,12 @@ public class TasksEditActivity extends BaseActivity {
                     Toast("负责人" + getString(R.string.app_no_null));
                     break;
                 }
-                requestCommitTask(title,content);
+                requestCommitTask(title, content);
                 break;
 
 
             /*编辑负责人*/
-            case R.id.layout_responsiblePerson:
-            {
+            case R.id.layout_responsiblePerson: {
                 StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(newUser);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
@@ -426,11 +425,10 @@ public class TasksEditActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
 
             /*编辑参与人*/
-            case R.id.tv_toUsers:
-            {
+            case R.id.tv_toUsers: {
                 StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
@@ -443,7 +441,7 @@ public class TasksEditActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
 
 
             //重复任务
@@ -486,7 +484,7 @@ public class TasksEditActivity extends BaseActivity {
         }
     }
 
-    void requestCommitTask(String title,String content){
+    void requestCommitTask(String title, String content) {
         showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
@@ -519,7 +517,7 @@ public class TasksEditActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateTask(mTask.getId(), map, new RCallback<Task>() {
             @Override
             public void success(final Task task, Response response) {
-                HttpErrorCheck.checkCommitSus("任务编辑",response);
+                HttpErrorCheck.checkCommitSus("任务编辑", response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -530,7 +528,7 @@ public class TasksEditActivity extends BaseActivity {
                         setResult(Activity.RESULT_OK, intent);
                         onBackPressed();
                     }
-                },1000);
+                }, 1000);
             }
 
             @Override
@@ -551,7 +549,7 @@ public class TasksEditActivity extends BaseActivity {
 //                tv_deadline.setText(str);
 //                mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str, "yyyy-MM-dd HH:mm")));
 
-                long time= com.loyo.oa.common.utils.DateTool.getStamp(year, month, day,hour,min,0);
+                long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, min, 0);
                 tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time));
                 mTask.setPlanEndAt(time);
 
@@ -699,15 +697,13 @@ public class TasksEditActivity extends BaseActivity {
             newUser = Compat.convertStaffCollectionToNewUser(collection);
             if (newUser == null) {
                 tv_responsiblePerson.setText("无负责人");
-            }
-            else {
+            } else {
                 tv_responsiblePerson.setText(newUser.getName());
             }
-        }
-        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+        } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             member = Compat.convertStaffCollectionToMembers(collection);
-            if (null == member || (member.users.size()==0 && member.depts.size()==0)) {
+            if (null == member || (member.users.size() == 0 && member.depts.size() == 0)) {
                 tv_toUsers.setText("无参与人");
             } else {
                 joinName = new StringBuffer();
@@ -824,31 +820,28 @@ public class TasksEditActivity extends BaseActivity {
                 break;
             /*删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                Utils.dialogShow(this, "请稍候");
+                showLoading("请稍候");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                 HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("bizType", 2);
                 map.put("uuid", uuid);
-                app.getRestAdapter().create(IAttachment.class)
-                        .remove(String.valueOf(delAttachment.getId()), map)
-                        .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers())
+                AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
                         .subscribe(new DefaultLoyoSubscriber<Attachment>() {
 
                             @Override
                             public void onError(Throwable e) {
                                 super.onError(e);
-                                Utils.dialogDismiss();
+                                cancelLoading();
                             }
 
                             @Override
                             public void onNext(Attachment attachment) {
-                                Utils.dialogDismiss();
+                                cancelLoading();
                                 Toast("删除附件成功!");
                                 mTask.getAttachments().remove(delAttachment);
                                 init_gridView_photo();
                             }
                         });
-
                 break;
 
             default:
