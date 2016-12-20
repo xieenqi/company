@@ -9,11 +9,14 @@ import android.widget.ListView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.adapter.WfInstanceTypeSelectListViewAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -124,10 +127,41 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
      */
     private void getBizForm() {
         showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForm(mBizForm.getId(), new RCallback<BizForm>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForm(mBizForm.getId(), new RCallback<BizForm>() {
+//            @Override
+//            public void success(final BizForm bizForm, final Response response) {
+//                HttpErrorCheck.checkResponse("获取审批【类型】详情:", response);
+//                if (null != bizForm) {
+//                    bizForm.setFields(filedWfinstanceInfo(bizForm.getFields()));
+//                    if (null == bizForm.getFields() || bizForm.getFields().size() == 0) {
+//                        sweetAlertDialogView.alertIcon(null,"该审批类别未设置(未启用)审批内容,\n请选择其它类别!");
+//                    } else {
+//                        mBundle = new Bundle();
+//                        mBundle.putSerializable("bizForm", bizForm);
+//                        mBundle.putString("projectTitle", projectTitle);
+//                        mBundle.putString("projectId", projectId);
+//                        app.startActivityForResult(WfInTypeSelectActivity.this, ProcessSelectActivity.class, MainApp.ENTER_TYPE_RIGHT, 0, mBundle);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
+
+        WfinstanceService.getWfBizForm(mBizForm.getId()).subscribe(new DefaultLoyoSubscriber<BizForm>() {
             @Override
-            public void success(final BizForm bizForm, final Response response) {
-                HttpErrorCheck.checkResponse("获取审批【类型】详情:", response);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+
+            @Override
+            public void onNext(BizForm bizForm) {
+                DialogHelp.cancelLoading();
                 if (null != bizForm) {
                     bizForm.setFields(filedWfinstanceInfo(bizForm.getFields()));
                     if (null == bizForm.getFields() || bizForm.getFields().size() == 0) {
@@ -141,12 +175,6 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
                     }
                 }
             }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
         });
     }
 
@@ -158,22 +186,39 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", pagination.getPageIndex());
         params.put("pageSize", 2000);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
+//            @Override
+//            public void success(final PaginationX<BizForm> bizFormPaginationX, final Response response) {
+//                HttpErrorCheck.checkResponse("获取审批【类型列表】", response);
+//                if (null != bizFormPaginationX) {
+//                    pagination = bizFormPaginationX;
+//                    pagination.records = filedBizFormInfo(pagination.records);
+//                    lstData_BizForm.addAll(pagination.getRecords());
+//                    wfInstanceTypeSelectListViewAdapter.notifyDataSetChanged();
+//                }
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
+        WfinstanceService.getWfBizForms(params).subscribe(new DefaultLoyoSubscriber<PaginationX<BizForm>>() {
             @Override
-            public void success(final PaginationX<BizForm> bizFormPaginationX, final Response response) {
-                HttpErrorCheck.checkResponse("获取审批【类型列表】", response);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+            @Override
+            public void onNext(PaginationX<BizForm> bizFormPaginationX) {
+                DialogHelp.cancelLoading();
                 if (null != bizFormPaginationX) {
                     pagination = bizFormPaginationX;
                     pagination.records = filedBizFormInfo(pagination.records);
                     lstData_BizForm.addAll(pagination.getRecords());
                     wfInstanceTypeSelectListViewAdapter.notifyDataSetChanged();
                 }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
             }
         });
     }

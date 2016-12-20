@@ -9,10 +9,13 @@ import android.widget.ListView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.adapter.ProcessChooseAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfTemplate;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -88,20 +91,35 @@ public class ProcessSelectActivity extends BaseActivity {
             return;
         }
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfTemplate(mBizForm.getId(), new RCallback<ArrayList<WfTemplate>>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfTemplate(mBizForm.getId(), new RCallback<ArrayList<WfTemplate>>() {
+//            @Override
+//            public void success(final ArrayList<WfTemplate> bizFormFieldsPaginationX, final Response response) {
+//                HttpErrorCheck.checkResponse("获取审批流程", response);
+//                wfTemplateArrayList = bizFormFieldsPaginationX;
+//                final ProcessChooseAdapter adapter = new ProcessChooseAdapter(ProcessSelectActivity.this, bizFormFieldsPaginationX);
+//                lv_deptList.setAdapter(adapter);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                Toast("获取审批流程失败");
+//                super.failure(error);
+//            }
+//        });
+        WfinstanceService.getWfTemplate(mBizForm.getId()).subscribe(new DefaultLoyoSubscriber<ArrayList<WfTemplate>>() {
             @Override
-            public void success(final ArrayList<WfTemplate> bizFormFieldsPaginationX, final Response response) {
-                HttpErrorCheck.checkResponse("获取审批流程", response);
-                wfTemplateArrayList = bizFormFieldsPaginationX;
-                final ProcessChooseAdapter adapter = new ProcessChooseAdapter(ProcessSelectActivity.this, bizFormFieldsPaginationX);
-                lv_deptList.setAdapter(adapter);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
             }
 
             @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Toast("获取审批流程失败");
-                super.failure(error);
+            public void onNext(ArrayList<WfTemplate> bizFormFieldsPaginationX) {
+                DialogHelp.cancelLoading();
+                wfTemplateArrayList = bizFormFieldsPaginationX;
+                final ProcessChooseAdapter adapter = new ProcessChooseAdapter(ProcessSelectActivity.this, bizFormFieldsPaginationX);
+                lv_deptList.setAdapter(adapter);
             }
         });
     }

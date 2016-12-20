@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfInstanceAdd;
@@ -20,6 +21,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
 import com.loyo.oa.v2.customview.WfinEditViewGroup;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -271,10 +273,28 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
         map.put("projectId", projectId);                       //项目Id
         map.put("memo",memo); //备注
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(id, map, new RCallback<WfInstance>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(id, map, new RCallback<WfInstance>() {
+//            @Override
+//            public void success(final WfInstance wfInstance, final Response response) {
+//                HttpErrorCheck.checkCommitSus("编辑审批",response);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        DialogHelp.cancelStatusLoading();
+//                        crolView.requestEditWfinEmbl(wfInstance);
+//                    }
+//                },1000);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkCommitEro(error);
+//                super.failure(error);
+//            }
+//        });
+        WfinstanceService.editWfInstance(id,map).subscribe(new DefaultLoyoSubscriber<WfInstance>(LoyoErrorChecker.COMMIT_DIALOG) {
             @Override
-            public void success(final WfInstance wfInstance, final Response response) {
-                HttpErrorCheck.checkCommitSus("编辑审批",response);
+            public void onNext(final WfInstance wfInstance) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -282,12 +302,6 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
                         crolView.requestEditWfinEmbl(wfInstance);
                     }
                 },1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-                super.failure(error);
             }
         });
     }

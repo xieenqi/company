@@ -26,112 +26,112 @@ import retrofit.http.QueryMap;
  * 时间 : 15/11/5.
  */
 public interface IWfInstance {
-
-    /**
-     * 获取审批类型
-     *
-     * @param map
-     * @param callback
-     */
-    @GET("/wfbizform/")
-    void getWfBizForms(@QueryMap HashMap<String, Object> map, Callback<PaginationX<BizForm>> callback);
-
-    /**
-     * 获取审批类型的详情
-     *
-     * @param callback
-     */
-    @GET("/wfbizform/{id}")
-    void getWfBizForm(@Path("id") String id, Callback<BizForm> callback);
-
-    /**
-     * 根据审批类型id获取对应的流程
-     *
-     * @param id
-     * @param callback
-     */
-    @GET("/wftpl/bizformId/{id}")
-    void getWfTemplate(@Path("id") String id, Callback<ArrayList<WfTemplate>> callback);
-
-    /**
-     * 新增审批
-     *
-     * @param map
-     * @param callback
-     */
-    @POST("/wfinstance/")
-    void addWfInstance(@Body HashMap<String, Object> map, Callback<WfInstance> callback);
-
-    /**
-     * 编辑审批
-     */
-    @PUT("/wfinstance/{id}")
-    void editWfInstance(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WfInstance> callback);
-
-    /**
-     * 审批
-     *
-     * @param id
-     * @param map
-     * @param callback
-     */
-    @PUT("/wfinstance/{id}/approve/")
-    void doWfInstance(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WfInstance> callback);
-
-    /**
-     * 获取审批列表
-     *
-     * @param map
-     * @param callback
-     */
-    @GET("/")
-    void getWfInstances(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WfInstance>> callback);
-
-    /**
-     * 获取审批列表(v2.2 精简版)
-     *
-     * @param map
-     * @param callback
-     */
-    @GET("/mobile/simplify")
-    void getWfInstancesData(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WfInstanceRecord>> callback);
-
-
-    /**
-     * 获取我提交的 审批 列表数据
-     *
-     * @param map
-     * @param callback
-     */
-    @GET("/new/simplify")
-    void getSubmitWfInstancesList(@QueryMap HashMap<String, Object> map, Callback<MySubmitWflnstance> callback);
-
-    /**
-     * 获取 我审批的 审批 列表数据
-     *
-     * @param map
-     * @param callback
-     */
-    @GET("/approve/mobile")
-    void getApproveWfInstancesList(@QueryMap HashMap<String, Object> map, Callback<MySubmitWflnstance> callback);
-
-    /**
-     * 获取审批详情
-     *
-     * @param id
-     * @param callback
-     */
-    @GET("/wfinstance/{id}")
-    void getWfInstance(@Path("id") String id, Callback<WfInstance> callback);
-
-    /**
-     * 获取审批详情
-     *
-     * @param id
-     * @param callback
-     */
-    @DELETE("/wfinstance/{id}")
-    void deleteWfinstance(@Path("id") String id, Callback<WfInstance> callback);
+//
+//    /**
+//     * 获取审批类型
+//     *
+//     * @param map
+//     * @param callback
+//     */
+//    @GET("/wfbizform/")
+//    void getWfBizForms(@QueryMap HashMap<String, Object> map, Callback<PaginationX<BizForm>> callback);
+//
+//    /**
+//     * 获取审批类型的详情
+//     *
+//     * @param callback
+//     */
+//    @GET("/wfbizform/{id}")
+//    void getWfBizForm(@Path("id") String id, Callback<BizForm> callback);
+//
+//    /**
+//     * 根据审批类型id获取对应的流程
+//     *
+//     * @param id
+//     * @param callback
+//     */
+//    @GET("/wftpl/bizformId/{id}")
+//    void getWfTemplate(@Path("id") String id, Callback<ArrayList<WfTemplate>> callback);
+//
+//    /**
+//     * 新增审批
+//     *
+//     * @param map
+//     * @param callback
+//     */
+//    @POST("/wfinstance/")
+//    void addWfInstance(@Body HashMap<String, Object> map, Callback<WfInstance> callback);
+//
+//    /**
+//     * 编辑审批
+//     */
+//    @PUT("/wfinstance/{id}")
+//    void editWfInstance(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WfInstance> callback);
+//
+//    /**
+//     * 审批
+//     *
+//     * @param id
+//     * @param map
+//     * @param callback
+//     */
+//    @PUT("/wfinstance/{id}/approve/")
+//    void doWfInstance(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WfInstance> callback);
+//
+//    /**
+//     * 获取审批列表
+//     *
+//     * @param map
+//     * @param callback
+//     */
+//    @GET("/")
+//    void getWfInstances(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WfInstance>> callback);
+//
+//    /**
+//     * 获取审批列表(v2.2 精简版)
+//     *
+//     * @param map
+//     * @param callback
+//     */
+//    @GET("/mobile/simplify")
+//    void getWfInstancesData(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WfInstanceRecord>> callback);
+//
+//
+//    /**
+//     * 获取我提交的 审批 列表数据
+//     *
+//     * @param map
+//     * @param callback
+//     */
+//    @GET("/new/simplify")
+//    void getSubmitWfInstancesList(@QueryMap HashMap<String, Object> map, Callback<MySubmitWflnstance> callback);
+//
+//    /**
+//     * 获取 我审批的 审批 列表数据
+//     *
+//     * @param map
+//     * @param callback
+//     */
+//    @GET("/approve/mobile")
+//    void getApproveWfInstancesList(@QueryMap HashMap<String, Object> map, Callback<MySubmitWflnstance> callback);
+//
+//    /**
+//     * 获取审批详情
+//     *
+//     * @param id
+//     * @param callback
+//     */
+//    @GET("/wfinstance/{id}")
+//    void getWfInstance(@Path("id") String id, Callback<WfInstance> callback);
+//
+//    /**
+//     * 获取审批详情
+//     *
+//     * @param id
+//     * @param callback
+//     */
+//    @DELETE("/wfinstance/{id}")
+//    void deleteWfinstance(@Path("id") String id, Callback<WfInstance> callback);
 
 
 }

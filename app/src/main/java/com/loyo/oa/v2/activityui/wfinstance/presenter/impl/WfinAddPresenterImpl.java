@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.widget.LinearLayout;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfInstanceAdd;
@@ -182,10 +183,29 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         }
         map.put("memo", memo); //备注
         LogUtil.d("创建审批传参：" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
+//            @Override
+//            public void success(final WfInstance wfInstance, final Response response) {
+//                HttpErrorCheck.checkCommitSus("新建审批",response);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        DialogHelp.cancelStatusLoading();
+//                        crolView.requestAddWfinSuccessEmbl(wfInstance);
+//                    }
+//                }, 1000);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkCommitEro(error);
+//                super.failure(error);
+//            }
+//        });
+
+        WfinstanceService.addWfInstance(map).subscribe(new DefaultLoyoSubscriber<WfInstance>(LoyoErrorChecker.COMMIT_DIALOG) {
             @Override
-            public void success(final WfInstance wfInstance, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建审批",response);
+            public void onNext(final WfInstance wfInstance) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -193,12 +213,6 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                         crolView.requestAddWfinSuccessEmbl(wfInstance);
                     }
                 }, 1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-                super.failure(error);
             }
         });
     }

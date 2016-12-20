@@ -11,6 +11,7 @@ import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.MySubmitWflnstance;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfinstanceUitls;
@@ -24,6 +25,8 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
@@ -72,10 +75,25 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", 1);
         params.put("pageSize", 500);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
-            @Override
-            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
+//            @Override
+//            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
+//                if (null != bizFormPaginationX) {
+//                    mBizForms = bizFormPaginationX.getRecords();
+//                    if (null != mBizForms && !mBizForms.isEmpty()) {
+//                        _loadFilterOptions(mBizForms);
+//                    } else {
+//                        _loadFilterOptions(null);
+//                    }
+//                } else {
+//                    _loadFilterOptions(null);
+//                }
+//            }
+//        });
 
+        WfinstanceService.getWfBizForms(params).subscribe(new DefaultLoyoSubscriber<PaginationX<BizForm>>() {
+            @Override
+            public void onNext(PaginationX<BizForm> bizFormPaginationX) {
                 if (null != bizFormPaginationX) {
                     mBizForms = bizFormPaginationX.getRecords();
                     if (null != mBizForms && !mBizForms.isEmpty()) {
@@ -102,37 +120,69 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
         map.put("status", status);
         map.put("bizformId", bizFormId); //自定义筛选字段
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL() +
-                FinalVariables.wfinstance).create(IWfInstance.class).
-                getApproveWfInstancesList(map, new Callback<MySubmitWflnstance>() {
-                    @Override
-                    public void success(MySubmitWflnstance mySubmitWflnstance, Response response) {
-                        HttpErrorCheck.checkResponse("【我审批的】列表数据：", response);
-                        crolView.setListRefreshComplete();
-                        if (null == mySubmitWflnstance) {
-                            return;
-                        }
-                        ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
-                        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
-                            crolView.showMsg("没有更多数据了");
-                            return;
-                        }
-                        if (!isTopAdd) {
-                            lstData.addAll(lstDataTemp);
-                        } else {
-                            lstData = lstDataTemp;
-                        }
-                        datas = WfinstanceUitls.convertGroupApproveData(lstData);
-                        crolView.bindListData(datas);
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL() +
+//                FinalVariables.wfinstance).create(IWfInstance.class).
+//                getApproveWfInstancesList(map, new Callback<MySubmitWflnstance>() {
+//                    @Override
+//                    public void success(MySubmitWflnstance mySubmitWflnstance, Response response) {
+//                        HttpErrorCheck.checkResponse("【我审批的】列表数据：", response);
+//                        crolView.setListRefreshComplete();
+//                        if (null == mySubmitWflnstance) {
+//                            return;
+//                        }
+//                        ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
+//                        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
+//                            crolView.showMsg("没有更多数据了");
+//                            return;
+//                        }
+//                        if (!isTopAdd) {
+//                            lstData.addAll(lstDataTemp);
+//                        } else {
+//                            lstData = lstDataTemp;
+//                        }
+//                        datas = WfinstanceUitls.convertGroupApproveData(lstData);
+//                        crolView.bindListData(datas);
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error, crolView.getLoading(), page == 1 ? true : false);
+//                        crolView.setListRefreshComplete();
+//                    }
+//                });
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, crolView.getLoading(), page == 1 ? true : false);
-                        crolView.setListRefreshComplete();
-                    }
-                });
-    }
+        WfinstanceService.getApproveWfInstancesList(map).subscribe(new DefaultLoyoSubscriber<MySubmitWflnstance>() {
+            @Override
+            public void onError(Throwable e) {
+
+                 /* 重写父类方法，不调用super, 当有数据时，使用Toast，无数据时才使用整屏错误页面 */
+                @LoyoErrorChecker.CheckType
+                int type =page != 1  ?LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                LoyoErrorChecker.checkLoyoError(e, type, crolView.getLoading());
+                crolView.setListRefreshComplete();
+            }
+
+            @Override
+            public void onNext(MySubmitWflnstance mySubmitWflnstance) {
+                crolView.setListRefreshComplete();
+                if (null == mySubmitWflnstance) {
+                    return;
+                }
+                ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
+                if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
+                    crolView.showMsg("没有更多数据了");
+                    return;
+                }
+                if (!isTopAdd) {
+                    lstData.addAll(lstDataTemp);
+                } else {
+                    lstData = lstDataTemp;
+                }
+                datas = WfinstanceUitls.convertGroupApproveData(lstData);
+                crolView.bindListData(datas);
+            }
+        });
+    };
 
     /**
      * 初始化顶部菜单
