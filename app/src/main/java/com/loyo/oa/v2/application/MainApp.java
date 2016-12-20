@@ -92,38 +92,38 @@ public class MainApp extends Application {
     private AnimationDrawable animationDrawable;
 
 //    public SimpleDateFormat df1;//设置日期格式
-    public SimpleDateFormat df2;//设置日期格式        df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
-
-//    public SimpleDateFormat df3;//设置日期格式        df3 = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());//设置日期格式
-
-    public SimpleDateFormat df4;//设置日期格式        df4 = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());//设置日期格式
-
-    public SimpleDateFormat df5;//设置日期格式        df5 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//设置日期格式
-
-    public SimpleDateFormat df6;//设置日期格式        df6 = new SimpleDateFormat("HH:mm", Locale.getDefault());//设置日期格式
-
-//    public SimpleDateFormat df7;//设置日期格式 df7 = new SimpleDateFormat("MM.dd", Locale.getDefault());//设置日期格式
-//    public SimpleDateFormat df8;//设置日期格式        df8 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
-
-//    public SimpleDateFormat df9;//设置日期格式        df9 = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());//设置日期格式
-
-//    public SimpleDateFormat df10;//设置日期格式        df10 = new SimpleDateFormat("yyyy年M月dd日 HH:mm", Locale.getDefault());//设置日期格式
-
-    public SimpleDateFormat df11;//设置日期格式        df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式
-
-//    public SimpleDateFormat df12;//设置日期格式        df12 = new SimpleDateFormat("yyyy年M月dd日", Locale.getDefault());//设置日期格式
-
-//    public SimpleDateFormat df13;//设置日期格式        df13 = new SimpleDateFormat("yyyy年M月", Locale.getDefault());//设置日期格式
-
-//    public SimpleDateFormat df14;//设置日期格式        df14 = new SimpleDateFormat("yyyy年M月dd日 HH:mm:ss", Locale.getDefault());//设置日期格式
-
-//    public SimpleDateFormat df15;//设置日期格式        df15 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
-
-    public SimpleDateFormat df_api;//服务器返回的时间格式        df_api = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());//设置日期格式
-
-    public SimpleDateFormat df_api_get;//        df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
-
-//    public SimpleDateFormat df_api_get2;//        df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00
+//    public SimpleDateFormat df2;//设置日期格式        df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df3;//设置日期格式        df3 = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df4;//设置日期格式        df4 = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df5;//设置日期格式        df5 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df6;//设置日期格式        df6 = new SimpleDateFormat("HH:mm", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df7;//设置日期格式 df7 = new SimpleDateFormat("MM.dd", Locale.getDefault());//设置日期格式
+////    public SimpleDateFormat df8;//设置日期格式        df8 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df9;//设置日期格式        df9 = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df10;//设置日期格式        df10 = new SimpleDateFormat("yyyy年M月dd日 HH:mm", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df11;//设置日期格式        df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df12;//设置日期格式        df12 = new SimpleDateFormat("yyyy年M月dd日", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df13;//设置日期格式        df13 = new SimpleDateFormat("yyyy年M月", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df14;//设置日期格式        df14 = new SimpleDateFormat("yyyy年M月dd日 HH:mm:ss", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df15;//设置日期格式        df15 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df_api;//服务器返回的时间格式        df_api = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df_api_get;//        df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df_api_get2;//        df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00
 
     public LogUtil logUtil;
 
