@@ -291,6 +291,13 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                         TypedString typedUuid = new TypedString(uuid);
                         AttachmentService.newUpload(typedUuid, bizType, typedFile)
                                 .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
+                                        cancelLoading();
+                                    }
+
                                     @Override
                                     public void onNext(Attachment attachment) {
                                         uploadSize++;
@@ -346,7 +353,14 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         CustomerService.addNewCustomer(map)
                 .subscribe(new DefaultLoyoSubscriber<Customer>() {
                     @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
+                    }
+
+                    @Override
                     public void onNext(Customer customer) {
+                        cancelLoading();
                         try {
                             Customer retCustomer = customer;
                             Toast("转移成功");

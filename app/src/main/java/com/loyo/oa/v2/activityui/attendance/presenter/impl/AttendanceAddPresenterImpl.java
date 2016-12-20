@@ -21,6 +21,7 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.ImageInfo;
@@ -267,9 +268,10 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         map.put("bizType", 0);
         map.put("uuid", uuid);
         AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
-                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                .subscribe(new DefaultLoyoSubscriber<Attachment>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
                     public void onNext(Attachment attachment) {
+                        DialogHelp.cancelStatusLoading();
                         crolView.deleteAttaSuccessEmbl(delAttachment);
                     }
                 });
