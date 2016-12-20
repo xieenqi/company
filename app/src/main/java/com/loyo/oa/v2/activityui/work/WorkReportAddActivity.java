@@ -62,7 +62,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.WeeksDialog;
 
@@ -372,20 +371,14 @@ public class WorkReportAddActivity extends BaseActivity {
      * 获取附件(编辑)
      */
     private void getEditAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                lstData_Attachment = attachments;
-                edit_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        lstData_Attachment = attachments;
+                        edit_gridView_photo();
+                    }
+                });
     }
 
     /**

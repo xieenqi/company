@@ -25,7 +25,6 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
@@ -60,8 +59,6 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.point.IAttachment;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -92,7 +89,6 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import rx.Observable;
@@ -515,11 +511,11 @@ public class Utils {
      * @param uuid
      * @param attachments
      */
-    public static synchronized void getAttachments(String uuid, RCallback<ArrayList<Attachment>> attachments) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT())
-                .create(IAttachment.class)
-                .getAttachments(uuid, attachments);
-    }
+//    public static synchronized void getAttachments(String uuid, RCallback<ArrayList<Attachment>> attachments) {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT())
+//                .create(IAttachment.class)
+//                .getAttachments(uuid, attachments);
+//    }
 
     /**
      * 获取参与人

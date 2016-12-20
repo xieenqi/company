@@ -25,7 +25,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,18 +71,13 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
      * */
     @Override
     public void getAttachments(String uuid) {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                crolView.getAttachmentsEmbl(attachments);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                Toast("获取附件失败");
-                super.failure(error);
-            }
-        });
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        crolView.getAttachmentsEmbl(attachments);
+                    }
+                });
     }
 
     /**

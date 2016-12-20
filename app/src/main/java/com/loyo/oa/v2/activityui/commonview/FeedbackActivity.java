@@ -85,21 +85,15 @@ public class FeedbackActivity extends BaseActivity {
      * 获取附件
      */
     private void getAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> _attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                attachments = _attachments;
-                init_gridView_photo();
-            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                Toast("获取附件失败");
-            }
-        });
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> result) {
+                        attachments = result;
+                        init_gridView_photo();
+                    }
+                });
     }
 
     /**

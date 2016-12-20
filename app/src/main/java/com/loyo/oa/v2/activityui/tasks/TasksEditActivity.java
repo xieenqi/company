@@ -32,7 +32,8 @@ import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.attachment.api.I2Attachment;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.attachment.api.IAttachment;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
@@ -324,21 +325,14 @@ public class TasksEditActivity extends BaseActivity {
      * 获取附件
      */
     void getAttachments() {
-        Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> _attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                mTask.setAttachments(_attachments);
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Toast("获取附件失败");
-                super.failure(error);
-            }
-        });
+        AttachmentService.getAttachments(mTask.getAttachmentUUId())
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        mTask.setAttachments(attachments);
+                        init_gridView_photo();
+                    }
+                });
     }
 
     /*POST数据保存，防止不作任何编辑操作，没有POST数据*/
@@ -835,7 +829,7 @@ public class TasksEditActivity extends BaseActivity {
                 HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("bizType", 2);
                 map.put("uuid", uuid);
-                app.getRestAdapter().create(I2Attachment.class)
+                app.getRestAdapter().create(IAttachment.class)
                         .remove(String.valueOf(delAttachment.getId()), map)
                         .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers())
                         .subscribe(new DefaultLoyoSubscriber<Attachment>() {

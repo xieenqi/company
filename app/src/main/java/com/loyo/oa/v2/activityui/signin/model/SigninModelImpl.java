@@ -8,21 +8,16 @@ import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by xeq on 2016/12/15
@@ -80,18 +75,13 @@ public class SigninModelImpl implements SigninContract.Model {
 
     @Override
     public void getAttachmentSend(String uuid) {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                presenter.getAttachmentSuccess(attachments);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        presenter.getAttachmentSuccess(attachments);
+                    }
+                });
     }
 
     @Override
