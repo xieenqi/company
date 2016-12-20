@@ -26,6 +26,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -204,7 +205,12 @@ public class CustomerRepeat extends BaseActivity implements CustomerRepeatAdapte
     }
 
     @Override
-    public void pickEmbl() {
+    public void pickEmbl(String id) {
         serachRepate(edt_search.getText().toString().trim());
+        Intent intent = new Intent();
+        intent.putExtra("Id", id);
+        intent.setClass(this, CustomerDetailInfoActivity_.class);
+        startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
+        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 }
