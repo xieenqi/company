@@ -35,7 +35,6 @@ import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IWorksheet;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -355,7 +354,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
         HashMap<String, Object> map = new HashMap<>();
         map.put("status", status);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                setStpoWorksheet(worksheetId, map, new Callback<Object>() {
+                setStopWorksheet(worksheetId, map, new Callback<Object>() {
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("意外终止工单：", response);

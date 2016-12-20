@@ -268,6 +268,13 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         buildAttachment();
         AttachmentService.setAttachementData(attachment)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>() {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelStatusLoading();
+                    }
+
                     @Override
                     public void onNext(final ArrayList<AttachmentForNew> news) {
                         new Handler().postDelayed(new Runnable() {

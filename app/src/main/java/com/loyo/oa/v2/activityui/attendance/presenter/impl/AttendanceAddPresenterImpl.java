@@ -290,9 +290,10 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         map.put("bizType", 0);
         map.put("uuid", uuid);
         AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
-                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                .subscribe(new DefaultLoyoSubscriber<Attachment>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
                     public void onNext(Attachment attachment) {
+                        DialogHelp.cancelStatusLoading();
                         crolView.deleteAttaSuccessEmbl(delAttachment);
                     }
                 });

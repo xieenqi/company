@@ -154,5 +154,5 @@ public interface IWorksheet {
      * 更新工单状态 意外终止工单
      */
     @PUT("/worksheets/{id}")
-    void setStpoWorksheet(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Object> callback);
+    void setStopWorksheet(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Object> callback);
 }

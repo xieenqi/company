@@ -427,7 +427,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         showStatusLoading(false);
         buildAttachment();
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
                     public void onNext(ArrayList<AttachmentForNew> news) {
                         cancelStatusLoading();
