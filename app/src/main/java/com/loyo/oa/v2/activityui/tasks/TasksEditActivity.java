@@ -26,17 +26,17 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.attachment.api.I2Attachment;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -44,13 +44,13 @@ import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.RepeatTaskView;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -66,14 +66,11 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 
 @EActivity(R.layout.activity_tasks_edit) //本Activity的布局文件
 public class TasksEditActivity extends BaseActivity {
@@ -838,22 +835,26 @@ public class TasksEditActivity extends BaseActivity {
                 HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("bizType", 2);
                 map.put("uuid", uuid);
-                app.getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachment, final Response response) {
-                        Utils.dialogDismiss();
-                        Toast("删除附件成功!");
-                        mTask.getAttachments().remove(delAttachment);
-                        init_gridView_photo();
-                    }
+                app.getRestAdapter().create(I2Attachment.class)
+                        .remove(String.valueOf(delAttachment.getId()), map)
+                        .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers())
+                        .subscribe(new DefaultLoyoSubscriber<Attachment>() {
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        Utils.dialogDismiss();
-                        Toast("删除附件失败!");
-                        super.failure(error);
-                    }
-                });
+                            @Override
+                            public void onError(Throwable e) {
+                                super.onError(e);
+                                Utils.dialogDismiss();
+                            }
+
+                            @Override
+                            public void onNext(Attachment attachment) {
+                                Utils.dialogDismiss();
+                                Toast("删除附件成功!");
+                                mTask.getAttachments().remove(delAttachment);
+                                init_gridView_photo();
+                            }
+                        });
+
                 break;
 
             default:

@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,29 +16,20 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【订单附件】
@@ -148,17 +138,18 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
     public void postAttaData() {
         showLoading("");
         buildAttachment();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
-                .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
+        AttachmentService.setAttachementData(attachment)
+                .subscribe(new DefaultLoyoSubscriber<AttachmentForNew>() {
                     @Override
-                    public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        HttpErrorCheck.checkResponse("上传附件信息", response);
-                        getAttachments();
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                    public void onNext(AttachmentForNew aNew) {
+                        cancelLoading();
+                        getAttachments();
                     }
                 });
     }
@@ -168,27 +159,26 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
      * 获取附件列表信息
      */
     void getAttachments() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                HttpErrorCheck.checkResponse("获取附件", response);
-                ll_loading.setStatus(LoadingLayout.Success);
-                mListAttachment = attachments;
-                attachmentCount = attachments.size();
-                bindAttachment();
-                controller.removeAllTask();
-                if (attachmentCount == 0)
-                    ll_loading.setStatus(LoadingLayout.Empty);
-            }
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(ll_loading) {
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error, ll_loading);
-                controller.removeAllTask();
-//                finish();
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        controller.removeAllTask();
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        mListAttachment = attachments;
+                        attachmentCount = attachments.size();
+                        bindAttachment();
+                        controller.removeAllTask();
+                        if (attachmentCount == 0)
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                    }
+                });
     }
 
 

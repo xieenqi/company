@@ -37,6 +37,7 @@ import com.loyo.oa.v2.activityui.work.bean.HttpDefaultComment;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
@@ -50,7 +51,8 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.SingleRowWheelView;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -901,20 +903,14 @@ public class WorkReportAddActivity extends BaseActivity {
                     if (newFile.exists()) {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
                         TypedString typedUuid = new TypedString(uuid);
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                                new RCallback<Attachment>() {
+                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
+                                .subscribe(new DefaultLoyoSubscriber<Attachment>(LoyoErrorChecker.COMMIT_DIALOG) {
                                     @Override
-                                    public void success(final Attachment attachments, final Response response) {
+                                    public void onNext(Attachment attachment) {
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
                                             requestCommitWork();
                                         }
-                                    }
-
-                                    @Override
-                                    public void failure(final RetrofitError error) {
-                                        super.failure(error);
-                                        HttpErrorCheck.checkCommitEro(error);
                                     }
                                 });
                     }
@@ -934,21 +930,16 @@ public class WorkReportAddActivity extends BaseActivity {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("bizType", bizType);
             map.put("uuid", uuid);
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                @Override
-                public void success(final Attachment attachment, final Response response) {
-                    Toast("删除附件成功!");
-                    lstData_Attachment.remove(delAttachment);
-                    signInGridViewAdapter.notifyDataSetChanged();
-                }
+            AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
+                    .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                        @Override
+                        public void onNext(Attachment attachment) {
+                            Toast("删除附件成功!");
+                            lstData_Attachment.remove(delAttachment);
+                            signInGridViewAdapter.notifyDataSetChanged();
+                        }
+                    });
 
-                @Override
-                public void failure(final RetrofitError error) {
-                    HttpErrorCheck.checkError(error);
-                    Toast("删除附件失败!");
-                    super.failure(error);
-                }
-            });
         } catch (Exception e) {
             Global.ProcException(e);
         }

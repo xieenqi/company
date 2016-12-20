@@ -25,13 +25,15 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -45,7 +47,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -167,17 +168,27 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
      */
     void postAttaData() {
         buildAttachment();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
-                .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
-                    @Override
-                    public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        //HttpErrorCheck.checkCommitSus("上传附件信息", response);
-                        commitDynamic();
-                    }
+//        RestAdapterFactory.getInstance()
+//                .build(Config_project.API_URL_ATTACHMENT())
+//                .create(IAttachment.class)
+//                .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
+//                    @Override
+//                    public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
+//                        //HttpErrorCheck.checkCommitSus("上传附件信息", response);
+//                        commitDynamic();
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkCommitEro(error);
+//                    }
+//                });
 
+        AttachmentService.setAttachementData(attachment)
+                .subscribe(new DefaultLoyoSubscriber<AttachmentForNew>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkCommitEro(error);
+                    public void onNext(AttachmentForNew aNew) {
+                        commitDynamic();
                     }
                 });
     }

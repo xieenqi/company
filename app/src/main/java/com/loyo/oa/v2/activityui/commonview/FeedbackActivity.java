@@ -17,15 +17,15 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.FeedBackCommit;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IFeedback;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -220,22 +220,16 @@ public class FeedbackActivity extends BaseActivity {
                     HashMap<String, Object> map = new HashMap<String, Object>();
                     map.put("bizType", 0);
                     map.put("uuid", uuid);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).
-                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                        @Override
-                        public void success(final Attachment attachment, final Response response) {
-                            Toast("删除附件成功!");
-                            attachments.remove(delAttachment);
-                            signInGridViewAdapter.notifyDataSetChanged();
-                        }
+                    AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
+                            .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                                @Override
+                                public void onNext(Attachment attachment) {
+                                    Toast("删除附件成功!");
+                                    attachments.remove(delAttachment);
+                                    signInGridViewAdapter.notifyDataSetChanged();
+                                }
+                            });
 
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
-                            Toast("删除附件失败!");
-                            super.failure(error);
-                        }
-                    });
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }

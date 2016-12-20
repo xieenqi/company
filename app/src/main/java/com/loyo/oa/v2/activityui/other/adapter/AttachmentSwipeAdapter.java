@@ -20,15 +20,11 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -36,14 +32,11 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【附件适配器】
@@ -250,69 +243,27 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                             HashMap<String, Object> map = new HashMap<String, Object>();
                             map.put("bizType", bizType);
                             map.put("uuid", uuid);
-                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), map, new RCallback<Attachment>() {
-                                @Override
-                                public void success(final Attachment att, final Response response) {
-                                    HttpErrorCheck.checkResponse(response);
-                                    if (mAction != null) {
-                                        mAction.afterDelete(attachment);
-                                    }
-                                    Utils.dialogDismiss();
-                                }
+                            AttachmentService.remove(attachment.getId(), map)
+                                    .subscribe(new DefaultLoyoSubscriber<Attachment>() {
 
-                                @Override
-                                public void failure(final RetrofitError error) {
-                                    super.failure(error);
-                                    HttpErrorCheck.checkError(error);
-                                    Utils.dialogDismiss();
-                                }
-                            });
+                                        public void onError(Throwable e) {
+                                            super.onError(e);
+                                            Utils.dialogDismiss();
+                                        }
+
+                                        @Override
+                                        public void onNext(Attachment attachment) {
+                                            if (mAction != null) {
+                                                mAction.afterDelete(attachment);
+                                            }
+                                            Utils.dialogDismiss();
+                                        }
+                                    });
 
                             sweetAlertDialog.dismiss();
                             listView.closeOpenedItems();
                         }
                     }, "提示", "附件删除后不能恢复，你确定要删除吗？");
-
-/*                    final GeneralPopView generalPopView = new GeneralPopView(mContext, true);
-                    generalPopView.show();
-                    generalPopView.setMessage("是否删除附件?");
-                    generalPopView.setCanceledOnTouchOutside(true);
-                    //确定
-                    generalPopView.setSureOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            Utils.dialogShow(mContext, "请稍候");
-                            HashMap<String, Object> map = new HashMap<String, Object>();
-                            map.put("bizType", bizType);
-                            map.put("uuid", uuid);
-                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), map, new RCallback<Attachment>() {
-                                @Override
-                                public void success(final Attachment att, final Response response) {
-                                    HttpErrorCheck.checkResponse(response);
-                                    if (mAction != null) {
-                                        mAction.afterDelete(attachment);
-                                    }
-                                    Utils.dialogDismiss();
-                                }
-
-                                @Override
-                                public void failure(final RetrofitError error) {
-                                    super.failure(error);
-                                    HttpErrorCheck.checkError(error);
-                                    Utils.dialogDismiss();
-                                }
-                            });
-
-                            generalPopView.dismiss();
-                        }
-                    });
-                    //取消
-                    generalPopView.setCancelOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            generalPopView.dismiss();
-                        }
-                    });*/
                 }
             });
         }

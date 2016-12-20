@@ -22,13 +22,14 @@ import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetWrapper;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -238,20 +239,30 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
     public void postAttaData() {
         showStatusLoading(false);
         buildAttachment();
-        IAttachment service = RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class);
-        service.setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
-            @Override
-            public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                HttpErrorCheck.checkCommitSus("上传附件信息",response);
-                cancelStatusLoading();
-                commitWorksheet();
-            }
+//        IAttachment service = RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT())
+//                .create(IAttachment.class);
+//        service.setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
+//            @Override
+//            public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
+//                HttpErrorCheck.checkCommitSus("上传附件信息",response);
+//                cancelStatusLoading();
+//                commitWorksheet();
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkCommitEro(error);
+//            }
+//        });
 
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+        AttachmentService.setAttachementData(attachment)
+                .subscribe(new DefaultLoyoSubscriber<AttachmentForNew>(LoyoErrorChecker.COMMIT_DIALOG) {
+                    @Override
+                    public void onNext(AttachmentForNew aNew) {
+                        cancelStatusLoading();
+                        commitWorksheet();
+                    }
+                });
     }
 
     @Override
