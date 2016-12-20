@@ -217,7 +217,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
          非开启/未完成/待点评/待审批/不通过状态下，不允许删除附件
          */
 
-        if (!MainApp.user.id.equals(attachment.getCreator().getId())) {
+        if (MainApp.user != null && !MainApp.user.id.equals(attachment.getCreator().getId())) {
             holder.layout_action_delete.setVisibility(View.INVISIBLE);
         } else {
             /*未结束*/
@@ -246,7 +246,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     }, new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            Utils.dialogShow(mContext, "请稍候");
+//                            Utils.dialogShow(mContext, "请稍候");
                             HashMap<String, Object> map = new HashMap<String, Object>();
                             map.put("bizType", bizType);
                             map.put("uuid", uuid);
@@ -257,14 +257,14 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                                     if (mAction != null) {
                                         mAction.afterDelete(attachment);
                                     }
-                                    Utils.dialogDismiss();
+//                                    Utils.dialogDismiss();
                                 }
 
                                 @Override
                                 public void failure(final RetrofitError error) {
                                     super.failure(error);
                                     HttpErrorCheck.checkError(error);
-                                    Utils.dialogDismiss();
+//                                    Utils.dialogDismiss();
                                 }
                             });
 
