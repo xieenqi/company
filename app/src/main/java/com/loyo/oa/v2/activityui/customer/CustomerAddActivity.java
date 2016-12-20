@@ -35,11 +35,11 @@ import com.loyo.oa.v2.activityui.customer.model.Locate;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
@@ -47,14 +47,11 @@ import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
@@ -71,8 +68,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
@@ -375,21 +370,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     if (newFile.exists()) {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
                         TypedString typedUuid = new TypedString(uuid);
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                                new RCallback<Attachment>() {
+                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
+                                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
                                     @Override
-                                    public void success(final Attachment attachments, final Response response) {
+                                    public void onNext(Attachment attachment) {
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
                                             cancelLoading();
                                             customerSendSucess(customer);
                                         }
-                                    }
-
-                                    @Override
-                                    public void failure(final RetrofitError error) {
-                                        super.failure(error);
-                                        HttpErrorCheck.checkError(error);
                                     }
                                 });
                     }

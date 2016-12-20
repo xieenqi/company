@@ -16,16 +16,15 @@ import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
@@ -273,20 +272,13 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("bizType", 0);
         map.put("uuid", uuid);
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-            @Override
-            public void success(final Attachment attachment, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                crolView.deleteAttaSuccessEmbl(delAttachment);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
+        AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
+                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                    @Override
+                    public void onNext(Attachment attachment) {
+                        crolView.deleteAttaSuccessEmbl(delAttachment);
+                    }
+                });
     }
 
     /**

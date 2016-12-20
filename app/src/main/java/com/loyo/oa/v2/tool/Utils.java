@@ -516,7 +516,9 @@ public class Utils {
      * @param attachments
      */
     public static synchronized void getAttachments(String uuid, RCallback<ArrayList<Attachment>> attachments) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, attachments);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT())
+                .create(IAttachment.class)
+                .getAttachments(uuid, attachments);
     }
 
     /**

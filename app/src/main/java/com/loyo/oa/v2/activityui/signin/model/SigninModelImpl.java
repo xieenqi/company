@@ -5,17 +5,15 @@ import android.app.Activity;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
@@ -98,18 +96,13 @@ public class SigninModelImpl implements SigninContract.Model {
 
     @Override
     public void deleteAttachmentSend(HashMap<String, Object> map, final Attachment delAttachment) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-            @Override
-            public void success(final Attachment attachment, final Response response) {
-                presenter.deleteAttachmentSuccess(delAttachment);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
+        AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
+                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                    @Override
+                    public void onNext(Attachment attachment) {
+                        presenter.deleteAttachmentSuccess(delAttachment);
+                    }
+                });
     }
 
 }

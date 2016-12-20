@@ -25,6 +25,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -32,13 +33,12 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -49,7 +49,8 @@ import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -672,22 +673,21 @@ public class TasksAddActivity extends BaseActivity {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
                         LogUtil.dee("typeFile:" + typedFile);
                         TypedString typedUuid = new TypedString(uuid);
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                                new RCallback<Attachment>() {
+                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
+                                .subscribe(new DefaultLoyoSubscriber<Attachment>(LoyoErrorChecker.COMMIT_DIALOG) {
+
                                     @Override
-                                    public void success(final Attachment attachments, final Response response) {
-                                        //cancelStatusLoading();
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
+                                        img_title_right.setEnabled(true);
+                                    }
+
+                                    @Override
+                                    public void onNext(Attachment attachment) {
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
                                             requestCommitTask();
                                         }
-                                    }
-
-                                    @Override
-                                    public void failure(final RetrofitError error) {
-                                        super.failure(error);
-                                        HttpErrorCheck.checkCommitEro(error);
-                                        img_title_right.setEnabled(true);
                                     }
                                 });
                     }

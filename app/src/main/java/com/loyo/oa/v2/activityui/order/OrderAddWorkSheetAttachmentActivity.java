@@ -15,26 +15,19 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【订单添加工单附件】
@@ -119,18 +112,20 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
     public void postAttaData() {
         showLoading("");
         buildAttachment();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
-                .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
+        AttachmentService.setAttachementData(attachment)
+                .subscribe(new DefaultLoyoSubscriber<AttachmentForNew>() {
+
                     @Override
-                    public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        HttpErrorCheck.checkResponse("上传附件信息", response);
-                        getAttachments();
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
                         controller.removeAllTask();
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                    public void onNext(AttachmentForNew aNew) {
+                        cancelLoading();
+                        getAttachments();
                         controller.removeAllTask();
                     }
                 });
@@ -141,24 +136,25 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
      * 获取附件列表信息
      */
     void getAttachments() {
-
         showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                HttpErrorCheck.checkResponse("获取附件", response);
-                mListAttachment = attachments;
-                attachmentCount = attachments.size();
-                bindAttachment();
-            }
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                finish();
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
+                        finish();
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        cancelLoading();
+                        mListAttachment = attachments;
+                        attachmentCount = attachments.size();
+                        bindAttachment();
+                    }
+                });
     }
 
 
