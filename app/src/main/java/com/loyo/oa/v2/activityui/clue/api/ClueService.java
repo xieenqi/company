@@ -23,7 +23,6 @@ import rx.Observable;
  */
 
 public class ClueService {
-    private static String TAG="ClueService";
     //我的销售线索
     public static Observable<ClueList> getMyClueList(HashMap<String, Object> params) {
         LogUtil.d("getMyClueList() called with: params = [" + params + "]");

@@ -22,6 +22,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
+import com.loyo.oa.v2.activityui.attendance.api.AttendanceService;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
@@ -53,6 +54,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IAttendance;
@@ -415,10 +417,52 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      */
     private void getValidateInfo() {
         DialogHelp.showLoading(getActivity(), "加载中...", true);
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
+//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
+//            @Override
+//            public void success(final ValidateInfo _validateInfo, final Response response) {
+//                HttpErrorCheck.checkResponse("考勤信息:", response);
+//                if (null == _validateInfo) {
+//                    Toast.makeText(getActivity(), "获取考勤信息失败", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                validateInfo = _validateInfo;
+//                for (ValidateItem validateItem : validateInfo.getValids()) {
+//                    if (validateItem.getType() == 1) {
+//                        inEnable = validateItem.isEnable();
+//                    } else if (validateItem.getType() == 2) {
+//                        outEnable = validateItem.isEnable();
+//                    }
+//                }
+//
+//                if (inEnable || outEnable) {
+//                    setAttendance();
+//                }
+//                //已打卡完毕 跳转考勤列表
+//                else {
+//                    Toast.makeText(getActivity(), "您今天已经打卡完毕", Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(getActivity(), AttendanceManagerActivity_.class);
+//                    startActivity(intent);
+//                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                }
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+
+        AttendanceService.validateAttendance().subscribe(new DefaultLoyoSubscriber<ValidateInfo>() {
             @Override
-            public void success(final ValidateInfo _validateInfo, final Response response) {
-                HttpErrorCheck.checkResponse("考勤信息:", response);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+
+            @Override
+            public void onNext(ValidateInfo _validateInfo) {
+                DialogHelp.cancelLoading();
                 if (null == _validateInfo) {
                     Toast.makeText(getActivity(), "获取考勤信息失败", Toast.LENGTH_SHORT).show();
                     return;
@@ -442,12 +486,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -779,11 +817,37 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         map.put("originalgps", longitude + "," + latitude);
         LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         DialogHelp.showLoading(getActivity(), "", true);
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
+//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
+//            @Override
+//            public void success(final AttendanceRecord attendanceRecord, final Response response) {
+//                attendanceRecords = attendanceRecord;
+//                HttpErrorCheck.checkResponse("考勤信息：", response);
+//                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "获取位置失败，请检查网络或GPS是否正常" : address);
+//                if (attendanceRecord.getState() == 3) {
+//                    attanceWorry();
+//                } else {
+//                    intentValue();
+//                }
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+
+        AttendanceService.checkAttendance(map).subscribe(new DefaultLoyoSubscriber<AttendanceRecord>() {
             @Override
-            public void success(final AttendanceRecord attendanceRecord, final Response response) {
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+
+            @Override
+            public void onNext(AttendanceRecord attendanceRecord) {
+                DialogHelp.cancelLoading();
                 attendanceRecords = attendanceRecord;
-                HttpErrorCheck.checkResponse("考勤信息：", response);
                 attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "获取位置失败，请检查网络或GPS是否正常" : address);
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();
@@ -791,13 +855,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     intentValue();
                 }
             }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
         });
+
         UMengTools.sendLocationInfo(address, longitude, latitude);
         LocationUtilGD.sotpLocation();
     }

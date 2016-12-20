@@ -320,7 +320,6 @@ public class MainApp extends Application {
             restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).
                     setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
         }
-
         return restAdapter;
     }
 

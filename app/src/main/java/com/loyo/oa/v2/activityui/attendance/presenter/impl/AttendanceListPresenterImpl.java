@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.attendance.presenter.impl;
 import android.app.Activity;
 
 import com.loyo.oa.common.utils.DateFormatSet;
+import com.loyo.oa.v2.activityui.attendance.api.AttendanceService;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceList;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceList;
@@ -10,7 +11,9 @@ import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceListPresenter;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceListView;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -47,17 +50,30 @@ public class AttendanceListPresenterImpl implements AttendanceListPresenter {
         map.put("qtime", qtime);
         map.put("pageIndex", page);
         map.put("pageSize", 2000);
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
-            @Override
-            public void success(HttpAttendanceList mAttendanceList, Response response) {
-                HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
-                crolView.getListDataEmbl(mAttendanceList);
-            }
+//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
+//            @Override
+//            public void success(HttpAttendanceList mAttendanceList, Response response) {
+//                HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
+//                crolView.getListDataEmbl(mAttendanceList);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error,crolView.getLoading());
+//                super.failure(error);
+//            }
+//        });
 
+        AttendanceService.getAttendances(map).subscribe(new DefaultLoyoSubscriber<HttpAttendanceList>(crolView.getLoading()) {
             @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error,crolView.getLoading());
-                super.failure(error);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+            @Override
+            public void onNext(HttpAttendanceList mAttendanceList) {
+                DialogHelp.cancelLoading();
+                crolView.getListDataEmbl(mAttendanceList);
             }
         });
     }
@@ -67,20 +83,35 @@ public class AttendanceListPresenterImpl implements AttendanceListPresenter {
      * */
     @Override
     public void getTeamData(int qtime) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
-                getTeamCount(getDateTime((long) qtime), new RCallback<AttendanceList>() {
-                    @Override
-                    public void success(AttendanceList mAttendanceList, Response response) {
-                        HttpErrorCheck.checkResponse(" 团队Count：", response);
-                        crolView.getTeamDataEmbl(mAttendanceList);
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
+//                getTeamCount(getDateTime((long) qtime), new RCallback<AttendanceList>() {
+//                    @Override
+//                    public void success(AttendanceList mAttendanceList, Response response) {
+//                        HttpErrorCheck.checkResponse(" 团队Count：", response);
+//                        crolView.getTeamDataEmbl(mAttendanceList);
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                        super.failure(error);
+//                    }
+//                });
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        super.failure(error);
-                    }
-                });
+        AttendanceService.getTeamCount(qtime).subscribe(new DefaultLoyoSubscriber<AttendanceList>() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+            @Override
+            public void onNext(AttendanceList mAttendanceList) {
+                DialogHelp.cancelLoading();
+
+                crolView.getTeamDataEmbl(mAttendanceList);
+
+            }
+        });
     }
 
 
@@ -90,17 +121,30 @@ public class AttendanceListPresenterImpl implements AttendanceListPresenter {
      * */
     @Override
     public void getValidateInfo() {
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
+//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
+//            @Override
+//            public void success(final ValidateInfo mValidateInfo, final Response response) {
+//                HttpErrorCheck.checkResponse("考勤信息1:", response);
+//                crolView.getValidateInfoEmbl(mValidateInfo);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+        AttendanceService.validateAttendance().subscribe(new DefaultLoyoSubscriber<ValidateInfo>() {
             @Override
-            public void success(final ValidateInfo mValidateInfo, final Response response) {
-                HttpErrorCheck.checkResponse("考勤信息1:", response);
-                crolView.getValidateInfoEmbl(mValidateInfo);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
             }
 
             @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
+            public void onNext(ValidateInfo validateInfo) {
+                DialogHelp.cancelLoading();
+                crolView.getValidateInfoEmbl(validateInfo);
             }
         });
     }
@@ -110,18 +154,30 @@ public class AttendanceListPresenterImpl implements AttendanceListPresenter {
      * */
     @Override
     public void checkAttendance(HashMap<String,Object> map, final String address) {
-        LogUtil.dee("check:"+MainApp.gson.toJson(map));
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
-            @Override
-            public void success(final AttendanceRecord mRecord, final Response response) {
-                HttpErrorCheck.checkResponse("考勤信息2：", response);
-                crolView.checkAttendanceEmbl(mRecord,address);
-            }
+//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
+//            @Override
+//            public void success(final AttendanceRecord mRecord, final Response response) {
+//                HttpErrorCheck.checkResponse("考勤信息2：", response);
+//                crolView.checkAttendanceEmbl(mRecord,address);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
 
+        AttendanceService.checkAttendance(map).subscribe(new DefaultLoyoSubscriber<AttendanceRecord>() {
             @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+            @Override
+            public void onNext(AttendanceRecord mRecord) {
+                DialogHelp.cancelLoading();
+                crolView.checkAttendanceEmbl(mRecord,address);
             }
         });
     }

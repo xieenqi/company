@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.attendance.api.AttendanceService;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
@@ -21,6 +22,8 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.network.model.LoyoError;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.ImageInfo;
@@ -142,10 +145,17 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
      * */
     @Override
     public void refreshLocation(final double longitude, final double latitude, final String address) {
-        String originalgps = longitude + "," + latitude;
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).refreshLocation(originalgps, new RCallback<Object>() {
+        String originalGPS = longitude + "," + latitude;
+//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).refreshLocation(originalGPS, new RCallback<Object>() {
+//            @Override
+//            public void success(final Object o, final Response response) {
+//                mAttendanceRecord.setAddress(address);
+//            }
+//        });
+
+        AttendanceService.refreshLocation(originalGPS).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
-            public void success(final Object o, final Response response) {
+            public void onNext(Object o) {
                 mAttendanceRecord.setAddress(address);
             }
         });
@@ -237,10 +247,28 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
             map.put("attachementuuid", uuid);
         }
         DialogHelp.showStatusLoading(false,mContext);
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
+//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
+//            @Override
+//            public void success(final AttendanceRecord attendanceRecord, final Response response) {
+//                HttpErrorCheck.checkCommitSus("确认打卡",response);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        DialogHelp.cancelStatusLoading();
+//                        crolView.attendanceSuccess();
+//                    }
+//                },1000);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkCommitEro(error);
+//            }
+//        });
+
+        AttendanceService.confirmAttendance(map).subscribe(new DefaultLoyoSubscriber<AttendanceRecord>(LoyoErrorChecker.COMMIT_DIALOG) {
             @Override
-            public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                HttpErrorCheck.checkCommitSus("确认打卡",response);
+            public void onNext(AttendanceRecord attendanceRecord) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -248,11 +276,6 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
                         crolView.attendanceSuccess();
                     }
                 },1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
