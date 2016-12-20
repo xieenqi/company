@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyMemberFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
@@ -25,6 +26,7 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.permission.BusinessOperation;
