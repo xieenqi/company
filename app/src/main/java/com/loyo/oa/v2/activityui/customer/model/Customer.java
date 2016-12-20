@@ -92,8 +92,8 @@ public class Customer extends BaseBeans {
 
     public long activityRecycleAt;//跟进行为丢公海时间
     public long orderRecycleAt;   //订单丢公海时间
-    public long activityRemindAt; //跟进行为丢公海提醒时间
-    public long orderRemindAt;   //订单丢公海提醒时间
+    public boolean activityRemindAt; //跟进行为丢公海提醒时间
+    public boolean orderRemindAt;   //订单丢公海提醒时间
 
     public long recycledAt;//丢公海的时间
 
