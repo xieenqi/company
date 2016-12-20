@@ -22,7 +22,7 @@ public class CommonMethod {
                 tView1.setVisibility(View.VISIBLE);
                 String tt1 = "无跟进丢公海：";
                 String time = DateTool.getDateTimeFriendly(customer.activityRecycleAt);
-                tView1.setText(isOutCurrentTime(customer.activityRemindAt) ?
+                tView1.setText(customer.activityRemindAt ?
                         Utils.modifyTextColor(tt1 + time, Color.parseColor("#f5625a"), tt1.length(), (tt1 + time).length())
                         : tt1 + time);
             } else {
@@ -32,7 +32,7 @@ public class CommonMethod {
                 tView2.setVisibility(View.VISIBLE);
                 String tt2 = "无订单丢公海：";
                 String time = DateTool.getDateTimeFriendly(customer.orderRecycleAt);
-                tView2.setText(isOutCurrentTime(customer.orderRemindAt) ?
+                tView2.setText(customer.orderRemindAt ?
                         Utils.modifyTextColor(tt2 + time, Color.parseColor("#f5625a"), tt2.length(), (tt2 + time).length())
                         : tt2 + time);
             } else {
