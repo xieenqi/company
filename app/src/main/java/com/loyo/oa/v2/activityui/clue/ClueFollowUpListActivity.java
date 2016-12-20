@@ -81,6 +81,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private ArrayList<ClueFollowGroupModel> listModel = new ArrayList<>();
     private PaginationX<ClueFollowGroupModel> mPagination = new PaginationX<>(20);
 
+    private boolean needToRefresh=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -270,6 +272,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
+        mPagination.setPageIndex(1);
+        needToRefresh=true;//如果是增加，或者是修改了，要重新刷新，避免存在老数据
         getData(false);
     }
 
@@ -345,7 +349,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     @Override
     public void getListDataSuccesseEmbl(PaginationX<ClueFollowGroupModel> paginationX) {
         listView.onRefreshComplete();
-        if (isPullOrDown) {
+        if (isPullOrDown||needToRefresh) {//增加了的，就要清除老数据
             listModel.clear();
         }
         mPagination = paginationX;
