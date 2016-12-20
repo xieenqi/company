@@ -1,23 +1,23 @@
 package com.loyo.oa.audio.player;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.Player;
-
-import static com.loyo.oa.v2.R.id.tv_audio_endtime;
 
 /**
  * Created by EthanGong on 2016/12/10.
@@ -32,11 +32,24 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
     private TextView tv_audio_starttime;
     private TextView tv_audio_endtime;
     private ImageView layout_audio_pauseorplay;
+    private ImageView image;
     private LinearLayout layout_audio_close;
     private RelativeLayout layout_audioplayer;
+    private ProgressBar progress;
 
-    //private String playTime;
     private boolean isOnPlay;
+
+    private Handler mHandler = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg){
+            if(msg.what == 0x01){
+                progress.setVisibility(View.GONE);
+            }else if(msg.what == 0x02){
+                progress.setVisibility(View.VISIBLE);
+            }
+        }
+    };
 
 
     public AudioPlayerView(Context context) {
@@ -69,13 +82,16 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
         tv_audio_starttime = (TextView) mView.findViewById(R.id.tv_audio_starttime);
         tv_audio_endtime = (TextView) mView.findViewById(R.id.tv_audio_endtime);
         layout_audio_pauseorplay = (ImageView) mView.findViewById(R.id.layout_audio_pauseorplay);
+        image = (ImageView) mView.findViewById(R.id.image);
         layout_audio_close = (LinearLayout) mView.findViewById(R.id.layout_audio_close);
         layout_audioplayer = (RelativeLayout) mView.findViewById(R.id.layout_audioplayer);
+        progress = (ProgressBar) mView.findViewById(R.id.progress);
         layout_audio_pauseorplay.setOnClickListener(this);
         layout_audio_close.setOnClickListener(this);
         this.addView(mView);
         AudioPlayer.getInstance().bindView(this);
     }
+
 
     public void updateUI(AudioPlayUpdate updateState) {
 
@@ -112,16 +128,15 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
 
             // 录音时长
             case AudioPlayUpdate.SIZE:
-                LogUtil.dee("SIZE:"+updateState.msg);
+                if(Integer.parseInt(updateState.msg) != 0){
+                    mHandler.sendEmptyMessage(0x01);
+                }
                 break;
-
         }
     }
 
 
-    /**
-     * 是否正在播放
-     * */
+    // 是否正在播放
     public boolean isPlaying(){
         return callbackHandler.onPlaying();
     }
@@ -136,16 +151,19 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
     // 第一次播放
     public void onStart(AudioModel audioModel,TextView nowsView){
         if (callbackHandler != null) {
+            mHandler.sendEmptyMessage(0x02);
             isOnPlay = false;
             this.nowsView = nowsView;
             tv_audio_endtime.setText(com.loyo.oa.common.utils.DateTool.int2time((int) audioModel.length * 1000));
             callbackHandler.onStart(this,audioModel);
+            //progress.setVisibility(View.VISIBLE);
         }
     }
 
     // 继续播放
     public void onResume(TextView textView) {
         if (callbackHandler != null) {
+            mHandler.sendEmptyMessage(0x02);
             isOnPlay = false;
             MainApp.getMainApp().startAnim(textView);
             layout_audioplayer.setVisibility(View.VISIBLE);

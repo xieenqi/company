@@ -1,6 +1,7 @@
 package com.loyo.oa.audio.player;
 
 import android.media.MediaPlayer;
+import android.view.View;
 import android.widget.SeekBar;
 
 import com.loyo.oa.common.utils.DateTool;
@@ -76,6 +77,7 @@ public class AudioPlayer implements PlayCallback {
     class PlayerError implements MediaPlayer.OnErrorListener {
         @Override
         public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+            player.mediaPlayer.reset();
             attachedView.updateUI(AudioPlayUpdate.errorState());
             return false;
         }
@@ -90,14 +92,9 @@ public class AudioPlayer implements PlayCallback {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress,
                                       boolean fromUser) {
-
             this.progress = progress;
             if(null != player)
                 attachedView.updateUI(AudioPlayUpdate.progressState(DateTool.int2time((progress)*1000)));
-
-            /*if (null != player)
-                this.progress = progress * player.mediaPlayer.getDuration() / seekBar.getMax();
-            attachedView.updateUI(AudioPlayUpdate.progressState(DateTool.int2time(this.progress)));*/
         }
 
         @Override
@@ -107,7 +104,6 @@ public class AudioPlayer implements PlayCallback {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            LogUtil.dee("progress:" + progress);
             player.mediaPlayer.seekTo(progress*1000);
             attachedView.updateUI(AudioPlayUpdate.progressState(DateTool.int2time(this.progress*1000)));
         }
