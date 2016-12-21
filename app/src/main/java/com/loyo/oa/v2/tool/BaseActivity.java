@@ -51,10 +51,9 @@ public class BaseActivity extends Activity {
     protected MainApp app;
     protected boolean isNeedLogin = true;
     public static Context mContext;
-    protected static final int NO_SCROLL = -1;
     public CustomProgressDialog customProgressDialog;
-    public Intent rushTokenIntent;
-    private int mTouchViewGroupId;
+//    public Intent rushTokenIntent;
+//    private int mTouchViewGroupId;
     public SweetAlertDialogView sweetAlertDialogView;
 
     /**
@@ -128,34 +127,34 @@ public class BaseActivity extends Activity {
     public void onEvent(Object object) {
 
     }
-
-    protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (null == intent) {
-                return;
-            }
-            String action = intent.getAction();
-            if (TextUtils.equals(action, ConnectivityManager.CONNECTIVITY_ACTION)) {
-                ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-                NetworkInfo info = manager.getActiveNetworkInfo();
-                if (null != info && info.isAvailable() && info.isConnected()) {
-                    onNetworkChanged(true);
-                } else {
-                    onNetworkChanged(false);
-                }
-            }
-        }
-    };
-
-    /**
-     * 网络状态变化回调方法
-     *
-     * @param available
-     */
-    protected void onNetworkChanged(boolean available) {
-
-    }
+//暂时注销一会可能会启用
+//    protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (null == intent) {
+//                return;
+//            }
+//            String action = intent.getAction();
+//            if (TextUtils.equals(action, ConnectivityManager.CONNECTIVITY_ACTION)) {
+//                ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+//                NetworkInfo info = manager.getActiveNetworkInfo();
+//                if (null != info && info.isAvailable() && info.isConnected()) {
+//                    onNetworkChanged(true);
+//                } else {
+//                    onNetworkChanged(false);
+//                }
+//            }
+//        }
+//    };
+//
+//    /**
+//     * 网络状态变化回调方法
+//     *
+//     * @param available
+//     */
+//    protected void onNetworkChanged(boolean available) {
+//
+//    }
 
     /**
      * 注册基类广播
