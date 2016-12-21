@@ -7,23 +7,17 @@ import android.text.TextUtils;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinAddView;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.announcement.api.AnnouncementService;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.INotice;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【发布通知】Presenter
@@ -132,26 +126,19 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
         if (attachments != null) {
             map.put("attachments", assembleAttachment(attachments));
         }
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
-            @Override
-            public void success(final Bulletin mBulletin, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建公告",response);
-                new Handler().postDelayed(new Runnable() {
+        AnnouncementService.publishNotice(map)
+                .subscribe(new DefaultLoyoSubscriber<Bulletin>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
-                    public void run() {
-                        DialogHelp.cancelStatusLoading();
-                        mBulletinAddView.onSuccess(mBulletin);
+                    public void onNext(final Bulletin bulletin) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                DialogHelp.cancelStatusLoading();
+                                mBulletinAddView.onSuccess(bulletin);
+                            }
+                        },1000);
                     }
-                },1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-                super.failure(error);
-            }
-        });
+                });
     }
 
     /**
