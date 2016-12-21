@@ -70,11 +70,10 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      * @param mListAttachment
      */
     private void bindAttachment(final ArrayList<Attachment> mListAttachment) {
-        ll_loading.setStatus(LoadingLayout.Success);
-        if (ListUtil.IsEmpty(mListAttachment)) {
-                ll_loading.setStatus(LoadingLayout.Empty);
-            return;
-        }
+//        if (ListUtil.IsEmpty(mListAttachment)) {
+//                ll_loading.setStatus(LoadingLayout.Empty);
+//            return;
+//        }
         onLoadSuccess(mListAttachment.size());
         final ArrayList<Attachment> sortAttachment = Attachment.Sort(mListAttachment);
         ArrayList<User> users = Common.getUsersByProject(mProject);
@@ -102,6 +101,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                 adapter.notifyDataSetChanged();
             }
         });
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
 //    /**
