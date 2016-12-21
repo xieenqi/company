@@ -21,22 +21,16 @@ import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.PaymentPopView;
-import com.loyo.oa.v2.point.IOrder;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【新增\编辑】计划回款
@@ -209,44 +203,39 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
 
         LogUtil.dee("创建计划:" + MainApp.gson.toJson(map));
         if (null == planEstimateList) {   //新建
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                    .addPlanEstimate(map, new Callback<EstimatePlanAdd>() {
+            OrderService.addPlanEstimate(map)
+                    .subscribe(new DefaultLoyoSubscriber<EstimatePlanAdd>(LoyoErrorChecker.COMMIT_DIALOG) {
                         @Override
-                        public void success(EstimatePlanAdd estimatePlanAdd, Response response) {
-                            HttpErrorCheck.checkCommitSus("创建计划回款", response);
+                        public void onNext(EstimatePlanAdd add) {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     cancelStatusLoading();
-                                    app.finishActivity(OrderAddPlanActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                    app.finishActivity(OrderAddPlanActivity.this,
+                                            MainApp.ENTER_TYPE_LEFT,
+                                            RESULT_OK,
+                                            new Intent());
                                 }
                             },1000);
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            HttpErrorCheck.checkCommitEro(error);
                         }
                     });
+
         } else {    //编辑
             map.put("id", planEstimateList.id);
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                    .editPlanEsstimate(planEstimateList.id, map, new Callback<EstimatePlanAdd>() {
+            OrderService.editPlanEsstimate(planEstimateList.id, map)
+                    .subscribe(new DefaultLoyoSubscriber<EstimatePlanAdd>(LoyoErrorChecker.COMMIT_DIALOG) {
                         @Override
-                        public void success(EstimatePlanAdd estimatePlanAdd, Response response) {
-                            HttpErrorCheck.checkCommitSus("编辑计划回款", response);
+                        public void onNext(EstimatePlanAdd add) {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     cancelStatusLoading();
-                                    app.finishActivity(OrderAddPlanActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                    app.finishActivity(OrderAddPlanActivity.this,
+                                            MainApp.ENTER_TYPE_LEFT,
+                                            RESULT_OK,
+                                            new Intent());
                                 }
                             },1000);
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            HttpErrorCheck.checkCommitEro(error);
                         }
                     });
         }

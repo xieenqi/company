@@ -17,20 +17,14 @@ import com.loyo.oa.v2.activityui.order.bean.EstimateList;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CustomTextView;
-import com.loyo.oa.v2.point.IOrder;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 订单【回款记录】
@@ -208,17 +202,12 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     public void deleteData() {
 
         showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .deletePayEstimate(mData.get(position).id, new Callback<EstimateAdd>() {
+        OrderService.deletePayEstimate(mData.get(position).id)
+                .subscribe(new DefaultLoyoSubscriber<EstimateAdd>() {
                     @Override
-                    public void success(EstimateAdd estimateAdds, Response response) {
-                        HttpErrorCheck.checkResponse("回款记录列表", response);
+                    public void onNext(EstimateAdd add) {
+                        cancelLoading();
                         getData();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
                     }
                 });
     }
@@ -228,17 +217,16 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
      * 获取收款记录列表
      */
     public void getData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .getPayEstimate(orderId, new Callback<EstimateList>() {
+        OrderService.getPayEstimate(orderId)
+                .subscribe(new DefaultLoyoSubscriber<EstimateList>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
-                    public void success(EstimateList estimateList, Response response) {
-                        HttpErrorCheck.checkResponse("回款记录列表", response);
+                    public void onNext(EstimateList list) {
                         ll_loading.setStatus(LoadingLayout.Success);
-                        if (null != estimateList) {
-                            mEstimateList = estimateList;
-                            if (null != estimateList.records) {
+                        if (null != list) {
+                            mEstimateList = list;
+                            if (null != list.records) {
                                 mData.clear();
-                                mData.addAll(estimateList.records);
+                                mData.addAll(list.records);
                                 rushAdapter();
                                 mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
                                 if (mData.size() == 0)
@@ -248,11 +236,6 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                             ll_loading.setStatus(LoadingLayout.No_Network);
                             ll_loading.setNoNetworkText("没有获取到数据");
                         }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error,ll_loading);
                     }
                 });
     }

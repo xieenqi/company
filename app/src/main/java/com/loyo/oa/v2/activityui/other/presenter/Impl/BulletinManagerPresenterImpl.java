@@ -9,21 +9,16 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.NoticeAdapter2;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinManagerPresenter;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinManagerView;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.announcement.api.AnnouncementService;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.INotice;
-import com.loyo.oa.v2.tool.RCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【通知公告】Presenter
@@ -53,37 +48,36 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
-        MainApp.getMainApp().getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
-            @Override
-            public void success(final PaginationX<Bulletin> pagination, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                if (!PaginationX.isEmpty(pagination)) {
-                    ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
-                    if (isTopAdd) {
-                        bulletins.clear();
-                    }
-                    bulletins.addAll(lstData_bulletin_current);
-                    crolView.bindListData();
-                    crolView.getLoadingLayout().setStatus(LoadingLayout.Success);
-                } else {
-                    if (pagination != null && pagination.getRecords() != null && pagination.getRecords().size() == 0 && isTopAdd) {
-                        crolView.emptyData();
-                    } else {
-                        crolView.getLoadingLayout().setStatus(LoadingLayout.Success);
-                        Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+        AnnouncementService.getNoticeList(map)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Bulletin>>(crolView.getLoadingLayout()) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        crolView.refreshCmpl();
                     }
 
-                }
-                crolView.refreshCmpl();
-            }
+                    @Override
+                    public void onNext(PaginationX<Bulletin> pagination) {
+                        if (!PaginationX.isEmpty(pagination)) {
+                            ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
+                            if (isTopAdd) {
+                                bulletins.clear();
+                            }
+                            bulletins.addAll(lstData_bulletin_current);
+                            crolView.bindListData();
+                            crolView.getLoadingLayout().setStatus(LoadingLayout.Success);
+                        } else {
+                            if (pagination != null && pagination.getRecords() != null && pagination.getRecords().size() == 0 && isTopAdd) {
+                                crolView.emptyData();
+                            } else {
+                                crolView.getLoadingLayout().setStatus(LoadingLayout.Success);
+                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error, crolView.getLoadingLayout(),(pageIndex==1)?true:false);
-                super.failure(error);
-                crolView.refreshCmpl();
-            }
-        });
+                        }
+                        crolView.refreshCmpl();
+                    }
+                });
     }
 
     /**

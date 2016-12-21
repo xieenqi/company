@@ -75,7 +75,7 @@ public class SystemMessagePControl implements SystemMesssagePersenter {
 //                    }
 //                });
 
-        HomeService.getSystemMessage(map).subscribe(new DefaultLoyoSubscriber<PaginationX<SystemMessageItem>>(vControl.getLoadingLayout()) {
+         HomeService.getSystemMessage(map).subscribe(new DefaultLoyoSubscriber<PaginationX<SystemMessageItem>>(vControl.getLoadingLayout()) {
             @Override
             public void onError(Throwable e) {
                 @LoyoErrorChecker.CheckType
@@ -107,7 +107,6 @@ public class SystemMessagePControl implements SystemMesssagePersenter {
                 vControl.bindingView(data);
             }
         });
-
     }
 
     @Override

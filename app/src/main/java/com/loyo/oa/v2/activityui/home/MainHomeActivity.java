@@ -37,6 +37,7 @@ import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.activityui.signin.SigninDetailsActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activityui.wfinstance.common.WfinstanceBizformConfig;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -91,6 +92,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         SaleStageConfig.getSaleStage();
         FolloUpConfig.getFolloUpStage();
         CustomerTageConfig.getTage();
+        WfinstanceBizformConfig.getBizform();
 
         //兼容android6.0使用新的方式申请
         PermissionTool.requestPermission(this,new String[]{"android.permission.ACCESS_FINE_LOCATION"},"请打开定位服务，允许快启使用你的位置",1);

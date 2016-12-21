@@ -3,16 +3,14 @@ package com.loyo.oa.v2.activityui.work;
 import android.content.Intent;
 
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
+import com.loyo.oa.v2.activityui.work.fragment.WorkReportsManageFragment;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.activityui.work.fragment.WorkReportsManageFragment;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
 

@@ -25,7 +25,6 @@ import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
 import com.loyo.oa.v2.activityui.attendance.api.AttendanceService;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
-import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
@@ -825,25 +824,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         map.put("originalgps", longitude + "," + latitude);
         LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         DialogHelp.showLoading(getActivity(), "", true);
-//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
-//            @Override
-//            public void success(final AttendanceRecord attendanceRecord, final Response response) {
-//                attendanceRecords = attendanceRecord;
-//                HttpErrorCheck.checkResponse("考勤信息：", response);
-//                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "获取位置失败，请检查网络或GPS是否正常" : address);
-//                if (attendanceRecord.getState() == 3) {
-//                    attanceWorry();
-//                } else {
-//                    intentValue();
-//                }
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
 
         AttendanceService.checkAttendance(map).subscribe(new DefaultLoyoSubscriber<AttendanceRecord>() {
             @Override

@@ -37,7 +37,7 @@ public class TeamSaleFragmentModelImpl implements TeamSaleFragmentContract.Model
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, mPersenter.getLoadingView(), page == 1 ? true : false);
+                HttpErrorCheck.checkError(error, mPersenter.getLoadingView());
                 mPersenter.refreshComplete();
             }
         });
