@@ -6,20 +6,15 @@ import android.os.Message;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.discuss.HttpDiscussItem;
+import com.loyo.oa.v2.activityui.discuss.api.DiscussService;
 import com.loyo.oa.v2.activityui.discuss.viewcontrol.MyDisscussVControl;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.MyDiscuss;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【我的讨论】的相关操作
@@ -43,38 +38,70 @@ public class MyDisscussPControl implements MyDiscussPersenter {
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex + "");
         map.put("pageSize", "10");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class).
-                getDisscussList(map, new RCallback<PaginationX<HttpDiscussItem>>() {
-                    @Override
-                    public void success(final PaginationX<HttpDiscussItem> discuss, final Response response) {
-                        HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
-                        if (!PaginationX.isEmpty(discuss)) {
-                            if (isTopAdd) {
-                                listData = null;
-                                listData = discuss.getRecords();
-                            } else {
-                                listData.addAll(discuss.getRecords());
-                            }
-                            bindPageData(listData);
-                            vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
-                        } else {
-                            if (isTopAdd) {
-                                vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
-                            } else {
-                                vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
-                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
-                            }
-                        }
-                        vControl.hideProgress();
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class).
+//                getDiscussList(map, new RCallback<PaginationX<HttpDiscussItem>>() {
+//                    @Override
+//                    public void success(final PaginationX<HttpDiscussItem> discuss, final Response response) {
+//                        HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
+//                        if (!PaginationX.isEmpty(discuss)) {
+//                            if (isTopAdd) {
+//                                listData = null;
+//                                listData = discuss.getRecords();
+//                            } else {
+//                                listData.addAll(discuss.getRecords());
+//                            }
+//                            bindPageData(listData);
+//                            vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+//                        } else {
+//                            if (isTopAdd) {
+//                                vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
+//                            } else {
+//                                vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+//                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+//                            }
+//                        }
+//                        vControl.hideProgress();
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout(),pageIndex==1?true:false);
+//                        super.failure(error);
+//                        vControl.hideProgress();
+//                    }
+//                });
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout(),pageIndex==1?true:false);
-                        super.failure(error);
-                        vControl.hideProgress();
+        DiscussService.getDiscussList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<HttpDiscussItem>>() {
+            @Override
+            public void onError(Throwable e) {
+                @LoyoErrorChecker.CheckType
+                int type=pageIndex!=1? LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                LoyoErrorChecker.checkLoyoError(e,type,vControl.getLoadingLayout());
+                vControl.hideProgress();
+            }
+
+            @Override
+            public void onNext(PaginationX<HttpDiscussItem> discuss) {
+                if (!PaginationX.isEmpty(discuss)) {
+                    if (isTopAdd) {
+                        listData = null;
+                        listData = discuss.getRecords();
+                    } else {
+                        listData.addAll(discuss.getRecords());
                     }
-                });
+                    bindPageData(listData);
+                    vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+                } else {
+                    if (isTopAdd) {
+                        vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
+                    } else {
+                        vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+                        Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                    }
+                }
+                vControl.hideProgress();
+            }
+        });
     }
 
     @Override

@@ -27,6 +27,7 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.discuss.api.DiscussService;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.discuss.bean.HttpCrecter;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
@@ -36,12 +37,15 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -341,15 +345,51 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      * @param isPull 是否是上拉
      */
     private void loadMessage(final boolean isPull) {
-        HashMap<String, Object> body = new HashMap<>();
-        body.put("pageIndex", pageIndex + "");
-        body.put("pageSize", 5);
-        body.put("attachmentUUId", mAttachmentUUId);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).
-                create(MyDiscuss.class).getDiscussDetail(body, new RCallback<PaginationX<HttpDiscussDet>>() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", pageIndex + "");
+        map.put("pageSize", 5);
+        map.put("attachmentUUId", mAttachmentUUId);
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).
+//                create(MyDiscuss.class).getDiscussDetail(map, new RCallback<PaginationX<HttpDiscussDet>>() {
+//            @Override
+//            public void success(final PaginationX<HttpDiscussDet> d, final Response response) {
+//                HttpErrorCheck.checkResponse("讨论详情：", response);
+//                Collections.reverse(d.getRecords());
+//                if (isPull) {
+//                    mPageDiscussion.getRecords().clear();
+//                    mPageDiscussion.getRecords().addAll(0, d.getRecords());
+//                } else {
+//                    mPageDiscussion.getRecords().addAll(0, d.getRecords());
+//                }
+//                bindDiscussion();
+//                lv_notice.onRefreshComplete();
+//                if (d != null && d.getRecords().size() == 0 && isPull) {
+//                    ll_loading.setStatus(LoadingLayout.Empty);
+//                } else {
+//                    ll_loading.setStatus(LoadingLayout.Success);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                lv_notice.onRefreshComplete();
+//                HttpErrorCheck.checkError(error, ll_loading,pageIndex==1?true:false);
+//                super.failure(error);
+//            }
+//        });
+
+        DiscussService.getDiscussDetail(map).subscribe(new DefaultLoyoSubscriber<PaginationX<HttpDiscussDet>>() {
             @Override
-            public void success(final PaginationX<HttpDiscussDet> d, final Response response) {
-                HttpErrorCheck.checkResponse("讨论详情：", response);
+            public void onError(Throwable e) {
+                lv_notice.onRefreshComplete();
+                @LoyoErrorChecker.CheckType
+                int type=pageIndex!=1? LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                LoyoErrorChecker.checkLoyoError(e,type,ll_loading);
+            }
+
+            @Override
+            public void onNext(PaginationX<HttpDiscussDet> d) {
                 Collections.reverse(d.getRecords());
                 if (isPull) {
                     mPageDiscussion.getRecords().clear();
@@ -364,16 +404,8 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                 } else {
                     ll_loading.setStatus(LoadingLayout.Success);
                 }
-
             }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                lv_notice.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading,pageIndex==1?true:false);
-                super.failure(error);
-            }
-        });
+       });
     }
 
     /**
@@ -842,22 +874,35 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      */
     private void refreshRedDot() {
         setResult(Activity.RESULT_OK);
-        HashMap<String, Object> body = new HashMap<>();
-        body.put("summaryId", summaryId);
-        LogUtil.d("@刷新红点:" + app.gson.toJson(body));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
-                .updateReadDot(body, new RCallback<Object>() {
-                    @Override
-                    public void success(final Object d, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        finishActivity();
-                    }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("summaryId", summaryId);
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
+//                .updateReadDot(map, new RCallback<Object>() {
+//                    @Override
+//                    public void success(final Object d, final Response response) {
+//                        HttpErrorCheck.checkResponse(response);
+//                        finishActivity();
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                        finishActivity();
+//                    }
+//                });
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        finishActivity();
-                    }
-                });
+        DiscussService.updateReadDot(map).subscribe(new DefaultLoyoSubscriber<Object>() {
+            @Override
+            public void onError(Throwable e) {
+                DialogHelp.cancelLoading();
+                finishActivity();
+            }
+
+            @Override
+            public void onNext(Object o) {
+                DialogHelp.cancelLoading();
+                finishActivity();
+            }
+        });
     }
 }

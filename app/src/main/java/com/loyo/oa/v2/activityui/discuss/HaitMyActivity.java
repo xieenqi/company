@@ -21,11 +21,14 @@ import com.loyo.oa.common.utils.GlideCircleTransform;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.discuss.api.DiscussService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
@@ -124,36 +127,64 @@ public class HaitMyActivity extends BaseLoadingActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex + "");
         map.put("pageSize", "20");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class).
-                getMyDisscussList(map, new RCallback<PaginationX<HttpMyDiscussItem>>() {
-                    @Override
-                    public void success(final PaginationX<HttpMyDiscussItem> discuss, final Response response) {
-                        HttpErrorCheck.checkResponse(" 【@我的】讨论数据： ", response);
-                        if (!PaginationX.isEmpty(discuss)) {
-                            if (isTopAdd) {
-                                adapter.cleanData();
-                            }
-                            adapter.updataList(discuss.getRecords());
-                            ll_loading.setStatus(LoadingLayout.Success);
-                        } else {
-                            if (discuss != null && discuss.getRecords() != null && discuss.getRecords().size() == 0 && isTopAdd) {
-                                ll_loading.setStatus(LoadingLayout.Empty);
-                            } else {
-                                ll_loading.setStatus(LoadingLayout.Success);
-                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
-                            }
-                        }
-                        lv_myDiscuss.onRefreshComplete();
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class).
+//                getMyDisscussList(map, new RCallback<PaginationX<HttpMyDiscussItem>>() {
+//                    @Override
+//                    public void success(final PaginationX<HttpMyDiscussItem> discuss, final Response response) {
+//                        HttpErrorCheck.checkResponse(" 【@我的】讨论数据： ", response);
+//                        if (!PaginationX.isEmpty(discuss)) {
+//                            if (isTopAdd) {
+//                                adapter.cleanData();
+//                            }
+//                            adapter.updataList(discuss.getRecords());
+//                            ll_loading.setStatus(LoadingLayout.Success);
+//                        } else {
+//                            if (discuss != null && discuss.getRecords() != null && discuss.getRecords().size() == 0 && isTopAdd) {
+//                                ll_loading.setStatus(LoadingLayout.Empty);
+//                            } else {
+//                                ll_loading.setStatus(LoadingLayout.Success);
+//                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+//                            }
+//                        }
+//                        lv_myDiscuss.onRefreshComplete();
+//
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        HttpErrorCheck.checkError(error, ll_loading,pageIndex==1?true:false);
+//                        super.failure(error);
+//                        lv_myDiscuss.onRefreshComplete();
+//                    }
+//                });
+        DiscussService.getMyDisscussList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<HttpMyDiscussItem>>() {
+            @Override
+            public void onError(Throwable e) {
+                @LoyoErrorChecker.CheckType
+                int type=pageIndex!=1? LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                LoyoErrorChecker.checkLoyoError(e,type,ll_loading);
+                lv_myDiscuss.onRefreshComplete();
+            }
 
+            @Override
+            public void onNext(PaginationX<HttpMyDiscussItem> discuss) {
+                if (!PaginationX.isEmpty(discuss)) {
+                    if (isTopAdd) {
+                        adapter.cleanData();
                     }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading,pageIndex==1?true:false);
-                        super.failure(error);
-                        lv_myDiscuss.onRefreshComplete();
+                    adapter.updataList(discuss.getRecords());
+                    ll_loading.setStatus(LoadingLayout.Success);
+                } else {
+                    if (discuss != null && discuss.getRecords() != null && discuss.getRecords().size() == 0 && isTopAdd) {
+                        ll_loading.setStatus(LoadingLayout.Empty);
+                    } else {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
                     }
-                });
+                }
+                lv_myDiscuss.onRefreshComplete();
+            }
+        });
     }
 
     @Override
