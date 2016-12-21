@@ -221,7 +221,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         dialog.show();
     }
 
-    /**
+    /**创建人编辑全部 负者人修改参与人
      * 之前编辑项目权限在 ProjectAddActivity操作 此次没有调整
      */
     private void editProject() {
