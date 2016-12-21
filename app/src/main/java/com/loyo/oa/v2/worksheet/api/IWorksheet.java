@@ -1,29 +1,32 @@
-package com.loyo.oa.v2.point;
+package com.loyo.oa.v2.worksheet.api;
 
 import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplateListWrapper;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetWrapper;
-import com.loyo.oa.v2.beans.BaseBeanT;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.network.model.BaseResponse;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
+import rx.Observable;
+
+/**
+ * Created by EthanGong on 2016/12/20.
+ */
 
 public interface IWorksheet {
-
-
     /**
      * 我的工单列表
      * <p/>
@@ -36,7 +39,7 @@ public interface IWorksheet {
      * pageSize
      */
     @GET("/worksheets/self")
-    void getMyWorksheetList(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
+    Observable<BaseResponse<PaginationX<Worksheet>>> getMyWorksheetList(@QueryMap HashMap<String, Object> map);
 
     /**
      * 我负责的列表
@@ -49,7 +52,7 @@ public interface IWorksheet {
      * pageSize
      */
     @GET("/worksheet/event/mobile")
-    void getResponsableWorksheetList(@QueryMap HashMap<String, Object> map, Callback<WorksheetEventListWrapper> callback);
+    Observable<BaseResponse<PaginationX<WorksheetEvent>>> getResponsableWorksheetList(@QueryMap HashMap<String, Object> map);
 
     /**
      * 团队工单列表
@@ -65,7 +68,7 @@ public interface IWorksheet {
      * userid      用户id
      */
     @GET("/worksheets/team")
-    void getTeamWorksheetList(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
+    Observable<BaseResponse<PaginationX<Worksheet>>> getTeamWorksheetList(@QueryMap HashMap<String, Object> map);
 
     /**
      * 团队工单列表
@@ -76,7 +79,7 @@ public interface IWorksheet {
      * pageSize
      */
     @GET("/worksheets/order/{oid}")
-    void getWorksheetListByOrder(@Path("oid") String oid, @QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
+    Observable<BaseResponse<PaginationX<Worksheet>>> getWorksheetListByOrder(@Path("oid") String oid, @QueryMap HashMap<String, Object> map);
 
 
     /**
@@ -90,10 +93,9 @@ public interface IWorksheet {
      *                 "content"    : "工单事件很多哟!",
      *                 "uuid"       :"57c3ef26ebe07f2d0b000001"
      *                 }
-     * @param callback
      */
     @POST("/worksheets")
-    void addWorksheet(@Body Map<String, Object> body, Callback<WorksheetWrapper> callback);
+    Observable<BaseResponse<Worksheet>> addWorksheet(@Body Map<String, Object> body);
 
     /**
      * 工单类型列表
@@ -101,25 +103,25 @@ public interface IWorksheet {
      * 参数 无
      */
     @GET("/worksheet/setting")
-    void getWorksheetTypesList(Callback<WorksheetTemplateListWrapper> callback);
+    Observable<BaseResponse<ArrayList<WorksheetTemplate>>> getWorksheetTypesList();
 
     /**
      * 获取工单详细信息
      */
     @GET("/worksheets/{id}")
-    void getWorksheetDetail(@Path("id") String id, Callback<BaseBeanT<WorksheetDetail>> callback);
+    Observable<BaseResponse<WorksheetDetail>> getWorksheetDetail(@Path("id") String id);
 
     /**
      * 设置事件 负责人
      */
     @PUT("/worksheet/event/responsor/{id}")
-    void setEventPerson(@Path("id") String id, @Body Map<String, Object> body, Callback<Object> callback);
+    Observable<BaseResponse<Object>> setEventPerson(@Path("id") String id, @Body Map<String, Object> body);
 
     /**
      * 设置所有事件 批量设置负责人
      */
     @PUT("/worksheet/event/responsor")
-    void setAllEventPerson(@Body Map<String, Object> body, Callback<Object> callback);
+    Observable<BaseResponse<Object>> setAllEventPerson(@Body Map<String, Object> body);
 
     /**
      * 订单列表
@@ -129,30 +131,30 @@ public interface IWorksheet {
      * keyword 订单标题关键字查询
      */
     @GET("/order/work/list")
-    void getWorksheetOrdersList(@QueryMap HashMap<String, Object> map, Callback<WorksheetOrderListWrapper> callback);
+    Observable<BaseResponse<PaginationX<WorksheetOrder>>> getWorksheetOrdersList(@QueryMap HashMap<String, Object> map);
 
     /**
      * 提交事件处理信息
      */
     @PUT("/worksheet/event/submit/{id}")
-    void setEventSubmit(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Object> callback);
+    Observable<BaseResponse<Object>> setEventSubmit(@Path("id") String id, @Body HashMap<String, Object> map);
 
     /**
      * 获取工单信息
      */
     @GET("/worksheets/detail/{id}")
-    void getWorksheetInfo(@Path("id") String id, Callback<BaseBeanT<WorksheetInfo>> callback);
+    Observable<BaseResponse<WorksheetInfo>> getWorksheetInfo(@Path("id") String id);
 
     /**
      * 获取 工单 事件详情  /worksheet/event/mobile/:id?wsId=工单id
      */
     @GET("/worksheet/event/mobile/{id}")
-    void getEventDetail(@Path("id") String id, @QueryMap HashMap<String, Object> map, Callback<BaseBeanT<EventDetail>> callback);
+    Observable<BaseResponse<EventDetail>> getEventDetail(@Path("id") String id, @QueryMap HashMap<String, Object> map);
 
 
     /**
      * 更新工单状态 意外终止工单
      */
     @PUT("/worksheets/{id}")
-    void setStopWorksheet(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Object> callback);
+    Observable<BaseResponse<Object>> setStopWorksheet(@Path("id") String id, @Body HashMap<String, Object> map);
 }

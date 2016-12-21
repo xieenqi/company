@@ -27,7 +27,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .getMyWorksheetList(map)
                         .compose(RetrofitAdapterFactory.<PaginationX<Worksheet>>applySchedulers());
     }
@@ -37,7 +37,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .getEventDetail(id, map)
                         .compose(RetrofitAdapterFactory.<EventDetail>applySchedulers());
     }
@@ -47,7 +47,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .setEventPerson(id, body)
                         .compose(RetrofitAdapterFactory.<Object>applySchedulers());
     }
@@ -57,7 +57,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .getWorksheetListByOrder(oid, map)
                         .compose(RetrofitAdapterFactory.<PaginationX<Worksheet>>applySchedulers());
     }
@@ -67,7 +67,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .getResponsableWorksheetList(map)
                         .compose(RetrofitAdapterFactory.<PaginationX<WorksheetEvent>>applySchedulers());
     }
@@ -77,7 +77,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .getTeamWorksheetList(map)
                         .compose(RetrofitAdapterFactory.<PaginationX<Worksheet>>applySchedulers());
     }
@@ -87,7 +87,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .addWorksheet(body)
                         .compose(RetrofitAdapterFactory.<Worksheet>applySchedulers());
     }
@@ -97,7 +97,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .getWorksheetTypesList()
                         .compose(RetrofitAdapterFactory.<ArrayList<WorksheetTemplate>>applySchedulers());
     }
@@ -107,7 +107,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .getWorksheetDetail(id)
                         .compose(RetrofitAdapterFactory.<WorksheetDetail>applySchedulers());
     }
@@ -117,7 +117,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .setStopWorksheet(id, map)
                         .compose(RetrofitAdapterFactory.<Object>applySchedulers());
     }
@@ -127,7 +127,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .setAllEventPerson(body)
                         .compose(RetrofitAdapterFactory.<Object>applySchedulers());
     }
@@ -137,7 +137,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .getWorksheetInfo(id)
                         .compose(RetrofitAdapterFactory.<WorksheetInfo>applySchedulers());
     }
@@ -147,7 +147,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .setEventSubmit(id, map)
                         .compose(RetrofitAdapterFactory.<Object>applySchedulers());
     }
@@ -157,7 +157,7 @@ public class WorksheetService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Worksheet.class)
+                        .create(IWorksheet.class)
                         .getWorksheetOrdersList(map)
                         .compose(RetrofitAdapterFactory.<PaginationX<WorksheetOrder>>applySchedulers());
     }
