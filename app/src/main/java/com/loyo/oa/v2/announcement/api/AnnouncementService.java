@@ -19,7 +19,7 @@ public class AnnouncementService {
     Observable<PaginationX<Bulletin>> getNoticeList(HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
-                        .build(Config_project.API_URL_CUSTOMER())
+                        .build(Config_project.API_URL())
                         .create(IAnnouncement.class)
                         .getNoticeList(map)
                         .compose(RetrofitAdapterFactory.<PaginationX<Bulletin>>compatApplySchedulers());
@@ -29,7 +29,7 @@ public class AnnouncementService {
     Observable<Bulletin> publishNotice(HashMap<String, Object> body) {
         return
                 RetrofitAdapterFactory.getInstance()
-                        .build(Config_project.API_URL_CUSTOMER())
+                        .build(Config_project.API_URL())
                         .create(IAnnouncement.class)
                         .publishNotice(body)
                         .compose(RetrofitAdapterFactory.<Bulletin>compatApplySchedulers());
