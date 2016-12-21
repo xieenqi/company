@@ -26,7 +26,6 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.db.DBManager;
@@ -55,16 +54,11 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.jpush.android.api.JPushInterface;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
 
 
 public class MainApp extends Application {
@@ -89,41 +83,6 @@ public class MainApp extends Application {
 
     public DisplayImageOptions options_rounded;
     private AnimationDrawable animationDrawable;
-
-//    public SimpleDateFormat df1;//设置日期格式
-//    public SimpleDateFormat df2;//设置日期格式        df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df3;//设置日期格式        df3 = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df4;//设置日期格式        df4 = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df5;//设置日期格式        df5 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df6;//设置日期格式        df6 = new SimpleDateFormat("HH:mm", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df7;//设置日期格式 df7 = new SimpleDateFormat("MM.dd", Locale.getDefault());//设置日期格式
-////    public SimpleDateFormat df8;//设置日期格式        df8 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df9;//设置日期格式        df9 = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df10;//设置日期格式        df10 = new SimpleDateFormat("yyyy年M月dd日 HH:mm", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df11;//设置日期格式        df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df12;//设置日期格式        df12 = new SimpleDateFormat("yyyy年M月dd日", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df13;//设置日期格式        df13 = new SimpleDateFormat("yyyy年M月", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df14;//设置日期格式        df14 = new SimpleDateFormat("yyyy年M月dd日 HH:mm:ss", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df15;//设置日期格式        df15 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df_api;//服务器返回的时间格式        df_api = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df_api_get;//        df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df_api_get2;//        df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00
-
     public LogUtil logUtil;
 
     MainApplicationHandler handler;
@@ -293,60 +252,7 @@ public class MainApp extends Application {
             animationDrawable.stop();
         }
         animationDrawable.selectDrawable(0);
-        //imageView.setImageResource(R.drawable.icon_dynamic_phone01);
     }
-
-
-    static RestAdapter restAdapter = null;
-
-    public RestAdapter getRestAdapter() {
-        if (restAdapter == null) {
-            if (cellInfo == null) {
-                cellInfo = Utils.getCellInfo();
-            }
-
-            RequestInterceptor requestInterceptor = new RequestInterceptor() {
-                @Override
-                public void intercept(RequestFacade request) {
-                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
-                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
-                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
-                    request.addHeader("LoyoVersionName", Global.getVersionName());
-                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-                }
-            };
-
-            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).
-                    setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
-        }
-        return restAdapter;
-    }
-//
-//    public RestAdapter getRestAdapter(int mode) {
-//        if (restAdapter != null) {
-//            if (cellInfo == null) {
-//                cellInfo = Utils.getCellInfo();
-//            }
-//            RequestInterceptor requestInterceptor = new RequestInterceptor() {
-//                @Override
-//                public void intercept(RequestFacade request) {
-//                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-//                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
-//                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
-//                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
-//                    request.addHeader("LoyoVersionName", Global.getVersionName());
-//                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-//                }
-//            };
-//
-//            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).
-//                    setRequestInterceptor(requestInterceptor).build();
-//        }
-//
-//        return restAdapter;
-//    }
-
 
     void init() {
 
@@ -367,52 +273,15 @@ public class MainApp extends Application {
         ServerAPI.init();
         initImageLoader(getApplicationContext());
         init_DisplayImageOptions();
-//        df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());//设置日期格式
-//        df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
-//        df3 = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());//设置日期格式
-//        df4 = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());//设置日期格式
-//        df5 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//设置日期格式
-//        df6 = new SimpleDateFormat("HH:mm", Locale.getDefault());//设置日期格式
-//        df7 = new SimpleDateFormat("MM.dd", Locale.getDefault());//设置日期格式
-//        df8 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
-//        df9 = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());//设置日期格式
-//        df10 = new SimpleDateFormat("yyyy年M月dd日 HH:mm", Locale.getDefault());//设置日期格式
-//        df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式
-//        df12 = new SimpleDateFormat("yyyy年M月dd日", Locale.getDefault());//设置日期格式
-//        df13 = new SimpleDateFormat("yyyy年M月", Locale.getDefault());//设置日期格式
-//        df14 = new SimpleDateFormat("yyyy年M月dd日 HH:mm:ss", Locale.getDefault());//设置日期格式
-//        df15 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
-//        df_api = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());//设置日期格式
-//        df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
-//        df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00
         gson = new Gson();
         Utils.openGPS(this);
         DBManager.init(this);
         OrganizationManager.init(this);
-
-//        try {
-////            user = DBManager.Instance().getUser();
-////             subUsers = DBManager.Instance().getSubordinates();
-//        } catch (Exception ex) {
-//            Global.ProcDebugException(ex);
-//            ex.printStackTrace();
-//        }
-//        Timer timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                //setOriginData();
-//            }
-//        }, 100);
-
     }
 
     /**
      * 设置缓存的组织架构数据
      */
-//    void setOriginData() {
-//        lstDepartment = DBManager.Instance().getOrganization();
-//    }
 
     void init_DisplayImageOptions() {
         options_rounded = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).

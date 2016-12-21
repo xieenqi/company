@@ -163,6 +163,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             finish();
             return;
         }
+<<<<<<< HEAD
 //        app.getRestAdapter().create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
 //            @Override
 //            public void success(final WorkReport _workReport, final Response response) {
@@ -180,6 +181,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
 //        });
 
         WorkReportService.getWorkReportDetail(workReportId,keyType).subscribe(new DefaultLoyoSubscriber<WorkReport>(ll_loading) {
+=======
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
+>>>>>>> develop
             @Override
             public void onNext(WorkReport _workReport) {
                 mWorkReport = _workReport;

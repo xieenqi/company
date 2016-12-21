@@ -31,9 +31,11 @@ import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseChildMainListFragmentX;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.OnLoadSuccessCallback;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -110,7 +112,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * 获取项目 详细数据
      */
     private void getProject() {
-        app.getRestAdapter().create(IProject.class).getProjectById(projectId, keyType, new RCallback<HttpProject>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjectById(projectId, keyType, new RCallback<HttpProject>() {
             @Override
             public void success(final HttpProject _project, final Response response) {
                 HttpErrorCheck.checkResponse("项目详情 ", response);
@@ -286,7 +288,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * 项目删除
      */
     public void deleteProject() {
-        app.getRestAdapter().create(IProject.class).deleteProject(project.getId(), new RCallback<Project>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).deleteProject(project.getId(), new RCallback<Project>() {
             @Override
             public void success(final Project o, final Response response) {
                 HttpErrorCheck.checkResponse("删除项目：", response);
@@ -307,7 +309,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      */
     public void restartProject() {
         DialogHelp.showLoading(this, "", true);
-        app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
             @Override
             public void success(final Project o, final Response response) {
                 HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);

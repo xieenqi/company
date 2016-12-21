@@ -149,7 +149,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
 
-        app.getRestAdapter().create(IProject.class).getProjectNewSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjectNewSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
             @Override
             public void success(Pagination paginationx, Response response) {
                 HttpErrorCheck.checkResponse("获取项目详情的任务，报告，审批json", response);

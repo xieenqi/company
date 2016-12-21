@@ -20,7 +20,9 @@ import com.loyo.oa.v2.activityui.tasks.bean.TaskTpl;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
@@ -110,7 +112,7 @@ public class TaskModelSelectManageActivity extends Activity implements SlideView
             public void onItemClick(final AdapterView<?> adapterView,final View view,final int i,final long l) {
 
                 TaskTpl tpl = lstData.get((int) l);
-                app.getRestAdapter().create(ITask.class).getTpl(tpl.getId(), new RCallback<TaskTpl>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTpl(tpl.getId(), new RCallback<TaskTpl>() {
                     @Override
                     public void success(final TaskTpl taskTpl,final Response response) {
                         if (isBlockOnItemClick) {
@@ -208,7 +210,7 @@ public class TaskModelSelectManageActivity extends Activity implements SlideView
                 public void onClick(final DialogInterface dialog,final int which) {
 
                     TaskTpl tpl = lstData.get(position);
-                    app.getRestAdapter().create(ITask.class).deleteTpl(tpl.getId(), new RCallback<TaskTpl>() {
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).deleteTpl(tpl.getId(), new RCallback<TaskTpl>() {
                         @Override
                         public void success(final TaskTpl taskTpl,final Response response) {
                             lstData.remove(position);

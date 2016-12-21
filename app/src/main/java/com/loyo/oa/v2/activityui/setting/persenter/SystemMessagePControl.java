@@ -67,7 +67,7 @@ public class SystemMessagePControl implements SystemMesssagePersenter {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout(),(int)pag[0]==1?true:false);
+                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
                         vControl.getDataComplete();
                     }
                 });
