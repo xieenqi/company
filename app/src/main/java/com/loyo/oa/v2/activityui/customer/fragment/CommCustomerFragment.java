@@ -81,13 +81,13 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
             switch (msg.what) {
                 //公海挑入
                 case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
-                    //getData();
-                    AppBus.getInstance().post(new MyCustomerListRushEvent());
+                    getData();
+                    /*AppBus.getInstance().post(new MyCustomerListRushEvent());
                     Intent intent = new Intent();
                     intent.putExtra("Id", msg.getData().getString("id"));
                     intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                     startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
-                    mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);*/
                     break;
             }
         }
