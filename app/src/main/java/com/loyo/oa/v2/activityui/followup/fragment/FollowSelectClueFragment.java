@@ -15,9 +15,9 @@ import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.activityui.clue.ClueTypeEnum;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
-import com.loyo.oa.v2.activityui.followup.persenter.DynamicSelectCustomerAndCuleFragmentPCersener;
-import com.loyo.oa.v2.activityui.followup.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
+import com.loyo.oa.v2.activityui.followup.persenter.FollowSelectCustomerAndCuleFragmentPCersener;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowSelectCustomerAndCuleFragmentVControl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -33,11 +33,11 @@ import java.util.ArrayList;
  * Created by xeq on 16/11/10.
  */
 
-public class DynamicSelectClueFragment extends BaseFragment implements DynamicSelectCustomerAndCuleFragmentVControl, PullToRefreshBase.OnRefreshListener2 {
+public class FollowSelectClueFragment extends BaseFragment implements FollowSelectCustomerAndCuleFragmentVControl, PullToRefreshBase.OnRefreshListener2 {
 
     private LinearLayout ll_search;
     private PullToRefreshListView lv_list;
-    private DynamicSelectCustomerAndCuleFragmentPCersener pCersener;
+    private FollowSelectCustomerAndCuleFragmentPCersener pCersener;
     private MyClueAdapter adapter;
     private LoadingLayout ll_loading;
 
@@ -74,7 +74,7 @@ public class DynamicSelectClueFragment extends BaseFragment implements DynamicSe
                 pCersener.getPageData();
             }
         });
-        pCersener = new DynamicSelectCustomerAndCuleFragmentPCersener(this, DynamicSelectCustomerAndCuleFragmentPCersener.SELECT_CULE);
+        pCersener = new FollowSelectCustomerAndCuleFragmentPCersener(this, FollowSelectCustomerAndCuleFragmentPCersener.SELECT_CULE);
         ll_search = (LinearLayout) view.findViewById(R.id.ll_search);
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         Global.SetTouchView(ll_search);
@@ -127,7 +127,7 @@ public class DynamicSelectClueFragment extends BaseFragment implements DynamicSe
                 Intent intent = new Intent();
                 intent.putExtra(ClueListItem.class.getName(), adapter.getItemData(position-1));
                 intent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
-                intent.setClass(mActivity, DynamicAddActivity.class);
+                intent.setClass(mActivity, FollowAddActivity.class);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 mActivity.finish();
