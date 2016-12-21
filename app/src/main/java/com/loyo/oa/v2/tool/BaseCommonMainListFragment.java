@@ -24,6 +24,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 
@@ -59,6 +60,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     protected PullToRefreshExpandableListView mExpandableListView;
     protected boolean isTopAdd = true;
     private LoadingLayout ll_loading;
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -212,8 +214,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void success(PaginationX<T> tPaginationX, Response response) {
-        HttpErrorCheck.checkResponse("项目、任务、报告、审批的统一界面 result:", response);
-
         mExpandableListView.onRefreshComplete();
         if (null == tPaginationX) {
             return;
@@ -245,7 +245,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void failure(RetrofitError error) {
-        HttpErrorCheck.checkError(error, ll_loading,pagination.getPageIndex() == 1 ? true : false);
+//        HttpErrorCheck.checkError(error, ll_loading,pagination.getPageIndex() == 1 ? true : false);
         mExpandableListView.onRefreshComplete();
     }
 

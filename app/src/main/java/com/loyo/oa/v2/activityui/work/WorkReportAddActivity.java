@@ -33,6 +33,7 @@ import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.work.adapter.workReportAddgridViewAdapter;
+import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.activityui.work.bean.HttpDefaultComment;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
@@ -43,6 +44,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -316,24 +318,35 @@ public class WorkReportAddActivity extends BaseActivity {
      * 获取默认点评人
      */
     private void getDefaultComment() {
-        RestAdapterFactory.getInstance().build(Config_project.ADD_WORK_REPORT_PL).create(IWorkReport.class)
-                .defaultComment(new RCallback<HttpDefaultComment>() {
-                    @Override
-                    public void success(final HttpDefaultComment reviewer, final Response response) {
-                        HttpErrorCheck.checkResponse("报告默认点评人：", response);
-                        mReviewer = new Reviewer();
-                        if (reviewer.reviewer != null) {
-                            mReviewer.user = reviewer.reviewer.user;
-                            tv_reviewer.setText(reviewer.reviewer.user.getName());
-                        }
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.ADD_WORK_REPORT_PL).create(IWorkReport.class)
+//                .defaultComment(new RCallback<HttpDefaultComment>() {
+//                    @Override
+//                    public void success(final HttpDefaultComment reviewer, final Response response) {
+//                        HttpErrorCheck.checkResponse("报告默认点评人：", response);
+//                        mReviewer = new Reviewer();
+//                        if (reviewer.reviewer != null) {
+//                            mReviewer.user = reviewer.reviewer.user;
+//                            tv_reviewer.setText(reviewer.reviewer.user.getName());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                        super.failure(error);
+//                    }
+//                });
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        super.failure(error);
-                    }
-                });
+        WorkReportService.defaultComment().subscribe(new DefaultLoyoSubscriber<HttpDefaultComment>() {
+            @Override
+            public void onNext(HttpDefaultComment reviewer) {
+                mReviewer = new Reviewer();
+                if (reviewer.reviewer != null) {
+                    mReviewer.user = reviewer.reviewer.user;
+                    tv_reviewer.setText(reviewer.reviewer.user.getName());
+                }
+            }
+        });
     }
 
 
@@ -615,31 +628,67 @@ public class WorkReportAddActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("startTime", startTime);
         map.put("endTime", endTime);
-        RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
-                .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
-                    @Override
-                    public void success(final ArrayList<WorkReportDyn> dyn, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        dynList = dyn;
-                        mHandler.sendEmptyMessage(UPDATE_SUCCESS);
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
+//                .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
+//                    @Override
+//                    public void success(final ArrayList<WorkReportDyn> dyn, final Response response) {
+//                        HttpErrorCheck.checkResponse(response);
+//                        dynList = dyn;
+//                        mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        super.failure(error);
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+        WorkReportService.getDynamic(map).subscribe(new DefaultLoyoSubscriber<ArrayList<WorkReportDyn>>() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+
+            @Override
+            public void onNext(ArrayList<WorkReportDyn> dyn) {
+                DialogHelp.cancelLoading();
+                dynList = dyn;
+                mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+            }
+        });
+
     }
 
     /**
      * 编辑报告请求
      */
     public void updateReport(final HashMap map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
+//            @Override
+//            public void success(final WorkReport workReport, final Response response) {
+//                HttpErrorCheck.checkCommitSus("编辑报告",response);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        cancelStatusLoading();
+//                        dealResult(workReport);
+//                    }
+//                },1000);
+//
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkCommitEro(error);
+//            }
+//        });
+
+        WorkReportService.updateWorkReport(mWorkReport.getId(),map).subscribe(new DefaultLoyoSubscriber<WorkReport>(LoyoErrorChecker.COMMIT_DIALOG) {
             @Override
-            public void success(final WorkReport workReport, final Response response) {
-                HttpErrorCheck.checkCommitSus("编辑报告",response);
+            public void onNext(final WorkReport workReport) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -647,13 +696,6 @@ public class WorkReportAddActivity extends BaseActivity {
                         dealResult(workReport);
                     }
                 },1000);
-
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -662,10 +704,29 @@ public class WorkReportAddActivity extends BaseActivity {
      * 新建报告请求
      */
     public void creteReport(final HashMap map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
+//            @Override
+//            public void success(final WorkReport workReport, final Response response) {
+//                HttpErrorCheck.checkCommitSus("新建报告",response);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        cancelStatusLoading();
+//                        dealResult(workReport);
+//                    }
+//                },1000);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkCommitEro(error);
+//            }
+//        });
+
+        WorkReportService.createWorkReport(map).subscribe(new DefaultLoyoSubscriber<WorkReport>(LoyoErrorChecker.COMMIT_DIALOG) {
             @Override
-            public void success(final WorkReport workReport, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建报告",response);
+            public void onNext(final WorkReport workReport) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -673,12 +734,6 @@ public class WorkReportAddActivity extends BaseActivity {
                         dealResult(workReport);
                     }
                 },1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }

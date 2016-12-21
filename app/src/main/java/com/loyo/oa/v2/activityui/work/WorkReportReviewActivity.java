@@ -6,9 +6,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -77,18 +80,33 @@ public class WorkReportReviewActivity extends BaseActivity {
         map.put("score", ratingBar_workReport.getProgress() * 20);
         map.put("comment", content);
         showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).reviewWorkReport(mWorkReportId, map, new RCallback<WorkReport>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).reviewWorkReport(mWorkReportId, map, new RCallback<WorkReport>() {
+//            @Override
+//            public void success(final WorkReport workReport, final Response response) {
+//                HttpErrorCheck.checkResponse(response);
+//                setResult(RESULT_OK);
+//                back();
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
+
+        WorkReportService.reviewWorkReport(mWorkReportId,map).subscribe(new DefaultLoyoSubscriber<WorkReport>() {
             @Override
-            public void success(final WorkReport workReport, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                setResult(RESULT_OK);
-                back();
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
+            public void onNext(WorkReport workReport) {
+                DialogHelp.cancelLoading();
+                setResult(RESULT_OK);
+                back();
             }
         });
     }

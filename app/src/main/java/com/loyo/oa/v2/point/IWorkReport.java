@@ -26,97 +26,97 @@ import retrofit.http.QueryMap;
  */
 public interface IWorkReport {
 
-//    @GET("/discussions?bizType=1")
-//    void getDiscussions(@Query("bizId") String id, retrofit.Callback<PaginationX<Discussion>> cb);
+////    @GET("/discussions?bizType=1")
+////    void getDiscussions(@Query("bizId") String id, retrofit.Callback<PaginationX<Discussion>> cb);
+////
+////    @POST("/discussions")
+////    void createDiscussion(
+////            @Body HashMap<String, Object> body,
+////            retrofit.Callback<Discussion> cb);
 //
-//    @POST("/discussions")
-//    void createDiscussion(
-//            @Body HashMap<String, Object> body,
-//            retrofit.Callback<Discussion> cb);
-
-
-    @GET(FinalVariables.workreports + "template/{id}")
-    void getTpl(@Path("id") String id, Callback<WorkReportTpl> cb);
-
-    @DELETE(FinalVariables.workreports + "template/{id}")
-    void deleteTpl(@Path("id") String id, Callback<WorkReportTpl> cb);
-
-//    @GET(FinalVariables.workreports + "lastusers")
-//    void getLastUsers(Callback<WorkreportLastUsers> cb);
-
-
-    /**
-     * 获取动态工作报告
-     *
-     * @param map
-     * @param cb
-     */
-    @GET("/statistics/process/number")
-    void getDynamic(@QueryMap HashMap<String, Object> map, Callback<ArrayList<WorkReportDyn>> cb);
-
-    /**
-     * 根据ID获取报告详情
-     *
-     * @param id
-     * @param cb
-     */
-    @GET("/wreport/{id}")
-    void get(@Path("id") String id, @Query("key") String key, Callback<WorkReport> cb);
-
-    /**
-     * 根据筛选条件获取报告列表
-     *
-     * @param map
-     * @param cb
-     */
-    @GET("/wreport/")
-    void getWorkReports(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WorkReport>> cb);
-
-    /**
-     * 根据筛选条件获取报告列表(v2.2 精简接口)
-     *
-     * @param map
-     * @param cb
-     */
-    @GET("/wreport/mobile/simplify")
-    void getWorkReportsData(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WorkReportRecord>> cb);
-
-    /**
-     * 点评报告
-     *
-     * @param id
-     * @param map
-     * @param cb
-     */
-    @PUT("/wreport/{id}/review")
-    void reviewWorkReport(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WorkReport> cb);
-
-    /**
-     * 创建报告
-     *
-     * @param map
-     * @param cb
-     */
-    @POST("/wreport/")
-    void createWorkReport(@Body HashMap<String, Object> map, Callback<WorkReport> cb);
-
-    /**
-     * 删除报告
-     *
-     * @param id
-     * @param cb
-     */
-    @DELETE("/wreport/{id}")
-    void deleteWorkReport(@Path("id") String id, Callback<WorkReport> cb);
-
-    @PUT("/wreport/{id}")
-    void updateWorkReport(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WorkReport> cb);
-
-    /**
-     * 获取默认的点评人
-     *
-     * @param cb
-     */
-    @GET("/wreport/latest")
-    void defaultComment(Callback<HttpDefaultComment> cb);
+//
+//    @GET(FinalVariables.workreports + "template/{id}")
+//    void getTpl(@Path("id") String id, Callback<WorkReportTpl> cb);
+//
+//    @DELETE(FinalVariables.workreports + "template/{id}")
+//    void deleteTpl(@Path("id") String id, Callback<WorkReportTpl> cb);
+//
+////    @GET(FinalVariables.workreports + "lastusers")
+////    void getLastUsers(Callback<WorkreportLastUsers> cb);
+//
+//
+//    /**
+//     * 获取动态工作报告
+//     *
+//     * @param map
+//     * @param cb
+//     */
+//    @GET("/statistics/process/number")
+//    void getDynamic(@QueryMap HashMap<String, Object> map, Callback<ArrayList<WorkReportDyn>> cb);
+//
+//    /**
+//     * 根据ID获取报告详情
+//     *
+//     * @param id
+//     * @param cb
+//     */
+//    @GET("/wreport/{id}")
+//    void get(@Path("id") String id, @Query("key") String key, Callback<WorkReport> cb);
+//
+//    /**
+//     * 根据筛选条件获取报告列表
+//     *
+//     * @param map
+//     * @param cb
+//     */
+//    @GET("/wreport/")
+//    void getWorkReports(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WorkReport>> cb);
+//
+//    /**
+//     * 根据筛选条件获取报告列表(v2.2 精简接口)
+//     *
+//     * @param map
+//     * @param cb
+//     */
+//    @GET("/wreport/mobile/simplify")
+//    void getWorkReportsData(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WorkReportRecord>> cb);
+//
+//    /**
+//     * 点评报告
+//     *
+//     * @param id
+//     * @param map
+//     * @param cb
+//     */
+//    @PUT("/wreport/{id}/review")
+//    void reviewWorkReport(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WorkReport> cb);
+//
+//    /**
+//     * 创建报告
+//     *
+//     * @param map
+//     * @param cb
+//     */
+//    @POST("/wreport/")
+//    void createWorkReport(@Body HashMap<String, Object> map, Callback<WorkReport> cb);
+//
+//    /**
+//     * 删除报告
+//     *
+//     * @param id
+//     * @param cb
+//     */
+//    @DELETE("/wreport/{id}")
+//    void deleteWorkReport(@Path("id") String id, Callback<WorkReport> cb);
+//
+//    @PUT("/wreport/{id}")
+//    void updateWorkReport(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WorkReport> cb);
+//
+//    /**
+//     * 获取默认的点评人
+//     *
+//     * @param cb
+//     */
+//    @GET("/wreport/latest")
+//    void defaultComment(Callback<HttpDefaultComment> cb);
 }
