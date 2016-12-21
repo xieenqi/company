@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.common.http;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -15,6 +16,7 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RemindWay;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -381,7 +383,7 @@ public class HttpErrorCheck {
     }
 
     private static void showDilog(String msg) {
-        final SweetAlertDialogView doalog = new SweetAlertDialogView(MainApp.getMainApp().getApplicationContext());
+        final SweetAlertDialogView doalog = new SweetAlertDialogView(BaseActivity.mContext);
         doalog.alertMessageClick(new OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {

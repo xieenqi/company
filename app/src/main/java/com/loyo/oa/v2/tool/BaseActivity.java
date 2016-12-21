@@ -50,7 +50,7 @@ public class BaseActivity extends Activity {
 
     protected MainApp app;
     protected boolean isNeedLogin = true;
-    protected Context mContext;
+    public static Context mContext;
     protected static final int NO_SCROLL = -1;
     public CustomProgressDialog customProgressDialog;
     public Intent rushTokenIntent;
