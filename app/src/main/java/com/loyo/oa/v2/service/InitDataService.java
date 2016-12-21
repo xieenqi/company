@@ -110,7 +110,7 @@ public class InitDataService extends IntentService {
 //     */
 //    void getOrganization() {
 //        ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
-//                .create(IUser.class).getOrganization();
+//                .create(I2User.class).getOrganization();
 //
 //        if (!ListUtil.IsEmpty(lstDepartment_current)) {
 //            //写DB
