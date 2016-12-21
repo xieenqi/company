@@ -1,22 +1,17 @@
 package com.loyo.oa.v2.activityui.wfinstance.common;
 
 import com.google.gson.reflect.TypeToken;
+import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IWfInstance;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class WfinstanceBizformConfig {
 
@@ -25,13 +20,15 @@ public class WfinstanceBizformConfig {
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", 1);
         params.put("pageSize", 2000);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
+        WfinstanceService.getWfBizForms(params)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<BizForm>>(LoyoErrorChecker.SILENCE) {
             @Override
-            public void success(PaginationX<BizForm> result, Response response) {
-                HttpErrorCheck.checkResponse("审批 config 自定义字段", response);
-                String json = MainApp.gson.toJson(result.getRecords());
-                SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.WFINSTANCE_BIZFORM);
-                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.WFINSTANCE_BIZFORM, json);
+            public void onNext(PaginationX<BizForm> bizFormPaginationX) {
+                if (null != bizFormPaginationX) {
+                    String json = MainApp.gson.toJson(bizFormPaginationX.getRecords());
+                    SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.WFINSTANCE_BIZFORM);
+                    SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.WFINSTANCE_BIZFORM, json);
+                }
             }
         });
     }

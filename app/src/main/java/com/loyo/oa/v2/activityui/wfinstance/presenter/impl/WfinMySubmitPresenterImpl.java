@@ -57,7 +57,6 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter {
     /**
      * 获取审批类型数据
      */
-    @Override
     public void getWfBizForms() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", 1);
