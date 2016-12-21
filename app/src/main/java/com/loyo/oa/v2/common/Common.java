@@ -11,6 +11,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.model.Department;
+import com.loyo.oa.v2.activityui.login.api.LoginService;
 import com.loyo.oa.v2.activityui.login.model.Token;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
@@ -19,6 +20,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.DateTool;
@@ -539,18 +541,25 @@ public final class Common {
         if (!TextUtils.isEmpty(startTimeText)) {
             long startTime = Long.parseLong(startTimeText);
             if (!com.loyo.oa.common.utils.DateTool.isDateInTime(startTime, 10)) {
-                RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<Token>() {
-                    @Override
-                    public void success(Token token, Response response) {
-                        HttpErrorCheck.checkResponse("刷新token", response);
-                        MainApp.setToken(token.access_token);
-                        //LogUtil.dee("刷新的Token:" + token.access_token);
-                    }
+//                RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<Token>() {
+//                    @Override
+//                    public void success(Token token, Response response) {
+//                        HttpErrorCheck.checkResponse("刷新token", response);
+//                        MainApp.setToken(token.access_token);
+//                        //LogUtil.dee("刷新的Token:" + token.access_token);
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        super.failure(error);
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
 
+                LoginService.getNewToken().subscribe(new DefaultLoyoSubscriber<Token>() {
                     @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
+                    public void onNext(Token token) {
+                        MainApp.setToken(token.access_token);
                     }
                 });
             }

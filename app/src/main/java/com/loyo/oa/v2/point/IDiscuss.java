@@ -20,12 +20,12 @@ import retrofit.http.QueryMap;
  */
 public interface IDiscuss {
 
-    @GET("/discussion/query")
-    void getDiscussions(@QueryMap HashMap<String, Object> map, Callback<PaginationX<Discussion>> callback);
-
-    @POST("/discussion/")
-    void createDiscussion(@Body HashMap<String, Object> map, Callback<Discussion> callback);
-
-    @GET("/discussion/count")
-    void createDiscussion(@Query("attachmentUUId") String attachmentUUId, Callback<PaginationX<Discussion>> callback);
+//    @GET("/discussion/query")
+//    void getDiscussions(@QueryMap HashMap<String, Object> map, Callback<PaginationX<Discussion>> callback);
+//
+//    @POST("/discussion/")
+//    void createDiscussion(@Body HashMap<String, Object> map, Callback<Discussion> callback);
+//
+//    @GET("/discussion/count")
+//    void createDiscussion(@Query("attachmentUUId") String attachmentUUId, Callback<PaginationX<Discussion>> callback);
 }
