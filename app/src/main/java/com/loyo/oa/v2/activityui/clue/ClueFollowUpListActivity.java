@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -49,7 +50,8 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class ClueFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, ClueFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
+public class ClueFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2,
+        ClueFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     public static final int ACTIVITIES_ADD = 101;
 
@@ -61,6 +63,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private boolean isMyUser;
     private boolean isPullOrDown;
     private String id;
+    private int parent, child;
 
     private String name, responsorName;
     private String clueId;
@@ -292,11 +295,13 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
      * 点击评论回调
      */
     @Override
-    public void commentEmbl(String id) {
+    public void commentEmbl(String id, int parent, int chuild) {
         this.id = id;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         layout_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        this.parent = parent;
+        this.child = chuild;
     }
 
     /**
@@ -324,14 +329,16 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel model) {
         if (isMyUser) {
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(parent).activities.get(child).comments.add(model);
+        mAdapter.notifyDataSetChanged();
+//        isPullOrDown = true;
+//        getData(false);
     }
 
     /**

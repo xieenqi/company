@@ -245,7 +245,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void failure(RetrofitError error) {
-        HttpErrorCheck.checkError(error, ll_loading);
+        HttpErrorCheck.checkError(error, ll_loading,pagination.getPageIndex() == 1 ? true : false);
         mExpandableListView.onRefreshComplete();
     }
 

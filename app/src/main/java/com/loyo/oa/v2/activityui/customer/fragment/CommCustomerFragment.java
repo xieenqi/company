@@ -32,6 +32,7 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
@@ -81,10 +82,22 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
                 //公海挑入
                 case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
                     getData();
+                    /*AppBus.getInstance().post(new MyCustomerListRushEvent());
+                    Intent intent = new Intent();
+                    intent.putExtra("Id", msg.getData().getString("id"));
+                    intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
+                    startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
+                    mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);*/
                     break;
             }
         }
     };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
+    }
 
     @Nullable
     @Override
@@ -240,14 +253,6 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
                 }
         );
     }
-
-    private View.OnClickListener click = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-            }
-        }
-    };
 
     /**
      * 刷新列表回调

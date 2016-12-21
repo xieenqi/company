@@ -73,7 +73,7 @@ public class CustomerSigninNewGroupAdapter extends BaseAdapter {
         if (crolView.getBottomMenuLayout().getVisibility() == View.GONE) {
             holder.tv_title.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(Long.parseLong(groupModel.timeStamp)));
             if (null != groupModel.activities && groupModel.activities.size() > 0) {
-                mAdapter = new CustomerSigninNewListAdapter(mContext, groupModel.activities, crolView, audioCb);
+                mAdapter = new CustomerSigninNewListAdapter(mContext, groupModel.activities, crolView, audioCb,position);
                 holder.layout_listview.setAdapter(mAdapter);
             }
         }

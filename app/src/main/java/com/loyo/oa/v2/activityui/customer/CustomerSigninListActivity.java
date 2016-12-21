@@ -23,6 +23,7 @@ import com.loyo.oa.v2.activityui.customer.presenter.impl.SigninListFragPresenter
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerSigninNewListView;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
@@ -51,7 +52,8 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerSigninListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, CustomerSigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
+public class CustomerSigninListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2,
+        CustomerSigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     private ViewGroup layout_back;
     private TextView tv_title;
@@ -63,6 +65,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     private boolean isPullOrDown;
     private boolean isChanged;
     private String id;
+    private int parent, child;
 
     private PaginationX<SigninNewGroupModel> mPagination = new PaginationX<>(20);
     private ArrayList<SigninNewGroupModel> listModel = new ArrayList<>();
@@ -76,7 +79,6 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     private AudioPlayerView audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
-    private int commentPosition;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
     private SigninListFragPresenter mPresenter;
@@ -149,7 +151,6 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-//        setTouchView(NO_SCROLL);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访签到");
         layout_back.setOnTouchListener(Global.GetTouch());
@@ -200,7 +201,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map,mPagination.getPageIndex());
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     /**
@@ -259,11 +260,13 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
      * 点击评论回调
      */
     @Override
-    public void commentEmbl(String id) {
+    public void commentEmbl(String id, int parent, int child) {
         this.id = id;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         layout_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        this.parent = parent;
+        this.child = child;
     }
 
     /**
@@ -291,14 +294,14 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel model) {
         if (canAdd) {
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(parent).activities.get(child).comments.add(model);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

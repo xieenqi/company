@@ -2,7 +2,9 @@ package com.loyo.oa.v2.activityui.customer.adapter;
 
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +78,7 @@ public class CommCustomerAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final Customer customer = mCustomers.get(position);
+        final String id = customer.getId();
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_common_customer, null, false);
         }
@@ -119,12 +122,18 @@ public class CommCustomerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {//挑入公海客户
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                        create(ICustomer.class).pickedIn(customer.getId(), new RCallback<BaseBean>() {
+                        create(ICustomer.class).pickedIn(id, new RCallback<BaseBean>() {
                     @Override
                     public void success(BaseBean customer, Response response) {
                         HttpErrorCheck.checkResponse(response);
                         if (customer.errcode == 0) {
-                            mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
+                            Message msg = new Message();
+                            Bundle mBundle = new Bundle();
+                            msg.what = CustomerManagerActivity.CUSTOMER_COMM_RUSH;
+                            mBundle.putString("id",id);
+                            msg.setData(mBundle);
+                            //mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
+                            mHandler.sendMessage(msg);
                         } else {
                             Global.Toast(customer.errmsg);
                         }

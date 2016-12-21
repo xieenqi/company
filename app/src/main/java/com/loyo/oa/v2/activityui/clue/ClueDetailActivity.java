@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -392,6 +393,21 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
             @Override
             public void onClick(View v) {
                 callPhonePopView.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+            @Override
+            public void success() {
+                Utils.call(mContext, data.sales.cellphone);
+            }
+
+            @Override
+            public void fail() {
+                Toast("你拒绝了打电话权限，无法拨出电话");
             }
         });
     }
