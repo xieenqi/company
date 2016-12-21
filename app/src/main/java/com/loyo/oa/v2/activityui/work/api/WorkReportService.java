@@ -40,30 +40,10 @@ public class WorkReportService {
                         .compose(RetrofitAdapterFactory.<ArrayList<WorkReportDyn>>compatApplySchedulers());
     }
 
-    //获取一个RestAdapter
-    private static RestAdapter getRestAdapter() {
-        if (restAdapter == null) {
-            RequestInterceptor requestInterceptor = new RequestInterceptor() {
-                @Override
-                public void intercept(RequestFacade request) {
-                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-                    request.addHeader("LoyoPlatform", Utils.getCellInfo().getLoyoPlatform());
-                    request.addHeader("LoyoAgent", Utils.getCellInfo().getLoyoAgent());
-                    request.addHeader("LoyoOSVersion", Utils.getCellInfo().getLoyoOSVersion());
-                    request.addHeader("LoyoVersionName", Global.getVersionName());
-                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-                }
-            };
-
-            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).
-                    setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
-        }
-        return restAdapter;
-    }
 
     //根据ID获取报告详情
     public static Observable<WorkReport> getWorkReportDetail(String id, String key) {
-        return getRestAdapter().create(IWorkReport.class).getWorkReportDetail(id,key)
+        return  RetrofitAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReportDetail(id,key)
                         .compose(RetrofitAdapterFactory.<WorkReport>compatApplySchedulers());
     }
 //     没有地方使用

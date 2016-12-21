@@ -30,67 +30,52 @@ import rx.Observable;
 
 public class AttendanceService {
 
-    private static RestAdapter getRestAdapter(){
-        RequestInterceptor requestInterceptor = new RequestInterceptor() {
-            @Override
-            public void intercept(RequestFacade request) {
-                request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-                request.addHeader("LoyoPlatform", Utils.getCellInfo().getLoyoPlatform());
-                request.addHeader("LoyoAgent", Utils.getCellInfo().getLoyoAgent());
-                request.addHeader("LoyoOSVersion", Utils.getCellInfo().getLoyoOSVersion());
-                request.addHeader("LoyoVersionName", Global.getVersionName());
-                request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-            }
-        };
 
-        return new RestAdapter.Builder().setEndpoint(/*TODO:*/Config_project.API_URL()).
-                setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
-    }
     //验证是否能打卡
     public static Observable<ValidateInfo> validateAttendance() {
-        return getRestAdapter().create(IAttendance.class)
+        return  RetrofitAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class)
                         .validateAttendance().compose(RetrofitAdapterFactory.<ValidateInfo>compatApplySchedulers());
     }
 
     // 刷新打卡位置
     public static Observable<Object> refreshLocation(String originalGPS) {
-        return getRestAdapter().create(IAttendance.class)
+        return RetrofitAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class)
                         .refreshLocation(originalGPS).compose(RetrofitAdapterFactory.<Object>compatApplySchedulers());
     }
 
     // 确认打卡
     public static Observable<AttendanceRecord> confirmAttendance(HashMap<String,Object> map) {
-        return getRestAdapter().create(IAttendance.class)
+        return RetrofitAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class)
                         .confirmAttendance(map).compose(RetrofitAdapterFactory.<AttendanceRecord>compatApplySchedulers());
     }
 
     // 用户打卡
     public static Observable<AttendanceRecord> checkAttendance(HashMap<String,Object> map) {
-        return getRestAdapter().create(IAttendance.class)
+        return RetrofitAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class)
                 .checkAttendance(map).compose(RetrofitAdapterFactory.<AttendanceRecord>compatApplySchedulers());
     }
 
     // 获取考勤打卡列表
     public static Observable<HttpAttendanceList> getAttendances(HashMap<String,Object> map) {
-        return getRestAdapter().create(IAttendance.class)
+        return RetrofitAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class)
                 .getAttendances(map).compose(RetrofitAdapterFactory.<HttpAttendanceList>compatApplySchedulers());
     }
 
     // 确认外勤
     public static Observable<AttendanceRecord> confirmOutAttendance(String  id, int type) {
-        return getRestAdapter().create(IAttendance.class)
+        return RetrofitAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class)
                 .confirmOutAttendance(id,type).compose(RetrofitAdapterFactory.<AttendanceRecord>compatApplySchedulers());
     }
 
     // 获取考勤打卡详细内容
     public static Observable<HttpAttendanceDetial> getAttendancesDetial(String  id) {
-        return getRestAdapter().create(IAttendance.class)
+        return RetrofitAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class)
                 .getAttendancesDetial(id).compose(RetrofitAdapterFactory.<HttpAttendanceDetial>compatApplySchedulers());
     }
 
     // 团队考勤列表，获取统计数据  加 checkindate  20160429
     public static Observable<AttendanceList> getTeamCount(int checkindate) {
-        return getRestAdapter().create(IAttendance.class)
+        return RetrofitAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class)
                 .getTeamCount(checkindate).compose(RetrofitAdapterFactory.<AttendanceList>compatApplySchedulers());
     }
 
