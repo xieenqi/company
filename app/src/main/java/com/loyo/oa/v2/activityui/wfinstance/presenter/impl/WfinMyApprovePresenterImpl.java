@@ -18,6 +18,7 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
 import com.loyo.oa.v2.activityui.wfinstance.common.ApproveStatusMenuModel;
 import com.loyo.oa.v2.activityui.wfinstance.common.BizFormMenuModel;
+import com.loyo.oa.v2.activityui.wfinstance.common.WfinstanceBizformConfig;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMyApprovePresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMyApproveView;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -64,31 +65,31 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
     }
 
 
-    /**
-     * 获取审批类型数据
-     */
-    @Override
-    public void getWfBizForms() {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", 1);
-        params.put("pageSize", 500);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
-            @Override
-            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
-
-                if (null != bizFormPaginationX) {
-                    mBizForms = bizFormPaginationX.getRecords();
-                    if (null != mBizForms && !mBizForms.isEmpty()) {
-                        _loadFilterOptions(mBizForms);
-                    } else {
-                        _loadFilterOptions(null);
-                    }
-                } else {
-                    _loadFilterOptions(null);
-                }
-            }
-        });
-    }
+//    /**
+//     * 获取审批类型数据
+//     */
+//    @Override
+//    public void getWfBizForms() {
+//        HashMap<String, Object> params = new HashMap<>();
+//        params.put("pageIndex", 1);
+//        params.put("pageSize", 500);
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
+//            @Override
+//            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
+//
+//                if (null != bizFormPaginationX) {
+//                    mBizForms = bizFormPaginationX.getRecords();
+//                    if (null != mBizForms && !mBizForms.isEmpty()) {
+//                        _loadFilterOptions(mBizForms);
+//                    } else {
+//                        _loadFilterOptions(null);
+//                    }
+//                } else {
+//                    _loadFilterOptions(null);
+//                }
+//            }
+//        });
+//    }
 
     /**
      * 获取审批列表数据
@@ -138,7 +139,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
      * 初始化顶部菜单
      */
 
-    public void _loadFilterOptions(List<BizForm> bizForms) {
+    public void loadFilterOptions(List<BizForm> bizForms) {
         List<FilterModel> options = new ArrayList<>();
         options.add(ApproveStatusMenuModel.getFilterModel());
         if (bizForms != null) {
@@ -166,8 +167,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
     }
 
     public void loadFilterOptions() {
-
-        getWfBizForms();
+        loadFilterOptions(WfinstanceBizformConfig.getBizform(true));
     }
 
     /**

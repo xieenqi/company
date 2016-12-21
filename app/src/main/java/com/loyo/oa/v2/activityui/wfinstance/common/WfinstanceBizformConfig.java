@@ -1,13 +1,11 @@
 package com.loyo.oa.v2.activityui.wfinstance.common;
 
 import com.google.gson.reflect.TypeToken;
-import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
@@ -31,7 +29,7 @@ public class WfinstanceBizformConfig {
             @Override
             public void success(PaginationX<BizForm> result, Response response) {
                 HttpErrorCheck.checkResponse("审批 config 自定义字段", response);
-                String json = MainApp.gson.toJson(result);
+                String json = MainApp.gson.toJson(result.getRecords());
                 SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.WFINSTANCE_BIZFORM);
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.WFINSTANCE_BIZFORM, json);
             }
@@ -39,11 +37,11 @@ public class WfinstanceBizformConfig {
     }
 
     /* 读取缓存 */
-    public static ArrayList<Tag> getBizformCache() {
-        ArrayList<Tag> result =
+    public static ArrayList<BizForm> getBizformCache() {
+        ArrayList<BizForm> result =
                 MainApp.getMainApp().gson.fromJson(
-                        SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.CUSTOMER_TAGE),
-                        new TypeToken<ArrayList<Tag>>() {
+                        SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.WFINSTANCE_BIZFORM),
+                        new TypeToken<ArrayList<BizForm>>() {
                         }.getType());
 
         return result;
@@ -51,8 +49,8 @@ public class WfinstanceBizformConfig {
 
     // TODO:  增加网络获取的回调
     /* 读取缓存，如果没有缓冲，从网络获取 */
-    public static ArrayList<Tag> getBizform(boolean fetchIfEmpty) {
-        ArrayList<Tag> result = getBizformCache();
+    public static ArrayList<BizForm> getBizform(boolean fetchIfEmpty) {
+        ArrayList<BizForm> result = getBizformCache();
 
         if (fetchIfEmpty && result == null) {
             getBizform();
@@ -63,6 +61,6 @@ public class WfinstanceBizformConfig {
 
     /* 清除缓存 */
     private static void clearBizform() {
-        SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.CUSTOMER_TAGE);
+        SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.WFINSTANCE_BIZFORM);
     }
 }
