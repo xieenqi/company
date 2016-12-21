@@ -143,7 +143,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         getIntenData();
         mPresenter = new ClueFollowUpListPresenterImpl(this, mContext);
         audioPlayer = new AudioPlayerView(this);
-        audioPlayer.onInit();
+        //audioPlayer.onInit();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -407,13 +407,15 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
                 audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.onResume(textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
                 audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.onResume(textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
             audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;

@@ -144,7 +144,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
 
         mPresenter = new CustomerFollowUpListPresenterImpl(this, mContext);
         audioPlayer = new AudioPlayerView(this);
-        audioPlayer.onInit();
+        //audioPlayer.onInit();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -401,21 +401,25 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
             if (null != lastView)
                 MainApp.getMainApp().stopAnim(lastView);
         }
+
         audioPlayer.onInit();
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
+                LogUtil.dee("同一条");
                 MainApp.getMainApp().stopAnim(textView);
                 audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.onResume(textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
                 audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.onResume(textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
             audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;

@@ -148,7 +148,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         mTags = FolloUpConfig.getFolloUpStageCache();
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayerView(getActivity());
-        audioPlayer.onInit();
+        //audioPlayer.onInit();
         btn_add = (Button) view.findViewById(R.id.btn_add);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
 
@@ -435,13 +435,15 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                 audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.onResume(textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
                 audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.onResume(textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
             audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;

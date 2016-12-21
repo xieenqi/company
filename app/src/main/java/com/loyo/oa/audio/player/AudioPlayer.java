@@ -131,18 +131,17 @@ public class AudioPlayer implements PlayCallback {
      */
     @Override
     public void onInit(SeekBar musicProgress) {
-        if (player != null) {
-            player.stop();
-        }
+        LogUtil.dee("onInit");
+        if (player == null) {
+            this.mSeekbar = musicProgress;
+            if (musicProgress != null) {
+                musicProgress.setOnSeekBarChangeListener(null);
+            }
 
-        this.mSeekbar = musicProgress;
-        if (musicProgress != null) {
-            musicProgress.setOnSeekBarChangeListener(null);
+            player = new Player(musicProgress);
+            musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
+            player.mediaPlayer.setOnCompletionListener(new PlayerComplte());
         }
-
-        player = new Player(musicProgress);
-        musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
-        player.mediaPlayer.setOnCompletionListener(new PlayerComplte());
     }
 
     /**
@@ -157,10 +156,6 @@ public class AudioPlayer implements PlayCallback {
         }
 
         mSeekbar.setProgress(0);
-        if (attachedView != null) {
-            attachedView.updateUI(AudioPlayUpdate.startState());
-        }
-
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         cachedThreadPool.execute(new Runnable() {
             @Override
@@ -183,6 +178,9 @@ public class AudioPlayer implements PlayCallback {
         if (player != null) {
             player.play();
             mSeekbar.setMax(getAudioSize(player.mediaPlayer)+1);
+            if (attachedView != null) {
+                attachedView.updateUI(AudioPlayUpdate.startState());
+            }
         }
     }
 

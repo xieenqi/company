@@ -154,7 +154,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
     public void initView(View view) {
         mPresenter = new SelfSigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayerView(getActivity());
-        audioPlayer.onInit();
+        //audioPlayer.onInit();
         ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
@@ -414,13 +414,15 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
                 audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.onResume(textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
                 audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.onResume(textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
             audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;

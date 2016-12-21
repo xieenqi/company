@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
@@ -123,7 +124,7 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
     /*录音播放相关*/
     private LinearLayout layout_bottom_voice;
     private int playVoiceSize = 0;
-    private AudioPlayer audioPlayer;
+    private AudioPlayerView audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
 
@@ -146,14 +147,14 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
     @Override
     public void onDestroy() {
         super.onDestroy();
-        audioPlayer.killPlayer();
+        audioPlayer.onStop();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         if (null != voiceView)
-            audioPlayer.audioPause(voiceView);
+            audioPlayer.onStop();
     }
 
     /**
@@ -205,8 +206,8 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
 
     private void initUI() {
         id = getIntent().getStringExtra("id");
-        audioPlayer = new AudioPlayer(mContext);
-        audioPlayer.initPlayer();
+        audioPlayer = new AudioPlayerView(mContext);
+        //audioPlayer.initPlayer();
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
@@ -595,22 +596,25 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
+        audioPlayer.onInit();
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
                 MainApp.getMainApp().stopAnim(textView);
-                audioPlayer.audioPause(textView);
+                audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.audioStart(textView);
-                audioPlayer.threadPool(audioModel, textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
+                audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel, textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
+            audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }

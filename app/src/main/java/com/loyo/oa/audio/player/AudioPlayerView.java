@@ -1,8 +1,6 @@
 package com.loyo.oa.audio.player;
 
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -18,6 +16,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.tool.LogUtil;
 
 /**
  * Created by EthanGong on 2016/12/10.
@@ -97,8 +96,10 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
 
         switch (updateState.type){
 
+            // 播放
             case AudioPlayUpdate.START:
-
+                MainApp.getMainApp().startAnim(nowsView);
+                layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
                 break;
 
             // 暂停
@@ -135,6 +136,12 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
         }
     }
 
+    // 重置view
+    public void restView(TextView textView){
+        isOnPlay = false;
+        mHandler.sendEmptyMessage(0x02);
+        MainApp.getMainApp().startAnim(textView);
+    }
 
     // 是否正在播放
     public boolean isPlaying(){
@@ -148,25 +155,31 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
         }
     }
 
-    // 第一次播放
+    // 首次播放
     public void onStart(AudioModel audioModel,TextView nowsView){
         if (callbackHandler != null) {
-            mHandler.sendEmptyMessage(0x02);
+            LogUtil.dee("onStart");
+            /*mHandler.sendEmptyMessage(0x02);
             isOnPlay = false;
+            MainApp.getMainApp().startAnim(nowsView);*/
+            restView(nowsView);
             this.nowsView = nowsView;
+            layout_audioplayer.setVisibility(View.VISIBLE);
+            layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
             tv_audio_endtime.setText(com.loyo.oa.common.utils.DateTool.int2time((int) audioModel.length * 1000));
             callbackHandler.onStart(this,audioModel);
-            MainApp.getMainApp().startAnim(nowsView);
         }
     }
 
-    // 继续播放
+    // 暂停后..继续播放
     public void onResume(TextView textView) {
         if (callbackHandler != null) {
-            mHandler.sendEmptyMessage(0x02);
-            isOnPlay = false;
-            MainApp.getMainApp().startAnim(textView);
-            layout_audioplayer.setVisibility(View.VISIBLE);
+            LogUtil.dee("onResume");
+            //mHandler.sendEmptyMessage(0x02);
+            //isOnPlay = false;
+            //MainApp.getMainApp().startAnim(textView);
+            restView(textView);
+            //layout_audioplayer.setVisibility(View.VISIBLE);
             layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
             callbackHandler.onResume(this);
         }
@@ -197,7 +210,6 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
             case R.id.layout_audio_pauseorplay:
                 if (isOnPlay) {
                     isOnPlay = false;
-                    layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
                     callbackHandler.onResume(this);
                 } else {
                     callbackHandler.onPause(this);
