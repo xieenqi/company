@@ -88,7 +88,7 @@ public class CustomerFollowUpListPresenterImpl implements CustomerFollowUpListPr
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, crolView.getLoadingLayout(), page == 1 ? true : false);
+                HttpErrorCheck.checkError(error, crolView.getLoadingLayout());
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }

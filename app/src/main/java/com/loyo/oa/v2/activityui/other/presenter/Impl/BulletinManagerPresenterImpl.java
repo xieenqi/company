@@ -81,7 +81,7 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error, crolView.getLoadingLayout(),(pageIndex==1)?true:false);
+                HttpErrorCheck.checkError(error, crolView.getLoadingLayout());
                 super.failure(error);
                 crolView.refreshCmpl();
             }

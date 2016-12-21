@@ -325,7 +325,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
+                        HttpErrorCheck.checkError(error, ll_loading);
                         listView.onRefreshComplete();
                     }
                 }

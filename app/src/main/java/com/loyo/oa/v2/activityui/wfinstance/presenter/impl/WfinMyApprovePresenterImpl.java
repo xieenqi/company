@@ -128,7 +128,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, crolView.getLoading(), page == 1 ? true : false);
+                        HttpErrorCheck.checkError(error, crolView.getLoading());
                         crolView.setListRefreshComplete();
                     }
                 });

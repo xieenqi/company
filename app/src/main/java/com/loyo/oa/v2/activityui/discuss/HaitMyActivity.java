@@ -149,7 +149,7 @@ public class HaitMyActivity extends BaseLoadingActivity {
 
                     @Override
                     public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading,pageIndex==1?true:false);
+                        HttpErrorCheck.checkError(error, ll_loading);
                         super.failure(error);
                         lv_myDiscuss.onRefreshComplete();
                     }
