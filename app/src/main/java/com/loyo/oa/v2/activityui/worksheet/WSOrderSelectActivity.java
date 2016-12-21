@@ -8,7 +8,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -22,25 +21,18 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IWorksheet;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.worksheet.api.WorksheetService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【订单选择】
@@ -164,22 +156,20 @@ public class WSOrderSelectActivity extends BaseLoadingActivity implements PullTo
         if (strSearch != null) {
             map.put("keyword", strSearch);
         }
+        WorksheetService.getWorksheetOrdersList(map)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<WorksheetOrder>>(ll_loading) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        pullToRefreshListView.onRefreshComplete();
+                    }
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IWorksheet.class).getWorksheetOrdersList(map, new Callback<WorksheetOrderListWrapper>() {
-            @Override
-            public void success(WorksheetOrderListWrapper listWrapper, Response response) {
-                pullToRefreshListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的工单列表：", response, ll_loading);
-                loadData(listWrapper.data.records);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                pullToRefreshListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading);
-            }
-        });
+                    @Override
+                    public void onNext(PaginationX<WorksheetOrder> x) {
+                        pullToRefreshListView.onRefreshComplete();
+                        loadData(x!=null? x.records: new ArrayList<WorksheetOrder>());
+                    }
+                });
     }
 
     private void loadData(List<WorksheetOrder> list) {
@@ -197,6 +187,9 @@ public class WSOrderSelectActivity extends BaseLoadingActivity implements PullTo
         }
         if (listData.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
+        else {
+            ll_loading.setStatus(LoadingLayout.Success);
+        }
     }
 
     @Override

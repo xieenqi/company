@@ -28,27 +28,21 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.worksheet.api.WorksheetService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【提交完成/打回重做】工单
@@ -188,34 +182,30 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
         map.put("uuid", uuid);
         map.put("address", httpLoc);
         LogUtil.dee("提交事件信息：" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).setEventSubmit(id, map, new RCallback<Object>() {
-            @Override
-            public void success(final Object o, final Response response) {
-                HttpErrorCheck.checkCommitSus("提交事情处理信息", response);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        cancelStatusLoading();
-                        if (type == 1) {
-                            AppBus.getInstance().post(new WorksheetDetail());
-                            WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
-                            event.bundle = new Bundle();
-                            event.bundle.putString(ExtraAndResult.EXTRA_ID, id);
-                            AppBus.getInstance().post(event);
-                        } else {
-                            AppBus.getInstance().post(new WorksheetInfo());
-                        }
-                        app.finishActivity(WorksheetSubmitActivity.this, MainApp.ENTER_TYPE_LEFT, 0, new Intent());
-                    }
-                },1000);
-            }
+        WorksheetService.setEventSubmit(id, map)
+                .subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.COMMIT_DIALOG) {
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+                    @Override
+                    public void onNext(Object o) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                DialogHelp.successStatusLoad();
+                                if (type == 1) {
+                                    AppBus.getInstance().post(new WorksheetDetail());
+                                    WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
+                                    event.bundle = new Bundle();
+                                    event.bundle.putString(ExtraAndResult.EXTRA_ID, id);
+                                    AppBus.getInstance().post(event);
+                                } else {
+                                    AppBus.getInstance().post(new WorksheetInfo());
+                                }
+                                app.finishActivity(WorksheetSubmitActivity.this, MainApp.ENTER_TYPE_LEFT, 0, new Intent());
+                            }
+                        },1000);
+
+                    }
+                });
     }
 
 

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
@@ -18,25 +17,24 @@ import com.loyo.oa.dropdownmenu.filtermenu.WorksheetStatusMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.WorksheetTemplateMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.common.fragment.BaseGroupsDataFragment;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
-import com.loyo.oa.v2.point.IWorksheet;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.worksheet.api.WorksheetService;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -44,10 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【我创建的工单】
@@ -191,28 +185,36 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
         map.put("type", 1/* 我创建的 */);
         map.put("status", statusParam);
         map.put("templateId", typeParam);
+        WorksheetService.getMyWorksheetList(map)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Worksheet>>() {
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IWorksheet.class).getMyWorksheetList(map, new Callback<WorksheetListWrapper>() {
-            @Override
-            public void success(WorksheetListWrapper listWrapper, Response response) {
-                mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我创建的工单列表：", response, ll_loading);
+                    @Override
+                    public void onError(Throwable e) {
+                        @LoyoErrorChecker.CheckType int type = groupsData.size()>0?
+                                        LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                        mExpandableListView.onRefreshComplete();
+                    }
 
-                if (isPullDown) {
-                    groupsData.clear();
-                    if (listWrapper != null && listWrapper.isEmpty())
-                        ll_loading.setStatus(LoadingLayout.Empty);
-                }
-                loadData(listWrapper.data.records);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
-            }
-        });
+                    @Override
+                    public void onNext(PaginationX<Worksheet> x) {
+                        mExpandableListView.onRefreshComplete();
+                        if (isPullDown) {
+                            groupsData.clear();
+                        }
+                        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size()==0) {
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        }
+                        else  if (PaginationX.isEmpty(x)){
+                            Toast("没有更多数据了");
+                            ll_loading.setStatus(LoadingLayout.Success);
+                        }
+                        else  {
+                            ll_loading.setStatus(LoadingLayout.Success);
+                        }
+                        loadData(x!=null?x.records:new ArrayList<Worksheet>());
+                    }
+                });
 
     }
 
