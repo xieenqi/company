@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -15,38 +13,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.adapter.ResponsableWorksheetsAdapter;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
-import com.loyo.oa.v2.point.IWorksheet;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.worksheet.api.WorksheetService;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【工单搜索】
@@ -214,6 +206,38 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
 
     protected void getData() {
 
+        DefaultLoyoSubscriber<PaginationX<Worksheet>> subscriber =
+                new DefaultLoyoSubscriber<PaginationX<Worksheet>>() {
+
+            @Override
+            public void onError(Throwable e) {
+                @LoyoErrorChecker.CheckType int type = groupsData.size() >0?
+                        LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                expandableListView.onRefreshComplete();
+
+            }
+
+            @Override
+            public void onNext(PaginationX<Worksheet> x) {
+                expandableListView.onRefreshComplete();
+                if (isPullDown) {
+                    groupsData.clear();
+                }
+                if (isPullDown && PaginationX.isEmpty(x) && groupsData.size()==0) {
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                }
+                else  if (PaginationX.isEmpty(x)){
+                    Toast("没有更多数据了");
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
+                else  {
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
+
+                loadData(x != null?x.records:new ArrayList<Worksheet>());
+            }
+        };
+
         if (searchType == WorksheetListType.SELF_CREATED || searchType == WorksheetListType.ASSIGNABLE) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", page);
@@ -222,79 +246,52 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                     ? 1/* 我创建的 */ : 2/* 我分派的 */);
             map.put("keyword", strSearch);
 
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(IWorksheet.class).getMyWorksheetList(map, new Callback<WorksheetListWrapper>() {
-                @Override
-                public void success(WorksheetListWrapper listWrapper, Response response) {
-                    expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkResponse("我的工单列表：", response, ll_loading);
-                    if (isPullDown) {
-                        groupsData.clear();
-                        if (listWrapper != null && listWrapper.isEmpty())
-                            ll_loading.setStatus(LoadingLayout.Empty);
-                    }
-                    loadData(listWrapper.data.records);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
-                }
-            });
-        } else if (searchType == WorksheetListType.RESPONSABLE) {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("pageIndex", page);
-            map.put("pageSize", 15);
-            map.put("keyword", strSearch);
-
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(IWorksheet.class).getResponsableWorksheetList(map, new Callback<WorksheetEventListWrapper>() {
-                @Override
-                public void success(WorksheetEventListWrapper listWrapper, Response response) {
-                    expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkResponse("我负责的工单列表：", response, ll_loading);
-                    if (isPullDown) {
-                        groupsData.clear();
-                        if (listWrapper != null && listWrapper.isEmpty())
-                            ll_loading.setStatus(LoadingLayout.Empty);
-                    }
-                    loadWorksheetEvents(listWrapper.data.records);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error, ll_loading,page == 1 ? true : false);
-                }
-            });
-
+            WorksheetService.getMyWorksheetList(map)
+                    .subscribe(subscriber);
         } else if (searchType == WorksheetListType.TEAM) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", page);
             map.put("pageSize", 15);
             map.put("keyword", strSearch);
+            WorksheetService.getTeamWorksheetList(map)
+                    .subscribe(subscriber);
+        } else if (searchType == WorksheetListType.RESPONSABLE) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("pageIndex", page);
+            map.put("pageSize", 15);
+            map.put("keyword", strSearch);
+            WorksheetService.getResponsableWorksheetList(map)
+                    .subscribe(new DefaultLoyoSubscriber<PaginationX<WorksheetEvent>>() {
+                        @Override
+                        public void onError(Throwable e) {
+                            @LoyoErrorChecker.CheckType int type =
+                                    groupsData.size()>0?LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                            LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                            expandableListView.onRefreshComplete();
+                        }
 
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(IWorksheet.class).getTeamWorksheetList(map, new Callback<WorksheetListWrapper>() {
-                @Override
-                public void success(WorksheetListWrapper listWrapper, Response response) {
-                    expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkResponse("团队工单列表：", response, ll_loading);
-                    if (isPullDown) {
-                        groupsData.clear();
-                        if (listWrapper != null && listWrapper.isEmpty())
-                            ll_loading.setStatus(LoadingLayout.Empty);
-                    }
-                    loadData(listWrapper.data.records);
-                }
+                        @Override
+                        public void onNext(PaginationX<WorksheetEvent> x) {
+                            expandableListView.onRefreshComplete();
 
-                @Override
-                public void failure(RetrofitError error) {
-                    expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error, ll_loading,page == 1 ? true : false);
-                }
-            });
+                            if (isPullDown) {
+                                groupsData.clear();
+                            }
+                            if (isPullDown && PaginationX.isEmpty(x) && groupsData.size()==0) {
+                                ll_loading.setStatus(LoadingLayout.Empty);
+                            }
+                            else  if (PaginationX.isEmpty(x)){
+                                Toast("没有更多数据了");
+                                ll_loading.setStatus(LoadingLayout.Success);
+                            }
+                            else  {
+                                ll_loading.setStatus(LoadingLayout.Success);
+                            }
+
+                            loadWorksheetEvents(x!=null?x.records:new ArrayList<WorksheetEvent>());
+                        }
+                    });
+
         }
 
 

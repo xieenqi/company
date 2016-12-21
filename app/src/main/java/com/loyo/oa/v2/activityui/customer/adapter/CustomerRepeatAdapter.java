@@ -39,7 +39,7 @@ public class CustomerRepeatAdapter extends BaseAdapter {
     private Context mContext;
 
     public interface PickInOnCallBack {
-        void pickEmbl();
+        void pickEmbl(String id);
     }
 
     public CustomerRepeatAdapter(final PaginationX<CustomerRepeatList> listCommons, final Context context, PickInOnCallBack pickInOnCallBack) {
@@ -75,6 +75,7 @@ public class CustomerRepeatAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, final ViewGroup viewGroup) {
         viewHolder holder = null;
         final CustomerRepeatList customerRepeatList = listCommon.getRecords().get(position);
+        final String id = customerRepeatList.getId();
         if (convertView == null) {
             holder = new viewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customerrepeat_list, null);
@@ -113,7 +114,7 @@ public class CustomerRepeatAdapter extends BaseAdapter {
                 CustomerService.pickInCustomer(customerRepeatList.getId())
                         .subscribe(new DefaultLoyoSubscriber<Customer>() {
                             public void onNext(Customer customer) {
-                                pickInOnCallBack.pickEmbl();
+                                pickInOnCallBack.pickEmbl(id);
                             }
                         });
             }

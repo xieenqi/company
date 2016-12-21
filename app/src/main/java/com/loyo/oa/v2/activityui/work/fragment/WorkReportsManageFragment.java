@@ -22,13 +22,9 @@ import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.network.model.LoyoError;
-import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,9 +88,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         map.put("sendType", typeParam);
         map.put("isReviewed", statusParam);
 
-//        LogUtil.dll("客户端发送数据:" + MainApp.gson.toJson(map));
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReportsData(map, this);
-
+        LogUtil.dll("客户端发送数据:" + MainApp.gson.toJson(map));
         //这里借助CallBack接口调用，不能直接实现DefaultLoyoSubscriber，因为会有方法冲突
         WorkReportService.getWorkReportsData(map).subscribe(new DefaultLoyoSubscriber<PaginationX<WorkReportRecord>>(LoyoErrorChecker.LOADING_LAYOUT) {
             @Override

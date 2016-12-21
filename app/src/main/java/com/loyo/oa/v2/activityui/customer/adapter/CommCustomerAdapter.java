@@ -2,7 +2,9 @@ package com.loyo.oa.v2.activityui.customer.adapter;
 
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +70,7 @@ public class CommCustomerAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final Customer customer = mCustomers.get(position);
+        final String id = customer.getId();
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_common_customer, null, false);
         }

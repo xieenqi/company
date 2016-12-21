@@ -176,7 +176,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * 登录成功
      * */
     @Override
-    public void onSuccess(Token token) {
+    public void onSuccess(String token) {
         loginPresenter.onSuccessEmbl(token,LoginActivity.this);
     }
 

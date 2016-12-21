@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activityui.login.model.Token;
 import com.loyo.oa.v2.activityui.login.presenter.LoginPresenter;
 import com.loyo.oa.v2.activityui.login.viewcontrol.LoginView;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -25,9 +26,11 @@ import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -43,16 +46,16 @@ public class LoginPresenterImpl implements LoginPresenter {
     public WaveView mWaveView;
     public Context mContext;
 
-    public LoginPresenterImpl(LoginView loginView, WaveView mWaveView, Context mContext){
+    public LoginPresenterImpl(LoginView loginView, WaveView mWaveView, Context mContext) {
         this.crolView = loginView;
         this.mWaveView = mWaveView;
-        this.mContext  = mContext;
+        this.mContext = mContext;
     }
 
-    public Handler mHandler = new Handler(){
+    public Handler mHandler = new Handler() {
 
-        public void handleMessage(Message msg){
-            if(msg.what == 0x01){
+        public void handleMessage(Message msg) {
+            if (msg.what == 0x01) {
                 changeColor(R.color.title_bg1, R.color.red1);
                 mWaveView.setText("登录失败");
             }
@@ -61,22 +64,22 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     /**
      * 登录请求
-     * */
+     */
     @Override
     public void requestLogin(HashMap<String, Object> body) {
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(FinalVariables.GET_TOKEN) //URL
                 .setLogLevel(RestAdapter.LogLevel.FULL) //是否Debug
                 .build();
-        adapter.create(ILogin.class).login(body, new RCallback<Token>() {
+        adapter.create(ILogin.class).login(body, new RCallback<BaseBeanT<String>>() {
             @Override
-            public void success(final Token token, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                if (null == token || TextUtils.isEmpty(token.access_token)) {
+            public void success(final BaseBeanT<String> token, final Response response) {
+                HttpErrorCheck.checkResponse("登录: ", response);
+                if (null == token || token.data == null || TextUtils.isEmpty(token.data)) {
                     crolView.onError();
                     return;
                 } else {
-                    crolView.onSuccess(token);
+                    crolView.onSuccess(token.data);
                 }
             }
 
@@ -91,9 +94,9 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     /**
      * 登录成功后操作
-     * */
+     */
     @Override
-    public void onSuccessEmbl(final Token token, final Activity mActivity) {
+    public void onSuccessEmbl(final String token, final Activity mActivity) {
         mWaveView.setText("登录成功");
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         cachedThreadPool.execute(new Runnable() {
@@ -106,8 +109,8 @@ public class LoginPresenterImpl implements LoginPresenter {
                 }
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "openOne");
                 //登录成功
-                MainApp.setToken(token.access_token);
-                SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);
+                MainApp.setToken(token);
+                SharedUtil.put(mContext, FinalVariables.TOKEN, token);
                 SharedUtil.putBoolean(mContext, ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
                 MainApp.getMainApp().startActivity(mActivity, MainHomeActivity.class, MainApp.ENTER_TYPE_RIGHT, true, new Bundle());
                 SharedUtil.putBoolean(mContext, ExtraAndResult.WELCOM_KEY, true);
@@ -120,7 +123,7 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     /**
      * 登录失败后操作
-     * */
+     */
     @Override
     public void onErrorEmbl() {
         mHandler.sendEmptyMessage(0x01);
@@ -128,7 +131,7 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     /**
      * 输入框监听
-     * */
+     */
     @Override
     public void editTextListner(EditText edt_username, EditText edt_password) {
         edt_username.addTextChangedListener(nameWatcher);
@@ -137,7 +140,7 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     /**
      * 按钮颜色改变
-     * */
+     */
     @Override
     public void changeColor(int bgColor, int waveColor) {
         if (bgColor > 0)
@@ -151,9 +154,9 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     /**
      * 登录请求验证
-     * */
+     */
     @Override
-    public void requestStandBy(String username,String password) {
+    public void requestStandBy(String username, String password) {
         if (StringUtil.isEmpty(username)) {
             crolView.verifyError(1);
             return;

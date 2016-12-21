@@ -86,6 +86,12 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
     private ArrayList<Tag> mTags;
     private LoadingLayout ll_loading;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
+    }
+
     @SuppressLint("InflateParams")
     @Nullable
     @Override
@@ -334,6 +340,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
      */
     @Subscribe
     public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
+        LogUtil.dee("我负责 onMyCustomerListRushEvent");
         getData();
     }
 
