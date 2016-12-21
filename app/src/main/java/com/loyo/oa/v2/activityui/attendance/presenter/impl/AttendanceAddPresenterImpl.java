@@ -144,7 +144,7 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
     @Override
     public void refreshLocation(final double longitude, final double latitude, final String address) {
         String originalgps = longitude + "," + latitude;
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).refreshLocation(originalgps, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).refreshLocation(originalgps, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
                 mAttendanceRecord.setAddress(address);
@@ -244,7 +244,7 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
             map.put("attachementuuid", uuid);
         }
         DialogHelp.showStatusLoading(false,mContext);
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 HttpErrorCheck.checkCommitSus("确认打卡",response);

@@ -10,8 +10,8 @@ import android.widget.ExpandableListView;
 
 public interface WfinMySubmitPresenter {
 
-    /*获取审批类型数据*/
-    void getWfBizForms();
+//    /*获取审批类型数据*/
+//    void getWfBizForms();
 
     /*获取审批列表数据*/
     void getApproveWfInstancesList(int page, boolean isTopAdd);

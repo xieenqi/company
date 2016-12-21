@@ -17,8 +17,10 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITrackLog;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.TrackLogRecevier;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.io.Serializable;
@@ -77,7 +79,7 @@ public class TrackRule implements Serializable {
 
         final MainApp app = MainApp.getMainApp();
         if (Global.isConnected()) {
-            app.getRestAdapter().create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
                 @Override
                 public void success(TrackRule trackRule, Response response) {
                     HttpErrorCheck.checkResponse("后台轨迹规则加载成功！", response);
@@ -108,7 +110,7 @@ public class TrackRule implements Serializable {
         final MainApp app = MainApp.getMainApp();
 
         if (Global.isConnected()) {
-            app.getRestAdapter().create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
                 @Override
                 public void success(TrackRule trackRule, Response response) {
                     if (null != trackRule) {

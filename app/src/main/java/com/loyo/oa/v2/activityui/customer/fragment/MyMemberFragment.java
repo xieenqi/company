@@ -148,8 +148,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
                 getData();
             }
         });
-//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-        mTags = CustomerTageConfig.getTageCache();
+        mTags = CustomerTageConfig.getTage(true);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         nearTv = (TextView) view.findViewById(R.id.tv_near_customers);
         nearLayout = (ViewGroup) view.findViewById(R.id.layout_near_customers);
@@ -325,7 +324,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
+                        HttpErrorCheck.checkError(error, ll_loading);
                         listView.onRefreshComplete();
                     }
                 }

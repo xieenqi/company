@@ -370,7 +370,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             @Override
             public void failure(final RetrofitError error) {
                 lv_notice.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading,pageIndex==1?true:false);
+                HttpErrorCheck.checkError(error, ll_loading);
                 super.failure(error);
             }
         });

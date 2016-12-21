@@ -17,7 +17,9 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.INotice;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +55,7 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
-        MainApp.getMainApp().getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
             @Override
             public void success(final PaginationX<Bulletin> pagination, final Response response) {
                 HttpErrorCheck.checkResponse(response);
@@ -79,7 +81,7 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error, crolView.getLoadingLayout(),(pageIndex==1)?true:false);
+                HttpErrorCheck.checkError(error, crolView.getLoadingLayout());
                 super.failure(error);
                 crolView.refreshCmpl();
             }

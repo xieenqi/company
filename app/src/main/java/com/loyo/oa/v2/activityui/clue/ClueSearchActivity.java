@@ -218,7 +218,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
     @Override
     public void failure(RetrofitError error) {
         expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
+        HttpErrorCheck.checkError(error, ll_loading);
     }
 
 
