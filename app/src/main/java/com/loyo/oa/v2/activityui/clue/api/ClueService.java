@@ -25,7 +25,6 @@ import rx.Observable;
 public class ClueService {
     //我的销售线索
     public static Observable<ClueList> getMyClueList(HashMap<String, Object> params) {
-        LogUtil.d("getMyClueList() called with: params = [" + params + "]");
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -36,7 +35,6 @@ public class ClueService {
 
     //团队销售线索
     public static Observable<ClueList> getTeamClueList(HashMap<String, Object> params) {
-        LogUtil.d("getTeamClueList() called with: params = [" + params + "]");
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -46,7 +44,6 @@ public class ClueService {
     }
     // 线索下的 跟进
     public static Observable<PaginationX<ClueFollowGroupModel>> followUp(HashMap<String, Object> params) {
-        LogUtil.d("followUp() called with: params = [" + params + "]");
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -56,7 +53,6 @@ public class ClueService {
     }
     // 获取 线索来源
     public static Observable<SourcesData> getSource() {
-        LogUtil.d("getSource() called");
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -67,7 +63,6 @@ public class ClueService {
 
     // 新建线索 表单传输
     public static Observable<ClueDetailWrapper> addClue(HashMap<String, Object> params) {
-        LogUtil.d("addClue() called with: params = [" + params + "]");
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -78,7 +73,6 @@ public class ClueService {
 
     // 新建线索 表单传输
     public static Observable<BaseBeanT<ClueDetailWrapper.ClueDetail>> getClueDetail(String params) {
-        LogUtil.d("getClueDetail() called with: params = [" + params + "]");
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -89,7 +83,6 @@ public class ClueService {
 
     //编辑 线索
     public static Observable<Object> editClue(String id,HashMap<String, Object> params) {
-        LogUtil.d("editClue() called with: id = [" + id + "], params = [" + params + "]");
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -100,7 +93,6 @@ public class ClueService {
 
     // 删除
     public static Observable<Object> deleteClue(HashMap<String, Object> params) {
-        LogUtil.d("deleteClue() called with: params = [" + params + "]");
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -111,7 +103,6 @@ public class ClueService {
 
     // 删除
     public static Observable<Object> transferClue(HashMap<String, Object> params) {
-        LogUtil.d( "transferClue() called with: params = [" + params + "]");
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -121,7 +112,6 @@ public class ClueService {
     }
     // 删除
     public static Observable<CallBackCallid> getCallReturnInfo(HashMap<String, Object> params) {
-        LogUtil.d("transferClue() called with: params = [" + params + "]");
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
