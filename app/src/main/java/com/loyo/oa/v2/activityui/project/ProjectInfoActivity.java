@@ -27,6 +27,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.activityui.project.fragment.AttachmentFragment;
 import com.loyo.oa.v2.activityui.project.fragment.DiscussionFragment;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseChildMainListFragmentX;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -91,6 +92,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
     private ArrayList<OnProjectChangeCallback> callbacks = new ArrayList<>();
     BaseFragment fragmentX = null;
+    private boolean isEdit, isStop, isDelete;
 
     @AfterViews
     void initViews() {
@@ -166,6 +168,44 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             default:
                 break;
         }
+    }
+
+    /**
+     * 右上角菜单
+     */
+    private void functionButton() {
+        ActionSheetDialog dialog = new ActionSheetDialog(ProjectInfoActivity.this).builder();
+        if (isEdit)
+            dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                }
+            });
+        if (isStop)
+            dialog.addSheetItem("结束项目", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                }
+            });
+        if (isDelete)
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                }
+            });
+        if (isStop)
+            dialog.addSheetItem("重启项目", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                }
+            });
+        if (isStop)
+            dialog.addSheetItem("修改参与人", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                }
+            });
+        dialog.show();
     }
 
     @Override
