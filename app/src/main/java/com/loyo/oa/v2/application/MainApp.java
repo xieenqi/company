@@ -298,32 +298,32 @@ public class MainApp extends Application {
     }
 
 
-    static RestAdapter restAdapter = null;
+//    static RestAdapter restAdapter = null;
 
-    public RestAdapter getRestAdapter() {
-        if (restAdapter == null) {
-            if (cellInfo == null) {
-                cellInfo = Utils.getCellInfo();
-            }
-
-            RequestInterceptor requestInterceptor = new RequestInterceptor() {
-                @Override
-                public void intercept(RequestFacade request) {
-                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
-                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
-                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
-                    request.addHeader("LoyoVersionName", Global.getVersionName());
-                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-                }
-            };
-
-            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).
-                    setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
-        }
-
-        return restAdapter;
-    }
+//    public RestAdapter getRestAdapter() {
+//        if (restAdapter == null) {
+//            if (cellInfo == null) {
+//                cellInfo = Utils.getCellInfo();
+//            }
+//
+//            RequestInterceptor requestInterceptor = new RequestInterceptor() {
+//                @Override
+//                public void intercept(RequestFacade request) {
+//                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
+//                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
+//                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
+//                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
+//                    request.addHeader("LoyoVersionName", Global.getVersionName());
+//                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
+//                }
+//            };
+//
+//            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).
+//                    setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+//        }
+//
+//        return restAdapter;
+//    }
 //
 //    public RestAdapter getRestAdapter(int mode) {
 //        if (restAdapter != null) {

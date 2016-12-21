@@ -170,7 +170,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             finish();
             return;
         }
-        app.getRestAdapter().create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport _workReport, final Response response) {
                 HttpErrorCheck.checkResponse("报告信息：", response);

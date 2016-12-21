@@ -731,7 +731,7 @@ public class TasksInfoActivity extends BaseActivity {
             return;
         }
 
-        app.getRestAdapter().create(ITask.class).getTask(mTaskId, keyType, new RCallback<Task>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTask(mTaskId, keyType, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
                 HttpErrorCheck.checkResponse("任务详情返回", response);
@@ -1160,7 +1160,7 @@ public class TasksInfoActivity extends BaseActivity {
                     isUpdate = true;
                  /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
-                    app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
                         @Override
                         public void success(final Task o, final Response response) {
                             Intent intent = new Intent();

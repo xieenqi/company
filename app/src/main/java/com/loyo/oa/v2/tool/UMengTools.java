@@ -101,7 +101,7 @@ public class UMengTools {
                 + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("tracklogs", trackLogs);
-        MainApp.getMainApp().getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new Callback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).uploadTrackLogs(jsonObject, new Callback<Object>() {
             @Override
             public void success(Object o, Response response) {
                 HttpErrorCheck.checkResponse(" 手动上传轨迹: ", response);

@@ -415,7 +415,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      */
     private void getValidateInfo() {
         DialogHelp.showLoading(getActivity(), "加载中...", true);
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(final ValidateInfo _validateInfo, final Response response) {
                 HttpErrorCheck.checkResponse("考勤信息:", response);
@@ -779,7 +779,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         map.put("originalgps", longitude + "," + latitude);
         LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         DialogHelp.showLoading(getActivity(), "", true);
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 attendanceRecords = attendanceRecord;
