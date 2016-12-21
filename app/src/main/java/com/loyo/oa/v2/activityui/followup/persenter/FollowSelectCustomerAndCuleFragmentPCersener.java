@@ -3,7 +3,7 @@ package com.loyo.oa.v2.activityui.followup.persenter;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
-import com.loyo.oa.v2.activityui.followup.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowSelectCustomerAndCuleFragmentVControl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -28,16 +28,16 @@ import retrofit.client.Response;
  * Created by xeq on 16/11/10.
  */
 
-public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSelectCustomerAndCuleFragmentPersener {
+public class FollowSelectCustomerAndCuleFragmentPCersener implements FollowSelectCustomerAndCuleFragmentPersener {
     public static final int SELECT_CUSTOMER = 101;
     public static final int SELECT_CULE = 102;
-    private DynamicSelectCustomerAndCuleFragmentVControl vControl;
+    private FollowSelectCustomerAndCuleFragmentVControl vControl;
     private int type, pageCus = 1, pageClue = 1;
     private boolean isPullCus, isPullClue;
     private ArrayList<Customer> mCustomers = new ArrayList<>();
     private ArrayList<ClueListItem> mCule = new ArrayList<>();
 
-    public DynamicSelectCustomerAndCuleFragmentPCersener(DynamicSelectCustomerAndCuleFragmentVControl vControl, int type) {
+    public FollowSelectCustomerAndCuleFragmentPCersener(FollowSelectCustomerAndCuleFragmentVControl vControl, int type) {
         this.type = type;
         this.vControl = vControl;
     }

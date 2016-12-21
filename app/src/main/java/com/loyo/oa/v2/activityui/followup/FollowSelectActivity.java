@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CommonPageAdapter;
-import com.loyo.oa.v2.activityui.followup.fragment.DynamicSelectClueFragment;
-import com.loyo.oa.v2.activityui.followup.fragment.DynamicSelectCustomerFragment;
+import com.loyo.oa.v2.activityui.followup.fragment.FollowSelectClueFragment;
+import com.loyo.oa.v2.activityui.followup.fragment.FollowSelectCustomerFragment;
 import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
@@ -23,21 +23,21 @@ import java.util.List;
  * Created by xeq on 16/11/10.
  */
 
-public class DynamicSelectActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class FollowSelectActivity extends BaseFragmentActivity implements View.OnClickListener {
 
     private LinearLayout ll_back;
     private TextView tv_title;
     private PagerSlidingTabStrip tabs;
     private ViewPager pager;
-    private DynamicSelectCustomerFragment selectCustomer;
-    private DynamicSelectClueFragment selectClue;
+    private FollowSelectCustomerFragment selectCustomer;
+    private FollowSelectClueFragment selectClue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dynamic_select);
-        selectCustomer = new DynamicSelectCustomerFragment();
-        selectClue = new DynamicSelectClueFragment();
+        selectCustomer = new FollowSelectCustomerFragment();
+        selectClue = new FollowSelectClueFragment();
         initView();
     }
 
