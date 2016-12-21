@@ -24,7 +24,6 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.network.model.LoyoError;
-import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.RCallback;

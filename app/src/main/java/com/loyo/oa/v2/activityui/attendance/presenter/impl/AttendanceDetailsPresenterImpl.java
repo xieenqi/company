@@ -14,7 +14,6 @@ import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;

@@ -455,27 +455,46 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
         body.put("content", message);
         body.put("bizType", mBizType);
         body.put("mentionedUserIds", getAndClearSelectUser(message));
-        LogUtil.d("发送的数据:" + MainApp.gson.toJson(body));
+//        LogUtil.d("发送的数据:" + MainApp.gson.toJson(body));
         mHaitSelectUsers.clear();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class)
-                .createDiscussion(body, new RCallback<Discussion>() {
-                    @Override
-                    public void success(final Discussion d, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class)
+//                .createDiscussion(body, new RCallback<Discussion>() {
+//                    @Override
+//                    public void success(final Discussion d, final Response response) {
+//                        HttpErrorCheck.checkResponse(response);
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                        super.failure(error);
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                adapter.removeAtTime(time);
+//                            }
+//                        }, 800);
+//                    }
+//                });
 
+        DiscussService.createDiscussion(body).subscribe(new DefaultLoyoSubscriber<Discussion>() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        super.failure(error);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.removeAtTime(time);
-                            }
-                        }, 800);
+                    public void run() {
+                        adapter.removeAtTime(time);
                     }
-                });
+                }, 800);
+            }
+
+            @Override
+            public void onNext(Discussion discussion) {
+                DialogHelp.cancelLoading();
+            }
+        });
     }
 
     /**

@@ -15,17 +15,21 @@ import android.widget.TextView;
 import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.discuss.api.DiscussService;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -168,10 +172,47 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         map.put("attachmentUUId", project.attachmentUUId);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? discussions.size() >= 2000 ? discussions.size() : 2000 : 2000);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).getDiscussions(map, new RCallback<PaginationX<Discussion>>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).getDiscussions(map, new RCallback<PaginationX<Discussion>>() {
+//            @Override
+//            public void success(PaginationX<Discussion> pagination, Response response) {
+//                HttpErrorCheck.checkResponse("项目讨论内容：", response);
+//                if (!PaginationX.isEmpty(pagination)) {
+//                    ArrayList<Discussion> lstData_bulletin_current = pagination.getRecords();
+//                    mPagination = pagination;
+//                    if (isTopAdd) {
+//                        discussions.clear();
+//                    }
+//                    Collections.reverse(lstData_bulletin_current);
+//                    discussions.addAll(lstData_bulletin_current);
+//                    onLoadSuccess(pagination.getTotalRecords());
+//                    bindData();
+//                }
+//                lv_discuss.onRefreshComplete();
+//                scrollToBottom();
+//                ll_loading.setStatus(LoadingLayout.Success);
+//                if (isTopAdd && discussions.size() == 0)
+//                    ll_loading.setStatus(LoadingLayout.Empty);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error, ll_loading, mPagination.getPageIndex() == 1 ? true : false);
+//                super.failure(error);
+//                lv_discuss.onRefreshComplete();
+//            }
+//        });
+
+        DiscussService.getDiscussions(map).subscribe(new DefaultLoyoSubscriber<PaginationX<Discussion>>() {
             @Override
-            public void success(PaginationX<Discussion> pagination, Response response) {
-                HttpErrorCheck.checkResponse("项目讨论内容：", response);
+            public void onError(Throwable e) {
+                @LoyoErrorChecker.CheckType
+                int type= mPagination.getPageIndex()!=1? LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                LoyoErrorChecker.checkLoyoError(e,type,ll_loading);
+                lv_discuss.onRefreshComplete();
+            }
+
+            @Override
+            public void onNext(PaginationX<Discussion> pagination) {
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Discussion> lstData_bulletin_current = pagination.getRecords();
                     mPagination = pagination;
@@ -188,13 +229,6 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                 ll_loading.setStatus(LoadingLayout.Success);
                 if (isTopAdd && discussions.size() == 0)
                     ll_loading.setStatus(LoadingLayout.Empty);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, ll_loading, mPagination.getPageIndex() == 1 ? true : false);
-                super.failure(error);
-                lv_discuss.onRefreshComplete();
             }
         });
     }
@@ -257,12 +291,21 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         body.put("mentionedUserIds", mHaitHelper.getSelectUser(comment));
         mHaitHelper.clear();
 
-        LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
+//        LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
+//
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).createDiscussion(body, new RCallback<Discussion>() {
+//            @Override
+//            public void success(Discussion d, Response response) {
+//                HttpErrorCheck.checkResponse("项目发送讨论内容：", response);
+//                isTopAdd = true;
+//                mPagination.setPageIndex(1);
+//                getData();
+//            }
+//        });
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).createDiscussion(body, new RCallback<Discussion>() {
+        DiscussService.createDiscussion(body).subscribe(new DefaultLoyoSubscriber<Discussion>() {
             @Override
-            public void success(Discussion d, Response response) {
-                HttpErrorCheck.checkResponse("项目发送讨论内容：", response);
+            public void onNext(Discussion discussion) {
                 isTopAdd = true;
                 mPagination.setPageIndex(1);
                 getData();
