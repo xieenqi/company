@@ -392,7 +392,7 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
 
     @Override
     public void failure(RetrofitError error) {
-        HttpErrorCheck.checkError(error, ll_loading);
+//        HttpErrorCheck.checkError(error, ll_loading);
         expandableListView_search.onRefreshComplete();
     }
 

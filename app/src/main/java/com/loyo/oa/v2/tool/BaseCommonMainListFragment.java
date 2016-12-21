@@ -59,7 +59,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     protected ArrayList<T> lstData = new ArrayList<>();
     protected PullToRefreshExpandableListView mExpandableListView;
     protected boolean isTopAdd = true;
-    private LoadingLayout ll_loading;
+    protected LoadingLayout ll_loading;
 
 
     @Override
@@ -245,7 +245,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void failure(RetrofitError error) {
-        HttpErrorCheck.checkError(error, ll_loading);
+//        HttpErrorCheck.checkError(error, ll_loading);
         mExpandableListView.onRefreshComplete();
     }
 
