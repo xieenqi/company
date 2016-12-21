@@ -25,7 +25,6 @@ import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
 import com.loyo.oa.v2.activityui.attendance.api.AttendanceService;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
-import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;

@@ -10,18 +10,9 @@ import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceList;
 import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceListPresenter;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceListView;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import java.util.Date;
 import java.util.HashMap;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【考勤列表】

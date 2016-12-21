@@ -27,14 +27,13 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.PaymentPopView;
-import com.loyo.oa.v2.point.IOrder;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -42,10 +41,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.HashMap;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【新增回款】
@@ -268,23 +263,20 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 map.put("payMethodString", tv_kind.getText().toString());
                 map.put("payeeUser", mEstimateAdd.payeeUser);
                 LogUtil.dee("新建回款 数据:" + MainApp.gson.toJson(map));
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                        .addPayEstimate(map, new Callback<EstimateAdd>() {
+                OrderService.addPayEstimate(map)
+                        .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(LoyoErrorChecker.COMMIT_DIALOG) {
                             @Override
-                            public void success(EstimateAdd orderAdd, Response response) {
-                                HttpErrorCheck.checkCommitSus("新建回款记录", response);
+                            public void onNext(EstimateAdd add) {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
                                         cancelStatusLoading();
-                                        app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                        app.finishActivity(OrderAddEstimateActivity.this,
+                                                MainApp.ENTER_TYPE_LEFT,
+                                                RESULT_OK,
+                                                new Intent());
                                     }
                                 },1000);
-                            }
-
-                            @Override
-                            public void failure(RetrofitError error) {
-                                HttpErrorCheck.checkCommitEro(error);
                             }
                         });
 
@@ -307,11 +299,10 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 map.put("payMethodString", tv_kind.getText().toString());
                 map.put("payeeUser", mEstimateAdd.payeeUser);
                 LogUtil.dee("编辑订单:" + MainApp.gson.toJson(map));
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                        .editPayEstimate(id, map, new Callback<EstimateAdd>() {
+                OrderService.editPayEstimate(id, map)
+                        .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(LoyoErrorChecker.COMMIT_DIALOG) {
                             @Override
-                            public void success(EstimateAdd orderAdd, Response response) {
-                                HttpErrorCheck.checkResponse("新建回款记录", response);
+                            public void onNext(EstimateAdd add) {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -319,11 +310,6 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                                         app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                                     }
                                 },1000);
-                            }
-
-                            @Override
-                            public void failure(RetrofitError error) {
-                                HttpErrorCheck.checkCommitEro(error);
                             }
                         });
                 break;
@@ -344,25 +330,20 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 map.put("payMethodString", tv_kind.getText().toString());
                 map.put("payeeUser", mEstimateAdd.payeeUser);
                 map.put("planId", planId);
-
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                        .addPayEstimate(map, new Callback<EstimateAdd>() {
+                OrderService.addPayEstimate(map)
+                        .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(LoyoErrorChecker.COMMIT_DIALOG) {
                             @Override
-                            public void success(EstimateAdd orderAdd, Response response) {
-                                HttpErrorCheck.checkCommitSus("新建回款记录", response);
+                            public void onNext(EstimateAdd add) {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
                                         cancelStatusLoading();
-                                        app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                        app.finishActivity(OrderAddEstimateActivity.this,
+                                                MainApp.ENTER_TYPE_LEFT,
+                                                RESULT_OK,
+                                                new Intent());
                                     }
                                 },1000);
-
-                            }
-
-                            @Override
-                            public void failure(RetrofitError error) {
-                                HttpErrorCheck.checkCommitEro(error);
                             }
                         });
 

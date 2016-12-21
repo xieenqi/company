@@ -22,23 +22,14 @@ import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMySubmitPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMySubmitView;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by yyy on 16/10/17.

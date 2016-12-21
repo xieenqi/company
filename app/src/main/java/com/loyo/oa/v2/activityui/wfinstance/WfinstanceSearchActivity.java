@@ -3,18 +3,15 @@ package com.loyo.oa.v2.activityui.wfinstance;
 import android.content.Intent;
 
 import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
+import com.loyo.oa.v2.activityui.work.fragment.WorkReportsManageFragment;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.activityui.work.fragment.WorkReportsManageFragment;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.HashMap;
 
-import okhttp3.Call;
 import retrofit.Callback;
 
 

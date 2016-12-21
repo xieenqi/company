@@ -10,25 +10,19 @@ import android.widget.ListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.adapter.WfInstanceTypeSelectListViewAdapter;
 import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【审批类型】选择
