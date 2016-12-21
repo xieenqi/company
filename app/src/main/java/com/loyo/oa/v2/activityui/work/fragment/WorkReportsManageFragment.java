@@ -12,22 +12,25 @@ import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsSearchActivity;
+import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.activityui.work.common.WorkReportCategoryMenuModel;
 import com.loyo.oa.v2.activityui.work.common.WorkReportStatusMenuModel;
 import com.loyo.oa.v2.activityui.work.common.WorkReportTypeMenuModel;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.point.IWorkReport;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
 
 /**
  * 工作报告 界面  的 fragment
@@ -86,9 +89,20 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         map.put("isReviewed", statusParam);
 
         LogUtil.dll("客户端发送数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL())
-                .create(IWorkReport.class)
-                .getWorkReportsData(map, this);
+        //这里借助CallBack接口调用，不能直接实现DefaultLoyoSubscriber，因为会有方法冲突
+        WorkReportService.getWorkReportsData(map).subscribe(new DefaultLoyoSubscriber<PaginationX<WorkReportRecord>>(LoyoErrorChecker.LOADING_LAYOUT) {
+            @Override
+            public void onError(Throwable e) {
+                @LoyoErrorChecker.CheckType
+                int type= pagination.getPageIndex() != 1 ? LoyoErrorChecker.TOAST : LoyoErrorChecker.COMMIT_DIALOG;
+                ((Callback)WorkReportsManageFragment.this).failure(null);
+            }
+
+            @Override
+            public void onNext(PaginationX<WorkReportRecord> workReportRecordPaginationX) {
+                ((Callback)WorkReportsManageFragment.this).success(workReportRecordPaginationX,null);
+            }
+        });
     }
 
     @Override

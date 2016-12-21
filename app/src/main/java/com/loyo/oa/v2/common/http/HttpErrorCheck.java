@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.common.http;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -13,6 +14,9 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.RemindWay;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -21,6 +25,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -366,10 +372,29 @@ public class HttpErrorCheck {
                     msg = "服务器出错";
                 }
                 if (data.errcode != 0) {
-                    Toast(msg);
+                    if (data.errType == RemindWay.DILOG.type) {
+                        showDilog(msg);
+                    } else {
+                        Toast(msg);
+                    }
                 }
             }
         }
+    }
+
+    private static void showDilog(String msg) {
+        final SweetAlertDialogView doalog = new SweetAlertDialogView(BaseActivity.mContext);
+        doalog.alertMessageClick(new OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                doalog.sweetAlertDialog.dismiss();
+                //到侧边栏 退出系统到登录界面
+                Intent in = new Intent();
+                in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+                in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
+                LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
+            }
+        }, "提示", msg);
     }
 
     /**
