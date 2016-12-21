@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.commonview.api.FeedBackService;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -23,7 +24,6 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.point.IFeedback;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.ImageInfo;
@@ -128,18 +128,25 @@ public class FeedbackActivity extends BaseActivity {
             map.put("operationSystem", androidInfo);
             map.put("userAgent", android.os.Build.MODEL);
 
-            RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
-                @Override
-                public void success(final FeedBackCommit feedBackCommit, final Response response) {
-                    HttpErrorCheck.checkResponse("意见反馈：", response);
-                    showSuccessDialog();
-                }
+//            RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
+//                @Override
+//                public void success(final FeedBackCommit feedBackCommit, final Response response) {
+//                    HttpErrorCheck.checkResponse("意见反馈：", response);
+//                    showSuccessDialog();
+//                }
+//
+//                @Override
+//                public void failure(final RetrofitError error) {
+//                    HttpErrorCheck.checkError(error);
+//                    Toast("提交失败");
+//                    super.failure(error);
+//                }
+//            });
 
+            FeedBackService.create(map).subscribe(new DefaultLoyoSubscriber<FeedBackCommit>() {
                 @Override
-                public void failure(final RetrofitError error) {
-                    HttpErrorCheck.checkError(error);
-                    Toast("提交失败");
-                    super.failure(error);
+                public void onNext(FeedBackCommit feedBackCommit) {
+                    showSuccessDialog();
                 }
             });
         } catch (PackageManager.NameNotFoundException e) {
