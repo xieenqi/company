@@ -27,7 +27,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .getOrderMyList(map)
                         .compose(RetrofitAdapterFactory.<PaginationX<OrderListItem>>compatApplySchedulers());
     }
@@ -37,7 +37,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .getOrderTeamList(map)
                         .compose(RetrofitAdapterFactory.<PaginationX<OrderListItem>>compatApplySchedulers());
     }
@@ -47,7 +47,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .editOrder(id, map)
                         .compose(RetrofitAdapterFactory.<OrderAdd>compatApplySchedulers());
     }
@@ -57,7 +57,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .addOrder(map)
                         .compose(RetrofitAdapterFactory.<OrderAdd>compatApplySchedulers());
     }
@@ -67,7 +67,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .addPayEstimate(map)
                         .compose(RetrofitAdapterFactory.<EstimateAdd>compatApplySchedulers());
     }
@@ -77,7 +77,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .editPayEstimate(id, map)
                         .compose(RetrofitAdapterFactory.<EstimateAdd>compatApplySchedulers());
     }
@@ -87,7 +87,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .addPlanEstimate(map)
                         .compose(RetrofitAdapterFactory.<EstimatePlanAdd>compatApplySchedulers());
     }
@@ -97,7 +97,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .editPlanEsstimate(id, map)
                         .compose(RetrofitAdapterFactory.<EstimatePlanAdd>compatApplySchedulers());
     }
@@ -107,7 +107,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .getSaleDetails(id)
                         .compose(RetrofitAdapterFactory.<OrderDetail>compatApplySchedulers());
     }
@@ -117,7 +117,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .deleteOrder(id)
                         .compose(RetrofitAdapterFactory.<Object>compatApplySchedulers());
     }
@@ -127,7 +127,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .terminationOrder(id)
                         .compose(RetrofitAdapterFactory.<Object>compatApplySchedulers());
     }
@@ -137,7 +137,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .deletePayEstimate(id)
                         .compose(RetrofitAdapterFactory.<EstimateAdd>compatApplySchedulers());
     }
@@ -147,7 +147,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .getPayEstimate(id)
                         .compose(RetrofitAdapterFactory.<EstimateList>compatApplySchedulers());
     }
@@ -157,7 +157,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .deletePlanEsstimateList(id)
                         .compose(RetrofitAdapterFactory.<EstimatePlanAdd>compatApplySchedulers());
     }
@@ -167,7 +167,7 @@ public class OrderService {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
-                        .create(I2Order.class)
+                        .create(IOrder.class)
                         .getPlanEstimateList(map)
                         .compose(RetrofitAdapterFactory.<ArrayList<PlanEstimateList>>compatApplySchedulers());
     }
