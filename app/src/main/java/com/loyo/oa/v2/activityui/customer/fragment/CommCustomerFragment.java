@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
 
@@ -30,7 +29,6 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -138,8 +136,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         });
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setVisibility(View.GONE);
-//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-        mTags = CustomerTageConfig.getTageCache();
+        mTags = CustomerTageConfig.getTage(true);
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);

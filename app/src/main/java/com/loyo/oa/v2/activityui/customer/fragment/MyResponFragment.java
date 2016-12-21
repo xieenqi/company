@@ -136,8 +136,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
                 getData();
             }
         });
-//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-        mTags = CustomerTageConfig.getTageCache();
+        mTags = CustomerTageConfig.getTage(true);
 
         btn_add = (Button) view.findViewById(R.id.btn_add);
         nearTv = (TextView) view.findViewById(R.id.tv_near_customers);
