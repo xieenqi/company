@@ -156,7 +156,7 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
             this.nowsView = nowsView;
             tv_audio_endtime.setText(com.loyo.oa.common.utils.DateTool.int2time((int) audioModel.length * 1000));
             callbackHandler.onStart(this,audioModel);
-            //progress.setVisibility(View.VISIBLE);
+            MainApp.getMainApp().startAnim(nowsView);
         }
     }
 

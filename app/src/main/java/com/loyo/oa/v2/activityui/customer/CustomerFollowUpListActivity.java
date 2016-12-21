@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -69,7 +70,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     private LinearLayout layout_bottom_voice;
     private LinearLayout layout_bottom_menu;
     private int playVoiceSize = 0;
-    private AudioPlayer audioPlayer;
+    private AudioPlayerView audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
     private MsgAudiomMenu msgAudiomMenu;
@@ -103,14 +104,14 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     public void onPause() {
         super.onPause();
         if (null != voiceView)
-            audioPlayer.audioPause(voiceView);
+            audioPlayer.onStop();
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        audioPlayer.killPlayer();
+        audioPlayer.onStop();
         layout_bottom_voice.setVisibility(View.GONE);
         layout_bottom_voice.removeAllViews();
     }
@@ -142,8 +143,8 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         }
 
         mPresenter = new CustomerFollowUpListPresenterImpl(this, mContext);
-        audioPlayer = new AudioPlayer(this);
-        audioPlayer.initPlayer();
+        audioPlayer = new AudioPlayerView(this);
+        audioPlayer.onInit();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -400,27 +401,25 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
             if (null != lastView)
                 MainApp.getMainApp().stopAnim(lastView);
         }
-        audioPlayer.initPlayer();
+        audioPlayer.onInit();
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
-                LogUtil.dee("同一条");
                 MainApp.getMainApp().stopAnim(textView);
-                audioPlayer.audioPause(textView);
+                audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.audioStart(textView);
-                audioPlayer.threadPool(audioModel, textView);
+                audioPlayer.onResume(textView);
+                audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel, textView);
+            audioPlayer.onResume(textView);
+            audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }
         playVoiceSize++;
     }
-
 }
