@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.point;
+package com.loyo.oa.v2.activityui.home.api;
 
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
@@ -18,55 +18,59 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.http.QueryMap;
+import rx.Observable;
 
-public interface IMain {
+/**
+ * 首页的网络接口
+ * Created by jie on 16/12/21.
+ */
+
+public interface IHome {
 
     @GET("/feed")
-    void getNumber(retrofit.Callback<ArrayList<HttpMainRedDot>> cb);
+    Observable<ArrayList<HttpMainRedDot>> getNumber();
 
     @GET("/checkupdate/android")
-    void checkUpdate(retrofit.Callback<CheckUpdateService.UpdateInfo> cb);
+    Observable<CheckUpdateService.UpdateInfo> checkUpdate();
 
     @GET("/gettime")
-    void getServerTime(retrofit.Callback<ServerTime> cb);
+    Observable<ServerTime> getServerTime();
 
     @PUT("/")
-    void resetPassword(@Body HashMap<String, Object> map, retrofit.Callback<Object> cb);
+    Observable<Object> resetPassword(@Body HashMap<String, Object> map);
 
     @GET("/forgetpwd/")
-    void verifyPhone(@Query("tel") String tel, Callback<Object> callback);
+    Observable<Object>  verifyPhone(@Query("tel") String tel);
 
     //绑定手机获取验证码
     @GET("/newphonenum")
-    void getVerificationCode(@Query("tel") String tel, Callback<Object> callback);
+    Observable<Object>  getVerificationCode(@Query("tel") String tel);
 
     /**
      * 验证密码
-     *
-     * @param map
-     * @param callback
      */
     @POST("/user/password/verify")
-    void verifyPasseord(@Body HashMap<String, Object> map, Callback<BaseBean> callback);
+    Observable<BaseBean> verifyPasseord(@Body HashMap<String, Object> map);
 
     @GET("/message")
-    void getSystemMessage(@QueryMap HashMap<String, Object> map, Callback<PaginationX<SystemMessageItem>> callback);
+    Observable<PaginationX<SystemMessageItem>> getSystemMessage(@QueryMap HashMap<String, Object> map);
 
     /**
      * 读取系统消息的一条
      */
     @PUT("/message/read/{id}")
-    void readSystemMessageOne(@Path("id") String id, Callback<Object> o);
+    Observable<Object> readSystemMessageOne(@Path("id") String id);
 
     /**
      * 读取系统消息的全部
      */
     @PUT("/message/read/all")
-    void readSystemMessageAll(Callback<Object> o);
+    Observable<Object> readSystemMessageAll();
 
     /**
      * 调用接口回传给服务器跟新系统消息的红点状态
      */
     @PUT("/message/read/pusher/{id}")
-    void refreshSystemMessageRed(@Path("id") String id, Callback<Object> o);
+    Observable<Object> refreshSystemMessageRed(@Path("id") String id);
+
 }

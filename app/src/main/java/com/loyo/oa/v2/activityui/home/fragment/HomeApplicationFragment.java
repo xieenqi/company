@@ -29,6 +29,7 @@ import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
+import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
@@ -57,7 +58,6 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
@@ -617,21 +617,30 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      */
     void requestNumber() {
         DialogHelp.cancelLoading();//列表出现消失dialog
-        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
-                getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
-                    @Override
-                    public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
-                        HttpErrorCheck.checkResponse("a首页红点", response);
-                        mItemNumbers = removalRedNumber(homeNumbers);
-                        testJurl();
-                        homefragment.onNetworkChanged(true);
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
+//                getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
+//                    @Override
+//                    public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
+//                        HttpErrorCheck.checkResponse("a首页红点", response);
+//                        mItemNumbers = removalRedNumber(homeNumbers);
+//                        testJurl();
+//                        homefragment.onNetworkChanged(true);
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        super.failure(error);
+//                    }
+//                });
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                    }
-                });
+        HomeService.getNumber().subscribe(new DefaultLoyoSubscriber<ArrayList<HttpMainRedDot>>() {
+            @Override
+            public void onNext(ArrayList<HttpMainRedDot> homeNumbers) {
+                mItemNumbers = removalRedNumber(homeNumbers);
+                testJurl();
+                homefragment.onNetworkChanged(true);
+            }
+        });
         // TODO: 建立单独的获取配置Service  目前初始化数据在首页加载完成在加载
         /* 获取配置数据 */
         WorksheetConfig.fetchWorksheetTypes();

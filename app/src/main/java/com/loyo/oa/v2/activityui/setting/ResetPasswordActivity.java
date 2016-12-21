@@ -7,10 +7,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -79,17 +80,31 @@ public class ResetPasswordActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("tel", tel);
         map.put("password", confirmNewPassword);
-        RestAdapterFactory.getInstance().build(FinalVariables.URL_RESET_PASSWORD).create(IMain.class).resetPassword(map, new RCallback<Object>() {
+//        RestAdapterFactory.getInstance().build(FinalVariables.URL_RESET_PASSWORD).create(IMain.class).resetPassword(map, new RCallback<Object>() {
+//            @Override
+//            public void success(final Object o, final Response response) {
+//                Toast("重置密码成功");
+//                onBackPressed();
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                Toast("重置密码失败");
+//                super.failure(error);
+//            }
+//        });
+
+        HomeService.resetPassword(map).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
-            public void success(final Object o, final Response response) {
+            public void onNext(Object o) {
                 Toast("重置密码成功");
                 onBackPressed();
             }
 
             @Override
-            public void failure(final RetrofitError error) {
-                Toast("重置密码失败");
-                super.failure(error);
+            public void onError(Throwable e) {
+                Toast("重置密码成功");
+                onBackPressed();
             }
         });
     }

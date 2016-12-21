@@ -23,6 +23,7 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
+import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.activityui.home.cusview.SlidingMenu;
 import com.loyo.oa.v2.activityui.home.fragment.HomeFragment;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
@@ -42,7 +43,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
-import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.Config_project;
@@ -377,18 +378,25 @@ public class MainHomeActivity extends SlidingFragmentActivity {
      * 调用接口回传给服务器跟新系统消息的红点状态
      */
     private void refreshSystemMessageRed(String pusherCognate) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
-                refreshSystemMessageRed(pusherCognate, new Callback<Object>() {
-                    @Override
-                    public void success(Object o, Response response) {
-                        LogUtil.d("系统消息跟新成功!!!");
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
+//                refreshSystemMessageRed(pusherCognate, new Callback<Object>() {
+//                    @Override
+//                    public void success(Object o, Response response) {
+//                        LogUtil.d("系统消息跟新成功!!!");
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//
+//                    }
+//                });
 
-                    @Override
-                    public void failure(RetrofitError error) {
+        HomeService.refreshSystemMessageRed(pusherCognate).subscribe(new DefaultLoyoSubscriber<Object>() {
+            @Override
+            public void onNext(Object o) {
 
-                    }
-                });
+            }
+        });
     }
 
     @Override

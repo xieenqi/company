@@ -11,11 +11,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IMobile;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.RCallback;
@@ -78,22 +79,39 @@ public class VerifyAccountActivity extends BaseActivity {
      * @param tel
      */
     private void verifyPhone(final String tel) {
-        RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMain.class).verifyPhone(tel, new RCallback<Object>() {
+//        RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMain.class).verifyPhone(tel, new RCallback<Object>() {
+//            @Override
+//            public void success(final Object o, final Response response) {
+//                et_account.removeCallbacks(countRunner);
+//                et_account.post(countRunner);
+//                btn_get_code.setEnabled(false);
+//                et_account.setEnabled(false);
+//                Toast("发送验证码成功");
+//
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//                btn_get_code.setEnabled(true);
+//            }
+//        });
+
+        HomeService.verifyPhone(tel).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
-            public void success(final Object o, final Response response) {
+            public void onError(Throwable e) {
+                super.onError(e);
+                btn_get_code.setEnabled(true);
+            }
+
+            @Override
+            public void onNext(Object o) {
                 et_account.removeCallbacks(countRunner);
                 et_account.post(countRunner);
                 btn_get_code.setEnabled(false);
                 et_account.setEnabled(false);
                 Toast("发送验证码成功");
-
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                btn_get_code.setEnabled(true);
             }
         });
     }

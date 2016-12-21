@@ -14,11 +14,13 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -125,10 +127,62 @@ public class CheckUpdateService extends Service {
         }
 
 
-        RestAdapterFactory.getInstance().build(FinalVariables.URL_CHECK_UPDATE).create(IMain.class).checkUpdate(new RCallback<UpdateInfo>() {
+//        RestAdapterFactory.getInstance().build(FinalVariables.URL_CHECK_UPDATE).create(IMain.class).checkUpdate(new RCallback<UpdateInfo>() {
+//            @Override
+//            public void success(UpdateInfo updateInfo, Response response) {
+////                HttpErrorCheck.checkResponse(response);
+//                if (null == updateInfo) {
+//                    LogUtil.d(" 版本信息为空 ");
+//                    return;
+//                }
+//                mUpdateInfo = updateInfo;
+//                LogUtil.dll("版本更新信息:" + MainApp.gson.toJson(updateInfo));
+//                try {
+//                    if (updateInfo.versionCode > Global.getVersion()) {
+//                        //有新版本
+//                        MainApp.getMainApp().hasNewVersion = true;
+//                        if (updateInfo.autoUpdate && Utils.getNetworkType(MainApp.getMainApp()).contains("WIFI")) {//后台自动更新
+//                            deleteFile();
+//                            downloadApp();
+//                        } else if (updateInfo.forceUpdate || isToast) {//弹窗提示更新
+//                            deleteFile();
+//                            Intent intentUpdateTipActivity = new Intent(CheckUpdateService.this, UpdateTipActivity.class);
+//                            intentUpdateTipActivity.putExtra("data", updateInfo);
+//                            intentUpdateTipActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intentUpdateTipActivity);
+//                        } else {
+//                            stopSelf();
+//                        }
+//
+//                        //通知侧边栏有新版本
+//                        Intent in = new Intent();
+//                        in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+//                        in.putExtra(ExtraAndResult.EXTRA_DATA, "version");
+//                        LocalBroadcastManager.getInstance(CheckUpdateService.this).sendBroadcast(in);
+//                    } else {
+//                        if (isToast) {
+//                            Global.Toast("你的软件已经是最新版本");
+//                        }
+//                        stopSelf();
+//                    }
+//                    isChecking = false;
+//                } catch (NullPointerException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+////                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//                Global.ProcException(error);
+//                stopSelf();
+//            }
+//        });
+
+        HomeService.checkUpdate().subscribe(new DefaultLoyoSubscriber<UpdateInfo>(LoyoErrorChecker.SILENCE) {
             @Override
-            public void success(UpdateInfo updateInfo, Response response) {
-//                HttpErrorCheck.checkResponse(response);
+            public void onNext(UpdateInfo updateInfo) {
                 if (null == updateInfo) {
                     LogUtil.d(" 版本信息为空 ");
                     return;
@@ -170,10 +224,8 @@ public class CheckUpdateService extends Service {
             }
 
             @Override
-            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-                super.failure(error);
-                Global.ProcException(error);
+            public void onError(Throwable e) {
+                super.onError(e);
                 stopSelf();
             }
         });
