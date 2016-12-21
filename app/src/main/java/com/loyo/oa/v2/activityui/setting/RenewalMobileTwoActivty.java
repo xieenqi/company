@@ -15,12 +15,14 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
+import com.loyo.oa.v2.activityui.setting.api.SettingService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBean;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IMobile;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
@@ -88,38 +90,68 @@ public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClic
      */
     private void verifyPhone(final String tel) {
         showLoading("");
-        //验证手机号
-        RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMobile.class).verifyPhone(tel, new RCallback<Object>() {
+//        //验证手机号
+//        RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMobile.class).verifyPhone(tel, new RCallback<Object>() {
+//            @Override
+//            public void success(final Object o, final Response response) {
+//                HttpErrorCheck.checkResponse("验证手机号", response);
+//                //请求验证码
+//                RestAdapterFactory.getInstance().build(FinalVariables.URL_GET_CODE).create(IMobile.class).getVerifyCode(tel, new RCallback<Object>() {
+//                    @Override
+//                    public void success(final Object o, final Response response) {
+//                        HttpErrorCheck.checkResponse("请求手机验证码", response);
+//                        et_account.removeCallbacks(countRunner);
+//                        et_account.post(countRunner);
+//                        btn_get_code.setEnabled(false);
+//                        et_account.setEnabled(false);
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        super.failure(error);
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
+//
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//                btn_get_code.setEnabled(true);
+////                if ("500".equals(error.getMessage().substring(0, 3))) {
+////                    Toast("该手机号已被录入本系统,请勿重复使用!");
+////                }
+//            }
+//        });
+
+        SettingService.verifyPhone(tel).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
-            public void success(final Object o, final Response response) {
-                HttpErrorCheck.checkResponse("验证手机号", response);
-                //请求验证码
-                RestAdapterFactory.getInstance().build(FinalVariables.URL_GET_CODE).create(IMobile.class).getVerifyCode(tel, new RCallback<Object>() {
+            public void onNext(Object o) {
+                SettingService.getVerifyCode(tel).subscribe(new DefaultLoyoSubscriber<Object>() {
                     @Override
-                    public void success(final Object o, final Response response) {
-                        HttpErrorCheck.checkResponse("请求手机验证码", response);
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        DialogHelp.cancelLoading();
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+                        DialogHelp.cancelLoading();
                         et_account.removeCallbacks(countRunner);
                         et_account.post(countRunner);
                         btn_get_code.setEnabled(false);
                         et_account.setEnabled(false);
                     }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
                 });
             }
 
             @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
                 btn_get_code.setEnabled(true);
-//                if ("500".equals(error.getMessage().substring(0, 3))) {
-//                    Toast("该手机号已被录入本系统,请勿重复使用!");
-//                }
             }
         });
     }
@@ -143,26 +175,41 @@ public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClic
         HashMap<String, Object> map = new HashMap<>();
         map.put("tel", mobile);
         map.put("code", code);
-        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMobile.class).
-                modifyMobile(map, new RCallback<BaseBean>() {
-                    @Override
-                    public void success(final BaseBean o, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        if(o.errcode==0){
-                            MenuFragment.callback.onExit(RenewalMobileTwoActivty.this);
-                        }
-//                Intent mIntent = new Intent();
-//                mIntent.putExtra("phone", mobile);
-//                app.finishActivity(RenewalMobileTwoActivty.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-//                finish();
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMobile.class).
+//                modifyMobile(map, new RCallback<BaseBean>() {
+//                    @Override
+//                    public void success(final BaseBean o, final Response response) {
+//                        HttpErrorCheck.checkResponse(response);
+//                        if(o.errcode==0){
+//                            MenuFragment.callback.onExit(RenewalMobileTwoActivty.this);
+//                        }
+////                Intent mIntent = new Intent();
+////                mIntent.putExtra("phone", mobile);
+////                app.finishActivity(RenewalMobileTwoActivty.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+////                finish();
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        super.failure(error);
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
+        SettingService.modifyMobile(map).subscribe(new DefaultLoyoSubscriber<BaseBean>() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+            @Override
+            public void onNext(BaseBean o) {
+                DialogHelp.cancelLoading();
+                if(o.errcode==0){
+                    MenuFragment.callback.onExit(RenewalMobileTwoActivty.this);
+                }
+            }
+        });
     }
 
     private Runnable countRunner = new Runnable() {
