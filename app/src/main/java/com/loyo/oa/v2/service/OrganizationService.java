@@ -5,18 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.loyo.oa.v2.activityui.customer.model.Department;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.db.OrganizationManager;
-import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.user.api.UserService;
 
 import java.util.ArrayList;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -78,32 +73,29 @@ public class OrganizationService extends IntentService {
             return;
         }
         _isFetchingOrganziationData = true;
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
-                .create(IUser.class).asynGetOrganization(new Callback<ArrayList<Department>>() {
-            @Override
-            public void success(ArrayList<Department> departments, Response response) {
-                if (!ListUtil.IsEmpty(departments)) {
-                    OrganizationManager.clearOrganizationData();
-                    OrganizationManager.shareManager().saveOrganizitionToDB(departments);
+        UserService.asynGetOrganization()
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Department>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        _isFetchingOrganziationData = false;
+                    }
 
-                    OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
+                    @Override
+                    public void onNext(ArrayList<Department> departments) {
+                        if (!ListUtil.IsEmpty(departments)) {
+                            OrganizationManager.clearOrganizationData();
+                            OrganizationManager.shareManager().saveOrganizitionToDB(departments);
+                            OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
+                            Intent it = new Intent("com.loyo.oa.v2.ORGANIZATION_UPDATED");
+                            sendBroadcast(it);
+                        } else {
+                            LogUtil.d("更新 组织 架构  失败");
+                        }
 
-                    long end1 = System.currentTimeMillis();
+                        _isFetchingOrganziationData = false;
+                    }
+                });
 
-                    Intent it = new Intent("com.loyo.oa.v2.ORGANIZATION_UPDATED");
-                    sendBroadcast(it);
-                } else {
-                    LogUtil.d("更新 组织 架构  失败");
-                }
-
-                _isFetchingOrganziationData = false;
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                _isFetchingOrganziationData = false;
-            }
-        });
         OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
     }
 

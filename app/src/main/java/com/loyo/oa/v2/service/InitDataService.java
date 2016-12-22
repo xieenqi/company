@@ -3,24 +3,22 @@ package com.loyo.oa.v2.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+
 import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.IUser;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.user.api.UserService;
+
 import org.androidannotations.annotations.EIntentService;
+
 import java.util.HashMap;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 // Add by ethan on 2016-08-03
 
@@ -43,31 +41,23 @@ public class InitDataService extends IntentService {
         if (null != DBManager.Instance().getUser()) {
             setRootMap(DBManager.Instance().getUser());//取缓存的用户对象
         }
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<NewUser>() {
-            @Override
-            public void success(NewUser user, Response response) {
-                try {
-                    if (Config_project.is_developer_mode)
-                        HttpErrorCheck.checkResponse("获取user", response);
-                    String json = MainApp.gson.toJson(user.data);
-                    MainApp.user = user.data;
-                    setRootMap(user.data);
-                    DBManager.Instance().putUser(json);//保存用户信息
-//                    HashMap<String, String> map = new HashMap<>();
-//                    map.put("name", user.name);
-//                    map.put("id", user.id);
-                    sendDataChangeBroad(user.data);
-                } catch (Exception E) {
-                    E.printStackTrace();
-                }
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        UserService.getProfile()
+                .subscribe(new DefaultLoyoSubscriber<NewUser>() {
+                    @Override
+                    public void onNext(NewUser user) {
+                        try {
+                            String json = MainApp.gson.toJson(user.data);
+                            MainApp.user = user.data;
+                            setRootMap(user.data);
+                            DBManager.Instance().putUser(json);//保存用户信息
+                            sendDataChangeBroad(user.data);
+                        } catch (Exception E) {
+                            E.printStackTrace();
+                        }
+                    }
+                });
+
 //        try {
 //            //all或者one
 //            String organizationUpdateInfo = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE);
@@ -110,7 +100,7 @@ public class InitDataService extends IntentService {
 //     */
 //    void getOrganization() {
 //        ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
-//                .create(I2User.class).getOrganization();
+//                .create(IUser.class).getOrganization();
 //
 //        if (!ListUtil.IsEmpty(lstDepartment_current)) {
 //            //写DB

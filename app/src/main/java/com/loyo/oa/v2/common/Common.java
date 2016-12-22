@@ -18,24 +18,16 @@ import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.UserInfo;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.point.IUser;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.user.api.UserService;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public final class Common {
 
@@ -510,25 +502,23 @@ public final class Common {
      * @param id
      */
     public static void getUserInfo(final Activity activity, final MainApp app, String id) {
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getUserById(id, new Callback<NewUser>() {
-            @Override
-            public void success(NewUser user, Response response) {
-                HttpErrorCheck.checkResponse("讨论其它人的信息：", response);
-                //点击进入人的详情页面
-                if (null != user) {
-                    Bundle b = new Bundle();
-                    b.putSerializable("user", user.data);
-                    app.startActivity(activity, ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
-                } else {
-                    Global.Toast("没有人员信息");
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        UserService.getUserById(id)
+                .subscribe(new DefaultLoyoSubscriber<NewUser>() {
+                    @Override
+                    public void onNext(NewUser user) {
+                        if (null != user) {
+                            Bundle b = new Bundle();
+                            b.putSerializable("user", user.data);
+                            app.startActivity(activity,
+                                    ContactInfoActivity_.class,
+                                    MainApp.ENTER_TYPE_RIGHT,
+                                    false,
+                                    b);
+                        } else {
+                            Global.Toast("没有人员信息");
+                        }
+                    }
+                });
     }
 
 
