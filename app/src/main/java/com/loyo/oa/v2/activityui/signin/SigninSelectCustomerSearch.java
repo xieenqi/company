@@ -20,21 +20,14 @@ import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 新建拜访 [搜索客户选择]

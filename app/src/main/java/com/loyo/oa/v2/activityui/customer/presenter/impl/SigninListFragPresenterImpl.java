@@ -10,7 +10,6 @@ import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
