@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.FeedbackActivity_;
-import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
@@ -262,11 +261,11 @@ public class MenuFragment extends BaseFragment {
     void updateUserinfo() {
         showLoading("");
         UserService.getProfile()
-                .subscribe(new DefaultLoyoSubscriber<NewUser>() {
+                .subscribe(new DefaultLoyoSubscriber<User>() {
                     @Override
-                    public void onNext(NewUser user) {
-                        String json = MainApp.gson.toJson(user.data);
-                        MainApp.user = user.data;
+                    public void onNext(User user) {
+                        String json = MainApp.gson.toJson(user);
+                        MainApp.user = user;
                         DBManager.Instance().putUser(json);
                         Bundle b = new Bundle();
                         String userId = MainApp.user.id;

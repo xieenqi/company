@@ -1,8 +1,8 @@
 package com.loyo.oa.v2.user.api;
 
-import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,13 +34,13 @@ public interface IUser {
      * @param id
      */
     @GET("/user/{id}/newprofile")
-    Observable<NewUser> getUserById(@Path("id") String id);
+    Observable<BaseResponse<User>> getUserById(@Path("id") String id);
 
     /**
      * 获取个人信息 "/user/profile"改为 "/user/newprofile" 权限管理换接口
      */
     @GET("/user/newprofile")
-    Observable<NewUser> getProfile();
+    Observable<BaseResponse<User>> getProfile();
 
     @PUT("/")
     Observable<Object> updatePassword(@Body HashMap<String, Object> map);

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -151,7 +151,7 @@ public class ContactInfoActivity extends BaseActivity {
      */
     void getUserInfo() {
         UserService.getProfile()
-                .subscribe(new DefaultLoyoSubscriber<NewUser>() {
+                .subscribe(new DefaultLoyoSubscriber<User>() {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
@@ -160,12 +160,12 @@ public class ContactInfoActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(NewUser theUser) {
-                        user.mobile = theUser.data.mobile;
-                        user.birthDay = theUser.data.birthDay;
-                        user.weixinId = theUser.data.weixinId;
-                        user.avatar = theUser.data.avatar;
-                        user.gender = theUser.data.gender;
+                    public void onNext(User theUser) {
+                        user.mobile = theUser.mobile;
+                        user.birthDay = theUser.birthDay;
+                        user.weixinId = theUser.weixinId;
+                        user.avatar = theUser.avatar;
+                        user.gender = theUser.gender;
 
                         OrganizationManager.shareManager().updateUser(user);
 

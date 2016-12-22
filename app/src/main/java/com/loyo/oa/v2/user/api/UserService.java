@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.user.api;
 
-import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -19,23 +18,23 @@ import rx.Observable;
 public class UserService {
 
     public static
-    Observable<NewUser> getUserById(String id) {
+    Observable<User> getUserById(String id) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(FinalVariables.GET_PROFILE)
                         .create(IUser.class)
                         .getUserById(id)
-                        .compose(RetrofitAdapterFactory.<NewUser>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<User>applySchedulers());
     }
 
     public static
-    Observable<NewUser> getProfile() {
+    Observable<User> getProfile() {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(FinalVariables.GET_PROFILE)
                         .create(IUser.class)
                         .getProfile()
-                        .compose(RetrofitAdapterFactory.<NewUser>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<User>applySchedulers());
     }
 
     public static

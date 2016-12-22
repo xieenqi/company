@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.util.SparseArray;
 
 import com.google.gson.reflect.TypeToken;
-import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.model.Department;
@@ -503,12 +502,12 @@ public final class Common {
      */
     public static void getUserInfo(final Activity activity, final MainApp app, String id) {
         UserService.getUserById(id)
-                .subscribe(new DefaultLoyoSubscriber<NewUser>() {
+                .subscribe(new DefaultLoyoSubscriber<User>() {
                     @Override
-                    public void onNext(NewUser user) {
+                    public void onNext(User user) {
                         if (null != user) {
                             Bundle b = new Bundle();
-                            b.putSerializable("user", user.data);
+                            b.putSerializable("user", user);
                             app.startActivity(activity,
                                     ContactInfoActivity_.class,
                                     MainApp.ENTER_TYPE_RIGHT,

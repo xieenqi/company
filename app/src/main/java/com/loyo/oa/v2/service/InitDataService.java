@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -43,15 +42,15 @@ public class InitDataService extends IntentService {
         }
 
         UserService.getProfile()
-                .subscribe(new DefaultLoyoSubscriber<NewUser>() {
+                .subscribe(new DefaultLoyoSubscriber<User>() {
                     @Override
-                    public void onNext(NewUser user) {
+                    public void onNext(User user) {
                         try {
-                            String json = MainApp.gson.toJson(user.data);
-                            MainApp.user = user.data;
-                            setRootMap(user.data);
+                            String json = MainApp.gson.toJson(user);
+                            MainApp.user = user;
+                            setRootMap(user);
                             DBManager.Instance().putUser(json);//保存用户信息
-                            sendDataChangeBroad(user.data);
+                            sendDataChangeBroad(user);
                         } catch (Exception E) {
                             E.printStackTrace();
                         }
