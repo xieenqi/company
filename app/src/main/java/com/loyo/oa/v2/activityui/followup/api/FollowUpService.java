@@ -84,13 +84,13 @@ public class FollowUpService {
     }
 
     //获取跟进列表 赛选的数据
-    public static Observable<FollowFilter> getFollowUpFilters() {
+    public static Observable<ArrayList<FollowFilter>> getFollowUpFilters() {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IFollowUp.class)
                         .getFollowUpFilters()
-                        .compose(RetrofitAdapterFactory.<FollowFilter>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<ArrayList<FollowFilter>>compatApplySchedulers());
     }
 
 

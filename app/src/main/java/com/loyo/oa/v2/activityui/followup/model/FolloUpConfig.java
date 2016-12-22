@@ -37,9 +37,9 @@ public class FolloUpConfig {
 //            }
 //        });
 
-        FollowUpService.getFollowUpFilters().subscribe(new DefaultLoyoSubscriber<FollowFilter>() {
+        FollowUpService.getFollowUpFilters().subscribe(new DefaultLoyoSubscriber<ArrayList<FollowFilter>>() {
             @Override
-            public void onNext(FollowFilter result) {
+            public void onNext(ArrayList<FollowFilter> result) {
                 String json = MainApp.gson.toJson(result);
                 SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.FOLLOW_UP_STAGE);
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.FOLLOW_UP_STAGE, json);

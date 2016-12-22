@@ -68,5 +68,5 @@ public interface IFollowUp {
      * 获取跟进列表 赛选的数据
      */
     @GET("/saleactivity/mobile/filters")
-    Observable<FollowFilter> getFollowUpFilters();
+    Observable<ArrayList<FollowFilter>> getFollowUpFilters();
 }
