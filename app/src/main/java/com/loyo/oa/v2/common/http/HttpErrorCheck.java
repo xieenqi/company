@@ -328,7 +328,7 @@ public class HttpErrorCheck {
             } else {
                 String errorInfo = job.getString("error");
                 //Toast(errorInfo);
-                errorMsg = "errorInfo";
+                errorMsg = errorInfo;
             }
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
         } catch (IOException e) {
