@@ -39,11 +39,11 @@ import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
@@ -51,13 +51,10 @@ import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.point.ITask;
+import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -72,8 +69,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
@@ -344,32 +339,26 @@ public class TasksAddActivity extends BaseActivity {
 
 
         LogUtil.d("任务创建 发送的数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
-            @Override
-            public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkCommitSus("任务创建",response);
-                new Handler().postDelayed(new Runnable(){
-                    public void run() {
-                        cancelStatusLoading();
-                        //不需要保存
-                        isSave = false;
-                        Intent intent = new Intent();
-                        intent.putExtra("data", task);
-                        setResult(0x09, intent);
-                        onBackPressed();
-                        if (isCopy)
-                            TasksInfoActivity.instance.finish();
+        TaskService.create(map)
+                .subscribe(new DefaultLoyoSubscriber<Task>(LoyoErrorChecker.COMMIT_DIALOG) {
+                    @Override
+                    public void onNext(final Task task) {
+                        DialogHelp.successStatusLoad();
+                        new Handler().postDelayed(new Runnable(){
+                            public void run() {
+                                cancelStatusLoading();
+                                //不需要保存
+                                isSave = false;
+                                Intent intent = new Intent();
+                                intent.putExtra("data", task);
+                                setResult(0x09, intent);
+                                onBackPressed();
+                                if (isCopy)
+                                    TasksInfoActivity.instance.finish();
+                            }
+                        }, 1000);
                     }
-                }, 1000);
-
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+                });
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson,

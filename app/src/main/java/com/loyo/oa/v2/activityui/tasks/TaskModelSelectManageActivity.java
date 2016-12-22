@@ -14,19 +14,17 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
-import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.tasks.bean.TaskTpl;
-import com.loyo.oa.v2.common.http.ServerAPI;
-import com.loyo.oa.v2.point.ITask;
-import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.pulltorefresh.Slide.SlideView;
+import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.tasks.bean.TaskTpl;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.task.api.TaskService;
+import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
+import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -37,8 +35,6 @@ import org.apache.http.Header;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import retrofit.client.Response;
 
 @EActivity(R.layout.activity_workreport_model_select)
 public class TaskModelSelectManageActivity extends Activity implements SlideView.OnSlideListener {
@@ -112,19 +108,21 @@ public class TaskModelSelectManageActivity extends Activity implements SlideView
             public void onItemClick(final AdapterView<?> adapterView,final View view,final int i,final long l) {
 
                 TaskTpl tpl = lstData.get((int) l);
-                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTpl(tpl.getId(), new RCallback<TaskTpl>() {
-                    @Override
-                    public void success(final TaskTpl taskTpl,final Response response) {
-                        if (isBlockOnItemClick) {
-                            isBlockOnItemClick = false;
-                            return;
-                        }
+                TaskService.getTpl(tpl.getId())
+                        .subscribe(new DefaultLoyoSubscriber<TaskTpl>() {
+                            @Override
+                            public void onNext(TaskTpl tpl) {
+                                if (isBlockOnItemClick) {
+                                    isBlockOnItemClick = false;
+                                    return;
+                                }
 
-                        Intent intent = new Intent();
-                        intent.putExtra("data", taskTpl);
-                        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-                    }
-                });
+                                Intent intent = new Intent();
+                                intent.putExtra("data", tpl);
+                                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                            }
+                        });
+
 
             }
         });
@@ -210,13 +208,14 @@ public class TaskModelSelectManageActivity extends Activity implements SlideView
                 public void onClick(final DialogInterface dialog,final int which) {
 
                     TaskTpl tpl = lstData.get(position);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).deleteTpl(tpl.getId(), new RCallback<TaskTpl>() {
-                        @Override
-                        public void success(final TaskTpl taskTpl,final Response response) {
-                            lstData.remove(position);
-                            bindAdapter();
-                        }
-                    });
+                    TaskService.deleteTpl(tpl.getId())
+                            .subscribe(new DefaultLoyoSubscriber<TaskTpl>() {
+                                @Override
+                                public void onNext(TaskTpl tpl) {
+                                    lstData.remove(position);
+                                    bindAdapter();
+                                }
+                            });
 
                     dialog.dismiss();
                 }

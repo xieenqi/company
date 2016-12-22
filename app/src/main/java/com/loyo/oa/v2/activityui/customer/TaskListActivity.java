@@ -7,30 +7,28 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateFormatSet;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateFormatSet;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ITask;
+import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -40,9 +38,6 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * 客户详情->的任务计划->  【任务管理】
@@ -175,35 +170,33 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         map.put("customerId", mCustomer.getId());
         map.put("pageIndex", taskPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? tasks.size() >= 20 ? tasks.size() : 20 : 20);
+        TaskService.getListData(map)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<TaskRecord>>(ll_loading) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        lv.onRefreshComplete();
+                    }
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getListData(map).
-                observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<PaginationX<TaskRecord>>() {
-            @Override
-            public void onCompleted() {
-                lv.onRefreshComplete();
-            }
+                    @Override
+                    public void onNext(PaginationX<TaskRecord> x) {
+                        taskPaginationX = x;
+                        lv.onRefreshComplete();
+                        if (isTopAdd) {
+                            tasks.clear();
+                        }
+                        if (isTopAdd && x.getRecords().size() == 0) {
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        }
+                        else {
+                            ll_loading.setStatus(LoadingLayout.Success);
+                        }
+                        tasks.addAll(x.getRecords());
+                        pagingGroupDatas = PagingGroupData_.convertGroupData(tasks);
+                        bindData();
+                    }
+                });
 
-            @Override
-            public void onError(final Throwable e) {
-                lv.onRefreshComplete();
-                ll_loading.setStatus(LoadingLayout.Success);
-            }
-
-            @Override
-            public void onNext(final PaginationX<TaskRecord> paginationX) {
-                taskPaginationX = paginationX;
-                lv.onRefreshComplete();
-                if (isTopAdd) {
-                    tasks.clear();
-                }
-                tasks.addAll(paginationX.getRecords());
-                pagingGroupDatas = PagingGroupData_.convertGroupData(tasks);
-                bindData();
-                ll_loading.setStatus(LoadingLayout.Success);
-                if (isTopAdd && paginationX.getRecords().size() == 0)
-                    ll_loading.setStatus(LoadingLayout.Empty);
-            }
-        });
     }
 
     /**

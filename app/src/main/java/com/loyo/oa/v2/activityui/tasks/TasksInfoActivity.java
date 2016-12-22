@@ -19,8 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -42,16 +42,13 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
-import com.loyo.oa.v2.point.ITask;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -67,9 +64,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【任务详情】
@@ -703,20 +697,13 @@ public class TasksInfoActivity extends BaseActivity {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("status", sts);
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updatesTask(id, cid, map, new RCallback<Task>() {
-            @Override
-            public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkResponse("更新子任务", response);
-                Toast("更新成功");
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        TaskService.updatesTask(id, cid, map)
+                .subscribe(new DefaultLoyoSubscriber<Task>() {
+                    @Override
+                    public void onNext(Task task) {
+                        Toast("更新成功");
+                    }
+                });
     }
 
     /**
@@ -729,23 +716,17 @@ public class TasksInfoActivity extends BaseActivity {
             return;
         }
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTask(mTaskId, keyType, new RCallback<Task>() {
-            @Override
-            public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkResponse("任务详情返回", response);
-                mTask = task;
-                updateUI();
-                showAttachment();
-                taskId = task.getId(); //任务ID获取
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error,ll_loading);
-//                finish();
-            }
-        });
+        TaskService.getTask(mTaskId, keyType)
+                .subscribe(new DefaultLoyoSubscriber<Task>(ll_loading) {
+                    @Override
+                    public void onNext(Task task) {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        mTask = task;
+                        updateUI();
+                        showAttachment();
+                        taskId = task.getId(); //任务ID获取
+                    }
+                });
     }
 
     /**
@@ -833,24 +814,17 @@ public class TasksInfoActivity extends BaseActivity {
     void commitFinish() {
         //信鸽透传时可能task为空 ykb 07-16
         if (null != mTask && mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class)
-                    .commitTask(null != mTask ? mTask.getId() : mTaskId, new RCallback<Task>() {
+            TaskService.commitTask(null != mTask ? mTask.getId() : mTaskId)
+                    .subscribe(new DefaultLoyoSubscriber<Task>() {
                         @Override
-                        public void success(final Task task, final Response response) {
-                            if (task != null) {
-                                task.setViewed(true);
-                                Intent intent = new Intent();
-                                intent.putExtra("review", task);
-                                app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
-                            }
-                        }
-
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            super.failure(error);
-                            HttpErrorCheck.checkError(error);
+                        public void onNext(Task task) {
+                            task.setViewed(true);
+                            Intent intent = new Intent();
+                            intent.putExtra("review", task);
+                            app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
                         }
                     });
+
         } else if (mTask.getStatus() == Task.STATUS_REVIEWING && mTask.getCreator().isCurrentUser()) {
 
             mTask.setViewed(true);
@@ -939,19 +913,14 @@ public class TasksInfoActivity extends BaseActivity {
             map.put("projectId", mTask.getProjectId());
         }
         LogUtil.d("修改参与人传递数据：" + app.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateJioner(mTask.getId(), map, new RCallback<Task>() {
-            @Override
-            public void success(final Task task, final Response response) {
-                Toast("修改参与人成功");
-                getTask();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        TaskService.updateJoiner(mTask.getId(), map)
+                .subscribe(new DefaultLoyoSubscriber<Task>() {
+                    @Override
+                    public void onNext(Task task) {
+                        Toast("修改参与人成功");
+                        getTask();
+                    }
+                });
     }
 
 
@@ -1158,14 +1127,15 @@ public class TasksInfoActivity extends BaseActivity {
                     isUpdate = true;
                  /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
-                        @Override
-                        public void success(final Task o, final Response response) {
-                            Intent intent = new Intent();
-                            intent.putExtra("delete", mTask);
-                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
-                        }
-                    });
+                    TaskService.deleteTask(mTask.getId())
+                            .subscribe(new DefaultLoyoSubscriber<Task>() {
+                                @Override
+                                public void onNext(Task task) {
+                                    Intent intent = new Intent();
+                                    intent.putExtra("delete", mTask);
+                                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
+                                }
+                            });
                  /*复制回调*/
                 } else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);

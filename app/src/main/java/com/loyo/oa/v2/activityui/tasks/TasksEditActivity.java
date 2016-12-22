@@ -37,21 +37,19 @@ import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.point.ITask;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -67,9 +65,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 @EActivity(R.layout.activity_tasks_edit) //本Activity的布局文件
 public class TasksEditActivity extends BaseActivity {
@@ -511,30 +506,24 @@ public class TasksEditActivity extends BaseActivity {
             map.put("remindtime", mTask.getRemindTime());
             map.put("reviewFlag", isState);
         }
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateTask(mTask.getId(), map, new RCallback<Task>() {
-            @Override
-            public void success(final Task task, Response response) {
-                HttpErrorCheck.checkCommitSus("任务编辑", response);
-                new Handler().postDelayed(new Runnable() {
+        TaskService.updateTask(mTask.getId(), map)
+                .subscribe(new DefaultLoyoSubscriber<Task>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
-                    public void run() {
-                        cancelStatusLoading();
-                        task.setViewed(true);
-                        Intent intent = new Intent();
-                        intent.putExtra("data", task);
-                        setResult(Activity.RESULT_OK, intent);
-                        onBackPressed();
+                    public void onNext(final Task task) {
+                        DialogHelp.successStatusLoad();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelStatusLoading();
+                                task.setViewed(true);
+                                Intent intent = new Intent();
+                                intent.putExtra("data", task);
+                                setResult(Activity.RESULT_OK, intent);
+                                onBackPressed();
+                            }
+                        }, 1000);
                     }
-                }, 1000);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+                });
     }
 
     void setDeadLine() {
