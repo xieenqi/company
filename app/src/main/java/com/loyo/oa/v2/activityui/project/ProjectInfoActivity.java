@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
