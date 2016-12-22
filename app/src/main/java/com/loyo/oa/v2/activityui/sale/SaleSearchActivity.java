@@ -20,13 +20,14 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.ISale;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -168,23 +169,42 @@ public class SaleSearchActivity extends BaseLoadingActivity implements PullToRef
         map.put("pageSize", 15);
         map.put("keyWords", strSearch);
         if (fromPage == MY_SALE_SEARCH) {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(ISale.class).getSaleMyList(map, this);
+//            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+//                    create(ISale.class).getSaleMyList(map, this);
+            SaleService.getSaleMyList(map).subscribe(getSaleListSubscriber());
         } else if (fromPage == TEAM_SALE_SEARCH) {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(ISale.class).getSaleTeamList(map, this);
+//            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+//                    create(ISale.class).getSaleTeamList(map, this);
+            SaleService.getSaleTeamList(map).subscribe(getSaleListSubscriber());
         }
+
+
+    }
+
+    //获取一个订阅者，来处理结果
+    private DefaultLoyoSubscriber<SaleList> getSaleListSubscriber(){
+        return new DefaultLoyoSubscriber<SaleList>(ll_loading) {
+            @Override
+            public void onNext(SaleList saleList) {
+                ((Callback)SaleSearchActivity.this).success(saleList,null);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                ((Callback)SaleSearchActivity.this).failure(null);
+            }
+        };
     }
 
     @Override
     public void success(SaleList saleList, Response response) {
         expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkResponse("机会搜索列表：", response);
         try {
             if (!isPullDown) {
                 if (saleList.records != null && saleList.records.size() == 0)
                     Toast("没有更多信息");
-                listData.addAll(saleList.records);
+                else listData.addAll(saleList.records);
             } else {
                 listData = saleList.records;
             }
@@ -199,7 +219,7 @@ public class SaleSearchActivity extends BaseLoadingActivity implements PullToRef
     @Override
     public void failure(RetrofitError error) {
         expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkError(error, ll_loading);
+//        HttpErrorCheck.checkError(error, ll_loading);
     }
 
 

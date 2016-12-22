@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
+import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
@@ -25,12 +26,13 @@ import com.loyo.oa.v2.activityui.sale.contract.SaleDetailContract;
 import com.loyo.oa.v2.activityui.sale.presenter.SaleDetailPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
-import com.loyo.oa.v2.point.ISale;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -478,20 +480,34 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
      */
     public void deleteSale() {
         showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
-                .create(ISale.class)
-                .deleteSaleOpportunity(selectId, new RCallback<SaleDetails>() {
-                    @Override
-                    public void success(SaleDetails saleDetails, Response response) {
-                        HttpErrorCheck.checkResponse("删除", response);
-                        app.finishActivity(SaleDetailsActivity.this, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, new Intent());
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
+//                .create(ISale.class)
+//                .deleteSaleOpportunity(selectId, new RCallback<SaleDetails>() {
+//                    @Override
+//                    public void success(SaleDetails saleDetails, Response response) {
+//                        HttpErrorCheck.checkResponse("删除", response);
+//                        app.finishActivity(SaleDetailsActivity.this, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, new Intent());
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+        SaleService.deleteSaleOpportunity(selectId).subscribe(new DefaultLoyoSubscriber<SaleDetails>() {
+            @Override
+            public void onNext(SaleDetails saleDetails) {
+                DialogHelp.cancelLoading();
+                app.finishActivity(SaleDetailsActivity.this, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, new Intent());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+        });
     }
 
     @Override

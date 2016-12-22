@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * 创建销售机会 的ben
  * Created by xeq on 16/5/23.
  */
-public class SaleOpportunityAdd implements Serializable {
+public class SaleOpportunity implements Serializable {
     public String customerName;
 
     public String customerId;

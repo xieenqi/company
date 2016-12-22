@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * 销售机会动态字段
  * Created by xeq on 16/5/18.
  */
-public class SaleFild implements Serializable {
+public class SaleField implements Serializable {
     public String type;
     public String label;
     public boolean required;
