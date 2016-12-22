@@ -14,7 +14,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.ITrackLog;
+import com.loyo.oa.tracklog.api.ITrackLog;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.TrackLogRecevier;
 import com.loyo.oa.v2.tool.Config_project;
@@ -24,8 +24,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 

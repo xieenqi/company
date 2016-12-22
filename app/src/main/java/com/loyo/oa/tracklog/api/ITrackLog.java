@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.point;
+package com.loyo.oa.tracklog.api;
 
 //import com.loyo.oa.v2.beans.TrackLocationRule;
 

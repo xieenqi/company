@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
-import com.loyo.oa.common.utils.*;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
@@ -13,12 +12,11 @@ import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.ITrackLog;
+import com.loyo.oa.tracklog.api.ITrackLog;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.Callback;

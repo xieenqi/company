@@ -24,7 +24,7 @@ import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.LDBManager;
-import com.loyo.oa.v2.point.ITrackLog;
+import com.loyo.oa.tracklog.api.ITrackLog;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
