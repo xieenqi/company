@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -25,9 +26,11 @@ import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
+import com.loyo.oa.v2.activityui.followup.api.FollowUpService;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
+import com.loyo.oa.v2.activityui.signin.api.SignInService;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
@@ -42,6 +45,7 @@ import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ISigninOrFollowUp;
@@ -246,17 +250,24 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
      * 评论删除
      */
     private void deleteComment(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
-            @Override
-            public void success(Object object, Response response) {
-                HttpErrorCheck.checkResponse("评论", response);
-                requestDetails();
-            }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
+//            @Override
+//            public void success(Object object, Response response) {
+//                HttpErrorCheck.checkResponse("评论", response);
+//                requestDetails();
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
 
+        FollowUpService.deleteComment(id).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
+            public void onNext(Object o) {
+                requestDetails();
             }
         });
     }
@@ -271,19 +282,27 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
-        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
+//        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
+//            @Override
+//            public void success(BaseBeanT<CommentModel> object, Response response) {
+//                HttpErrorCheck.checkResponse("评论", response);
+//                msgAudiomMenu.closeMenu();
+//                requestDetails();
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
+
+        FollowUpService.requestComment(map).subscribe(new DefaultLoyoSubscriber<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(BaseBeanT<CommentModel> object, Response response) {
-                HttpErrorCheck.checkResponse("评论", response);
+            public void onNext(BaseBeanT<CommentModel> commentModelBaseBeanT) {
                 msgAudiomMenu.closeMenu();
                 requestDetails();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
             }
         });
     }
@@ -297,19 +316,27 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
-        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
+//        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
+//            @Override
+//            public void success(BaseBeanT<CommentModel> object, Response response) {
+//                HttpErrorCheck.checkResponse("评论", response);
+//                msgAudiomMenu.closeMenu();
+//                requestDetails();
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
+
+        FollowUpService.requestComment(map).subscribe(new DefaultLoyoSubscriber<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(BaseBeanT<CommentModel> object, Response response) {
-                HttpErrorCheck.checkResponse("评论", response);
+            public void onNext(BaseBeanT<CommentModel> commentModelBaseBeanT) {
                 msgAudiomMenu.closeMenu();
                 requestDetails();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
             }
         });
     }
@@ -455,10 +482,29 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
 //        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("split", true);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).getSigninDetails(id, map, new RCallback<BaseBeanT<SigninNewListModel>>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).getSigninDetails(id, map, new RCallback<BaseBeanT<SigninNewListModel>>() {
+//            @Override
+//            public void success(BaseBeanT<SigninNewListModel> signinNewListModel, Response response) {
+//                HttpErrorCheck.checkResponse("拜访详情", response, ll_loading);
+//                mSigninDelModel = signinNewListModel.data;
+//                if (mSigninDelModel == null) {
+//                    Toast("没有获取到数据");
+//                    onBackPressed();
+//                } else {
+//                    bindData();
+//                }
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error, ll_loading);
+//                super.failure(error);
+//            }
+//        });
+        SignInService.getSignInDetails(id,map).subscribe(new DefaultLoyoSubscriber<BaseBeanT<SigninNewListModel>>(ll_loading) {
             @Override
-            public void success(BaseBeanT<SigninNewListModel> signinNewListModel, Response response) {
-                HttpErrorCheck.checkResponse("拜访详情", response, ll_loading);
+            public void onNext(BaseBeanT<SigninNewListModel> signinNewListModel) {
+                ll_loading.setStatus(LoadingLayout.Success);
                 mSigninDelModel = signinNewListModel.data;
                 if (mSigninDelModel == null) {
                     Toast("没有获取到数据");
@@ -466,12 +512,6 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
                 } else {
                     bindData();
                 }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, ll_loading);
-                super.failure(error);
             }
         });
     }
