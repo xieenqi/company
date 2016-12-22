@@ -1,21 +1,19 @@
 package com.loyo.oa.v2.activityui.product.view;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.product.adapter.SelectProductAdapter;
+import com.loyo.oa.v2.activityui.product.adapter.SelectProductMenuAdapter;
+import com.loyo.oa.v2.activityui.product.viewcontrol.SelectProMenuView;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.LogUtil;
 
 /**
  * Created by yyy on 16/12/22.
@@ -29,10 +27,12 @@ public class SelectProductMenu extends PopupWindow implements View.OnClickListen
     private ListView listview;
     private LinearLayout layout_hs;
 
-    SelectProductAdapter mAdapter;
+    SelectProductMenuAdapter mAdapter;
+    SelectProMenuView viewCrol;
 
-    public SelectProductMenu(Context mContext){
+    public SelectProductMenu(Context mContext,SelectProMenuView selectProMenuView){
         this.mContext = mContext;
+        viewCrol = selectProMenuView;
         initUI();
     }
 
@@ -62,6 +62,7 @@ public class SelectProductMenu extends PopupWindow implements View.OnClickListen
         this.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss() {
+                viewCrol.popWindowDimsEmbl();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -71,7 +72,7 @@ public class SelectProductMenu extends PopupWindow implements View.OnClickListen
             }
         });
 
-        mAdapter = new SelectProductAdapter(mContext);
+        mAdapter = new SelectProductMenuAdapter(mContext);
         listview.setAdapter(mAdapter);
     }
 
@@ -80,6 +81,7 @@ public class SelectProductMenu extends PopupWindow implements View.OnClickListen
         if (!isShow) {
             isShow = true;
             this.showAsDropDown(parent);
+            viewCrol.popWindowShowEmbl();
         }else{
             this.dismiss();
         }
