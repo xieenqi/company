@@ -164,17 +164,29 @@ public class AdapterHomeItem extends BaseAdapter {
             tv_extra.setText(item.extra);
             view_number.setVisibility(item.viewed ? View.GONE : View.VISIBLE);
             //列表分组
-            if (item.tag == 1) {
-                item_newmain_topview.setVisibility(crmTi ? View.GONE : View.VISIBLE);
+//            原来的实现有问题，重绘ui的时候，标记会失效
+//            if (item.tag == 1) {
+//                item_newmain_topview.setVisibility(crmTi ? View.GONE : View.VISIBLE);
+//                tv_title.setText("CRM");
+//                crmTi = true;
+//            } else if (item.tag == 2) {
+//                item_newmain_topview.setVisibility(oaTi ? View.GONE : View.VISIBLE);
+//                tv_title.setText("OA");
+//                oaTi = true;
+//            } else if (item.tag == 0) {
+//                item_newmain_topview.setVisibility(View.GONE);
+//            }
+
+            if ("销售线索".equals(item.title)) {
+                item_newmain_topview.setVisibility(View.VISIBLE);
                 tv_title.setText("CRM");
-                crmTi = true;
-            } else if (item.tag == 2) {
-                item_newmain_topview.setVisibility(oaTi ? View.GONE : View.VISIBLE);
+            } else if ("项目管理".equals(item.title)) {
+                item_newmain_topview.setVisibility(View.VISIBLE);
                 tv_title.setText("OA");
-                oaTi = true;
-            } else if (item.tag == 0) {
+            } else{
                 item_newmain_topview.setVisibility(View.GONE);
             }
+
             img_item.setImageResource(item.imageViewRes);
             tv_item.setText(item.title);
 
