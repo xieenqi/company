@@ -430,6 +430,8 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                     @Override
                     public void success(final Discussion d, final Response response) {
                         HttpErrorCheck.checkResponse(response);
+//                        if (mPageDiscussion.getRecords().size() == 0)
+                            getPageData();
                     }
 
                     @Override
@@ -541,7 +543,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
-        if (! REQUEST_GET_USER.equals(event.request)) {
+        if (!REQUEST_GET_USER.equals(event.request)) {
             return;
         }
         StaffMemberCollection collection = event.data;
