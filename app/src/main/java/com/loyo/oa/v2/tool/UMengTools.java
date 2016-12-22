@@ -5,23 +5,22 @@ import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.tracklog.api.TrackLogService;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.tracklog.api.ITrackLog;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import retrofit.Callback;
 import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 友盟统计相关方法
@@ -99,19 +98,14 @@ public class UMengTools {
                 + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("tracklogs", trackLogs);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).uploadTrackLogs(jsonObject, new Callback<Object>() {
-            @Override
-            public void success(Object o, Response response) {
-                HttpErrorCheck.checkResponse(" 手动上传轨迹: ", response);
-                SharedUtil.remove(MainApp.getMainApp(), "sendLocation");
-                SharedUtil.put(MainApp.getMainApp(), "sendLocation", date + address);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-            }
-        });
+        TrackLogService.uploadTrackLogs(jsonObject)
+                .subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.SILENCE) {
+                    @Override
+                    public void onNext(Object o) {
+                        SharedUtil.remove(MainApp.getMainApp(), "sendLocation");
+                        SharedUtil.put(MainApp.getMainApp(), "sendLocation", date + address);
+                    }
+                });
     }
 
     private static void newUpLocation(final String address, final double longitude, final double latitude, final String date) {
@@ -120,19 +114,12 @@ public class UMengTools {
                 + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> map = new HashMap<>();
         map.put("trackLogs", trackLogs);
-        RestAdapterFactory.getInstance().build(Config_project.NEW_UPLOCATION()).create(ITrackLog.class)
-                .newUploadTrack(map, new Callback<TrackLog>() {
+        TrackLogService.newUploadTrack(map)
+                .subscribe(new DefaultLoyoSubscriber<TrackLog>(LoyoErrorChecker.SILENCE) {
                     @Override
-                    public void success(TrackLog trackLog, Response response) {
-                        HttpErrorCheck.checkResponse(" new >>>>>>>>>>手动上传轨迹: ", response);
+                    public void onNext(TrackLog log) {
                         SharedUtil.remove(MainApp.getMainApp(), "sendLocation");
-
                         SharedUtil.put(MainApp.getMainApp(), "sendLocation", date + address);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
                     }
                 });
     }

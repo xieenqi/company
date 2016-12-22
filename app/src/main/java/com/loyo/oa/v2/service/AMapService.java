@@ -17,18 +17,16 @@ import com.amap.api.location.APSService;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.loyo.oa.common.utils.DateFormatSet;
+import com.loyo.oa.tracklog.api.TrackLogService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LocateData;
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.LDBManager;
-import com.loyo.oa.tracklog.api.ITrackLog;
-import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.ArrayList;
@@ -38,10 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.service
@@ -313,61 +307,23 @@ public class AMapService extends APSService {
         final HashMap<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("trackLogs", trackLogs);//tracklogs
 //新版上传轨迹
-        RestAdapterFactory.getInstance().build(Config_project.NEW_UPLOCATION()).create(ITrackLog.class)
-                .newUploadTrack(jsonObject, new Callback<TrackLog>() {
+        TrackLogService.newUploadTrack(jsonObject)
+                .subscribe(new DefaultLoyoSubscriber<TrackLog>() {
                     @Override
-                    public void success(TrackLog trackLog, Response response) {
-                        HttpErrorCheck.checkResponse(" new >>>> 【后台】 >>>>>上传轨迹: ", response);
+                    public void onError(Throwable e) {
+                        LocateData data = buildLocateData(location);
+                        ldbManager.addLocateData(data);
+                        SharedUtil.putBoolean(app, "isCache", true);
+                    }
 
+                    @Override
+                    public void onNext(TrackLog log) {
                         SharedUtil.put(MainApp.getMainApp(), "lat", String.valueOf(latitude));
                         SharedUtil.put(MainApp.getMainApp(), "lng", String.valueOf(longitude));
                         SharedUtil.remove(MainApp.getMainApp(), "address");
                         SharedUtil.put(MainApp.getMainApp(), "address", address);
                     }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-                        LocateData data = buildLocateData(location);
-                        ldbManager.addLocateData(data);
-                        SharedUtil.putBoolean(app, "isCache", true);
-                    }
                 });
-
-
-//        app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
-//            @Override
-//            public void success(Object trackLog, Response response) {
-//                LogUtil.d("【轨迹上报成功！!!!!!!!！！】,address : " + address);
-//                HttpErrorCheck.checkResponse("上报轨迹", response);
-//                SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
-//
-//                SharedUtil.put(app, "lat", String.valueOf(latitude));
-//                SharedUtil.put(app, "lng", String.valueOf(longitude));
-//                SharedUtil.remove(app, "address");
-//                SharedUtil.put(app, "address", address);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-////                HttpErrorCheck.checkError(error);
-//                LogUtil.d(TAG + " 【 轨迹 】,轨迹上报失败");
-//                LocateData data = buildLocateData(location);
-//                ldbManager.addLocateData(data);
-//                SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "2|" + app.df1.format(new Date()));
-//                //fixes bugly1043 空指针异常 v3.1.1 ykb 07-15
-//                UMengTools.sendCustomErroInfo(getApplicationContext(), location);
-//                String userName = MainApp.user == null || StringUtil.isEmpty(MainApp.user.getRealname()) ? "" : MainApp.user.getRealname();
-//                if (null != MainApp.user)
-//                    Global.ProcException(new Exception(" 轨迹上【搜集】报失败:" + error.getMessage() +
-//                            " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(jsonObject)
-//                            + "用户：" + app.gson.toJson(MainApp.user)));
-//                SharedUtil.putBoolean(app, "isCache", true);
-////                isCache = true;
-//                UMengTools.sendCustomTrajectory(app, error, jsonObject);
-//                super.failure(error);
-//            }
-//        });
     }
 
     /**
@@ -425,25 +381,14 @@ public class AMapService extends APSService {
             if (null != trackLogs && trackLogs.length > 0) {
                 final HashMap<String, Object> tracklogsMap = new HashMap<>();
                 tracklogsMap.put("tracklogs", trackLogs);
-                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).uploadTrackLogs(tracklogsMap, new RCallback<Object>() {
-                    @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("【缓存轨迹】上传成功： ", response);
-                        ldbManager.clearAllLocateDatas();
-//                        isCache = false;
-                        SharedUtil.putBoolean(app, "isCache", false);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        if (null != MainApp.user)
-                            Global.ProcException(new Exception(" 《缓存》轨迹上【搜集】报失败:" + error.getMessage() +
-                                    " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(tracklogsMap)
-                                    + "用户：" + app.gson.toJson(MainApp.user)));
-
-                    }
-                });
+                TrackLogService.uploadTrackLogs(tracklogsMap)
+                        .subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.SILENCE) {
+                            @Override
+                            public void onNext(Object o) {
+                                ldbManager.clearAllLocateDatas();
+                                SharedUtil.putBoolean(app, "isCache", false);
+                            }
+                        });
             }
         }
     }
@@ -539,17 +484,13 @@ public class AMapService extends APSService {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).getUserOneLine(new Callback<Object>() {
-                    @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("用户在线：", response);
-                    }
+                TrackLogService.getUserOneLine()
+                        .subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.SILENCE) {
+                            @Override
+                            public void onNext(Object o) {
 
-                    @Override
-                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                            }
+                        });
             }
         }, timerOk, timerOk);
     }

@@ -7,34 +7,28 @@ import com.loyo.oa.v2.beans.TrackRule;
 
 import java.util.HashMap;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import rx.Observable;
 
 public interface ITrackLog {
     /***
      * 最新上传轨迹 经纬度 时间
      * @param body
-     * @param cb
      */
     @POST("/api/v1/track_logs ")
-    void newUploadTrack(@Body HashMap<String, Object> body, Callback<TrackLog> cb);
+    Observable<TrackLog> newUploadTrack(@Body HashMap<String, Object> body);
 
     @GET("/trackrule")
-    void getTrackRule(retrofit.Callback<TrackRule> cb);
-
-//    @GET("/trackrule")
-//    void getTrackLocationRule(retrofit.Callback<TrackLocationRule> cb);
+    Observable<TrackRule> getTrackRule();
 
     @POST("/tracklog/multiple")
-    void uploadTrackLogs(@Body HashMap<String, Object> tracklogs, Callback<Object> callback);
+    Observable<Object> uploadTrackLogs(@Body HashMap<String, Object> tracklogs);
 
     /**
      * 轨迹用户在线
-     *
-     * @param cb
      */
     @GET("/tracklog/record")
-    void getUserOneLine(Callback<Object> cb);
+    Observable<Object> getUserOneLine();
 }
