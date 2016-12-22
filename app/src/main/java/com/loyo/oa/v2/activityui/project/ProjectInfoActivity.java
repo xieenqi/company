@@ -189,7 +189,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     }
 
     /**
-     * 参见 peofect_Perminssion 图片
+     * 参见 project_perminssion 图片
      * 右上角菜单
      */
     private void functionButton() {
