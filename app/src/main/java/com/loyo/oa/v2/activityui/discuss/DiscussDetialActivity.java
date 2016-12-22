@@ -34,38 +34,28 @@ import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.HaitHelper;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【讨论详情界面】
@@ -567,7 +557,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null) {
-            NewUser user = (NewUser) data.getSerializableExtra("data");
+            OrganizationalMember user = (OrganizationalMember) data.getSerializableExtra("data");
             if (user != null) {
                 String id = user.getId();
                 if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
@@ -594,7 +584,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             return;
         }
         StaffMemberCollection collection = event.data;
-        NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+        OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);
         if (user == null) {
             return;
         }

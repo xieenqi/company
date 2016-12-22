@@ -29,7 +29,7 @@ import com.loyo.oa.v2.activityui.work.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -309,7 +309,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         } else {
             mHandler.sendEmptyMessage(UPDATE_SUCCESS);
         }
-        NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.user ? mWorkReport.reviewer.user : null;
+        OrganizationalMember reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.user ? mWorkReport.reviewer.user : null;
         tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : (mWorkReport.content.toString().contains("<") ? Html.fromHtml(mWorkReport.content) : mWorkReport.content));
         tv_reviewer.setText(mWorkReport.reviewer.user.getName());
         tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人：无抄送人" : "抄送人：" + getJoinUserNames());

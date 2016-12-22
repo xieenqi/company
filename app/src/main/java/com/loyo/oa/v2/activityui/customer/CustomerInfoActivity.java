@@ -32,7 +32,7 @@ import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -440,7 +440,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
         if (owner != null) {
-            NewUser ownerUser = new NewUser();
+            OrganizationalMember ownerUser = new OrganizationalMember();
             ownerUser.setAvatar(owner.getAvatar());
             ownerUser.setId(owner.getId());
             ownerUser.setName(owner.getName());
@@ -654,7 +654,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
         if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
-            NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+            OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);
             if (user == null) {
                 return;
             } else {
@@ -676,7 +676,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             /*判断当前负责人用owner对象*/
             if (members != null) {
                 if (cusMembers.depts.size() > 0) {
-                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
+                    for (OrganizationalMember newUser : cusMembers.depts) {
                         if (!mCustomer.owner.id.equals(newUser.getId())) {
                             mManagerNames.append(newUser.getName() + ",");
                             mManagerIds.append(newUser.getId() + ",");
@@ -686,7 +686,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     }
                 }
                 if (cusMembers.users.size() > 0) {
-                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
+                    for (OrganizationalMember newUser : cusMembers.users) {
                         if (!mCustomer.owner.id.equals(newUser.getId())) {
                             mManagerNames.append(newUser.getName() + ",");
                             mManagerIds.append(newUser.getId() + ",");
@@ -739,7 +739,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
              * 负责人回调
              * */
             case FinalVariables.REQUEST_ONLY:
-                NewUser nu = (NewUser) data.getSerializableExtra("data");
+                OrganizationalMember nu = (OrganizationalMember) data.getSerializableExtra("data");
                 owner.id = nu.getId();
                 owner.name = nu.getName();
                 owner.avatar = nu.getAvatar();
@@ -757,7 +757,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
                 if (members != null) {
                     if (null != cusMembers.depts) {
-                        for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
+                        for (OrganizationalMember newUser : cusMembers.depts) {
                             if (!MainApp.user.id.equals(newUser.getId())) {
                                 mManagerNames.append(newUser.getName() + ",");
                                 mManagerIds.append(newUser.getId() + ",");
@@ -767,7 +767,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         }
                     }
                     if (null != cusMembers.users) {
-                        for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
+                        for (OrganizationalMember newUser : cusMembers.users) {
                             if (!MainApp.user.id.equals(newUser.getId())) {
                                 mManagerNames.append(newUser.getName() + ",");
                                 mManagerIds.append(newUser.getId() + ",");

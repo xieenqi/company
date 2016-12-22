@@ -27,7 +27,7 @@ import com.loyo.oa.v2.activityui.worksheet.common.WorksheetPermisssion;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -347,7 +347,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
     public void onContactPicked(ContactPickedEvent event) {
         if (WorksheetDetailActivity.PICK_USER_SESSION.equals(event.session)) {
             StaffMemberCollection collection = event.data;
-            NewUser u = Compat.convertStaffCollectionToNewUser(collection);
+            OrganizationalMember u = Compat.convertStaffCollectionToNewUser(collection);
             if (!TextUtils.isEmpty(eventId)) {
                 setEventPersonal(u.getId());
             } else {
@@ -364,7 +364,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
         switch (requestCode) {
              /*用户单选, 负责人*/
             case FinalVariables.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
+                OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
                 if (!TextUtils.isEmpty(eventId)) {
                     setEventPersonal(u.getId());
                 } else {

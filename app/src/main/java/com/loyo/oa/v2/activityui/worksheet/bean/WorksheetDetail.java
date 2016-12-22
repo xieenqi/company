@@ -2,7 +2,7 @@ package com.loyo.oa.v2.activityui.worksheet.bean;
 
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,8 +17,8 @@ public class WorksheetDetail implements Serializable{
     public String title;
     public String content;
     public String uuid;
-    public NewUser dispatcher;
-    public NewUser creator;
+    public OrganizationalMember dispatcher;
+    public OrganizationalMember creator;
     public int triggerMode;//1 流程触发 2 定时触发
     public ArrayList<WorksheetEventsSupporter> sheetEventsSupporter;
     public WorksheetStatus status;

@@ -57,7 +57,7 @@ import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.attachment.api.IAttachment;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
 
@@ -530,7 +530,7 @@ public class Utils {
         }
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < members.size(); i++) {
-            NewUser user = members.get(i).getUser();
+            OrganizationalMember user = members.get(i).getUser();
             if (null == user) {
                 continue;
             }
@@ -584,7 +584,7 @@ public class Utils {
         String ids[] = userIds.split(",");
         String names[] = userNames.split(",");
         for (int i = 0; i < ids.length; i++) {
-            NewUser user = new NewUser();
+            OrganizationalMember user = new OrganizationalMember();
             user.setName(names[i]);
             user.setId(ids[i]);
 

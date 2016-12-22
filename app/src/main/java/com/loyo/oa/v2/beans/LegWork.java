@@ -16,7 +16,7 @@ public class LegWork extends BaseBeans implements Serializable {
     public String address;//(string, optional): ,
     public ArrayList<Attachment> attachments;// (array[&{common Attachment}], optional): ,
     public long createdAt;// (&{time Time}, optional): ,
-    public NewUser creator=new NewUser();//(&{organization User}, optional): ,
+    public OrganizationalMember creator=new OrganizationalMember();//(&{organization User}, optional): ,
     public String customerId;//(int64, optional): ,
     public String customerName;//(string, optional): ,
     public String id;//(int64, optional): ,

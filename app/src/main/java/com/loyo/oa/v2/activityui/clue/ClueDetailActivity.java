@@ -28,12 +28,11 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
@@ -43,25 +42,17 @@ import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.voip.VoIPCallActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Date;
 import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class ClueDetailActivity extends BaseLoadingActivity implements View.OnClickListener {
 
@@ -802,7 +793,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
         StaffMemberCollection collection = event.data;
-        final NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+        final OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);
         if (user == null) {
             return;
         }
@@ -829,7 +820,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
 
         switch (requestCode) {
             case FinalVariables.REQUEST_ONLY:
-                final NewUser u = (NewUser) data.getSerializableExtra("data");
+                final OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
 
                 sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                     @Override

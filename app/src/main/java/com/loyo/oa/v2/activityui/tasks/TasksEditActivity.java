@@ -34,7 +34,7 @@ import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -131,10 +131,10 @@ public class TasksEditActivity extends BaseActivity {
     private SignInGridViewAdapter signInGridViewAdapter;
     private AlertDialog dialog_Product;
     private String uuid = StringUtil.getUUID();
-    private ArrayList<NewUser> userss;
-    private ArrayList<NewUser> depts;
+    private ArrayList<OrganizationalMember> userss;
+    private ArrayList<OrganizationalMember> depts;
     private Members member;
-    private NewUser newUser;
+    private OrganizationalMember newUser;
     private StringBuffer joinName = new StringBuffer();
     private StringBuffer joinUserId = new StringBuffer();
     private boolean isState;
@@ -341,7 +341,7 @@ public class TasksEditActivity extends BaseActivity {
             joinName.append(mTask.getMembers().getAllData().get(i).getName() + ",");
             joinUserId.append(mTask.getMembers().getAllData().get(i).getId() + ",");
 
-            NewUser newUser = new NewUser();
+            OrganizationalMember newUser = new OrganizationalMember();
             newUser.setName(mTask.members.getAllData().get(i).getName());
             newUser.setId(mTask.getMembers().getAllData().get(i).getId());
             userss.add(newUser);
@@ -707,13 +707,13 @@ public class TasksEditActivity extends BaseActivity {
                 joinName = new StringBuffer();
                 joinUserId = new StringBuffer();
                 if (null != member.depts) {
-                    for (NewUser newUser : member.depts) {
+                    for (OrganizationalMember newUser : member.depts) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
                 }
                 if (null != member.users) {
-                    for (NewUser newUser : member.users) {
+                    for (OrganizationalMember newUser : member.users) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
@@ -761,7 +761,7 @@ public class TasksEditActivity extends BaseActivity {
 
             //用户单选, 负责人
             case FinalVariables.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
+                OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
                 newUser = u;
                 tv_responsiblePerson.setText(newUser.getName());
                 break;
@@ -774,13 +774,13 @@ public class TasksEditActivity extends BaseActivity {
                     joinName = new StringBuffer();
                     joinUserId = new StringBuffer();
                     if (null != member.depts) {
-                        for (NewUser newUser : member.depts) {
+                        for (OrganizationalMember newUser : member.depts) {
                             joinName.append(newUser.getName() + ",");
                             joinUserId.append(newUser.getId() + ",");
                         }
                     }
                     if (null != member.users) {
-                        for (NewUser newUser : member.users) {
+                        for (OrganizationalMember newUser : member.users) {
                             joinName.append(newUser.getName() + ",");
                             joinUserId.append(newUser.getId() + ",");
                         }

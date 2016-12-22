@@ -11,7 +11,7 @@ import com.loyo.oa.v2.announcement.api.AnnouncementService;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -60,13 +60,13 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
             joinUserId.reverse();
         } else {
             if (null != member.depts) {
-                for (NewUser newUser : member.depts) {
+                for (OrganizationalMember newUser : member.depts) {
                     joinName.append(newUser.getName() + ",");
                     joinUserId.append(newUser.getId() + ",");
                 }
             }
             if (null != member.users) {
-                for (NewUser newUser : member.users) {
+                for (OrganizationalMember newUser : member.users) {
                     joinName.append(newUser.getName() + ",");
                     joinUserId.append(newUser.getId() + ",");
                 }
