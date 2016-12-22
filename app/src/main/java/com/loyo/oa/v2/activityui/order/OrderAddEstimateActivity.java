@@ -22,7 +22,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -76,7 +76,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     private int attamentSize = 0;
     private Intent mIntent;
     private Bundle mBundle;
-    private NewUser newUser;
+    private OrganizationalMember newUser;
     private EstimateAdd mEstimateAdd;
     private HashMap<String, Object> map;
 
@@ -171,7 +171,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
      */
     private void editEstimate() {
         if (null != mEstimateAdd) {
-            newUser = new NewUser();
+            newUser = new OrganizationalMember();
             newUser.setId(mEstimateAdd.payeeUser.id);
             newUser.setName(mEstimateAdd.payeeUser.name);
             newUser.setAvatar(mEstimateAdd.payeeUser.avatar);
@@ -526,7 +526,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
             //用户单选, 负责人
             case FinalVariables.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
+                OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
                 newUser = u;
                 tv_priceer.setText(newUser.getName());
                 break;
@@ -549,7 +549,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
         if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
-            NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+            OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);
             if (user == null) {
                 return;
             }

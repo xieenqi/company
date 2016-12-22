@@ -12,22 +12,17 @@ import android.widget.TextView;
 
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.CustomerContactManageActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
-import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.user.api.UserService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.AfterViews;
@@ -35,9 +30,6 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.activity
@@ -158,33 +150,31 @@ public class ContactInfoActivity extends BaseActivity {
      * 更新登录用户资料
      */
     void getUserInfo() {
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<NewUser>() {
-            @Override
-            public void success(final NewUser theUser, final Response response) {
-                user.mobile = theUser.data.mobile;
-                user.birthDay = theUser.data.birthDay;
-                user.weixinId = theUser.data.weixinId;
-                user.avatar = theUser.data.avatar;
-                user.gender = theUser.data.gender;
+        UserService.getProfile()
+                .subscribe(new DefaultLoyoSubscriber<User>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        Toast("获取用户资料失败");
+                        finish();
+                    }
 
-                OrganizationManager.shareManager().updateUser(user);
+                    @Override
+                    public void onNext(User theUser) {
+                        user.mobile = theUser.mobile;
+                        user.birthDay = theUser.birthDay;
+                        user.weixinId = theUser.weixinId;
+                        user.avatar = theUser.avatar;
+                        user.gender = theUser.gender;
 
-                Intent it = new Intent("com.loyo.oa.v2.USER_REFRESH");
-                it.putExtra("userId", user.id);
-                sendBroadcast(it);
+                        OrganizationManager.shareManager().updateUser(user);
 
-                HttpErrorCheck.checkResponse(response);
-                updateUIWithUser(user);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                Toast("获取用户资料失败");
-                HttpErrorCheck.checkError(error);
-                finish();
-            }
-        });
+                        Intent it = new Intent("com.loyo.oa.v2.USER_REFRESH");
+                        it.putExtra("userId", user.id);
+                        sendBroadcast(it);
+                        updateUIWithUser(user);
+                    }
+                });
     }
 
     /**

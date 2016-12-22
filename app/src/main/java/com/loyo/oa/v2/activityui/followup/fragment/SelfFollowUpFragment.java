@@ -33,7 +33,7 @@ import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
-import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
+import com.loyo.oa.v2.activityui.followup.FollowSelectActivity;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
@@ -404,7 +404,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         switch (v.getId()) {
             //新建跟进
             case R.id.btn_add:
-                startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
+                startActivityForResult(new Intent(getActivity(), FollowSelectActivity.class), Activity.RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
         }

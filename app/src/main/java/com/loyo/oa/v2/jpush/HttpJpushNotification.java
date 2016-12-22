@@ -16,12 +16,13 @@ public class HttpJpushNotification implements Serializable {
     public String pusherCognate = "";//调用接口回传给服务器跟新系统消息的红点状态
     public int silentType;
     public ArrayList<String> buzzIds;
-    public int jumpType;//1.我负责的客户  2.我参与的客户
+    public int jumpType;//1.我负责的客户  2.我参与的客户 3.公海客户
 
     public enum JumpType {
         NUONE(0),
         MY_RESON(1),
-        MY_MEMBER(2);
+        MY_MEMBER(2),
+        COMMON_CUSTOMER(3);
         public int value;
 
         JumpType(int value) {

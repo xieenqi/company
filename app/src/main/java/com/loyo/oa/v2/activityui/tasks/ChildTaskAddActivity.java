@@ -17,7 +17,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.common.Global;
@@ -25,7 +25,6 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICheckPoint;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
@@ -57,11 +56,11 @@ public class ChildTaskAddActivity extends BaseActivity {
 
     @Extra("childTask") TaskCheckPoint chidTask;
     @Extra("Task") Task mTask;
-    @Extra("allUsers") ArrayList<NewUser> allUsers; //负责人与参与人 集合
+    @Extra("allUsers") ArrayList<OrganizationalMember> allUsers; //负责人与参与人 集合
 
     TaskCheckPoint mChildTask = new TaskCheckPoint();
 
-    NewUser newUser;
+    OrganizationalMember newUser;
 
     @AfterViews
     void intUi() {
@@ -340,7 +339,7 @@ public class ChildTaskAddActivity extends BaseActivity {
 
         switch (requestCode) {
             case 300:
-                NewUser user = (NewUser) data.getSerializableExtra("user");
+                OrganizationalMember user = (OrganizationalMember) data.getSerializableExtra("user");
                 if (user != null) {
                     tv_child_add_responser_name.setText(user.getRealname());
                     newUser = user;

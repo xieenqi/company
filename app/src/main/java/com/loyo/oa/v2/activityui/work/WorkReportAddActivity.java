@@ -40,7 +40,7 @@ import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.WorkReport;
@@ -161,8 +161,8 @@ public class WorkReportAddActivity extends BaseActivity {
     private ImageGridViewAdapter imageGridViewAdapter;
     private workReportAddgridViewAdapter workGridViewAdapter;
     private ArrayList<Attachment> lstData_Attachment = null;
-    private ArrayList<NewUser> users = new ArrayList<>();
-    private ArrayList<NewUser> depts = new ArrayList<>();
+    private ArrayList<OrganizationalMember> users = new ArrayList<>();
+    private ArrayList<OrganizationalMember> depts = new ArrayList<>();
     private List<String> mSelectPath;
     private ArrayList<ImageInfo> pickPhotsResult;
     private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
@@ -276,7 +276,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     break;
             }
 
-            NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer
+            OrganizationalMember reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer
                     .user ? mWorkReport.reviewer.user : null;
             tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
             tv_toUser.setText(getMenberText());
@@ -995,7 +995,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
         if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
-            NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+            OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);
             if (user == null) {
                 return;
             }
@@ -1011,13 +1011,13 @@ public class WorkReportAddActivity extends BaseActivity {
                 joinUserId.reverse();
             } else {
                 if (null != members.depts) {
-                    for (NewUser newUser : members.depts) {
+                    for (OrganizationalMember newUser : members.depts) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
                 }
                 if (null != members.users) {
-                    for (NewUser newUser : members.users) {
+                    for (OrganizationalMember newUser : members.users) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
@@ -1078,7 +1078,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
             //用户单选, 点评人
             case FinalVariables.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
+                OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
                 mReviewer = new Reviewer(u);
                 mReviewer.user = u;
                 tv_reviewer.setText(u.getRealname());
@@ -1094,13 +1094,13 @@ public class WorkReportAddActivity extends BaseActivity {
                     joinUserId.reverse();
                 } else {
                     if (null != members.depts) {
-                        for (NewUser newUser : members.depts) {
+                        for (OrganizationalMember newUser : members.depts) {
                             joinName.append(newUser.getName() + ",");
                             joinUserId.append(newUser.getId() + ",");
                         }
                     }
                     if (null != members.users) {
-                        for (NewUser newUser : members.users) {
+                        for (OrganizationalMember newUser : members.users) {
                             joinName.append(newUser.getName() + ",");
                             joinUserId.append(newUser.getId() + ",");
                         }

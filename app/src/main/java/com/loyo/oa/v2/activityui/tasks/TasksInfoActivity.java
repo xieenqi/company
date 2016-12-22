@@ -30,11 +30,10 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
@@ -66,7 +65,6 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -160,8 +158,8 @@ public class TasksInfoActivity extends BaseActivity {
     public PaginationX<Discussion> mPageDiscussion;
     public static TasksInfoActivity instance = null;
     public ArrayList<TextView> taskChildView = new ArrayList<>();
-    public ArrayList<NewUser> childTastUsers = new ArrayList<>();
-//    public ArrayList<NewUser> requestDepts = new ArrayList<>();
+    public ArrayList<OrganizationalMember> childTastUsers = new ArrayList<>();
+//    public ArrayList<OrganizationalMember> requestDepts = new ArrayList<>();
 //    public ArrayList<User> aboutDepts = new ArrayList<>();
 //    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
 
@@ -240,9 +238,9 @@ public class TasksInfoActivity extends BaseActivity {
      * 当当前用户不在项目中, 不显示附件和子任务
      */
     private void updateUIInTask() {
-        NewUser user = mTask.getResponsiblePerson(); // 获取负责人
-        NewUser createUser = mTask.getCreator(); //获取创建人
-        List<NewUser> users = mTask.getMembers().getAllData(); // 获取参与人列表
+        OrganizationalMember user = mTask.getResponsiblePerson(); // 获取负责人
+        OrganizationalMember createUser = mTask.getCreator(); //获取创建人
+        List<OrganizationalMember> users = mTask.getMembers().getAllData(); // 获取参与人列表
 
         users.add(user);
         users.add(createUser);
@@ -327,7 +325,7 @@ public class TasksInfoActivity extends BaseActivity {
         if (mTask.members != null) {
             if (mTask.members.getAllData().size() > 0) {
                 StringBuffer userNames = new StringBuffer();
-                for (NewUser element : mTask.members.getAllData()) {
+                for (OrganizationalMember element : mTask.members.getAllData()) {
                     userNames.append(element.getName() + " ");
                 }
                 tv_toUsers.setText("参与人: " + userNames.toString());
@@ -336,7 +334,7 @@ public class TasksInfoActivity extends BaseActivity {
                 // 获取部门（包括子部门）的用户
                 List<DBUser> deptsUsers = new ArrayList<DBUser>();
                 if (null != mTask.members.depts) {
-                    for (NewUser dept : mTask.members.depts) {
+                    for (OrganizationalMember dept : mTask.members.depts) {
                         deptsUsers.addAll(OrganizationManager.shareManager().entireUsersOfDepartment(dept.getId()));
                     }
                 }
@@ -672,7 +670,7 @@ public class TasksInfoActivity extends BaseActivity {
                         //组装 负责人 于 参与人
                         ArrayList<Reviewer> reponserData = new ArrayList<Reviewer>();
                         reponserData.addAll(mTask.responsiblePersons);
-                        ArrayList<NewUser> reponserDataUser = new ArrayList<NewUser>();
+                        ArrayList<OrganizationalMember> reponserDataUser = new ArrayList<OrganizationalMember>();
                         for (Reviewer element : reponserData) {
                             reponserDataUser.add(element.user);
                         }
@@ -977,7 +975,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putBoolean("isOver", isOver);
         bundle.putInt("bizType", 2);
 
-        ArrayList<NewUser> users = new ArrayList<>();
+        ArrayList<OrganizationalMember> users = new ArrayList<>();
         if (mTask.getMembers() != null) {
             users.addAll(mTask.getMembers().getAllData());
         }
@@ -1033,7 +1031,7 @@ public class TasksInfoActivity extends BaseActivity {
 //        requestDepts.addAll(mTask.members.depts);
 //
 //        for (Department department : deptSource) {
-//            for (NewUser newUser : requestDepts) {
+//            for (OrganizationalMember newUser : requestDepts) {
 //                try {
 //                    if (department.getId().equals(newUser.getId())) {
 //                        aboutDepts.addAll(department.getUsers());
@@ -1064,13 +1062,13 @@ public class TasksInfoActivity extends BaseActivity {
                 joinName = new StringBuffer();
                 joinUserId = new StringBuffer();
                 if (null != member.depts) {
-                    for (NewUser newUser : member.depts) {
+                    for (OrganizationalMember newUser : member.depts) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
                 }
                 if (null != member.users) {
-                    for (NewUser newUser : member.users) {
+                    for (OrganizationalMember newUser : member.users) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
@@ -1101,13 +1099,13 @@ public class TasksInfoActivity extends BaseActivity {
                     joinUserId.reverse();
                 } else {
                     if (null != member.depts) {
-                        for (NewUser newUser : member.depts) {
+                        for (OrganizationalMember newUser : member.depts) {
                             joinName.append(newUser.getName() + ",");
                             joinUserId.append(newUser.getId() + ",");
                         }
                     }
                     if (null != member.users) {
-                        for (NewUser newUser : member.users) {
+                        for (OrganizationalMember newUser : member.users) {
                             joinName.append(newUser.getName() + ",");
                             joinUserId.append(newUser.getId() + ",");
                         }

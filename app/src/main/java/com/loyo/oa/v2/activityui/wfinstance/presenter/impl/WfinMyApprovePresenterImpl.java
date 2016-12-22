@@ -19,9 +19,9 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
 import com.loyo.oa.v2.activityui.wfinstance.common.ApproveStatusMenuModel;
 import com.loyo.oa.v2.activityui.wfinstance.common.BizFormMenuModel;
+import com.loyo.oa.v2.activityui.wfinstance.common.WfinstanceBizformConfig;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMyApprovePresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMyApproveView;
-import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -44,7 +44,6 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
 
     private ArrayList<WflnstanceItemData> datas = new ArrayList<>();
     private ArrayList<WflnstanceListItem> lstData = new ArrayList<>();
-    private ArrayList<BizForm> mBizForms = new ArrayList<>();
 
     private String status;
     private String bizFormId = "";
@@ -54,47 +53,6 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
         this.crolView = crolView;
         this.mContext = mContext;
         this.filterMenu = mMenu;
-    }
-
-
-    /**
-     * 获取审批类型数据
-     */
-    public void getWfBizForms() {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", 1);
-        params.put("pageSize", 500);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
-//            @Override
-//            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
-//                if (null != bizFormPaginationX) {
-//                    mBizForms = bizFormPaginationX.getRecords();
-//                    if (null != mBizForms && !mBizForms.isEmpty()) {
-//                        _loadFilterOptions(mBizForms);
-//                    } else {
-//                        _loadFilterOptions(null);
-//                    }
-//                } else {
-//                    _loadFilterOptions(null);
-//                }
-//            }
-//        });
-
-        WfinstanceService.getWfBizForms(params).subscribe(new DefaultLoyoSubscriber<PaginationX<BizForm>>() {
-            @Override
-            public void onNext(PaginationX<BizForm> bizFormPaginationX) {
-                if (null != bizFormPaginationX) {
-                    mBizForms = bizFormPaginationX.getRecords();
-                    if (null != mBizForms && !mBizForms.isEmpty()) {
-                        _loadFilterOptions(mBizForms);
-                    } else {
-                        _loadFilterOptions(null);
-                    }
-                } else {
-                    _loadFilterOptions(null);
-                }
-            }
-        });
     }
 
     /**
@@ -108,38 +66,6 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
         map.put("pageSize", 20);
         map.put("status", status);
         map.put("bizformId", bizFormId); //自定义筛选字段
-
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL() +
-//                FinalVariables.wfinstance).create(IWfInstance.class).
-//                getApproveWfInstancesList(map, new Callback<MySubmitWflnstance>() {
-//                    @Override
-//                    public void success(MySubmitWflnstance mySubmitWflnstance, Response response) {
-//                        HttpErrorCheck.checkResponse("【我审批的】列表数据：", response);
-//                        crolView.setListRefreshComplete();
-//                        if (null == mySubmitWflnstance) {
-//                            return;
-//                        }
-//                        ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
-//                        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
-//                            crolView.showMsg("没有更多数据了");
-//                            return;
-//                        }
-//                        if (!isTopAdd) {
-//                            lstData.addAll(lstDataTemp);
-//                        } else {
-//                            lstData = lstDataTemp;
-//                        }
-//                        datas = WfinstanceUitls.convertGroupApproveData(lstData);
-//                        crolView.bindListData(datas);
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error, crolView.getLoading(), page == 1 ? true : false);
-//                        crolView.setListRefreshComplete();
-//                    }
-//                });
-
         WfinstanceService.getApproveWfInstancesList(map).subscribe(new DefaultLoyoSubscriber<MySubmitWflnstance>() {
             @Override
             public void onError(Throwable e) {
@@ -177,7 +103,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
      * 初始化顶部菜单
      */
 
-    public void _loadFilterOptions(List<BizForm> bizForms) {
+    public void loadFilterOptions(List<BizForm> bizForms) {
         List<FilterModel> options = new ArrayList<>();
         options.add(ApproveStatusMenuModel.getFilterModel());
         if (bizForms != null) {
@@ -205,8 +131,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
     }
 
     public void loadFilterOptions() {
-
-        getWfBizForms();
+        loadFilterOptions(WfinstanceBizformConfig.getBizform(true));
     }
 
     /**

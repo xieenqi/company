@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.point.ICheckPoint;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -42,8 +42,8 @@ public class ChildTaskEdit extends BaseActivity {
     private TextView tv_title_1;
     private TaskCheckPoint data;
     private String TaskId;
-    private ArrayList<NewUser> reponserData;
-    private NewUser newUser;//负责人 信息
+    private ArrayList<OrganizationalMember> reponserData;
+    private OrganizationalMember newUser;//负责人 信息
     private Intent mIntent;
     private boolean isReponser;
 
@@ -60,7 +60,7 @@ public class ChildTaskEdit extends BaseActivity {
         mIntent = getIntent();
         data = (TaskCheckPoint) mIntent.getSerializableExtra("TaskEdit");
         TaskId = mIntent.getStringExtra("TaskId");
-        reponserData = (ArrayList<NewUser>)mIntent.getSerializableExtra("allUsers");
+        reponserData = (ArrayList<OrganizationalMember>)mIntent.getSerializableExtra("allUsers");
         isReponser = mIntent.getBooleanExtra("isReponser",false);
 
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
@@ -180,7 +180,7 @@ public class ChildTaskEdit extends BaseActivity {
     protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK&&requestCode==300){
-            newUser=(NewUser) data.getSerializableExtra("user");
+            newUser=(OrganizationalMember) data.getSerializableExtra("user");
             tv_responser.setText(newUser.getName());
         }
     }

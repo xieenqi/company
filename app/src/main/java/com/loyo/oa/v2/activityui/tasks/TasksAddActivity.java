@@ -35,7 +35,7 @@ import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
@@ -148,13 +148,13 @@ public class TasksAddActivity extends BaseActivity {
 
     private AlertDialog dialog_Product;
     private ImageGridViewAdapter imageGridViewAdapter;
-    private NewUser newUser;
+    private OrganizationalMember newUser;
     private CornBody cornBody;
     private StringBuffer strBuf;
     private Members members;
     private PostBizExtData bizExtData;
-    private ArrayList<NewUser> userss;
-    private ArrayList<NewUser> depts;
+    private ArrayList<OrganizationalMember> userss;
+    private ArrayList<OrganizationalMember> depts;
     private long mDeadline;
     private int remindTime;
     private int mRemind = 0;
@@ -225,13 +225,13 @@ public class TasksAddActivity extends BaseActivity {
                 joinName = new StringBuffer();
                 joinUserId = new StringBuffer();
                 if (null != members.depts) {
-                    for (NewUser newUser : members.depts) {
+                    for (OrganizationalMember newUser : members.depts) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
                 }
                 if (null != members.users) {
-                    for (NewUser newUser : members.users) {
+                    for (OrganizationalMember newUser : members.users) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
@@ -757,7 +757,7 @@ public class TasksAddActivity extends BaseActivity {
 
             /*用户单选, 负责人*/
             case FinalVariables.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
+                OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
                 newUser = u;
                 tv_responsiblePerson.setText(newUser.getName());
                 break;
@@ -771,13 +771,13 @@ public class TasksAddActivity extends BaseActivity {
                     joinName = new StringBuffer();
                     joinUserId = new StringBuffer();
                     if (null != members.depts) {
-                        for (NewUser newUser : members.depts) {
+                        for (OrganizationalMember newUser : members.depts) {
                             joinName.append(newUser.getName() + ",");
                             joinUserId.append(newUser.getId() + ",");
                         }
                     }
                     if (null != members.users) {
-                        for (NewUser newUser : members.users) {
+                        for (OrganizationalMember newUser : members.users) {
                             joinName.append(newUser.getName() + ",");
                             joinUserId.append(newUser.getId() + ",");
                         }

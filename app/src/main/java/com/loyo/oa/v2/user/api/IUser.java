@@ -1,8 +1,8 @@
 package com.loyo.oa.v2.user.api;
 
-import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,15 +17,12 @@ import rx.Observable;
  * Created by EthanGong on 2016/12/21.
  */
 
-public interface I2User {
+public interface IUser {
     @GET("/")
     ArrayList<Department> getOrganization();
 
     @GET("/")
     Observable<ArrayList<Department>> asynGetOrganization();
-
-    @GET("/user/subordinates")
-    ArrayList<User> getSubordinates();
 
     @PUT("/api/v2/user/{userId}/profile")
     Observable<User> updateProfile(@Path("userId") String id, @Body HashMap<String, Object> map);
@@ -37,13 +34,13 @@ public interface I2User {
      * @param id
      */
     @GET("/user/{id}/newprofile")
-    Observable<NewUser> getUserById(@Path("id") String id);
+    Observable<BaseResponse<User>> getUserById(@Path("id") String id);
 
     /**
      * 获取个人信息 "/user/profile"改为 "/user/newprofile" 权限管理换接口
      */
     @GET("/user/newprofile")
-    Observable<NewUser> getProfile();
+    Observable<BaseResponse<User>> getProfile();
 
     @PUT("/")
     Observable<Object> updatePassword(@Body HashMap<String, Object> map);

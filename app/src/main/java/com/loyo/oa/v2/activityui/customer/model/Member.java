@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.customer.model;
 
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * 时间 : 15/9/30.
  */
 public class Member implements Serializable {
-    private NewUser user;
+    private OrganizationalMember user;
     private boolean viewed;
     private long viewedAt;
 
@@ -31,11 +31,11 @@ public class Member implements Serializable {
         this.viewed = viewed;
     }
 
-    public NewUser getUser() {
+    public OrganizationalMember getUser() {
         return user;
     }
 
-    public void setUser(NewUser user) {
+    public void setUser(OrganizationalMember user) {
         this.user = user;
     }
 }

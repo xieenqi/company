@@ -15,29 +15,29 @@ import java.util.List;
  * 作者 : ykb
  * 时间 : 15/9/30.
  */
-public class NewUser implements Serializable {
+public class OrganizationalMember implements Serializable {
 
     private String id;
     private String name;
     private String avatar;
     private String xpath;
-    private List<NewUser> users = new ArrayList<>();
+    private List<OrganizationalMember> users = new ArrayList<>();
 
 
-    public List<NewUser> getUsers() {
+    public List<OrganizationalMember> getUsers() {
         return users;
     }
 
-    public void setUsers(List<NewUser> users) {
+    public void setUsers(List<OrganizationalMember> users) {
         this.users = users;
     }
 
-    public static String GetNewUserNames(List<NewUser> users) {
+    public static String GetNewUserNames(List<OrganizationalMember> users) {
         if (users == null || users.isEmpty()) {
             return "";
         }
         StringBuffer sb = null;
-        for (NewUser user : users) {
+        for (OrganizationalMember user : users) {
             if (sb == null) {
                 sb = new StringBuffer();
                 sb.append(user.getRealname());
@@ -60,7 +60,7 @@ public class NewUser implements Serializable {
         return avatar;
     }
 
-    public NewUser setAvatar(String avatar) {
+    public OrganizationalMember setAvatar(String avatar) {
         this.avatar = avatar;
         return this;
     }
@@ -69,7 +69,7 @@ public class NewUser implements Serializable {
         return id;
     }
 
-    public NewUser setId(String id) {
+    public OrganizationalMember setId(String id) {
         this.id = id;
         return this;
     }
@@ -78,7 +78,7 @@ public class NewUser implements Serializable {
         return TextUtils.isEmpty(name) ? " " : name;
     }
 
-    public NewUser setName(String name) {
+    public OrganizationalMember setName(String name) {
         this.name = name;
         return this;
     }
@@ -96,11 +96,11 @@ public class NewUser implements Serializable {
             return ((User) o).id.equals(id);
         }
 
-        if (!(o instanceof NewUser)) {
+        if (!(o instanceof OrganizationalMember)) {
             return false;
         }
 
-        NewUser user = (NewUser) o;
+        OrganizationalMember user = (OrganizationalMember) o;
 
         return (user.id).equals(id);
     }

@@ -8,14 +8,14 @@ import java.util.ArrayList;
  */
 public class Members implements Serializable {
 
-    public ArrayList<NewUser> users = new ArrayList<>();
+    public ArrayList<OrganizationalMember> users = new ArrayList<>();
 
-    public ArrayList<NewUser> depts = new ArrayList<>();
+    public ArrayList<OrganizationalMember> depts = new ArrayList<>();
 
 
     /*获取所有参与人*/
-    public ArrayList<NewUser> getAllData() {
-        ArrayList<NewUser> newData = new ArrayList<NewUser>();
+    public ArrayList<OrganizationalMember> getAllData() {
+        ArrayList<OrganizationalMember> newData = new ArrayList<OrganizationalMember>();
         if (users != null) {
             newData.addAll(users);
         }
@@ -25,8 +25,8 @@ public class Members implements Serializable {
         return newData;
     }
 
-    public ArrayList<NewUser> getAllDepts() {
-        ArrayList<NewUser> newDate = new ArrayList<>();
+    public ArrayList<OrganizationalMember> getAllDepts() {
+        ArrayList<OrganizationalMember> newDate = new ArrayList<>();
         if (depts != null) {
             newDate.addAll(depts);
         }

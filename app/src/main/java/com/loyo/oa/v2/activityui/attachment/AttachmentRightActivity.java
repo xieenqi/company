@@ -14,7 +14,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class AttachmentRightActivity extends BaseActivity {
 
     @Extra("users")
-    ArrayList<NewUser> users;
+    ArrayList<OrganizationalMember> users;
     @Extra("data")
     Attachment mAttachment;
     @ViewById
@@ -139,14 +139,14 @@ public class AttachmentRightActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(final UserViewHolder holder, final int position) {
-            final NewUser user = users.get(position);
+            final OrganizationalMember user = users.get(position);
 
             if (user != null) {
                 holder.tv_title.setText(user.getRealname());
 
                 if (!mAttachment.isPublic() && mAttachment.getViewers() != null) {
                     //回显
-                    for (NewUser u : mAttachment.getViewers()) {
+                    for (OrganizationalMember u : mAttachment.getViewers()) {
                         if (u.equals(user)) {
                             holder.cb.setChecked(true);
                             break;
@@ -168,7 +168,7 @@ public class AttachmentRightActivity extends BaseActivity {
                 LogUtil.dll("SIZE:" + mAttachment.getViewers().size());
 
                 /*勾选状态设置*/
-/*                for(NewUser newUser : mAttachment.getViewers()){
+/*                for(OrganizationalMember newUser : mAttachment.getViewers()){
                     LogUtil.dll("可以看的ID:"+newUser.getUsers().get(0).getId());
                     if(user.getId().equals(newUser.getUsers().get(0).getId())){
                         holder.cb.setChecked(true);
@@ -187,7 +187,7 @@ public class AttachmentRightActivity extends BaseActivity {
                                             mAttachment.SetIsPublic(false);
 
                                             if (mAttachment.getViewers() == null) {
-                                                mAttachment.setViewers(new ArrayList<NewUser>());
+                                                mAttachment.setViewers(new ArrayList<OrganizationalMember>());
                                             }
 
                                             mAttachment.getViewers().add(user);
