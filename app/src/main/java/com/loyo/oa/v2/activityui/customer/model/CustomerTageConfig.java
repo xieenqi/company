@@ -26,17 +26,6 @@ public class CustomerTageConfig {
                 });
     }
 
-    /* 读取缓存 */
-    public static ArrayList<Tag> getTageCache() {
-        ArrayList<Tag> result =
-                MainApp.getMainApp().gson.fromJson(
-                        SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.CUSTOMER_TAGE),
-                        new TypeToken<ArrayList<Tag>>() {
-                        }.getType());
-
-        return result;
-    }
-
     // TODO:  增加网络获取的回调
     /* 读取缓存，如果没有缓冲，从网络获取 */
     public static ArrayList<Tag> getTage(boolean fetchIfEmpty) {
@@ -48,6 +37,18 @@ public class CustomerTageConfig {
 
         return result;
     }
+
+    /* 读取缓存 */
+    public static ArrayList<Tag> getTageCache() {
+        ArrayList<Tag> result =
+                MainApp.getMainApp().gson.fromJson(
+                        SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.CUSTOMER_TAGE),
+                        new TypeToken<ArrayList<Tag>>() {
+                        }.getType());
+
+        return result;
+    }
+
 
     /* 清除缓存 */
     private static void clearTage() {

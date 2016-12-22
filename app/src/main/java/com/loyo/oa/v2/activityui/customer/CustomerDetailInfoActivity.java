@@ -27,7 +27,7 @@ import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPresenterimpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
@@ -338,7 +338,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
             /*快捷跟进*/
             case R.id.layout_gj:
-                mIntent = new Intent(CustomerDetailInfoActivity.this, DynamicAddActivity.class);
+                mIntent = new Intent(CustomerDetailInfoActivity.this, FollowAddActivity.class);
                 mIntent.putExtra(Customer.class.getName(), mCustomer);
                 mIntent.putExtra("isDetail", true);
                 mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);

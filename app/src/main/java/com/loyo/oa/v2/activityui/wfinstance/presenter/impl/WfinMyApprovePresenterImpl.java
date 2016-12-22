@@ -44,7 +44,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
 
     private ArrayList<WflnstanceItemData> datas = new ArrayList<>();
     private ArrayList<WflnstanceListItem> lstData = new ArrayList<>();
-    private ArrayList<BizForm> mBizForms = new ArrayList<>();
+//    private ArrayList<BizForm> mBizForms = new ArrayList<>();
 
     private String status;
     private String bizFormId = "";

@@ -12,12 +12,12 @@ import android.widget.LinearLayout;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
-import com.loyo.oa.v2.activityui.followup.persenter.DynamicSelectCustomerAndCuleFragmentPCersener;
-import com.loyo.oa.v2.activityui.followup.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;
+import com.loyo.oa.v2.activityui.followup.persenter.FollowSelectCustomerAndCuleFragmentPCersener;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowSelectCustomerAndCuleFragmentVControl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -34,10 +34,10 @@ import java.util.ArrayList;
  * Created by xeq on 16/11/10.
  */
 
-public class DynamicSelectCustomerFragment extends BaseFragment implements DynamicSelectCustomerAndCuleFragmentVControl, PullToRefreshBase.OnRefreshListener2 {
+public class FollowSelectCustomerFragment extends BaseFragment implements FollowSelectCustomerAndCuleFragmentVControl, PullToRefreshBase.OnRefreshListener2 {
     private LinearLayout ll_search;
     private PullToRefreshListView lv_list;
-    private DynamicSelectCustomerAndCuleFragmentPCersener pCersener;
+    private FollowSelectCustomerAndCuleFragmentPCersener pCersener;
     private MyCustomerAdapter adapter;
     private LoadingLayout ll_loading;
 
@@ -74,7 +74,7 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
                 pCersener.getPageData();
             }
         });
-        pCersener = new DynamicSelectCustomerAndCuleFragmentPCersener(this, DynamicSelectCustomerAndCuleFragmentPCersener.SELECT_CUSTOMER);
+        pCersener = new FollowSelectCustomerAndCuleFragmentPCersener(this, FollowSelectCustomerAndCuleFragmentPCersener.SELECT_CUSTOMER);
         ll_search = (LinearLayout) view.findViewById(R.id.ll_search);
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
@@ -124,7 +124,7 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent mIntent = new Intent(mActivity, DynamicAddActivity.class);
+                Intent mIntent = new Intent(mActivity, FollowAddActivity.class);
                 mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 mIntent.putExtra(Customer.class.getName(), adapter.getItemData(position - 1));
                 startActivity(mIntent);

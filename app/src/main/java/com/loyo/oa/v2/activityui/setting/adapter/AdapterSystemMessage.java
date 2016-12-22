@@ -106,8 +106,9 @@ public class AdapterSystemMessage extends BaseAdapter {
             Intent intent = new Intent();
             if (item.bizzType.getValue() == 24) {
                 return;//系统消息不做调转
-            }  //此处特殊处理 客户 批量改 参与人、负责人
-            else if (item.bizzType.getValue() == SystemMessageItemType.MSG_CUSTOMER.getValue() && item.jumpType != 0) {
+            }  //此处特殊处理 客户 批量改 参与人、负责人 、掉入公海
+            else if (item.bizzType.getValue() == SystemMessageItemType.MSG_CUSTOMER.getValue()
+                    && item.jumpType != 0) {
                 intent.setClass(context, CustomerManagerActivity.class);
                 intent.putExtra(ExtraAndResult.EXTRA_TYPE, item.jumpType);
             } else {

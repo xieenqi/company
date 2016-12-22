@@ -73,7 +73,7 @@ import java.util.List;
  * <p/>
  * Create by yyy on 16/08/24
  */
-public class DynamicAddActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
+public class FollowAddActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
 
     private static final int RECORD_REQUEST = 0x10;//获取录音需要的权限
 
@@ -258,7 +258,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
 //                    Toast("你没有配置录音或者储存权限");
 //                }
                 view=v;
-                if (PermissionTool.requestPermission(DynamicAddActivity.this, new String[]{
+                if (PermissionTool.requestPermission(FollowAddActivity.this, new String[]{
                                 Manifest.permission.RECORD_AUDIO, //录音权限
                                 Manifest.permission.READ_PHONE_STATE,//读取设备权限
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,//写入外存权限
@@ -282,7 +282,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             @Override
             public void recordComplete(String recordPath, String tiem) {
                 isRecordRun = true;
-                ll_record.addView(new CommonRecordItem(DynamicAddActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
+                ll_record.addView(new CommonRecordItem(FollowAddActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
                     @Override
                     public void Success(Record record) {//上传录音完成回调
                         audioInfo.add(record);
@@ -313,7 +313,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                         .setPhotoCount(9 - controller.count())
                         .setShowCamera(true)
                         .setPreviewEnabled(false)
-                        .start(DynamicAddActivity.this);
+                        .start(FollowAddActivity.this);
             }
         });
         /*添加地址处理*/
@@ -326,7 +326,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
 //
 //                Bundle mBundle = new Bundle();
 //                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(DynamicAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                app.startActivityForResult(FollowAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
             }
         });
         /*@相关人员*/
@@ -340,7 +340,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                 }
                 bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
                 Intent intent = new Intent();
-                intent.setClass(DynamicAddActivity.this, ContactPickerActivity.class);
+                intent.setClass(FollowAddActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -412,7 +412,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                             public void run() {
                                 cancelStatusLoading();
                                 AppBus.getInstance().post(new FollowUpRushEvent());
-                                app.finishActivity(DynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                app.finishActivity(FollowAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                             }
                         },1000);
 
@@ -534,7 +534,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             /*选择客户*/
             case R.id.ll_customer:
                 Bundle b = new Bundle();
-                app.startActivityForResult(DynamicAddActivity.this, SigninSelectCustomerSearch.class,
+                app.startActivityForResult(FollowAddActivity.this, SigninSelectCustomerSearch.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
 
@@ -543,7 +543,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                 Bundle bContact = new Bundle();
                 bContact.putSerializable(ExtraAndResult.EXTRA_DATA, mCustomer.contacts);
                 bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-                app.startActivityForResult(DynamicAddActivity.this, FollowContactSelectActivity.class,
+                app.startActivityForResult(FollowAddActivity.this, FollowContactSelectActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                 break;
 
@@ -572,9 +572,9 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                 bCule.putInt(ExtraAndResult.EXTRA_TYPE, ClueTypeEnum.myCule.getType());
                 bCule.putBoolean("isSelect", true);
                 bCule.putBoolean("isResult", true);
-                app.startActivityForResult(DynamicAddActivity.this, ClueSearchActivity.class,
+                app.startActivityForResult(FollowAddActivity.this, ClueSearchActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, bCule);
-//                app.startActivity(DynamicAddActivity.this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bCule);
+//                app.startActivity(FollowAddActivity.this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bCule);
                 break;
         }
     }

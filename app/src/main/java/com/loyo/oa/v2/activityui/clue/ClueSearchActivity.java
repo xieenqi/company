@@ -24,7 +24,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -151,7 +151,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
                     Intent intent = new Intent();
                     intent.putExtra(ClueListItem.class.getName(), listData.get(position - 1));
                     intent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
-                    intent.setClass(ClueSearchActivity.this, DynamicAddActivity.class);
+                    intent.setClass(ClueSearchActivity.this, FollowAddActivity.class);
                     if (isResult) {
                         setResult(RESULT_OK, intent);
                         onBackPressed();
