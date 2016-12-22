@@ -24,8 +24,8 @@ public interface IStatistics {
      * @param map
      * @param callback statistics/query?startAt=1465747200&endAt=1466352000
      */
-    @GET("/statistics/query")
-    void getNoticeList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
+//    @GET("/statistics/query")
+//    void getNoticeList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
 
     /**
      * 获取 【过程统计】 的 今日 本周 数据
@@ -33,8 +33,8 @@ public interface IStatistics {
      * @param map
      * @param callback
      */
-    @GET("/statistics/process/query")
-    void getProcessList(@QueryMap HashMap<String, Object> map, Callback<List<HttpProcess>> callback);
+//    @GET("/statistics/process/query")
+//    void getProcessList(@QueryMap HashMap<String, Object> map, Callback<List<HttpProcess>> callback);
 
     /**
      * 获取 【增量统计】 的 今日 本周 数据
@@ -42,8 +42,8 @@ public interface IStatistics {
      * @param map
      * @param callback
      */
-    @GET("/statistics/bulking/query")
-    void getBulkingList(@QueryMap HashMap<String, Object> map, Callback<List<HttpBulking>> callback);
+//    @GET("/statistics/bulking/query")
+//    void getBulkingList(@QueryMap HashMap<String, Object> map, Callback<List<HttpBulking>> callback);
 
     /**
      * 获取 【业绩目标】 的 本周 本月 数据
@@ -51,8 +51,8 @@ public interface IStatistics {
      * @param map
      * @param callback
      */
-    @GET("/statistics/achieve/query")
-    void getAchievesList(@QueryMap HashMap<String, Object> map, Callback<List<HttpAchieves>> callback);
+//    @GET("/statistics/achieve/query")
+//    void getAchievesList(@QueryMap HashMap<String, Object> map, Callback<List<HttpAchieves>> callback);
 
     /**
      * 获取 【销售漏斗】 的 本周 本月 数据
@@ -60,6 +60,6 @@ public interface IStatistics {
      * @param map
      * @param callback
      */
-    @GET("/statistics/salechance/query")
-    void getFunnelList(@QueryMap HashMap<String, Object> map, Callback<List<HttpSalechance>> callback);
+//    @GET("/statistics/salechance/query")
+//    void getFunnelList(@QueryMap HashMap<String, Object> map, Callback<List<HttpSalechance>> callback);
 }

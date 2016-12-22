@@ -16,13 +16,16 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.adapter.FunnelDataAdapter;
 import com.loyo.oa.v2.activityui.home.adapter.ProcessDataAdapter;
+import com.loyo.oa.v2.activityui.home.api.StatisticsService;
 import com.loyo.oa.v2.activityui.home.bean.HttpAchieves;
 import com.loyo.oa.v2.activityui.home.bean.HttpBulking;
 import com.loyo.oa.v2.activityui.home.bean.HttpProcess;
 import com.loyo.oa.v2.activityui.home.bean.HttpSalechance;
 import com.loyo.oa.v2.activityui.home.bean.HttpStatistics;
 import com.loyo.oa.v2.activityui.home.cusview.LoopView;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.point.IStatistics;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -161,11 +164,42 @@ public class HomeStatisticsFragment extends BaseFragment {
         rb_achieves_week.setChecked(true);
         rb_funnel_week.setChecked(true);
         HashMap<String, Object> map = new HashMap<>();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
-                .create(IStatistics.class).getNoticeList(map, new Callback<HttpStatistics>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
+//                .create(IStatistics.class).getNoticeList(map, new Callback<HttpStatistics>() {
+//            @Override
+//            public void success(HttpStatistics httpStatistics, Response response) {
+//                HttpErrorCheck.checkResponse("销售统计全部数据：", response);
+//                srl_refresh.setRefreshing(false);
+//                if (null == httpStatistics) {
+//                    return;
+//                } else {
+//                    if (null != httpStatistics.process)
+//                        setprocessData(httpStatistics.process);
+//                    if (null != httpStatistics.bulking)
+//                        setBulkingData(httpStatistics.bulking);
+//                    if (null != httpStatistics.salechance)
+//                        setFunnelData(httpStatistics.salechance);
+//                    if (null != httpStatistics.achieves)
+//                        setAchievesData(httpStatistics.achieves);
+//                }
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                srl_refresh.setRefreshing(false);
+//            }
+//        });
+
+        StatisticsService.getNoticeList(map).subscribe(new DefaultLoyoSubscriber<HttpStatistics>() {
             @Override
-            public void success(HttpStatistics httpStatistics, Response response) {
-                HttpErrorCheck.checkResponse("销售统计全部数据：", response);
+            public void onError(Throwable e) {
+                super.onError(e);
+                srl_refresh.setRefreshing(false);
+            }
+
+            @Override
+            public void onNext(HttpStatistics httpStatistics) {
                 srl_refresh.setRefreshing(false);
                 if (null == httpStatistics) {
                     return;
@@ -180,12 +214,6 @@ public class HomeStatisticsFragment extends BaseFragment {
                         setAchievesData(httpStatistics.achieves);
                 }
             }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                srl_refresh.setRefreshing(false);
-            }
         });
     }
 
@@ -196,17 +224,31 @@ public class HomeStatisticsFragment extends BaseFragment {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
-                .create(IStatistics.class).getProcessList(map, new Callback<List<HttpProcess>>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
+//                .create(IStatistics.class).getProcessList(map, new Callback<List<HttpProcess>>() {
+//            @Override
+//            public void success(List<HttpProcess> result, Response response) {
+//                HttpErrorCheck.checkResponse("【过程统计】数据：", response);
+//                setprocessData(result);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+
+        StatisticsService.getProcessList(map).subscribe(new DefaultLoyoSubscriber<List<HttpProcess>>() {
             @Override
-            public void success(List<HttpProcess> result, Response response) {
-                HttpErrorCheck.checkResponse("【过程统计】数据：", response);
-                setprocessData(result);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+            public void onNext(List<HttpProcess> httpProcesses) {
+                DialogHelp.cancelLoading();
+                setprocessData(httpProcesses);
             }
         });
     }
@@ -218,17 +260,31 @@ public class HomeStatisticsFragment extends BaseFragment {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
-                .create(IStatistics.class).getBulkingList(map, new Callback<List<HttpBulking>>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
+//                .create(IStatistics.class).getBulkingList(map, new Callback<List<HttpBulking>>() {
+//            @Override
+//            public void success(List<HttpBulking> result, Response response) {
+//                HttpErrorCheck.checkResponse("【增量统计】数据：", response);
+//                setBulkingData(result);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+
+        StatisticsService.getBulkingList(map).subscribe(new DefaultLoyoSubscriber<List<HttpBulking>>() {
             @Override
-            public void success(List<HttpBulking> result, Response response) {
-                HttpErrorCheck.checkResponse("【增量统计】数据：", response);
-                setBulkingData(result);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+            public void onNext(List<HttpBulking> httpBulkings) {
+                DialogHelp.cancelLoading();
+                setBulkingData(httpBulkings);
             }
         });
     }
@@ -240,17 +296,31 @@ public class HomeStatisticsFragment extends BaseFragment {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
-                .create(IStatistics.class).getAchievesList(map, new Callback<List<HttpAchieves>>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
+//                .create(IStatistics.class).getAchievesList(map, new Callback<List<HttpAchieves>>() {
+//            @Override
+//            public void success(List<HttpAchieves> result, Response response) {
+//                HttpErrorCheck.checkResponse("【业绩目标】数据：", response);
+//                setAchievesData(result);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+
+        StatisticsService.getAchievesList(map).subscribe(new DefaultLoyoSubscriber<List<HttpAchieves>>() {
             @Override
-            public void success(List<HttpAchieves> result, Response response) {
-                HttpErrorCheck.checkResponse("【业绩目标】数据：", response);
-                setAchievesData(result);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+            public void onNext(List<HttpAchieves> result) {
+                DialogHelp.cancelLoading();
+                setAchievesData(result);
             }
         });
     }
@@ -262,17 +332,31 @@ public class HomeStatisticsFragment extends BaseFragment {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
-                .create(IStatistics.class).getFunnelList(map, new Callback<List<HttpSalechance>>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
+//                .create(IStatistics.class).getFunnelList(map, new Callback<List<HttpSalechance>>() {
+//            @Override
+//            public void success(List<HttpSalechance> result, Response response) {
+//                HttpErrorCheck.checkResponse("【销售漏斗】数据：", response);
+//                setFunnelData(result);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+
+        StatisticsService.getFunnelList(map).subscribe(new DefaultLoyoSubscriber<List<HttpSalechance>>() {
             @Override
-            public void success(List<HttpSalechance> result, Response response) {
-                HttpErrorCheck.checkResponse("【销售漏斗】数据：", response);
-                setFunnelData(result);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+            public void onNext(List<HttpSalechance> result) {
+                DialogHelp.cancelLoading();
+                setFunnelData(result);
             }
         });
     }
