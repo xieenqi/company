@@ -50,9 +50,10 @@ public class BaseActivity extends Activity {
 
     protected MainApp app;
     protected boolean isNeedLogin = true;
-    public static Context mContext;
+    public Context mContext;
+    public static Context mActivity;
     public CustomProgressDialog customProgressDialog;
-//    public Intent rushTokenIntent;
+    //    public Intent rushTokenIntent;
 //    private int mTouchViewGroupId;
     public SweetAlertDialogView sweetAlertDialogView;
 
@@ -83,6 +84,7 @@ public class BaseActivity extends Activity {
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         app = (MainApp) getApplicationContext();
         mContext = this;
+        mActivity = this;
 //        mDetector = new GestureDetector(this, this);
         com.loyo.oa.v2.common.event.AppBus.getInstance().register(this);
         ExitActivity.getInstance().addActivity(this);
@@ -121,6 +123,7 @@ public class BaseActivity extends Activity {
         }
         customProgressDialog = null;
         super.onDestroy();
+        mActivity = null;
     }
 
     @Subscribe
@@ -402,15 +405,15 @@ public class BaseActivity extends Activity {
 
     /**
      * 展示带成功失败动画加载框
-     * */
-    public void showStatusLoading(boolean outTouch){
-        DialogHelp.showStatusLoading(outTouch,this);
+     */
+    public void showStatusLoading(boolean outTouch) {
+        DialogHelp.showStatusLoading(outTouch, this);
     }
 
     /**
      * 关闭带成功失败动画加载框
-     * */
-    public void cancelStatusLoading(){
+     */
+    public void cancelStatusLoading() {
         DialogHelp.cancelStatusLoading();
     }
 

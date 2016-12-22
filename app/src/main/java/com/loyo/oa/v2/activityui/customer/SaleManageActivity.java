@@ -185,7 +185,7 @@ public class SaleManageActivity extends BaseLoadingActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, isChanged ? RESULT_OK : RESULT_CANCELED, new Intent());
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isChanged ? RESULT_OK : RESULT_CANCELED, new Intent());
     }
 
     @Override

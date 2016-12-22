@@ -146,8 +146,7 @@ public class HttpErrorCheck {
      * loading 报错 error信息走Error返回的
      *
      * @param error
-     * @param loadingLayout
-//     * @param isLoading     true 只显示loading  false Toast
+     * @param loadingLayout //     * @param isLoading     true 只显示loading  false Toast
      */
     public static void checkError(RetrofitError error, LoadingLayout loadingLayout) {
         DialogHelp.cancelLoading();
@@ -383,7 +382,7 @@ public class HttpErrorCheck {
     }
 
     private static void showDilog(String msg) {
-        final SweetAlertDialogView doalog = new SweetAlertDialogView(BaseActivity.mContext);
+        final SweetAlertDialogView doalog = new SweetAlertDialogView(BaseActivity.mActivity);
         doalog.alertMessageClick(new OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
