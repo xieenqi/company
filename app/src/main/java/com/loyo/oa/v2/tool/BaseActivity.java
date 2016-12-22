@@ -51,7 +51,6 @@ public class BaseActivity extends Activity {
     protected MainApp app;
     protected boolean isNeedLogin = true;
     public Context mContext;
-    public static Context mActivity;
     public CustomProgressDialog customProgressDialog;
     //    public Intent rushTokenIntent;
 //    private int mTouchViewGroupId;
@@ -84,7 +83,6 @@ public class BaseActivity extends Activity {
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         app = (MainApp) getApplicationContext();
         mContext = this;
-        mActivity = this;
 //        mDetector = new GestureDetector(this, this);
         com.loyo.oa.v2.common.event.AppBus.getInstance().register(this);
         ExitActivity.getInstance().addActivity(this);
@@ -123,7 +121,6 @@ public class BaseActivity extends Activity {
         }
         customProgressDialog = null;
         super.onDestroy();
-        mActivity = null;
     }
 
     @Subscribe

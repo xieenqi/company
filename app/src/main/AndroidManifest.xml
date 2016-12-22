@@ -435,6 +435,12 @@
             android:name=".tool.UpdateTipActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
+        <!-- 此页面是一个透明且全屏的页面 -->
+        <activity
+            android:name=".activityui.login.DialogTipActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+
         <activity
             android:name=".activityui.attachment.AttachmentRightActivity_"
             android:launchMode="singleTop"
