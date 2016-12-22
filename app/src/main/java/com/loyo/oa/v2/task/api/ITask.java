@@ -1,15 +1,13 @@
-package com.loyo.oa.v2.point;
+package com.loyo.oa.v2.task.api;
 
+import com.loyo.oa.v2.activityui.tasks.bean.TaskTpl;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskRecord;
-import com.loyo.oa.v2.activityui.tasks.bean.TaskTpl;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.tool.RCallback;
 
 import java.util.HashMap;
 
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
@@ -24,16 +22,16 @@ public interface ITask {
 
     /*获取任务信息*/
     @GET("/task/{Id}")
-    void getTask(@Path("Id") String Id, @Query("key") String key, retrofit.Callback<Task> cb);
+    Observable<Task> getTask(@Path("Id") String Id, @Query("key") String key);
 
     @DELETE("/task/{Id}")
-    void deleteTask(@Path("Id") String Id, retrofit.Callback<Task> cb);
+    Observable<Task> deleteTask(@Path("Id") String Id);
 
     @GET(FinalVariables.tasks + "template/{id}")
-    void getTpl(@Path("id") String id, Callback<TaskTpl> cb);
+    Observable<TaskTpl> getTpl(@Path("id") String id);
 
     @DELETE(FinalVariables.tasks + "template/{id}")
-    void deleteTpl(@Path("id") String id, Callback<TaskTpl> cb);
+    Observable<TaskTpl> deleteTpl(@Path("id") String id);
 
     @GET("/task/query")
     Observable<PaginationX<Task>> getList(@QueryMap HashMap<String, Object> body);
@@ -48,17 +46,17 @@ public interface ITask {
      * 获取任务列表数据
      * */
     @GET("/task/query")
-    void getTasks(@QueryMap HashMap<String, Object> body, Callback<PaginationX<Task>> callback);
+    Observable<PaginationX<Task>> getTasks(@QueryMap HashMap<String, Object> body);
 
     /**
      * 获取任务列表数据(v2.2 精简接口)
      * */
     @GET("/task/query/mobile/simplify")
-    void getTasksData(@QueryMap HashMap<String, Object> body, Callback<PaginationX<TaskRecord>> callback);
+    Observable<PaginationX<TaskRecord>> getTasksData(@QueryMap HashMap<String, Object> body);
 
     /*创建任务*/
     @POST("/task")
-    void create(@Body HashMap<String, Object> body, retrofit.Callback<Task> cb);
+    Observable<Task> create(@Body HashMap<String, Object> body);
 
     /*更新任务 弃用*/
     @PUT("/task/{Id}")
@@ -66,23 +64,23 @@ public interface ITask {
 
     /*更新任务*/
     @PUT("/task/{Id}")
-    void updateTask(@Path("Id") String Id, @Body HashMap<String, Object> body,RCallback<Task> callback);
+    Observable<Task> updateTask(@Path("Id") String Id, @Body HashMap<String, Object> body);
 
     /*修改参与人*/
     @PUT("/task/{Id}")
-    void updateJioner(@Path("Id") String Id, @Body HashMap<String, Object> body, RCallback<Task> callback);
+    Observable<Task> updateJioner(@Path("Id") String Id, @Body HashMap<String, Object> body);
 
     /*任务完成*/
     @PUT("/task/{id}/finished")
-    void commitTask(@Path("id") String id, Callback<Task> callback);
+    Observable<Task> commitTask(@Path("id") String id);
 
     /*任务审核*/
     @PUT("/task/{id}/review")
-    void verifyTask(@Path("id") String id, @Body HashMap<String, Object> map, RCallback<Task> callback);
+    Observable<Task> verifyTask(@Path("id") String id, @Body HashMap<String, Object> map);
 
     /*更新子任务状态*/
     @PUT("/task/{id}/checkitemstatus/{cid}")
-    void updatesTask(@Path("id") String id, @Path("cid") String cid, @Body HashMap<String, Object> map, RCallback<Task> callback);
+    Observable<Task> updatesTask(@Path("id") String id, @Path("cid") String cid, @Body HashMap<String, Object> map);
 
 
 //       @Param bizId query int true "业务 Id"
