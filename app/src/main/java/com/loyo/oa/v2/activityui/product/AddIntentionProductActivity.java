@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.sale;
+package com.loyo.oa.v2.activityui.product;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
-import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activityui.sale.adapter.ProductsRadioListViewAdapter;
 import com.loyo.oa.v2.activityui.sale.contract.AddIntentionProductContract;
 import com.loyo.oa.v2.activityui.sale.presenter.AddIntentionProductPresenterImpl;
@@ -27,21 +26,12 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Product;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【新增意向产品】

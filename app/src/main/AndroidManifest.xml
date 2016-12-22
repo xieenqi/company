@@ -578,12 +578,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activityui.sale.IntentionProductActivity"
+            android:name=".activityui.product.IntentionProductActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activityui.sale.AddIntentionProductActivity"
+            android:name=".activityui.product.AddIntentionProductActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
@@ -832,6 +832,11 @@
             android:name="com.loyo.oa.photo.PhotoPagerActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".activityui.product.SelectProductActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
 
         <supports-screens
             android:anyDensity="true"

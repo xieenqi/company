@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.sale;
+package com.loyo.oa.v2.activityui.product;
 
 import android.content.Intent;
 import android.os.Bundle;
