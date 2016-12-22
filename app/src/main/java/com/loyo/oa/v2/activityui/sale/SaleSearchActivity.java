@@ -209,6 +209,7 @@ public class SaleSearchActivity extends BaseLoadingActivity implements PullToRef
                 listData = saleList.records;
             }
             adapter.setAdapter();
+            ll_loading.setStatus(LoadingLayout.Success);
             if (listData.size() == 0)
                 ll_loading.setStatus(LoadingLayout.Empty);
         } catch (NullPointerException e) {
