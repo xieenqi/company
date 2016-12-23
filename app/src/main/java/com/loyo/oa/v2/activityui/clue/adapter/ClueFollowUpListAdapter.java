@@ -177,9 +177,11 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         if (null != model.content && !TextUtils.isEmpty(model.content)) {
             if (model.content.contains("<p>")) {
                 holder.setContent(holder.ll_web, model.content);
+                holder.tv_memo.setVisibility(View.GONE);
             } else {
                 holder.tv_memo.setVisibility(View.VISIBLE);
                 holder.tv_memo.setText(model.content);
+                holder.ll_web.removeAllViews();
             }
         }
 
