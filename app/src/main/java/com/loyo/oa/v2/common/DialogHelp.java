@@ -31,8 +31,8 @@ public class DialogHelp {
 
     /**
      * 带成功,失败的加载Dialog
-     * */
-    public static void showStatusLoading(boolean outTouch,Context context){
+     */
+    public static void showStatusLoading(boolean outTouch, Context context) {
         loadStatusDialog = new LoadStatusView(context);
         loadStatusDialog.setCanceledOnTouchOutside(outTouch);
         loadStatusDialog.show();
@@ -40,8 +40,8 @@ public class DialogHelp {
 
     /**
      * 成功
-     * */
-    public static void successStatusLoad(){
+     */
+    public static void successStatusLoad() {
         if (loadStatusDialog != null) {
             loadStatusDialog.animSuccessEmbl();
         }
@@ -49,15 +49,20 @@ public class DialogHelp {
 
     /**
      * 失败
-     * */
-    public static void errorStatusLoading(String message){
+     */
+    public static void errorStatusLoading(String message) {
         if (loadStatusDialog != null) {
             loadStatusDialog.animErrorEmbl(message);
         }
     }
 
-    public static void cancelStatusLoading(){
-        loadStatusDialog.dismiss();
+    public static void cancelStatusLoading() {
+        try {
+            loadStatusDialog.dismiss();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            LogUtil.d("提交 loading 取消异常!!!!!!");
+        }
     }
 
     /**
