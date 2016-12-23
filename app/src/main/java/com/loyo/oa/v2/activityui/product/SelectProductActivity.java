@@ -4,11 +4,18 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.product.adapter.SelectProductAdapter;
+import com.loyo.oa.v2.activityui.product.view.RouteControlsView;
+import com.loyo.oa.v2.activityui.product.view.SelectProductMenu;
+import com.loyo.oa.v2.activityui.product.viewcontrol.SelectProMenuView;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 
@@ -17,13 +24,14 @@ import com.loyo.oa.v2.tool.BaseActivity;
  * Created by yyy on 16/12/21.
  */
 
-public class SelectProductActivity extends BaseActivity implements View.OnClickListener{
+public class SelectProductActivity extends BaseActivity implements View.OnClickListener,SelectProMenuView {
 
     private ImageView img_back;
     private TextView  tv_title,tv_add;
     private LinearLayout ll_search;
-    private PopupWindow popupwindow;
-
+    private ListView lv_listview;
+    private SelectProductMenu productMenu;
+    private SelectProductAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,37 +40,28 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
         initUI();
     }
 
+    void bindAdapter(){
+        if(null == mAdapter){
+            mAdapter = new SelectProductAdapter(this);
+            lv_listview.setAdapter(mAdapter);
+        }else{
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
     void initUI() {
         ll_search = (LinearLayout) findViewById(R.id.ll_search);
         img_back = (ImageView) findViewById(R.id.img_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_add = (TextView) findViewById(R.id.tv_add);
+        tv_add   = (TextView) findViewById(R.id.tv_add);
+        lv_listview   = (ListView) findViewById(R.id.lv_listview);
+
         tv_title.setText("选择产品");
         tv_add.setText("分类");
 
         bindOnClick();
-        initmPopupWindowView();
-    }
-        public void initmPopupWindowView() {
-            View customView = getLayoutInflater().inflate(R.layout.view_selectproduct,null, false);
-            popupwindow = new PopupWindow(customView);
-            popupwindow.setAnimationStyle(R.style.SelectProductViewAnim);
-            popupwindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-            popupwindow.setHeight(600);
-            popupwindow.setOutsideTouchable(true);
-
-
-            // 自定义view添加触摸事件
-            customView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (popupwindow != null && popupwindow.isShowing()) {
-                        popupwindow.dismiss();
-                        popupwindow = null;
-                    }
-                    return false;
-                }
-            });
+        productMenu = new SelectProductMenu(this,this);
+        bindAdapter();
     }
 
     void bindOnClick(){
@@ -87,8 +86,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
 
             // 分类
             case R.id.tv_add:
-                Toast("分类");
-                popupwindow.showAsDropDown(v);
+                productMenu.showPopupWindow(v);
                 break;
 
             // 搜索
@@ -97,5 +95,19 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
                 break;
 
         }
+    }
+
+    @Override
+    public void popWindowShowEmbl() {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 0.7f;
+        getWindow().setAttributes(lp);
+    }
+
+    @Override
+    public void popWindowDimsEmbl() {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 1f;
+        getWindow().setAttributes(lp);
     }
 }
