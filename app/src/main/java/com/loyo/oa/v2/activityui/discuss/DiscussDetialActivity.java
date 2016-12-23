@@ -401,6 +401,9 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      * @param mineMessage
      */
     private void addMineMessge(final long time, final String mineMessage) {
+        //页面没有数据的时候发送信息就展现页面
+        if (mPageDiscussion.getRecords().size() == 0)
+           ll_loading.setStatus(LoadingLayout.Success);
         messages.put(time, mineMessage);
         HttpDiscussDet discussion = new HttpDiscussDet();
         HttpCrecter creacter = new HttpCrecter();
@@ -430,8 +433,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                     @Override
                     public void success(final Discussion d, final Response response) {
                         HttpErrorCheck.checkResponse(response);
-//                        if (mPageDiscussion.getRecords().size() == 0)
-                            getPageData();
+
                     }
 
                     @Override
