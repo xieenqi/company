@@ -2,7 +2,9 @@ package com.loyo.oa.v2.activityui.customer.adapter;
 
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +12,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.permission.BusinessOperation;
@@ -74,6 +78,7 @@ public class CommCustomerAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final Customer customer = mCustomers.get(position);
+        final String id = customer.getId();
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_common_customer, null, false);
         }
@@ -99,7 +104,8 @@ public class CommCustomerAdapter extends BaseAdapter {
 
         tv_title.setText(customer.name);
         String tagItems = Utils.getTagItems(customer);
-        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
+//        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
+        String recycledAt = customer.recycledAt != 0 ? DateTool.getDateTimeFriendly(customer.recycledAt) : "--";
         img_public.setVisibility(View.INVISIBLE);
         permissionTest(img_public);
         layout_go_where.setVisibility(View.GONE);
@@ -108,7 +114,7 @@ public class CommCustomerAdapter extends BaseAdapter {
         img1.setImageResource(R.drawable.icon_customer_tag);
         img2.setImageResource(R.drawable.icon_customer_follow_time);
         tv_content1.setText("标签：" + tagItems);
-        tv_content2.setText("跟进时间：" + lastActivityAt);
+        tv_content2.setText("丢公海时间：" + recycledAt);
 
 
         img_public.setOnTouchListener(Global.GetTouch());
@@ -116,11 +122,21 @@ public class CommCustomerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {//挑入公海客户
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                        create(ICustomer.class).pickedIn(customer.getId(), new RCallback<Customer>() {
+                        create(ICustomer.class).pickedIn(id, new RCallback<BaseBean>() {
                     @Override
-                    public void success(Customer customer, Response response) {
+                    public void success(BaseBean customer, Response response) {
                         HttpErrorCheck.checkResponse(response);
-                        mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
+                        if (customer.errcode == 0) {
+                            Message msg = new Message();
+                            Bundle mBundle = new Bundle();
+                            msg.what = CustomerManagerActivity.CUSTOMER_COMM_RUSH;
+                            mBundle.putString("id",id);
+                            msg.setData(mBundle);
+                            //mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
+                            mHandler.sendMessage(msg);
+                        } else {
+                            Global.Toast(customer.errmsg);
+                        }
                     }
 
                     @Override

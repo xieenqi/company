@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
@@ -340,7 +341,6 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      * @param isPull 是否是上拉
      */
     private void loadMessage(final boolean isPull) {
-//        showLoading("");
         HashMap<String, Object> body = new HashMap<>();
         body.put("pageIndex", pageIndex + "");
         body.put("pageSize", 5);
@@ -350,9 +350,6 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             @Override
             public void success(final PaginationX<HttpDiscussDet> d, final Response response) {
                 HttpErrorCheck.checkResponse("讨论详情：", response);
-//                if (d == null || d.getRecords().size() == 0) {
-//                    Toast("没有更多信息");
-//                }
                 Collections.reverse(d.getRecords());
                 if (isPull) {
                     mPageDiscussion.getRecords().clear();
@@ -404,6 +401,9 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      * @param mineMessage
      */
     private void addMineMessge(final long time, final String mineMessage) {
+        //页面没有数据的时候发送信息就展现页面
+        if (mPageDiscussion.getRecords().size() == 0)
+           ll_loading.setStatus(LoadingLayout.Success);
         messages.put(time, mineMessage);
         HttpDiscussDet discussion = new HttpDiscussDet();
         HttpCrecter creacter = new HttpCrecter();
@@ -433,6 +433,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                     @Override
                     public void success(final Discussion d, final Response response) {
                         HttpErrorCheck.checkResponse(response);
+
                     }
 
                     @Override
@@ -544,7 +545,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
-        if (! REQUEST_GET_USER.equals(event.request)) {
+        if (!REQUEST_GET_USER.equals(event.request)) {
             return;
         }
         StaffMemberCollection collection = event.data;
@@ -757,7 +758,8 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             final HttpDiscussDet info = datas.get(position);
             if (holder.getClass() == DiscussDetMineViewHolder.class) {
                 DiscussDetMineViewHolder mineHolder = (DiscussDetMineViewHolder) holder;
-                mineHolder.tvMineTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+//                mineHolder.tvMineTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+                mineHolder.tvMineTime.setText(DateTool.getDateTimeFriendly(info.createdAt));
 //                mineHolder.tvContent.setAutoLinkMask(0x01);
                 try {
                     mineHolder.tvContent.setText(info.content);
@@ -779,7 +781,8 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-                otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+//                otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+                otherHolder.mTvOtherTime.setText(DateTool.getDateTimeFriendly(info.createdAt));
                 ImageLoader.getInstance().displayImage(info.creator.avatar, otherHolder.mIvOtherAvatar);
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
                 otherHolder.mIvOtherAvatar.setTag(selectUser);

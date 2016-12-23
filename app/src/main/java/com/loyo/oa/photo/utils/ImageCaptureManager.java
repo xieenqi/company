@@ -10,6 +10,9 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.loyo.oa.common.utils.DateTool;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -34,8 +37,8 @@ public class ImageCaptureManager {
 
   private File createImageFile() throws IOException {
     // Create an image file name
-    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
-    String imageFileName = "JPEG_" + timeStamp + ".jpg";
+//    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
+    String imageFileName = "JPEG_" + DateTool.getFileNameByTime() + ".jpg";
     File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
     if (!storageDir.exists()) {

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.common.utils.ReusePool;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
@@ -93,7 +94,8 @@ public class NoticeAdapter2 extends RecyclerView.Adapter<NoticeAdapter2.Bulletin
     @Override
     public void onBindViewHolder(final BulletinViewHolder holder, final int position) {
         final Bulletin bulletin = mBulletins.get(position);
-        holder.tv_time.setText(MainApp.getMainApp().df3.format(new Date(bulletin.createdAt * 1000)));
+//        holder.tv_time.setText(MainApp.getMainApp().df3.format(new Date(bulletin.createdAt * 1000)));
+        holder.tv_time.setText(DateTool.getDateTimeFriendly(bulletin.createdAt));
         holder.tv_title.setText(bulletin.title);
         holder.tv_content.setText(bulletin.content);
 

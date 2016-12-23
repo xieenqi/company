@@ -9,7 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.common.CommonMethod;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.tool.Utils;
@@ -73,25 +75,30 @@ public class MyCustomerAdapter extends BaseAdapter {
         TextView tv_title = ViewHolder.get(convertView, R.id.tv_title);
         TextView tv_content1 = ViewHolder.get(convertView, R.id.tv_content1);
         TextView tv_content2 = ViewHolder.get(convertView, R.id.tv_content2);
-        TextView tv_content3 = ViewHolder.get(convertView, R.id.tv_content3);
-        TextView tv_content4 = ViewHolder.get(convertView, R.id.tv_distance);
+//        TextView tv_content3 = ViewHolder.get(convertView, R.id.tv_content3);
+//        TextView tv_content4 = ViewHolder.get(convertView, R.id.tv_distance);
+
+        TextView tv_content41 = ViewHolder.get(convertView, R.id.tv_content41);
+        TextView tv_content42 = ViewHolder.get(convertView, R.id.tv_content42);
 
         ImageView img1 = ViewHolder.get(convertView, R.id.img_1);
         ImageView img2 = ViewHolder.get(convertView, R.id.img_2);
-        ImageView img3 = ViewHolder.get(convertView, R.id.img_3);
-        ImageView imgWin = ViewHolder.get(convertView, R.id.iv_win);
+//        ImageView img3 = ViewHolder.get(convertView, R.id.img_3);
+//        ImageView imgWin = ViewHolder.get(convertView, R.id.iv_win);
         ImageView img_public = ViewHolder.get(convertView, R.id.img_public);
-        ImageView img_go_where = ViewHolder.get(convertView, R.id.img_go_where);
+//        ImageView img_go_where = ViewHolder.get(convertView, R.id.img_go_where);
 
 
-        ViewGroup layout1 = ViewHolder.get(convertView, R.id.layout_1);
+//        ViewGroup layout1 = ViewHolder.get(convertView, R.id.layout_1);
         ViewGroup layout2 = ViewHolder.get(convertView, R.id.layout_2);
         ViewGroup layout3 = ViewHolder.get(convertView, R.id.layout_3);
+        ViewGroup layout_4 = ViewHolder.get(convertView, R.id.layout_4);
         ViewGroup layout_go_where = ViewHolder.get(convertView, R.id.layout_go_where);
 
         tv_title.setText(customer.name);
         String tagItems = Utils.getTagItems(customer);
-        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
+//        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
+        String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
 
         img_public.setVisibility(View.GONE);
         layout_go_where.setVisibility(View.GONE);
@@ -103,8 +110,8 @@ public class MyCustomerAdapter extends BaseAdapter {
 
         tv_content1.setText("标签：" + tagItems);
         tv_content2.setText("跟进时间：" + lastActivityAt);
-
-
+        CommonMethod.commonCustomerRecycleTime(customer, layout_4, tv_content41, tv_content42);
         return convertView;
     }
+
 }

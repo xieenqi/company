@@ -276,7 +276,6 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
                 .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
                     @Override
                     public void success(final ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        //HttpErrorCheck.checkCommitSus("上传附件信息",response);
                         if (attachmentForNew != null) {
                             new Handler().postDelayed(new Runnable() {
                                 @Override

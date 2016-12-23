@@ -22,7 +22,6 @@ import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
@@ -30,8 +29,9 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
-import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Record;
@@ -46,8 +46,7 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ISigninNeworFollowUp;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -258,7 +257,7 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         tv_name.setText(mFollowUpDelModel.creator.name);
         tv_contact.setText(mFollowUpDelModel.contactName);
         tv_customername.setText(mFollowUpDelModel.customerName);
-        tv_time.setText(DateTool.getDiffTime(mFollowUpDelModel.createAt));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mFollowUpDelModel.createAt));
 
         /** 设置跟进内容 */
         if (null != mFollowUpDelModel.content && !TextUtils.isEmpty(mFollowUpDelModel.content)) {
@@ -396,7 +395,7 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         /** 电话录音设置 */
         if (null != mFollowUpDelModel.audioUrl && !TextUtils.isEmpty(mFollowUpDelModel.audioUrl)) {
             layout_phonely.setVisibility(View.VISIBLE);
-            tv_audio_length.setText(DateTool.stringForTime(mFollowUpDelModel.audioLength * 1000));
+            tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(mFollowUpDelModel.audioLength * 1000));
             int audioLength = mFollowUpDelModel.audioLength;
             if (audioLength > 0 && audioLength <= 60) {
                 iv_phone_call.setText("000");
@@ -433,7 +432,7 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
      * 评论删除
      */
     private void deleteComment(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -456,7 +455,7 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", id);
         map.put("split", true);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getFollowUpDetails(map, new RCallback<BaseBeanT<FollowUpListModel>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).getFollowUpDetails(map, new RCallback<BaseBeanT<FollowUpListModel>>() {
             @Override
             public void success(BaseBeanT<FollowUpListModel> followuplistmodel, Response response) {
                 HttpErrorCheck.checkResponse("跟进详情", response,ll_loading);
@@ -489,9 +488,9 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         map.put("bizzType", 2);   //1拜访 2跟进
 //        map.put("audioInfo", "");//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(Object object, Response response) {
+            public void success(BaseBeanT<CommentModel> object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
                 msgAudiomMenu.closeMenu();
                 requestDetails();
@@ -515,9 +514,9 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         map.put("bizzType", 2);   //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(Object object, Response response) {
+            public void success(BaseBeanT<CommentModel> object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
                 msgAudiomMenu.closeMenu();
                 requestDetails();

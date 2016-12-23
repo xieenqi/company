@@ -3,7 +3,7 @@ package com.loyo.oa.v2.activityui.followup.viewcontrol;
 
 import android.widget.TextView;
 
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 
 /**
  * Created by loyo_dev1 on 16/11/17.

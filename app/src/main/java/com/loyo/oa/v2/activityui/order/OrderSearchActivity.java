@@ -281,7 +281,7 @@ public class OrderSearchActivity extends BaseLoadingActivity implements PullToRe
                 tv_money.setText(Utils.setValueDouble(item.dealMoney));
                 tv_customer.setText(item.customerName);
                 tv_product.setText(item.proName);
-                tv_time.setText(DateTool.getDiffTime(Long.valueOf(item.createdAt + "")));
+                tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(item.createdAt + "")));
             }
         }
     }

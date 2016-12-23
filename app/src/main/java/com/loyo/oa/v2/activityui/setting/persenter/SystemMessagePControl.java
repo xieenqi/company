@@ -36,7 +36,7 @@ public class SystemMessagePControl implements SystemMesssagePersenter {
     }
 
     @Override
-    public void getPageData(Object... pag) {
+    public void getPageData(final Object... pag) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pag[0] + "");
         map.put("pageSize", 20 + "");
@@ -68,6 +68,7 @@ public class SystemMessagePControl implements SystemMesssagePersenter {
                     @Override
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
+                        vControl.getDataComplete();
                     }
                 });
 

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
@@ -33,7 +34,6 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.ContactAddforExtraData;
@@ -227,7 +227,8 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
             oldStageNmae = mSaleDetails.stageName;
             stageId = mSaleDetails.stageId;
             et_money.setText(Utils.setValueDouble(mSaleDetails.estimatedAmount) + "");
-            tv_estimate.setText(mSaleDetails.estimatedTime != 0 ? app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)) : "");
+//            tv_estimate.setText(mSaleDetails.estimatedTime != 0 ? app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)) : "");
+            tv_estimate.setText(mSaleDetails.estimatedTime != 0 ? DateTool.getDateFriendly(mSaleDetails.estimatedTime) : "");
             estimatedTime = mSaleDetails.estimatedTime;
             intentionProductData = mSaleDetails.proInfos;
             tv_product.setText(getIntentionProductName());
@@ -274,8 +275,11 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
                 int year = datePicker.getYear();
                 int month = datePicker.getMonth();
                 int day = datePicker.getDayOfMonth();
-                tv_estimate.setText(year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day));
-                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_estimate.getText().toString(), "yyyy.MM.dd"));
+//                tv_estimate.setText(year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day));
+//                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_estimate.getText().toString(), "yyyy.MM.dd"));
+                long time=com.loyo.oa.common.utils.DateTool.getStamp(year,month,day);
+                estimatedTime= (int) time;
+                tv_estimate.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(time));
             }
         });
 

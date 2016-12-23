@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateFormatSet;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
@@ -168,10 +169,9 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      * 获取列表
      */
     private void getData() {
-//        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("startAt", "2014-01-01");
-        map.put("endAt", DateTool.getEndAt_ofDay(app.df5));
+        map.put("endAt", DateFormatSet.dateSdf.format(com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis()));
         map.put("customerId", mCustomer.getId());
         map.put("pageIndex", taskPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? tasks.size() >= 20 ? tasks.size() : 20 : 20);
@@ -181,15 +181,12 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             @Override
             public void onCompleted() {
                 lv.onRefreshComplete();
-//                ll_loading.setStatus(LoadingLayout.Success);
-//                cancelLoading();
             }
 
             @Override
             public void onError(final Throwable e) {
                 lv.onRefreshComplete();
                 ll_loading.setStatus(LoadingLayout.Success);
-//                cancelLoading();
             }
 
             @Override

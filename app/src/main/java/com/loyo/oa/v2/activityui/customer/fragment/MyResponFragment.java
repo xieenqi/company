@@ -65,7 +65,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【我fu'ze】列表
+ * 【我负责】列表
  * Created by yyy on 16/6/1.
  */
 public class MyResponFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, MyCustomerFragView {
@@ -91,6 +91,12 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
     private ArrayList<Customer> mCustomers = new ArrayList<>();
     private ArrayList<Tag> mTags;
     private LoadingLayout ll_loading;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
+    }
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -130,8 +136,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
                 getData();
             }
         });
-//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-        mTags = CustomerTageConfig.getTageCache();
+        mTags = CustomerTageConfig.getTage(true);
 
         btn_add = (Button) view.findViewById(R.id.btn_add);
         nearTv = (TextView) view.findViewById(R.id.tv_near_customers);
@@ -147,14 +152,13 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
         btn_add.setOnTouchListener(Global.GetTouch());
 
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-        getData();
         mPresenter = new MyCustomerFragPresenterImpl(getActivity(), this);
         Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
     }
 
     private void loadFilterOptions() {
         List<FilterModel> options = new ArrayList<>();
-        options.add(TimeFilterModel.getFilterModel());
+        options.add(TimeFilterModel.getFilterModel2());
         options.add(TagMenuModel.getTagFilterModel(mTags));
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
@@ -341,6 +345,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
      */
     @Subscribe
     public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
+        LogUtil.dee("我负责 onMyCustomerListRushEvent");
         getData();
     }
 
@@ -350,6 +355,10 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
      */
     @Override
     public void intentAutoInsert(PopupWindow popupWindow) {
+        if (!Utils.isNetworkAvailable(getActivity())) {
+            Toast("请检查您的网络连接");
+            return;
+        }
         popupWindow.dismiss();
         Intent mIntent = new Intent();
         mIntent.setClass(getActivity(), MyContactMailList.class);
@@ -363,6 +372,10 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
      */
     @Override
     public void intentHandInsert(PopupWindow popupWindow) {
+        if (!Utils.isNetworkAvailable(getActivity())) {
+            Toast("请检查您的网络连接");
+            return;
+        }
         popupWindow.dismiss();
         mIntent = new Intent();
         mIntent.setClass(getActivity(), CustomerAddActivity_.class);

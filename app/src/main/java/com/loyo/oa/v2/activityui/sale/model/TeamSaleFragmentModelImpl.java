@@ -26,7 +26,7 @@ public class TeamSaleFragmentModelImpl implements TeamSaleFragmentContract.Model
     }
 
     @Override
-    public void getData(HashMap<String, Object> map) {
+    public void getData(HashMap<String, Object> map, final int page) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleTeamList(map, new RCallback<SaleList>() {
             @Override
             public void success(SaleList saleTeamList, Response response) {

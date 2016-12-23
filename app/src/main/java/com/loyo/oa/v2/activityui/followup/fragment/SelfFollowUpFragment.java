@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -34,8 +33,9 @@ import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
-import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.followup.FollowSelectActivity;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -60,7 +60,8 @@ import java.util.List;
  * 【我的跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
+public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,
+        FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
     private View mView;
     private Button btn_add;
@@ -219,7 +220,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         ll_loading.setStatus(LoadingLayout.Loading);
         mPagination.setPageIndex(1);
         isPullOrDown = true;
-        getData(false);
+        getData(true);
     }
 
 
@@ -227,12 +228,14 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 数据绑定
      */
     public void bindData() {
+        LogUtil.d("开始: " + System.currentTimeMillis());
         if (null == mAdapter) {
             mAdapter = new FollowUpListAdapter(getActivity(), listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }
+        LogUtil.d("结束: " + System.currentTimeMillis());
     }
 
 
@@ -267,7 +270,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", MainApp.user.id);//我的传id,团队则空着
@@ -280,7 +283,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.d("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     /**
@@ -336,11 +339,11 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel modle) {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(true);
+        listModel.get(commentPosition).comments.add(modle);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -348,6 +351,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
+        LogUtil.d("数据: " + System.currentTimeMillis());
         listView.onRefreshComplete();
         if (isPullOrDown) {
             listModel.clear();
@@ -358,6 +362,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
+        ll_loading.setStatus(LoadingLayout.Success);
         if (isPullOrDown && listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
     }
@@ -399,7 +404,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         switch (v.getId()) {
             //新建跟进
             case R.id.btn_add:
-                startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
+                startActivityForResult(new Intent(getActivity(), FollowSelectActivity.class), Activity.RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
         }

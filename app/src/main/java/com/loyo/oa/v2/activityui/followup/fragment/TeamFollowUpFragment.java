@@ -7,8 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,12 +33,12 @@ import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
@@ -147,7 +145,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             }
         });
 //        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
-        mTags= FolloUpConfig.getFolloUpStageCache();
+        mTags = FolloUpConfig.getFolloUpStageCache();
         for (int i = 0; i < mTags.size(); i++) {//过滤掉跟进方式
             if (mTags.get(i).fieldName.contains("activity")) {
                 mTags.remove(i);
@@ -253,11 +251,12 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         });
         initPageData();
     }
+
     private void initPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
         mPagination.setPageIndex(1);
         isPullOrDown = true;
-        getData(false);
+        getData(true);
     }
 
     /**
@@ -303,7 +302,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", userId);
@@ -315,7 +314,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map,mPagination.getPageIndex());
     }
 
     /**
@@ -356,11 +355,11 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel modle) {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(commentPosition).comments.add(modle);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -378,6 +377,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
+        ll_loading.setStatus(LoadingLayout.Success);
         if (isPullOrDown && listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
     }

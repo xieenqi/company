@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
@@ -26,14 +27,18 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.voip.VoIPCallActivity;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -69,7 +74,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     private String contactName;
     private String callNum;
     private String myCall;
-    private int    callType;
+    private int callType;
+
+    private String phoneNum;//用来存储一下电话号码，用在动态授权上
 
     @AfterViews
     void initViews() {
@@ -81,7 +88,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 getContactsFields();
             }
         });
-        layout_add.setVisibility(canEdit?View.VISIBLE:View.GONE);
+        layout_add.setVisibility(canEdit ? View.VISIBLE : View.GONE);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("联系人详情");
         layout_back.setOnTouchListener(Global.GetTouch());
@@ -93,7 +100,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 获取最新 左侧动态字段
      */
     private void getContactsFields() {
-//        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getContactsField(new RCallback<ArrayList<ContactLeftExtras>>() {
                     @Override
@@ -106,7 +112,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     @Override
                     public void failure(RetrofitError error) {
                         super.failure(error);
-                        HttpErrorCheck.checkError(error,ll_loading);
+                        HttpErrorCheck.checkError(error, ll_loading);
                     }
                 });
     }
@@ -118,7 +124,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerContacts(customerId, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkResponse("联系人详情：", response,ll_loading);
+                HttpErrorCheck.checkResponse("联系人详情：", response, ll_loading);
                 customerContact = customer;
                 initData();
             }
@@ -126,7 +132,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error,ll_loading);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
     }
@@ -136,26 +142,32 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 初始化数据
      */
     private void initData() {
-        if (null == leftExtrases || null == customerContact || null == customerContact.contacts
+        /*if (null == leftExtrases || null == customerContact || null == customerContact.contacts
                 || customerContact.contacts.isEmpty()) {
             ll_loading.setStatus(LoadingLayout.Empty);
             return;
+        }*/
+
+        if (null == customerContact.contacts && customerContact.contacts.size() == 0) {
+            ll_loading.setStatus(LoadingLayout.Empty);
+            return;
         }
+
 
         layout_container.removeAllViews();
         ArrayList<Contact> contactsCopy = new ArrayList<>();
         contactsCopy.clear();
 
         /*默认数据放在最前*/
-        for(Contact mContact : customerContact.contacts){
-            if(mContact.isDefault()){
+        for (Contact mContact : customerContact.contacts) {
+            if (mContact.isDefault()) {
                 contactsCopy.add(mContact);
                 break;
             }
         }
         /*非默认联系人排后*/
-        for(Contact mContact : customerContact.contacts){
-            if(!mContact.isDefault()){
+        for (Contact mContact : customerContact.contacts) {
+            if (!mContact.isDefault()) {
                 contactsCopy.add(mContact);
             }
         }
@@ -167,6 +179,43 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         }
 
         cancelLoading();
+    }
+
+
+    @Override
+    public void setPhone(String phone) {
+        //用来保存刚才用户拨打的电话
+        this.phoneNum = phone;
+    }
+
+    //用来处理打电话权限申请
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (Utils.CALL_REQUEST == requestCode) {
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                    Utils.call(CustomerContactManageActivity.this, phoneNum);
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了打电话权限，无法拨出电话");
+                }
+            });
+        }else if(Utils.SEND_SMS_REQUEST==requestCode){
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                     Utils.sendSms(CustomerContactManageActivity.this, phoneNum);
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了发短信权限，无法发送短信");
+                }
+            });
+        }
     }
 
     @Click(R.id.layout_add)
@@ -193,6 +242,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
                 Contact contact = (Contact) data.getSerializableExtra("data");
                 customerContact.contacts.add(contact);
+                LogUtil.dee("contacts:"+MainApp.gson.toJson(customerContact.contacts));
                 initData();
                 break;
 
@@ -225,17 +275,17 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         map.put("contactId", contactId);
         map.put("type", callType);
         map.put("mobile", callNum);
-        LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
+        LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).requestCallBack(map,
                 new RCallback<CallBackCallid>() {
                     @Override
                     public void success(final CallBackCallid callBackCallid, final Response response) {
                         HttpErrorCheck.checkResponse("请求回拨", response);
-                        try{
-                            switch (callBackCallid.errcode){
+                        try {
+                            switch (callBackCallid.errcode) {
                                 case 0:
                                     Bundle mBundle = new Bundle();
-                                    mBundle.putString(ExtraAndResult.WELCOM_KEY,callBackCallid.data.callLogId);
+                                    mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
                                     mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
                                     app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                                     break;
@@ -253,10 +303,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                                     break;
 
                                 default:
-                                    Toast("网络连接失败:"+callBackCallid.errcode);
+                                    Toast("网络连接失败:" + callBackCallid.errcode);
                                     break;
                             }
-                        }catch (NullPointerException e){
+                        } catch (NullPointerException e) {
                             e.printStackTrace();
                             Toast(e.getMessage());
                             finish();
@@ -269,7 +319,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                         HttpErrorCheck.checkError(error);
                     }
                 });
-            }
+    }
 
     /**
      * 拨打商务电话回调
@@ -288,9 +338,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 //
         if (callType == ContactViewGroup.CallbackPhone) {
             requestClientInfo();
-        }else if (callType == ContactViewGroup.DirectPhone)  {
+        } else if (callType == ContactViewGroup.DirectPhone) {
             Bundle mBundle = new Bundle();
-            mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,callNum);
+            mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, callNum);
             mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
             mBundle.putString(VoIPCallActivity.CALLEE_USER_KEY, contactId);
             mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, customerContact.getId());
@@ -303,6 +353,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     public void onPhoneError() {
         Toast("电话号码格式不正确或为空!");
     }
+
 
     /**
      * 删除联系人的回调 xnq
@@ -349,7 +400,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 setDefaultContact(customerContact.getId(), contact.getId(), new RCallback<Contact>() {
                     @Override
                     public void success(final Contact _contact, final Response response) {
-                        HttpErrorCheck.checkResponse("设置默认联系人",response);
+                        HttpErrorCheck.checkResponse("设置默认联系人", response);
                         Intent intent = new Intent();
                         CustomerContactManageActivity.this.setResult(Activity.RESULT_OK, intent);//回调刷新界面
 

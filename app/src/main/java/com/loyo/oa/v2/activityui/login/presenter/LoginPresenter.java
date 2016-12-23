@@ -23,7 +23,7 @@ public interface LoginPresenter {
     void requestStandBy(String username,String password);
 
     /*登录请求成功操作*/
-    void onSuccessEmbl(Token token, Activity mActivity);
+    void onSuccessEmbl(String token, Activity mActivity);
 
     /*登录请求失败操作*/
     void onErrorEmbl();

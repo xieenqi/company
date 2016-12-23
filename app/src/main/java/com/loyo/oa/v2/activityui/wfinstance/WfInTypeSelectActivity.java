@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.adapter.WfInstanceTypeSelectListViewAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.common.WfinstanceBizformConfig;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
@@ -25,6 +26,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -53,6 +55,7 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wfinstance_type_select);
         instance = this;
+        lstData_BizForm = filedBizFormInfo(WfinstanceBizformConfig.getBizform(true));
         initUI();
     }
 
@@ -65,26 +68,24 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
             e.printStackTrace();
         }
 
-        getData_BizForm();
+//        getData_BizForm();
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         listView_bizform = (ListView) findViewById(R.id.listView_bizform);
-        if (lstData_BizForm != null) {
-            wfInstanceTypeSelectListViewAdapter = new WfInstanceTypeSelectListViewAdapter(this, lstData_BizForm, true);
-            listView_bizform.setAdapter(wfInstanceTypeSelectListViewAdapter);
-            listView_bizform.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-                    mBizForm = lstData_BizForm.get((int) id);
-                    if (mBizForm != null) {
-                        getBizForm();
-                    } else {
-                        Toast("类型不存在");
-                    }
+        wfInstanceTypeSelectListViewAdapter = new WfInstanceTypeSelectListViewAdapter(this, lstData_BizForm, true);
+        listView_bizform.setAdapter(wfInstanceTypeSelectListViewAdapter);
+        listView_bizform.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+                mBizForm = lstData_BizForm.get((int) id);
+                if (mBizForm != null) {
+                    getBizForm();
+                } else {
+                    Toast("类型不存在");
                 }
-            });
-        }
+            }
+        });
     }
 
     /**
@@ -131,7 +132,7 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
                 if (null != bizForm) {
                     bizForm.setFields(filedWfinstanceInfo(bizForm.getFields()));
                     if (null == bizForm.getFields() || bizForm.getFields().size() == 0) {
-                        sweetAlertDialogView.alertIcon(null,"该审批类别未设置(未启用)审批内容,\n请选择其它类别!");
+                        sweetAlertDialogView.alertIcon(null, "该审批类别未设置(未启用)审批内容,\n请选择其它类别!");
                     } else {
                         mBundle = new Bundle();
                         mBundle.putSerializable("bizForm", bizForm);
@@ -150,33 +151,33 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
         });
     }
 
-    /**
-     * 获取审批类别列表
-     */
-    private void getData_BizForm() {
-        showLoading("");
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", pagination.getPageIndex());
-        params.put("pageSize", 2000);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
-            @Override
-            public void success(final PaginationX<BizForm> bizFormPaginationX, final Response response) {
-                HttpErrorCheck.checkResponse("获取审批【类型列表】", response);
-                if (null != bizFormPaginationX) {
-                    pagination = bizFormPaginationX;
-                    pagination.records = filedBizFormInfo(pagination.records);
-                    lstData_BizForm.addAll(pagination.getRecords());
-                    wfInstanceTypeSelectListViewAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
-    }
+//    /**
+//     * 获取审批类别列表
+//     */
+//    private void getData_BizForm() {
+//        showLoading("");
+//        HashMap<String, Object> params = new HashMap<>();
+//        params.put("pageIndex", pagination.getPageIndex());
+//        params.put("pageSize", 2000);
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
+//            @Override
+//            public void success(final PaginationX<BizForm> bizFormPaginationX, final Response response) {
+//                HttpErrorCheck.checkResponse("获取审批【类型列表】", response);
+//                if (null != bizFormPaginationX) {
+//                    pagination = bizFormPaginationX;
+//                    pagination.records = filedBizFormInfo(pagination.records);
+//                    lstData_BizForm.addAll(pagination.getRecords());
+//                    wfInstanceTypeSelectListViewAdapter.notifyDataSetChanged();
+//                }
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
+//    }
 
     /**
      * 过滤审批liuc 流程没有被启用的数据
@@ -197,9 +198,9 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
 
     /**
      * Ui刷新回调
-     * */
+     */
     @Subscribe
-    public void rushListData(BizForm bizForm){
+    public void rushListData(BizForm bizForm) {
         app.finishActivity(WfInTypeSelectActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, new Intent());
     }
 

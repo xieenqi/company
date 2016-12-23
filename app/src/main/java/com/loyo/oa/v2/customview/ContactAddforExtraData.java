@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
@@ -27,9 +28,9 @@ import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -54,7 +55,7 @@ public class ContactAddforExtraData extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactLeftExtras> extras, boolean edit,int valueSize) {
+    public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactLeftExtras> extras, boolean edit, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
         this.mContact = mContact;//为null 不是联系模块
@@ -77,7 +78,7 @@ public class ContactAddforExtraData extends LinearLayout {
             return;
         }
         LogUtil.dee("ContactLeftExtras:" + MainApp.gson.toJson(extras));
-        for (int i = 0; i < extras.size(); i++ ) {
+        for (int i = 0; i < extras.size(); i++) {
 
             ContactLeftExtras customerExtra = extras.get(i);
             if (null == customerExtra) {
@@ -89,11 +90,11 @@ public class ContactAddforExtraData extends LinearLayout {
             }
 
             /*姓名,手机,座机view已写死,不受动态字段控制视图,所以排除掉*/
-            if(customerExtra.fieldName.equals("name")){
+            if (customerExtra.fieldName.equals("name")) {
                 continue;
-            }else if(customerExtra.fieldName.equals("wiretel")){
+            } else if (customerExtra.fieldName.equals("wiretel")) {
                 continue;
-            }else if(customerExtra.fieldName.equals("tel")){
+            } else if (customerExtra.fieldName.equals("tel")) {
                 continue;
             }
 
@@ -341,9 +342,14 @@ public class ContactAddforExtraData extends LinearLayout {
 
                 age = Utils.getAge(year + "");
                 if (age > 0) {
-                    birthStr = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day);
-                    extra.val = birthStr;
-                    textView.setText(birthStr);
+//                    birthStr = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day);
+//                    extra.val = birthStr;
+//                    textView.setText(birthStr);
+                    long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day);
+                    extra.val = com.loyo.oa.common.utils.DateTool.getDateReal(time);
+                    textView.setText(extra.val);
+
+
                 } else {
                     Toast.makeText(mContext, "出生日期不能是未来时间，请重新设置", Toast.LENGTH_SHORT).show();
                 }
@@ -417,18 +423,18 @@ public class ContactAddforExtraData extends LinearLayout {
         @Override
         public void onClick(View v) {
             if (!ClickTool.isDoubleClick()) {
-                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(textView);
-                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
-                    @Override
-                    public boolean onClick_onDateSet() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onClick_onTimeSet() {
-                        return false;
-                    }
-                });
+//                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(textView);
+//                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
+//                    @Override
+//                    public boolean onClick_onDateSet() {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onClick_onTimeSet() {
+//                        return false;
+//                    }
+//                });
 
                 if (isBrith) {
                     pickDate(extra, textView);
@@ -437,10 +443,16 @@ public class ContactAddforExtraData extends LinearLayout {
                     dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                         @Override
                         public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
-                            String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                            textView.setText(str);
-                            String times = DateTool.getDataOne(str, DateTool.DATE_FORMATE_SPLITE_BY_POINT);
-                            extra.val = times;
+//                            String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                            textView.setText(str);
+//                            String times = DateTool.getDataOne(str, DateTool.DATE_FORMATE_SPLITE_BY_POINT);
+//                            extra.val = times;
+                            //获取时间戳
+                            long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, min, 0);
+                            extra.val = time + "";
+                            //把时间戳转换成便于阅读格式
+                            textView.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time));
+
                         }
 
                         @Override

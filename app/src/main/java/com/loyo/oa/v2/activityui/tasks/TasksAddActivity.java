@@ -53,7 +53,6 @@ import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -71,8 +70,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -308,10 +305,9 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask() {
-        if (pickPhots.size() == 0) {
-            //showLoading("正在提交");
+        /*if (pickPhots.size() == 0) {
             showStatusLoading(false);
-        }
+        }*/
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(pickPhots.size());
         HashMap<String, Object> map = new HashMap<>();
@@ -351,7 +347,6 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void success(final Task task, final Response response) {
                 HttpErrorCheck.checkCommitSus("任务创建",response);
-                //HttpErrorCheck.checkResponse(response);
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
                         cancelStatusLoading();
@@ -425,6 +420,7 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
                 //没有附件
+                showStatusLoading(false);
                 if (pickPhots.size() == 0) {
                     requestCommitTask();
                     //有附件
@@ -538,10 +534,15 @@ public class TasksAddActivity extends BaseActivity {
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
-                String str = year + "." + String.format("%02d", (month + 1)) + "." +
-                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                tv_deadline.setText(str);
-                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy.MM.dd HH:mm"));
+//                String str = year + "." + String.format("%02d", (month + 1)) + "." +
+//                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                tv_deadline.setText(str);
+//                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy.MM.dd HH:mm"));
+
+                mDeadline= com.loyo.oa.common.utils.DateTool.getStamp(year, month, day,hour,min,0);
+                tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mDeadline));
+
+
                 isKind = false;
                 layout_retask.setVisibility(View.GONE);
                 layout_retask_view.setVisibility(View.GONE);
@@ -660,7 +661,6 @@ public class TasksAddActivity extends BaseActivity {
      * 批量上传附件
      */
     private void newUploadAttachement() {
-        showLoading("正在提交");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -676,6 +676,7 @@ public class TasksAddActivity extends BaseActivity {
                                 new RCallback<Attachment>() {
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
+                                        //cancelStatusLoading();
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
                                             requestCommitTask();
@@ -685,7 +686,7 @@ public class TasksAddActivity extends BaseActivity {
                                     @Override
                                     public void failure(final RetrofitError error) {
                                         super.failure(error);
-                                        HttpErrorCheck.checkError(error);
+                                        HttpErrorCheck.checkCommitEro(error);
                                         img_title_right.setEnabled(true);
                                     }
                                 });

@@ -5,15 +5,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
@@ -30,15 +31,12 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IOrder;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
@@ -91,7 +89,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             switch (msg.what) {
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
                     if (attachmentSize != 0) {
-                        tv_enclosure.setText("附件(" + attachmentSize + ")");
+                        tv_enclosure.setText("附件（"+ attachmentSize + "）");
                     }
                     break;
             }
@@ -102,13 +100,14 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getIntentData();
         initView();
     }
 
     @Override
     public void setLayoutView() {
-        setContentView(R.layout.activity_order_detail);
+        setContentView(R.layout.activity_order_detail_new);
     }
 
     @Override
@@ -217,7 +216,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 app.startActivityForResult(OrderDetailActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                 break;
-            case R.id.ll_record://回款记录  mData.backMoney + "(" + mData.ratePayment + "%)");
+            case R.id.ll_record://回款记录  mData.backMoney + "（"+ mData.ratePayment + "%)");
                 Bundle mBundle = new Bundle();
                 mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_DETAILS);
                 mBundle.putString("price", tv_money.getText().toString());
@@ -231,7 +230,14 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             case R.id.ll_enclosure://附件
                 mBundle = new Bundle();
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
-                mBundle.putBoolean("isOver", true);
+                if(2==mData.status){
+                    //订单没有通过,可以编辑附件
+                    mBundle.putBoolean("isOver", false);
+                    mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
+                }else{
+                    mBundle.putBoolean("isOver", true);
+                    mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
+                }
                 mBundle.putString("uuid", mData.attachmentUUId);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
@@ -334,12 +340,13 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
         tv_product.setText(mData.proName);
         tv_responsible_name.setText(mData.directorName);
         tv_creator_name.setText(mData.creatorName);
-        tv_plan.setText("回款计划（" + mData.planNum + "）");
-        tv_record.setText("回款记录（" + mData.recordNum + "）");
-        tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
-        tv_worksheet.setText("工单" + "(" + mData.worksheetNum + ")");
-        tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
-        tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
+        tv_plan.setText("回款计划（"+ mData.planNum + "）");
+        tv_record.setText("回款记录（"+ mData.recordNum + "）");
+        tv_record_value.setText("¥" + mData.backMoney + "（"+ mData.ratePayment + "%)");
+        tv_worksheet.setText("工单" + "（"+ mData.worksheetNum + "）");
+        if(attachmentSize==0)tv_enclosure.setText("附件（"+ mData.attachmentCount + "）");//避免上传附件回来,把原来的数值抹掉了
+//        tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
+        tv_creator_time.setText(DateTool.getDateTimeFriendly(mData.createdAt));
         tv_plan_value.setText(mData.planMoney + "");
         OrderCommon.getOrderDetailsStatus(tv_status, mData.status);
         if (!TextUtils.isEmpty(mData.wfName)) {//是否关联审批

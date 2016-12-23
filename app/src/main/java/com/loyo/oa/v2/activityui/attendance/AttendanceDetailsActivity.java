@@ -11,24 +11,22 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceDetial;
 import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceDetailsPresenterImpl;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceDetailsView;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.UserInfo;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.AfterViews;
@@ -38,7 +36,6 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -235,8 +232,10 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
 
          /*加班处理*/
         if (mAttendanceDetails.state == 5 && inOrOut == 3) {
-            String time = (DateTool.timet(mAttendanceDetails.extraWorkStartTime + "", DateTool.DATE_FORMATE_HOUR_YEAR)
-                    + "至" + DateTool.timet(mAttendanceDetails.extraWorkEndTime + "", DateTool.DATE_FORMATE_HOUR_YEAR));
+//            String time = (DateTool.timet(mAttendanceDetails.extraWorkStartTime + "", DateTool.DATE_FORMATE_HOUR_YEAR)
+//                    + "至" + DateTool.timet(mAttendanceDetails.extraWorkEndTime + "", DateTool.DATE_FORMATE_HOUR_YEAR));
+
+            String time= com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mAttendanceDetails.extraWorkStartTime )+"-"+ com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mAttendanceDetails.extraWorkEndTime);
             tv_info.setText("加班时间: " + time);
             tv_tag.setText("加班时长: " + overTime);
             tv_explain.setText("加班原因");
@@ -267,7 +266,8 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
                 tv_tag.setText(tag);
             }
 
-            String content = info + app.df2.format(new Date(mAttendanceDetails.createtime * 1000));
+//            String content = info + app.df2.format(new Date(mAttendanceDetails.createtime * 1000));
+            String content = info + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mAttendanceDetails.createtime);
             tv_info.setText(content);
         }
 
@@ -289,12 +289,15 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
             names = mAttendanceDetails.confirmuser.name;
             deptNames = mAttendanceDetails.confirmuser.depts.get(0).getShortDept().getName();
             roleNames = mAttendanceDetails.confirmuser.depts.get(0).getTitle();
-            comfirmTime = app.df2.format(new Date(mAttendanceDetails.confirmtime * 1000));
-        } else if (null != mAttendanceDetails.extraConfirmUser) {
+
+            comfirmTime = com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mAttendanceDetails.confirmtime);
+        }else if(null != mAttendanceDetails.extraConfirmUser){
+
             names = mAttendanceDetails.extraConfirmUser.name;
             deptNames = mAttendanceDetails.extraConfirmUser.depts.get(0).getShortDept().getName();
             roleNames = mAttendanceDetails.extraConfirmUser.depts.get(0).getTitle();
-            comfirmTime = app.df2.format(new Date(mAttendanceDetails.confirmExtraTime * 1000));
+//            comfirmTime = app.df2.format(new Date(mAttendanceDetails.confirmExtraTime * 1000));
+            comfirmTime = com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mAttendanceDetails.confirmExtraTime);
         }
 
         /*确认考勤*/

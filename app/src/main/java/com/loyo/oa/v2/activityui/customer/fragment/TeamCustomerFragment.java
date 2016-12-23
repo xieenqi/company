@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.TeamCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.other.model.Tag;
@@ -51,6 +52,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UMengTools;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,6 +89,11 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private boolean isPullUp = false;
     private LoadingLayout ll_loading;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getRefershData();
+    }
 
     @Nullable
     @Override
@@ -133,7 +141,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         nearLayout.setOnTouchListener(Global.GetTouch());
 
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-        getRefershData();
     }
 
     private void loadFilterOptions() {
@@ -158,7 +165,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
         List<FilterModel> options = new ArrayList<>();
         options.add(new OrganizationFilterModel(depts, title));
-        options.add(TimeFilterModel.getFilterModel());
+        options.add(TimeFilterModel.getFilterModel2());
         options.add(TagMenuModel.getTagFilterModel(mTags));
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
@@ -353,6 +360,15 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
             }
         }
     };
+
+
+    /**
+     * 刷新列表回调
+     */
+    @Subscribe
+    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
+        getData();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -36,7 +36,8 @@ public class ProjectSearchActivity extends BaseSearchActivity<Project> {
         params.put("status", mBundle.getInt(ExtraAndResult.EXTRA_STATUS, -1) == -1 ? 0 : mBundle.getInt(ExtraAndResult.EXTRA_STATUS, -1));
         params.put("type", 0);
         params.put("endAt", System.currentTimeMillis() / 1000);
-        params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+//        params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+        params.put("startAt", com.loyo.oa.common.utils.DateTool.getDateStamp("2014-01-01")/ 1000);
         params.put("pageIndex", paginationX.getPageIndex());
         params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
 

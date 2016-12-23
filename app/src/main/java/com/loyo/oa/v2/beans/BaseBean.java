@@ -7,6 +7,7 @@ import java.io.Serializable;
  * Created by xeq on 16/8/22.
  */
 public class BaseBean implements Serializable {
+    public int errType;
     public int errcode;
     public String errmsg;
 //    public T data;

@@ -131,7 +131,7 @@ public class SaleManageActivity extends BaseLoadingActivity implements View.OnCl
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error,ll_loading);
+                        HttpErrorCheck.checkError(error, ll_loading);
                         listView_demands.onRefreshComplete();
                         super.failure(error);
                     }
@@ -149,7 +149,7 @@ public class SaleManageActivity extends BaseLoadingActivity implements View.OnCl
             listView_demands.setOnRefreshListener(this);
         }
         ll_loading.setStatus(LoadingLayout.Success);
-        if(isTopAdd&&listData.size()==0)
+        if (isTopAdd && listData.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
     }
 
@@ -162,7 +162,7 @@ public class SaleManageActivity extends BaseLoadingActivity implements View.OnCl
                 break;
             case R.id.layout_add:
 
-                if (! PermissionManager.getInstance().hasPermission(BusinessOperation.SALE_OPPORTUNITY)) {
+                if (!PermissionManager.getInstance().hasPermission(BusinessOperation.SALE_OPPORTUNITY)) {
 
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
 
@@ -185,7 +185,7 @@ public class SaleManageActivity extends BaseLoadingActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, isChanged ? RESULT_OK : RESULT_CANCELED, new Intent());
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isChanged ? RESULT_OK : RESULT_CANCELED, new Intent());
     }
 
     @Override
@@ -268,7 +268,7 @@ public class SaleManageActivity extends BaseLoadingActivity implements View.OnCl
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (! PermissionManager.getInstance().hasPermission(BusinessOperation.SALE_OPPORTUNITY)) {
+                    if (!PermissionManager.getInstance().hasPermission(BusinessOperation.SALE_OPPORTUNITY)) {
                         sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                         return;
                     }

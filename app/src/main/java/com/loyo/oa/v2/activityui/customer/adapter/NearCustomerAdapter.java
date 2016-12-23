@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -81,7 +82,8 @@ public class NearCustomerAdapter extends BaseAdapter {
 
         tv_title.setText(customer.name);
         String tagItems = Utils.getTagItems(customer);
-        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
+//        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
+        String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
 
         //附近 - 个人(我的客户)
         if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE) {

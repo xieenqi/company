@@ -88,7 +88,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private int attamentSize = 0;
     private String uuid;
     public  static String orderTitle;
-
     private OrderDetail mOrderDetail;
     private OrderAddforExtraData orderAddforExtra;
 
@@ -100,8 +99,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             switch (msg.what) {
 
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
-                    if (attamentSize != 0) {
-                        tv_source.setText("附件(" + attamentSize + ")");
+                     if (attamentSize != 0) {
+
+                    tv_source.setText("附件（" + attamentSize + "）");
                     }
                     break;
                 case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
@@ -307,7 +307,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             if (!extra.isSystem && extra.required && TextUtils.isEmpty(extra.val)) {
                 Toast("请填写必填项!");
                 return;
-            } else if (!extra.isSystem && extra.required && !TextUtils.isEmpty(extra.val)) {
+            } else if (!extra.isSystem && !TextUtils.isEmpty(extra.val)) {
                 fieldData.add(extra);
             }
         }
@@ -400,7 +400,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //提交
             case R.id.iv_submit:
-                commitOrder();
+                if(Utils.isNetworkAvailable(mContext)){
+                    commitOrder();
+                }else{
+                    Toast("请检查您的网路连接");
+                }
                 break;
 
             //后退

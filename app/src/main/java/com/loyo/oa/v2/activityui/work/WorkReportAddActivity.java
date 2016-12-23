@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,7 +153,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private long beginAt, endAt;
     private boolean isDelayed = false;
     private int mSelectType = WorkReport.DAY;
-    private int retroIndex;
+    private int retroIndex = 1;//蛋疼的兼容原来的1序
     private int bizType = 1;
     private int uploadSize;
     private int uploadNum;
@@ -400,8 +401,8 @@ public class WorkReportAddActivity extends BaseActivity {
                         beginTime = beginAt / 1000;
                         endTime = endAt / 1000;
                     } else {
-                        beginTime = DateTool.getCurrentMoringMillis() / 1000;
-                        endTime = DateTool.getNextMoringMillis() / 1000;
+                        beginTime = com.loyo.oa.common.utils.DateTool.getCurrentDayBeginMillis() / 1000;
+                        endTime = com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
                     break;
@@ -411,8 +412,8 @@ public class WorkReportAddActivity extends BaseActivity {
                         beginTime = weeksDialog.GetBeginandEndAt()[0] / 1000;
                         endTime = weeksDialog.GetBeginandEndAt()[1] / 1000;
                     } else {
-                        beginTime = DateTool.getBeginAt_ofWeek() / 1000;
-                        endTime = DateTool.getEndAt_ofWeek() / 1000;
+                        beginTime = com.loyo.oa.common.utils.DateTool.getCurrentWeekBeginMillis() / 1000;
+                        endTime = com.loyo.oa.common.utils.DateTool.getCurrentWeekEndMillis() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
                     break;
@@ -422,8 +423,8 @@ public class WorkReportAddActivity extends BaseActivity {
                         beginTime = beginAt / 1000;
                         endTime = endAt / 1000;
                     } else {
-                        beginTime = DateTool.getBeginAt_ofMonthMills() / 1000;
-                        endTime = DateTool.getEndAt_ofMonth() / 1000;
+                        beginTime = com.loyo.oa.common.utils.DateTool.getCurrentMonthBeginMillis() / 1000;
+                        endTime = com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
                     break;
@@ -438,16 +439,18 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     @CheckedChange(R.id.rb1)
     void dayClick(final CompoundButton button, final boolean b) {
+        //TODO 这里好像有bug,如果是补签,会拉取签到那天的工作动态,代码分析出来的,没有数据未确认bug。——Mr.Jie
         if (!b) {
             return;
         }
         isDelayed = false;
         currentValue = pastSevenDay[0];
-        openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
+        openDynamic(com.loyo.oa.common.utils.DateTool.getCurrentDayBeginMillis() / 1000 + "", com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis() / 1000 + "");
         tv_crm.setText("本日工作动态统计");
-        beginAt = DateTool.getBeginAt_ofDay();
-        endAt = DateTool.getEndAt_ofDay();
-        tv_time.setText(app.df4.format(beginAt));
+        beginAt = com.loyo.oa.common.utils.DateTool.getCurrentDayBeginMillis();
+        endAt = com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis();
+//        tv_time.setText(app.df4.format(beginAt));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(beginAt / 1000));
         mSelectType = WorkReport.DAY;
     }
 
@@ -460,7 +463,7 @@ public class WorkReportAddActivity extends BaseActivity {
             return;
         }
         isDelayed = false;
-        openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
+        openDynamic(com.loyo.oa.common.utils.DateTool.getCurrentWeekBeginMillis() / 1000 + "", com.loyo.oa.common.utils.DateTool.getCurrentWeekEndMillis() / 1000 + "");
         tv_crm.setText("本周工作动态统计");
         beginAt = weeksDialog.getNowBeginandEndAt()[0];
         endAt = weeksDialog.getNowBeginandEndAt()[1];
@@ -478,14 +481,15 @@ public class WorkReportAddActivity extends BaseActivity {
         }
         isDelayed = false;
         currentValue = pastThreeMonth[0];
-        openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
+        openDynamic(com.loyo.oa.common.utils.DateTool.getCurrentMonthBeginMillis() / 1000 + "", com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis() / 1000 + "");
         tv_crm.setText("本月工作动态统计");
-        beginAt = DateTool.getEndAt_ofMonth();//DateTool.getBeginAt_ofMonth()
-        endAt = DateTool.getEndAt_ofMonth();
+        beginAt = com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis();//DateTool.getBeginAt_ofMonth()
+        endAt = com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis();
         DateTool.calendar = Calendar.getInstance();
         int year = DateTool.calendar.get(Calendar.YEAR);
         int month = DateTool.calendar.get(Calendar.MONTH);
-        tv_time.setText(year + "." + String.format("%02d", (month + 1)));
+//        tv_time.setText(year + "." + String.format("%02d", (month + 1)));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getYearMonth(System.currentTimeMillis()/1000));
         mSelectType = WorkReport.MONTH;
 
     }
@@ -540,6 +544,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
 
                 //没有附件
+                showStatusLoading(false);
                 if (pickPhots.size() == 0) {
                     requestCommitWork();
                     //有附件
@@ -555,9 +560,8 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
 
             /*点评人*/
-            case R.id.layout_reviewer:
-            {
-                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer!=null?mReviewer.user:null);
+            case R.id.layout_reviewer: {
+                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer != null ? mReviewer.user : null);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
                 if (collection != null) {
@@ -569,11 +573,10 @@ public class WorkReportAddActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
 
             /*抄送人*/
-            case R.id.layout_toUser:
-            {
+            case R.id.layout_toUser: {
                 StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
@@ -586,7 +589,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
 
             case R.id.layout_del:
                 users.clear();
@@ -709,7 +712,8 @@ public class WorkReportAddActivity extends BaseActivity {
         for (int i = 0; i < 7; i++) {
             Calendar cl = Calendar.getInstance();
             cl.add(Calendar.DAY_OF_MONTH, -(i + 1));
-            String time = app.df4.format(cl.getTime());
+//            String time = app.df4.format(cl.getTime());
+            String time = com.loyo.oa.common.utils.DateTool.getDateFriendly(cl.getTimeInMillis() / 1000);
             pastSevenDay[i] = time;
         }
 
@@ -723,21 +727,24 @@ public class WorkReportAddActivity extends BaseActivity {
                 case 0:
                     cl = Calendar.getInstance();
                     cl.add(Calendar.DAY_OF_MONTH, -30);
-                    month = app.df15.format(cl.getTime());
+//                    month = app.df15.format(cl.getTime());
+                    month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
 
                 case 1:
                     cl = Calendar.getInstance();
                     cl.add(Calendar.DAY_OF_MONTH, -60);
-                    month = app.df15.format(cl.getTime());
+//                    month = app.df15.format(cl.getTime());
+                    month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
 
                 case 2:
                     cl = Calendar.getInstance();
                     cl.add(Calendar.DAY_OF_MONTH, -90);
-                    month = app.df15.format(cl.getTime());
+//                    month = app.df15.format(cl.getTime());
+                    month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
             }
@@ -753,11 +760,14 @@ public class WorkReportAddActivity extends BaseActivity {
         wv.setOffset(2);//为了界面好看，故意将index多加2条，因此取item下标时，要-2
         wv.setItems(Arrays.asList(arrlst));
         //wv.setSeletion(3);
+        //TODO 为什么要用监听改变的方式,不懂,用户点击了以后,不滑动,不会调用,不会改成默认值。后面改一下,直接获取选中的就可以了 ——Mr.Jie
         wv.setOnWheelViewListener(new SingleRowWheelView.OnWheelViewListener() {
             @Override
             public void onSelected(int selectedIndex, String item) {
                 currentValue = item;
-                retroIndex = selectedIndex - 2;
+                retroIndex = selectedIndex - 1;
+                Log.i("temptest", "onSelec" +
+                        "ted: retroIndex:" + retroIndex);
             }
         });
         return outerView;
@@ -775,20 +785,21 @@ public class WorkReportAddActivity extends BaseActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (mSelectType) {
                             case 1:
-                                currentValue = pastSevenDay[retroIndex];
-                                beginAt = DateTool.getSomeDayBeginAt(retroIndex);
-                                endAt = DateTool.getSomeDayEndAt(retroIndex);
+                                currentValue = pastSevenDay[retroIndex - 1];
+                                beginAt = com.loyo.oa.common.utils.DateTool.getSomeDayBeginMillis(retroIndex);
+                                endAt = com.loyo.oa.common.utils.DateTool.getSomeDayEndMillis(retroIndex);
                                 break;
 
                             case 3:
-                                currentValue = pastThreeMonth[retroIndex];
-                                beginAt = DateTool.getSomeMonthBeginAt(retroIndex);
-                                endAt = DateTool.getSomeMonthEndAt(retroIndex);
+                                Log.i("temptest", "onClick: " + retroIndex + "->" + pastThreeMonth[retroIndex - 1]);
+                                currentValue = pastThreeMonth[retroIndex - 1];
+                                beginAt = com.loyo.oa.common.utils.DateTool.getSomeMonthBeginMillis(retroIndex);
+                                endAt = com.loyo.oa.common.utils.DateTool.getSomeMonthEndMillis(retroIndex);
                                 break;
                         }
 
                         tv_time.setText(currentValue + "(补签)");
-                        retroIndex = 0;
+                        retroIndex = 1;
                         openDynamic(beginAt / 1000 + "", endAt / 1000 + "");
                     }
                 })
@@ -830,10 +841,9 @@ public class WorkReportAddActivity extends BaseActivity {
      * 提交报告
      */
     private void requestCommitWork() {
-        if (pickPhots.size() == 0) {
+        /*if (pickPhots.size() == 0) {
             showStatusLoading(false);
-            //showLoading("正在提交");
-        }
+        }*/
 
         bizExtData = new PostBizExtData();
         if (type == TYPE_EDIT) {
@@ -880,7 +890,6 @@ public class WorkReportAddActivity extends BaseActivity {
      * 批量上传附件
      */
     private void newUploadAttachement() {
-        showLoading("正在提交");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -905,7 +914,7 @@ public class WorkReportAddActivity extends BaseActivity {
                                     @Override
                                     public void failure(final RetrofitError error) {
                                         super.failure(error);
-                                        HttpErrorCheck.checkError(error);
+                                        HttpErrorCheck.checkCommitEro(error);
                                     }
                                 });
                     }
@@ -955,18 +964,17 @@ public class WorkReportAddActivity extends BaseActivity {
         if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             NewUser user = Compat.convertStaffCollectionToNewUser(collection);
-            if (user == null){
+            if (user == null) {
                 return;
             }
             mReviewer = new Reviewer(user);
             tv_reviewer.setText(user.getRealname());
-        }
-        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+        } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             members = Compat.convertStaffCollectionToMembers(collection);
             joinName = new StringBuffer();
             joinUserId = new StringBuffer();
-            if (members==null ||( members.users.size() == 0 && members.depts.size() == 0)) {
+            if (members == null || (members.users.size() == 0 && members.depts.size() == 0)) {
                 tv_toUser.setText("无抄送人");
                 joinUserId.reverse();
             } else {

@@ -6,19 +6,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
+import android.util.Log;
 import android.util.SparseArray;
 import android.widget.TextView;
-
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity;
-import com.loyo.oa.v2.application.MainApp;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.TimeZone;
 
 public class WeeksDialog {
@@ -103,11 +100,15 @@ public class WeeksDialog {
                 long begin = item.get("begin");
                 long end = item.get("end");
 
+                String weekBegin= DateTool.getMonthDay(begin/1000);
+                String weekEnd= DateTool.getMonthDay(end/1000);
+                String weekString=weekBegin.concat("-").concat(weekEnd);
+
                 /*周报补签，取消本周显示*/
                 if (i == 0) {
-                    //exList.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)).concat(" (本周)"));
+                    //exList.add(DateTool.getMonthDay(begin).concat(" - ").concat(DateTool.getMonthDay(end)).concat(" (本周)"));
                 } else {
-                    exList.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)));
+                    exList.add(weekString);
                 }
             }
             sourseArray = exList.toArray(new String[exList.size()]);
@@ -119,11 +120,14 @@ public class WeeksDialog {
                 long begin = item.get("begin");
                 long end = item.get("end");
 
-                /*周报补签，取消本周显示*/
+                String weekBegin= DateTool.getMonthDay(begin/1000);
+                String weekEnd= DateTool.getMonthDay(end/1000);
+                String weekString=weekBegin.concat("-").concat(weekEnd);
+
                 if (i == 0) {
-                    exListToWeek.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)).concat(" (本周)"));
+                    exListToWeek.add(weekString.concat(" (本周)"));
                 } else {
-                    exListToWeek.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)));
+                    exListToWeek.add(weekString);
                 }
             }
             sourseToWeek = exListToWeek.toArray(new String[exList.size()]);
@@ -143,7 +147,8 @@ public class WeeksDialog {
         public void onClick(DialogInterface dialogInterface, int which) {// 按下项所在的索引
             String date = sourseArray[singleIndex].replace(" (本周)", "").split("-")[1];
             dateR = sourseArray[singleIndex].replace(" (本周)", "");
-            if (DateTool.getDateToTimestamp(date, MainApp.getMainApp().df7) < DateTool.getBeginAt_ofWeek()) {
+//            if (DateTool.getDateToTimestamp(date, MainApp.getMainApp().df7) < DateTool.getCurrentWeekBeginMillis()) {
+            if (com.loyo.oa.common.utils.DateTool.getDayStamp(date) < com.loyo.oa.common.utils.DateTool.getCurrentWeekBeginMillis()) {
                 dateR += "(补签)";
             }
             resultTview.setText(dateR);
@@ -175,8 +180,8 @@ public class WeeksDialog {
         String[] begAt = gdragon[0].trim().split("\\.");
         String[] endAt = gdragon[1].trim().split("\\.");
 
-        begAndendAt[0] = DateTool.getSomeWeekBeginAt(calendar.get(calendar.YEAR), (Integer.valueOf(begAt[0]) - 1), Integer.valueOf(begAt[1]));
-        begAndendAt[1] = DateTool.getSomeWeekEndAt(calendar.get(calendar.YEAR), (Integer.valueOf(endAt[0]) - 1), Integer.valueOf(endAt[1]));
+        begAndendAt[0] = com.loyo.oa.common.utils.DateTool.getSomeWeekBeginMillis(calendar.get(calendar.YEAR), (Integer.valueOf(begAt[0]) - 1), Integer.valueOf(begAt[1]));
+        begAndendAt[1] = com.loyo.oa.common.utils.DateTool.getSomeWeekEndMillis(calendar.get(calendar.YEAR), (Integer.valueOf(endAt[0]) - 1), Integer.valueOf(endAt[1]));
         return begAndendAt;
     }
 
@@ -191,8 +196,8 @@ public class WeeksDialog {
         String[] begAt = gdragon[0].trim().split("\\.");
         String[] endAt = gdragon[1].trim().split("\\.");
 
-        begAndendAt[0] = DateTool.getSomeWeekBeginAt(calendar.get(calendar.YEAR), (Integer.valueOf(begAt[0]) - 1), Integer.valueOf(begAt[1]));
-        begAndendAt[1] = DateTool.getSomeWeekEndAt(calendar.get(calendar.YEAR), (Integer.valueOf(endAt[0]) - 1), Integer.valueOf(endAt[1]));
+        begAndendAt[0] = com.loyo.oa.common.utils.DateTool.getSomeWeekBeginMillis(calendar.get(calendar.YEAR), (Integer.valueOf(begAt[0]) - 1), Integer.valueOf(begAt[1]));
+        begAndendAt[1] = com.loyo.oa.common.utils.DateTool.getSomeWeekEndMillis(calendar.get(calendar.YEAR), (Integer.valueOf(endAt[0]) - 1), Integer.valueOf(endAt[1]));
         return begAndendAt;
     }
 }

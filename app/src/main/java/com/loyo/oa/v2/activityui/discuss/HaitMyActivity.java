@@ -191,7 +191,7 @@ public class HaitMyActivity extends BaseLoadingActivity {
         @Override
         public void onBindViewHolder(final HaitViewHolder holder, final int position) {
             HttpMyDiscussItem info = datas.get(position);
-            holder.tv_time.setText(info.newUpdatedAt != 0 ? DateTool.getDiffTime(info.newUpdatedAt) : info.updatedAt.substring(11, 19));
+            holder.tv_time.setText(info.newUpdatedAt != 0 ? com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(info.newUpdatedAt) : info.updatedAt.substring(11, 19));
             holder.tv_content.setText(info.atContent);
             holder.tv_title.setText(parseTitle(info.creator.name, info.title));
             Glide.with(MainApp.getMainApp())

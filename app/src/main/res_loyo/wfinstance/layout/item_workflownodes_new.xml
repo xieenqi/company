@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/wfinstance_layout_padding"
+        android:background="@drawable/wfinstance_nodes_bg"
+        android:paddingLeft="@dimen/wfinstance_layout_padding"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/wfinstance_layout_padding"
+            android:layout_marginRight="@dimen/wfinstance_layout_padding"
+            android:layout_marginTop="@dimen/wfinstance_layout_padding"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_wfinstance_agree_new" />
+
+            <TextView
+                android:id="@+id/tv_creator_title"
+                style="@style/wfinstance_line_text_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/wfinstance_text_line_space"
+                android:ellipsize="end"
+                android:maxEms="12"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:text="销售部" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_set_time"
+                style="@style/wfinstance_line_text_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_overtime"
+                style="@style/wfinstance_line_text_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textColor="@color/wfinstance_text_red" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view_dashed_line"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginRight="@dimen/wfinstance_layout_padding"
+            android:background="@drawable/view_dashed_line"
+            android:layerType="software" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/wfinstance_layout_padding"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/wfinstance_text_line_space"
+                android:layout_marginBottom="@dimen/wfinstance_text_line_space"
+                android:text="内容"
+                android:gravity="left"
+                style="@style/wfinstance_line_text_other_1"/>
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/wfinstance_text_line_space"
+                style="@style/wfinstance_line_text_small"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

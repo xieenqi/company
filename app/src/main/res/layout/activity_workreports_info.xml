@@ -194,7 +194,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:hint="点评人: "
+                            android:hint="点评人："
                             android:textColor="@color/text33"
                             android:textSize="@dimen/text_sp12" />
 
@@ -227,7 +227,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="left|center_vertical"
-                            android:text="抄送人:"
+                            android:text="抄送人："
                             android:textColor="#999999"
                             android:textSize="12sp" />
 
@@ -247,7 +247,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:hint="所属项目: "
+                            android:hint="所属项目："
                             android:textSize="@dimen/text_sp12" />
 
                         <TextView
@@ -372,7 +372,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/dimen_8"
                                     android:layout_weight="1"
-                                    android:text="点评人:"
+                                    android:text="点评人："
                                     android:textColor="#999999" />
 
                                 <TextView

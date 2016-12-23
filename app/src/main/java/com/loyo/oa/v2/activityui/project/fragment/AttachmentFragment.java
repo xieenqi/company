@@ -49,7 +49,7 @@ import retrofit.mime.TypedString;
  * 作者 : ykb
  * 时间 : 15/9/8.
  */
-public class AttachmentFragment extends BaseFragment implements View.OnClickListener, AttachmentSwipeAdapter.OnRightClickCallback {
+public class AttachmentFragment extends BaseFragment implements View.OnClickListener{
 
     private View mView;
     private SwipeListView mListViewAttachment;
@@ -77,11 +77,10 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      * @param mListAttachment
      */
     private void bindAttachment(final ArrayList<Attachment> mListAttachment) {
-        ll_loading.setStatus(LoadingLayout.Success);
-        if (ListUtil.IsEmpty(mListAttachment)) {
-                ll_loading.setStatus(LoadingLayout.Empty);
-            return;
-        }
+//        if (ListUtil.IsEmpty(mListAttachment)) {
+//                ll_loading.setStatus(LoadingLayout.Empty);
+//            return;
+//        }
         onLoadSuccess(mListAttachment.size());
         final ArrayList<Attachment> sortAttachment = Attachment.Sort(mListAttachment);
         ArrayList<User> users = Common.getUsersByProject(mProject);
@@ -91,7 +90,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         }
 
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this, bizType, mProject.attachmentUUId, isOver);
+            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, mListViewAttachment, bizType, mProject.attachmentUUId, isOver);
             mListViewAttachment.setAdapter(adapter);
         } else {
             adapter.setData(mListAttachment);
@@ -109,6 +108,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                 adapter.notifyDataSetChanged();
             }
         });
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
 //    /**
@@ -192,7 +192,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                             mAttachments = attachments;
                             bindAttachment(mAttachments);
                         }else {
-                            ll_loading.setStatus(LoadingLayout.Success);
+//                            ll_loading.setStatus(LoadingLayout.Success);
                             ll_loading.setStatus(LoadingLayout.Empty);
                         }
                     }
@@ -270,12 +270,12 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     }
 
 
-    @Override
-    public void onRightClick(Bundle b) {
-        Intent intent = new Intent(mActivity, AttachmentRightActivity_.class);
-        intent.putExtras(b);
-        startActivityForResult(intent, AttachmentSwipeAdapter.REQUEST_ATTACHMENT);
-    }
+//    @Override
+//    public void onRightClick(Bundle b) {
+//        Intent intent = new Intent(mActivity, AttachmentRightActivity_.class);
+//        intent.putExtras(b);
+//        startActivityForResult(intent, AttachmentSwipeAdapter.REQUEST_ATTACHMENT);
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

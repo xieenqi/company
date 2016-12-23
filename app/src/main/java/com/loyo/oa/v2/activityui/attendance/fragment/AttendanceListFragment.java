@@ -19,8 +19,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceDetailsActivity_;
 import com.loyo.oa.v2.activityui.attendance.adapter.AttendanceListAdapter;
-import com.loyo.oa.v2.activityui.attendance.adapter.CustomerDataManager;
 import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
+import com.loyo.oa.v2.activityui.attendance.event.AttendanceAddEevent;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceList;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.DataSelect;
@@ -38,16 +38,16 @@ import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.CustomRecyclerView;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -189,10 +189,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      */
     public void DataSelectInit() {
 
-        int year = Integer.parseInt(DateTool.getNowTime("yyyy"));
+        int year = Integer.parseInt(com.loyo.oa.common.utils.DateTool.getYear());
 
         if (type == 2) {
-            dataSelects = DateTool.getYearAllofDay(2015, year);
+            dataSelects = com.loyo.oa.common.utils.DateTool.getYearMonthDay(2015, year);
             Collections.reverse(dataSelects);
             dataSelects.remove(dataSelects.size() - 1);
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
@@ -203,7 +203,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             recyclerView.setAdapter(dataSelectAdapter);
             qtime = Integer.parseInt(dataSelects.get(0).mapOftime);
         } else {
-            dataSelects = DateTool.getYearAllofMonth(2015, year);
+            dataSelects = com.loyo.oa.common.utils.DateTool.getYearMonth(2015, year);
             Collections.reverse(dataSelects);
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
             data_time_tv.setText(dataSelects.get(0).yearMonDay);
@@ -244,10 +244,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 //        checkdateTime = mills;
         switch (type) {
             case 1:
-                time = app.df13.format(new Date(mills));
+//                time = app.df13.format(new Date(mills));
+                time= com.loyo.oa.common.utils.DateTool.getYearMonth(mills/1000);
                 break;
             case 2:
-                time = app.df12.format(new Date(mills));
+//                time = app.df12.format(new Date(mills));
+                time= com.loyo.oa.common.utils.DateTool.getDateFriendly(mills/1000);
                 break;
         }
         // 顶部显示的 当前时间
@@ -610,5 +612,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     @Override
     public LoadingLayout getLoading() {
         return ll_loading;
+    }
+
+
+    /**
+     * 添加考勤回调
+     */
+    @Subscribe
+    public void onAddAttendance(AttendanceAddEevent event) {
+        getData(1);
     }
 }
