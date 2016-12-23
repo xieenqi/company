@@ -4,29 +4,59 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_45"
-        android:orientation="horizontal"
-        android:background="@color/white"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_other_view"
-            android:text="全部分类"
-            android:layout_gravity="center_vertical"
-            />
-    </LinearLayout>
-
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/layout_hs"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_45"
+            android:background="@color/white"
+            android:orientation="horizontal"/>
+    </HorizontalScrollView>
 
     <include layout="@layout/include_solid_line" />
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/listview"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@color/red"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_height="@dimen/dimen_180"
+        android:background="@color/white"
+        android:divider="@color/lineCC"
+        android:dividerHeight="0.5dp" />
+
+    <include layout="@layout/include_solid_line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_42"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="@dimen/dimen_80"
+            android:layout_height="@dimen/dimen_30"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_other_view"
+            android:background="@drawable/selepro_shape"
+            android:gravity="center"
+            android:text="重置"
+            android:textColor="@color/text33" />
+
+        <TextView
+            android:id="@+id/tv_commit"
+            android:layout_width="@dimen/dimen_80"
+            android:layout_height="@dimen/dimen_30"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_other_view"
+            android:background="@drawable/selepro_shape"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/title_bg1" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/include_solid_line" />
 
 </LinearLayout>
