@@ -10,12 +10,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.product.adapter.SelectProductAdapter;
+import com.loyo.oa.v2.activityui.product.new275.ProductSearchActivity;
 import com.loyo.oa.v2.activityui.product.view.RouteControlsView;
 import com.loyo.oa.v2.activityui.product.view.SelectProductMenu;
 import com.loyo.oa.v2.activityui.product.viewcontrol.SelectProMenuView;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 
@@ -68,8 +73,8 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
         img_back.setOnClickListener(this);
         ll_search.setOnClickListener(this);
         tv_add.setOnClickListener(this);
-        img_back.setOnTouchListener(Global.GetTouch());
-        tv_add.setOnTouchListener(Global.GetTouch());
+
+        Global.SetTouchView(img_back,tv_add,ll_search);
     }
 
 
@@ -92,6 +97,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
             // 搜索
             case R.id.ll_search:
 
+                app.startActivity(this, ProductSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
 
         }

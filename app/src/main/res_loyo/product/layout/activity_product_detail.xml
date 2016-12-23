@@ -159,7 +159,7 @@
 
             <!--自定义字段，可能有很多，所以，做一个linearlayout-->
             <LinearLayout
-                android:id="@+id/product_detail_more_definde"
+                android:id="@+id/product_detail_more_defined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
