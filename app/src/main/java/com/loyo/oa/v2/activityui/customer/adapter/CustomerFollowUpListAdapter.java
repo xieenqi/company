@@ -172,9 +172,11 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         if (null != followUpListModel.content && !TextUtils.isEmpty(followUpListModel.content)) {
             if (followUpListModel.content.contains("<p>")) {
                 holder.setContent(holder.ll_web, followUpListModel.content);
+                holder.tv_memo.setVisibility(View.GONE);
             } else {
                 holder.tv_memo.setVisibility(View.VISIBLE);
                 holder.tv_memo.setText(followUpListModel.content);
+                holder.ll_web.removeAllViews();
             }
         }
 
