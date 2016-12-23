@@ -54,6 +54,8 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Locale;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -95,7 +97,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
         //兼容android6.0使用新的方式申请
         PermissionTool.requestPermission(this,new String[]{"android.permission.ACCESS_FINE_LOCATION"},"请打开定位服务，允许快启使用你的位置",1);
-
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

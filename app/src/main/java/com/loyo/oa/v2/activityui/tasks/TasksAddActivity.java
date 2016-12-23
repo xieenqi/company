@@ -191,7 +191,6 @@ public class TasksAddActivity extends BaseActivity {
         switch_approve.setState(true);
         edt_content.addTextChangedListener(new CountTextWatcher(wordcount));
         init_gridView_photo();
-//        setTouchView(-1);
         getTempTask();
 
         projectAddTask();
@@ -199,6 +198,8 @@ public class TasksAddActivity extends BaseActivity {
             tv_mycustomer.setText(customerName);
             layout_mycustomer.setEnabled(false);
         }
+
+        MainApp.getMainApp().setTextSelection(null,edt_content,TasksAddActivity.this);
     }
 
     /**
@@ -534,15 +535,8 @@ public class TasksAddActivity extends BaseActivity {
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
-//                String str = year + "." + String.format("%02d", (month + 1)) + "." +
-//                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-//                tv_deadline.setText(str);
-//                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy.MM.dd HH:mm"));
-
                 mDeadline= com.loyo.oa.common.utils.DateTool.getStamp(year, month, day,hour,min,0);
                 tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mDeadline));
-
-
                 isKind = false;
                 layout_retask.setVisibility(View.GONE);
                 layout_retask_view.setVisibility(View.GONE);

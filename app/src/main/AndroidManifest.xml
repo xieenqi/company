@@ -39,6 +39,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.DEVICE_POWER" />
     <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
 
     <!-- 激光推送 -->
     <permission
@@ -59,7 +60,7 @@
     <application
         android:name=".application.MainApp"
         android:allowBackup="true"
-        android:configChanges="orientation|keyboardHidden"
+        android:configChanges="locale"
         android:icon="@drawable/app_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppStartLoadTranslucent"

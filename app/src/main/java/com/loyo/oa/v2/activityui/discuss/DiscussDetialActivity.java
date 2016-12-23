@@ -1,16 +1,23 @@
 package com.loyo.oa.v2.activityui.discuss;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
@@ -60,6 +68,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit.RetrofitError;
@@ -102,7 +111,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
     private int mStatus;
     private boolean isOnce = true; // 让数据第一次定位的底部
 
-    /**
+     /**
      * 启动当前页面
      *
      * @param act
@@ -169,7 +178,6 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                 tv_edit.setText("查看项目");
                 break;
             default:
-
                 break;
         }
 
@@ -864,4 +872,5 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                     }
                 });
     }
+
 }
