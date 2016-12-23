@@ -6,9 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -35,6 +33,7 @@ public class AddBuyProductActivity extends BaseActivity {
     private ImageView ivMore;
     private GridView gridViewPic;
     private EditText etBuyNum;
+    private  LinearLayout llDefinedHolder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +49,7 @@ public class AddBuyProductActivity extends BaseActivity {
         ivMore=(ImageView)findViewById(R.id.add_buy_product_iv_1);
         gridViewPic= (GridView) findViewById(R.id.add_buy_product_more_grid_1);
         etBuyNum= (EditText) findViewById(R.id.add_buy_product_et_2);
+        llDefinedHolder= (LinearLayout) findViewById(R.id.add_buy_product_more_definde);
 
 
         etBuyNum.addTextChangedListener(new TextWatcher() {
@@ -104,5 +104,20 @@ public class AddBuyProductActivity extends BaseActivity {
         });
         tvTitle.setText("新增购买产品");
         ivSubmit.setVisibility(View.VISIBLE);
+
+        addDefined();
+    }
+
+    //模拟添加自定义字段
+    private void addDefined(){
+        for (int i = 0; i < 5; i++) {
+            View view = getLayoutInflater().inflate(R.layout.item_product_defined, null);
+            TextView tvTempTitle= (TextView) view.findViewById(R.id.add_product_defined_tv_1);
+            TextView tvTempText= (TextView) view.findViewById(R.id.add_product_defined_tv_2);
+            tvTempTitle.setText("标题："+i);
+            tvTempText.setText("content:"+i);
+            llDefinedHolder.addView(view);
+
+        }
     }
 }
