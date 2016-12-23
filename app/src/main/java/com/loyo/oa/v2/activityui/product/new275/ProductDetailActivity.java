@@ -30,15 +30,17 @@ public class ProductDetailActivity extends BaseActivity {
     private TextView tvTitle;
 
     private GridView gridViewPic;
+    private LinearLayout llDefinedHolder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_buy_product);
+        setContentView(R.layout.activity_product_detail);
         initView();
     }
 
     private void initView(){
         tvTitle= (TextView) findViewById(R.id.tv_title);
+        llDefinedHolder= (LinearLayout) findViewById(R.id.product_detail_more_defined);
         gridViewPic= (GridView) findViewById(R.id.product_detail_more_grid_1);
 
         final List<Attachment> data=new ArrayList<>();
@@ -59,5 +61,21 @@ public class ProductDetailActivity extends BaseActivity {
 
         gridViewPic.setAdapter(picAdapter);
         tvTitle.setText("产品详细");
+
+        addDefined();
     }
+
+    //模拟添加自定义字段
+    private void addDefined(){
+        for (int i = 0; i < 5; i++) {
+            View view = getLayoutInflater().inflate(R.layout.item_product_defined, null);
+            TextView tvTempTitle= (TextView) view.findViewById(R.id.add_product_defined_tv_1);
+            TextView tvTempText= (TextView) view.findViewById(R.id.add_product_defined_tv_2);
+            tvTempTitle.setText("标题："+i);
+            tvTempText.setText("content:"+i);
+            llDefinedHolder.addView(view);
+
+        }
+    }
+
 }

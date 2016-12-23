@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include layout="@layout/include_search_title" />
 
-    <com.library.module.widget.loading.LoadingLayout
+    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ll_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:isFirstVisible="true">
 
         <com.loyo.oa.pulltorefresh.PullToRefreshListView
-            android:id="@+id/expandableListView_search"
+            android:id="@+id/lv_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
             android:cacheColorHint="#00000000"
             android:divider="@null"
-            android:drawSelectorOnTop="false"
+            android:drawSelectorOnTop="true"
             android:fadingEdge="none"
             android:fastScrollEnabled="false"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
+            android:scrollbars="none"
             android:smoothScrollbar="true" />
-
     </com.library.module.widget.loading.LoadingLayout>
-
-
 </LinearLayout>

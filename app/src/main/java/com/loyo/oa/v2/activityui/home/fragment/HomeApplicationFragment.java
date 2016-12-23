@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
+import com.loyo.oa.v2.activityui.dashboard.DashboardDetailActivity;
 import com.loyo.oa.v2.activityui.followup.FollowSelectActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
@@ -35,6 +36,7 @@ import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.product.SelectProductActivity;
+import com.loyo.oa.v2.activityui.product.new275.ProductDetailActivity;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
@@ -253,6 +255,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO 修改下面首页＋ 的入口
+                //测试调用
                 startActivity(new Intent(getActivity(), SelectProductActivity.class));
                 //showMoreWindow(v);
             }

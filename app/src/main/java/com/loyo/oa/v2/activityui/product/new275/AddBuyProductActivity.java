@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.product.new275.adapter.ProductPicAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class AddBuyProductActivity extends BaseActivity {
                     int num= Integer.parseInt(s+"");
                     if(num>10){
                         Toast("库存不足");
+                        etBuyNum.setText("10");
                     }
                 }
             }
@@ -102,8 +104,16 @@ public class AddBuyProductActivity extends BaseActivity {
                 }
             }
         });
+
+        //设置头部标题图标
         tvTitle.setText("新增购买产品");
         ivSubmit.setVisibility(View.VISIBLE);
+        ivSubmit.setImageResource(R.drawable.right_submit1);
+
+        //添加点击的反馈效果
+        Global.SetTouchView(ivSubmit,llMoreInfoBtn);
+
+
 
         addDefined();
     }
