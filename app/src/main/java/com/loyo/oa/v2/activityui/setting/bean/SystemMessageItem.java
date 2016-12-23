@@ -18,4 +18,6 @@ public class SystemMessageItem implements Serializable {
     public long viewedAt;
     public SystemMessageItemType bizzType;
     public int jumpType;
+    public int messageType;//区分 普通客户消息和公海客户消息，当bizzType=6&&messageType==1为公海客户提醒消息。
+
 }

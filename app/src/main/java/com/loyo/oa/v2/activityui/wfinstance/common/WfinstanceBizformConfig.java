@@ -1,10 +1,12 @@
 package com.loyo.oa.v2.activityui.wfinstance.common;
 
 import com.google.gson.reflect.TypeToken;
+import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.Config_project;
@@ -43,7 +45,10 @@ public class WfinstanceBizformConfig {
                         SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.WFINSTANCE_BIZFORM),
                         new TypeToken<ArrayList<BizForm>>() {
                         }.getType());
-
+        if (result == null) {
+            Global.Toast("审批类别数据在准备中,请退出重试");
+            return new ArrayList<BizForm>();
+        }
         return result;
     }
 

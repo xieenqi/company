@@ -50,9 +50,9 @@ public class BaseActivity extends Activity {
 
     protected MainApp app;
     protected boolean isNeedLogin = true;
-    public static Context mContext;
+    public Context mContext;
     public CustomProgressDialog customProgressDialog;
-//    public Intent rushTokenIntent;
+    //    public Intent rushTokenIntent;
 //    private int mTouchViewGroupId;
     public SweetAlertDialogView sweetAlertDialogView;
 
@@ -402,15 +402,15 @@ public class BaseActivity extends Activity {
 
     /**
      * 展示带成功失败动画加载框
-     * */
-    public void showStatusLoading(boolean outTouch){
-        DialogHelp.showStatusLoading(outTouch,this);
+     */
+    public void showStatusLoading(boolean outTouch) {
+        DialogHelp.showStatusLoading(outTouch, this);
     }
 
     /**
      * 关闭带成功失败动画加载框
-     * */
-    public void cancelStatusLoading(){
+     */
+    public void cancelStatusLoading() {
         DialogHelp.cancelStatusLoading();
     }
 

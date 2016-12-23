@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
@@ -55,7 +56,10 @@ public class CustomerTageConfig {
                         SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.CUSTOMER_TAGE),
                         new TypeToken<ArrayList<Tag>>() {
                         }.getType());
-
+        if (result == null) {
+            Global.Toast("标签数据在准备中,请退出重试");
+            return new ArrayList<Tag>();
+        }
         return result;
     }
 

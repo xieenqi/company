@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
@@ -27,6 +26,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.activityui.project.fragment.AttachmentFragment;
 import com.loyo.oa.v2.activityui.project.fragment.DiscussionFragment;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseChildMainListFragmentX;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -91,6 +91,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
     private ArrayList<OnProjectChangeCallback> callbacks = new ArrayList<>();
     BaseFragment fragmentX = null;
+    private boolean isEdit, isStop, isDelete, isRestart, isEditMember;
 
     @AfterViews
     void initViews() {
@@ -140,23 +141,30 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     Global.Toast("项目为空！");
                     return;
                 }
-                Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+                isEdit = project.status == 1 && project.isCreator();
+                isDelete = isStop = project.status == 1 && project.isCreator();
+                isRestart = project.status == 2 && project.isCreator();
+                //负责人和创建人相同 就取大的那个(创建人)
+                isEditMember = project.status == 1 && project.isManager() && !project.isCreator();
 
-                if (project.status == 1) {
-                    if (project.isCreator()) {
-                        intent.putExtra("delete", true);
-                        intent.putExtra("edit", true);
-                        intent.putExtra("extra", "结束项目"); //1:未完成
-                    } else if (project.isManager()) {
-                        intent.putExtra("edit", true);
-                        intent.putExtra("editText", "修改参与人");
-                    }
-                } else {
-                    if (project.isCreator()) {
-                        intent.putExtra("extra", "重启项目"); //0:关闭
-                    }
-                }
-                startActivityForResult(intent, ExtraAndResult.REQUSET_STATUS);
+//                Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+//                if (project.status == 1) {
+//                    if (project.isCreator()) {
+//                        intent.putExtra("delete", true);
+//                        intent.putExtra("edit", true);
+//                        intent.putExtra("extra", "结束项目"); //1:未完成
+//                    } else if (project.isManager()) {
+//                        intent.putExtra("edit", true);
+//                        intent.putExtra("editText", "修改参与人");
+//                    }
+//                } else {
+//                    if (project.isCreator()) {
+//                        intent.putExtra("extra", "重启项目"); //0:关闭
+//                    }
+//                }
+//                startActivityForResult(intent, ExtraAndResult.REQUSET_STATUS);
+
+                functionButton();
                 break;
             case R.id.layout_project_des:
                 Bundle b = new Bundle();
@@ -166,6 +174,62 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             default:
                 break;
         }
+    }
+
+    /**
+     * 参见 project_perminssion 图片
+     * 右上角菜单
+     */
+    private void functionButton() {
+        ActionSheetDialog dialog = new ActionSheetDialog(ProjectInfoActivity.this).builder();
+        if (isEdit)
+            dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    editProject();
+                }
+            });
+        if (isStop)
+            dialog.addSheetItem("结束项目", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    restartProject();
+                }
+            });
+        if (isDelete)
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    deleteProject();
+                }
+            });
+        if (isRestart)
+            dialog.addSheetItem("重启项目", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    restartProject();
+                }
+            });
+        if (isEditMember)
+            dialog.addSheetItem("修改参与人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    editProject();
+                }
+            });
+        dialog.show();
+    }
+
+    /**创建人编辑全部 负者人修改参与人
+     * 之前编辑项目权限在 ProjectAddActivity操作 此次没有调整
+     */
+    private void editProject() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("mUpdate", true);
+        bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, project);
+        app.startActivityForResult(ProjectInfoActivity.this, ProjectAddActivity_.class, MainApp.ENTER_TYPE_RIGHT,
+                TasksInfoActivity.REQUEST_EDIT, bundle);
+        isUpdate = true;
     }
 
     @Override
@@ -359,24 +423,24 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             case TasksInfoActivity.REQUEST_EDIT:
                 getProject();
                 break;
-            case ExtraAndResult.REQUSET_STATUS:
-                if (data.getBooleanExtra("edit", false)) {
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("mUpdate", true);
-                    bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, project);
-                    app.startActivityForResult(this, ProjectAddActivity_.class, MainApp.ENTER_TYPE_RIGHT,
-                            TasksInfoActivity.REQUEST_EDIT, bundle);
-                    isUpdate = true;
-                }
-                //删除回调
-                else if (data.getBooleanExtra("delete", false)) {
-                    deleteProject();
-                }
-                //结束任务或重启任务
-                else if (data.getBooleanExtra("extra", false)) {
-                    restartProject();
-                }
-                break;
+//            case ExtraAndResult.REQUSET_STATUS:
+//                if (data.getBooleanExtra("edit", false)) {
+//                    Bundle bundle = new Bundle();
+//                    bundle.putBoolean("mUpdate", true);
+//                    bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, project);
+//                    app.startActivityForResult(this, ProjectAddActivity_.class, MainApp.ENTER_TYPE_RIGHT,
+//                            TasksInfoActivity.REQUEST_EDIT, bundle);
+//                    isUpdate = true;
+//                }
+//                //删除回调
+//                else if (data.getBooleanExtra("delete", false)) {
+//                    deleteProject();
+//                }
+//                //结束任务或重启任务
+//                else if (data.getBooleanExtra("extra", false)) {
+//                    restartProject();
+//                }
+//                break;
 //            case 196708://讨论不能够@自己196708
 //                if (fragmentX instanceof DiscussionFragment) {
 //                    ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);

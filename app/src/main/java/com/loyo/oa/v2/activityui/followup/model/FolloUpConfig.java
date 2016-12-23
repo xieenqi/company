@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.followup.model;
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.Config_project;
@@ -43,7 +44,10 @@ public class FolloUpConfig {
                         SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.FOLLOW_UP_STAGE),
                         new TypeToken<ArrayList<FollowFilter>>() {
                         }.getType());
-
+        if (result == null) {
+            Global.Toast("筛选数据在准备中,请退出重试");
+            return new ArrayList<FollowFilter>();
+        }
         return result;
     }
 

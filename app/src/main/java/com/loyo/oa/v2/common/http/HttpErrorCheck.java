@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.common.http;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -10,14 +12,17 @@ import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.v2.activityui.login.DialogTipActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RemindWay;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.UpdateTipActivity;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.json.JSONException;
@@ -146,8 +151,7 @@ public class HttpErrorCheck {
      * loading 报错 error信息走Error返回的
      *
      * @param error
-     * @param loadingLayout
-//     * @param isLoading     true 只显示loading  false Toast
+     * @param loadingLayout //     * @param isLoading     true 只显示loading  false Toast
      */
     public static void checkError(RetrofitError error, LoadingLayout loadingLayout) {
         DialogHelp.cancelLoading();
@@ -324,7 +328,7 @@ public class HttpErrorCheck {
             } else {
                 String errorInfo = job.getString("error");
                 //Toast(errorInfo);
-                errorMsg = "errorInfo";
+                errorMsg = errorInfo;
             }
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
         } catch (IOException e) {
@@ -383,18 +387,10 @@ public class HttpErrorCheck {
     }
 
     private static void showDilog(String msg) {
-        final SweetAlertDialogView doalog = new SweetAlertDialogView(BaseActivity.mContext);
-        doalog.alertMessageClick(new OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                doalog.sweetAlertDialog.dismiss();
-                //到侧边栏 退出系统到登录界面
-                Intent in = new Intent();
-                in.setAction(ExtraAndResult.ACTION_USER_VERSION);
-                in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
-                LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
-            }
-        }, "提示", msg);
+        Intent intentUpdateTipActivity = new Intent(MainApp.getMainApp().getBaseContext(), DialogTipActivity.class);
+        intentUpdateTipActivity.putExtra("msg", msg);
+        intentUpdateTipActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        MainApp.getMainApp().getBaseContext().startActivity(intentUpdateTipActivity);
     }
 
     /**
