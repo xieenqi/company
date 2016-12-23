@@ -38,7 +38,8 @@ android {
                            'src/main/res_loyo/setting',
                            'src/main/res_loyo/worksheet',
                            'src/main/res_loyo/order',
-                           'src/main/res_loyo/wfinstance']
+                           'src/main/res_loyo/wfinstance',
+                           'src/main/res_loyo/product']
         }
     }
     signingConfigs {

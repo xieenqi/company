@@ -838,6 +838,16 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
 
+
+        <!--新增产品模块-->
+        <activity
+            android:name=".activityui.product.new275.AddBuyProductActivity"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+
+
         <supports-screens
             android:anyDensity="true"
             android:largeScreens="true"
