@@ -36,7 +36,7 @@ public class MySaleFrgmentModelImpl implements MySaleFrgmentContract.Model {
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, presenter.getLoadingView(), page == 1 ? true : false);
+                HttpErrorCheck.checkError(error, presenter.getLoadingView());
                 presenter.refreshComplete();
             }
         });

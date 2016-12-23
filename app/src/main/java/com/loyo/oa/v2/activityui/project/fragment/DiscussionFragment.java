@@ -192,7 +192,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, ll_loading, mPagination.getPageIndex() == 1 ? true : false);
+                HttpErrorCheck.checkError(error, ll_loading);
                 super.failure(error);
                 lv_discuss.onRefreshComplete();
             }

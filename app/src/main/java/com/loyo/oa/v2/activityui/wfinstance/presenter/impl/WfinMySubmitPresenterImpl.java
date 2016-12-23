@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
 import com.loyo.oa.v2.activityui.wfinstance.common.BizFormMenuModel;
 import com.loyo.oa.v2.activityui.wfinstance.common.SubmitStatusMenuModel;
+import com.loyo.oa.v2.activityui.wfinstance.common.WfinstanceBizformConfig;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMySubmitPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMySubmitView;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -48,7 +49,7 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter {
     private WfinMySubmitView crolView;
     private ArrayList<WflnstanceItemData> datas = new ArrayList<>();
     private ArrayList<WflnstanceListItem> lstData = new ArrayList<>();
-    private ArrayList<BizForm> mBizForms = new ArrayList<>();
+//    private ArrayList<BizForm> mBizForms = new ArrayList<>();
 
     private String status;
     private String bizFormId = "";
@@ -59,32 +60,32 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter {
         this.filterMenu = mMenu;
 
     }
-
-    /**
-     * 获取审批类型数据
-     */
-    @Override
-    public void getWfBizForms() {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", 1);
-        params.put("pageSize", 500);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
-            @Override
-            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
-                HttpErrorCheck.checkResponse("审批自定义字段", response);
-                if (null != bizFormPaginationX) {
-                    mBizForms = bizFormPaginationX.getRecords();
-                    if (null != mBizForms && !mBizForms.isEmpty()) {
-                        _loadFilterOptions(mBizForms);
-                    } else {
-                        _loadFilterOptions(null);
-                    }
-                } else {
-                    _loadFilterOptions(null);
-                }
-            }
-        });
-    }
+//
+//    /**
+//     * 获取审批类型数据
+//     */
+//    @Override
+//    public void getWfBizForms() {
+//        HashMap<String, Object> params = new HashMap<>();
+//        params.put("pageIndex", 1);
+//        params.put("pageSize", 500);
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
+//            @Override
+//            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
+//                HttpErrorCheck.checkResponse("审批自定义字段", response);
+//                if (null != bizFormPaginationX) {
+//                    mBizForms = bizFormPaginationX.getRecords();
+//                    if (null != mBizForms && !mBizForms.isEmpty()) {
+//                        _loadFilterOptions(mBizForms);
+//                    } else {
+//                        _loadFilterOptions(null);
+//                    }
+//                } else {
+//                    _loadFilterOptions(null);
+//                }
+//            }
+//        });
+//    }
 
     /**
      * 获取审批列表数据
@@ -124,7 +125,7 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, crolView.getLoading(), page == 1 ? true : false);
+                        HttpErrorCheck.checkError(error, crolView.getLoading());
                         crolView.setListRefreshComplete();
                     }
                 });
@@ -133,7 +134,7 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter {
     /**
      * 初始化顶部菜单
      */
-    public void _loadFilterOptions(List<BizForm> bizForms) {
+    public void loadFilterOptions(List<BizForm> bizForms) {
         List<FilterModel> options = new ArrayList<>();
         options.add(SubmitStatusMenuModel.getFilterModel());
         if (bizForms != null) {
@@ -162,7 +163,8 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter {
 
     @Override
     public void loadFilterOptions() {
-        getWfBizForms();
+        loadFilterOptions(WfinstanceBizformConfig.getBizform(true));
+
     }
 
     /**

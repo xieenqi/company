@@ -20,13 +20,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.*;
 import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.beans.WorkReportRecord;
@@ -49,7 +48,6 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -238,7 +236,7 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
                         break;
                     // 跟进对象 客户 到新建跟进动态
                     case DYNAMIC_MANAGE:
-                        mIntent = new Intent(getApplicationContext(), DynamicAddActivity.class);
+                        mIntent = new Intent(getApplicationContext(), FollowAddActivity.class);
                         mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                         mIntent.putExtra(Customer.class.getName(), (Customer) (lstData.get(position - 2)));
                         startActivity(mIntent);
@@ -393,7 +391,7 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
 
     @Override
     public void failure(RetrofitError error) {
-        HttpErrorCheck.checkError(error, ll_loading, isTopAdd);
+        HttpErrorCheck.checkError(error, ll_loading);
         expandableListView_search.onRefreshComplete();
     }
 

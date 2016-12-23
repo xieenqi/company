@@ -24,8 +24,11 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICheckPoint;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -228,7 +231,7 @@ public class ChildTaskAddActivity extends BaseActivity {
      * 删除子任务
      */
     private void delete() {
-        MainApp.getMainApp().getRestAdapter().create(ICheckPoint.class).deleteChildTask(mTask.getId(), mChildTask.getId(), new RCallback<TaskCheckPoint>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ICheckPoint.class).deleteChildTask(mTask.getId(), mChildTask.getId(), new RCallback<TaskCheckPoint>() {
             @Override
             public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
                 Toast("删除子任务成功");
@@ -266,7 +269,7 @@ public class ChildTaskAddActivity extends BaseActivity {
         map.put("content", mChildTask.getTitle());
         map.put("responsiblePerson", mChildTask.getResponsiblePerson());
 
-        MainApp.getMainApp().getRestAdapter().create(ICheckPoint.class).createChildTask(mTask.getId(), map, new RCallback<TaskCheckPoint>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ICheckPoint.class).createChildTask(mTask.getId(), map, new RCallback<TaskCheckPoint>() {
             @Override
             public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
                 HttpErrorCheck.checkCommitSus("新建子任务",response);
@@ -312,7 +315,7 @@ public class ChildTaskAddActivity extends BaseActivity {
         datas2.put("title", mChildTask.getTitle());
         datas2.put("achieved", mChildTask.isAchieved());
         datas2.put("responsiblePersonId", mChildTask.getResponsiblePerson().getId());
-        app.getRestAdapter().create(ICheckPoint.class).updateChildTask(mChildTask.getTaskId(), mChildTask.getId(), datas2, new RCallback<TaskCheckPoint>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ICheckPoint.class).updateChildTask(mChildTask.getTaskId(), mChildTask.getId(), datas2, new RCallback<TaskCheckPoint>() {
             @Override
             public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
                 Toast("更新子任务成功");

@@ -24,9 +24,8 @@ import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
-import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
+import com.loyo.oa.v2.activityui.followup.FollowSelectActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
@@ -177,8 +176,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //写跟进
-                case BaseActivity.FOLLOW_ADD://   DynamicSelectActivity  DynamicAddActivity
-                    startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
+                case BaseActivity.FOLLOW_ADD://   FollowSelectActivity  FollowAddActivity
+                    startActivityForResult(new Intent(getActivity(), FollowSelectActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //新建订单
@@ -415,7 +414,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      */
     private void getValidateInfo() {
         DialogHelp.showLoading(getActivity(), "加载中...", true);
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(final ValidateInfo _validateInfo, final Response response) {
                 HttpErrorCheck.checkResponse("考勤信息:", response);
@@ -779,7 +778,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         map.put("originalgps", longitude + "," + latitude);
         LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         DialogHelp.showLoading(getActivity(), "", true);
-        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 attendanceRecords = attendanceRecord;

@@ -79,7 +79,7 @@ public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresen
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, crolView.getLoadingView(), page == 1 ? true : false);
+                HttpErrorCheck.checkError(error, crolView.getLoadingView());
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }

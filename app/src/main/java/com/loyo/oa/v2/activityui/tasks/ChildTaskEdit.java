@@ -16,8 +16,10 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.point.ICheckPoint;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -131,7 +133,7 @@ public class ChildTaskEdit extends BaseActivity {
         parmas.put("content", et_info.getText().toString());
         parmas.put("responsiblePerson",newUser);
 
-        app.getRestAdapter().create(ICheckPoint.class).updateChildTaskInfo(TaskId, data.getId(), parmas, new RCallback<TaskCheckPoint>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ICheckPoint.class).updateChildTaskInfo(TaskId, data.getId(), parmas, new RCallback<TaskCheckPoint>() {
             @Override
             public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
                 Toast("更新子任务成功");
@@ -150,7 +152,7 @@ public class ChildTaskEdit extends BaseActivity {
      * 删除 任务 的子任务 xnq
      */
     private void deleteChildTask(){
-        app.getRestAdapter().create(ICheckPoint.class).deleteChildTaskInfo(TaskId, data.getId(), new RCallback<TaskCheckPoint>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ICheckPoint.class).deleteChildTaskInfo(TaskId, data.getId(), new RCallback<TaskCheckPoint>() {
             @Override
             public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
                 Toast("删除子任务成功");

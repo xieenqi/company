@@ -237,21 +237,21 @@ public enum SystemMessageItemType {
             return "Id";
         }
     },
-    // TODO 公海客户暂还没有定义
-    /*公海客户详情*/
-    MSG_CUSTOMER_PUBLIC(40) {
-        public int getIcon() {
-            return R.drawable.icon_sys_custom_public;
-        }
-
-        public Class<?> getItemClass() {
-            return CustomerDetailInfoActivity_.class;
-        }
-
-        public String getExtraName() {
-            return "Id";
-        }
-    },
+//    // TODO 公海客户暂还没有定义
+//    /*公海客户详情*/
+//    MSG_CUSTOMER_PUBLIC(40) {
+//        public int getIcon() {
+//            return R.drawable.icon_sys_custom_public;
+//        }
+//
+//        public Class<?> getItemClass() {
+//            return CustomerDetailInfoActivity_.class;
+//        }
+//
+//        public String getExtraName() {
+//            return "Id";
+//        }
+//    },
     /*订单详情*/
     MSG_ORDER(25) {
         public int getIcon() {

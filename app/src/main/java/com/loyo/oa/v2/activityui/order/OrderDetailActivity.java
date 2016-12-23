@@ -15,7 +15,6 @@ import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
@@ -32,16 +31,12 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IOrder;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;

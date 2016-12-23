@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
@@ -36,17 +37,6 @@ public class CustomerTageConfig {
                 });
     }
 
-    /* 读取缓存 */
-    public static ArrayList<Tag> getTageCache() {
-        ArrayList<Tag> result =
-                MainApp.getMainApp().gson.fromJson(
-                        SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.CUSTOMER_TAGE),
-                        new TypeToken<ArrayList<Tag>>() {
-                        }.getType());
-
-        return result;
-    }
-
     // TODO:  增加网络获取的回调
     /* 读取缓存，如果没有缓冲，从网络获取 */
     public static ArrayList<Tag> getTage(boolean fetchIfEmpty) {
@@ -58,6 +48,21 @@ public class CustomerTageConfig {
 
         return result;
     }
+
+    /* 读取缓存 */
+    public static ArrayList<Tag> getTageCache() {
+        ArrayList<Tag> result =
+                MainApp.getMainApp().gson.fromJson(
+                        SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.CUSTOMER_TAGE),
+                        new TypeToken<ArrayList<Tag>>() {
+                        }.getType());
+        if (result == null) {
+            Global.Toast("标签数据在准备中,请退出重试");
+            return new ArrayList<Tag>();
+        }
+        return result;
+    }
+
 
     /* 清除缓存 */
     private static void clearTage() {

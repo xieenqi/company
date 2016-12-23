@@ -19,18 +19,16 @@ import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.clue.presenter.impl.ClueFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
@@ -221,7 +219,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
                 bundle.putSerializable(ClueListItem.class.getName(), item);
                 bundle.putBoolean("isDetail", true);
                 bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
-                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                app.startActivityForResult(this, FollowAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
         }
     }

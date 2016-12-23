@@ -194,7 +194,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void failure(RetrofitError error) {
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
     }

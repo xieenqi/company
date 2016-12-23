@@ -425,7 +425,7 @@ public class AMapService extends APSService {
             if (null != trackLogs && trackLogs.length > 0) {
                 final HashMap<String, Object> tracklogsMap = new HashMap<>();
                 tracklogsMap.put("tracklogs", trackLogs);
-                app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(tracklogsMap, new RCallback<Object>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).uploadTrackLogs(tracklogsMap, new RCallback<Object>() {
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【缓存轨迹】上传成功： ", response);
@@ -539,7 +539,7 @@ public class AMapService extends APSService {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                app.getRestAdapter().create(ITrackLog.class).getUserOneLine(new Callback<Object>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).getUserOneLine(new Callback<Object>() {
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("用户在线：", response);

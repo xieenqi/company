@@ -22,7 +22,7 @@ import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerFollowUpListView;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
@@ -225,7 +225,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
                 bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 bundle.putBoolean("isDetail", true);
-                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                app.startActivityForResult(this, FollowAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
         }
     }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Created by xeq on 16/11/10.
  */
 
-public interface DynamicSelectCustomerAndCuleFragmentVControl extends BaseView {
+public interface FollowSelectCustomerAndCuleFragmentVControl extends BaseView {
     void bindCustomerData(ArrayList<Customer> mCustomers);
 
     void bindClueData(ArrayList<ClueListItem> mClues);

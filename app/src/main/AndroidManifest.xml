@@ -274,7 +274,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activityui.followup.DynamicSelectActivity"
+            android:name=".activityui.followup.FollowSelectActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
@@ -411,7 +411,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
-            android:name=".activityui.followup.DynamicAddActivity"
+            android:name=".activityui.followup.FollowAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -435,6 +435,12 @@
             android:name=".tool.UpdateTipActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
+        <!--、-->
+        <activity
+            android:name=".activityui.login.DialogTipActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+
         <activity
             android:name=".activityui.attachment.AttachmentRightActivity_"
             android:launchMode="singleTop"

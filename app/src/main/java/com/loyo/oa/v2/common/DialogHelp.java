@@ -57,7 +57,12 @@ public class DialogHelp {
     }
 
     public static void cancelStatusLoading() {
-        loadStatusDialog.dismiss();
+        try {
+            loadStatusDialog.dismiss();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            LogUtil.d("提交 loading 取消异常!!!!!!");
+        }
     }
 
     /**

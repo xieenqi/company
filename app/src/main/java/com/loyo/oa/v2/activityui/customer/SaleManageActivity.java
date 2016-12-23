@@ -131,7 +131,7 @@ public class SaleManageActivity extends BaseLoadingActivity implements View.OnCl
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
+                        HttpErrorCheck.checkError(error, ll_loading);
                         listView_demands.onRefreshComplete();
                         super.failure(error);
                     }
@@ -185,7 +185,7 @@ public class SaleManageActivity extends BaseLoadingActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, isChanged ? RESULT_OK : RESULT_CANCELED, new Intent());
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isChanged ? RESULT_OK : RESULT_CANCELED, new Intent());
     }
 
     @Override
