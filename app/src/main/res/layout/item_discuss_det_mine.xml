@@ -65,6 +65,7 @@
                 android:text=""
                 android:textColor="#fff"
                 android:textIsSelectable="true"
+                android:selectAllOnFocus="true"
                 android:textSize="@dimen/text_sp14"/>
 
         </RelativeLayout>

@@ -676,7 +676,8 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             tvMine = (TextView) itemView.findViewById(R.id.tv_mine);
             tvContent = (TextView) itemView.findViewById(R.id.tv_mine_content);
             tvContent.setMaxWidth(screenWidth / 2);
-//            tvContent.setAutoLinkMask(Linkify.WEB_URLS);
+//          tvContent.setAutoLinkMask(Linkify.WEB_URLS);
+            MainApp.getMainApp().setTextSelection(tvContent,null,DiscussDetialActivity.this);
             ivMineAvatar = (RoundImageView) itemView.findViewById(R.id.iv_mine_avatar);
         }
     }
@@ -694,6 +695,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             mTvOtherContent = (TextView) itemView.findViewById(R.id.tv_other_content);
             mTvOtherContent.setMaxWidth((int) (screenWidth / 1.6f));
 //            mTvOtherContent.setAutoLinkMask(Linkify.PHONE_NUMBERS | Linkify.WEB_URLS);
+            MainApp.getMainApp().setTextSelection(mTvOtherContent,null,DiscussDetialActivity.this);
             mIvOtherAvatar = (RoundImageView) itemView.findViewById(R.id.iv_other_avatar);
         }
     }

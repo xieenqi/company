@@ -164,6 +164,9 @@ public class TasksAddActivity extends BaseActivity {
     private boolean isState = true;
     private boolean isKind;//true:重复 //截止
 
+    private static final int ID_PASTE = android.R.id.paste;
+
+
     private String title;
     private String content;
     private StringBuffer joinName;
@@ -172,6 +175,7 @@ public class TasksAddActivity extends BaseActivity {
     private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
     private List<String> mSelectPath;
     private ArrayList<ImageInfo> pickPhotsResult;
+
 
     @AfterViews
     void initUI() {
@@ -198,8 +202,6 @@ public class TasksAddActivity extends BaseActivity {
             tv_mycustomer.setText(customerName);
             layout_mycustomer.setEnabled(false);
         }
-
-        MainApp.getMainApp().setTextSelection(null,edt_content,TasksAddActivity.this);
     }
 
     /**

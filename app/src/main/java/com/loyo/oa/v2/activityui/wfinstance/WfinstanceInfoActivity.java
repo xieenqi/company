@@ -32,6 +32,7 @@ import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfNodes;
@@ -181,7 +182,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         img_title_left.setOnTouchListener(touch);
         img_title_right.setOnTouchListener(touch);
         img_title_right.setVisibility(View.GONE);
-
+        MainApp.getMainApp().setTextSelection(tv_memo,null,WfinstanceInfoActivity.this);
     }
 
     /**

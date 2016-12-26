@@ -169,6 +169,8 @@ public class MainApp extends Application {
 
     /* app是否在前台 */
     private static boolean isActive;
+    ActionMode actionMode;
+
 
     public static String getToken() {
         if (!StringUtil.isEmpty(token)) {
@@ -778,6 +780,7 @@ public class MainApp extends Application {
         }
     }
 
+
     /**
      * 全局复制粘贴
      * */
@@ -788,9 +791,10 @@ public class MainApp extends Application {
             return;
         }
 
-        ActionMode.Callback2 callback2 = new ActionMode.Callback2() {
+        final ActionMode.Callback callback2 = new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                LogUtil.dee("onPrepareActionMode");
                 MenuInflater menuInflater = mode.getMenuInflater();
                 menuInflater.inflate(R.menu.selectionmenu,menu);
                 return true;
@@ -798,6 +802,7 @@ public class MainApp extends Application {
 
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                LogUtil.dee("onPrepareActionMode");
                 for (int i = 0; i < menu.size(); i++) {
                     MenuItem item = menu.getItem(i);
                     if (!menuIds.contains(item.getItemId()))
@@ -857,11 +862,7 @@ public class MainApp extends Application {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-            }
-            //控制这个浮动菜单的位置
-            @Override
-            public void onGetContentRect(ActionMode mode, View view, Rect outRect) {
-                super.onGetContentRect(mode, view, outRect);
+                actionMode = null;
             }
         };
 
@@ -869,6 +870,16 @@ public class MainApp extends Application {
         textView.setCustomSelectionActionModeCallback(callback2);
         if(null != editText)
         editText.setCustomSelectionActionModeCallback(callback2);
+/*        editText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (actionMode != null) {
+                    return false;
+                }
+                actionMode = mActivity.startActionMode(callback2, ActionMode.TYPE_FLOATING);
+                return true;
+            }
+        });*/
 
     }
 
