@@ -31,8 +31,8 @@ public class DialogHelp {
 
     /**
      * 带成功,失败的加载Dialog
-     * */
-    public static void showStatusLoading(boolean outTouch,Context context){
+     */
+    public static void showStatusLoading(boolean outTouch, Context context) {
         loadStatusDialog = new LoadStatusView(context);
         loadStatusDialog.setCanceledOnTouchOutside(outTouch);
         loadStatusDialog.show();
@@ -40,8 +40,8 @@ public class DialogHelp {
 
     /**
      * 成功
-     * */
-    public static void successStatusLoad(){
+     */
+    public static void successStatusLoad() {
         if (loadStatusDialog != null) {
             loadStatusDialog.animSuccessEmbl();
         }
@@ -49,15 +49,20 @@ public class DialogHelp {
 
     /**
      * 失败
-     * */
-    public static void errorStatusLoading(){
+     */
+    public static void errorStatusLoading(String message) {
         if (loadStatusDialog != null) {
-            loadStatusDialog.animErrorEmbl();
+            loadStatusDialog.animErrorEmbl(message);
         }
     }
 
-    public static void cancelStatusLoading(){
-        loadStatusDialog.dismiss();
+    public static void cancelStatusLoading() {
+        try {
+            loadStatusDialog.dismiss();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            LogUtil.d("提交 loading 取消异常!!!!!!");
+        }
     }
 
     /**
@@ -125,4 +130,18 @@ public class DialogHelp {
         }
         return loadingDialog.isShowing();
     }
+
+    public static Dialog createLoadingDialog(Context context) {
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View v = inflater.inflate(R.layout.layout_loading_dialog, null); // 得到加载view
+        LinearLayout layout = (LinearLayout) v.findViewById(R.id.dialog_view); // 加载布局
+        Dialog loadingDialog = new Dialog(context, R.style.loading_dialog); // 创建自定义样式dialog
+        loadingDialog.setCancelable(false); // 不可以用"返回键"取消
+        loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        return loadingDialog;
+    }
+
 }

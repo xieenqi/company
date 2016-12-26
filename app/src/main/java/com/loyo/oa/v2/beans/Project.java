@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectAddActivity;
@@ -104,7 +105,8 @@ public class Project extends BaseBeans {
 
     @Override
     public String getOrderStr() {
-        return MainApp.getMainApp().df9.format(new Date(getCreatedAt()));
+//        return MainApp.getMainApp().df9.format(new Date(getCreatedAt()));
+        return DateTool.getDateTimeFriendly(getCreatedAt()/1000);
     }
 
     @Override

@@ -121,7 +121,9 @@ public class MenuTabBar extends LinearLayout {
         canvas.drawRect(0, 0, measuredWidth, mLineHeight, mLinePaint);
 
         /* 下边线 */
-        canvas.drawRect(0, measureHeight - mLineHeight, measuredWidth, measureHeight, mLinePaint);
+        if (mTabCount != 0) {
+            canvas.drawRect(0, measureHeight - mLineHeight, measuredWidth, measureHeight, mLinePaint);
+        }
     }
 
     public void setTitles(List<String> list) {

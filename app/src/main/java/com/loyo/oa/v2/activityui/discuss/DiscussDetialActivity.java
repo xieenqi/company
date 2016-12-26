@@ -1,16 +1,23 @@
 package com.loyo.oa.v2.activityui.discuss;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,7 +27,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
@@ -59,6 +68,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit.RetrofitError;
@@ -101,7 +111,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
     private int mStatus;
     private boolean isOnce = true; // 让数据第一次定位的底部
 
-    /**
+     /**
      * 启动当前页面
      *
      * @param act
@@ -168,7 +178,6 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                 tv_edit.setText("查看项目");
                 break;
             default:
-
                 break;
         }
 
@@ -340,7 +349,6 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      * @param isPull 是否是上拉
      */
     private void loadMessage(final boolean isPull) {
-//        showLoading("");
         HashMap<String, Object> body = new HashMap<>();
         body.put("pageIndex", pageIndex + "");
         body.put("pageSize", 5);
@@ -350,9 +358,6 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             @Override
             public void success(final PaginationX<HttpDiscussDet> d, final Response response) {
                 HttpErrorCheck.checkResponse("讨论详情：", response);
-//                if (d == null || d.getRecords().size() == 0) {
-//                    Toast("没有更多信息");
-//                }
                 Collections.reverse(d.getRecords());
                 if (isPull) {
                     mPageDiscussion.getRecords().clear();
@@ -404,6 +409,9 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      * @param mineMessage
      */
     private void addMineMessge(final long time, final String mineMessage) {
+        //页面没有数据的时候发送信息就展现页面
+        if (mPageDiscussion.getRecords().size() == 0)
+           ll_loading.setStatus(LoadingLayout.Success);
         messages.put(time, mineMessage);
         HttpDiscussDet discussion = new HttpDiscussDet();
         HttpCrecter creacter = new HttpCrecter();
@@ -433,6 +441,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                     @Override
                     public void success(final Discussion d, final Response response) {
                         HttpErrorCheck.checkResponse(response);
+
                     }
 
                     @Override
@@ -544,7 +553,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
-        if (! REQUEST_GET_USER.equals(event.request)) {
+        if (!REQUEST_GET_USER.equals(event.request)) {
             return;
         }
         StaffMemberCollection collection = event.data;
@@ -667,7 +676,8 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             tvMine = (TextView) itemView.findViewById(R.id.tv_mine);
             tvContent = (TextView) itemView.findViewById(R.id.tv_mine_content);
             tvContent.setMaxWidth(screenWidth / 2);
-//            tvContent.setAutoLinkMask(Linkify.WEB_URLS);
+//          tvContent.setAutoLinkMask(Linkify.WEB_URLS);
+            MainApp.getMainApp().setTextSelection(tvContent,null,DiscussDetialActivity.this);
             ivMineAvatar = (RoundImageView) itemView.findViewById(R.id.iv_mine_avatar);
         }
     }
@@ -685,6 +695,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             mTvOtherContent = (TextView) itemView.findViewById(R.id.tv_other_content);
             mTvOtherContent.setMaxWidth((int) (screenWidth / 1.6f));
 //            mTvOtherContent.setAutoLinkMask(Linkify.PHONE_NUMBERS | Linkify.WEB_URLS);
+            MainApp.getMainApp().setTextSelection(mTvOtherContent,null,DiscussDetialActivity.this);
             mIvOtherAvatar = (RoundImageView) itemView.findViewById(R.id.iv_other_avatar);
         }
     }
@@ -757,7 +768,8 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             final HttpDiscussDet info = datas.get(position);
             if (holder.getClass() == DiscussDetMineViewHolder.class) {
                 DiscussDetMineViewHolder mineHolder = (DiscussDetMineViewHolder) holder;
-                mineHolder.tvMineTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+//                mineHolder.tvMineTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+                mineHolder.tvMineTime.setText(DateTool.getDateTimeFriendly(info.createdAt));
 //                mineHolder.tvContent.setAutoLinkMask(0x01);
                 try {
                     mineHolder.tvContent.setText(info.content);
@@ -779,7 +791,8 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-                otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+//                otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+                otherHolder.mTvOtherTime.setText(DateTool.getDateTimeFriendly(info.createdAt));
                 ImageLoader.getInstance().displayImage(info.creator.avatar, otherHolder.mIvOtherAvatar);
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
                 otherHolder.mIvOtherAvatar.setTag(selectUser);
@@ -861,4 +874,5 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                     }
                 });
     }
+
 }

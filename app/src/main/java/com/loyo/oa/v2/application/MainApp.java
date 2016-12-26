@@ -3,16 +3,28 @@ package com.loyo.oa.v2.application;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
+import android.text.Editable;
+import android.util.DisplayMetrics;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -67,6 +79,8 @@ import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.Response;
 
+import static com.loyo.oa.v2.R.id.tv_content;
+
 
 public class MainApp extends Application {
 
@@ -91,24 +105,40 @@ public class MainApp extends Application {
     public DisplayImageOptions options_rounded;
     private AnimationDrawable animationDrawable;
 
-    public SimpleDateFormat df1;//设置日期格式
-    public SimpleDateFormat df2;//设置日期格式
-    public SimpleDateFormat df3;//设置日期格式
-    public SimpleDateFormat df4;//设置日期格式
-    public SimpleDateFormat df5;//设置日期格式
-    public SimpleDateFormat df6;//设置日期格式
-    public SimpleDateFormat df7;//设置日期格式
-    public SimpleDateFormat df8;//设置日期格式
-    public SimpleDateFormat df9;//设置日期格式
-    public SimpleDateFormat df10;//设置日期格式
-    public SimpleDateFormat df11;//设置日期格式
-    public SimpleDateFormat df12;//设置日期格式
-    public SimpleDateFormat df13;//设置日期格式
-    public SimpleDateFormat df14;//设置日期格式
-    public SimpleDateFormat df15;//设置日期格式
-    public SimpleDateFormat df_api;//服务器返回的时间格式
-    public SimpleDateFormat df_api_get;
-    public SimpleDateFormat df_api_get2;
+//    public SimpleDateFormat df1;//设置日期格式
+//    public SimpleDateFormat df2;//设置日期格式        df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df3;//设置日期格式        df3 = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df4;//设置日期格式        df4 = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df5;//设置日期格式        df5 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df6;//设置日期格式        df6 = new SimpleDateFormat("HH:mm", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df7;//设置日期格式 df7 = new SimpleDateFormat("MM.dd", Locale.getDefault());//设置日期格式
+////    public SimpleDateFormat df8;//设置日期格式        df8 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df9;//设置日期格式        df9 = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df10;//设置日期格式        df10 = new SimpleDateFormat("yyyy年M月dd日 HH:mm", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df11;//设置日期格式        df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df12;//设置日期格式        df12 = new SimpleDateFormat("yyyy年M月dd日", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df13;//设置日期格式        df13 = new SimpleDateFormat("yyyy年M月", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df14;//设置日期格式        df14 = new SimpleDateFormat("yyyy年M月dd日 HH:mm:ss", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df15;//设置日期格式        df15 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df_api;//服务器返回的时间格式        df_api = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());//设置日期格式
+//
+//    public SimpleDateFormat df_api_get;//        df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
+//
+////    public SimpleDateFormat df_api_get2;//        df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00
+
     public LogUtil logUtil;
 
     MainApplicationHandler handler;
@@ -125,6 +155,8 @@ public class MainApp extends Application {
     public ScaleAnimation animShow;  //显示动画
     public ScaleAnimation animHide;  //隐藏动画
 
+    private List<Integer> menuIds = new ArrayList<>();
+    private ClipboardManager cmb;
 
     //-------这些数据需要保存在本地-------------
     //下属
@@ -137,6 +169,8 @@ public class MainApp extends Application {
 
     /* app是否在前台 */
     private static boolean isActive;
+    ActionMode actionMode;
+
 
     public static String getToken() {
         if (!StringUtil.isEmpty(token)) {
@@ -179,6 +213,8 @@ public class MainApp extends Application {
         GlideManager.getInstance().initWithContext(getApplicationContext());
         VoIPManager.getInstance().init(this);
         initLoadingConfig();
+        menuIds.add(R.id.copy);
+        menuIds.add(R.id.paste);
     }
 
     private void initLoadingConfig() {
@@ -265,6 +301,7 @@ public class MainApp extends Application {
      * 启动动画
      */
     public void startAnim(TextView textView) {
+        LogUtil.dee("startAnim:::" + textView.getBackground());
         animationDrawable = (AnimationDrawable) textView.getBackground();
         animationDrawable.start();
     }
@@ -273,6 +310,7 @@ public class MainApp extends Application {
      * 停止动画
      */
     public void stopAnim(TextView textView) {
+        LogUtil.dee("stopAnim");
         animationDrawable = (AnimationDrawable) textView.getBackground();
         if (animationDrawable.isRunning()) {
             animationDrawable.stop();
@@ -282,56 +320,56 @@ public class MainApp extends Application {
     }
 
 
-    static RestAdapter restAdapter = null;
+//    static RestAdapter restAdapter = null;
 
-    public RestAdapter getRestAdapter() {
-        if (restAdapter == null) {
-            if (cellInfo == null) {
-                cellInfo = Utils.getCellInfo();
-            }
-
-            RequestInterceptor requestInterceptor = new RequestInterceptor() {
-                @Override
-                public void intercept(RequestFacade request) {
-                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
-                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
-                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
-                    request.addHeader("LoyoVersionName", Global.getVersionName());
-                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-                }
-            };
-
-            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).
-                    setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
-        }
-
-        return restAdapter;
-    }
-
-    public RestAdapter getRestAdapter(int mode) {
-        if (restAdapter != null) {
-            if (cellInfo == null) {
-                cellInfo = Utils.getCellInfo();
-            }
-            RequestInterceptor requestInterceptor = new RequestInterceptor() {
-                @Override
-                public void intercept(RequestFacade request) {
-                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
-                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
-                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
-                    request.addHeader("LoyoVersionName", Global.getVersionName());
-                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-                }
-            };
-
-            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).
-                    setRequestInterceptor(requestInterceptor).build();
-        }
-
-        return restAdapter;
-    }
+//    public RestAdapter getRestAdapter() {
+//        if (restAdapter == null) {
+//            if (cellInfo == null) {
+//                cellInfo = Utils.getCellInfo();
+//            }
+//
+//            RequestInterceptor requestInterceptor = new RequestInterceptor() {
+//                @Override
+//                public void intercept(RequestFacade request) {
+//                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
+//                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
+//                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
+//                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
+//                    request.addHeader("LoyoVersionName", Global.getVersionName());
+//                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
+//                }
+//            };
+//
+//            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).
+//                    setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+//        }
+//
+//        return restAdapter;
+//    }
+//
+//    public RestAdapter getRestAdapter(int mode) {
+//        if (restAdapter != null) {
+//            if (cellInfo == null) {
+//                cellInfo = Utils.getCellInfo();
+//            }
+//            RequestInterceptor requestInterceptor = new RequestInterceptor() {
+//                @Override
+//                public void intercept(RequestFacade request) {
+//                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
+//                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
+//                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
+//                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
+//                    request.addHeader("LoyoVersionName", Global.getVersionName());
+//                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
+//                }
+//            };
+//
+//            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).
+//                    setRequestInterceptor(requestInterceptor).build();
+//        }
+//
+//        return restAdapter;
+//    }
 
 
     void init() {
@@ -345,53 +383,62 @@ public class MainApp extends Application {
         animHide.setDuration(120);//设置动画持续时间
 
         CrashReport.initCrashReport(getApplicationContext(), "900037071", Config_project.is_developer_mode);  //初始化bugly SDK  900001993
-        Configuration config = getResources().getConfiguration();
-        config.locale = Locale.CHINA;
-        getBaseContext().getResources().updateConfiguration(config, null);
         logUtil = LogUtil.lLog();
         handler = new MainApplicationHandler();
         ServerAPI.init();
         initImageLoader(getApplicationContext());
         init_DisplayImageOptions();
-        df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());//设置日期格式
-        df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
-        df3 = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());//设置日期格式
-        df4 = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());//设置日期格式
-        df5 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//设置日期格式
-        df6 = new SimpleDateFormat("HH:mm", Locale.getDefault());//设置日期格式
-        df7 = new SimpleDateFormat("MM.dd", Locale.getDefault());//设置日期格式
-        df8 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
-        df9 = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());//设置日期格式
-        df10 = new SimpleDateFormat("yyyy年M月dd日 HH:mm", Locale.getDefault());//设置日期格式
-        df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式
-        df12 = new SimpleDateFormat("yyyy年M月dd日", Locale.getDefault());//设置日期格式
-        df13 = new SimpleDateFormat("yyyy年M月", Locale.getDefault());//设置日期格式
-        df14 = new SimpleDateFormat("yyyy年M月dd日 HH:mm:ss", Locale.getDefault());//设置日期格式
-        df15 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
-        df_api = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());//设置日期格式
-        df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
-        df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00
+
+        String languageToLoad  = "zh";
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = getResources().getConfiguration();
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        config.locale = Locale.SIMPLIFIED_CHINESE;
+        getResources().updateConfiguration(config, metrics);
+        cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
+//        df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());//设置日期格式
+//        df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
+//        df3 = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());//设置日期格式
+//        df4 = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());//设置日期格式
+//        df5 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//设置日期格式
+//        df6 = new SimpleDateFormat("HH:mm", Locale.getDefault());//设置日期格式
+//        df7 = new SimpleDateFormat("MM.dd", Locale.getDefault());//设置日期格式
+//        df8 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
+//        df9 = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());//设置日期格式
+//        df10 = new SimpleDateFormat("yyyy年M月dd日 HH:mm", Locale.getDefault());//设置日期格式
+//        df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式
+//        df12 = new SimpleDateFormat("yyyy年M月dd日", Locale.getDefault());//设置日期格式
+//        df13 = new SimpleDateFormat("yyyy年M月", Locale.getDefault());//设置日期格式
+//        df14 = new SimpleDateFormat("yyyy年M月dd日 HH:mm:ss", Locale.getDefault());//设置日期格式
+//        df15 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
+//        df_api = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());//设置日期格式
+//        df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
+//        df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00
         gson = new Gson();
         Utils.openGPS(this);
         DBManager.init(this);
         OrganizationManager.init(this);
 
-        try {
-//            user = DBManager.Instance().getUser();
-//             subUsers = DBManager.Instance().getSubordinates();
-        } catch (Exception ex) {
-            Global.ProcDebugException(ex);
-            ex.printStackTrace();
-        }
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                //setOriginData();
-            }
-        }, 100);
+//        try {
+////            user = DBManager.Instance().getUser();
+////             subUsers = DBManager.Instance().getSubordinates();
+//        } catch (Exception ex) {
+//            Global.ProcDebugException(ex);
+//            ex.printStackTrace();
+//        }
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                //setOriginData();
+//            }
+//        }, 100);
 
     }
+
+
 
     /**
      * 设置缓存的组织架构数据
@@ -735,6 +782,108 @@ public class MainApp extends Application {
         }
     }
 
+
+    /**
+     * 全局复制粘贴
+     * */
+    public void setTextSelection(final TextView textView, final EditText editText, final Activity mActivity){
+
+        // 小于5.0不调用方法
+        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP){
+            return;
+        }
+
+        final ActionMode.Callback callback2 = new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                LogUtil.dee("onPrepareActionMode");
+                MenuInflater menuInflater = mode.getMenuInflater();
+                menuInflater.inflate(R.menu.selectionmenu,menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                LogUtil.dee("onPrepareActionMode");
+                for (int i = 0; i < menu.size(); i++) {
+                    MenuItem item = menu.getItem(i);
+                    if (!menuIds.contains(item.getItemId()))
+                        item.setVisible(false);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+
+                    case R.id.copy:
+                        if(null != textView){
+                            int min = 0;
+                            int max = textView.getText().length();
+                            if (textView.isFocused()) {
+                                final int start = textView.getSelectionStart();
+                                final int end = textView.getSelectionEnd();
+
+                                min = Math.max(0, Math.min(start, end));
+                                max = Math.max(0, Math.max(start, end));
+                            }
+
+                            cmb.setPrimaryClip(ClipData.newPlainText("paste_content", textView.getText().subSequence(min, max)));
+                        }
+
+                        if(null != editText){
+                            int min = 0;
+                            int max = editText.getText().length();
+                            if (editText.isFocused()) {
+                                final int start = editText.getSelectionStart();
+                                final int end = editText.getSelectionEnd();
+
+                                min = Math.max(0, Math.min(start, end));
+                                max = Math.max(0, Math.max(start, end));
+                            }
+
+                            cmb.setPrimaryClip(ClipData.newPlainText("paste_content", editText.getText().subSequence(min, max)));
+                        }
+                        mode.finish();
+                        return true;
+
+                    case R.id.paste:
+                        if (null != editText && editText.isFocusable()) {
+                            int index = editText.getSelectionStart();
+                            Editable editable = editText.getText();
+                            editable.insert(index, cmb.getPrimaryClip().getItemAt(0).coerceToText(mActivity));
+                        }
+
+                        mode.finish();
+                        return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                actionMode = null;
+            }
+        };
+
+        if(null != textView)
+        textView.setCustomSelectionActionModeCallback(callback2);
+        if(null != editText)
+        editText.setCustomSelectionActionModeCallback(callback2);
+/*        editText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (actionMode != null) {
+                    return false;
+                }
+                actionMode = mActivity.startActionMode(callback2, ActionMode.TYPE_FLOATING);
+                return true;
+            }
+        });*/
+
+    }
 
     @Override
     public void onTerminate() {

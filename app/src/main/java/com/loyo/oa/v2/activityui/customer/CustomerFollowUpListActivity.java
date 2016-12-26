@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -21,10 +22,11 @@ import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerFollowUpListView;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
@@ -34,7 +36,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -50,7 +51,8 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, CustomerFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
+public class CustomerFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2,
+        CustomerFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     public static final int ACTIVITIES_ADD = 101;
 
@@ -64,12 +66,13 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     private boolean isPullOrDown;
     private boolean isChanged;
     private String id;
+    private int parent, child;
 
     /*录音 评论 播放相关*/
     private LinearLayout layout_bottom_voice;
     private LinearLayout layout_bottom_menu;
     private int playVoiceSize = 0;
-    private AudioPlayer audioPlayer;
+    private AudioPlayerView audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
     private MsgAudiomMenu msgAudiomMenu;
@@ -96,21 +99,21 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     public void getPageData() {
         isPullOrDown = true;
         mPagination.setPageIndex(1);
-        getData(false);
+        getData(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         if (null != voiceView)
-            audioPlayer.audioPause(voiceView);
+            audioPlayer.onStop();
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        audioPlayer.killPlayer();
+        audioPlayer.onStop();
         layout_bottom_voice.setVisibility(View.GONE);
         layout_bottom_voice.removeAllViews();
     }
@@ -142,8 +145,8 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         }
 
         mPresenter = new CustomerFollowUpListPresenterImpl(this, mContext);
-        audioPlayer = new AudioPlayer(this);
-        audioPlayer.initPlayer();
+        audioPlayer = new AudioPlayerView(this);
+        //audioPlayer.onInit();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -186,14 +189,14 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
             return;
         }
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map, mCustomer.id);
+        mPresenter.getListData(map, mCustomer.id, mPagination.getPageIndex());
     }
 
     @Override
@@ -222,7 +225,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
                 bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 bundle.putBoolean("isDetail", true);
-                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                app.startActivityForResult(this, FollowAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
         }
     }
@@ -299,11 +302,13 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
      * 点击评论回调
      */
     @Override
-    public void commentEmbl(String id) {
+    public void commentEmbl(String id, int parent, int child) {
         this.id = id;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         layout_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        this.parent = parent;
+        this.child = child;
     }
 
     /**
@@ -331,14 +336,16 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel model) {
         if (canAdd) {
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(parent).activities.get(child).comments.add(model);
+        mAdapter.notifyDataSetChanged();
+//        isPullOrDown = true;
+//        getData(false);
     }
 
     /**
@@ -400,27 +407,29 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
             if (null != lastView)
                 MainApp.getMainApp().stopAnim(lastView);
         }
-        audioPlayer.initPlayer();
+
+        audioPlayer.onInit();
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
                 MainApp.getMainApp().stopAnim(textView);
-                audioPlayer.audioPause(textView);
+                audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.audioStart(textView);
-                audioPlayer.threadPool(audioModel, textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
+                audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel, textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
+            audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }
         playVoiceSize++;
     }
-
 }

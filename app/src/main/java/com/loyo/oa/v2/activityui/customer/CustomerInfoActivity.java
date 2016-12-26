@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
@@ -74,51 +76,21 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     //    public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
     public static final int REQUEST_CUSTOMER_UPDATE_CONTRACT = 7;
-//    public static final int REQUEST_CUSTOMER_FOLLOW = 8;
+    //    public static final int REQUEST_CUSTOMER_FOLLOW = 8;
     public static final int REQUEST_CUSTOMER_EDIT_BASEINFO = 9;
 
     @ViewById
-    ViewGroup img_title_left;
-    @ViewById
-    ViewGroup img_title_right;
-    @ViewById
-    ViewGroup layout_customer_district;
-    @ViewById
-    ViewGroup layout_customer_label;
-    @ViewById
-    ViewGroup layout_customer_responser;
-    @ViewById
-    ViewGroup layout_customer_join_users;
+    ViewGroup img_title_left, layout_Extra, img_title_right, layout_customer_district, layout_customer_label,
+            layout_customer_responser, layout_customer_join_users, ll_recycledAt;
     @ViewById(R.id.layout_customer_optional_info)
-    LinearLayout containerOp;
+    LinearLayout containerOp, layout_rushpackger;
     @ViewById
-    EditText tv_address;
+    EditText tv_address, tv_customer_name, edt_customer_memo, edt_address_details;
     @ViewById
-    EditText tv_customer_name;
+    TextView tv_customer_creator, tv_customer_responser, tv_customer_join_users, tv_customer_create_at,
+            tv_labels, tv_district, tv_customer_recycledAt;
     @ViewById
-    TextView tv_customer_creator;
-    @ViewById
-    TextView tv_customer_responser;
-    @ViewById
-    TextView tv_customer_join_users;
-    @ViewById
-    TextView tv_customer_create_at;
-    @ViewById
-    EditText edt_customer_memo;
-
-    @ViewById
-    TextView tv_labels;
-    @ViewById
-    TextView tv_district;
-    LinearLayout layout_rushpackger;
-    @ViewById
-    ImageView img_go_where;
-    @ViewById
-    ImageView img_refresh_address;
-    @ViewById
-    ImageView img_del_join_users;
-    @ViewById
-    EditText edt_address_details;
+    ImageView img_go_where, img_refresh_address, img_del_join_users;
     @ViewById
     LoadingLayout ll_loading;
 
@@ -190,14 +162,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         ll_loading.setStatus(LoadingLayout.Success);
                         mCustomerExtraDatas = customerExtraDatas;
                         initData();
-//                        Utils.dialogDismiss();
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
-                        HttpErrorCheck.checkError(error,ll_loading);
-//                        Utils.dialogDismiss();
+                        HttpErrorCheck.checkError(error, ll_loading);
                         finish();
                     }
                 });
@@ -232,7 +202,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-//                Utils.dialogDismiss();
             }
         });
     }
@@ -241,7 +210,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 获取用户信息
      */
     void getCustomer() {
-//        Utils.dialogShow(this, "请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getCustomerById(mCustomerId, new RCallback<BaseResponse<Customer>>() {
                     @Override
@@ -257,8 +225,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
-                        HttpErrorCheck.checkError(error,ll_loading);
-//                        Utils.dialogDismiss();
+                        HttpErrorCheck.checkError(error, ll_loading);
                         finish();
                     }
                 });
@@ -408,11 +375,21 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             tv_district.setText(regional.province + " " + regional.city + " " + regional.county + " ");
         }
         edt_customer_memo.setText(mCustomer.summary);
-        tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.createdAt * 1000)));
+//        tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.createdAt * 1000)));
+        tv_customer_create_at.setText(DateTool.getDateTimeFriendly(mCustomer.createdAt));
 
         if (mCustomer.tags != null && mCustomer.tags.size() > 0) {
             mTagItems = mCustomer.tags;
             setTag();
+        }
+        /* 公海客户特殊操作 */
+        if (mCustomer.state == Customer.DumpedCustomer) {
+            layout_Extra.setVisibility(View.GONE);
+            ll_recycledAt.setVisibility(View.VISIBLE);
+            tv_customer_recycledAt.setText(mCustomer.recycledAt != 0 ? DateTool.getDateTimeFriendly(mCustomer.recycledAt) : "--");
+        } else {
+            layout_Extra.setVisibility(View.VISIBLE);
+            ll_recycledAt.setVisibility(View.GONE);
         }
     }
 
@@ -478,19 +455,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 显示修改负责任 对话框
      */
     private void showLeaveDialog() {
-
-//        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-//            @Override
-//            public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                dismissSweetAlert();
-//            }
-//        }, new SweetAlertDialog.OnSweetClickListener() {
-//            @Override
-//            public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                dismissSweetAlert();
-//
-//            }
-//        },"提示",getString(R.string.app_userdetalis_message));
 
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
@@ -647,7 +611,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             adrDetailsData.addr = addressDetails;
         }
 
-        showLoading("");
+        showStatusLoading(false);
         mLocate.addr = customerAddress;
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", customerName);
@@ -665,18 +629,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
                     public void success(final Customer customer, final Response response) {
-                        HttpErrorCheck.checkResponse("更新客户信息", response);
-                        app.isCutomerEdit = true;
-                        customer.loc = mLocate;
-                        AppBus.getInstance().post(new EditCustomerEvent());
-                        finish();
-
+                        HttpErrorCheck.checkCommitSus("更新客户信息", response);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelStatusLoading();
+                                app.isCutomerEdit = true;
+                                customer.loc = mLocate;
+                                AppBus.getInstance().post(new EditCustomerEvent());
+                                finish();
+                            }
+                        }, 1000);
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
     }

@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.activityui.setting.persenter.SettingPControl;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SettingVControl;
+import com.loyo.oa.v2.activityui.wfinstance.common.WfinstanceBizformConfig;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -134,6 +135,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     SaleStageConfig.getSaleStage();
                     FolloUpConfig.getFolloUpStage();
                     CustomerTageConfig.getTage();
+                    WfinstanceBizformConfig.getBizform();
                 } else {
                     Toast("请检查您的网络连接");
                 }

@@ -63,7 +63,7 @@ public class TeamSaleFragmentPresenterImpl implements TeamSaleFragmentContract.P
         map.put("xpath", xPath);
         map.put("userId", userId);
         LogUtil.d("团队机会列表 请求数据:" + MainApp.gson.toJson(map));
-        model.getData(map);
+        model.getData(map, (int) pag[0]);
     }
 
     @Override

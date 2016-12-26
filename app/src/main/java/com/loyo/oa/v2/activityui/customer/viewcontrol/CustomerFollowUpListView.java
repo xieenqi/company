@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 
@@ -15,7 +16,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 public interface CustomerFollowUpListView {
 
     /*评论操作*/
-    void commentEmbl(String id);
+    void commentEmbl(String id, int parent, int child);
 
     /*删除附件操作*/
     void deleteCommentEmbl(String id);
@@ -24,7 +25,7 @@ public interface CustomerFollowUpListView {
     void rushListData(boolean shw);
 
     /*发送评论成功操作*/
-    void commentSuccessEmbl();
+    void commentSuccessEmbl(CommentModel model);
 
     /*获取列表数据成功*/
     void getListDataSuccesseEmbl(PaginationX<FollowUpGroupModel> paginationX);

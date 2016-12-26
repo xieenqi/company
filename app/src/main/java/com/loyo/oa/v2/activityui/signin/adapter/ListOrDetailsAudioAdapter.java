@@ -1,0 +1,109 @@
+package com.loyo.oa.v2.activityui.signin.adapter;
+
+import android.content.Context;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
+
+import java.util.ArrayList;
+
+/**
+ * 【语音录音】跟进拜访 列表详情 公用Adapter
+ * Created by yyy on 16/11/14.
+ */
+
+public class ListOrDetailsAudioAdapter extends BaseAdapter {
+
+    private Context mContext;
+    private ArrayList<AudioModel> audioInfo;
+    private AudioPlayCallBack audioPlayCallBack;
+
+    public ListOrDetailsAudioAdapter(Context mContext,ArrayList<AudioModel> audioInfo,AudioPlayCallBack audioPlayCallBack){
+        this.mContext = mContext;
+        this.audioInfo = audioInfo;
+        this.audioPlayCallBack = audioPlayCallBack;
+    }
+
+    @Override
+    public int getCount() {
+        return audioInfo.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return audioInfo.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        ViewHolder holder = null;
+        final AudioModel audioModel = audioInfo.get(position);
+
+        if(null == convertView){
+            holder = new ViewHolder();
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sigfollw_audio,null);
+            holder.tv_audio_length = (TextView) convertView.findViewById(R.id.tv_audio_length);
+            holder.layout_audio = (LinearLayout) convertView.findViewById(R.id.layout_audio);
+            convertView.setTag(holder);
+        }else{
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        final TextView tv_calls = (TextView) convertView.findViewById(R.id.iv_calls);
+        tv_calls.setOnTouchListener(Global.GetTouch());
+        /*判断是否有录音*/
+        if (null != audioModel.url && !TextUtils.isEmpty(audioModel.url)) {
+            long audioLength = audioModel.length;
+            LogUtil.dee("length:"+audioLength);
+            if (audioLength > 0 && audioLength <= 10) {
+                tv_calls.setText("000");
+            } else if (audioLength > 10 && audioLength <= 20) {
+                tv_calls.setText("00000");
+            } else if (audioLength > 20 && audioLength <= 30) {
+                tv_calls.setText("0000000");
+            } else if (audioLength > 30 && audioLength <= 40) {
+                tv_calls.setText("00000000");
+            } else if (audioLength > 40 && audioLength <= 50) {
+                tv_calls.setText("000000000");
+            } else if (audioLength > 50 && audioLength <= 60) {
+                tv_calls.setText("0000000000");
+            } else {
+                tv_calls.setText("");
+            }
+            holder.layout_audio.setVisibility(View.VISIBLE);
+            holder.tv_audio_length.setText(audioModel.length+"\"");
+        } else {
+            holder.layout_audio.setVisibility(View.GONE);
+        }
+
+        /*点击播放录音*/
+        tv_calls.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                audioPlayCallBack.playVoice(audioModel,tv_calls);
+            }
+        });
+
+        return convertView;
+    }
+
+    class ViewHolder {
+        TextView tv_audio_length; //录音长度
+        LinearLayout layout_audio;
+    }
+}

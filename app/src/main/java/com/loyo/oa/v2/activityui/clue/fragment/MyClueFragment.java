@@ -187,7 +187,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                     if (!isPullDown) {
                         listData.addAll(clueList.data.records);
                     } else {
-                        if (clueList.data.records==null)
+                        if (clueList.data.records == null)
                             ll_loading.setStatus(LoadingLayout.Empty);
                         listData = clueList.data.records;
                     }

@@ -172,7 +172,7 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
 
         //Attachment.Sort(mListAttachment);
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList, bizType, uuid, isOver);
+            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList, mListViewAttachment,bizType, uuid, isOver);//这里要传mListViewAttachment，不然删除的时候会崩溃
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
                 @Override
                 public void afterDelete(final Attachment attachment) {

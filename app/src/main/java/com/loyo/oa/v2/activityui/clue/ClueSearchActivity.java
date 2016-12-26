@@ -8,7 +8,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -21,16 +20,14 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IClue;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
@@ -156,7 +153,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
                     Intent intent = new Intent();
                     intent.putExtra(ClueListItem.class.getName(), listData.get(position - 1));
                     intent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
-                    intent.setClass(ClueSearchActivity.this, DynamicAddActivity.class);
+                    intent.setClass(ClueSearchActivity.this, FollowAddActivity.class);
                     if (isResult) {
                         setResult(RESULT_OK, intent);
                         onBackPressed();
@@ -285,7 +282,8 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
             holder.tv_company_name.setText(clueListItem.companyName);
             holder.tv_customer.setText(clueListItem.name);
             if (clueListItem.lastActAt != 0) {
-                holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd HH:mm"));
+//                holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd HH:mm"));
+                holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(clueListItem.lastActAt));
             } else {
                 holder.tv_time.setText("--");
             }

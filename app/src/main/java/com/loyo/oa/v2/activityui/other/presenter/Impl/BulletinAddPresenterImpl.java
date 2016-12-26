@@ -15,7 +15,9 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -131,7 +133,7 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
             map.put("attachments", assembleAttachment(attachments));
         }
 
-        MainApp.getMainApp().getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
             @Override
             public void success(final Bulletin mBulletin, final Response response) {
                 HttpErrorCheck.checkCommitSus("新建公告",response);

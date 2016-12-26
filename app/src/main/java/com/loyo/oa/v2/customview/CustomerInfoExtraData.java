@@ -16,12 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
@@ -100,7 +100,8 @@ public class CustomerInfoExtraData extends LinearLayout {
 
                 }
                 try {
-                    tv_content.setText(DateTool.timet(customerExtra.getVal(), DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+//                    tv_content.setText(DateTool.timet(customerExtra.getVal(), DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+                    tv_content.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.parseLong(customerExtra.getVal())));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     tv_content.setText(customerExtra.getVal());
@@ -241,27 +242,31 @@ public class CustomerInfoExtraData extends LinearLayout {
         @Override
         public void onClick(View v) {
             if (!ClickTool.isDoubleClick()) {
-                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(textView);
-                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
-                    @Override
-                    public boolean onClick_onDateSet() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onClick_onTimeSet() {
-                        return false;
-                    }
-                });
+//                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(textView);
+//                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
+//                    @Override
+//                    public boolean onClick_onDateSet() {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onClick_onTimeSet() {
+//                        return false;
+//                    }
+//                });
 
                 DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(mContext, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
 
-                        String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                        textView.setText(str);
+//                        String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                        textView.setText(str);
+//                        extra.setVal(str);
+                        long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day,hour,min,0);
+                        String str= DateTool.getDateTimeFriendly(time);
                         extra.setVal(str);
+                        textView.setText(str);
                     }
 
                     @Override

@@ -16,6 +16,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.APSService;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
+import com.loyo.oa.common.utils.DateFormatSet;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LocateData;
 import com.loyo.oa.v2.beans.TrackLog;
@@ -201,7 +202,7 @@ public class AMapService extends APSService {
         String address = aMapLocation.getAddress();
         float accuracy = aMapLocation.getAccuracy();//定位精度
         String provider = aMapLocation.getProvider();//获取定位提供者
-        String time = MainApp.getMainApp().df1.format(new Date(aMapLocation.getTime()));
+        String time = DateFormatSet.secondCommonSdf.format(new Date(aMapLocation.getTime()));
         LogUtil.d("【轨迹定位】：" + "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " +
                 (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
@@ -424,7 +425,7 @@ public class AMapService extends APSService {
             if (null != trackLogs && trackLogs.length > 0) {
                 final HashMap<String, Object> tracklogsMap = new HashMap<>();
                 tracklogsMap.put("tracklogs", trackLogs);
-                app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(tracklogsMap, new RCallback<Object>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).uploadTrackLogs(tracklogsMap, new RCallback<Object>() {
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【缓存轨迹】上传成功： ", response);
@@ -538,7 +539,7 @@ public class AMapService extends APSService {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                app.getRestAdapter().create(ITrackLog.class).getUserOneLine(new Callback<Object>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).getUserOneLine(new Callback<Object>() {
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("用户在线：", response);

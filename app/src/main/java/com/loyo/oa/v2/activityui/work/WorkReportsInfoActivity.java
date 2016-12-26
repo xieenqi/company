@@ -17,10 +17,12 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.activityui.work.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -35,7 +37,6 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -170,7 +171,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             finish();
             return;
         }
-        app.getRestAdapter().create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport _workReport, final Response response) {
                 HttpErrorCheck.checkResponse("报告信息：", response);
@@ -236,6 +237,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         layout_attachment.setOnTouchListener(Global.GetTouch());
         layout_discussion.setOnTouchListener(Global.GetTouch());
         img_title_right.setVisibility(View.GONE);
+        MainApp.getMainApp().setTextSelection(tv_workContent,null,WorkReportsInfoActivity.this);
     }
 
     void updateUI(final WorkReport mWorkReport) {
@@ -251,24 +253,29 @@ public class WorkReportsInfoActivity extends BaseActivity {
         }
         StringBuilder title = new StringBuilder(mWorkReport.creator.name + "提交 ");
         String reportDate = "";
-        String date = app.df3.format(new Date(mWorkReport.createdAt * 1000));
+//        String date = app.df3.format(new Date(mWorkReport.createdAt * 1000));
+        String date = DateTool.getDateTimeFriendly(mWorkReport.createdAt);
         String reportType = "";
         String crmName = "";
         switch (mWorkReport.type) {
             case WorkReport.DAY:
                 reportType = " 日报";
                 crmName = "本日工作动态统计";
-                reportDate = app.df4.format(new Date(mWorkReport.beginAt * 1000));
+//                reportDate = app.df4.format(new Date(mWorkReport.beginAt * 1000));
+                reportDate = DateTool.getDateFriendly(mWorkReport.beginAt);
                 break;
             case WorkReport.WEEK:
                 reportType = " 周报";
                 crmName = "本周工作动态统计";
-                reportDate = app.df7.format(new Date(mWorkReport.beginAt * 1000)) + "-" + app.df7.format(new Date(mWorkReport.endAt * 1000));
+
+//                reportDate = app.df7.format(new Date(mWorkReport.beginAt * 1000)) + "-" + app.df7.format(new Date(mWorkReport.endAt * 1000));
+                reportDate = DateTool.getMonthDay(mWorkReport.beginAt) + "-" + DateTool.getMonthDay(mWorkReport.endAt);
                 break;
             case WorkReport.MONTH:
                 reportType = " 月报";
                 crmName = "本月工作动态统计";
-                reportDate = app.df8.format(new Date(mWorkReport.beginAt * 1000));
+//                reportDate = app.df8.format(new Date(mWorkReport.beginAt * 1000));
+                reportDate = DateTool.getYearMonth(mWorkReport.beginAt);
                 break;
             default:
                 break;
@@ -298,7 +305,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.user ? mWorkReport.reviewer.user : null;
         tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : (mWorkReport.content.toString().contains("<") ? Html.fromHtml(mWorkReport.content) : mWorkReport.content));
         tv_reviewer.setText(mWorkReport.reviewer.user.getName());
-        tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人: 无抄送人" : "抄送人: " + getJoinUserNames());
+        tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人：无抄送人" : "抄送人：" + getJoinUserNames());
 
         tv_workReport_time.setText("提交时间：" + date);
 
@@ -313,7 +320,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.user.getName());
-            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.reviewedAt + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+//            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.reviewedAt + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+            tv_review_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorkReport.reviewer.reviewedAt));
             btn_workreport_review.setVisibility(View.GONE);
             ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.score)).intValue() / 20);
 

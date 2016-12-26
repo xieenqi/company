@@ -7,13 +7,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -35,12 +34,12 @@ import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
@@ -89,7 +88,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private LinearLayout layout_bottom_voice;
     private int playVoiceSize = 0;
-    private AudioPlayer audioPlayer;
+    private AudioPlayerView audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
     private LoadingLayout ll_loading;
@@ -111,14 +110,14 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     public void onPause() {
         super.onPause();
         if (null != voiceView)
-            audioPlayer.audioPause(voiceView);
+            audioPlayer.onStop();
     }
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        audioPlayer.killPlayer();
+        audioPlayer.onStop();
         layout_bottom_voice.setVisibility(View.GONE);
         layout_bottom_voice.removeAllViews();
     }
@@ -147,15 +146,15 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             }
         });
 //        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
-        mTags= FolloUpConfig.getFolloUpStageCache();
+        mTags = FolloUpConfig.getFolloUpStageCache();
         for (int i = 0; i < mTags.size(); i++) {//过滤掉跟进方式
             if (mTags.get(i).fieldName.contains("activity")) {
                 mTags.remove(i);
             }
         }
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
-        audioPlayer = new AudioPlayer(getActivity());
-        audioPlayer.initPlayer();
+        audioPlayer = new AudioPlayerView(getActivity());
+        //audioPlayer.onInit();
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
 
         layout_bottom_menu = (LinearLayout) view.findViewById(R.id.layout_bottom_menu);
@@ -253,11 +252,12 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         });
         initPageData();
     }
+
     private void initPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
         mPagination.setPageIndex(1);
         isPullOrDown = true;
-        getData(false);
+        getData(true);
     }
 
     /**
@@ -303,7 +303,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", userId);
@@ -315,7 +315,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map,mPagination.getPageIndex());
     }
 
     /**
@@ -356,11 +356,11 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel modle) {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(commentPosition).comments.add(modle);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -378,6 +378,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
+        ll_loading.setStatus(LoadingLayout.Success);
         if (isPullOrDown && listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
     }
@@ -430,23 +431,25 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        audioPlayer.initPlayer();
+        audioPlayer.onInit();
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
                 MainApp.getMainApp().stopAnim(textView);
-                audioPlayer.audioPause(textView);
+                audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.audioStart(textView);
-                audioPlayer.threadPool(audioModel, textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
+                audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel, textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
+            audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }

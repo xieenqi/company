@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.library.module.common.SystemBarTintManager;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
@@ -39,6 +40,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     final String Tag = "BaseFragmentActivity";
     public SystemBarTintManager tintManager;
     public SweetAlertDialogView sweetAlertDialogView;
+    public LoadStatusView loadView;
 
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
@@ -306,6 +308,21 @@ public class BaseFragmentActivity extends FragmentActivity {
         finish();
         overridePendingTransition(0, 0);
         startActivity(intent);
+    }
+
+
+    /**
+     * 展示带成功失败动画加载框
+     * */
+    public void showStatusLoading(boolean outTouch){
+        DialogHelp.showStatusLoading(outTouch,this);
+    }
+
+    /**
+     * 关闭带成功失败动画加载框
+     * */
+    public void cancelStatusLoading(){
+        DialogHelp.cancelStatusLoading();
     }
 
     /**

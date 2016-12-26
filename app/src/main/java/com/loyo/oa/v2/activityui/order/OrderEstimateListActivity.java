@@ -188,6 +188,8 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
         if (fromPage == ORDER_DETAILS) {
             getPageData();
             ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
+        }else {
+            ll_loading.setStatus(LoadingLayout.Success);
         }
         mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage, isAdd);
         mAdapter.setOrderStatus(orderStatus);

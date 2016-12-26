@@ -23,7 +23,7 @@
             swipe:swipeCloseAllItemsWhenMoveList="true"
             swipe:swipeFrontView="@+id/front"
             swipe:swipeMode="left"
-            swipe:swipeOffsetLeft="240dp"
+            swipe:swipeOffsetLeft="300dp"
             swipe:swipeOffsetRight="0dp"
             swipe:swipeOpenOnLongPress="false" />
     </com.library.module.widget.loading.LoadingLayout>

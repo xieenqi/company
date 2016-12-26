@@ -185,7 +185,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                     listData.addAll(orderlist.records);
                 } else {
                     listData = orderlist.records;
-                    if(listData.size()==0)
+                    if (listData.size() == 0)
                         ll_loading.setStatus(LoadingLayout.Empty);
                 }
                 adapter.setData(listData);
@@ -194,7 +194,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void failure(RetrofitError error) {
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error,ll_loading);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
     }

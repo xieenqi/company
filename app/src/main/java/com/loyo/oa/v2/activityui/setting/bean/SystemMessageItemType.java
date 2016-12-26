@@ -15,7 +15,7 @@ import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
-import com.loyo.oa.v2.activityui.signinnew.SigninNewDetailsActivity;
+import com.loyo.oa.v2.activityui.signin.SigninDetailsActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
@@ -175,7 +175,7 @@ public enum SystemMessageItemType {
         }
 
         public Class<?> getItemClass() {
-            return SigninNewDetailsActivity.class;
+            return SigninDetailsActivity.class;
         }
 
         public String getExtraName() {
@@ -188,7 +188,7 @@ public enum SystemMessageItemType {
         }
 
         public Class<?> getItemClass() {
-            return SigninNewDetailsActivity.class;
+            return SigninDetailsActivity.class;
         }
 
         public String getExtraName() {
@@ -237,21 +237,21 @@ public enum SystemMessageItemType {
             return "Id";
         }
     },
-    // TODO 公海客户暂还没有定义
-    /*公海客户详情*/
-    MSG_CUSTOMER_PUBLIC(40) {
-        public int getIcon() {
-            return R.drawable.icon_sys_custom_public;
-        }
-
-        public Class<?> getItemClass() {
-            return CustomerDetailInfoActivity_.class;
-        }
-
-        public String getExtraName() {
-            return "Id";
-        }
-    },
+//    // TODO 公海客户暂还没有定义
+//    /*公海客户详情*/
+//    MSG_CUSTOMER_PUBLIC(40) {
+//        public int getIcon() {
+//            return R.drawable.icon_sys_custom_public;
+//        }
+//
+//        public Class<?> getItemClass() {
+//            return CustomerDetailInfoActivity_.class;
+//        }
+//
+//        public String getExtraName() {
+//            return "Id";
+//        }
+//    },
     /*订单详情*/
     MSG_ORDER(25) {
         public int getIcon() {

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.model.User;
@@ -56,7 +57,8 @@ public class Bulletin extends BaseBeans {
 
     @Override
     public String getOrderStr() {
-        return MainApp.getMainApp().df3.format(new Date(createdAt * 1000));
+//        return MainApp.getMainApp().df3.format(new Date(createdAt * 1000));
+        return DateTool.getDateTimeFriendly(createdAt);
     }
 
     public ArrayList<String> attachmentUrls() {

@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.customer.model;
 
-import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
+import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
 
 import java.util.ArrayList;
 

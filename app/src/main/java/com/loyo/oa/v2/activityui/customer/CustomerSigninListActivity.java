@@ -10,24 +10,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewGroupAdapter;
-import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewListAdapter;
-import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.activityui.customer.presenter.SigninListFragPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.SigninListFragPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerSigninNewListView;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
-import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
-import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
-import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
+import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -39,7 +37,6 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -55,7 +52,8 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerSigninListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, CustomerSigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
+public class CustomerSigninListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2,
+        CustomerSigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     private ViewGroup layout_back;
     private TextView tv_title;
@@ -67,6 +65,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     private boolean isPullOrDown;
     private boolean isChanged;
     private String id;
+    private int parent, child;
 
     private PaginationX<SigninNewGroupModel> mPagination = new PaginationX<>(20);
     private ArrayList<SigninNewGroupModel> listModel = new ArrayList<>();
@@ -77,10 +76,9 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     private LinearLayout layout_bottom_voice;
     private LinearLayout layout_bottom_menu;
     private int playVoiceSize = 0;
-    private AudioPlayer audioPlayer;
+    private AudioPlayerView audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
-    private int commentPosition;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
     private SigninListFragPresenter mPresenter;
@@ -101,21 +99,21 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     public void getPageData() {
         isPullOrDown = true;
         mPagination.setPageIndex(1);
-        getData(false);
+        getData(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         if (null != voiceView)
-            audioPlayer.audioPause(voiceView);
+            audioPlayer.onStop();
     }
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        audioPlayer.killPlayer();
+        audioPlayer.onStop();
     }
 
     @Override
@@ -135,8 +133,8 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     private void initView() {
         mCustomer = (Customer) getIntent().getSerializableExtra("mCustomer");
         mPresenter = new SigninListFragPresenterImpl(this);
-        audioPlayer = new AudioPlayer(this);
-        audioPlayer.initPlayer();
+        audioPlayer = new AudioPlayerView(this);
+        //audioPlayer.onInit();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -153,7 +151,6 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-//        setTouchView(NO_SCROLL);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访签到");
         layout_back.setOnTouchListener(Global.GetTouch());
@@ -196,7 +193,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("split", true);
@@ -204,7 +201,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     /**
@@ -234,7 +231,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     }
 
     @Subscribe
-    public void onSigninNewRushEvent(SigninNewRushEvent event) {
+    public void onSigninNewRushEvent(SigninRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
@@ -263,11 +260,13 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
      * 点击评论回调
      */
     @Override
-    public void commentEmbl(String id) {
+    public void commentEmbl(String id, int parent, int child) {
         this.id = id;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         layout_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        this.parent = parent;
+        this.child = child;
     }
 
     /**
@@ -295,14 +294,14 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel model) {
         if (canAdd) {
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(parent).activities.get(child).comments.add(model);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -369,6 +368,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
         }
     }
 
+
     /**
      * 列表播放语音回调
      */
@@ -388,23 +388,25 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        audioPlayer.initPlayer();
+        audioPlayer.onInit();
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
                 MainApp.getMainApp().stopAnim(textView);
-                audioPlayer.audioPause(textView);
+                audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.audioStart(textView);
-                audioPlayer.threadPool(audioModel, textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
+                audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel, textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
+            audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }

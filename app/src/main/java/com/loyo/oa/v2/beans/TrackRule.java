@@ -17,12 +17,11 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITrackLog;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.TrackLogRecevier;
-import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
-
-import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -80,7 +79,7 @@ public class TrackRule implements Serializable {
 
         final MainApp app = MainApp.getMainApp();
         if (Global.isConnected()) {
-            app.getRestAdapter().create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
                 @Override
                 public void success(TrackRule trackRule, Response response) {
                     HttpErrorCheck.checkResponse("后台轨迹规则加载成功！", response);
@@ -111,7 +110,7 @@ public class TrackRule implements Serializable {
         final MainApp app = MainApp.getMainApp();
 
         if (Global.isConnected()) {
-            app.getRestAdapter().create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
                 @Override
                 public void success(TrackRule trackRule, Response response) {
                     if (null != trackRule) {
@@ -182,7 +181,8 @@ public class TrackRule implements Serializable {
     public static void StartTrackRule(TrackRule trackRule, Context app) {
         StartTrackRuleAlarm(app, trackRule, 30 * 1000);
         //记录最近一次设置轨迹成功的时间
-        SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_CHECK_TRACKLOG, DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+//        SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_CHECK_TRACKLOG, DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+        SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_CHECK_TRACKLOG, com.loyo.oa.common.utils.DateTool.getDateTime());
     }
 
 
@@ -199,7 +199,7 @@ public class TrackRule implements Serializable {
             return false;
         }
 
-        int day_of_week = DateTool.get_DAY_OF_WEEK(new Date());
+        int day_of_week = com.loyo.oa.common.utils.DateTool.getWeek();
         day_of_week = day_of_week == 1 ? 7 : day_of_week - 1;
 
         boolean notNeedCheck = true; /* 当天是否设置轨迹规则， 是否需要打卡 */
@@ -210,21 +210,41 @@ public class TrackRule implements Serializable {
             LogUtil.d("checkRule,当日未【设置】上报轨迹,weekdays : " + trackRule.getWeekdays() + " dayofweek : " + day_of_week);
         }
 
+
+        //        boolean isInTime = false; /* 是否在开始和结束时间之间，打卡时间范围内 */
+//        SimpleDateFormat sdf = MainApp.getMainApp().df6;
+//        String currentDate = sdf.format(new Date());
+//        try {
+//            Date currDate = sdf.parse(currentDate);
+//            Date startDate = sdf.parse(trackRule.startTime);
+//            Date endDate = sdf.parse(trackRule.endTime);
+//
+//            if (currDate.after(startDate) && currDate.before(endDate)) {
+//                isInTime = true;
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+        long start= com.loyo.oa.common.utils.DateTool.getHourMinStamp(trackRule.startTime);
+        long end= com.loyo.oa.common.utils.DateTool.getHourMinStamp(trackRule.endTime);
+        String curTime=com.loyo.oa.common.utils.DateTool.getHourMinute(System.currentTimeMillis()/1000); //获取当前时间 eg 12:12
+        long cur= com.loyo.oa.common.utils.DateTool.getHourMinStamp(curTime);
         boolean isInTime = false; /* 是否在开始和结束时间之间，打卡时间范围内 */
-        SimpleDateFormat sdf = MainApp.getMainApp().df6;
-        String currentDate = sdf.format(new Date());
-        try {
-            Date currDate = sdf.parse(currentDate);
-            Date startDate = sdf.parse(trackRule.startTime);
-            Date endDate = sdf.parse(trackRule.endTime);
 
-            if (currDate.after(startDate) && currDate.before(endDate)) {
-                isInTime = true;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(cur>=start&&cur<=end){
+            isInTime= true;
+        }else{
+            isInTime= false;
         }
+
+
+
+
+
+
+
         if (!isInTime) {
             LogUtil.d("checkRule,该时间段内未【设置】上报轨迹");
         }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
+import com.loyo.oa.common.utils.*;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackLog;
@@ -40,7 +42,8 @@ public class UMengTools {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            String time = MainApp.getMainApp().df10.format(new Date(location.getTime()));
+//            String time = MainApp.getMainApp().df10.format(new Date(location.getTime()));
+            String time = DateTool.getDateTimeReal(location.getTime()/1000);
             CellInfo cellInfo = Utils.getCellInfo();
             StringBuffer erroInfo = new StringBuffer();
             erroInfo.append("品牌：" + cellInfo.getLoyoAgent() + "<->");
@@ -71,7 +74,8 @@ public class UMengTools {
 
     public static void sendLocationInfo(final String address, final double longitude, final double latitude) {
         try {
-            final String date = MainApp.getMainApp().df4.format(new Date(System.currentTimeMillis()));
+//            final String date = MainApp.getMainApp().df4.format(new Date(System.currentTimeMillis()));
+            final String date = com.loyo.oa.common.utils.DateTool.getDateFriendly(System.currentTimeMillis()/1000);
             LogUtil.d("检查时间: " + date);
             String oldInfo = SharedUtil.get(MainApp.getMainApp(), "sendLocation");
             TrackRule trackrule = DBManager.Instance().getTrackRule();
@@ -97,7 +101,7 @@ public class UMengTools {
                 + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("tracklogs", trackLogs);
-        MainApp.getMainApp().getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new Callback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).uploadTrackLogs(jsonObject, new Callback<Object>() {
             @Override
             public void success(Object o, Response response) {
                 HttpErrorCheck.checkResponse(" 手动上传轨迹: ", response);

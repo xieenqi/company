@@ -29,7 +29,8 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
         mContext = context;
         groupsData = data;
         this.fromPage = fromPage;
-        nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime("yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"));
+//        nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime("yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"));
+        nowTime= com.loyo.oa.common.utils.DateTool.getStamp(true);
     }
 
     @Override
@@ -95,10 +96,10 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                 /*是否超时判断*/
                 if (wse.isOvertime) {
                     tv_deadline.setTextColor(mContext.getResources().getColor(R.color.red1));
-                    tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
+                    tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wse.endTime));
                     tv_endtime_tag.setVisibility(View.VISIBLE);
                 } else {
-                    tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
+                    tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wse.endTime));
                 }
             } else {
                 tv_deadline.setText("--");
@@ -110,7 +111,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                 tv_time.setText("" + wse.daysLater + "天以后触发");
                 tv_time.setVisibility(View.INVISIBLE);
             } else {
-                tv_time.setText(DateTool.getDiffTime(wse.startTime));
+                tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wse.startTime));
                 tv_time.setVisibility(View.VISIBLE);
             }
 

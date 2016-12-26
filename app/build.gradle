@@ -36,7 +36,9 @@ android {
                            'src/main/res_loyo/customer',
                            'src/main/res_loyo/saleopportunity',
                            'src/main/res_loyo/setting',
-                           'src/main/res_loyo/worksheet']
+                           'src/main/res_loyo/worksheet',
+                           'src/main/res_loyo/order',
+                           'src/main/res_loyo/wfinstance']
         }
     }
     signingConfigs {
@@ -59,8 +61,8 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 2016120801
-        versionName '1.4.6t'
+        versionCode 2016122301
+        versionName '1.4.8t'
     }
 
     buildTypes {
@@ -125,6 +127,7 @@ android {
         compile "com.android.support:support-annotations:$supportLibVersion"
         compile "org.androidannotations:androidannotations-api:$AAVersion"
         compile "com.android.support:percent:$supportLibVersion"//百分比布局
+        compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'//约束布局
         compile 'com.google.code.gson:gson:2.3'
         compile 'com.squareup.retrofit:retrofit:1.9.0'
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
@@ -186,6 +189,7 @@ dependencies {
     compile project(path: ':library:sweetDialog')
     compile project(path: ':LibraryModule')
     compile project(':library:circularprogressbutton')
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
 }
 
 apt {

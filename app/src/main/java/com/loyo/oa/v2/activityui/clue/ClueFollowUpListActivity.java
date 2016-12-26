@@ -10,33 +10,29 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpGroupAdapter;
-import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpListAdapter;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
-import com.loyo.oa.v2.activityui.clue.model.ClueFollowUpListModel;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.clue.presenter.impl.ClueFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
-import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -52,7 +48,8 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class ClueFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, ClueFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
+public class ClueFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2,
+        ClueFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     public static final int ACTIVITIES_ADD = 101;
 
@@ -61,12 +58,10 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private TextView voiceView;
     private PullToRefreshListView listView;
     private ViewGroup layout_add;
-    private Customer mCustomer;
     private boolean isMyUser;
     private boolean isPullOrDown;
-    private boolean isChanged;
     private String id;
-    private Customer customer;
+    private int parent, child;
 
     private String name, responsorName;
     private String clueId;
@@ -75,7 +70,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private LinearLayout layout_bottom_voice;
     private LinearLayout layout_bottom_menu;
     private int playVoiceSize = 0;
-    private AudioPlayer audioPlayer;
+    private AudioPlayerView audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
     private MsgAudiomMenu msgAudiomMenu;
@@ -99,21 +94,21 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
 
     @Override
     public void getPageData() {
-        getData(false);
+        getData(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         if (null != voiceView)
-            audioPlayer.audioPause(voiceView);
+            audioPlayer.onStop();
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        audioPlayer.killPlayer();
+        audioPlayer.onStop();
         layout_bottom_voice.setVisibility(View.GONE);
         layout_bottom_voice.removeAllViews();
     }
@@ -148,8 +143,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private void initView() {
         getIntenData();
         mPresenter = new ClueFollowUpListPresenterImpl(this, mContext);
-        audioPlayer = new AudioPlayer(this);
-        audioPlayer.initPlayer();
+        audioPlayer = new AudioPlayerView(this);
+        //audioPlayer.onInit();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -187,7 +182,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("salesId", clueId);
@@ -196,16 +191,11 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     @Override
     public void onBackPressed() {
-        if (isChanged) {
-            Intent intent = new Intent();
-            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, FinalVariables.REQUEST_CREATE_TASK, intent);
-            return;
-        }
         super.onBackPressed();
     }
 
@@ -229,7 +219,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
                 bundle.putSerializable(ClueListItem.class.getName(), item);
                 bundle.putBoolean("isDetail", true);
                 bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
-                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                app.startActivityForResult(this, FollowAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
         }
     }
@@ -303,11 +293,13 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
      * 点击评论回调
      */
     @Override
-    public void commentEmbl(String id) {
+    public void commentEmbl(String id, int parent, int chuild) {
         this.id = id;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         layout_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        this.parent = parent;
+        this.child = chuild;
     }
 
     /**
@@ -335,14 +327,16 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
      * 评论成功操作
      */
     @Override
-    public void commentSuccessEmbl() {
+    public void commentSuccessEmbl(CommentModel model) {
         if (isMyUser) {
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        isPullOrDown = true;
-        getData(false);
+        listModel.get(parent).activities.get(child).comments.add(model);
+        mAdapter.notifyDataSetChanged();
+//        isPullOrDown = true;
+//        getData(false);
     }
 
     /**
@@ -367,7 +361,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         }
         bindData();
         ll_loading.setStatus(LoadingLayout.Success);
-        if (isPullOrDown && listModel.size() == 0)
+        if (listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
     }
 
@@ -389,17 +383,16 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         return ll_loading;
     }
 
+
     /**
      * 列表播放语音回调
      */
     @Override
     public void playVoice(AudioModel audioModel, TextView textView) {
-
         if (TextUtils.isEmpty(audioModel.url)) {
             Toast("无录音资源!");
             return;
         }
-
         voiceView = textView;
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
@@ -410,23 +403,25 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        audioPlayer.initPlayer();
+        audioPlayer.onInit();
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
                 MainApp.getMainApp().stopAnim(textView);
-                audioPlayer.audioPause(textView);
+                audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.audioStart(textView);
-                audioPlayer.threadPool(audioModel, textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
+                audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel, textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
+            audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }

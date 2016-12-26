@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
 import com.loyo.oa.v2.activityui.wfinstance.common.BizFormMenuModel;
 import com.loyo.oa.v2.activityui.wfinstance.common.SubmitStatusMenuModel;
+import com.loyo.oa.v2.activityui.wfinstance.common.WfinstanceBizformConfig;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMySubmitPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMySubmitView;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -41,59 +42,56 @@ import retrofit.client.Response;
  * Created by yyy on 16/10/17.
  */
 
-public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter{
+public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter {
 
     private Context mContext;
     private com.loyo.oa.dropdownmenu.DropDownMenu filterMenu;
     private WfinMySubmitView crolView;
     private ArrayList<WflnstanceItemData> datas = new ArrayList<>();
     private ArrayList<WflnstanceListItem> lstData = new ArrayList<>();
-    private ArrayList<BizForm> mBizForms = new ArrayList<>();
+//    private ArrayList<BizForm> mBizForms = new ArrayList<>();
 
     private String status;
     private String bizFormId = "";
 
-    public  WfinMySubmitPresenterImpl(Context mContext,WfinMySubmitView crolView,DropDownMenu mMenu){
+    public WfinMySubmitPresenterImpl(Context mContext, WfinMySubmitView crolView, DropDownMenu mMenu) {
         this.mContext = mContext;
         this.crolView = crolView;
-        this.filterMenu    = mMenu;
+        this.filterMenu = mMenu;
 
     }
-
-    /**
-     * 获取审批类型数据
-     * */
-    @Override
-    public void getWfBizForms() {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", 1);
-        params.put("pageSize", 500);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
-            @Override
-            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
-                HttpErrorCheck.checkResponse("审批自定义字段", response);
-                if (null != bizFormPaginationX) {
-                    mBizForms = bizFormPaginationX.getRecords();
-                    if (null != mBizForms && !mBizForms.isEmpty()) {
-                        _loadFilterOptions(mBizForms);
-                    }
-                    else {
-                        _loadFilterOptions(null);
-                    }
-                }
-                else {
-                    _loadFilterOptions(null);
-                }
-            }
-        });
-    }
+//
+//    /**
+//     * 获取审批类型数据
+//     */
+//    @Override
+//    public void getWfBizForms() {
+//        HashMap<String, Object> params = new HashMap<>();
+//        params.put("pageIndex", 1);
+//        params.put("pageSize", 500);
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
+//            @Override
+//            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
+//                HttpErrorCheck.checkResponse("审批自定义字段", response);
+//                if (null != bizFormPaginationX) {
+//                    mBizForms = bizFormPaginationX.getRecords();
+//                    if (null != mBizForms && !mBizForms.isEmpty()) {
+//                        _loadFilterOptions(mBizForms);
+//                    } else {
+//                        _loadFilterOptions(null);
+//                    }
+//                } else {
+//                    _loadFilterOptions(null);
+//                }
+//            }
+//        });
+//    }
 
     /**
      * 获取审批列表数据
-     * */
+     */
     @Override
-    public void getApproveWfInstancesList(int page,final boolean isTopAdd) {
-//        crolView.showProgress("");
+    public void getApproveWfInstancesList(final int page, final boolean isTopAdd) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 20);
@@ -127,7 +125,7 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter{
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error,crolView.getLoading());
+                        HttpErrorCheck.checkError(error, crolView.getLoading());
                         crolView.setListRefreshComplete();
                     }
                 });
@@ -135,8 +133,8 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter{
 
     /**
      * 初始化顶部菜单
-     * */
-    public void _loadFilterOptions(List<BizForm> bizForms) {
+     */
+    public void loadFilterOptions(List<BizForm> bizForms) {
         List<FilterModel> options = new ArrayList<>();
         options.add(SubmitStatusMenuModel.getFilterModel());
         if (bizForms != null) {
@@ -155,8 +153,7 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter{
 
                 if (menuIndex == 0) {
                     status = key;
-                }
-                else if (menuIndex == 1) {
+                } else if (menuIndex == 1) {
                     bizFormId = key;
                 }
                 crolView.setPullDownToRefresh();
@@ -166,12 +163,13 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter{
 
     @Override
     public void loadFilterOptions() {
-        getWfBizForms();
+        loadFilterOptions(WfinstanceBizformConfig.getBizform(true));
+
     }
 
     /**
      * ListView监听与初始化
-     * */
+     */
     @Override
     public void initListView(ExpandableListView mListView, Button btn_add) {
         mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -185,7 +183,7 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter{
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 try {
-                    crolView.openItemEmbl(groupPosition,childPosition);
+                    crolView.openItemEmbl(groupPosition, childPosition);
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }

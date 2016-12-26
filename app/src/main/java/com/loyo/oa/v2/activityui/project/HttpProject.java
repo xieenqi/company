@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.project;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.UserInfo;
@@ -149,7 +150,8 @@ public class HttpProject implements Serializable {
 
 
     public String getOrderStr() {
-        return MainApp.getMainApp().df9.format(new Date(createdAt));
+//        return MainApp.getMainApp().df9.format(new Date(createdAt));
+        return DateTool.getDateTimeFriendly(createdAt/1000);
     }
 
 

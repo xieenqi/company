@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfNodes;
-import com.loyo.oa.v2.tool.DateTool;
 
 import java.util.ArrayList;
 
@@ -52,7 +51,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
         Item_info item_info;
         if (convertView == null) {
             item_info = new Item_info();
-            convertView = mInflater.inflate(R.layout.item_workflownodes, null);
+            convertView = mInflater.inflate(R.layout.item_workflownodes_new, null);
             item_info.img_left = (ImageView) convertView.findViewById(R.id.img_left);
             item_info.tv_set_time = (TextView) convertView.findViewById(R.id.tv_set_time);
             item_info.tv_overtime = (TextView) convertView.findViewById(R.id.tv_overtime);
@@ -93,34 +92,38 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
 
             /*已通过*/
             if (wfInstanceStatus == 4) {
-                item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
+                item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree_new);
                 item_info.tv_content.setTextColor(Color.parseColor("#333333"));
-                item_info.tv_content.setText(actionName + ":" + (TextUtils.isEmpty(actionInfo) ? "同意" : actionInfo));
+                item_info.tv_content.setText(actionName + "：" + (TextUtils.isEmpty(actionInfo) ? "同意" : actionInfo));
                 item_info.tv_time.setVisibility(View.VISIBLE);
-                item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+//                item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+                item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
             } else {
                 if (wfNodes.getActive() == 1) {
-                    item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
+                    item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait_new);
                     item_info.tv_content.setTextColor(Color.parseColor("#999999"));
                     item_info.tv_content.setText(actionName + "(待处理)");
                 } else if (wfNodes.getActive() == 2) {
-                    item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
+                    item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait_new);
                     item_info.tv_content.setTextColor(Color.parseColor("#999999"));
                     item_info.tv_content.setText(actionName + "(待处理)");
                 } else if (wfNodes.getActive() == 3) {
                     if (wfNodes.isApproveFlag()) {
-                        item_info.img_left.setImageResource(wfNodes.isNeedApprove() ? R.drawable.img_wfinstance_agree : R.drawable.img_wfinstance_complete);
+                        item_info.img_left.setImageResource(wfNodes.isNeedApprove() ? R.drawable.img_wfinstance_agree_new : R.drawable.img_wfinstance_complete_new);
                         item_info.tv_content.setTextColor(Color.parseColor("#333333"));
-                        item_info.tv_content.setText(actionName + ":" + (TextUtils.isEmpty(actionInfo) ? (wfNodes.isNeedApprove() ? "同意" : "已办结") :
+                        item_info.tv_content.setText(actionName + "：" + (TextUtils.isEmpty(actionInfo) ? (wfNodes.isNeedApprove() ? "同意" : "已办结") :
                                 actionInfo));
                         item_info.tv_time.setVisibility(View.VISIBLE);
-                        item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+//                        item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+                        item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
                     } else {
-                        item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree);
+                        item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree_new);
                         item_info.tv_content.setTextColor(Color.parseColor("#333333"));
-                        item_info.tv_content.setText(actionName + ":" + actionInfo);
+                        item_info.tv_content.setText(actionName + "：" + actionInfo);
                         item_info.tv_time.setVisibility(View.VISIBLE);
-                        item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+//                        item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+                        item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
+                        item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
                     }
                 }
             }

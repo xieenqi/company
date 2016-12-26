@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
@@ -42,7 +43,10 @@ public class SaleStageConfig {
                         SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE),
                         new TypeToken<ArrayList<SaleStage>>() {
                         }.getType());
-
+        if (result == null) {
+            Global.Toast("销售阶段数据在准备中,请退出重试");
+            return new ArrayList<SaleStage>();
+        }
         return result;
     }
 

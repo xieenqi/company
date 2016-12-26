@@ -10,44 +10,54 @@ import java.lang.annotation.RetentionPolicy;
 
 public class AudioPlayUpdate {
 
-    public final static String PLAY = "";
-    public final static String RESUME = "";
-    public final static String PAUSE = "";
-    public final static String STOP = "";
-    public final static String PROGRESS = "";
+    public final static String START = "START";
+    public final static String RESUME = "RESUME";
+    public final static String PAUSE = "PAUSE";
+    public final static String STOP = "STOP";
+    public final static String PROGRESS = "PROGRESS";
+    public final static String ERROR = "ERROR";
+    public final static String SIZE  = "SIZE";
 
-    @StringDef({PLAY, RESUME, PAUSE, STOP, PROGRESS})
+    @StringDef({START, RESUME, PAUSE, STOP, PROGRESS,ERROR,SIZE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
     }
 
     @Type
     public String type;
-    public float progress;
+    public String msg;
 
-    private AudioPlayUpdate(@Type String type, float progress) {
+    private AudioPlayUpdate(@Type String type, String msg) {
         this.type = type;
-        this.progress = progress;
+        this.msg = msg;
     }
 
-    public static AudioPlayUpdate playState() {
-        return new AudioPlayUpdate(PLAY, 0);
+    public static AudioPlayUpdate startState() {
+        return new AudioPlayUpdate(START, "0");
     }
 
     public static AudioPlayUpdate resumeState() {
-        return new AudioPlayUpdate(RESUME, 0);
+        return new AudioPlayUpdate(RESUME, "0");
     }
 
     public static AudioPlayUpdate pauseState() {
-        return new AudioPlayUpdate(PAUSE, 0);
+        return new AudioPlayUpdate(PAUSE, "0");
     }
 
     public static AudioPlayUpdate stopState() {
-        return new AudioPlayUpdate(STOP, 0);
+        return new AudioPlayUpdate(STOP, "0");
     }
 
-    public static AudioPlayUpdate progressState(float progress) {
+    public static AudioPlayUpdate progressState(String progress) {
         return new AudioPlayUpdate(PROGRESS, progress);
+    }
+
+    public static AudioPlayUpdate errorState(){
+        return new AudioPlayUpdate(ERROR, "0");
+    }
+
+    public static AudioPlayUpdate audioSize(String size){
+        return new AudioPlayUpdate(SIZE, size);
     }
 
 

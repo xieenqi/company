@@ -16,7 +16,7 @@ public interface LoginView {
     void verifyError(int code);
 
     /*请求成功*/
-    void onSuccess(Token token);
+    void onSuccess(String token);
 
     /*请求失败*/
     void onError();

@@ -53,7 +53,6 @@ import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -71,8 +70,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -167,6 +164,9 @@ public class TasksAddActivity extends BaseActivity {
     private boolean isState = true;
     private boolean isKind;//true:重复 //截止
 
+    private static final int ID_PASTE = android.R.id.paste;
+
+
     private String title;
     private String content;
     private StringBuffer joinName;
@@ -175,6 +175,7 @@ public class TasksAddActivity extends BaseActivity {
     private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
     private List<String> mSelectPath;
     private ArrayList<ImageInfo> pickPhotsResult;
+
 
     @AfterViews
     void initUI() {
@@ -194,7 +195,6 @@ public class TasksAddActivity extends BaseActivity {
         switch_approve.setState(true);
         edt_content.addTextChangedListener(new CountTextWatcher(wordcount));
         init_gridView_photo();
-//        setTouchView(-1);
         getTempTask();
 
         projectAddTask();
@@ -217,6 +217,8 @@ public class TasksAddActivity extends BaseActivity {
                 tv_responsiblePerson.setText("无负责人");
             } else {
                 tv_responsiblePerson.setText(newUser.getName());
+                linear_task_approve.setVisibility(newUser.isCurrentUser() ? View.GONE : View.VISIBLE);
+                switch_approve.setState(newUser.isCurrentUser() ? false : true);
             }
         } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
@@ -308,10 +310,9 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask() {
-        if (pickPhots.size() == 0) {
-            //showLoading("正在提交");
+        /*if (pickPhots.size() == 0) {
             showStatusLoading(false);
-        }
+        }*/
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(pickPhots.size());
         HashMap<String, Object> map = new HashMap<>();
@@ -350,9 +351,8 @@ public class TasksAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkCommitSus("任务创建",response);
-                //HttpErrorCheck.checkResponse(response);
-                new Handler().postDelayed(new Runnable(){
+                HttpErrorCheck.checkCommitSus("任务创建", response);
+                new Handler().postDelayed(new Runnable() {
                     public void run() {
                         cancelStatusLoading();
                         //不需要保存
@@ -425,6 +425,7 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
                 //没有附件
+                showStatusLoading(false);
                 if (pickPhots.size() == 0) {
                     requestCommitTask();
                     //有附件
@@ -538,10 +539,13 @@ public class TasksAddActivity extends BaseActivity {
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
-                String str = year + "." + String.format("%02d", (month + 1)) + "." +
-                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                tv_deadline.setText(str);
-                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy.MM.dd HH:mm"));
+//                String str = year + "." + String.format("%02d", (month + 1)) + "." +
+//                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                tv_deadline.setText(str);
+//                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy.MM.dd HH:mm"));
+
+                mDeadline = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, min, 0);
+                tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mDeadline));
                 isKind = false;
                 layout_retask.setVisibility(View.GONE);
                 layout_retask_view.setVisibility(View.GONE);
@@ -660,7 +664,6 @@ public class TasksAddActivity extends BaseActivity {
      * 批量上传附件
      */
     private void newUploadAttachement() {
-        showLoading("正在提交");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -676,6 +679,7 @@ public class TasksAddActivity extends BaseActivity {
                                 new RCallback<Attachment>() {
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
+                                        //cancelStatusLoading();
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
                                             requestCommitTask();
@@ -685,7 +689,7 @@ public class TasksAddActivity extends BaseActivity {
                                     @Override
                                     public void failure(final RetrofitError error) {
                                         super.failure(error);
-                                        HttpErrorCheck.checkError(error);
+                                        HttpErrorCheck.checkCommitEro(error);
                                         img_title_right.setEnabled(true);
                                     }
                                 });
@@ -754,42 +758,39 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 break;
 
-            /*用户单选, 负责人*/
-            case FinalVariables.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
-                newUser = u;
-                tv_responsiblePerson.setText(newUser.getName());
-                break;
-
-            /*用户选择, 参与人*/
-            case FinalVariables.REQUEST_ALL_SELECT:
-                members = (Members) data.getSerializableExtra("data");
-                if (null == members) {
-                    tv_toUsers.setText("无参与人");
-                } else {
-                    joinName = new StringBuffer();
-                    joinUserId = new StringBuffer();
-                    if (null != members.depts) {
-                        for (NewUser newUser : members.depts) {
-                            joinName.append(newUser.getName() + ",");
-                            joinUserId.append(newUser.getId() + ",");
-                        }
-                    }
-                    if (null != members.users) {
-                        for (NewUser newUser : members.users) {
-                            joinName.append(newUser.getName() + ",");
-                            joinUserId.append(newUser.getId() + ",");
-                        }
-                    }
-                    if (!TextUtils.isEmpty(joinName)) {
-                        joinName.deleteCharAt(joinName.length() - 1);
-                    }
-                    tv_toUsers.setText(joinName.toString());
-                }
-                break;
-
-            default:
-                break;
+//            /*用户单选, 负责人*/ 被替代了
+//            case FinalVariables.REQUEST_ONLY:
+//                NewUser u = (NewUser) data.getSerializableExtra("data");
+//                newUser = u;
+//                tv_responsiblePerson.setText(newUser.getName());
+//                break;
+//
+//            /*用户选择, 参与人*/
+//            case FinalVariables.REQUEST_ALL_SELECT:
+//                members = (Members) data.getSerializableExtra("data");
+//                if (null == members) {
+//                    tv_toUsers.setText("无参与人");
+//                } else {
+//                    joinName = new StringBuffer();
+//                    joinUserId = new StringBuffer();
+//                    if (null != members.depts) {
+//                        for (NewUser newUser : members.depts) {
+//                            joinName.append(newUser.getName() + ",");
+//                            joinUserId.append(newUser.getId() + ",");
+//                        }
+//                    }
+//                    if (null != members.users) {
+//                        for (NewUser newUser : members.users) {
+//                            joinName.append(newUser.getName() + ",");
+//                            joinUserId.append(newUser.getId() + ",");
+//                        }
+//                    }
+//                    if (!TextUtils.isEmpty(joinName)) {
+//                        joinName.deleteCharAt(joinName.length() - 1);
+//                    }
+//                    tv_toUsers.setText(joinName.toString());
+//                }
+//                break;
         }
     }
 

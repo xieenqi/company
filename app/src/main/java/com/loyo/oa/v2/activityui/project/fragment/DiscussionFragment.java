@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
@@ -317,6 +318,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                     holder.time = (TextView) view.findViewById(R.id.tv_mine_time);
                     holder.name = (TextView) view.findViewById(R.id.tv_mine);
                     holder.content = (TextView) view.findViewById(R.id.tv_mine_content);
+                    MainApp.getMainApp().setTextSelection(holder.content,null,getActivity());
                     view.setTag(holder);
                 } else {
 //                    view = mInflater.inflate(R.layout.item_discussion_receive, viewGroup, false);
@@ -325,6 +327,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                     holder.time = (TextView) view.findViewById(R.id.tv_other_time);
                     holder.name = (TextView) view.findViewById(R.id.tv_other_name);
                     holder.content = (TextView) view.findViewById(R.id.tv_other_content);
+                    MainApp.getMainApp().setTextSelection(holder.content,null,getActivity());
                     try {
                         holder.content.setAutoLinkMask(Linkify.ALL);
                     } catch (NullPointerException e) {
@@ -340,7 +343,8 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 //            TextView name = ViewHolder.get(view, R.id.tv_discuss_sender);
 //            TextView content = ViewHolder.get(view, R.id.tv_discuss_content);
 
-            holder.time.setText(TimeFormatUtil.toMd_Hm(discussion.getCreatedAt()));
+//            holder.time.setText(TimeFormatUtil.toMd_Hm(discussion.getCreatedAt()));
+            holder.time.setText(DateTool.getDateTimeFriendly(discussion.getCreatedAt()));
             holder.name.setText(discussion.getCreator().name);
             holder.content.setText(discussion.getContent());
             ImageLoader.getInstance().displayImage(discussion.getCreator().avatar, holder.iv);

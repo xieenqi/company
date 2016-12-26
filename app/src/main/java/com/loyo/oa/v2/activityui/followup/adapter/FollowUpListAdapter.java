@@ -23,14 +23,13 @@ import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
-import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -41,7 +40,6 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.DateTool;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -132,12 +130,12 @@ public class FollowUpListAdapter extends BaseAdapter {
         holder.tv_contact.setText(TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
         holder.tv_customer.setText(followUpListModel.customerName);
         holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# " + followUpListModel.typeName);
-        holder.tv_create_time.setText(DateTool.getDiffTime(followUpListModel.createAt));
+        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(followUpListModel.createAt));
 
         /** 电话录音设置 */
         if (null != followUpListModel.audioUrl && !TextUtils.isEmpty(followUpListModel.audioUrl)) {
             holder.layout_phonely.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(DateTool.stringForTime(followUpListModel.audioLength * 1000));
+            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(followUpListModel.audioLength * 1000));
             int audioLength = followUpListModel.audioLength;
             if (audioLength > 0 && audioLength <= 60) {
                 holder.iv_phone_call.setText("000");
@@ -164,7 +162,8 @@ public class FollowUpListAdapter extends BaseAdapter {
         /** 下次跟进时间 */
         if (followUpListModel.remindAt != 0) {
             holder.layout_lasttime.setVisibility(View.VISIBLE);
-            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt + "", "yyyy-MM-dd HH:mm"));
+//            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt + "", "yyyy-MM-dd HH:mm"));
+            holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(followUpListModel.remindAt));
         } else {
             holder.layout_lasttime.setVisibility(View.GONE);
         }
@@ -173,9 +172,11 @@ public class FollowUpListAdapter extends BaseAdapter {
         if (null != followUpListModel.content && !TextUtils.isEmpty(followUpListModel.content)) {
             if (followUpListModel.content.contains("<p>")) {
                 holder.setContent(holder.ll_web, followUpListModel.content);
+                holder.tv_memo.setVisibility(View.GONE);
             } else {
                 holder.tv_memo.setVisibility(View.VISIBLE);
                 holder.tv_memo.setText(followUpListModel.content);
+                holder.ll_web.removeAllViews();
             }
         }
 

@@ -38,14 +38,19 @@ public class DiscussCell extends RecyclerView.ViewHolder {
     public void openItem(final HttpDiscussItem itemData) {
 
         tv_title.setText(itemData.title);
-        tv_time.setText(itemData.newUpdatedAt != 0 ? DateTool.getDiffTime(itemData.newUpdatedAt) : itemData.updatedAt.substring(11, 19));
+        tv_time.setText(itemData.newUpdatedAt != 0 ? com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(itemData.newUpdatedAt) : itemData.updatedAt.substring(11, 19));
         tv_content.setText(itemData.creator.name + ":" + itemData.content);
 
         switch (itemData.bizType) {
             case 1:
                 iv_icon.setImageResource(R.drawable.ic_disuss_report);
                 tv_dateTime.setVisibility(View.VISIBLE);
-                tv_dateTime.setText(MainApp.getMainApp().df11.format(new Date(System.currentTimeMillis())));
+                //TODO 这里没有严格替换
+
+//              tv_dateTime.setText(MainApp.getMainApp().df11.format(new Date(System.currentTimeMillis())));
+
+                tv_dateTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(System.currentTimeMillis()));
+
                 break;
             case 2:
                 iv_icon.setImageResource(R.drawable.ic_discuss_task);

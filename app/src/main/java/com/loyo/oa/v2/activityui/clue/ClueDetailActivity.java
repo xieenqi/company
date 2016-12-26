@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -179,6 +181,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         update_time = (TextView) findViewById(R.id.tv_update_time);
         tv_address = (TextView) findViewById(R.id.tv_address);
 
+        MainApp.getMainApp().setTextSelection(clue_note,null,ClueDetailActivity.this);
     }
 
     public void bindData() {
@@ -207,8 +210,8 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
             ll_track.setVisibility(View.VISIBLE);
             tv_track_content.setText(data.activity.content.contains("<p>") ?
                     CommonHtmlUtils.Instance().checkContent(data.activity.content) : data.activity.content);
-            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.activity.createAt + "") * 1000))
-                    + "  " + data.activity.creatorName + " # " + data.activity.typeName);
+//            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.activity.createAt + "") * 1000))+ "  " + data.activity.creatorName + " # " + data.activity.typeName);
+            tv_track_time.setText(DateTool.getDateTimeFriendly(data.activity.createAt) + "  " + data.activity.creatorName + " # " + data.activity.typeName);
         }
         tv_visit_number.setText("(" + sales.saleActivityCount + ")");
 
@@ -216,15 +219,19 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         contact_mobile.setText(sales.cellphone);
         contact_wiretel.setText(sales.tel);
         clue_region.setText(sales.getRegion());
+        regional = sales.region;
         tv_address.setText(sales.address);
         clue_source.setText(sales.source);
         clue_note.setText(sales.remark);
-
+        clueStatus = sales.status;
         /* 分区4 */
         responsible_name.setText(sales.responsorName);
         creator_name.setText(sales.creatorName);
-        create_time.setText(app.df3.format(new Date(Long.valueOf(sales.createdAt + "") * 1000)));
-        update_time.setText(app.df3.format(new Date(Long.valueOf(sales.updatedAt + "") * 1000)));
+//        create_time.setText(app.df3.format(new Date(Long.valueOf(sales.createdAt + "") * 1000)));
+//        update_time.setText(app.df3.format(new Date(Long.valueOf(sales.updatedAt + "") * 1000)));
+
+        create_time.setText(DateTool.getDateTimeFriendly(sales.createdAt));
+        update_time.setText(DateTool.getDateTimeFriendly(sales.updatedAt));
     }
 
     private void getIntenData() {
@@ -388,6 +395,21 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
             @Override
             public void onClick(View v) {
                 callPhonePopView.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+            @Override
+            public void success() {
+                Utils.call(mContext, data.sales.cellphone);
+            }
+
+            @Override
+            public void fail() {
+                Toast("你拒绝了打电话权限，无法拨出电话");
             }
         });
     }
@@ -614,17 +636,21 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
 
     /**
      * 编辑线索 1 地区 2 线索来源
+     * 编辑线索把全部的内容传一次  12-22
      *
      * @param function
      */
     private void editAreaAndSource(final int function) {
         HashMap<String, Object> map = new HashMap<>();
-        if (1 == function)
-            map.put("region", regional);
-        if (2 == function)
-            map.put("source", clue_source.getText().toString());
-        if (3 == function)
-            map.put("status", clueStatus);
+        map.put("name", section1_username.getText().toString());
+        map.put("companyName", section1_company_name.getText().toString());
+        map.put("cellphone", contact_mobile.getText().toString());
+        map.put("tel", contact_wiretel.getText().toString());
+        map.put("address", tv_address.getText().toString());
+        map.put("remark", clue_note.getText().toString());
+        map.put("region", regional);
+        map.put("source", clue_source.getText().toString());
+        map.put("status", clueStatus);
         LogUtil.d(app.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
                 .editClue(clueId, map, new Callback<Object>() {

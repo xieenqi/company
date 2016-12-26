@@ -2,6 +2,7 @@ package com.loyo.oa.v2.tool;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -47,13 +48,11 @@ public class BaseActivity extends AppCompatActivity {
 
     protected MainApp app;
     protected boolean isNeedLogin = true;
-    protected Context mContext;
-    protected static final int NO_SCROLL = -1;
+    public Context mContext;
     public CustomProgressDialog customProgressDialog;
-    public Intent rushTokenIntent;
-    private int mTouchViewGroupId;
+    //    public Intent rushTokenIntent;
+//    private int mTouchViewGroupId;
     public SweetAlertDialogView sweetAlertDialogView;
-    public LoadStatusView loadView;
 
     /**
      * 搜索跳转分类
@@ -126,34 +125,34 @@ public class BaseActivity extends AppCompatActivity {
     public void onEvent(Object object) {
 
     }
-
-    protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (null == intent) {
-                return;
-            }
-            String action = intent.getAction();
-            if (TextUtils.equals(action, ConnectivityManager.CONNECTIVITY_ACTION)) {
-                ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-                NetworkInfo info = manager.getActiveNetworkInfo();
-                if (null != info && info.isAvailable() && info.isConnected()) {
-                    onNetworkChanged(true);
-                } else {
-                    onNetworkChanged(false);
-                }
-            }
-        }
-    };
-
-    /**
-     * 网络状态变化回调方法
-     *
-     * @param available
-     */
-    protected void onNetworkChanged(boolean available) {
-
-    }
+//暂时注销一会可能会启用
+//    protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (null == intent) {
+//                return;
+//            }
+//            String action = intent.getAction();
+//            if (TextUtils.equals(action, ConnectivityManager.CONNECTIVITY_ACTION)) {
+//                ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+//                NetworkInfo info = manager.getActiveNetworkInfo();
+//                if (null != info && info.isAvailable() && info.isConnected()) {
+//                    onNetworkChanged(true);
+//                } else {
+//                    onNetworkChanged(false);
+//                }
+//            }
+//        }
+//    };
+//
+//    /**
+//     * 网络状态变化回调方法
+//     *
+//     * @param available
+//     */
+//    protected void onNetworkChanged(boolean available) {
+//
+//    }
 
     /**
      * 注册基类广播
@@ -401,15 +400,15 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * 展示带成功失败动画加载框
-     * */
-    public void showStatusLoading(boolean outTouch){
-        DialogHelp.showStatusLoading(outTouch,this);
+     */
+    public void showStatusLoading(boolean outTouch) {
+        DialogHelp.showStatusLoading(outTouch, this);
     }
 
     /**
      * 关闭带成功失败动画加载框
-     * */
-    public void cancelStatusLoading(){
+     */
+    public void cancelStatusLoading() {
         DialogHelp.cancelStatusLoading();
     }
 

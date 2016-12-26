@@ -163,7 +163,7 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
 
         @Override
         public void afterTextChanged(final Editable s) {
-            Log.e(getClass().getSimpleName(), "afterTextChanged, s : " + s.toString());
+            Log.e(getClass().getSimpleName(), "afterTextChanged, s ： " + s.toString());
             if (s.toString().length() > 0) {
                 map_Values.put(lstData.get(position).getId(), s.toString());
             } else {
@@ -212,32 +212,35 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
         @Override
         public void onClick(final View v) {
             if (!ClickTool.isDoubleClick()) {
-                DateTool.calendar = Calendar.getInstance();
-                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(
-                        textView);
-                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
-                    @Override
-                    public boolean onClick_onDateSet() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onClick_onTimeSet() {
-                        map_Values.put(lstData.get(position).getId(), dateListener.strDate + dateListener.strTime);
-//                        mainApplication.logUtil.d("map_Values.put(" + (int) mListData.get(position).getId() + "," + dateListener.strDate + dateListener.strTime + ")");
-                        return false;
-                    }
-                });
+//                DateTool.calendar = Calendar.getInstance();
+//                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(
+//                        textView);
+//                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
+//                    @Override
+//                    public boolean onClick_onDateSet() {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onClick_onTimeSet() {
+//                        map_Values.put(lstData.get(position).getId(), dateListener.strDate + dateListener.strTime);
+////                        mainApplication.logUtil.d("map_Values.put(" + (int) mListData.get(position).getId() + "," + dateListener.strDate + dateListener.strTime + ")");
+//                        return false;
+//                    }
+//                });
 
                 DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(context, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
                     public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
 
-                        String str = year + "-" + String.format("%02d", (month + 1)) + "-"
-                                + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                        textView.setText(str);
-                        map_Values.put(lstData.get(position).getId(), str);
+//                        String str = year + "-" + String.format("%02d", (month + 1)) + "-"
+//                                + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                        textView.setText(str);
+//                        map_Values.put(lstData.get(position).getId(), str);
+
+                        long time= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,hour,min);
+                        map_Values.put(lstData.get(position).getId(), com.loyo.oa.common.utils.DateTool.getDateTimeReal(time));
 
                     }
 

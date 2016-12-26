@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -48,7 +49,6 @@ import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -66,14 +66,11 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 
 @EActivity(R.layout.activity_tasks_edit) //本Activity的布局文件
 public class TasksEditActivity extends BaseActivity {
@@ -162,7 +159,7 @@ public class TasksEditActivity extends BaseActivity {
         member = new Members();
 
         UpdateUI();
-        //getEditAttachments();
+//        getEditAttachments();
 //        setTouchView(-1);
 
     }
@@ -188,7 +185,8 @@ public class TasksEditActivity extends BaseActivity {
         savePostData();
         tv_toUsers.setText(joinName.toString());
         if (mTask.getPlanEndAt() != 0) {
-            tv_deadline.setText(MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)));
+//            tv_deadline.setText(MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)));
+            tv_deadline.setText(DateTool.getDateTimeFriendly(mTask.getPlanEndAt()));
         }
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
         switch_approve.setState(mTask.isReviewFlag());
@@ -214,7 +212,7 @@ public class TasksEditActivity extends BaseActivity {
     }
 
 //    /**
-//     * 获取附件(编辑)
+//     * 获取附件(编辑) 不在此处编辑 而在详情的附件 增加、删除
 //     */
 //    void getEditAttachments() {
 //        showLoading("");
@@ -415,13 +413,12 @@ public class TasksEditActivity extends BaseActivity {
                     Toast("负责人" + getString(R.string.app_no_null));
                     break;
                 }
-                requestCommitTask(title,content);
+                requestCommitTask(title, content);
                 break;
 
 
             /*编辑负责人*/
-            case R.id.layout_responsiblePerson:
-            {
+            case R.id.layout_responsiblePerson: {
                 StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(newUser);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
@@ -434,11 +431,10 @@ public class TasksEditActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
 
             /*编辑参与人*/
-            case R.id.tv_toUsers:
-            {
+            case R.id.tv_toUsers: {
                 StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
@@ -451,7 +447,7 @@ public class TasksEditActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
 
 
             //重复任务
@@ -494,7 +490,7 @@ public class TasksEditActivity extends BaseActivity {
         }
     }
 
-    void requestCommitTask(String title,String content){
+    void requestCommitTask(String title, String content) {
         showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
@@ -527,7 +523,7 @@ public class TasksEditActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateTask(mTask.getId(), map, new RCallback<Task>() {
             @Override
             public void success(final Task task, Response response) {
-                HttpErrorCheck.checkCommitSus("任务编辑",response);
+                HttpErrorCheck.checkCommitSus("任务编辑", response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -538,7 +534,7 @@ public class TasksEditActivity extends BaseActivity {
                         setResult(Activity.RESULT_OK, intent);
                         onBackPressed();
                     }
-                },1000);
+                }, 1000);
             }
 
             @Override
@@ -554,10 +550,16 @@ public class TasksEditActivity extends BaseActivity {
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
-                String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
-                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                tv_deadline.setText(str);
-                mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str, "yyyy-MM-dd HH:mm")));
+//                String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
+//                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                tv_deadline.setText(str);
+//                mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str, "yyyy-MM-dd HH:mm")));
+
+                long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, min, 0);
+                tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time));
+                mTask.setPlanEndAt(time);
+
+
                 isKind = false;
                 layout_retask.setVisibility(View.GONE);
                 layout_retask_view.setVisibility(View.GONE);
@@ -701,15 +703,13 @@ public class TasksEditActivity extends BaseActivity {
             newUser = Compat.convertStaffCollectionToNewUser(collection);
             if (newUser == null) {
                 tv_responsiblePerson.setText("无负责人");
-            }
-            else {
+            } else {
                 tv_responsiblePerson.setText(newUser.getName());
             }
-        }
-        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+        } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             member = Compat.convertStaffCollectionToMembers(collection);
-            if (null == member || (member.users.size()==0 && member.depts.size()==0)) {
+            if (null == member || (member.users.size() == 0 && member.depts.size() == 0)) {
                 tv_toUsers.setText("无参与人");
             } else {
                 joinName = new StringBuffer();
@@ -826,15 +826,15 @@ public class TasksEditActivity extends BaseActivity {
                 break;
             /*删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                Utils.dialogShow(this, "请稍候");
+                showLoading("请稍候");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                 HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("bizType", 2);
                 map.put("uuid", uuid);
-                app.getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
+               RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                     @Override
                     public void success(final Attachment attachment, final Response response) {
-                        Utils.dialogDismiss();
+                        HttpErrorCheck.checkResponse(response);
                         Toast("删除附件成功!");
                         mTask.getAttachments().remove(delAttachment);
                         init_gridView_photo();
@@ -842,7 +842,8 @@ public class TasksEditActivity extends BaseActivity {
 
                     @Override
                     public void failure(final RetrofitError error) {
-                        Utils.dialogDismiss();
+                        HttpErrorCheck.checkError(error);
+//                        cancelLoading();
                         Toast("删除附件失败!");
                         super.failure(error);
                     }

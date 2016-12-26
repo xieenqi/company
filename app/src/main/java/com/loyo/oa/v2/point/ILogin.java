@@ -2,6 +2,8 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.login.model.Token;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.beans.BaseBeanT;
+
 import java.util.HashMap;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -23,7 +25,7 @@ public interface ILogin {
      * @param cb   返回对象
      */
     @POST("/")
-    void login(@Body HashMap<String, Object> body, retrofit.Callback<Token> cb);
+    void login(@Body HashMap<String, Object> body, retrofit.Callback<BaseBeanT<String>> cb);
 
     /**
      * 更新unionid

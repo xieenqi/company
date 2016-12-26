@@ -30,8 +30,8 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
-import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -39,7 +39,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.tool.DateTool;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -55,17 +54,20 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
     private ArrayList<ClueFollowUpListModel> listModel;
     private ClueFollowUpListView viewCrol;
     private AudioPlayCallBack audioPlayCallBack;
+    private int parentIndex;
 
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格附件 */
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
     private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
 
-    public ClueFollowUpListAdapter(Context mContext, ArrayList<ClueFollowUpListModel> listModel, ClueFollowUpListView viewCrol, AudioPlayCallBack audioCallBack) {
+    public ClueFollowUpListAdapter(Context mContext, ArrayList<ClueFollowUpListModel> listModel,
+                                   ClueFollowUpListView viewCrol, AudioPlayCallBack audioCallBack, int parentIndex) {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
         this.audioPlayCallBack = audioCallBack;
+        this.parentIndex = parentIndex;
     }
 
     @Override
@@ -122,14 +124,14 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(model.avatar, holder.iv_heading);
         holder.tv_name.setText(model.creatorName);
         holder.tv_address.setText(TextUtils.isEmpty(model.addr) ? "无定位信息" : model.addr);
-        holder.tv_create_time.setText(DateTool.getDiffTime(model.createAt));
-        holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# "+model.typeName);
+        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createAt));
+        holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# " + model.typeName);
         holder.tv_contact.setText(TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName);
 
         /** 电话录音设置 */
-        if(null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)){
+        if (null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)) {
             holder.layout_phonely.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(DateTool.stringForTime(model.audioLength * 1000));
+            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(model.audioLength * 1000));
             int audioLength = model.audioLength;
             if (audioLength > 0 && audioLength <= 60) {
                 holder.iv_phone_call.setText("000");
@@ -148,15 +150,17 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             } else {
                 holder.iv_phone_call.setText("");
             }
-        }else{
+        } else {
             holder.layout_phonely.setVisibility(View.GONE);
         }
 
         /** 下次跟进时间 */
-        if(model.remindAt != 0){
+        if (model.remindAt != 0) {
             holder.layout_lasttime.setVisibility(View.VISIBLE);
-            holder.tv_last_time.setText(DateTool.timet(model.remindAt+"","yyyy-MM-dd HH:mm"));
-        }else{
+//            holder.tv_last_time.setText(DateTool.timet(model.remindAt+"","yyyy-MM-dd HH:mm"));
+            holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.remindAt));
+
+        } else {
             holder.layout_lasttime.setVisibility(View.GONE);
         }
 
@@ -170,43 +174,45 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         }*/
 
         /** 设置跟进内容 */
-        if(null != model.content && !TextUtils.isEmpty(model.content)){
-            if(model.content.contains("<p>")){
+        if (null != model.content && !TextUtils.isEmpty(model.content)) {
+            if (model.content.contains("<p>")) {
                 holder.setContent(holder.ll_web, model.content);
-            }else{
+                holder.tv_memo.setVisibility(View.GONE);
+            } else {
                 holder.tv_memo.setVisibility(View.VISIBLE);
                 holder.tv_memo.setText(model.content);
+                holder.ll_web.removeAllViews();
             }
         }
 
         /** 客户地址 */
-        if(null != model.addr && !TextUtils.isEmpty(model.location.addr)){
+        if (null != model.addr && !TextUtils.isEmpty(model.location.addr)) {
             holder.layout_address.setVisibility(View.VISIBLE);
             holder.tv_address.setText(model.location.addr);
             holder.tv_address.setOnTouchListener(Global.GetTouch());
-        }else{
+        } else {
             holder.layout_address.setVisibility(View.GONE);
         }
 
         /** @的相关人员 */
-        if(null != model.atNameAndDepts && !TextUtils.isEmpty(model.atNameAndDepts)){
+        if (null != model.atNameAndDepts && !TextUtils.isEmpty(model.atNameAndDepts)) {
             holder.tv_toast.setText("@" + model.atNameAndDepts);
-        }else{
+        } else {
             holder.tv_toast.setVisibility(View.GONE);
         }
 
         /** 录音语音 */
-        if(null != model.audioInfo){
+        if (null != model.audioInfo) {
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,model.audioInfo,audioPlayCallBack);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext, model.audioInfo, audioPlayCallBack);
             holder.lv_audio.setAdapter(audioAdapter);
-        }else{
+        } else {
             holder.lv_audio.setVisibility(View.GONE);
         }
 
         /** 文件列表 数据绑定 */
-        if(null != model.attachments && model.attachments.size() > 0){
-            optionAdapter = new ListOrDetailsOptionsAdapter(mContext,model.attachments);
+        if (null != model.attachments && model.attachments.size() > 0) {
+            optionAdapter = new ListOrDetailsOptionsAdapter(mContext, model.attachments);
             holder.lv_options.setAdapter(optionAdapter);
         }
 
@@ -228,14 +234,14 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
                             MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
                 }
             });
-        }else{
+        } else {
             holder.layout_gridview.setVisibility(View.GONE);
         }
 
         /** 绑定评论数据 */
         if (null != model.comments && model.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, model.comments,audioPlayCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, model.comments, audioPlayCallBack);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -255,7 +261,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         holder.iv_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewCrol.commentEmbl(model.id);
+                viewCrol.commentEmbl(model.id, parentIndex, position);
             }
         });
 
@@ -263,14 +269,14 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         holder.tv_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(null != model.location.loc){
+                if (null != model.location.loc) {
                     Intent mIntent = new Intent(mContext, MapSingleView.class);
                     mIntent.putExtra("la", Double.valueOf(model.location.loc[0]));
                     mIntent.putExtra("lo", Double.valueOf(model.location.loc[1]));
-                    mIntent.putExtra("address",model.location.addr);
+                    mIntent.putExtra("address", model.location.addr);
                     mContext.startActivity(mIntent);
-                }else{
-                    Toast.makeText(mContext,"GPS坐标不全!",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "GPS坐标不全!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -295,7 +301,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
                 AudioModel audioModel = new AudioModel();
                 audioModel.url = model.audioUrl;
                 audioModel.length = model.audioLength;
-                audioPlayCallBack.playVoice(audioModel,iv_phone_call);
+                audioPlayCallBack.playVoice(audioModel, iv_phone_call);
             }
         });
 

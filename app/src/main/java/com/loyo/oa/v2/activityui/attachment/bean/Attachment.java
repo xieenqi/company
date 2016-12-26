@@ -228,9 +228,10 @@ public class Attachment implements Serializable {
             @Override
             public int compare(Attachment lhs, Attachment rhs) {
 
-                long l = DateTool.getDateToTimestamp(lhs.getCreatedAt(), app.df_api_get);
-                long r = DateTool.getDateToTimestamp(rhs.getCreatedAt(), app.df_api_get);
-
+//                long l = DateTool.getDateToTimestamp(lhs.getCreatedAt(), app.df_api_get);
+//                long r = DateTool.getDateToTimestamp(rhs.getCreatedAt(), app.df_api_get);
+                long l= com.loyo.oa.common.utils.DateTool.getSecondStamp(lhs.getCreatedAt());
+                long r= com.loyo.oa.common.utils.DateTool.getSecondStamp(rhs.getCreatedAt());
                 return (l - r) > 0 ? -1 : 1;
             }
         });

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.worksheet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -165,19 +166,18 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
      * 上传附件信息
      */
     void postAttaData() {
-        showLoading("");
         buildAttachment();
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
                 .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
                     @Override
                     public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        HttpErrorCheck.checkResponse("上传附件信息", response);
+                        //HttpErrorCheck.checkCommitSus("上传附件信息", response);
                         commitDynamic();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
     }
@@ -196,23 +196,29 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).setEventSubmit(id, map, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
-                HttpErrorCheck.checkResponse("提交事情处理信息", response);
-                if (type == 1) {
-                    AppBus.getInstance().post(new WorksheetDetail());
-                    WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
-                    event.bundle = new Bundle();
-                    event.bundle.putString(ExtraAndResult.EXTRA_ID, id);
-                    AppBus.getInstance().post(event);
-                } else {
-                    AppBus.getInstance().post(new WorksheetInfo());
-                }
-                app.finishActivity(WorksheetSubmitActivity.this, MainApp.ENTER_TYPE_LEFT, 0, new Intent());
+                HttpErrorCheck.checkCommitSus("提交事情处理信息", response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        if (type == 1) {
+                            AppBus.getInstance().post(new WorksheetDetail());
+                            WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
+                            event.bundle = new Bundle();
+                            event.bundle.putString(ExtraAndResult.EXTRA_ID, id);
+                            AppBus.getInstance().post(event);
+                        } else {
+                            AppBus.getInstance().post(new WorksheetInfo());
+                        }
+                        app.finishActivity(WorksheetSubmitActivity.this, MainApp.ENTER_TYPE_LEFT, 0, new Intent());
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -232,7 +238,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                     }
                 }
 
-                showLoading("");
+                showStatusLoading(false);
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
 
@@ -364,10 +370,10 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelLoading();
         int count = controller.failedTaskCount();
         if (count > 0) {
             Toast(count + "个附件上传失败，请重试或者删除");
+            cancelStatusLoading();
             return;
         }
         if (taskList.size() >0) {
