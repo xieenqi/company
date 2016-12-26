@@ -64,6 +64,7 @@
             android:text=""
             android:textColor="@color/text33"
             android:textIsSelectable="true"
+            android:selectAllOnFocus="true"
             android:textSize="@dimen/text_sp14"/>
 
 

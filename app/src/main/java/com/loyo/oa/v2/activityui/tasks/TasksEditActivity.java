@@ -159,7 +159,7 @@ public class TasksEditActivity extends BaseActivity {
         member = new Members();
 
         UpdateUI();
-        getEditAttachments();
+//        getEditAttachments();
 //        setTouchView(-1);
 
     }
@@ -211,27 +211,27 @@ public class TasksEditActivity extends BaseActivity {
         setCornBodyinfo();
     }
 
-    /**
-     * 获取附件(编辑)
-     */
-    void getEditAttachments() {
-        showLoading("");
-        Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> _attachments, final Response response) {
-                cancelLoading();
-                mTask.setAttachments(_attachments);
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                cancelLoading();
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
+//    /**
+//     * 获取附件(编辑) 不在此处编辑 而在详情的附件 增加、删除
+//     */
+//    void getEditAttachments() {
+//        showLoading("");
+//        Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
+//            @Override
+//            public void success(final ArrayList<Attachment> _attachments, final Response response) {
+//                cancelLoading();
+//                mTask.setAttachments(_attachments);
+//                init_gridView_photo();
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                cancelLoading();
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+//    }
 
     /**
      * 重复任务数据拆解

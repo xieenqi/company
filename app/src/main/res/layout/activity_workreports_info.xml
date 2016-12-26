@@ -176,10 +176,12 @@
                         android:layout_marginLeft="@dimen/dimen_15"
                         android:layout_marginRight="@dimen/dimen_15"
                         android:paddingBottom="@dimen/dimen_10"
-                        android:text="Content"
+                        android:text=""
                         android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp15"
                         android:textIsSelectable="true"
-                        android:textSize="@dimen/text_sp15" />
+                        android:selectAllOnFocus="true"
+                        />
 
                     <LinearLayout
                         android:layout_width="match_parent"
