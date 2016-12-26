@@ -31,6 +31,7 @@ import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.project.ProjectInfoActivity;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
@@ -44,6 +45,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.ITask;
@@ -162,7 +164,7 @@ public class TasksInfoActivity extends BaseActivity {
     public ArrayList<TextView> taskChildView = new ArrayList<>();
     public ArrayList<NewUser> childTastUsers = new ArrayList<>();
 //    public ArrayList<NewUser> requestDepts = new ArrayList<>();
-//    public ArrayList<User> aboutDepts = new ArrayList<>();
+//    public ArrayList<User> aboutDepaboutDeptsts = new ArrayList<>();
 //    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
 
     //    public ArrayList<Department> deptSource = Common.getLstDepartment();
@@ -179,6 +181,7 @@ public class TasksInfoActivity extends BaseActivity {
     public TextView viewContent;
     private StringBuffer joinUserId;
     private StringBuffer joinName;
+    private boolean isEdit, isDelete, isCopyTask, isEditMember;
 
     public android.os.Handler mHandler = new android.os.Handler() {
         public void handleMessage(final Message msg) {
@@ -224,10 +227,14 @@ public class TasksInfoActivity extends BaseActivity {
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_complete.setOnTouchListener(Global.GetTouch());
         layout_child_add_action.setOnTouchListener(Global.GetTouch());
+        img_title_right.setVisibility(View.INVISIBLE);
     }
 
     void updateUI() {
         if (mTask != null) {
+            if (IsCreator() || (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING)) {
+                img_title_right.setVisibility(View.VISIBLE);
+            }
             updateUI_task_base();
             updateUI_task_responsiblePerson();
             updateUI_task_sub_task();
@@ -265,14 +272,14 @@ public class TasksInfoActivity extends BaseActivity {
             layout_child_add_action.setVisibility(View.GONE);
             layout_attachment.setVisibility(View.GONE);
             v_split.setVisibility(View.GONE);
-            img_title_right.setVisibility(View.GONE);
+//            img_title_right.setVisibility(View.GONE);
             layout_child_Add_area.setVisibility(View.GONE);
             layout_task_testfather.setVisibility(View.GONE);
             btn_complete.setVisibility(View.GONE);
         }
 
         if (!IsCreator() && !IsResponsiblePerson()) {
-            img_title_right.setVisibility(View.GONE);
+//            img_title_right.setVisibility(View.GONE);
         }
     }
 
@@ -297,24 +304,24 @@ public class TasksInfoActivity extends BaseActivity {
      */
     void updateUI_task_responsiblePerson() {
         childTastUsers.clear();
-        //参与人
-        if (!IsResponsiblePerson() && !IsCreator()) {
-            img_title_right.setVisibility(View.GONE);
-        }
-        //其他情况
-        switch (mTask.getStatus()) {
-            case Task.STATUS_REVIEWING:
-                if (IsResponsiblePerson()) {
-                    img_title_right.setVisibility(View.GONE);
-                }
-                break;
-
-            case Task.STATUS_FINISHED:
-                if (IsResponsiblePerson()) {
-                    img_title_right.setVisibility(View.GONE);
-                }
-                break;
-        }
+//        //参与人
+//        if (!IsResponsiblePerson() && !IsCreator()) {
+//            img_title_right.setVisibility(View.GONE);
+//        }
+//        //其他情况
+//        switch (mTask.getStatus()) {
+//            case Task.STATUS_REVIEWING:
+//                if (IsResponsiblePerson()) {
+//                    img_title_right.setVisibility(View.GONE);
+//                }
+//                break;
+//
+//            case Task.STATUS_FINISHED:
+//                if (IsResponsiblePerson()) {
+//                    img_title_right.setVisibility(View.GONE);
+//                }
+//                break;
+//        }
 
 
         if (mTask.getResponsiblePerson() != null) {
@@ -556,7 +563,7 @@ public class TasksInfoActivity extends BaseActivity {
         if (mTask.getCreator() != null && mTask.getCreatedAt() > 0) {
             tv_sub_title.setText(String.format("%s %s 提交", mTask.getCreator().getRealname(),
 //                    app.df2.format(new Date(mTask.getCreatedAt()))));
-                    DateTool.getDateTimeFriendly(mTask.getCreatedAt()/1000)));
+                    DateTool.getDateTimeFriendly(mTask.getCreatedAt() / 1000)));
         }
 
         if (mTask.getBizExtData() != null) {
@@ -744,7 +751,7 @@ public class TasksInfoActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error,ll_loading);
+                HttpErrorCheck.checkError(error, ll_loading);
 //                finish();
             }
         });
@@ -753,53 +760,51 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 标题左右监听
      */
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete, R.id.layout_cb})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete})
     void onClick(final View v) {
-
         switch (v.getId()) {
-
             case R.id.img_title_left:
                 onBackPressed();
                 break;
-
             case R.id.img_title_right:
-
                 if (null == mTask) {
                     Toast("任务为空！");
                     return;
                 }
-
-                Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-
-                /*创建人*/
-                if (IsCreator()) {
-                    if (mTask.getStatus() == Task.STATUS_PROCESSING) {//创建者 任务进行中
-                        intent.putExtra("edit", true);
-                        intent.putExtra("delete", true);
-                        intent.putExtra("extra", "复制任务");
-                    } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
-                        intent.putExtra("extra", "复制任务");
-                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
-                        intent.putExtra("extra", "复制任务");
-                    }
-                    /*负责人*/
-                } else if (IsResponsiblePerson()) {
-                    switch (mTask.getStatus()) {
-                        case Task.STATUS_PROCESSING:
-                            intent.putExtra("edit", true);
-                            intent.putExtra("editText", "修改参与人");
-                            break;
-
-                        case Task.STATUS_REVIEWING:
-                            intent.putExtra("extra", "复制任务");
-                            break;
-
-                        case Task.STATUS_FINISHED:
-                            intent.putExtra("extra", "复制任务");
-                            break;
-                    }
-                }
-                startActivityForResult(intent, REQUEST_EDIT_DELETE);
+                isEdit = isDelete = IsCreator() && mTask.getStatus() == Task.STATUS_PROCESSING;
+                isCopyTask = IsCreator();
+                isEditMember = IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING && !IsCreator();
+                functionButton();
+//                Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+//                /*创建人*/
+//                if (IsCreator()) {
+//                    if (mTask.getStatus() == Task.STATUS_PROCESSING) {//创建者 任务进行中
+//                        intent.putExtra("edit", true);
+//                        intent.putExtra("delete", true);
+//                        intent.putExtra("extra", "复制任务");
+//                    } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
+//                        intent.putExtra("extra", "复制任务");
+//                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
+//                        intent.putExtra("extra", "复制任务");
+//                    }
+//                    /*负责人*/
+//                } else if (IsResponsiblePerson()) {
+//                    switch (mTask.getStatus()) {
+//                        case Task.STATUS_PROCESSING:
+//                            intent.putExtra("edit", true);
+//                            intent.putExtra("editText", "修改参与人");
+//                            break;
+//
+//                        case Task.STATUS_REVIEWING:
+//                            intent.putExtra("extra", "复制任务");
+//                            break;
+//
+//                        case Task.STATUS_FINISHED:
+//                            intent.putExtra("extra", "复制任务");
+//                            break;
+//                    }
+//                }
+//                startActivityForResult(intent, REQUEST_EDIT_DELETE);
                 break;
 
             /**提交完成*/
@@ -810,16 +815,71 @@ public class TasksInfoActivity extends BaseActivity {
                     Toast("子任务尚未完成，不能提交！");
                 }
                 break;
-
-            case R.id.layout_cb:
-
-
-                break;
-
-
-            default:
-                break;
         }
+    }
+
+
+    /**
+     * 详见 task_perminssion 图片
+     * 右上角菜单
+     */
+    private void functionButton() {
+        ActionSheetDialog dialog = new ActionSheetDialog(TasksInfoActivity.this).builder();
+        if (isCopyTask)
+            dialog.addSheetItem("复制任务", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
+                    Bundle mBundle = new Bundle();
+                    mBundle.putSerializable("data", mTask);
+                    intent.putExtras(mBundle);
+                    startActivity(intent);
+                }
+            });
+        if (isEdit)
+            dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("mTask", mTask);
+                    bundle.putBoolean("type", IsCreator());
+                    app.startActivityForResult(TasksInfoActivity.this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
+                }
+            });
+        if (isDelete)
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).deleteTask(mTask.getId(),
+                            new RCallback<Task>() {
+                                @Override
+                                public void success(final Task o, final Response response) {
+                                    Intent intent = new Intent();
+                                    intent.putExtra("delete", mTask);
+                                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
+                                }
+                            });
+                }
+            });
+        if (isEditMember)
+            dialog.addSheetItem("修改参与人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                    if (collection != null) {
+                        bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                    }
+                    bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                    Intent intent = new Intent();
+                    intent.setClass(TasksInfoActivity.this, ContactPickerActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    isUpdate = true;
+                }
+            });
+        dialog.show();
     }
 
     @Click(R.id.tv_upload)
@@ -1133,66 +1193,66 @@ public class TasksInfoActivity extends BaseActivity {
                 getTask();
                 break;
 
-            case REQUEST_EDIT_DELETE:
-
-                /*编辑回调 创建人可编辑 负责人只能修改参与人*/
-                if (data.getBooleanExtra("edit", false)) {
-                    if (IsCreator()) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("mTask", mTask);
-                        bundle.putBoolean("type", IsCreator());
-                        app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
-                    } else {
-                        {
-                            StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
-                            Bundle bundle = new Bundle();
-                            bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
-                            if (collection != null) {
-                                bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
-                            }
-                            bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
-                            Intent intent = new Intent();
-                            intent.setClass(this, ContactPickerActivity.class);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                        }
-                    }
-                    isUpdate = true;
-                 /*删除回调*/
-                } else if (data.getBooleanExtra("delete", false)) {
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
-                        @Override
-                        public void success(final Task o, final Response response) {
-                            Intent intent = new Intent();
-                            intent.putExtra("delete", mTask);
-                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
-                        }
-                    });
-                 /*复制回调*/
-                } else if (data.getBooleanExtra("extra", false)) {
-                    Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
-                    Bundle mBundle = new Bundle();
-                    mBundle.putSerializable("data", mTask);
-                    intent.putExtras(mBundle);
-                    startActivity(intent);
-                 /*修改参与人回调*/
-                } else if (data.getBooleanExtra("editjoiner", false)) {
-                    {
-                        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
-                        if (collection != null) {
-                            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
-                        }
-                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
-                        Intent intent = new Intent();
-                        intent.setClass(this, ContactPickerActivity.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-                    isUpdate = true;
-                }
-                break;
+//            case REQUEST_EDIT_DELETE:
+//
+//                /*编辑回调 创建人可编辑 负责人只能修改参与人*/
+//                if (data.getBooleanExtra("edit", false)) {
+//                    if (IsCreator()) {
+//                        Bundle bundle = new Bundle();
+//                        bundle.putSerializable("mTask", mTask);
+//                        bundle.putBoolean("type", IsCreator());
+//                        app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
+//                    } else {
+//                        {
+//                            StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
+//                            Bundle bundle = new Bundle();
+//                            bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+//                            if (collection != null) {
+//                                bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+//                            }
+//                            bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+//                            Intent intent = new Intent();
+//                            intent.setClass(this, ContactPickerActivity.class);
+//                            intent.putExtras(bundle);
+//                            startActivity(intent);
+//                        }
+//                    }
+//                    isUpdate = true;
+//                 /*删除回调*/
+//                } else if (data.getBooleanExtra("delete", false)) {
+//                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
+//                        @Override
+//                        public void success(final Task o, final Response response) {
+//                            Intent intent = new Intent();
+//                            intent.putExtra("delete", mTask);
+//                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
+//                        }
+//                    });
+//                 /*复制回调*/
+//                } else if (data.getBooleanExtra("extra", false)) {
+//                    Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
+//                    Bundle mBundle = new Bundle();
+//                    mBundle.putSerializable("data", mTask);
+//                    intent.putExtras(mBundle);
+//                    startActivity(intent);
+//                 /*修改参与人回调*/
+//                } else if (data.getBooleanExtra("editjoiner", false)) {
+//                    {
+//                        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
+//                        Bundle bundle = new Bundle();
+//                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+//                        if (collection != null) {
+//                            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+//                        }
+//                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+//                        Intent intent = new Intent();
+//                        intent.setClass(this, ContactPickerActivity.class);
+//                        intent.putExtras(bundle);
+//                        startActivity(intent);
+//                    }
+//                    isUpdate = true;
+//                }
+//                break;
 
             case MSG_ATTACHMENT:
                 if (data == null || data.getExtras() == null) {
