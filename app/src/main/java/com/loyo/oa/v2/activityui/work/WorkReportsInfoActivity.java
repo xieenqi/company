@@ -22,6 +22,7 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.activityui.work.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -236,6 +237,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         layout_attachment.setOnTouchListener(Global.GetTouch());
         layout_discussion.setOnTouchListener(Global.GetTouch());
         img_title_right.setVisibility(View.GONE);
+        MainApp.getMainApp().setTextSelection(tv_workContent,null,WorkReportsInfoActivity.this);
     }
 
     void updateUI(final WorkReport mWorkReport) {

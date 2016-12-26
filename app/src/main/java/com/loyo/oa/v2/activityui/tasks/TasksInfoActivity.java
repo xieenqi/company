@@ -1,12 +1,19 @@
 package com.loyo.oa.v2.activityui.tasks;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -68,7 +75,6 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -97,7 +103,6 @@ public class TasksInfoActivity extends BaseActivity {
     public String beProjects;
 
     private String taskId;  //任务ID
-    //    private String userId;
     private String uuid = StringUtil.getUUID();
 
     @ViewById
@@ -163,11 +168,13 @@ public class TasksInfoActivity extends BaseActivity {
     public static TasksInfoActivity instance = null;
     public ArrayList<TextView> taskChildView = new ArrayList<>();
     public ArrayList<NewUser> childTastUsers = new ArrayList<>();
+
 //    public ArrayList<NewUser> requestDepts = new ArrayList<>();
 //    public ArrayList<User> aboutDepaboutDeptsts = new ArrayList<>();
 //    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
 
     //    public ArrayList<Department> deptSource = Common.getLstDepartment();
+
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
     public LinearLayout item_tasks_sorece;
@@ -351,11 +358,6 @@ public class TasksInfoActivity extends BaseActivity {
                 for (DBUser user : deptsUsers) {
                     childTastUsers.add(user.toShortUser());
                 }
-//
-//                LogUtil.d("参与人:" + MainApp.gson.toJson(mTask.members));
-//                LogUtil.d("子任务负责人:" + MainApp.gson.toJson(childTastUsers));
-//
-//                getAboutUser();
 
             } else {
                 tv_toUsers.setText("没有参与人");
@@ -501,7 +503,6 @@ public class TasksInfoActivity extends BaseActivity {
             }
 
             if (!TextUtils.isEmpty(reviewer.reviewedAt + "")) {
-//                tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.reviewedAt * 1000L)));
                 tv_reviewtime.setText(DateTool.getDateTimeFriendly(reviewer.reviewedAt));
             }
 
@@ -552,6 +553,7 @@ public class TasksInfoActivity extends BaseActivity {
             }
         }
 
+        MainApp.getMainApp().setTextSelection(tv_content,null,TasksInfoActivity.this);
         tv_task_title.setText(mTask.getTitle());
         tv_content.setText(mTask.getContent());
         isTest = mTask.isReviewFlag() ? "是" : "否";
@@ -1281,5 +1283,4 @@ public class TasksInfoActivity extends BaseActivity {
                 break;
         }
     }
-
 }

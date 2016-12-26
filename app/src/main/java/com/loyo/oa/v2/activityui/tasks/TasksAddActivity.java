@@ -164,6 +164,9 @@ public class TasksAddActivity extends BaseActivity {
     private boolean isState = true;
     private boolean isKind;//true:重复 //截止
 
+    private static final int ID_PASTE = android.R.id.paste;
+
+
     private String title;
     private String content;
     private StringBuffer joinName;
@@ -172,6 +175,7 @@ public class TasksAddActivity extends BaseActivity {
     private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
     private List<String> mSelectPath;
     private ArrayList<ImageInfo> pickPhotsResult;
+
 
     @AfterViews
     void initUI() {
@@ -191,7 +195,6 @@ public class TasksAddActivity extends BaseActivity {
         switch_approve.setState(true);
         edt_content.addTextChangedListener(new CountTextWatcher(wordcount));
         init_gridView_photo();
-//        setTouchView(-1);
         getTempTask();
 
         projectAddTask();
@@ -543,8 +546,6 @@ public class TasksAddActivity extends BaseActivity {
 
                 mDeadline = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, min, 0);
                 tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mDeadline));
-
-
                 isKind = false;
                 layout_retask.setVisibility(View.GONE);
                 layout_retask_view.setVisibility(View.GONE);
