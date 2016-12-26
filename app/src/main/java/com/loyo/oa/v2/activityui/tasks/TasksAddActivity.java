@@ -214,6 +214,8 @@ public class TasksAddActivity extends BaseActivity {
                 tv_responsiblePerson.setText("无负责人");
             } else {
                 tv_responsiblePerson.setText(newUser.getName());
+                linear_task_approve.setVisibility(newUser.isCurrentUser() ? View.GONE : View.VISIBLE);
+                switch_approve.setState(newUser.isCurrentUser() ? false : true);
             }
         } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
@@ -346,8 +348,8 @@ public class TasksAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkCommitSus("任务创建",response);
-                new Handler().postDelayed(new Runnable(){
+                HttpErrorCheck.checkCommitSus("任务创建", response);
+                new Handler().postDelayed(new Runnable() {
                     public void run() {
                         cancelStatusLoading();
                         //不需要保存
@@ -539,7 +541,7 @@ public class TasksAddActivity extends BaseActivity {
 //                tv_deadline.setText(str);
 //                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy.MM.dd HH:mm"));
 
-                mDeadline= com.loyo.oa.common.utils.DateTool.getStamp(year, month, day,hour,min,0);
+                mDeadline = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, min, 0);
                 tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mDeadline));
 
 
@@ -755,42 +757,39 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 break;
 
-            /*用户单选, 负责人*/
-            case FinalVariables.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
-                newUser = u;
-                tv_responsiblePerson.setText(newUser.getName());
-                break;
-
-            /*用户选择, 参与人*/
-            case FinalVariables.REQUEST_ALL_SELECT:
-                members = (Members) data.getSerializableExtra("data");
-                if (null == members) {
-                    tv_toUsers.setText("无参与人");
-                } else {
-                    joinName = new StringBuffer();
-                    joinUserId = new StringBuffer();
-                    if (null != members.depts) {
-                        for (NewUser newUser : members.depts) {
-                            joinName.append(newUser.getName() + ",");
-                            joinUserId.append(newUser.getId() + ",");
-                        }
-                    }
-                    if (null != members.users) {
-                        for (NewUser newUser : members.users) {
-                            joinName.append(newUser.getName() + ",");
-                            joinUserId.append(newUser.getId() + ",");
-                        }
-                    }
-                    if (!TextUtils.isEmpty(joinName)) {
-                        joinName.deleteCharAt(joinName.length() - 1);
-                    }
-                    tv_toUsers.setText(joinName.toString());
-                }
-                break;
-
-            default:
-                break;
+//            /*用户单选, 负责人*/ 被替代了
+//            case FinalVariables.REQUEST_ONLY:
+//                NewUser u = (NewUser) data.getSerializableExtra("data");
+//                newUser = u;
+//                tv_responsiblePerson.setText(newUser.getName());
+//                break;
+//
+//            /*用户选择, 参与人*/
+//            case FinalVariables.REQUEST_ALL_SELECT:
+//                members = (Members) data.getSerializableExtra("data");
+//                if (null == members) {
+//                    tv_toUsers.setText("无参与人");
+//                } else {
+//                    joinName = new StringBuffer();
+//                    joinUserId = new StringBuffer();
+//                    if (null != members.depts) {
+//                        for (NewUser newUser : members.depts) {
+//                            joinName.append(newUser.getName() + ",");
+//                            joinUserId.append(newUser.getId() + ",");
+//                        }
+//                    }
+//                    if (null != members.users) {
+//                        for (NewUser newUser : members.users) {
+//                            joinName.append(newUser.getName() + ",");
+//                            joinUserId.append(newUser.getId() + ",");
+//                        }
+//                    }
+//                    if (!TextUtils.isEmpty(joinName)) {
+//                        joinName.deleteCharAt(joinName.length() - 1);
+//                    }
+//                    tv_toUsers.setText(joinName.toString());
+//                }
+//                break;
         }
     }
 
