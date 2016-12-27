@@ -350,14 +350,14 @@ public class MainApp extends Application {
         init_DisplayImageOptions();
         switchLanguage(Locale.SIMPLIFIED_CHINESE);
 
-        /*String languageToLoad  = "zh";
-        Locale locale = new Locale(languageToLoad);
-        Locale.setDefault(locale);
+
+        //设置系统语言，避免控件显示英语
+        Locale.setDefault(Locale.CHINA);
         Configuration config = getResources().getConfiguration();
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         config.locale = Locale.SIMPLIFIED_CHINESE;
         getResources().updateConfiguration(config, metrics);
-        cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);*/
+        cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
 //        df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());//设置日期格式
 //        df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
