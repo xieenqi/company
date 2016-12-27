@@ -375,6 +375,9 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         }
     }
 
+    /**
+     * 检查拨打电话的权限
+     */
     private void phoneCallPermissionRequest() {
 
         if (PackageManager.PERMISSION_GRANTED ==
@@ -412,6 +415,13 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         }
     }
 
+    /**
+     * 检查是否有权限
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (permissions[0].equals(Manifest.permission.RECORD_AUDIO)
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -492,6 +502,11 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         phoneCallPermissionRequest();
     }
 
+    /**
+     * 开始拨打电话 检查电话格式
+     *
+     * @param number
+     */
     private void dial(String number) {
         if (!PhoneNumberTools.checkMobilePhoneNumber(number) &&
                 !PhoneNumberTools.checkTelphoneNumber(number)) {
@@ -512,7 +527,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
             return;
         }
 
-        VoIPManager.getInstance().dialNumber(number, customerId, userId, callType,salesleadId, new OnRespond() {
+        VoIPManager.getInstance().dialNumber(number, customerId, userId, callType, salesleadId, new OnRespond() {
             @Override
             public void onPaymentDeny() {
                 // 余额不足
@@ -693,8 +708,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                 }
             });
             hangupPalyer.start();
-        }
-        else {
+        } else {
             final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
             dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override

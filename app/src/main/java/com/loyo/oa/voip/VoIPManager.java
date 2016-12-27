@@ -2,6 +2,7 @@ package com.loyo.oa.voip;
 
 import android.content.Context;
 import android.util.Log;
+
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.voip.api.IVoIP;
@@ -18,9 +19,11 @@ import com.yzx.listenerInterface.CallStateListener;
 import com.yzxtcp.UCSManager;
 import com.yzxtcp.data.UcsReason;
 import com.yzxtcp.listener.ILoginListener;
+
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -189,6 +192,16 @@ public class VoIPManager implements CallStateListener {
 
     }
 
+    /**
+     * 链接状态
+     *
+     * @param phone
+     * @param customerId
+     * @param userId
+     * @param callType
+     * @param salesleadId
+     * @param callback
+     */
     public void dialNumber(final String phone, final String customerId, final String userId, int callType, String salesleadId, final OnRespond callback) {
         if (phone == null || phone.length() <= 0) {
             return;
@@ -260,6 +273,11 @@ public class VoIPManager implements CallStateListener {
         }
     }
 
+    /**
+     * 符合条件拨打电话
+     *
+     * @param phone
+     */
     private void _dial(String phone) {
         String userInfo = "";
         if (requestAccess != null) {
