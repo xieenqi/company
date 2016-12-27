@@ -186,7 +186,9 @@ public class TasksEditActivity extends BaseActivity {
             tv_deadline.setText(DateTool.getDateTimeFriendly(mTask.getPlanEndAt()));
         }
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
-        switch_approve.setState(mTask.isReviewFlag());
+
+        switch_approve.setState(mTask.getResponsiblePerson().isCurrentUser() ? false : mTask.isReviewFlag());
+        linear_task_approve.setVisibility(mTask.getResponsiblePerson().isCurrentUser() ? View.GONE : View.VISIBLE);
         edt_content.setText(mTask.getContent());
         edt_title.setText(mTask.getTitle());
         tv_mycustomer.setText(mTask.getCustomerName());
@@ -807,7 +809,7 @@ public class TasksEditActivity extends BaseActivity {
                 HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("bizType", 2);
                 map.put("uuid", uuid);
-               RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                     @Override
                     public void success(final Attachment attachment, final Response response) {
                         HttpErrorCheck.checkResponse(response);
