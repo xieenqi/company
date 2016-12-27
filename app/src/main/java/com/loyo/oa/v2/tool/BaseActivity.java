@@ -36,10 +36,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
-
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -203,13 +200,6 @@ public class BaseActivity extends Activity {
         if (MainApp.user == null) {
             MainApp.user = DBManager.Instance().getUser();
         }
-
-        /*强制设置系统语言为中文*/
-        Locale locale = new Locale("zh");
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config, null);
         super.onResume();
     }
 
