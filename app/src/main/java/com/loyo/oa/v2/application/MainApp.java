@@ -320,16 +320,17 @@ public class MainApp extends Application {
         //imageView.setImageResource(R.drawable.icon_dynamic_phone01);
     }
 
-    /**
-     * 设置APP语言
-     * */
-    public void switchLanguage(Locale locale) {
-        Resources resources = getResources();// 获得res资源对象
-        Configuration config = resources.getConfiguration();// 获得设置对象
-        DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
-        config.locale = locale; // 简体中文
-        resources.updateConfiguration(config, dm);
-    }
+//    /**
+//     * 设置APP语言，地区等
+//     * */
+//    public void switchLanguage() {
+//        Locale.setDefault(Locale.CHINA);
+//        Resources resources = getResources();// 获得res资源对象
+//        Configuration config = resources.getConfiguration();// 获得设置对象
+//        DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
+//        config.locale = Locale.SIMPLIFIED_CHINESE; // 简体中文
+//        resources.updateConfiguration(config, dm);
+//    }
 
 
     void init() {
@@ -348,15 +349,8 @@ public class MainApp extends Application {
         ServerAPI.init();
         initImageLoader(getApplicationContext());
         init_DisplayImageOptions();
-        switchLanguage(Locale.SIMPLIFIED_CHINESE);
 
 
-        //设置系统语言，避免控件显示英语
-        Locale.setDefault(Locale.CHINA);
-        Configuration config = getResources().getConfiguration();
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        config.locale = Locale.SIMPLIFIED_CHINESE;
-        getResources().updateConfiguration(config, metrics);
         cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
 //        df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());//设置日期格式
