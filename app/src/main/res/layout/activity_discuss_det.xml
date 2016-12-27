@@ -24,14 +24,13 @@
             android:id="@+id/ll_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:layout_above="@+id/ll_edit"
             app:isFirstVisible="true">
 
             <com.loyo.oa.pulltorefresh.PullToRefreshRecycleView
                 android:id="@+id/lv_notice"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/ll_edit"
                 android:clickable="false"
                 android:clipChildren="false"
                 android:clipToPadding="false"
