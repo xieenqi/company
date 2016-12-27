@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -62,7 +63,6 @@ import java.util.List;
  */
 public class TeamSigninFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
-    //    private ArrayList<Tag> mTags;
     private String menuTimekey = "0";        /*时间*/
     private String menuSortkey = "0";        /*排序*/
     private String departmentId = "";        /*部门id*/
@@ -89,7 +89,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
     /*录音播放相关*/
     private LinearLayout layout_bottom_voice;
     private int playVoiceSize = 0;
-    private AudioPlayer audioPlayer;
+    private AudioPlayerView audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
     private LoadingLayout ll_loading;
@@ -111,14 +111,14 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
     public void onPause() {
         super.onPause();
         if (null != voiceView)
-            audioPlayer.audioPause(voiceView);
+            audioPlayer.onStop();
     }
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        audioPlayer.killPlayer();
+        audioPlayer.onStop();
         layout_bottom_voice.setVisibility(View.GONE);
         layout_bottom_voice.removeAllViews();
     }
@@ -139,8 +139,8 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
 
     public void initView(View view) {
         mPresenter = new TeamSigninListFragPresenterImpl(this);
-        audioPlayer = new AudioPlayer(getActivity());
-        audioPlayer.initPlayer();
+        audioPlayer = new AudioPlayerView(getActivity());
+        //audioPlayer.onInit();
         ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
@@ -425,23 +425,25 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        audioPlayer.initPlayer();
+        audioPlayer.onInit();
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
                 MainApp.getMainApp().stopAnim(textView);
-                audioPlayer.audioPause(textView);
+                audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.audioStart(textView);
-                audioPlayer.threadPool(audioModel, textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
+                audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel, textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
+            audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }

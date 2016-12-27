@@ -301,6 +301,7 @@ public class MainApp extends Application {
      * 启动动画
      */
     public void startAnim(TextView textView) {
+        LogUtil.dee("startAnim:::" + textView.getBackground());
         animationDrawable = (AnimationDrawable) textView.getBackground();
         animationDrawable.start();
     }
@@ -309,6 +310,7 @@ public class MainApp extends Application {
      * 停止动画
      */
     public void stopAnim(TextView textView) {
+        LogUtil.dee("stopAnim");
         animationDrawable = (AnimationDrawable) textView.getBackground();
         if (animationDrawable.isRunning()) {
             animationDrawable.stop();

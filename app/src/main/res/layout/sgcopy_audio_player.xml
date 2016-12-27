@@ -60,6 +60,15 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_sp12" />
 
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="15dip"
+                    android:layout_height="15dip"
+                    android:indeterminateDrawable="@drawable/progress_bar"
+                    android:layout_centerHorizontal="true"
+                    />
+
 
                 <TextView
                     android:id="@+id/tv_audio_endtime"

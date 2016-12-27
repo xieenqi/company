@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpGroupAdapter;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
@@ -69,7 +70,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private LinearLayout layout_bottom_voice;
     private LinearLayout layout_bottom_menu;
     private int playVoiceSize = 0;
-    private AudioPlayer audioPlayer;
+    private AudioPlayerView audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
     private MsgAudiomMenu msgAudiomMenu;
@@ -100,14 +101,14 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     public void onPause() {
         super.onPause();
         if (null != voiceView)
-            audioPlayer.audioPause(voiceView);
+            audioPlayer.onStop();
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        audioPlayer.killPlayer();
+        audioPlayer.onStop();
         layout_bottom_voice.setVisibility(View.GONE);
         layout_bottom_voice.removeAllViews();
     }
@@ -142,8 +143,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private void initView() {
         getIntenData();
         mPresenter = new ClueFollowUpListPresenterImpl(this, mContext);
-        audioPlayer = new AudioPlayer(this);
-        audioPlayer.initPlayer();
+        audioPlayer = new AudioPlayerView(this);
+        //audioPlayer.onInit();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -382,17 +383,16 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         return ll_loading;
     }
 
+
     /**
      * 列表播放语音回调
      */
     @Override
     public void playVoice(AudioModel audioModel, TextView textView) {
-
         if (TextUtils.isEmpty(audioModel.url)) {
             Toast("无录音资源!");
             return;
         }
-
         voiceView = textView;
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
@@ -403,23 +403,25 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        audioPlayer.initPlayer();
+        audioPlayer.onInit();
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
                 MainApp.getMainApp().stopAnim(textView);
-                audioPlayer.audioPause(textView);
+                audioPlayer.onPause(textView);
                 lastView = null;
             } else {
-                audioPlayer.audioStart(textView);
-                audioPlayer.threadPool(audioModel, textView);
+                LogUtil.dee("另一条");
+                //audioPlayer.onResume(textView);
+                audioPlayer.onStart(audioModel, textView);
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
-            audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel, textView);
+            LogUtil.dee("第一次播放");
+            //audioPlayer.onResume(textView);
+            audioPlayer.onStart(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }

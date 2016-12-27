@@ -2,6 +2,7 @@ package com.loyo.oa.v2.tool;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
