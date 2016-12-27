@@ -38,9 +38,6 @@ import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
-import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
-import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.activityui.project.ProjectInfoActivity;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
@@ -882,9 +879,7 @@ public class TasksInfoActivity extends BaseActivity {
         startActivityForResult(intent, MainApp.GET_IMG);
     }
 
-    /**
-     * 任务提交完成
-     */
+    /*任务提交完成*/
     void commitFinish() {
         //信鸽透传时可能task为空 ykb 07-16
         if (null != mTask && mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
@@ -906,7 +901,9 @@ public class TasksInfoActivity extends BaseActivity {
                             HttpErrorCheck.checkError(error);
                         }
                     });
-        } else if (mTask.getStatus() == Task.STATUS_REVIEWING && mTask.getCreator().isCurrentUser()) {
+        }
+        /*任务审核*/
+        else if (mTask.getStatus() == Task.STATUS_REVIEWING && mTask.getCreator().isCurrentUser()) {
 
             mTask.setViewed(true);
             //跳转到评分
