@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -73,11 +75,9 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -168,13 +168,6 @@ public class TasksInfoActivity extends BaseActivity {
     public static TasksInfoActivity instance = null;
     public ArrayList<TextView> taskChildView = new ArrayList<>();
     public ArrayList<NewUser> childTastUsers = new ArrayList<>();
-
-//    public ArrayList<NewUser> requestDepts = new ArrayList<>();
-//    public ArrayList<User> aboutDepaboutDeptsts = new ArrayList<>();
-//    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
-
-    //    public ArrayList<Department> deptSource = Common.getLstDepartment();
-
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
     public LinearLayout item_tasks_sorece;
@@ -221,7 +214,6 @@ public class TasksInfoActivity extends BaseActivity {
 
     void initUI() {
         super.setTitle("任务详情");
-//        userId = DBManager.Instance().getUser().getId();
         member = new Members();
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
@@ -553,7 +545,6 @@ public class TasksInfoActivity extends BaseActivity {
             }
         }
 
-        MainApp.getMainApp().setTextSelection(tv_content,null,TasksInfoActivity.this);
         tv_task_title.setText(mTask.getTitle());
         tv_content.setText(mTask.getContent());
         isTest = mTask.isReviewFlag() ? "是" : "否";

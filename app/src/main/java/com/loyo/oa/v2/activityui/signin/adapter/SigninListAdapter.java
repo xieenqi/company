@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * 【我的跟进列表】adapter
+ * 【我的拜访】adapter
  * Created by yyy on 16/11/12.
  */
 
@@ -88,7 +88,7 @@ public class SigninListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        final SigninNewListModel signinNewListModel = listModel.get(position);
+        final SigninNewListModel model = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sgninnew_selflist, null);
@@ -117,77 +117,82 @@ public class SigninListAdapter extends BaseAdapter {
 
         holder.iv_comment.setOnTouchListener(Global.GetTouch());
 
-        ImageLoader.getInstance().displayImage(signinNewListModel.creator.avatar, holder.iv_heading);
-        holder.tv_name.setText(signinNewListModel.creator.name);
-        holder.tv_contact.setText(signinNewListModel.contactName);
-        holder.tv_position.setText(signinNewListModel.address);
-        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(signinNewListModel.createdAt));
+        ImageLoader.getInstance().displayImage(model.creator.avatar, holder.iv_heading);
+        holder.tv_name.setText(model.creator.name);
+        holder.tv_position.setText(model.address);
+        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createdAt));
 
+        String contact = TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName;
+        if(null != model.contactTpl && !TextUtils.isEmpty(model.contactTpl) && !contact.equals("无联系人信息")){
+            holder.tv_contact.setText(contact+"("+model.contactTpl+")");
+        }else{
+            holder.tv_contact.setText(contact);
+        }
 
         /** 偏差距离,当未知显示红色 */
-        if(signinNewListModel.distance.equals("未知")){
+        if(model.distance.equals("未知")){
             holder.tv_offset.setTextColor(mContext.getResources().getColor(R.color.red));
         }else{
             holder.tv_offset.setTextColor(mContext.getResources().getColor(R.color.text99));
         }
-        holder.tv_offset.setText(signinNewListModel.distance);
+        holder.tv_offset.setText(model.distance);
 
 
         /** 客户姓名 */
-        if(null != signinNewListModel.customerName && !TextUtils.isEmpty(signinNewListModel.customerName)){
+        if(null != model.customerName && !TextUtils.isEmpty(model.customerName)){
             holder.layout_customer.setVisibility(View.VISIBLE);
-            holder.tv_customer.setText(signinNewListModel.customerName);
+            holder.tv_customer.setText(model.customerName);
             holder.tv_customer.setOnTouchListener(Global.GetTouch());
         }else{
             holder.layout_customer.setVisibility(View.GONE);
         }
 
         /** 客户地址 */
-        if(null != signinNewListModel.position && !TextUtils.isEmpty(signinNewListModel.position)){
+        if(null != model.position && !TextUtils.isEmpty(model.position)){
             holder.layout_address.setVisibility(View.VISIBLE);
-            holder.tv_address.setText(signinNewListModel.position);
+            holder.tv_address.setText(model.position);
             holder.layout_address.setOnTouchListener(Global.GetTouch());
         }else{
             holder.layout_address.setVisibility(View.GONE);
         }
 
         /** 备注内容 */
-        if(null != signinNewListModel.memo && !TextUtils.isEmpty(signinNewListModel.memo)){
+        if(null != model.memo && !TextUtils.isEmpty(model.memo)){
             holder.tv_memo.setVisibility(View.VISIBLE);
-            holder.tv_memo.setText(signinNewListModel.memo);
+            holder.tv_memo.setText(model.memo);
         }else{
             holder.tv_memo.setVisibility(View.GONE);
         }
 
         /** @的相关人员 */
-        if(null != signinNewListModel.atNameAndDepts){
-            holder.tv_toast.setText("@" + signinNewListModel.atNameAndDepts);
+        if(null != model.atNameAndDepts){
+            holder.tv_toast.setText("@" + model.atNameAndDepts);
         }else{
             holder.tv_toast.setVisibility(View.GONE);
         }
 
         /** 录音语音 */
-        if(null != signinNewListModel.audioInfo){
+        if(null != model.audioInfo){
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,signinNewListModel.audioInfo,audioPlayCallBack);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext,model.audioInfo,audioPlayCallBack);
             holder.lv_audio.setAdapter(audioAdapter);
         }else{
             holder.lv_audio.setVisibility(View.GONE);
         }
 
         /** 文件列表 数据绑定 */
-        if(null != signinNewListModel.attachments && signinNewListModel.attachments.size() > 0){
+        if(null != model.attachments && model.attachments.size() > 0){
             holder.lv_options.setVisibility(View.VISIBLE);
-            optionAdapter = new ListOrDetailsOptionsAdapter(mContext,signinNewListModel.attachments);
+            optionAdapter = new ListOrDetailsOptionsAdapter(mContext,model.attachments);
             holder.lv_options.setAdapter(optionAdapter);
         }else{
             holder.lv_options.setVisibility(View.GONE);
         }
 
         /** 绑定图片与GridView监听 */
-        if (null != signinNewListModel.imageAttachments && signinNewListModel.imageAttachments.size() > 0) {
+        if (null != model.imageAttachments && model.imageAttachments.size() > 0) {
             holder.layout_gridview.setVisibility(View.VISIBLE);
-            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, signinNewListModel.imageAttachments);
+            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, model.imageAttachments);
             holder.layout_gridview.setAdapter(gridViewAdapter);
 
             /*图片预览*/
@@ -195,7 +200,7 @@ public class SigninListAdapter extends BaseAdapter {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("data", signinNewListModel.imageAttachments);
+                    bundle.putSerializable("data", model.imageAttachments);
                     bundle.putInt("position", position);
                     bundle.putBoolean("isEdit", false);
                     MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
@@ -207,16 +212,16 @@ public class SigninListAdapter extends BaseAdapter {
         }
 
         /** 绑定评论数据 */
-        if (null != signinNewListModel.comments && signinNewListModel.comments.size() > 0) {
+        if (null != model.comments && model.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, signinNewListModel.comments,audioPlayCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, model.comments,audioPlayCallBack);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
             holder.lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    viewCrol.deleteCommentEmbl(signinNewListModel.comments.get(position).id);
+                    viewCrol.deleteCommentEmbl(model.comments.get(position).id);
                     return false;
                 }
             });
@@ -237,12 +242,12 @@ public class SigninListAdapter extends BaseAdapter {
         holder.layout_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(null != signinNewListModel.gpsInfo && !TextUtils.isEmpty(signinNewListModel.gpsInfo)){
+                if(null != model.gpsInfo && !TextUtils.isEmpty(model.gpsInfo)){
                     Intent mIntent = new Intent(mContext, MapSingleView.class);
-                    String[] gps = signinNewListModel.gpsInfo.split(",");
+                    String[] gps = model.gpsInfo.split(",");
                     mIntent.putExtra("la",Double.valueOf(gps[1]));
                     mIntent.putExtra("lo",Double.valueOf(gps[0]));
-                    mIntent.putExtra("address",signinNewListModel.position);
+                    mIntent.putExtra("address",model.position);
                     mIntent.putExtra("title","签到地址");
                     mContext.startActivity(mIntent);
                 }else{
@@ -270,7 +275,7 @@ public class SigninListAdapter extends BaseAdapter {
                 }
 
                 Intent intent = new Intent();
-                intent.putExtra("Id", signinNewListModel.customerId);
+                intent.putExtra("Id", model.customerId);
                 intent.putExtra(ExtraAndResult.EXTRA_OBJ,true);
                 intent.setClass(mContext, CustomerDetailInfoActivity_.class);
                 mContext.startActivity(intent);

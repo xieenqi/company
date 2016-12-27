@@ -182,7 +182,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
         img_title_left.setOnTouchListener(touch);
         img_title_right.setOnTouchListener(touch);
         img_title_right.setVisibility(View.GONE);
-        MainApp.getMainApp().setTextSelection(tv_memo,null,WfinstanceInfoActivity.this);
     }
 
     /**

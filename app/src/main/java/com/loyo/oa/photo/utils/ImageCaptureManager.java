@@ -15,9 +15,6 @@ import com.loyo.oa.common.utils.DateTool;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * https://github.com/donglua/PhotoPicker
