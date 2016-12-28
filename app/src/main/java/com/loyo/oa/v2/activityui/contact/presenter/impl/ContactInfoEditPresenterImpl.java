@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -137,6 +138,7 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
     @Override
     public void pickDate(final Handler mHandler) {
         Calendar cal = Calendar.getInstance();
+        Locale.setDefault(Locale.CHINA);//设置语言
         final DatePickerDialog mDialog = new DatePickerDialog(mContext, null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 

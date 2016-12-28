@@ -351,6 +351,7 @@ public class MainApp extends Application {
         init_DisplayImageOptions();
 
 
+
         cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
 //        df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());//设置日期格式

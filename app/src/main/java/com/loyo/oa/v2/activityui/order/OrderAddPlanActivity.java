@@ -33,6 +33,7 @@ import com.loyo.oa.v2.tool.Utils;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -258,9 +259,9 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
      */
     public void estimateTime() {
         Calendar cal = Calendar.getInstance();
+        Locale.setDefault(Locale.CHINA);//设置语言
         final DatePickerDialog mDialog = new DatePickerDialog(this, null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-
         //手动设置按钮
         mDialog.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
             @Override
