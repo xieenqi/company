@@ -7,35 +7,28 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.AdapterView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.NearCustomerAdapter;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.customermanagement.api.ICustomer;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【附近客户】列表 我的附近  我团队的附近
@@ -150,10 +143,22 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
             return;
         }
 
-        RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
-                    @Override
-                    public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        HttpErrorCheck.checkResponse("附近", response);
+        RetrofitAdapterFactory.getInstance()
+                .build(url)
+                .create(ICustomer.class)
+                .getCustomers(params)
+                .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers())
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
+                    public void onError(Throwable e) {
+                        /* 重写父类方法，不调用super */
+                        @LoyoErrorChecker.CheckType
+                        int type = mCustomers.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                        listView.onRefreshComplete();
+                    }
+
+                    public void onNext(PaginationX<Customer> customerPaginationX) {
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);
@@ -163,7 +168,6 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                             } else {
                                 Toast("没有更多数据了");
                                 listView.onRefreshComplete();
-                                return;
                             }
                         } else {
                             mPagination = customerPaginationX;
@@ -179,14 +183,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                         if (!isPullUp && mCustomers.size() == 0)
                             ll_loading.setStatus(LoadingLayout.Empty);
                     }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
-                        listView.onRefreshComplete();
-                    }
-                }
-        );
+                });
     }
 
     /**
@@ -199,6 +196,12 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
             listView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
+        }
+
+        if(!isPullUp&&mCustomers.size()==0)
+            ll_loading.setStatus(LoadingLayout.Empty);
+        else {
+            ll_loading.setStatus(LoadingLayout.Success);
         }
 
         /**

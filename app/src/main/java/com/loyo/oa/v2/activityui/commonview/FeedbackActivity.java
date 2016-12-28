@@ -14,18 +14,18 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.commonview.api.FeedBackService;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.FeedBackCommit;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.IFeedback;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -85,21 +85,15 @@ public class FeedbackActivity extends BaseActivity {
      * 获取附件
      */
     private void getAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> _attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                attachments = _attachments;
-                init_gridView_photo();
-            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                Toast("获取附件失败");
-            }
-        });
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> result) {
+                        attachments = result;
+                        init_gridView_photo();
+                    }
+                });
     }
 
     /**
@@ -134,18 +128,25 @@ public class FeedbackActivity extends BaseActivity {
             map.put("operationSystem", androidInfo);
             map.put("userAgent", android.os.Build.MODEL);
 
-            RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
-                @Override
-                public void success(final FeedBackCommit feedBackCommit, final Response response) {
-                    HttpErrorCheck.checkResponse("意见反馈：", response);
-                    showSuccessDialog();
-                }
+//            RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
+//                @Override
+//                public void success(final FeedBackCommit feedBackCommit, final Response response) {
+//                    HttpErrorCheck.checkResponse("意见反馈：", response);
+//                    showSuccessDialog();
+//                }
+//
+//                @Override
+//                public void failure(final RetrofitError error) {
+//                    HttpErrorCheck.checkError(error);
+//                    Toast("提交失败");
+//                    super.failure(error);
+//                }
+//            });
 
+            FeedBackService.create(map).subscribe(new DefaultLoyoSubscriber<FeedBackCommit>() {
                 @Override
-                public void failure(final RetrofitError error) {
-                    HttpErrorCheck.checkError(error);
-                    Toast("提交失败");
-                    super.failure(error);
+                public void onNext(FeedBackCommit feedBackCommit) {
+                    showSuccessDialog();
                 }
             });
         } catch (PackageManager.NameNotFoundException e) {
@@ -220,22 +221,16 @@ public class FeedbackActivity extends BaseActivity {
                     HashMap<String, Object> map = new HashMap<String, Object>();
                     map.put("bizType", 0);
                     map.put("uuid", uuid);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).
-                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                        @Override
-                        public void success(final Attachment attachment, final Response response) {
-                            Toast("删除附件成功!");
-                            attachments.remove(delAttachment);
-                            signInGridViewAdapter.notifyDataSetChanged();
-                        }
+                    AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
+                            .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                                @Override
+                                public void onNext(Attachment attachment) {
+                                    Toast("删除附件成功!");
+                                    attachments.remove(delAttachment);
+                                    signInGridViewAdapter.notifyDataSetChanged();
+                                }
+                            });
 
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
-                            Toast("删除附件失败!");
-                            super.failure(error);
-                        }
-                    });
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }

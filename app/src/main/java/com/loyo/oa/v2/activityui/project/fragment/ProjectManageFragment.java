@@ -13,12 +13,14 @@ import com.loyo.oa.v2.activityui.project.ProjectAddActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.project.adapter.ProjectExpandableListAdapter;
+import com.loyo.oa.v2.activityui.project.api.ProjectService;
 import com.loyo.oa.v2.activityui.project.common.ProjectStatusMenuModel;
 import com.loyo.oa.v2.activityui.project.common.ProjectTypeMenuModel;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.point.IProject;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -29,6 +31,8 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
 
 /**
  * com.loyo.oa.v2.ui.fragment
@@ -63,8 +67,19 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         params.put("endAt", System.currentTimeMillis() / 1000);
 //        params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         params.put("startAt", com.loyo.oa.common.utils.DateTool.getDateStamp("2014-01-01") / 1000);
-        LogUtil.d(" 项目管理列表请求： " + MainApp.gson.toJson(params));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params, this);
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params, this);
+        ProjectService.getProjects(params).subscribe(new DefaultLoyoSubscriber<PaginationX<Project>>(ll_loading) {
+            @Override
+            public void onNext(PaginationX<Project> projectPaginationX) {
+                ((Callback)ProjectManageFragment.this).success(projectPaginationX,null);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                ((Callback)ProjectManageFragment.this).failure(null);
+            }
+        });
     }
 
     @Override

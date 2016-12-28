@@ -19,36 +19,30 @@ import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.TimeFilterModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.CommCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【公海客户】列表
@@ -187,6 +181,9 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         }
         if (!isPullUp && mCustomers.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
+        else {
+            ll_loading.setStatus(LoadingLayout.Success);
+        }
         /**
          * 列表监听 进入客户详情页面
          * */
@@ -214,10 +211,18 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         params.put("order", order);
         params.put("tagsParams", tagsParams);
         LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
-        RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_PUBLIC).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
-                    @Override
-                    public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        HttpErrorCheck.checkResponse("客户列表", response, ll_loading);
+        CustomerService.getDumpedCustomers(params)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
+                    public void onError(Throwable e) {
+                        /* 重写父类方法，不调用super */
+                        @LoyoErrorChecker.CheckType
+                        int type = mCustomers.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                        listView.onRefreshComplete();
+                    }
+
+                    public void onNext(PaginationX<Customer> customerPaginationX) {
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);
@@ -241,14 +246,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
                     }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
-                        listView.onRefreshComplete();
-                    }
-                }
-        );
+                });
     }
 
     /**

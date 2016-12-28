@@ -7,29 +7,23 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
+import com.loyo.oa.tracklog.api.TrackLogService;
 import com.loyo.oa.v2.activityui.other.model.Company;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.ITrackLog;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.TrackLogRecevier;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import retrofit.client.Response;
 
 public class TrackRule implements Serializable {
     public static final int RequestCode = 234;
@@ -79,16 +73,17 @@ public class TrackRule implements Serializable {
 
         final MainApp app = MainApp.getMainApp();
         if (Global.isConnected()) {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
-                @Override
-                public void success(TrackRule trackRule, Response response) {
-                    HttpErrorCheck.checkResponse("后台轨迹规则加载成功！", response);
-                    if (null != trackRule && trackRule.enable) {
-                        DBManager.Instance().putTrackRule(MainApp.gson.toJson(trackRule));
-                        SendTrackRuleBroadcast(app, trackRule);
-                    }
-                }
-            });
+            TrackLogService.getTrackRule()
+                    .subscribe(new DefaultLoyoSubscriber<TrackRule>(LoyoErrorChecker.SILENCE) {
+                        @Override
+                        public void onNext(TrackRule rule) {
+                            if (null != rule && rule.enable) {
+                                DBManager.Instance().putTrackRule(MainApp.gson.toJson(rule));
+                                SendTrackRuleBroadcast(app, rule);
+                            }
+                        }
+                    });
+
         } else {
             TrackRule trackRule = DBManager.Instance().getTrackRule();
             if (null != trackRule && trackRule.enable) {
@@ -110,15 +105,17 @@ public class TrackRule implements Serializable {
         final MainApp app = MainApp.getMainApp();
 
         if (Global.isConnected()) {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
-                @Override
-                public void success(TrackRule trackRule, Response response) {
-                    if (null != trackRule) {
-                        StartTrackRule(trackRule, app);
-                        DBManager.Instance().putTrackRule(MainApp.gson.toJson(trackRule));
-                    }
-                }
-            });
+            TrackLogService.getTrackRule()
+                    .subscribe(new DefaultLoyoSubscriber<TrackRule>(LoyoErrorChecker.SILENCE) {
+                        @Override
+                        public void onNext(TrackRule trackRule) {
+                            if (null != trackRule) {
+                                StartTrackRule(trackRule, app);
+                                DBManager.Instance().putTrackRule(MainApp.gson.toJson(trackRule));
+                            }
+                        }
+                    });
+
         } else {
             TrackRule trackRule = DBManager.Instance().getTrackRule();
             if (null != trackRule) {

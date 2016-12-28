@@ -17,12 +17,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.home.api.HomeService;
+import com.loyo.oa.v2.activityui.setting.api.SettingService;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IMain;
-import com.loyo.oa.v2.point.IMobile;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
@@ -166,22 +168,40 @@ public class EditUserMobileActivity extends BaseActivity {
      * @param tel
      */
     private void verifyPhone(final String tel) {
-        RestAdapterFactory.getInstance().build(Config_project.GET_VERIFICATION_CODE).create(IMain.class).getVerificationCode(tel, new RCallback<Object>() {
+//        RestAdapterFactory.getInstance().build(Config_project.GET_VERIFICATION_CODE).create(IMain.class).getVerificationCode(tel, new RCallback<Object>() {
+//            @Override
+//            public void success(final Object o, final Response response) {
+//                et_mobile.removeCallbacks(countRunner);
+//                et_mobile.post(countRunner);
+//                bt_verificationCode.setEnabled(false);
+//                et_mobile.setEnabled(false);
+//                Toast("发送验证码成功");
+//
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                bt_verificationCode.setEnabled(true);
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+
+        HomeService.getVerificationCode(tel).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
-            public void success(final Object o, final Response response) {
+            public void onError(Throwable e) {
+                super.onError(e);
+                bt_verificationCode.setEnabled(true);
+            }
+
+            @Override
+            public void onNext(Object o) {
                 et_mobile.removeCallbacks(countRunner);
                 et_mobile.post(countRunner);
                 bt_verificationCode.setEnabled(false);
                 et_mobile.setEnabled(false);
                 Toast("发送验证码成功");
 
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                bt_verificationCode.setEnabled(true);
-                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -225,22 +245,37 @@ public class EditUserMobileActivity extends BaseActivity {
         map.put("tel", mobile);
         map.put("code", verificatioNumber);
         map.put("password", pwd);
-        RestAdapterFactory.getInstance().build(Config_project.BIND_MOBLIE).create(IMobile.class).bindMobile(map, new RCallback<Object>() {
+//        RestAdapterFactory.getInstance().build(Config_project.BIND_MOBLIE).create(IMobile.class).bindMobile(map, new RCallback<Object>() {
+//            @Override
+//            public void success(final Object o, final Response response) {
+//                HttpErrorCheck.checkResponse("绑定手机号码", response);
+//                Toast("绑定成功");
+//                onBackPressed();
+////                et_account.removeCallbacks(countRunner);
+////                Bundle bundle = new Bundle();
+////                bundle.putString("tel", mobile);
+////                app.startActivity(VerifyAccountActivity.this, ResetPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
+
+        SettingService.bindMobile(map).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
-            public void success(final Object o, final Response response) {
-                HttpErrorCheck.checkResponse("绑定手机号码", response);
-                Toast("绑定成功");
-                onBackPressed();
-//                et_account.removeCallbacks(countRunner);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("tel", mobile);
-//                app.startActivity(VerifyAccountActivity.this, ResetPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
             }
 
             @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
+            public void onNext(Object o) {
+                DialogHelp.cancelLoading();
+                Toast("绑定成功");
+                onBackPressed();
             }
         });
 

@@ -14,15 +14,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CustomTextView;
-import com.loyo.oa.v2.point.ISale;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -177,19 +179,35 @@ public class IntentionProductActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("cid", saleId);
         map.put("pid", pid);
-        LogUtil.d("删除意向产品:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).deleteSaleProduct(map, new RCallback<SaleProductEdit>() {
+//        LogUtil.d("删除意向产品:" + MainApp.gson.toJson(map));
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).deleteSaleProduct(map, new RCallback<SaleProductEdit>() {
+//            @Override
+//            public void success(final SaleProductEdit saleProductEdit, final Response response) {
+//                HttpErrorCheck.checkResponse("删除意向产品", response);
+//                resultAction = ActionCode.SALE_DETAILS_RUSH;
+//                hadler.sendEmptyMessage(0);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//                finish();
+//            }
+//        });
+
+        SaleService.deleteSaleProduct(map).subscribe(new DefaultLoyoSubscriber<SaleProductEdit>() {
             @Override
-            public void success(final SaleProductEdit saleProductEdit, final Response response) {
-                HttpErrorCheck.checkResponse("删除意向产品", response);
+            public void onNext(SaleProductEdit saleProductEdit) {
+                DialogHelp.cancelLoading();
                 resultAction = ActionCode.SALE_DETAILS_RUSH;
                 hadler.sendEmptyMessage(0);
             }
 
             @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
                 finish();
             }
         });

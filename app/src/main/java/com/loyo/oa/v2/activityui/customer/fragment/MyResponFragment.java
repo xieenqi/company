@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -23,6 +22,8 @@ import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.TimeFilterModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
@@ -31,27 +32,23 @@ import com.loyo.oa.v2.activityui.customer.MyContactMailList;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
-import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.customer.presenter.MyCustomerFragPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.MyCustomerFragPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.MyCustomerFragView;
+import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -60,9 +57,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【我负责】列表
@@ -152,6 +146,9 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
         btn_add.setOnTouchListener(Global.GetTouch());
 
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
+        adapter = new MyCustomerAdapter(app, mCustomers);
+        listView.setAdapter(adapter);
+        getData();
         mPresenter = new MyCustomerFragPresenterImpl(getActivity(), this);
         Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
     }
@@ -199,6 +196,9 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
         }
         if (!isPullUp && mCustomers.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
+        else {
+            ll_loading.setStatus(LoadingLayout.Success);
+        }
         /**
          * 列表监听 进入客户详情页面
          * */
@@ -238,24 +238,16 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 LocationUtilGD.sotpLocation();
                 position = String.valueOf(longitude).concat(",").concat(String.valueOf(latitude));
-
-                RestAdapterFactory.getInstance().build(FinalVariables.QUERY_NEAR_CUSTOMERS_COUNT_SELF).create(ICustomer.class).queryNearCount(position, new RCallback<NearCount>() {
-                    @Override
-                    public void success(NearCount _nearCount, Response response) {
-                        HttpErrorCheck.checkResponse("附近客户", response);
-                        nearCount = _nearCount;
-                        if (null != nearCount) {
-                            nearTv.setText("发现" + nearCount.total + "个附近客户");
-                            showNearCustomersView();
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                CustomerService.getNearbySelfCustomerCount(position)
+                        .subscribe(new DefaultLoyoSubscriber<NearCount>() {
+                            public void onNext(NearCount count) {
+                                nearCount = count;
+                                if (null != nearCount) {
+                                    nearTv.setText("发现" + nearCount.total + "个附近客户");
+                                    showNearCustomersView();
+                                }
+                            }
+                        });
 
                 UMengTools.sendLocationInfo(address, longitude, latitude);
             }
@@ -280,10 +272,19 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
         params.put("order", order);
         params.put("tagsParams", tagsParams);
         LogUtil.dee("我负责的查询参数：" + MainApp.gson.toJson(params));
-        RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_RESPON).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
-                    @Override
-                    public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        HttpErrorCheck.checkResponse("我负责的", response, ll_loading);
+        CustomerService.getMyCustomers(params)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
+                    public void onError(Throwable e) {
+                        /* 重写父类方法，不调用super */
+                        @LoyoErrorChecker.CheckType
+                        int type = mCustomers.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                        listView.onRefreshComplete();
+
+                    }
+
+                    public void onNext(PaginationX<Customer> customerPaginationX) {
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);
@@ -307,14 +308,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
                     }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
-                        listView.onRefreshComplete();
-                    }
-                }
-        );
+                });
     }
 
     private View.OnClickListener click = new View.OnClickListener() {

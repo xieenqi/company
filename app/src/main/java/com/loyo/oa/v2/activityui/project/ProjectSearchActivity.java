@@ -2,15 +2,19 @@ package com.loyo.oa.v2.activityui.project;
 
 import android.content.Intent;
 
+import com.loyo.oa.v2.activityui.project.api.ProjectService;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.point.IProject;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
+
+import retrofit.Callback;
 
 /**
  * com.loyo.oa.v2.activity
@@ -41,6 +45,20 @@ public class ProjectSearchActivity extends BaseSearchActivity<Project> {
         params.put("pageIndex", paginationX.getPageIndex());
         params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params, this);
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params, this);
+
+        ProjectService.getProjects(params).subscribe(new DefaultLoyoSubscriber<PaginationX<Project>>(ll_loading) {
+            @Override
+            public void onNext(PaginationX<Project> projectPaginationX) {
+                ((Callback)ProjectSearchActivity.this).success(projectPaginationX,null);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                ((Callback)ProjectSearchActivity.this).failure(null);
+            }
+        });
+
     }
 }

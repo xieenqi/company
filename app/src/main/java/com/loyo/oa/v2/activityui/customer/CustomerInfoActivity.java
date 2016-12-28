@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -32,23 +32,21 @@ import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
-import com.loyo.oa.v2.network.model.BaseResponse;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -60,12 +58,8 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【客户信息】 页面
@@ -154,21 +148,19 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     void getExtraData() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getDynamic(map, new RCallback<ArrayList<CustomerExtraData>>() {
+        CustomerService.getCustomerDynamic(map)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<CustomerExtraData>>(ll_loading) {
                     @Override
-                    public void success(final ArrayList<CustomerExtraData> customerExtraDatas, final Response response) {
-                        HttpErrorCheck.checkResponse("客户动态字段", response);
-                        ll_loading.setStatus(LoadingLayout.Success);
-                        mCustomerExtraDatas = customerExtraDatas;
-                        initData();
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        finish();
                     }
 
                     @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error, ll_loading);
-                        finish();
+                    public void onNext(ArrayList<CustomerExtraData> customerExtraDataArrayList) {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        mCustomerExtraDatas = customerExtraDataArrayList;
+                        initData();
                     }
                 });
         requestJurisdiction();
@@ -180,53 +172,42 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     public void requestJurisdiction() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
-            @Override
-            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse("编辑客户那些字段必填权限", response);
-                for (ContactLeftExtras customerJur : cuslist) {
-                    if (customerJur.label.contains("简介") && customerJur.required) {
-                        cusBrief = true;
-                        edt_customer_memo.setHint("请输入客户简介(必填)");
-                    } else if (customerJur.label.contains("定位") && customerJur.required) {
-                        tv_address.setHint("客户地址(必填)");
-                        cusLocation = true;//定位必填
-                    } else if (customerJur.label.contains("客户地址") && customerJur.required) {
-                        cusDetialAdress = true;//详细地址必填
-                        edt_address_details.setHint("请输入客户详细地址(必填)");
+        CustomerService.getAddCustomerJur(map)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
+                    @Override
+                    public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
+                        for (ContactLeftExtras customerJur : contactLeftExtrasArrayList) {
+                            if (customerJur.label.contains("简介") && customerJur.required) {
+                                cusBrief = true;
+                                edt_customer_memo.setHint("请输入客户简介(必填)");
+                            } else if (customerJur.label.contains("定位") && customerJur.required) {
+                                tv_address.setHint("客户地址(必填)");
+                                cusLocation = true;//定位必填
+                            } else if (customerJur.label.contains("客户地址") && customerJur.required) {
+                                cusDetialAdress = true;//详细地址必填
+                                edt_address_details.setHint("请输入客户详细地址(必填)");
+                            }
+                        }
                     }
-                }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                });
     }
 
     /**
      * 获取用户信息
      */
     void getCustomer() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getCustomerById(mCustomerId, new RCallback<BaseResponse<Customer>>() {
+        CustomerService.getCustomerDetailById(mCustomerId)
+                .subscribe(new DefaultLoyoSubscriber<Customer>(ll_loading) {
                     @Override
-                    public void success(final BaseResponse<Customer> customerResp, final Response response) {
-                        HttpErrorCheck.checkResponse("客户信息", response);
-                        if (customerResp == null || customerResp.data == null) {
-                            return;
-                        }
-                        mCustomer = customerResp.data;
-                        getExtraData();
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        finish();
                     }
 
                     @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error, ll_loading);
-                        finish();
+                    public void onNext(Customer customer) {
+                        mCustomer = customer;
+                        getExtraData();
                     }
                 });
     }
@@ -459,7 +440,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
         if (owner != null) {
-            NewUser ownerUser = new NewUser();
+            OrganizationalMember ownerUser = new OrganizationalMember();
             ownerUser.setAvatar(owner.getAvatar());
             ownerUser.setId(owner.getId());
             ownerUser.setName(owner.getName());
@@ -588,7 +569,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         Locate adrDetailsData = new Locate();
         String customerName = tv_customer_name.getText().toString().trim();
         String customerAddress = tv_address.getText().toString().trim();
-        String summary = edt_customer_memo.getText().toString().trim();
+        final String summary = edt_customer_memo.getText().toString().trim();
         String addressDetails = edt_address_details.getText().toString().trim();
 
         if (TextUtils.isEmpty(customerName)) {
@@ -611,7 +592,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             adrDetailsData.addr = addressDetails;
         }
 
-        showStatusLoading(false);
+
         mLocate.addr = customerAddress;
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", customerName);
@@ -625,11 +606,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         map.put("regional", regional);
 
         LogUtil.d("提交客户信息，发送的数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
+
+        showStatusLoading(false);
+
+        CustomerService.updateCustomer(mCustomer.getId(), map)
+                .subscribe(new DefaultLoyoSubscriber<Customer>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
-                    public void success(final Customer customer, final Response response) {
-                        HttpErrorCheck.checkCommitSus("更新客户信息", response);
+                    public void onNext(final Customer customer) {
+                        DialogHelp.successStatusLoad();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -640,12 +624,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                                 finish();
                             }
                         }, 1000);
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
     }
@@ -676,7 +654,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
         if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
-            NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+            OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);
             if (user == null) {
                 return;
             } else {
@@ -698,7 +676,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             /*判断当前负责人用owner对象*/
             if (members != null) {
                 if (cusMembers.depts.size() > 0) {
-                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
+                    for (OrganizationalMember newUser : cusMembers.depts) {
                         if (!mCustomer.owner.id.equals(newUser.getId())) {
                             mManagerNames.append(newUser.getName() + ",");
                             mManagerIds.append(newUser.getId() + ",");
@@ -708,7 +686,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     }
                 }
                 if (cusMembers.users.size() > 0) {
-                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
+                    for (OrganizationalMember newUser : cusMembers.users) {
                         if (!mCustomer.owner.id.equals(newUser.getId())) {
                             mManagerNames.append(newUser.getName() + ",");
                             mManagerIds.append(newUser.getId() + ",");
@@ -761,7 +739,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
              * 负责人回调
              * */
             case FinalVariables.REQUEST_ONLY:
-                NewUser nu = (NewUser) data.getSerializableExtra("data");
+                OrganizationalMember nu = (OrganizationalMember) data.getSerializableExtra("data");
                 owner.id = nu.getId();
                 owner.name = nu.getName();
                 owner.avatar = nu.getAvatar();
@@ -779,7 +757,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
                 if (members != null) {
                     if (null != cusMembers.depts) {
-                        for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
+                        for (OrganizationalMember newUser : cusMembers.depts) {
                             if (!MainApp.user.id.equals(newUser.getId())) {
                                 mManagerNames.append(newUser.getName() + ",");
                                 mManagerIds.append(newUser.getId() + ",");
@@ -789,7 +767,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         }
                     }
                     if (null != cusMembers.users) {
-                        for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
+                        for (OrganizationalMember newUser : cusMembers.users) {
                             if (!MainApp.user.id.equals(newUser.getId())) {
                                 mManagerNames.append(newUser.getName() + ",");
                                 mManagerIds.append(newUser.getId() + ",");

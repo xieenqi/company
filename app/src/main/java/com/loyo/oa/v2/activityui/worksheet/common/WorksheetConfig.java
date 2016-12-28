@@ -2,21 +2,15 @@ package com.loyo.oa.v2.activityui.worksheet.common;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplateListWrapper;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IWorksheet;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.SharedUtil;
+import com.loyo.oa.v2.worksheet.api.WorksheetService;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by EthanGong on 16/8/30.
@@ -26,24 +20,21 @@ public class WorksheetConfig {
     /* 从网络获取 */
     public static void fetchWorksheetTypes() {
         final List<WorksheetTemplate> data = new ArrayList<>();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IWorksheet.class).getWorksheetTypesList(new Callback<WorksheetTemplateListWrapper>() {
-            @Override
-            public void success(WorksheetTemplateListWrapper listWrapper, Response response) {
-                HttpErrorCheck.checkResponse("类型列表：", response);
-                if (0 == listWrapper.errcode && listWrapper.data != null) {
-                    for (WorksheetTemplate template : listWrapper.data) {
-                        data.add(template);
+        WorksheetService.getWorksheetTypesList()
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<WorksheetTemplate>>(LoyoErrorChecker.SILENCE) {
+                    @Override
+                    public void onNext(ArrayList<WorksheetTemplate> templates) {
+                        if (templates == null) {
+                            return;
+                        }
+                        for (WorksheetTemplate template : templates) {
+                            data.add(template);
+                        }
+                        String json = MainApp.gson.toJson(data);
+                        SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES);
+                        SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES, json);
                     }
-                    String json = MainApp.gson.toJson(data);
-                    SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES);
-                    SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES, json);
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-            }
-        });
+                });
     }
 
     /* 读取缓存 */

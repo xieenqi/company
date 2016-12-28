@@ -2,7 +2,7 @@ package com.loyo.oa.v2.activityui.other.model;
 
 import android.text.TextUtils;
 
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.activityui.commonview.SelectUserHelper;
 
 import java.io.Serializable;
@@ -63,8 +63,8 @@ public class SelectUserData implements Serializable {
         return true;
     }
 
-    public NewUser toNewUser() {
-        NewUser newUser = new NewUser();
+    public OrganizationalMember toNewUser() {
+        OrganizationalMember newUser = new OrganizationalMember();
         newUser.setId(getId());
         newUser.setName(this.name);
         newUser.setAvatar(this.avatar);

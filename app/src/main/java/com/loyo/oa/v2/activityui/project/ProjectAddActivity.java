@@ -17,15 +17,18 @@ import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.adapter.ProjectMemberListViewAdapter;
+import com.loyo.oa.v2.activityui.project.api.ProjectService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.point.IProject;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -251,10 +254,32 @@ public class ProjectAddActivity extends BaseActivity {
      */
     void createProject(final ProjectTransObj obj) {
         showStatusLoading(false);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).Create(obj, new RCallback<Project>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).Create(obj, new RCallback<Project>() {
+//            @Override
+//            public void success(final Project project, final Response response) {
+//                HttpErrorCheck.checkCommitSus("项目创建",response);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        cancelStatusLoading();
+//                        Intent intent = new Intent();
+//                        intent.putExtra("data", project);
+//                        app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
+//                    }
+//                },1000);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkCommitEro(error);
+//            }
+//        });
+
+        ProjectService.Create(obj).subscribe(new DefaultLoyoSubscriber<Project>(LoyoErrorChecker.COMMIT_DIALOG) {
             @Override
-            public void success(final Project project, final Response response) {
-                HttpErrorCheck.checkCommitSus("项目创建",response);
+            public void onNext(final Project project) {
+                DialogHelp.successStatusLoad();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -265,12 +290,6 @@ public class ProjectAddActivity extends BaseActivity {
                     }
                 },1000);
             }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
         });
     }
 
@@ -279,10 +298,31 @@ public class ProjectAddActivity extends BaseActivity {
      */
     void updateProject(final ProjectTransObj obj) {
         showStatusLoading(false);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).Update(mProject.getId(), obj, new RCallback<Project>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).Update(mProject.getId(), obj, new RCallback<Project>() {
+//            @Override
+//            public void success(final Project project, final Response response) {
+//                HttpErrorCheck.checkCommitSus("项目编辑",response);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        cancelStatusLoading();
+//                        Intent intent = new Intent();
+//                        intent.putExtra("data", project);
+//                        app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+//                    }
+//                },1000);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkCommitEro(error);
+//            }
+//        });
+
+        ProjectService.Update(mProject.getId(),obj).subscribe(new DefaultLoyoSubscriber<Project>(LoyoErrorChecker.COMMIT_DIALOG) {
             @Override
-            public void success(final Project project, final Response response) {
-                HttpErrorCheck.checkCommitSus("项目编辑",response);
+            public void onNext(final Project project) {
+                DialogHelp.successStatusLoad();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -292,11 +332,6 @@ public class ProjectAddActivity extends BaseActivity {
                         app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                     }
                 },1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }

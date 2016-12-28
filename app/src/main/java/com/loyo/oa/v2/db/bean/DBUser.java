@@ -7,7 +7,7 @@ package com.loyo.oa.v2.db.bean;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.loyo.oa.v2.activityui.other.model.SelectUserData;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -108,10 +108,10 @@ public class DBUser implements Serializable {
     /**
      * TODO:
      *
-     * @return NewUser
+     * @return OrganizationalMember
      */
-    public NewUser toShortUser() {
-        NewUser user = new NewUser();
+    public OrganizationalMember toShortUser() {
+        OrganizationalMember user = new OrganizationalMember();
         user.setId(this.id);
         user.setName(this.name);
         user.setAvatar(this.avatar);

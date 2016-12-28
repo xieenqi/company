@@ -8,22 +8,16 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.presenter.OrderWorksheetAddPresenter;
 import com.loyo.oa.v2.activityui.worksheet.viewcontrol.OrderWorksheetAddView;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by yyy on 16/10/22.
@@ -92,21 +86,23 @@ public class OrderWorksheetAddPresenterImpl implements OrderWorksheetAddPresente
     @Override
     public void uploadAttachmentAt(UploadController controller,String uuid,int bizType) {
         buildAttachment(controller,uuid,bizType);
-        IAttachment service = RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class);
-        service.setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
-            @Override
-            public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                HttpErrorCheck.checkResponse("上传附件信息", response);
-                crolView.setUploadAttachmentEmbl(attachmentForNew.size(),mFilePath);
-            }
+        AttachmentService.setAttachementData(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>() {
 
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        crolView.hideProgress();
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<AttachmentForNew> news) {
+                        crolView.setUploadAttachmentEmbl(news.size(),mFilePath);
+                    }
+                });
+
         crolView.showProgress("");
-    }
+}
 
     private void buildAttachment(UploadController controller,String uuid,int bizType) {
         ArrayList<UploadTask> list = controller.getTaskList();

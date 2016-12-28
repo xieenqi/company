@@ -20,7 +20,6 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -32,25 +31,22 @@ import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
-import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
+import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfNodes;
 import com.loyo.oa.v2.activityui.work.adapter.WorkflowNodesListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WfInstance;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ListView_inScrollView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.IWfInstance;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 
@@ -64,9 +60,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【审批详情】
@@ -193,10 +186,47 @@ public class WfinstanceInfoActivity extends BaseActivity {
             finish();
             return;
         }
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
+//            @Override
+//            public void success(final WfInstance wfInstance_current, final Response response) {
+//                HttpErrorCheck.checkResponse("审批详情返回的数据：", response);
+//                mWfInstance = wfInstance_current;
+//                Log.i("MSG_ATTACHMENT","date"+mWfInstance.attachments);
+//                if (null != wfInstance_current && null != wfInstance_current.workflowNodes) {
+//                    lstData_WfNodes.clear();
+//                    lstData_WfNodes.addAll(wfInstance_current.workflowNodes);
+//                }
+//                /**
+//                 * 赢单审批
+//                 */
+//                if (wfInstance_current==null || wfInstance_current.bizForm == null)
+//                {
+//                    return;
+//                }
+//
+//                if (300 == wfInstance_current.bizForm.bizCode) {
+//                    wfData(wfInstance_current);
+//                } else if (400 == wfInstance_current.bizForm.bizCode) {//订单审批
+//                    orderData();
+//                } else if (500 == wfInstance_current.bizForm.bizCode) {//回款审批
+//                    paymentData();
+//                } else {
+//                    initData_WorkflowValues();
+//                }
+//                updateUI();
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error,ll_loading);
+////                finish();
+//            }
+//        });
+
+        WfinstanceService.getWfInstance(wfInstanceId).subscribe(new DefaultLoyoSubscriber<WfInstance>(LoyoErrorChecker.LOADING_LAYOUT) {
             @Override
-            public void success(final WfInstance wfInstance_current, final Response response) {
-                HttpErrorCheck.checkResponse("审批详情返回的数据：", response);
+            public void onNext(WfInstance wfInstance_current) {
                 mWfInstance = wfInstance_current;
                 Log.i("MSG_ATTACHMENT","date"+mWfInstance.attachments);
                 if (null != wfInstance_current && null != wfInstance_current.workflowNodes) {
@@ -221,13 +251,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     initData_WorkflowValues();
                 }
                 updateUI();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error,ll_loading);
-//                finish();
             }
         });
     }
@@ -660,11 +683,43 @@ public class WfinstanceInfoActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("comment", comment);
         map.put("type", type);
-        LogUtil.dll("请求内容：" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(mWfInstance.getId(), map, new RCallback<WfInstance>() {
+//        LogUtil.dll("请求内容：" + MainApp.gson.toJson(map));
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(mWfInstance.getId(), map, new RCallback<WfInstance>() {
+//            @Override
+//            public void success(final WfInstance wfInstance_current, final Response response) {
+//                HttpErrorCheck.checkResponse("审批成功：", response);
+//                if (null != wfInstance_current) {
+//                    Toast("审批" + getString(R.string.app_succeed));
+//                    //如果不clear,会提示java.io.NotSerializableException
+//                    if (null != wfInstance_current.workflowValues) {
+//                        wfInstance_current.workflowValues.clear();
+//                    }
+//                    wfInstance_current.setViewed(true);
+//                    Intent intent = getIntent();
+//                    intent.putExtra("review", wfInstance_current);
+//                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+//                } else {
+//                    Toast("服务器错误");
+//                }
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+
+        WfinstanceService.doWfInstance(mWfInstance.getId(),map).subscribe(new DefaultLoyoSubscriber<WfInstance>() {
             @Override
-            public void success(final WfInstance wfInstance_current, final Response response) {
-                HttpErrorCheck.checkResponse("审批成功：", response);
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+
+            @Override
+            public void onNext(WfInstance wfInstance_current) {
+                DialogHelp.cancelLoading();
                 if (null != wfInstance_current) {
                     Toast("审批" + getString(R.string.app_succeed));
                     //如果不clear,会提示java.io.NotSerializableException
@@ -678,12 +733,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 } else {
                     Toast("服务器错误");
                 }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -833,9 +882,27 @@ public class WfinstanceInfoActivity extends BaseActivity {
      * 审批删除
      */
     public void deleteWfin() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).deleteWfinstance(mWfInstance.getId(), new RCallback<WfInstance>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).deleteWfinstance(mWfInstance.getId(), new RCallback<WfInstance>() {
+//            @Override
+//            public void success(final WfInstance wfInstance, final Response response) {
+//                if (null != wfInstance.workflowValues) {
+//                    wfInstance.workflowValues.clear();
+//                }
+//                Intent intent = new Intent();
+//                intent.putExtra("delete", wfInstance);
+//                AppBus.getInstance().post(new BizForm());
+//                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                Toast("删除失败");
+//                super.failure(error);
+//            }
+//        });
+        WfinstanceService.deleteWfinstance(mWfInstance.getId()).subscribe(new DefaultLoyoSubscriber<WfInstance>() {
             @Override
-            public void success(final WfInstance wfInstance, final Response response) {
+            public void onNext(WfInstance wfInstance) {
                 if (null != wfInstance.workflowValues) {
                     wfInstance.workflowValues.clear();
                 }
@@ -843,12 +910,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 intent.putExtra("delete", wfInstance);
                 AppBus.getInstance().post(new BizForm());
                 app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                Toast("删除失败");
-                super.failure(error);
             }
         });
     }

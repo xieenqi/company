@@ -1,13 +1,9 @@
 package com.loyo.oa.v2.beans;
 
-import android.widget.ImageView;
-
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
-import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -17,7 +13,7 @@ import java.util.ArrayList;
 public class CustomerFollowUpModel extends BaseBeans implements Serializable {
 
     private ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
-    private NewUser creator;//&{organization User}, optional): ,
+    private OrganizationalMember creator;//&{organization User}, optional): ,
     private String customerId;//int64, optional): ,
     private String opportunityId;//int64, optional): ,
     private String tagItemIds;//string, optional): ,
@@ -73,11 +69,11 @@ public class CustomerFollowUpModel extends BaseBeans implements Serializable {
         this.createAt = createAt;
     }
 
-    public NewUser getCreator() {
+    public OrganizationalMember getCreator() {
         return creator;
     }
 
-    public void setCreator(NewUser creator) {
+    public void setCreator(OrganizationalMember creator) {
         this.creator = creator;
     }
 

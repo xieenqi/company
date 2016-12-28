@@ -27,6 +27,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -34,9 +35,9 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
@@ -45,20 +46,17 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.ITask;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -74,8 +72,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
@@ -150,13 +146,13 @@ public class TasksAddActivity extends BaseActivity {
 
     private AlertDialog dialog_Product;
     private ImageGridViewAdapter imageGridViewAdapter;
-    private NewUser newUser;
+    private OrganizationalMember newUser;
     private CornBody cornBody;
     private StringBuffer strBuf;
     private Members members;
     private PostBizExtData bizExtData;
-    private ArrayList<NewUser> userss;
-    private ArrayList<NewUser> depts;
+    private ArrayList<OrganizationalMember> userss;
+    private ArrayList<OrganizationalMember> depts;
     private long mDeadline;
     private int remindTime;
     private int mRemind = 0;
@@ -239,13 +235,13 @@ public class TasksAddActivity extends BaseActivity {
                 joinName = new StringBuffer();
                 joinUserId = new StringBuffer();
                 if (null != members.depts) {
-                    for (NewUser newUser : members.depts) {
+                    for (OrganizationalMember newUser : members.depts) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
                 }
                 if (null != members.users) {
-                    for (NewUser newUser : members.users) {
+                    for (OrganizationalMember newUser : members.users) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
@@ -358,32 +354,26 @@ public class TasksAddActivity extends BaseActivity {
 
 
         LogUtil.d("任务创建 发送的数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
-            @Override
-            public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkCommitSus("任务创建", response);
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        cancelStatusLoading();
-                        //不需要保存
-                        isSave = false;
-                        Intent intent = new Intent();
-                        intent.putExtra("data", task);
-                        setResult(0x09, intent);
-                        onBackPressed();
-                        if (isCopy)
-                            TasksInfoActivity.instance.finish();
+        TaskService.create(map)
+                .subscribe(new DefaultLoyoSubscriber<Task>(LoyoErrorChecker.COMMIT_DIALOG) {
+                    @Override
+                    public void onNext(final Task task) {
+                        DialogHelp.successStatusLoad();
+                        new Handler().postDelayed(new Runnable(){
+                            public void run() {
+                                cancelStatusLoading();
+                                //不需要保存
+                                isSave = false;
+                                Intent intent = new Intent();
+                                intent.putExtra("data", task);
+                                setResult(0x09, intent);
+                                onBackPressed();
+                                if (isCopy)
+                                    TasksInfoActivity.instance.finish();
+                            }
+                        }, 1000);
                     }
-                }, 1000);
-
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+                });
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson,
@@ -685,22 +675,21 @@ public class TasksAddActivity extends BaseActivity {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
                         LogUtil.dee("typeFile:" + typedFile);
                         TypedString typedUuid = new TypedString(uuid);
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                                new RCallback<Attachment>() {
+                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
+                                .subscribe(new DefaultLoyoSubscriber<Attachment>(LoyoErrorChecker.COMMIT_DIALOG) {
+
                                     @Override
-                                    public void success(final Attachment attachments, final Response response) {
-                                        //cancelStatusLoading();
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
+                                        img_title_right.setEnabled(true);
+                                    }
+
+                                    @Override
+                                    public void onNext(Attachment attachment) {
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
                                             requestCommitTask();
                                         }
-                                    }
-
-                                    @Override
-                                    public void failure(final RetrofitError error) {
-                                        super.failure(error);
-                                        HttpErrorCheck.checkCommitEro(error);
-                                        img_title_right.setEnabled(true);
                                     }
                                 });
                     }
@@ -768,6 +757,7 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 break;
 
+
 //            /*用户单选, 负责人*/ 被替代了
 //            case FinalVariables.REQUEST_ONLY:
 //                NewUser u = (NewUser) data.getSerializableExtra("data");
@@ -801,6 +791,44 @@ public class TasksAddActivity extends BaseActivity {
 //                    tv_toUsers.setText(joinName.toString());
 //                }
 //                break;
+
+            /*用户单选, 负责人*/
+            case FinalVariables.REQUEST_ONLY:
+                OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
+                newUser = u;
+                tv_responsiblePerson.setText(newUser.getName());
+                break;
+
+            /*用户选择, 参与人*/
+            case FinalVariables.REQUEST_ALL_SELECT:
+                members = (Members) data.getSerializableExtra("data");
+                if (null == members) {
+                    tv_toUsers.setText("无参与人");
+                } else {
+                    joinName = new StringBuffer();
+                    joinUserId = new StringBuffer();
+                    if (null != members.depts) {
+                        for (OrganizationalMember newUser : members.depts) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (null != members.users) {
+                        for (OrganizationalMember newUser : members.users) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (!TextUtils.isEmpty(joinName)) {
+                        joinName.deleteCharAt(joinName.length() - 1);
+                    }
+                    tv_toUsers.setText(joinName.toString());
+                }
+                break;
+
+            default:
+                break;
+
         }
     }
 

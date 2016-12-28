@@ -15,6 +15,7 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.project.HttpProject;
+import com.loyo.oa.v2.activityui.project.api.ProjectService;
 import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
@@ -32,9 +33,9 @@ import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.IProject;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -149,10 +150,56 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjectNewSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjectNewSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
+//            @Override
+//            public void success(Pagination paginationx, Response response) {
+//                HttpErrorCheck.checkResponse("获取项目详情的任务，报告，审批json", response);
+//
+//                mExpandableListView.onRefreshComplete();
+//                if (!Pagination.isEmpty(paginationx)) {
+//                    ArrayList lstDataTemp = GetTData(paginationx);
+//                    pagination.setPageIndex(paginationx.getPageIndex());
+//                    pagination.setPageSize(paginationx.getPageSize());
+//                    if (isTopAdd) {
+//                        lstData.clear();
+//                    }
+//                    lstData.addAll(lstDataTemp);
+//                    onLoadSuccess(paginationx.getTotalRecords());
+//                    pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
+//                    changeAdapter();
+//                    expand();
+//                } else {
+//                    if (!(paginationx.getRecords().size() > 0) && pageIndex == 1) {
+//                        pagingGroupDatas.clear();
+//                        changeAdapter();
+//                    }
+//                }
+//                ll_loading.setStatus(LoadingLayout.Success);
+//                if (isTopAdd && lstData.size() == 0)
+//                    ll_loading.setStatus(LoadingLayout.Empty);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error, ll_loading);
+//                super.failure(error);
+//                if (null != mExpandableListView) {
+//                    mExpandableListView.onRefreshComplete();
+//                }
+//            }
+//        });
+
+        ProjectService.getProjectNewSubs(mProject.getId(),type,map).subscribe(new DefaultLoyoSubscriber<Pagination>(ll_loading) {
             @Override
-            public void success(Pagination paginationx, Response response) {
-                HttpErrorCheck.checkResponse("获取项目详情的任务，报告，审批json", response);
+            public void onError(Throwable e) {
+                super.onError(e);
+                if (null != mExpandableListView) {
+                    mExpandableListView.onRefreshComplete();
+                }
+            }
+
+            @Override
+            public void onNext(Pagination paginationx) {
 
                 mExpandableListView.onRefreshComplete();
                 if (!Pagination.isEmpty(paginationx)) {
@@ -176,15 +223,6 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                 ll_loading.setStatus(LoadingLayout.Success);
                 if (isTopAdd && lstData.size() == 0)
                     ll_loading.setStatus(LoadingLayout.Empty);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error, ll_loading);
-                super.failure(error);
-                if (null != mExpandableListView) {
-                    mExpandableListView.onRefreshComplete();
-                }
             }
         });
     }

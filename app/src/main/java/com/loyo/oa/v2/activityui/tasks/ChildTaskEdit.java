@@ -10,22 +10,17 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
-import com.loyo.oa.v2.point.ICheckPoint;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【编辑 子任务】   页面
@@ -42,8 +37,8 @@ public class ChildTaskEdit extends BaseActivity {
     private TextView tv_title_1;
     private TaskCheckPoint data;
     private String TaskId;
-    private ArrayList<NewUser> reponserData;
-    private NewUser newUser;//负责人 信息
+    private ArrayList<OrganizationalMember> reponserData;
+    private OrganizationalMember newUser;//负责人 信息
     private Intent mIntent;
     private boolean isReponser;
 
@@ -60,7 +55,7 @@ public class ChildTaskEdit extends BaseActivity {
         mIntent = getIntent();
         data = (TaskCheckPoint) mIntent.getSerializableExtra("TaskEdit");
         TaskId = mIntent.getStringExtra("TaskId");
-        reponserData = (ArrayList<NewUser>)mIntent.getSerializableExtra("allUsers");
+        reponserData = (ArrayList<OrganizationalMember>)mIntent.getSerializableExtra("allUsers");
         isReponser = mIntent.getBooleanExtra("isReponser",false);
 
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
@@ -132,39 +127,30 @@ public class ChildTaskEdit extends BaseActivity {
         HashMap<String, Object> parmas = new HashMap<>();
         parmas.put("content", et_info.getText().toString());
         parmas.put("responsiblePerson",newUser);
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ICheckPoint.class).updateChildTaskInfo(TaskId, data.getId(), parmas, new RCallback<TaskCheckPoint>() {
-            @Override
-            public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
-                Toast("更新子任务成功");
-                MainApp.getMainApp().finishActivity(ChildTaskEdit.this, MainApp.ENTER_TYPE_TOP,RESULT_OK,new Intent());
-            }
-            @Override
-            public void failure(final RetrofitError error) {
-                Toast("更新子任务失败");
-                LogUtil.d(error.getUrl()+"   错误信息 "+error.getMessage()+" 热舞id "+ MainApp.gson.toJson(data));
-                super.failure(error);
-            }
-        });
+        TaskService.updateChildTaskInfo(TaskId, data.getId(), parmas)
+                .subscribe(new DefaultLoyoSubscriber<TaskCheckPoint>() {
+                    @Override
+                    public void onNext(TaskCheckPoint point) {
+                        Toast("更新子任务成功");
+                        MainApp.getMainApp().finishActivity(ChildTaskEdit.this,
+                                MainApp.ENTER_TYPE_TOP,RESULT_OK,new Intent());
+                    }
+                });
     }
 
     /**
      * 删除 任务 的子任务 xnq
      */
     private void deleteChildTask(){
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ICheckPoint.class).deleteChildTaskInfo(TaskId, data.getId(), new RCallback<TaskCheckPoint>() {
-            @Override
-            public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
-                Toast("删除子任务成功");
-                MainApp.getMainApp().finishActivity(ChildTaskEdit.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, new Intent());
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                Toast("删除子任务失败");
-                super.failure(error);
-            }
-        });
+        TaskService.deleteChildTaskInfo(TaskId, data.getId())
+                .subscribe(new DefaultLoyoSubscriber<TaskCheckPoint>() {
+                    @Override
+                    public void onNext(TaskCheckPoint point) {
+                        Toast("删除子任务成功");
+                        MainApp.getMainApp().finishActivity(ChildTaskEdit.this,
+                                MainApp.ENTER_TYPE_TOP, RESULT_OK, new Intent());
+                    }
+                });
     }
 
     /** xnq
@@ -180,7 +166,7 @@ public class ChildTaskEdit extends BaseActivity {
     protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK&&requestCode==300){
-            newUser=(NewUser) data.getSerializableExtra("user");
+            newUser=(OrganizationalMember) data.getSerializableExtra("user");
             tv_responser.setText(newUser.getName());
         }
     }

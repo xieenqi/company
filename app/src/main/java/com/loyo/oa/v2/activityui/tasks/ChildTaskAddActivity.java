@@ -15,29 +15,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICheckPoint;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 描述 :【新建子任】页面务类
@@ -57,11 +54,11 @@ public class ChildTaskAddActivity extends BaseActivity {
 
     @Extra("childTask") TaskCheckPoint chidTask;
     @Extra("Task") Task mTask;
-    @Extra("allUsers") ArrayList<NewUser> allUsers; //负责人与参与人 集合
+    @Extra("allUsers") ArrayList<OrganizationalMember> allUsers; //负责人与参与人 集合
 
     TaskCheckPoint mChildTask = new TaskCheckPoint();
 
-    NewUser newUser;
+    OrganizationalMember newUser;
 
     @AfterViews
     void intUi() {
@@ -231,21 +228,17 @@ public class ChildTaskAddActivity extends BaseActivity {
      * 删除子任务
      */
     private void delete() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ICheckPoint.class).deleteChildTask(mTask.getId(), mChildTask.getId(), new RCallback<TaskCheckPoint>() {
-            @Override
-            public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
-                Toast("删除子任务成功");
-                Intent delIntent = new Intent();
-                delIntent.putExtra("childTaskId", chidTask.getId());
-                MainApp.getMainApp().finishActivity(ChildTaskAddActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, delIntent);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                Toast("删除子任务失败");
-                super.failure(error);
-            }
-        });
+        TaskService.deleteChildTask(mTask.getId(), mChildTask.getId())
+                .subscribe(new DefaultLoyoSubscriber<TaskCheckPoint>() {
+                    @Override
+                    public void onNext(TaskCheckPoint point) {
+                        Toast("删除子任务成功");
+                        Intent delIntent = new Intent();
+                        delIntent.putExtra("childTaskId", chidTask.getId());
+                        MainApp.getMainApp().finishActivity(ChildTaskAddActivity.this,
+                                MainApp.ENTER_TYPE_TOP, RESULT_OK, delIntent);
+                    }
+                });
     }
 
     /**
@@ -268,29 +261,23 @@ public class ChildTaskAddActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("content", mChildTask.getTitle());
         map.put("responsiblePerson", mChildTask.getResponsiblePerson());
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ICheckPoint.class).createChildTask(mTask.getId(), map, new RCallback<TaskCheckPoint>() {
-            @Override
-            public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
-                HttpErrorCheck.checkCommitSus("新建子任务",response);
-                new Handler().postDelayed(new Runnable() {
+        TaskService.createChildTask(mTask.getId(), map)
+                .subscribe(new DefaultLoyoSubscriber<TaskCheckPoint>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
-                    public void run() {
-                        cancelStatusLoading();
-                        mChildTask = taskCheckPoint;
-                        Intent intent = new Intent();
-                        intent.putExtra("childTask", taskCheckPoint);
-                        MainApp.getMainApp().finishActivity(ChildTaskAddActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
+                    public void onNext(final TaskCheckPoint point) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelStatusLoading();
+                                mChildTask = point;
+                                Intent intent = new Intent();
+                                intent.putExtra("childTask", point);
+                                MainApp.getMainApp().finishActivity(ChildTaskAddActivity.this,
+                                        MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
+                            }
+                        },1000);
                     }
-                },1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-                super.failure(error);
-            }
-        });
+                });
     }
 
     /**
@@ -315,21 +302,17 @@ public class ChildTaskAddActivity extends BaseActivity {
         datas2.put("title", mChildTask.getTitle());
         datas2.put("achieved", mChildTask.isAchieved());
         datas2.put("responsiblePersonId", mChildTask.getResponsiblePerson().getId());
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ICheckPoint.class).updateChildTask(mChildTask.getTaskId(), mChildTask.getId(), datas2, new RCallback<TaskCheckPoint>() {
-            @Override
-            public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
-                Toast("更新子任务成功");
-                Intent completeIntent = new Intent();
-                completeIntent.putExtra("childTask", mChildTask);
-                MainApp.getMainApp().finishActivity(ChildTaskAddActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, completeIntent);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                Toast("更新子任务失败");
-                super.failure(error);
-            }
-        });
+        TaskService.updateChildTask(mChildTask.getTaskId(), mChildTask.getId(), datas2)
+                .subscribe(new DefaultLoyoSubscriber<TaskCheckPoint>() {
+                    @Override
+                    public void onNext(TaskCheckPoint point) {
+                        Toast("更新子任务成功");
+                        Intent completeIntent = new Intent();
+                        completeIntent.putExtra("childTask", mChildTask);
+                        MainApp.getMainApp().finishActivity(ChildTaskAddActivity.this,
+                                MainApp.ENTER_TYPE_TOP, RESULT_OK, completeIntent);
+                    }
+                });
     }
 
     @Override
@@ -340,7 +323,7 @@ public class ChildTaskAddActivity extends BaseActivity {
 
         switch (requestCode) {
             case 300:
-                NewUser user = (NewUser) data.getSerializableExtra("user");
+                OrganizationalMember user = (OrganizationalMember) data.getSerializableExtra("user");
                 if (user != null) {
                     tv_child_add_responser_name.setText(user.getRealname());
                     newUser = user;

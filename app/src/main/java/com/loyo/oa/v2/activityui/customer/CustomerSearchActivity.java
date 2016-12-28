@@ -3,14 +3,17 @@ package com.loyo.oa.v2.activityui.customer;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
 
@@ -80,6 +83,37 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
                 break;
 
         }
-        RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, this);
+        RetrofitAdapterFactory.getInstance()
+                .build(/*TODO:*/url)
+                .create(ICustomer.class)
+                .getCustomers(params)
+                .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers())
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        expandableListView_search.onRefreshComplete();
+                        ll_loading.setStatus(LoadingLayout.Error);
+                    }
+
+                    @Override
+                    public void onNext(PaginationX<Customer> customerPaginationX) {
+                        if (!isTopAdd && paginationX.isEmpty(customerPaginationX)) {
+                            Toast("没有更多数据!");
+                        }
+                        if (isTopAdd && paginationX.isEmpty(customerPaginationX)) {
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        } else {
+                            ll_loading.setStatus(LoadingLayout.Success);
+                        }
+
+                        if (isTopAdd) {
+                            lstData.clear();
+                        }
+                        lstData.addAll(customerPaginationX.getRecords());
+                        expandableListView_search.onRefreshComplete();
+                        changeAdapter();
+                    }
+                });
     }
 }

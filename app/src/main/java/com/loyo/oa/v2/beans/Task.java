@@ -40,8 +40,8 @@ public class Task extends BaseBeans implements Serializable {
     public ArrayList<Attachment> attachments;
     public ArrayList<TaskCheckPoint> checklists;
     public ArrayList<TaskReviewComment> reviewComments;
-    public NewUser responsiblePerson;
-    public NewUser creator;
+    public OrganizationalMember responsiblePerson;
+    public OrganizationalMember creator;
     public Members members = new Members();
     public ArrayList<Reviewer> reviewers = new ArrayList<>();
     public CornBody cornBody;
@@ -218,11 +218,11 @@ public class Task extends BaseBeans implements Serializable {
     }
 
 
-    public NewUser getCreator() {
+    public OrganizationalMember getCreator() {
         return creator;
     }
 
-    public void setCreator(NewUser creator) {
+    public void setCreator(OrganizationalMember creator) {
         this.creator = creator;
     }
 
@@ -254,12 +254,12 @@ public class Task extends BaseBeans implements Serializable {
         this.remindtime = remindTime;
     }
 
-    public NewUser getResponsiblePerson() {
+    public OrganizationalMember getResponsiblePerson() {
 
         return responsiblePerson;
     }
 
-    public void setResponsiblePerson(NewUser responsiblePerson) {
+    public void setResponsiblePerson(OrganizationalMember responsiblePerson) {
         this.responsiblePerson = responsiblePerson;
     }
 

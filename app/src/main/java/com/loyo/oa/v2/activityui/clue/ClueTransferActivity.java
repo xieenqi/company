@@ -27,24 +27,21 @@ import com.loyo.oa.v2.activityui.customer.CustomerLabelActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerRepeat;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.HttpAddCustomer;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 
@@ -53,8 +50,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
@@ -204,31 +199,24 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         showLoading("");
         HashMap<String,Object> map = new HashMap<>();
         map.put("bizType",100);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
-            @Override
-            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                mCusList = cuslist;
-                for (ContactLeftExtras customerJur : cuslist) {
-                    if (customerJur.label.contains("联系人") && customerJur.required) {
-                        cusGuys = true;
-                        edt_contract.setHint("请输入联系人姓名(必填)");
-                    } else if (customerJur.label.contains("手机") && customerJur.required) {
-                        cusPhone = true;
-                        edt_contract_tel.setHint("请输入联系人手机号(必填)");
-                    } else if (customerJur.label.contains("座机") && customerJur.required) {
-                        cusMobile = true;
-                        edt_contract_telnum.setHint("请输入联系人座机(必填)");
+        CustomerService.getAddCustomerJur(map)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
+                    public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
+                        mCusList = contactLeftExtrasArrayList;
+                        for (ContactLeftExtras customerJur : contactLeftExtrasArrayList) {
+                            if (customerJur.label.contains("联系人") && customerJur.required) {
+                                cusGuys = true;
+                                edt_contract.setHint("请输入联系人姓名(必填)");
+                            } else if (customerJur.label.contains("手机") && customerJur.required) {
+                                cusPhone = true;
+                                edt_contract_tel.setHint("请输入联系人手机号(必填)");
+                            } else if (customerJur.label.contains("座机") && customerJur.required) {
+                                cusMobile = true;
+                                edt_contract_telnum.setHint("请输入联系人座机(必填)");
+                            }
+                        }
                     }
-                }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                });
     }
 
 
@@ -301,20 +289,21 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                     if (newFile.exists()) {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
                         TypedString typedUuid = new TypedString(uuid);
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                                new RCallback<Attachment>() {
+                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
+                                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+
                                     @Override
-                                    public void success(final Attachment attachments, final Response response) {
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
+                                        cancelLoading();
+                                    }
+
+                                    @Override
+                                    public void onNext(Attachment attachment) {
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
                                             requestCommitTask();
                                         }
-                                    }
-
-                                    @Override
-                                    public void failure(final RetrofitError error) {
-                                        super.failure(error);
-                                        HttpErrorCheck.checkError(error);
                                     }
                                 });
                     }
@@ -361,29 +350,30 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         map.put("tags", positionData.tags);
         map.put("salesleadId", mCluesales.id);
         LogUtil.dee("转移客户发送数据:"+MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                try {
-                    Customer retCustomer = customer;
-                    Toast("转移成功");
-                    isSave = false;
-                    Intent intent = new Intent();
-                    intent.putExtra(Customer.class.getName(), retCustomer);
-                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT,RESULT_OK, intent);
+        CustomerService.addNewCustomer(map)
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
+                    }
 
-                } catch (Exception e) {
-                    Global.ProcException(e);
-                }
-            }
+                    @Override
+                    public void onNext(Customer customer) {
+                        cancelLoading();
+                        try {
+                            Customer retCustomer = customer;
+                            Toast("转移成功");
+                            isSave = false;
+                            Intent intent = new Intent();
+                            intent.putExtra(Customer.class.getName(), retCustomer);
+                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT,RESULT_OK, intent);
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                        } catch (Exception e) {
+                            Global.ProcException(e);
+                        }
+                    }
+                });
     }
 
     @Override

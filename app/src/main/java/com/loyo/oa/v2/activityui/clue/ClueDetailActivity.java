@@ -10,12 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.model.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.model.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
@@ -26,39 +28,31 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.IClue;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.voip.VoIPCallActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Date;
 import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class ClueDetailActivity extends BaseLoadingActivity implements View.OnClickListener {
 
@@ -249,22 +243,31 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         if (clueId == null) {
             return;
         }
-        RestAdapterFactory.getInstance()
-                .build(Config_project.API_URL_CUSTOMER())
-                .create(IClue.class)
-                .getClueDetail(clueId, new Callback<BaseBeanT<ClueDetailWrapper.ClueDetail>>() {
-                    @Override
-                    public void success(BaseBeanT<ClueDetailWrapper.ClueDetail> detail, Response response) {
-                        HttpErrorCheck.checkResponse("线索详情：", response, ll_loading);
-                        data = detail.data;
-                        bindData();
-                    }
+//        RestAdapterFactory.getInstance()
+//                .build(Config_project.API_URL_CUSTOMER())
+//                .create(IClue.class)
+//                .getClueDetail(clueId, new Callback<BaseBeanT<ClueDetailWrapper.ClueDetail>>() {
+//                    @Override
+//                    public void success(BaseBeanT<ClueDetailWrapper.ClueDetail> detail, Response response) {
+//                        HttpErrorCheck.checkResponse("线索详情：", response, ll_loading);
+//                        data = detail.data;
+//                        bindData();
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error, ll_loading);
+//                    }
+//                });
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
-                    }
-                });
+        ClueService.getClueDetail(clueId).subscribe(new DefaultLoyoSubscriber<BaseBeanT<ClueDetailWrapper.ClueDetail>>(ll_loading) {
+            @Override
+            public void onNext(BaseBeanT<ClueDetailWrapper.ClueDetail> detail) {
+                ll_loading.setStatus(LoadingLayout.Success);
+                data = detail.data;
+                bindData();
+            }
+        });
     }
 
 
@@ -422,46 +425,77 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         map.put("salesleadId", data.sales.id);
         map.put("type", callType);
         map.put("mobile", phone);
-        LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getCallReturnInfo(map,
-                new RCallback<CallBackCallid>() {
-                    @Override
-                    public void success(final CallBackCallid callBackCallid, final Response response) {
-                        HttpErrorCheck.checkResponse("线索请求回拨", response);
-                        try {
-                            switch (callBackCallid.errcode) {
-                                case 0:
-                                    Bundle mBundle = new Bundle();
-                                    mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
-                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
-                                    app.startActivity(ClueDetailActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-                                    break;
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getCallReturnInfo(map,
+//                new RCallback<CallBackCallid>() {
+//                    @Override
+//                    public void success(final CallBackCallid callBackCallid, final Response response) {
+//                        HttpErrorCheck.checkResponse("线索请求回拨", response);
+//                        try {
+//                            switch (callBackCallid.errcode) {
+//                                case 0:
+//                                    Bundle mBundle = new Bundle();
+//                                    mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
+//                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
+//                                    app.startActivity(ClueDetailActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+//                                    break;
+//
+//                                case 50000:
+//                                    Toast("主叫与被叫号码不能相同!");
+//                                    break;
+//
+//                                case 50001:
+//                                    Toast("余额不足!");
+//                                    break;
+//
+//                                case 50002:
+//                                    Toast("号码格式错误!");
+//                                    break;
+//                            }
+//                        } catch (NullPointerException e) {
+//                            e.printStackTrace();
+//                            Toast(e.getMessage());
+//                            finish();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        super.failure(error);
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
 
-                                case 50000:
-                                    Toast("主叫与被叫号码不能相同!");
-                                    break;
+        ClueService.getCallReturnInfo(map).subscribe(new DefaultLoyoSubscriber<CallBackCallid>() {
+            @Override
+            public void onNext(CallBackCallid callBackCallid) {
+                try {
+                    switch (callBackCallid.errcode) {
+                        case 0:
+                            Bundle mBundle = new Bundle();
+                            mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
+                            mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
+                            app.startActivity(ClueDetailActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                            break;
 
-                                case 50001:
-                                    Toast("余额不足!");
-                                    break;
+                        case 50000:
+                            Toast("主叫与被叫号码不能相同!");
+                            break;
 
-                                case 50002:
-                                    Toast("号码格式错误!");
-                                    break;
-                            }
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                            Toast(e.getMessage());
-                            finish();
-                        }
+                        case 50001:
+                            Toast("余额不足!");
+                            break;
+
+                        case 50002:
+                            Toast("号码格式错误!");
+                            break;
                     }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    Toast(e.getMessage());
+                    finish();
+                }
+            }
+        });
     }
 
     /**
@@ -651,31 +685,54 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         map.put("source", clue_source.getText().toString());
         map.put("status", clueStatus);
         LogUtil.d(app.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-                .editClue(clueId, map, new Callback<Object>() {
-                    @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("【编辑详情】线索：", response);
-                        /* 提交成功，更新本地model */
-                        if (1 == function
-                                && data != null && data != null && data.sales != null) {
-                            data.sales.region = regional;
-                            clue_region.setText(regional.salesleadDisplayText());
-                        }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+//                .editClue(clueId, map, new Callback<Object>() {
+//                    @Override
+//                    public void success(Object o, Response response) {
+//                        HttpErrorCheck.checkResponse("【编辑详情】线索：", response);
+//                        /* 提交成功，更新本地model */
+//                        if (1 == function
+//                                && data != null && data != null && data.sales != null) {
+//                            data.sales.region = regional;
+//                            clue_region.setText(regional.salesleadDisplayText());
+//                        }
+//
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                        /* 提交失败，更新UI至原来状态 */
+//                        if (1 == function
+//                                && data != null && data != null && data.sales != null) {
+//                            clue_region.setText(data.sales.region.salesleadDisplayText());
+//                        }
+//
+//                    }
+//                });
 
-                    }
+        ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.COMMIT_DIALOG) {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                 /* 提交失败，更新UI至原来状态 */
+                if (1 == function
+                        && data != null && data != null && data.sales != null) {
+                    clue_region.setText(data.sales.region.salesleadDisplayText());
+                }
+            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        /* 提交失败，更新UI至原来状态 */
-                        if (1 == function
-                                && data != null && data != null && data.sales != null) {
-                            clue_region.setText(data.sales.region.salesleadDisplayText());
-                        }
+            @Override
+            public void onNext(Object o) {
+                /* 提交成功，更新本地model */
+                if (1 == function
+                        && data != null && data != null && data.sales != null) {
+                    data.sales.region = regional;
+                    clue_region.setText(regional.salesleadDisplayText());
+                }
 
-                    }
-                });
+            }
+        });
     }
 
     /**
@@ -684,20 +741,26 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
     private void deleteClue() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("ids", clueId);
-        LogUtil.d(app.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-                .deleteClue(map, new Callback<Object>() {
-                    @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("【删除详情】线索：", response);
-                        app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+//                .deleteClue(map, new Callback<Object>() {
+//                    @Override
+//                    public void success(Object o, Response response) {
+//                        HttpErrorCheck.checkResponse("【删除详情】线索：", response);
+//                        app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+        ClueService.deleteClue(map).subscribe(new DefaultLoyoSubscriber<Object>() {
+            @Override
+            public void onNext(Object o) {
+                app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+            }
+        });
     }
 
     /**
@@ -707,20 +770,26 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         HashMap<String, Object> map = new HashMap<>();
         map.put("ids", clueId);
         map.put("responsorId", responsorId);
-        LogUtil.d(app.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-                .transferClue(map, new Callback<Object>() {
-                    @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("【转 移】线索：", response);
-                        app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+//                .transferClue(map, new Callback<Object>() {
+//                    @Override
+//                    public void success(Object o, Response response) {
+//                        HttpErrorCheck.checkResponse("【转 移】线索：", response);
+//                        app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+        ClueService.transferClue(map).subscribe(new DefaultLoyoSubscriber<Object>() {
+            @Override
+            public void onNext(Object o) {
+                app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+            }
+        });
     }
 
     /**
@@ -729,7 +798,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
         StaffMemberCollection collection = event.data;
-        final NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+        final OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);
         if (user == null) {
             return;
         }
@@ -756,7 +825,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
 
         switch (requestCode) {
             case FinalVariables.REQUEST_ONLY:
-                final NewUser u = (NewUser) data.getSerializableExtra("data");
+                final OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
 
                 sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                     @Override

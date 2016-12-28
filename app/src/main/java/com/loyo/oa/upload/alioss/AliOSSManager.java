@@ -8,11 +8,9 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
-
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 /**
  * 【阿里云oss】工具类
@@ -44,10 +42,7 @@ public class AliOSSManager {
             @Override
             public OSSFederationToken getFederationToken() {
 
-                OssToken ossToken = RestAdapterFactory.getInstance()
-                        .build(Config_project.API_URL_ATTACHMENT())
-                        .create(IAttachment.class)
-                        .syncGetServerToken();
+                OssToken ossToken = AttachmentService.syncGetServerToken();
 
                 if (ossToken != null && ossToken.Credentials != null) {
                     String ak = ossToken.Credentials.AccessKeyId;

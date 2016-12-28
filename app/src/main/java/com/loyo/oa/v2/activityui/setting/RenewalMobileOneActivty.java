@@ -7,11 +7,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBean;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -73,22 +75,40 @@ public class RenewalMobileOneActivty extends BaseActivity implements View.OnClic
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("password", et_pwd.getText().toString());
-        RestAdapterFactory.getInstance().build(Config_project.BIND_MOBLIE).create(IMain.class).
-                verifyPasseord(map, new Callback<BaseBean>() {
-                    @Override
-                    public void success(BaseBean o, Response response) {
-                        HttpErrorCheck.checkResponse("验证密码", response);
-                        if (o.errcode == 0) {
-                            app.startActivity(RenewalMobileOneActivty.this, RenewalMobileTwoActivty.class, MainApp.ENTER_TYPE_RIGHT, false, null);
-                        } else {
-                            Toast(o.errmsg);
-                        }
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.BIND_MOBLIE).create(IMain.class).
+//                verifyPasseord(map, new Callback<BaseBean>() {
+//                    @Override
+//                    public void success(BaseBean o, Response response) {
+//                        HttpErrorCheck.checkResponse("验证密码", response);
+//                        if (o.errcode == 0) {
+//                            app.startActivity(RenewalMobileOneActivty.this, RenewalMobileTwoActivty.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+//                        } else {
+//                            Toast(o.errmsg);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+        HomeService.verifyPasseord(map).subscribe(new DefaultLoyoSubscriber<BaseBean>() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                DialogHelp.cancelLoading();
+            }
+
+            @Override
+            public void onNext(BaseBean o) {
+                DialogHelp.cancelLoading();
+                if (o.errcode == 0) {
+                    app.startActivity(RenewalMobileOneActivty.this, RenewalMobileTwoActivty.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                } else {
+                    Toast(o.errmsg);
+                }
+            }
+        });
     }
 }

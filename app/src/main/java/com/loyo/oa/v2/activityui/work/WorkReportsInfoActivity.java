@@ -17,33 +17,29 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.activityui.work.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
+import com.loyo.oa.v2.activityui.work.api.WorkReportService;
+import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
-import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IWorkReport;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -52,10 +48,6 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Date;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【报告详情】
@@ -171,19 +163,27 @@ public class WorkReportsInfoActivity extends BaseActivity {
             finish();
             return;
         }
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
+//        app.getRestAdapter().create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
+//            @Override
+//            public void success(final WorkReport _workReport, final Response response) {
+//                HttpErrorCheck.checkResponse("报告信息：", response);
+//                mWorkReport = _workReport;
+//                updateUI(mWorkReport);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error, ll_loading);
+////                finish();
+//            }
+//        });
+
+        WorkReportService.getWorkReportDetail(workReportId,keyType).subscribe(new DefaultLoyoSubscriber<WorkReport>(ll_loading) {
             @Override
-            public void success(final WorkReport _workReport, final Response response) {
-                HttpErrorCheck.checkResponse("报告信息：", response);
+            public void onNext(WorkReport _workReport) {
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error, ll_loading);
-//                finish();
             }
         });
     }
@@ -192,18 +192,26 @@ public class WorkReportsInfoActivity extends BaseActivity {
      * 报告删除
      */
     void delete_WorkReport() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).deleteWorkReport(workReportId, new RCallback<WorkReport>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).deleteWorkReport(workReportId, new RCallback<WorkReport>() {
+//            @Override
+//            public void success(final WorkReport workReport, final Response response) {
+//                Intent intent = new Intent();
+//                intent.putExtra("delete", mWorkReport);
+//                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+        WorkReportService.deleteWorkReport(workReportId).subscribe(new DefaultLoyoSubscriber<WorkReport>() {
             @Override
-            public void success(final WorkReport workReport, final Response response) {
+            public void onNext(WorkReport workReport) {
                 Intent intent = new Intent();
                 intent.putExtra("delete", mWorkReport);
                 app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -301,7 +309,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         } else {
             mHandler.sendEmptyMessage(UPDATE_SUCCESS);
         }
-        NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.user ? mWorkReport.reviewer.user : null;
+        OrganizationalMember reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.user ? mWorkReport.reviewer.user : null;
         tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : (mWorkReport.content.toString().contains("<") ? Html.fromHtml(mWorkReport.content) : mWorkReport.content));
         tv_reviewer.setText(mWorkReport.reviewer.user.getName());
         tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人：无抄送人" : "抄送人：" + getJoinUserNames());

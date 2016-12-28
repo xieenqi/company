@@ -1,11 +1,12 @@
 package com.loyo.oa.v2.activityui.followup.model;
 
 import com.google.gson.reflect.TypeToken;
+import com.loyo.oa.v2.activityui.followup.api.FollowUpService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ISigninOrFollowUp;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -21,18 +22,27 @@ public class FolloUpConfig {
 
     /* 从网络获取 */
     public static void getFolloUpStage() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).
-                getFollupFilters(new RCallback<ArrayList<FollowFilter>>() {
-            @Override
-            public void success(ArrayList<FollowFilter> result, Response response) {
-                HttpErrorCheck.checkResponse("跟进 config 筛选 ：", response);
-                    String json = MainApp.gson.toJson(result);
-                    SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.FOLLOW_UP_STAGE);
-                    SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.FOLLOW_UP_STAGE, json);
-            }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).
+//                getFollupFilters(new RCallback<ArrayList<FollowFilter>>() {
+//            @Override
+//            public void success(ArrayList<FollowFilter> result, Response response) {
+//                HttpErrorCheck.checkResponse("跟进 config 筛选 ：", response);
+//                    String json = MainApp.gson.toJson(result);
+//                    SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.FOLLOW_UP_STAGE);
+//                    SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.FOLLOW_UP_STAGE, json);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//            }
+//        });
 
+        FollowUpService.getFollowUpFilters().subscribe(new DefaultLoyoSubscriber<ArrayList<FollowFilter>>() {
             @Override
-            public void failure(RetrofitError error) {
+            public void onNext(ArrayList<FollowFilter> result) {
+                String json = MainApp.gson.toJson(result);
+                SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.FOLLOW_UP_STAGE);
+                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.FOLLOW_UP_STAGE, json);
             }
         });
     }

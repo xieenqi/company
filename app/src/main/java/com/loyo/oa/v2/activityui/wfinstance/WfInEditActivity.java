@@ -3,9 +3,7 @@ package com.loyo.oa.v2.activityui.wfinstance;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,6 +23,7 @@ import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinEditPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinEditPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinEditView;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
@@ -35,19 +34,13 @@ import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【编辑审批】界面
@@ -320,20 +313,16 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
                 HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("bizType", bizType);
                 map.put("uuid", uuid);
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachment, final Response response) {
-                        Toast("删除附件成功!");
-                        lstData_Attachment.remove(delAttachment);
-                        init_gridView_photo();
-                    }
+                AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
+                        .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                            @Override
+                            public void onNext(Attachment attachment) {
+                                Toast("删除附件成功!");
+                                lstData_Attachment.remove(delAttachment);
+                                init_gridView_photo();
+                            }
+                        });
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        Toast("删除附件失败!");
-                        super.failure(error);
-                    }
-                });
                 break;
             case MSG_ATTACHMENT:
                 if (data == null || data.getExtras() == null) {

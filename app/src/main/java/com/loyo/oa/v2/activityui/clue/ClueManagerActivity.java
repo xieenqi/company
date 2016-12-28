@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 【订单管理】 列表 页面
+ * 【我的线索】 列表 页面
  * Created by yyy on 16/8/19.
  */
 public class ClueManagerActivity extends BaseFragmentActivity implements View.OnClickListener {

@@ -26,14 +26,15 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.common.DialogHelp;
@@ -41,18 +42,14 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.RepeatTaskView;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.ITask;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -68,9 +65,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 @EActivity(R.layout.activity_tasks_edit) //本Activity的布局文件
 public class TasksEditActivity extends BaseActivity {
@@ -132,10 +126,10 @@ public class TasksEditActivity extends BaseActivity {
     private SignInGridViewAdapter signInGridViewAdapter;
     private AlertDialog dialog_Product;
     private String uuid = StringUtil.getUUID();
-    private ArrayList<NewUser> userss;
-    private ArrayList<NewUser> depts;
+    private ArrayList<OrganizationalMember> userss;
+    private ArrayList<OrganizationalMember> depts;
     private Members member;
-    private NewUser newUser;
+    private OrganizationalMember newUser;
     private StringBuffer joinName = new StringBuffer();
     private StringBuffer joinUserId = new StringBuffer();
     private boolean isState;
@@ -206,6 +200,28 @@ public class TasksEditActivity extends BaseActivity {
             layout_retask_view.setVisibility(View.GONE);
         }
         setCornBodyinfo();
+    }
+
+    /**
+     * 获取附件(编辑)
+     */
+    void getEditAttachments() {
+        showLoading("");
+        AttachmentService.getAttachments(mTask.getAttachmentUUId())
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        cancelLoading();
+                        mTask.setAttachments(attachments);
+                        init_gridView_photo();
+                    }
+                });
     }
 
 
@@ -300,21 +316,14 @@ public class TasksEditActivity extends BaseActivity {
      * 获取附件
      */
     void getAttachments() {
-        Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> _attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                mTask.setAttachments(_attachments);
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Toast("获取附件失败");
-                super.failure(error);
-            }
-        });
+        AttachmentService.getAttachments(mTask.getAttachmentUUId())
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        mTask.setAttachments(attachments);
+                        init_gridView_photo();
+                    }
+                });
     }
 
     /*POST数据保存，防止不作任何编辑操作，没有POST数据*/
@@ -325,7 +334,7 @@ public class TasksEditActivity extends BaseActivity {
             joinName.append(mTask.getMembers().getAllData().get(i).getName() + ",");
             joinUserId.append(mTask.getMembers().getAllData().get(i).getId() + ",");
 
-            NewUser newUser = new NewUser();
+            OrganizationalMember newUser = new OrganizationalMember();
             newUser.setName(mTask.members.getAllData().get(i).getName());
             newUser.setId(mTask.getMembers().getAllData().get(i).getId());
             userss.add(newUser);
@@ -495,30 +504,24 @@ public class TasksEditActivity extends BaseActivity {
             map.put("remindtime", mTask.getRemindTime());
             map.put("reviewFlag", isState);
         }
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateTask(mTask.getId(), map, new RCallback<Task>() {
-            @Override
-            public void success(final Task task, Response response) {
-                HttpErrorCheck.checkCommitSus("任务编辑", response);
-                new Handler().postDelayed(new Runnable() {
+        TaskService.updateTask(mTask.getId(), map)
+                .subscribe(new DefaultLoyoSubscriber<Task>(LoyoErrorChecker.COMMIT_DIALOG) {
                     @Override
-                    public void run() {
-                        cancelStatusLoading();
-                        task.setViewed(true);
-                        Intent intent = new Intent();
-                        intent.putExtra("data", task);
-                        setResult(Activity.RESULT_OK, intent);
-                        onBackPressed();
+                    public void onNext(final Task task) {
+                        DialogHelp.successStatusLoad();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelStatusLoading();
+                                task.setViewed(true);
+                                Intent intent = new Intent();
+                                intent.putExtra("data", task);
+                                setResult(Activity.RESULT_OK, intent);
+                                onBackPressed();
+                            }
+                        }, 1000);
                     }
-                }, 1000);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+                });
     }
 
     void setDeadLine() {
@@ -691,13 +694,13 @@ public class TasksEditActivity extends BaseActivity {
                 joinName = new StringBuffer();
                 joinUserId = new StringBuffer();
                 if (null != member.depts) {
-                    for (NewUser newUser : member.depts) {
+                    for (OrganizationalMember newUser : member.depts) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
                 }
                 if (null != member.users) {
-                    for (NewUser newUser : member.users) {
+                    for (OrganizationalMember newUser : member.users) {
                         joinName.append(newUser.getName() + ",");
                         joinUserId.append(newUser.getId() + ",");
                     }
@@ -745,7 +748,7 @@ public class TasksEditActivity extends BaseActivity {
 
             //用户单选, 负责人
             case FinalVariables.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
+                OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
                 newUser = u;
                 tv_responsiblePerson.setText(newUser.getName());
                 break;
@@ -758,13 +761,13 @@ public class TasksEditActivity extends BaseActivity {
                     joinName = new StringBuffer();
                     joinUserId = new StringBuffer();
                     if (null != member.depts) {
-                        for (NewUser newUser : member.depts) {
+                        for (OrganizationalMember newUser : member.depts) {
                             joinName.append(newUser.getName() + ",");
                             joinUserId.append(newUser.getId() + ",");
                         }
                     }
                     if (null != member.users) {
-                        for (NewUser newUser : member.users) {
+                        for (OrganizationalMember newUser : member.users) {
                             joinName.append(newUser.getName() + ",");
                             joinUserId.append(newUser.getId() + ",");
                         }
@@ -807,23 +810,23 @@ public class TasksEditActivity extends BaseActivity {
                 HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("bizType", 2);
                 map.put("uuid", uuid);
-               RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachment, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        Toast("删除附件成功!");
-                        mTask.getAttachments().remove(delAttachment);
-                        init_gridView_photo();
-                    }
+                AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
+                        .subscribe(new DefaultLoyoSubscriber<Attachment>() {
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-//                        cancelLoading();
-                        Toast("删除附件失败!");
-                        super.failure(error);
-                    }
-                });
+                            @Override
+                            public void onError(Throwable e) {
+                                super.onError(e);
+                                cancelLoading();
+                            }
+
+                            @Override
+                            public void onNext(Attachment attachment) {
+                                cancelLoading();
+                                Toast("删除附件成功!");
+                                mTask.getAttachments().remove(delAttachment);
+                                init_gridView_photo();
+                            }
+                        });
                 break;
 
             default:

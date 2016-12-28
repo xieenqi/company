@@ -7,34 +7,26 @@ import android.text.TextUtils;
 import android.util.SparseArray;
 
 import com.google.gson.reflect.TypeToken;
-import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.model.Department;
+import com.loyo.oa.v2.activityui.login.api.LoginService;
 import com.loyo.oa.v2.activityui.login.model.Token;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.UserInfo;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.ILogin;
-import com.loyo.oa.v2.point.IUser;
-import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.user.api.UserService;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public final class Common {
 
@@ -509,25 +501,23 @@ public final class Common {
      * @param id
      */
     public static void getUserInfo(final Activity activity, final MainApp app, String id) {
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getUserById(id, new Callback<NewUser>() {
-            @Override
-            public void success(NewUser user, Response response) {
-                HttpErrorCheck.checkResponse("讨论其它人的信息：", response);
-                //点击进入人的详情页面
-                if (null != user) {
-                    Bundle b = new Bundle();
-                    b.putSerializable("user", user.data);
-                    app.startActivity(activity, ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
-                } else {
-                    Global.Toast("没有人员信息");
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        UserService.getUserById(id)
+                .subscribe(new DefaultLoyoSubscriber<User>() {
+                    @Override
+                    public void onNext(User user) {
+                        if (null != user) {
+                            Bundle b = new Bundle();
+                            b.putSerializable("user", user);
+                            app.startActivity(activity,
+                                    ContactInfoActivity_.class,
+                                    MainApp.ENTER_TYPE_RIGHT,
+                                    false,
+                                    b);
+                        } else {
+                            Global.Toast("没有人员信息");
+                        }
+                    }
+                });
     }
 
 
@@ -539,18 +529,25 @@ public final class Common {
         if (!TextUtils.isEmpty(startTimeText)) {
             long startTime = Long.parseLong(startTimeText);
             if (!com.loyo.oa.common.utils.DateTool.isDateInTime(startTime, 10)) {
-                RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<Token>() {
-                    @Override
-                    public void success(Token token, Response response) {
-                        HttpErrorCheck.checkResponse("刷新token", response);
-                        MainApp.setToken(token.access_token);
-                        //LogUtil.dee("刷新的Token:" + token.access_token);
-                    }
+//                RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<Token>() {
+//                    @Override
+//                    public void success(Token token, Response response) {
+//                        HttpErrorCheck.checkResponse("刷新token", response);
+//                        MainApp.setToken(token.access_token);
+//                        //LogUtil.dee("刷新的Token:" + token.access_token);
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        super.failure(error);
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
 
+                LoginService.getNewToken().subscribe(new DefaultLoyoSubscriber<Token>() {
                     @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
+                    public void onNext(Token token) {
+                        MainApp.setToken(token.access_token);
                     }
                 });
             }
