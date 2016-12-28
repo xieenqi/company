@@ -1,8 +1,6 @@
 package com.loyo.oa.common.utils;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * 用来格式化时间的格式化工具集合

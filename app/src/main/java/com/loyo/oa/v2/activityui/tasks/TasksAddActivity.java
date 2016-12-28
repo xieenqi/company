@@ -3,6 +3,8 @@ package com.loyo.oa.v2.activityui.tasks;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,6 +72,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -202,6 +205,13 @@ public class TasksAddActivity extends BaseActivity {
             tv_mycustomer.setText(customerName);
             layout_mycustomer.setEnabled(false);
         }
+
+        Resources res = mContext.getResources();
+        Configuration config = res.getConfiguration();
+        String locale = config.locale.getCountry();
+        LogUtil.dee("方法1:"+ locale);
+        LogUtil.dee("方法2:"+ Locale.getDefault().toString());
+        LogUtil.dee("方法3:"+ Locale.getDefault().getLanguage());
     }
 
     /**

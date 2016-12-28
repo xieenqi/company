@@ -413,6 +413,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
+
+        if(null != contactList && contactList.size() > 0){
+            if(null != contactList.get(0).telGroup && contactList.get(0).telGroup.size() > 0){
+                map.put("contactTpl", contactList.get(0).telGroup.get(0));
+            }
+        }
+
         LogUtil.d(" 新增拜访传递数据：" + MainApp.gson.toJson(map));
         presenter.creatSignin(map);
     }

@@ -36,6 +36,7 @@ public class FollowUpListModel implements Serializable{
 
     public String typeName;
     public String contactName;
+    public String contactPhone;
     public String atNameAndDepts;   //@的相关人
 
 

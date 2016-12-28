@@ -237,7 +237,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         layout_attachment.setOnTouchListener(Global.GetTouch());
         layout_discussion.setOnTouchListener(Global.GetTouch());
         img_title_right.setVisibility(View.GONE);
-        MainApp.getMainApp().setTextSelection(tv_workContent,null,WorkReportsInfoActivity.this);
     }
 
     void updateUI(final WorkReport mWorkReport) {

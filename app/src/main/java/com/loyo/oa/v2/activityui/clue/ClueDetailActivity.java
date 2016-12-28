@@ -181,7 +181,6 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         update_time = (TextView) findViewById(R.id.tv_update_time);
         tv_address = (TextView) findViewById(R.id.tv_address);
 
-        MainApp.getMainApp().setTextSelection(clue_note,null,ClueDetailActivity.this);
     }
 
     public void bindData() {

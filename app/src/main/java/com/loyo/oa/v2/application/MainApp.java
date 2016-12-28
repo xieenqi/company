@@ -8,6 +8,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
@@ -319,57 +320,16 @@ public class MainApp extends Application {
         //imageView.setImageResource(R.drawable.icon_dynamic_phone01);
     }
 
-
-//    static RestAdapter restAdapter = null;
-
-//    public RestAdapter getRestAdapter() {
-//        if (restAdapter == null) {
-//            if (cellInfo == null) {
-//                cellInfo = Utils.getCellInfo();
-//            }
-//
-//            RequestInterceptor requestInterceptor = new RequestInterceptor() {
-//                @Override
-//                public void intercept(RequestFacade request) {
-//                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-//                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
-//                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
-//                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
-//                    request.addHeader("LoyoVersionName", Global.getVersionName());
-//                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-//                }
-//            };
-//
-//            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).
-//                    setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
-//        }
-//
-//        return restAdapter;
-//    }
-//
-//    public RestAdapter getRestAdapter(int mode) {
-//        if (restAdapter != null) {
-//            if (cellInfo == null) {
-//                cellInfo = Utils.getCellInfo();
-//            }
-//            RequestInterceptor requestInterceptor = new RequestInterceptor() {
-//                @Override
-//                public void intercept(RequestFacade request) {
-//                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-//                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
-//                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
-//                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
-//                    request.addHeader("LoyoVersionName", Global.getVersionName());
-//                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-//                }
-//            };
-//
-//            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).
-//                    setRequestInterceptor(requestInterceptor).build();
-//        }
-//
-//        return restAdapter;
-//    }
+    /**
+     * 设置APP语言
+     * */
+    public void switchLanguage(Locale locale) {
+        Resources resources = getResources();// 获得res资源对象
+        Configuration config = resources.getConfiguration();// 获得设置对象
+        DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
+        config.locale = locale; // 简体中文
+        resources.updateConfiguration(config, dm);
+    }
 
 
     void init() {
@@ -388,15 +348,16 @@ public class MainApp extends Application {
         ServerAPI.init();
         initImageLoader(getApplicationContext());
         init_DisplayImageOptions();
+        switchLanguage(Locale.SIMPLIFIED_CHINESE);
 
-        String languageToLoad  = "zh";
+        /*String languageToLoad  = "zh";
         Locale locale = new Locale(languageToLoad);
         Locale.setDefault(locale);
         Configuration config = getResources().getConfiguration();
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         config.locale = Locale.SIMPLIFIED_CHINESE;
         getResources().updateConfiguration(config, metrics);
-        cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);*/
 
 //        df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());//设置日期格式
 //        df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
