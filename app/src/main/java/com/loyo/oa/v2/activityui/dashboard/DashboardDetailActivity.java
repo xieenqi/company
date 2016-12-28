@@ -42,7 +42,7 @@ import java.util.Objects;
 
 public class DashboardDetailActivity extends BaseLoadingActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
-    private String TAG="DashboardDetailActivity";
+    private String TAG = "DashboardDetailActivity";
     private LinearLayout ll_back;
     private DropDownMenu filterMenu;
     private TextView tv_title;
@@ -66,18 +66,36 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void getPageData() {
-        HashMap<String,Object> map= new HashMap<String,Object>();
-        map.put("qType",1);
-        map.put("sortBy",1);
-        map.put("activityObj",1);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("qType", 1);
+        map.put("sortBy", 1);
+        //根据type，判断请求的类型，构造参数
+        if (DashborardType.CUS_FOLLOWUP == type) {
+            //客户跟进
+            map.put("activityObj", 1);
+        } else if (DashborardType.SALE_FOLLOWUP == type) {
+            //线索跟进
+            map.put("activityObj", 2);
+        } else if (DashborardType.CUS_CELL_RECORD == type) {
+            //客户电话录
+            map.put("activityObj", 1);
+        } else if (DashborardType.CUS_SIGNIN == type) {
+            //客户拜访
+        }else if (DashborardType.SALE_CELL_RECORD == type) {
+            //获取线索电话录
+            map.put("activityObj", 2);
+        }else if (DashborardType.COMMON == type) {
+            //增量/存量
+            map.put("tagItemId", getIntent().getStringExtra("tagItemId"));//tagItemId
+        }
+
         //网络请求
-        DashBoardService.getDashBoardListData(map).subscribe(new DefaultLoyoSubscriber<DashBoardListModel>() {
+        DashBoardService.getDashBoardListData(map, type).subscribe(new DefaultLoyoSubscriber<DashBoardListModel>() {
             @Override
             public void onNext(DashBoardListModel dashBoardListModel) {
-                Log.i(TAG, "onNext: "+dashBoardListModel);
+                adapter.addAll(dashBoardListModel.data.records);
             }
         });
-
     }
 
     private void getIntentData() {
@@ -95,7 +113,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         lv_list = (PullToRefreshListView) findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        adapter = new DashboardDetailAdapter(this,type.getTableHead());
+        adapter = new DashboardDetailAdapter(this, type);
         lv_list.setAdapter(adapter);
 
         ll_loading.setStatus(LoadingLayout.Success);
@@ -139,7 +157,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 String key = model.getKey();
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-                Log.d(TAG, "onMenuModelsSelected() called with: menuIndex = [" + menuIndex + "], key:"+key+",value;"+value);
+                Log.d(TAG, "onMenuModelsSelected() called with: menuIndex = [" + menuIndex + "], key:" + key + ",value;" + value);
 
 //
 //                if (menuIndex == 0) { //
@@ -181,11 +199,13 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        Log.i(TAG, "onPullDownToRefresh: ");
 
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        Log.i(TAG, "onPullUpToRefresh: ");
 
     }
 }

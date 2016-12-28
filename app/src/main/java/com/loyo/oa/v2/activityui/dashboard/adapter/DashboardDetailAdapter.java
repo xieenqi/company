@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.dashboard.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.percent.PercentRelativeLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
+import com.loyo.oa.v2.activityui.dashboard.model.DashBoardListModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by xeq on 16/12/13.
@@ -20,18 +24,32 @@ public class DashboardDetailAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater inflater;
-    private String[] titles;//表头标题
+    private List<DashBoardListModel.Record> records = new ArrayList<>();//数据列表
+    private DashborardType type;
 
-
-    public DashboardDetailAdapter(Context context,String[] titles) {
+    public DashboardDetailAdapter(Context context, DashborardType type) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.titles=titles;
+        this.type = type;
+    }
+
+    //加载更多
+    public void addAll(List<DashBoardListModel.Record> data) {
+        records.addAll(data);
+        notifyDataSetChanged();
+    }
+
+    //刷新
+    public void reload(List<DashBoardListModel.Record> data) {
+        records.clear();
+        records.addAll(data);
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return 202;
+        //因为多了一行表头
+        return records.size() + 1;
     }
 
     @Override
@@ -73,6 +91,7 @@ public class DashboardDetailAdapter extends BaseAdapter {
         LinearLayout item;
 
         public void setContent(int position) {
+
             int itemColor1 = Color.parseColor("#666666");
             int itemColor2 = Color.parseColor("#ff9900");
             int itemColor3 = Color.parseColor("#333333");
@@ -81,22 +100,24 @@ public class DashboardDetailAdapter extends BaseAdapter {
                 setChildViewColor(itemColor1);
                 view1.setVisibility(View.VISIBLE);
                 view2.setVisibility(View.GONE);
-                setChildNum(true);
-            } else if(1==position){
+                setChildNumName(true);
+            } else if (1 == position) {
                 //总计
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
                 setChildViewColor(itemColor2);
-                ((TextView)item.getChildAt(0)).setText("总计");
-                setChildNum(false);
-            }else{
+                ((TextView) item.getChildAt(0)).setText("总计");
+                setChildNumName(false);
+
+                bindDate(0);
+            } else {
                 //其他具体的内容
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
                 setChildViewColor(itemColor3);
-                setChildNum(false);
+                setChildNumName(false);
+                bindDate(position);
             }
-
         }
 
         //设置一行，每一个字段的颜色
@@ -107,20 +128,68 @@ public class DashboardDetailAdapter extends BaseAdapter {
         }
 
         //设置一行的字段数目和表头
-        private void setChildNum(boolean isTableNum){
+        private void setChildNumName(boolean isTableNum) {
+            String[] heads = type.getTableHead();
             for (int i = 0; i < item.getChildCount(); i++) {
                 //如果是表头，就设置一下表头
-                if(isTableNum){
-                    for (int j = 0; j < titles.length; j++) {
-                        ((TextView)item.getChildAt(j)).setText(titles[j]);
+                if (isTableNum) {
+                    for (int j = 0; j < heads.length; j++) {
+                        ((TextView) item.getChildAt(j)).setText(heads[j]);
                     }
                 }
                 //把多余的字段，隐藏了。
-                if(i>=titles.length){
+                if (i >= heads.length) {
                     item.getChildAt(i).setVisibility(View.GONE);
                 }
-
             }
+        }
+
+        //判断不同的数据，绑定数据
+        private void bindDate(int position) {
+            if (DashborardType.CUS_FOLLOWUP == type || DashborardType.SALE_FOLLOWUP == type||DashborardType.CUS_SIGNIN == type) {
+                //客户/线索 跟进/客户拜访
+                if (0 == position) {
+                    text1.setText(records.get(0).userName + "");
+                    text2.setText(records.get(0).totalCustomer + "");
+                    text3.setText(records.get(0).total + "");
+                } else {
+                    int tempP = position - 1;//添加了一个表头，消去下标偏移
+                    text1.setText(records.get(tempP).userName + "");
+                    text2.setText(records.get(tempP).totalCustomer + "");
+                    text3.setText(records.get(tempP).total + "");
+                }
+            }else if (DashborardType.CUS_CELL_RECORD == type||DashborardType.SALE_CELL_RECORD == type) {
+                //客户电话录/线索电话录
+                if (0 == position) {
+                    text1.setText(records.get(0).userName + "");
+                    text2.setText(records.get(0).totalCustomer + "");
+                    text3.setText(records.get(0).total + "");
+                    text4.setText(records.get(0).totalLength + "");
+                } else {
+                    int tempP = position - 1;//添加了一个表头，消去下标偏移
+                    text1.setText(records.get(tempP).userName + "");
+                    text2.setText(records.get(tempP).totalCustomer + "");
+                    text3.setText(records.get(tempP).total + "");
+                    text4.setText(records.get(tempP).totalLength + "");
+
+                }
+            }else if (DashborardType.COMMON == type) {
+                //增量/存量
+                if (0 == position) {
+                    text1.setText(records.get(0).Id + "");
+                    text2.setText(records.get(0).Name + "");
+                    text3.setText(records.get(0).Count + "");
+                    text4.setText(records.get(0).AddCount + "");
+                } else {
+                    int tempP = position - 1;//添加了一个表头，消去下标偏移
+                    text1.setText(records.get(tempP).Id + "");
+                    text2.setText(records.get(tempP).Name + "");
+                    text3.setText(records.get(tempP).Count + "");
+                    text4.setText(records.get(tempP).AddCount + "");
+
+                }
+            }
+
         }
 
     }

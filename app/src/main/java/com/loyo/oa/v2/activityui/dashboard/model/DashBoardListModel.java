@@ -2,23 +2,37 @@ package com.loyo.oa.v2.activityui.dashboard.model;
 
 import com.loyo.oa.v2.beans.BaseBeanT;
 
+import java.util.List;
+
 /**
  * 仪表盘 列表的模型
  * Created by jie on 16/12/28.
  */
 
 public class DashBoardListModel extends BaseBeanT<DashBoardListModel.Data>{
-    class Data{
+    public class Data{
         public Integer pageIndex;
         public Integer pageSize;
         public Integer totalRecords;
-        public Record[] records;
+        //客户／线索 跟进
+        public List<Record> records;
+
 
     }
-    class Record{
+    public class Record {
+        //公共字段
         public Integer total;
         public Integer totalCustomer;
         public String userName;
+        //电话录音
+        public String totalLength;
+
+        //增量／存量
+        public String Id;
+        public String Name;
+        public Integer Count;
+        public Integer AddCount;
+
 
     }
 }

@@ -38,5 +38,9 @@ public interface IDashBoard {
      */
     @GET("/statistics/call_activity/mobile/detail")
     Observable<DashBoardListModel> getDashBoardCallListData(@QueryMap HashMap<String, Object> map);
-
+    /**
+     *增量/存量 明细列表接
+     */
+    @GET("/statistics/customer_stock_increment/mobile/detail")
+    Observable<DashBoardListModel> getDashBoardCommonListData(@QueryMap HashMap<String, Object> map);
 }
