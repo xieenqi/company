@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.dashboard.common;
 import com.loyo.oa.dropdownmenu.filtermenu.DashboardSortTypeMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.v2.permission.BusinessOperation;
+
 import java.io.Serializable;
 
 /**

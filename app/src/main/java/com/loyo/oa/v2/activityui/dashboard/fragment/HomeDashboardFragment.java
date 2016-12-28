@@ -8,13 +8,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.DashboardDetailActivity;
+import com.loyo.oa.v2.activityui.dashboard.DashboardLoadingView;
 import com.loyo.oa.v2.activityui.dashboard.adapter.StockListAdapter;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
+import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.presenter.impl.HomeDashboardPresenterImpl;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
@@ -36,11 +43,18 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private View mView;
     private RadioButton rb_customer, rb_clue;
     private LinearLayout ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record,ll_dashboard_order_number,
-            ll_dashboard_order_money;
+            ll_dashboard_order_money,ll_followup;
+
+    private RelativeLayout layout_loaddiv1,layout_loaddiv2,layout_loaddiv3;
+    private LinearLayout layout_rest1,layout_rest2,layout_rest3;
+    private TextView tv_rest1,tv_rest2,tv_rest3;
+    private ImageView layout_load1,layout_load2,layout_load3;
+
+
     private LinearLayout ll_case1, ll_case2, ll_case3;
     private CustomerListView lv_stocklist;
-    private StockListAdapter mAdapter;
 
+    private StockListAdapter mAdapter;
     private HomeDashboardPresenter mPresenter;
 
     @Override
@@ -94,6 +108,16 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         ll_case1 = (LinearLayout) mView.findViewById(R.id.ll_case1);
         ll_case2 = (LinearLayout) mView.findViewById(R.id.ll_case2);
         ll_case3 = (LinearLayout) mView.findViewById(R.id.ll_case3);
+        ll_followup = (LinearLayout) mView.findViewById(R.id.ll_followup);
+
+        layout_loaddiv1 = (RelativeLayout) mView.findViewById(R.id.layout_loaddiv1);
+
+        layout_rest1 = (LinearLayout) mView.findViewById(R.id.layout_rest1);
+
+        tv_rest1 = (TextView) mView.findViewById(R.id.tv_rest1);
+
+        layout_load1 = (ImageView) mView.findViewById(R.id.layout_load1);
+
 
         rb_customer.setOnClickListener(this);
         rb_clue.setOnClickListener(this);
@@ -115,36 +139,23 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         ll_dashboard_order_money.setOnClickListener(this);
         Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin,ll_dashboard_record,ll_dashboard_order_number,
                 ll_dashboard_order_money);
-
         bindAdapter();
+
     }
 
-
-    private void showPopupWindow() {
-
-        // 一个自定义的布局，作为显示的内容
-        View contentView = LayoutInflater.from(getActivity()).inflate(
-                R.layout.paymentpopview, null);
-
-        final PopupWindow popupWindow = new PopupWindow(contentView,
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-
-        popupWindow.setTouchable(true);
-        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                return false;
-                // 这里如果返回true的话，touch事件将被拦截
-                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
-            }
-        });
-
-
-        // 设置好参数之后再show
-        popupWindow.showAtLocation(contentView, Gravity.CENTER,0,0);
-
+    /**
+     * 设置Loading状态
+     *
+     * @param  modlv:  展示数据view
+     * @param  load:   loading动画
+     * @param  rest:   点击重试
+     * @param  layout: 整个Layout
+     *
+     * */
+    public void setOnSucssView(LinearLayout modlv,ImageView load,LinearLayout rest,RelativeLayout layout,LoadStatus status){
+        load.setVisibility(status.getLoadView());
+        rest.setVisibility(status.getRestView());
+        layout.setVisibility(status.getLayoutView());
     }
 
     @Override
@@ -157,11 +168,13 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
             /*客户跟进*/
             case R.id.rb_customer:
                 Toast("1");
+                mPresenter.getFollowUpData(null,5);
                 break;
 
             /*线索跟进*/
             case R.id.rb_clue:
                 Toast("2");
+                mPresenter.getFollowUpData(null,5);
                 break;
 
             /*客户线索筛选*/
@@ -237,6 +250,17 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     @Override
     public void setScreenVal(String val) {
         Toast(val);
+    }
+
+    // 获取跟进成功处理
+    @Override
+    public void followUpSuccessEmbl() {
+        setOnSucssView(ll_followup,layout_load1,layout_rest1,layout_loaddiv1,LoadStatus.SUCCESS);
+    }
+
+    @Override
+    public void followUpErrorEmbl() {
+        setOnSucssView(ll_followup,layout_load1,layout_rest1,layout_loaddiv1,LoadStatus.ERROR);
     }
 
     @Override

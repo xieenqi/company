@@ -16,7 +16,7 @@ public interface IDashBoard {
     /**
      * 客户跟进/线索跟进
      */
-    @GET("/statistics/sale-activity/mobile")
+    @GET("/statistics/sale-activity/mobile/total")
     Observable<CsclueFowUp> getFupCusClue(@QueryMap HashMap<String, Object> map);
 
 }

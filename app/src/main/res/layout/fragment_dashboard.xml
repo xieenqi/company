@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    android:orientation="vertical"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    >
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -66,16 +65,14 @@
                     android:id="@+id/ll_case1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    >
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="今天"
-                        android:textSize="@dimen/text_sp13"
-                        />
+                        android:textSize="@dimen/text_sp13" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -85,247 +82,307 @@
                 </LinearLayout>
 
             </LinearLayout>
+
             <include layout="@layout/include_solid_line_left" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/ll_dashboard_followup"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_65"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/margin_other_view"
-                        android:background="@drawable/icon_dasignin" />
+                    android:layout_height="wrap_content"
+                    >
 
                     <RelativeLayout
+                        android:id="@+id/layout_loaddiv1"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/margin_other_view">
+                        android:layout_height="182dp">
 
                         <LinearLayout
+                            android:id="@+id/layout_rest1"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
                             android:layout_centerVertical="true"
-                            android:orientation="horizontal">
+                            android:visibility="gone"
+                            >
+                            <ImageView
+                                android:layout_width="@dimen/dimen_44"
+                                android:layout_height="@dimen/dimen_45"
+                                android:background="@drawable/icon_error_network" />
 
                             <TextView
-                                android:layout_width="0dip"
+                                android:layout_marginTop="@dimen/dimen_10"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_weight="1"
-                                android:text="跟进动态" />
+                                android:text="网络不给力,请稍后再试!"
+                                android:textSize="@dimen/text_sp12"
+                                android:textColor="@color/text99"
+                                />
 
-                            <LinearLayout
-                                android:layout_width="0dip"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.5"
-                                android:gravity="center"
-                                android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/tv_rest1"
+                                android:layout_marginTop="@dimen/dimen_10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="点击重试"
+                                android:textSize="@dimen/text_sp12"
+                                android:textColor="@color/title_bg1"
+                                />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="30" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="次数"
-                                    android:textColor="@color/diseditable" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="0dip"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.5"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="16" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="客户数"
-                                    android:textColor="@color/diseditable" />
-                            </LinearLayout>
                         </LinearLayout>
 
-                        <View
-                            style="@style/view_split"
-                            android:layout_width="match_parent"
-                            android:layout_alignParentBottom="true" />
+                        <ImageView
+                            android:id="@+id/layout_load1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/animation_loading"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            />
+
                     </RelativeLayout>
-                </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_dashboard_signin"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_65"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/ll_followup"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/margin_other_view"
-                        android:background="@drawable/icon_dalocation" />
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/margin_other_view">
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
 
                         <LinearLayout
+                            android:id="@+id/ll_dashboard_followup"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_centerVertical="true"
+                            android:layout_height="@dimen/dimen_65"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="0dip"
+                            <ImageView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:layout_weight="1"
-                                android:text="客户拜访" />
+                                android:layout_marginLeft="@dimen/margin_other_view"
+                                android:background="@drawable/icon_dasignin" />
 
-                            <LinearLayout
-                                android:layout_width="0dip"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.5"
-                                android:gravity="center"
-                                android:orientation="vertical">
+                                android:layout_marginLeft="@dimen/margin_other_view">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="30" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerVertical="true"
+                                    android:orientation="horizontal">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="次数"
-                                    android:textColor="@color/diseditable" />
-                            </LinearLayout>
+                                    <TextView
+                                        android:layout_width="0dip"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_weight="1"
+                                        android:text="跟进动态" />
 
-                            <LinearLayout
-                                android:layout_width="0dip"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.5"
-                                android:gravity="center"
-                                android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="0dip"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="16" />
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="30" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="客户数"
-                                    android:textColor="@color/diseditable" />
-                            </LinearLayout>
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="次数"
+                                            android:textColor="@color/diseditable" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dip"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="16" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="客户数"
+                                            android:textColor="@color/diseditable" />
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <View
+                                    style="@style/view_split"
+                                    android:layout_width="match_parent"
+                                    android:layout_alignParentBottom="true" />
+                            </RelativeLayout>
                         </LinearLayout>
-
-                        <View
-                            style="@style/view_split"
-                            android:layout_width="match_parent"
-                            android:layout_alignParentBottom="true" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/ll_dashboard_record"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_65"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/margin_other_view"
-                        android:background="@drawable/icon_daphone" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/margin_other_view">
 
                         <LinearLayout
+                            android:id="@+id/ll_dashboard_signin"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_centerVertical="true"
+                            android:layout_height="@dimen/dimen_65"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="0dip"
+                            <ImageView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:layout_weight="1"
-                                android:text="电话录音" />
+                                android:layout_marginLeft="@dimen/margin_other_view"
+                                android:background="@drawable/icon_dalocation" />
 
-                            <LinearLayout
-                                android:layout_width="0dip"
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.5"
-                                android:gravity="center"
-                                android:orientation="vertical">
+                                android:layout_marginLeft="@dimen/margin_other_view">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="30" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerVertical="true"
+                                    android:orientation="horizontal">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="次数"
-                                    android:textColor="@color/diseditable" />
-                            </LinearLayout>
+                                    <TextView
+                                        android:layout_width="0dip"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_weight="1"
+                                        android:text="客户拜访" />
 
-                            <LinearLayout
-                                android:layout_width="0dip"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.5"
-                                android:gravity="center"
-                                android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="0dip"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="16" />
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="30" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="客户数"
-                                    android:textColor="@color/diseditable" />
-                            </LinearLayout>
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="次数"
+                                            android:textColor="@color/diseditable" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dip"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="16" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="客户数"
+                                            android:textColor="@color/diseditable" />
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <View
+                                    style="@style/view_split"
+                                    android:layout_width="match_parent"
+                                    android:layout_alignParentBottom="true" />
+                            </RelativeLayout>
                         </LinearLayout>
 
-                        <View
-                            style="@style/view_split"
-                            android:layout_width="match_parent"
-                            android:layout_alignParentBottom="true" />
-                    </RelativeLayout>
-                </LinearLayout>
-            </LinearLayout>
 
+                        <LinearLayout
+                            android:id="@+id/ll_dashboard_record"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dimen_65"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/margin_other_view"
+                                android:background="@drawable/icon_daphone" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="@dimen/margin_other_view">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerVertical="true"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="0dip"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_weight="1"
+                                        android:text="电话录音" />
+
+                                    <LinearLayout
+                                        android:layout_width="0dip"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="30" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="次数"
+                                            android:textColor="@color/diseditable" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dip"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="16" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="客户数"
+                                            android:textColor="@color/diseditable" />
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <View
+                                    style="@style/view_split"
+                                    android:layout_width="match_parent"
+                                    android:layout_alignParentBottom="true" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
             <include layout="@layout/include_solid_line15" />
 
             <LinearLayout
@@ -368,8 +425,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="今天"
-                        android:textSize="@dimen/text_sp13"
-                        />
+                        android:textSize="@dimen/text_sp13" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -384,11 +440,10 @@
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_stocklist"
-                android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:listSelector="@android:color/transparent"
-                />
+                android:layout_marginLeft="@dimen/margin_other_view"
+                android:listSelector="@android:color/transparent" />
 
             <include layout="@layout/include_solid_line15" />
 
@@ -432,8 +487,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="本月"
-                        android:textSize="@dimen/text_sp13"
-                        />
+                        android:textSize="@dimen/text_sp13" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -476,8 +530,7 @@
                             app:wlv_titleCenterSize="15sp"
                             app:wlv_titleCenterStrokeWidth="3dp"
                             app:wlv_triangle_direction="north"
-                            app:wlv_waveAmplitude="70"
-                            />
+                            app:wlv_waveAmplitude="70" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -549,8 +602,7 @@
                         app:wlv_titleCenterSize="15sp"
                         app:wlv_titleCenterStrokeWidth="3dp"
                         app:wlv_triangle_direction="north"
-                        app:wlv_waveAmplitude="70"
-                        />
+                        app:wlv_waveAmplitude="70" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

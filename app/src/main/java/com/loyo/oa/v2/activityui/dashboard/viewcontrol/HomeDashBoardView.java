@@ -10,4 +10,7 @@ public interface HomeDashBoardView extends BaseView{
 
     void setScreenVal(String val);
 
+    void followUpSuccessEmbl();
+
+    void followUpErrorEmbl();
 }

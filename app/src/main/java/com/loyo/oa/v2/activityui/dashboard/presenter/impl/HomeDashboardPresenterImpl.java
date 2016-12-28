@@ -2,10 +2,18 @@ package com.loyo.oa.v2.activityui.dashboard.presenter.impl;
 
 import android.content.Context;
 import android.graphics.Color;
+
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
+import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
 import com.loyo.oa.v2.customview.PaymentPopView;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+
+import java.util.HashMap;
+
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -64,6 +72,18 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
             @Override
             public void setValue(String value, int index) {
                 crolView.setScreenVal(value);
+            }
+        });
+    }
+
+    @Override
+    public void getFollowUpData(LoadingLayout ll_loading,int type) {
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("qType",type);
+        DashBoardService.getFupCusClue(map).subscribe(new DefaultLoyoSubscriber<CsclueFowUp>(ll_loading) {
+            @Override
+            public void onNext(CsclueFowUp csclueFowUp) {
+                crolView.followUpSuccessEmbl();
             }
         });
     }
