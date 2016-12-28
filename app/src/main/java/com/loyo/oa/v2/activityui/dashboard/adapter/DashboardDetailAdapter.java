@@ -20,11 +20,13 @@ public class DashboardDetailAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater inflater;
+    private String[] titles;//表头标题
 
 
-    public DashboardDetailAdapter(Context context) {
+    public DashboardDetailAdapter(Context context,String[] titles) {
         this.context = context;
         inflater = LayoutInflater.from(context);
+        this.titles=titles;
     }
 
     @Override
@@ -79,16 +81,20 @@ public class DashboardDetailAdapter extends BaseAdapter {
                 setChildViewColor(itemColor1);
                 view1.setVisibility(View.VISIBLE);
                 view2.setVisibility(View.GONE);
+                setChildNum(true);
             } else if(1==position){
                 //总计
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
                 setChildViewColor(itemColor2);
+                ((TextView)item.getChildAt(0)).setText("总计");
+                setChildNum(false);
             }else{
                 //其他具体的内容
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
                 setChildViewColor(itemColor3);
+                setChildNum(false);
             }
 
         }
@@ -97,6 +103,23 @@ public class DashboardDetailAdapter extends BaseAdapter {
         private void setChildViewColor(int color) {
             for (int i = 0; i < item.getChildCount(); i++) {
                 ((TextView) item.getChildAt(i)).setTextColor(color);
+            }
+        }
+
+        //设置一行的字段数目和表头
+        private void setChildNum(boolean isTableNum){
+            for (int i = 0; i < item.getChildCount(); i++) {
+                //如果是表头，就设置一下表头
+                if(isTableNum){
+                    for (int j = 0; j < titles.length; j++) {
+                        ((TextView)item.getChildAt(j)).setText(titles[j]);
+                    }
+                }
+                //把多余的字段，隐藏了。
+                if(i>=titles.length){
+                    item.getChildAt(i).setVisibility(View.GONE);
+                }
+
             }
         }
 

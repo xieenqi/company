@@ -94,7 +94,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         lv_list = (PullToRefreshListView) findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        adapter = new DashboardDetailAdapter(this);
+        adapter = new DashboardDetailAdapter(this,type.getTableHead());
         lv_list.setAdapter(adapter);
 
         ll_loading.setStatus(LoadingLayout.Success);
