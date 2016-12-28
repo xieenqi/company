@@ -82,6 +82,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     private void getIntentData() {
         Intent intent = getIntent();
+        //获取传入的类型数据，表示是哪种列表
         type = (DashborardType) intent.getSerializableExtra("type");
 
     }
@@ -121,6 +122,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             title = "我";
             depts.add(OrganizationFilterModel.selfDepartment());
         }
+        //添加3个筛选字段
         List<FilterModel> options = new ArrayList<>();
         options.add("订单金额".equals(type.getTitle()) ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel() : DashboardFilterTimeModel.getFilterModel());
         options.add(type.getSort());
@@ -128,6 +130,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(this, options);
         filterMenu.setMenuAdapter(adapter);
+        //筛选菜单的回调
         adapter.setCallback(new OnMenuModelsSelected() {
             @Override
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
@@ -136,6 +139,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 String key = model.getKey();
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
+                Log.d(TAG, "onMenuModelsSelected() called with: menuIndex = [" + menuIndex + "], key:"+key+",value;"+value);
+
 //
 //                if (menuIndex == 0) { //
 ////                    statusType = key;
