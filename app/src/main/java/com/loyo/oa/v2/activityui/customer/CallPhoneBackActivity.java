@@ -93,7 +93,7 @@ public class CallPhoneBackActivity extends BaseActivity implements View.OnClickL
         Intent mIntent = getIntent();
         name = mIntent.getStringExtra(ExtraAndResult.EXTRA_NAME);
         callLogId = mIntent.getStringExtra(ExtraAndResult.WELCOM_KEY);
-        if(null == name || null == callLogId){
+        if(null == callLogId){
            Toast("参数不全");
             onBackPressed();
         }
