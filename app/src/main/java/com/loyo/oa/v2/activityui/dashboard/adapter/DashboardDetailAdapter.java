@@ -66,7 +66,8 @@ public class DashboardDetailAdapter extends BaseAdapter {
 
     class Holder {
         TextView text1, text2, text3, text4;
-        View view1, view2;
+        View view1;//下面无边距的分割线
+        View view2;//下面有左边距的分割线
         LinearLayout item;
 
         public void setContent(int position) {
@@ -91,6 +92,7 @@ public class DashboardDetailAdapter extends BaseAdapter {
 
         }
 
+        //设置第二行，总数的颜色
         private void setChildViewColor(int color) {
             for (int i = 0; i < item.getChildCount(); i++) {
                 ((TextView) item.getChildAt(i)).setTextColor(color);
