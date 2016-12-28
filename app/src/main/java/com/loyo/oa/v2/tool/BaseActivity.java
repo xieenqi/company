@@ -34,6 +34,8 @@ import com.loyo.oa.v2.customview.CustomProgressDialog;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -197,6 +199,8 @@ public class BaseActivity extends AppCompatActivity {
         if (MainApp.user == null) {
             MainApp.user = DBManager.Instance().getUser();
         }
+
+
         super.onResume();
     }
 

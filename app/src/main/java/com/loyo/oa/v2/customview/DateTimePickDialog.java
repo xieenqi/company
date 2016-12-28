@@ -114,6 +114,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
      */
     public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener, final boolean isOver, String nebName) {
 
+        Locale.setDefault(Locale.CHINA);//设置地区，让显示时间为中文
         LinearLayout dateTimeLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.date_pick_layout, null);
         datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.datepicker);
         timePicker = (TimePicker) dateTimeLayout.findViewById(R.id.timepicker);
