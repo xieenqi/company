@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,15 +19,21 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.adapter.DashboardDetailAdapter;
+import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
+import com.loyo.oa.v2.activityui.dashboard.model.DashBoardListModel;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 【仪表盘】详情页面
@@ -35,6 +42,7 @@ import java.util.List;
 
 public class DashboardDetailActivity extends BaseLoadingActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
+    private String TAG="DashboardDetailActivity";
     private LinearLayout ll_back;
     private DropDownMenu filterMenu;
     private TextView tv_title;
@@ -48,6 +56,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         super.onCreate(savedInstanceState);
         getIntentData();
         initView();
+        getPageData();
     }
 
     @Override
@@ -57,6 +66,17 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void getPageData() {
+        HashMap<String,Object> map= new HashMap<String,Object>();
+        map.put("qType",1);
+        map.put("sortBy",1);
+        map.put("activityObj",1);
+        //网络请求
+        DashBoardService.getDashBoardListData(map).subscribe(new DefaultLoyoSubscriber<DashBoardListModel>() {
+            @Override
+            public void onNext(DashBoardListModel dashBoardListModel) {
+                Log.i(TAG, "onNext: "+dashBoardListModel);
+            }
+        });
 
     }
 

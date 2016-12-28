@@ -75,24 +75,25 @@ public class DashboardDetailAdapter extends BaseAdapter {
             int itemColor2 = Color.parseColor("#ff9900");
             int itemColor3 = Color.parseColor("#333333");
             if (position == 0) {
+                //表哥头部标题
                 setChildViewColor(itemColor1);
                 view1.setVisibility(View.VISIBLE);
                 view2.setVisibility(View.GONE);
-            } else {
+            } else if(1==position){
+                //总计
+                view1.setVisibility(View.GONE);
+                view2.setVisibility(View.VISIBLE);
+                setChildViewColor(itemColor2);
+            }else{
+                //其他具体的内容
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
                 setChildViewColor(itemColor3);
             }
-            if (position == 1) {
-                setChildViewColor(itemColor2);
-            } else {
-                setChildViewColor(itemColor3);
-            }
-
 
         }
 
-        //设置第二行，总数的颜色
+        //设置一行，每一个字段的颜色
         private void setChildViewColor(int color) {
             for (int i = 0; i < item.getChildCount(); i++) {
                 ((TextView) item.getChildAt(i)).setTextColor(color);
