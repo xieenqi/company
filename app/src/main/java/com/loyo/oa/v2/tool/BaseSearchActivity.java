@@ -355,7 +355,6 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
 
     @Override
     public void success(Object o, Response response) {
-        HttpErrorCheck.checkResponse("公用搜索基类: ", response, ll_loading);
         expandableListView_search.onRefreshComplete();
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         //imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -391,7 +390,7 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
 
     @Override
     public void failure(RetrofitError error) {
-        HttpErrorCheck.checkError(error, ll_loading);
+//        HttpErrorCheck.checkError(error, ll_loading);
         expandableListView_search.onRefreshComplete();
     }
 

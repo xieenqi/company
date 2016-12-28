@@ -12,18 +12,15 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 
 import org.androidannotations.annotations.AfterViews;
@@ -36,8 +33,6 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.util.ArrayList;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
@@ -105,21 +100,18 @@ public class AttachmentActivity extends BaseActivity {
      */
     @UiThread
     void getAttachments() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                mListAttachment = attachments;
-                bindAttachment();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error,ll_loading);
-                finish();
-            }
-        });
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(ll_loading) {
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        finish();
+                    }
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        mListAttachment = attachments;
+                        bindAttachment();
+                    }
+                });
     }
 
     /**
@@ -245,18 +237,11 @@ public class AttachmentActivity extends BaseActivity {
         uploadSize++;
         TypedFile typedFile = new TypedFile("image/*", file);
         TypedString typedUuid = new TypedString(uuid);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                new RCallback<Attachment>() {
+        AttachmentService.newUpload(typedUuid, bizType, typedFile)
+                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
                     @Override
-                    public void success(final Attachment attachments, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
+                    public void onNext(Attachment attachment) {
                         getAttachments();
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
                     }
                 });
     }

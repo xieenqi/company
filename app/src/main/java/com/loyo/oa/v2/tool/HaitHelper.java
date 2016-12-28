@@ -17,7 +17,7 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.event.AppBus;
@@ -232,7 +232,7 @@ public class HaitHelper {
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && null != data) {
-            NewUser user = (NewUser) data.getSerializableExtra("data");
+            OrganizationalMember user = (OrganizationalMember) data.getSerializableExtra("data");
             if (user != null) {
                 String id = user.getId();
                 if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
@@ -258,7 +258,7 @@ public class HaitHelper {
     public void onContactPicked(ContactPickedEvent event) {
 
         StaffMemberCollection collection = event.data;
-        NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+        OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);
         if (user != null) {
             String id = user.getId();
             if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {

@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
+import com.loyo.oa.v2.activityui.login.api.LoginService;
 import com.loyo.oa.v2.activityui.login.model.Token;
 import com.loyo.oa.v2.activityui.login.presenter.LoginPresenter;
 import com.loyo.oa.v2.activityui.login.viewcontrol.LoginView;
@@ -21,7 +22,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.WaveView;
-import com.loyo.oa.v2.point.ILogin;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -67,14 +68,33 @@ public class LoginPresenterImpl implements LoginPresenter {
      */
     @Override
     public void requestLogin(HashMap<String, Object> body) {
-        RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint(FinalVariables.GET_TOKEN) //URL
-                .setLogLevel(RestAdapter.LogLevel.FULL) //是否Debug
-                .build();
-        adapter.create(ILogin.class).login(body, new RCallback<BaseBeanT<String>>() {
+//        RestAdapter adapter = new RestAdapter.Builder()
+//                .setEndpoint(FinalVariables.GET_TOKEN) //URL
+//                .setLogLevel(RestAdapter.LogLevel.FULL) //是否Debug
+//                .build();
+//        adapter.create(ILogin.class).login(body, new RCallback<BaseBeanT<String>>() {
+//            @Override
+//            public void success(final BaseBeanT<String> token, final Response response) {
+//                HttpErrorCheck.checkResponse("登录: ", response);
+//                if (null == token || token.data == null || TextUtils.isEmpty(token.data)) {
+//                    crolView.onError();
+//                    return;
+//                } else {
+//                    crolView.onSuccess(token.data);
+//                }
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//                crolView.onError();
+//            }
+//        });
+
+        LoginService.login(body).subscribe(new DefaultLoyoSubscriber<BaseBeanT<String>>() {
             @Override
-            public void success(final BaseBeanT<String> token, final Response response) {
-                HttpErrorCheck.checkResponse("登录: ", response);
+            public void onNext(BaseBeanT<String> token) {
                 if (null == token || token.data == null || TextUtils.isEmpty(token.data)) {
                     crolView.onError();
                     return;
@@ -84,9 +104,8 @@ public class LoginPresenterImpl implements LoginPresenter {
             }
 
             @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
+            public void onError(Throwable e) {
+                super.onError(e);
                 crolView.onError();
             }
         });

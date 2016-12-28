@@ -8,6 +8,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
@@ -15,21 +17,12 @@ import com.loyo.oa.v2.activityui.worksheet.adapter.WorkSheetListNestingAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetCommon;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.IWorksheet;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import com.loyo.oa.v2.worksheet.api.WorksheetService;
 
 /**
  * 【工单详情】  页面
@@ -70,7 +63,7 @@ public class WorksheetInfoActivity extends BaseLoadingActivity implements View.O
      * Other
      */
     private WorkSheetListNestingAdapter mAdapter;
-    private BaseBeanT<WorksheetInfo> mWorksheetInfo;
+    private WorksheetInfo mWorksheetInfo;
     private Intent mIntent;
     private Bundle mBundle;
 
@@ -122,53 +115,58 @@ public class WorksheetInfoActivity extends BaseLoadingActivity implements View.O
     }
 
     private void bindData() {
+        ll_loading.setStatus(LoadingLayout.Success);
+        if (mWorksheetInfo == null) {
+            return;
+        }
 
-        tv_title.setText(mWorksheetInfo.data.title);
-        tv_Assignment_name.setText(mWorksheetInfo.data.dispatcherName);
-        if (mWorksheetInfo.data.triggerMode == 1) {
+        tv_title.setText(mWorksheetInfo.title);
+        tv_Assignment_name.setText(mWorksheetInfo.dispatcherName);
+        if (mWorksheetInfo.triggerMode == 1) {
             tv_boom.setText("自动流转");
         } else {
             tv_boom.setText("定时触发");
         }
-        tv_commit_info.setText(mWorksheetInfo.data.creatorName + " " + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorksheetInfo.data.createdAt) + " 提交");
-        tv_track_content.setText(mWorksheetInfo.data.content);
-        tv_related_order.setText(mWorksheetInfo.data.orderName);
-        tv_related_customer.setText(mWorksheetInfo.data.customerName);
-        tv_responsible_name.setText(mWorksheetInfo.data.responsorNames);
+        tv_commit_info.setText(mWorksheetInfo.creatorName + " "
+                + DateTool.getDateTimeFriendly(mWorksheetInfo.createdAt) + " 提交");
+        tv_track_content.setText(mWorksheetInfo.content);
+        tv_related_order.setText(mWorksheetInfo.orderName);
+        tv_related_customer.setText(mWorksheetInfo.customerName);
+        tv_responsible_name.setText(mWorksheetInfo.responsorNames);
 
-        if (mWorksheetInfo.data.confirmedAt != 0) {
+        if (mWorksheetInfo.confirmedAt != 0) {
             ll_assignment_time.setVisibility(View.VISIBLE);
-            tv_assignment_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorksheetInfo.data.confirmedAt));
+            tv_assignment_time.setText(DateTool.getDateTimeFriendly(mWorksheetInfo.confirmedAt));
         } else {
             tv_assignment_time.setText("--");
             ll_assignment_time.setVisibility(View.GONE);
         }
 
-        if (mWorksheetInfo.data.completedAt != 0) {
+        if (mWorksheetInfo.completedAt != 0) {
             ll_finish_time.setVisibility(View.VISIBLE);
-            tv_finish_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorksheetInfo.data.completedAt));
+            tv_finish_time.setText(DateTool.getDateTimeFriendly(mWorksheetInfo.completedAt));
         } else {
             tv_finish_time.setText("--");
             ll_finish_time.setVisibility(View.GONE);
         }
 
-        if (mWorksheetInfo.data.interruptAt != 0) {
+        if (mWorksheetInfo.interruptAt != 0) {
             ll_termination_time.setVisibility(View.VISIBLE);
-            tv_termination_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorksheetInfo.data.interruptAt));
+            tv_termination_time.setText(DateTool.getDateTimeFriendly(mWorksheetInfo.interruptAt));
         } else {
             tv_termination_time.setText("--");
             ll_termination_time.setVisibility(View.GONE);
         }
 
-        if (mWorksheetInfo.data.confirmedAt == 0
-                && mWorksheetInfo.data.completedAt == 0
-                && mWorksheetInfo.data.interruptAt == 0) {
+        if (mWorksheetInfo.confirmedAt == 0
+                && mWorksheetInfo.completedAt == 0
+                && mWorksheetInfo.interruptAt == 0) {
             ll_times_container.setVisibility(View.GONE);
         }
 
-        WorksheetCommon.setStatus(tv_status, mWorksheetInfo.data.status);
-        if (null != mWorksheetInfo.data.attachment && mWorksheetInfo.data.attachment.size() > 0) {
-            mAdapter = new WorkSheetListNestingAdapter(mWorksheetInfo.data.attachment, this);
+        WorksheetCommon.setStatus(tv_status, mWorksheetInfo.status);
+        if (null != mWorksheetInfo.attachment && mWorksheetInfo.attachment.size() > 0) {
+            mAdapter = new WorkSheetListNestingAdapter(mWorksheetInfo.attachment, this);
             lv_listview.setAdapter(mAdapter);
             mAdapter.refreshData();
         }
@@ -178,18 +176,12 @@ public class WorksheetInfoActivity extends BaseLoadingActivity implements View.O
      * 获取工单信息
      */
     private void requestData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                getWorksheetInfo(id, new Callback<BaseBeanT<WorksheetInfo>>() {
+        WorksheetService.getWorksheetInfo(id)
+                .subscribe(new DefaultLoyoSubscriber<WorksheetInfo>(ll_loading) {
                     @Override
-                    public void success(BaseBeanT<WorksheetInfo> worksheetInfo, Response response) {
-                        HttpErrorCheck.checkResponse("获取工单信息：", response,ll_loading);
-                        mWorksheetInfo = worksheetInfo;
+                    public void onNext(WorksheetInfo info) {
+                        mWorksheetInfo = info;
                         bindData();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error,ll_loading);
                     }
                 });
     }
@@ -206,7 +198,7 @@ public class WorksheetInfoActivity extends BaseLoadingActivity implements View.O
                     return;
                 }
                 mBundle = new Bundle();
-                mBundle.putSerializable(ExtraAndResult.EXTRA_ID, mWorksheetInfo.data.orderId);
+                mBundle.putSerializable(ExtraAndResult.EXTRA_ID, mWorksheetInfo.orderId);
                 app.startActivity(this, OrderDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 break;
 
@@ -221,7 +213,7 @@ public class WorksheetInfoActivity extends BaseLoadingActivity implements View.O
                 return;
             }
                 mBundle = new Bundle();
-                mBundle.putString("Id", mWorksheetInfo.data.customerId);
+                mBundle.putString("Id", mWorksheetInfo.customerId);
                 app.startActivity(this, CustomerDetailInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 break;
         }

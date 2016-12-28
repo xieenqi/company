@@ -22,22 +22,16 @@ import com.loyo.oa.v2.activityui.setting.viewcontrol.SettingVControl;
 import com.loyo.oa.v2.activityui.wfinstance.common.WfinstanceBizformConfig;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.user.api.UserService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【设置】页面
@@ -166,18 +160,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
      * 更新(当首页红点数据异常)
      */
     void rushHomeData() {
-        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
-            @Override
-            public void success(final User user, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-            }
+        UserService.rushHomeDate()
+                .subscribe(new DefaultLoyoSubscriber<User>() {
+                    @Override
+                    public void onNext(User user) {
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                    }
+                });
     }
 
     @Override

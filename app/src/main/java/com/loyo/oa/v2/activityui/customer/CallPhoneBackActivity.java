@@ -14,25 +14,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.service.BroadcastReceiverMgr;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【电话回拨】等待界面
@@ -135,24 +129,19 @@ public class CallPhoneBackActivity extends BaseActivity implements View.OnClickL
 
     void requestCallBack2() {
         showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).cancelCallBack(callLogId,
-                new RCallback<CallBackCallid>() {
+        CustomerService.cancelCallBack(callLogId)
+                .subscribe(new DefaultLoyoSubscriber<String>() {
                     @Override
-                    public void success(final CallBackCallid callBackCallid, final Response response) {
-                        HttpErrorCheck.checkResponse("请求回拨", response);
-                        if(callBackCallid.errcode == 0){
-                            finish();
-                        }else{
-                            cancelLoading();
-                            Toast(callBackCallid.errmsg);
-                            finish();
-                        }
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
+                        finish();
                     }
 
                     @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
+                    public void onNext(String callbackId) {
+                        cancelLoading();
+                        finish();
                     }
                 });
     }

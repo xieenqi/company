@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -26,20 +27,16 @@ import com.loyo.oa.v2.activityui.worksheet.common.WorksheetPermisssion;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.BaseBeanT;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.v2.point.IWorksheet;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.worksheet.api.WorksheetService;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -48,9 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【 工单详情 】  页面
@@ -171,24 +165,13 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
     }
 
     private void getData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                getWorksheetDetail(worksheetId, new Callback<BaseBeanT<WorksheetDetail>>() {
+        WorksheetService.getWorksheetDetail(worksheetId)
+                .subscribe(new DefaultLoyoSubscriber<WorksheetDetail>(ll_loading) {
                     @Override
-                    public void success(BaseBeanT<WorksheetDetail> result, Response response) {
-                        HttpErrorCheck.checkResponse("工单详情：", response,ll_loading);
-                        if (result.errcode == 0) {
-                            detail = result.data;
-                            loadData();
-                        }
-//                        else {
-//                            Toast("" + result.errmsg);
-//                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-//                        onBackPressed();
-                        HttpErrorCheck.checkError(error,ll_loading);
+                    public void onNext(WorksheetDetail result) {
+                        cancelLoading();
+                        detail = result;
+                        loadData();
                     }
                 });
 
@@ -229,6 +212,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
     }
 
     private void loadData() {
+        ll_loading.setStatus(LoadingLayout.Success);
         tv_setting.setVisibility(View.INVISIBLE);
         img_title_right.setVisibility(View.INVISIBLE);
         bt_confirm.setVisibility(View.INVISIBLE);
@@ -324,22 +308,6 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
                     }
                 }, "提示", "意外终止后不可恢复，此工单将无法进行任何操作。\n" +
                         "您确定要终止吗？");
-
-/*                final GeneralPopView warn = showGeneralDialog(true, true, "意外终止后不可恢复，此工单将无法进行任何操作。\n" +
-                        "您确定要终止吗？");
-                warn.setSureOnclick(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        stopWorksheet(5);
-                        warn.dismisDialog();
-                    }
-                });
-                warn.setNoCancelOnclick(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        warn.dismisDialog();
-                    }
-                });*/
             }
         });
         dialog.show();
@@ -354,21 +322,20 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("status", status);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                setStpoWorksheet(worksheetId, map, new Callback<Object>() {
+        WorksheetService.setStopWorksheet(worksheetId, map)
+                .subscribe(new DefaultLoyoSubscriber<Object>() {
+
                     @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("意外终止工单：", response);
-                        showLoading("");
-                        getData();
-                        Toast("操作成功");
-                        bt_confirm.setVisibility(View.GONE);
-//                        onBackPressed();
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                    public void onNext(Object o) {
+                        getData();
+                        Toast("操作成功");
+                        bt_confirm.setVisibility(View.GONE);
                     }
                 });
     }
@@ -380,7 +347,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
     public void onContactPicked(ContactPickedEvent event) {
         if (WorksheetDetailActivity.PICK_USER_SESSION.equals(event.session)) {
             StaffMemberCollection collection = event.data;
-            NewUser u = Compat.convertStaffCollectionToNewUser(collection);
+            OrganizationalMember u = Compat.convertStaffCollectionToNewUser(collection);
             if (!TextUtils.isEmpty(eventId)) {
                 setEventPersonal(u.getId());
             } else {
@@ -397,7 +364,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
         switch (requestCode) {
              /*用户单选, 负责人*/
             case FinalVariables.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
+                OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
                 if (!TextUtils.isEmpty(eventId)) {
                     setEventPersonal(u.getId());
                 } else {
@@ -412,21 +379,20 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
      */
     private void setEventPersonal(String userId) {
 
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("responsorId", userId);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                setEventPerson(eventId, map, new Callback<Object>() {
+        WorksheetService.setEventPerson(eventId, map)
+                .subscribe(new DefaultLoyoSubscriber<Object>() {
                     @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("设置事件负责人：", response);
-                        showLoading("");
-                        getData();
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-
+                    public void onNext(Object o) {
+                        getData();
                     }
                 });
 
@@ -436,6 +402,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
      * 设置事件负责人
      */
     private void setAllEventPersonal(String userId) {
+        showLoading("");
         List<String> eventIsList = new ArrayList<>();
         for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
             eventIsList.add(detail.sheetEventsSupporter.get(i).id);
@@ -443,19 +410,17 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
         HashMap<String, Object> map = new HashMap<>();
         map.put("responsorId", userId);
         map.put("eventIds", eventIsList);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                setAllEventPerson(map, new Callback<Object>() {
+        WorksheetService.setAllEventPerson(map)
+                .subscribe(new DefaultLoyoSubscriber<Object>() {
                     @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("设置all事件负责人：", response);
-                        showLoading("");
-                        getData();
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-
+                    public void onNext(Object o) {
+                        getData();
                     }
                 });
     }

@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
 
@@ -21,30 +20,25 @@ import com.loyo.oa.dropdownmenu.filtermenu.OrderStatusMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuListType;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
-import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.IOrder;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【我的订单】
@@ -174,29 +168,31 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         map.put("pageSize", 15);
         map.put("status", statusType);
         map.put("filed", field);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IOrder.class).getOrderMyList(map, new Callback<OrderList>() {
-            @Override
-            public void success(OrderList orderlist, Response response) {
-                lv_list.onRefreshComplete();
-                ll_loading.setStatus(LoadingLayout.Success);
-                HttpErrorCheck.checkResponse("我的订单列表：", response);
-                if (!isPullDown) {
-                    listData.addAll(orderlist.records);
-                } else {
-                    listData = orderlist.records;
-                    if (listData.size() == 0)
-                        ll_loading.setStatus(LoadingLayout.Empty);
-                }
-                adapter.setData(listData);
-            }
+        OrderService.getOrderMyList(map)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<OrderListItem>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        @LoyoErrorChecker.CheckType int type = listData.size()>0?
+                                LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
 
-            @Override
-            public void failure(RetrofitError error) {
-                lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading);
-            }
-        });
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                        lv_list.onRefreshComplete();
+                    }
+
+                    @Override
+                    public void onNext(PaginationX<OrderListItem> orderListItemPaginationX) {
+                        lv_list.onRefreshComplete();
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        if (!isPullDown) {
+                            listData.addAll(orderListItemPaginationX.records);
+                        } else {
+                            listData = orderListItemPaginationX.records;
+                            if (listData.size() == 0)
+                                ll_loading.setStatus(LoadingLayout.Empty);
+                        }
+                        adapter.setData(listData);
+                    }
+                });
     }
 
     @Override

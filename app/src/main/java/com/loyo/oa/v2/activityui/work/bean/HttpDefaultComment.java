@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.work.bean;
 
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 
 /**
  * 默认的点评人
@@ -10,7 +10,7 @@ public class HttpDefaultComment {
 
     public Reviewer reviewer;
     public class Reviewer {
-        public NewUser user;
+        public OrganizationalMember user;
 
     }
 }

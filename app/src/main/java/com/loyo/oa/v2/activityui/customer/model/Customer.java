@@ -4,7 +4,7 @@ import android.support.annotation.IntDef;
 
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.BaseBeans;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.SaleActivity;
 
 import java.lang.annotation.Retention;
@@ -73,7 +73,7 @@ public class Customer extends BaseBeans {
     public long lastActAt;
     public String companyId;
     public User owner;
-    public NewUser creator;
+    public OrganizationalMember creator;
     public CustomerRegional regional;
     public Counter counter;
     public ArrayList<Member> members = new ArrayList<>();

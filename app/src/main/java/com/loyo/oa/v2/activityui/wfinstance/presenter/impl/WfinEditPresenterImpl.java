@@ -6,36 +6,33 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
+
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfInstanceAdd;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinEditPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinEditView;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
 import com.loyo.oa.v2.customview.WfinEditViewGroup;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.IWfInstance;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
+
 import static com.loyo.oa.v2.common.Global.Toast;
 
 /**
@@ -69,18 +66,13 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
      * */
     @Override
     public void getAttachments(String uuid) {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                crolView.getAttachmentsEmbl(attachments);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                Toast("获取附件失败");
-                super.failure(error);
-            }
-        });
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        crolView.getAttachmentsEmbl(attachments);
+                    }
+                });
     }
 
     /**
@@ -94,18 +86,11 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
         uploadSize++;
         TypedFile typedFile = new TypedFile("image/*", file);
         TypedString typedUuid = new TypedString(uuid);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                new RCallback<Attachment>() {
+        AttachmentService.newUpload(typedUuid, bizType, typedFile)
+                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
                     @Override
-                    public void success(final Attachment attachments, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
+                    public void onNext(Attachment attachment) {
                         getAttachments(uuid);
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
                     }
                 });
     }
@@ -281,10 +266,28 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
         map.put("projectId", projectId);                       //项目Id
         map.put("memo",memo); //备注
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(id, map, new RCallback<WfInstance>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(id, map, new RCallback<WfInstance>() {
+//            @Override
+//            public void success(final WfInstance wfInstance, final Response response) {
+//                HttpErrorCheck.checkCommitSus("编辑审批",response);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        DialogHelp.cancelStatusLoading();
+//                        crolView.requestEditWfinEmbl(wfInstance);
+//                    }
+//                },1000);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkCommitEro(error);
+//                super.failure(error);
+//            }
+//        });
+        WfinstanceService.editWfInstance(id,map).subscribe(new DefaultLoyoSubscriber<WfInstance>(LoyoErrorChecker.COMMIT_DIALOG) {
             @Override
-            public void success(final WfInstance wfInstance, final Response response) {
-                HttpErrorCheck.checkCommitSus("编辑审批",response);
+            public void onNext(final WfInstance wfInstance) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -292,12 +295,6 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
                         crolView.requestEditWfinEmbl(wfInstance);
                     }
                 },1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-                super.failure(error);
             }
         });
     }

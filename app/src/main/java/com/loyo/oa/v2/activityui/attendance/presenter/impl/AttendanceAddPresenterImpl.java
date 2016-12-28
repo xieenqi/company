@@ -12,20 +12,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.attendance.api.AttendanceService;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.IAttendance;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
@@ -34,9 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【新增考勤】Presenter
@@ -143,10 +137,17 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
      * */
     @Override
     public void refreshLocation(final double longitude, final double latitude, final String address) {
-        String originalgps = longitude + "," + latitude;
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).refreshLocation(originalgps, new RCallback<Object>() {
+        String originalGPS = longitude + "," + latitude;
+//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).refreshLocation(originalGPS, new RCallback<Object>() {
+//            @Override
+//            public void success(final Object o, final Response response) {
+//                mAttendanceRecord.setAddress(address);
+//            }
+//        });
+
+        AttendanceService.refreshLocation(originalGPS).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
-            public void success(final Object o, final Response response) {
+            public void onNext(Object o) {
                 mAttendanceRecord.setAddress(address);
             }
         });
@@ -157,19 +158,13 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
      * */
     @Override
     public void getAttachments(String uuid) {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> mAttachment, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                crolView.setAttachmentEmbl(mAttachment);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        crolView.setAttachmentEmbl(attachments);
+                    }
+                });
     }
 
     /**
@@ -244,10 +239,28 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
             map.put("attachementuuid", uuid);
         }
         DialogHelp.showStatusLoading(false,mContext);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
+//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
+//            @Override
+//            public void success(final AttendanceRecord attendanceRecord, final Response response) {
+//                HttpErrorCheck.checkCommitSus("确认打卡",response);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        DialogHelp.cancelStatusLoading();
+//                        crolView.attendanceSuccess();
+//                    }
+//                },1000);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkCommitEro(error);
+//            }
+//        });
+
+        AttendanceService.confirmAttendance(map).subscribe(new DefaultLoyoSubscriber<AttendanceRecord>(LoyoErrorChecker.COMMIT_DIALOG) {
             @Override
-            public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                HttpErrorCheck.checkCommitSus("确认打卡",response);
+            public void onNext(AttendanceRecord attendanceRecord) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -255,11 +268,6 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
                         crolView.attendanceSuccess();
                     }
                 },1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -273,20 +281,14 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("bizType", 0);
         map.put("uuid", uuid);
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-            @Override
-            public void success(final Attachment attachment, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                crolView.deleteAttaSuccessEmbl(delAttachment);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
+        AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
+                .subscribe(new DefaultLoyoSubscriber<Attachment>(LoyoErrorChecker.COMMIT_DIALOG) {
+                    @Override
+                    public void onNext(Attachment attachment) {
+                        DialogHelp.cancelStatusLoading();
+                        crolView.deleteAttaSuccessEmbl(delAttachment);
+                    }
+                });
     }
 
     /**

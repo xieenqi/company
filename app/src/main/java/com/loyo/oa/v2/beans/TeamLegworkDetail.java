@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 时间 : 15/10/29.
  */
 public class TeamLegworkDetail implements Serializable {
-    public NewUser user;//暂时没有用
+    public OrganizationalMember user;//暂时没有用
     public int visitNum;
     public int customerNum;
 

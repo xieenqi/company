@@ -15,24 +15,19 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.signin.api.SignInService;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ISigninOrFollowUp;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 新建拜访 [搜索客户选择]
@@ -130,45 +125,82 @@ public class SigninSelectCustomerSearch extends BaseLoadingActivity implements P
         params.put("pageIndex", page);
         params.put("pageSize", 20);
         params.put("keyWords", edt_search.getText().toString().trim());
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(ISigninOrFollowUp.class).
-                signinSearchCutomer(params, new Callback<BaseBeanT<PaginationX<SigninSelectCustomer>>>() {
-                    @Override
-                    public void success(final BaseBeanT<PaginationX<SigninSelectCustomer>> customerPaginationX, final Response response) {
-                        HttpErrorCheck.checkResponse("拜访搜索选择客户:", response, ll_loading);
-                        expandableListView_search.onRefreshComplete();
-//                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-//                        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                        if (null == customerPaginationX) {
-                            if (isTopAdd) {
-                                showNoData();
-                            } else {
-                                Toast("没有更多数据!");
-                            }
-                            return;
-                        }
-                        ArrayList<SigninSelectCustomer> lstDataTemp = customerPaginationX.data.getRecords();
-                        if (lstDataTemp == null || lstDataTemp.size() == 0) {
-                            if (isTopAdd) {
-                                showNoData();
-                            } else {
-                                Toast("没有更多数据!");
-                            }
-                            return;
-                        } else {
-                            if (isTopAdd) {
-                                lstData.clear();
-                            }
-                            lstData.addAll(lstDataTemp);
-                        }
-                        changeAdapter();
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(ISigninOrFollowUp.class).
+//                signinSearchCutomer(params, new Callback<BaseBeanT<PaginationX<SigninSelectCustomer>>>() {
+//                    @Override
+//                    public void success(final BaseBeanT<PaginationX<SigninSelectCustomer>> customerPaginationX, final Response response) {
+//                        HttpErrorCheck.checkResponse("拜访搜索选择客户:", response, ll_loading);
+//                        expandableListView_search.onRefreshComplete();
+////                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+////                        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//                        if (null == customerPaginationX) {
+//                            if (isTopAdd) {
+//                                showNoData();
+//                            } else {
+//                                Toast("没有更多数据!");
+//                            }
+//                            return;
+//                        }
+//                        ArrayList<SigninSelectCustomer> lstDataTemp = customerPaginationX.data.getRecords();
+//                        if (lstDataTemp == null || lstDataTemp.size() == 0) {
+//                            if (isTopAdd) {
+//                                showNoData();
+//                            } else {
+//                                Toast("没有更多数据!");
+//                            }
+//                            return;
+//                        } else {
+//                            if (isTopAdd) {
+//                                lstData.clear();
+//                            }
+//                            lstData.addAll(lstDataTemp);
+//                        }
+//                        changeAdapter();
+//                    }
+//
+//                    @Override
+//                    public void failure(final RetrofitError error) {
+//                        HttpErrorCheck.checkError(error, ll_loading);
+//                        expandableListView_search.onRefreshComplete();
+//                    }
+//                });
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
-                        expandableListView_search.onRefreshComplete();
+        SignInService.signInSearchCutomer(params).subscribe(new DefaultLoyoSubscriber<BaseBeanT<PaginationX<SigninSelectCustomer>>>(ll_loading) {
+            @Override
+            public void onNext(BaseBeanT<PaginationX<SigninSelectCustomer>> customerPaginationX) {
+                ll_loading.setStatus(LoadingLayout.Success);
+                expandableListView_search.onRefreshComplete();
+                if (null == customerPaginationX) {
+                    if (isTopAdd) {
+                        showNoData();
+                    } else {
+                        Toast("没有更多数据!");
                     }
-                });
+                    return;
+                }
+                ArrayList<SigninSelectCustomer> lstDataTemp = customerPaginationX.data.getRecords();
+                if (lstDataTemp == null || lstDataTemp.size() == 0) {
+                    if (isTopAdd) {
+                        showNoData();
+                    } else {
+                        Toast("没有更多数据!");
+                    }
+                    return;
+                } else {
+                    if (isTopAdd) {
+                        lstData.clear();
+                    }
+                    lstData.addAll(lstDataTemp);
+                }
+                changeAdapter();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                expandableListView_search.onRefreshComplete();
+            }
+        });
     }
 
     void doSearch() {

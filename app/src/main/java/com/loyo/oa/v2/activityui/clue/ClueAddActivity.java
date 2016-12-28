@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.model.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.model.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
@@ -23,7 +24,8 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
-import com.loyo.oa.v2.point.IClue;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -213,51 +215,80 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         map.put("address", et_address.getText().toString());
         map.put("remark", et_remake.getText().toString());
         map.put("source", tv_source.getText().toString());
-        LogUtil.d("线索创建参数：" + app.gson.toJson(map));
         if (!isEdit) {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-                    .addClue(map, new Callback<ClueDetailWrapper>() {
-                        @Override
-                        public void success(final ClueDetailWrapper clueDetailWrapper, Response response) {
-                            HttpErrorCheck.checkCommitSus("新建线索",response);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    cancelStatusLoading();
-                                    if(clueDetailWrapper.errcode != 0){
-                                        Toast(clueDetailWrapper.errmsg);
-                                        return;
-                                    }else if(clueDetailWrapper.errcode == 0){
-                                        app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-                                    }
-                                }
-                            },1000);
-                        }
+//            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+//                    .addClue(map, new Callback<ClueDetailWrapper>() {
+//                        @Override
+//                        public void success(final ClueDetailWrapper clueDetailWrapper, Response response) {
+//                            HttpErrorCheck.checkCommitSus("新建线索",response);
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    cancelStatusLoading();
+//                                    if(clueDetailWrapper.errcode != 0){
+//                                        Toast(clueDetailWrapper.errmsg);
+//                                        return;
+//                                    }else if(clueDetailWrapper.errcode == 0){
+//                                        app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+//                                    }
+//                                }
+//                            },1000);
+//                        }
+//
+//                        @Override
+//                        public void failure(RetrofitError error) {
+//                            HttpErrorCheck.checkCommitEro(error);
+//                        }
+//                    });
 
+            ClueService.addClue(map).subscribe(new DefaultLoyoSubscriber<ClueDetailWrapper>(LoyoErrorChecker.COMMIT_DIALOG) {
+                @Override
+                public void onNext(final ClueDetailWrapper clueDetailWrapper) {
+                    new Handler().postDelayed(new Runnable() {
                         @Override
-                        public void failure(RetrofitError error) {
-                            HttpErrorCheck.checkCommitEro(error);
+                        public void run() {//TODO Why??!! 延迟1s干什么呢
+                            cancelStatusLoading();
+                            if(clueDetailWrapper.errcode != 0){
+                                Toast(clueDetailWrapper.errmsg);
+                                return;
+                            }else if(clueDetailWrapper.errcode == 0){
+                                app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                            }
                         }
-                    });
+                    },1000);
+                }
+            });
         } else {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-                    .editClue(clueId, map, new Callback<Object>() {
-                        @Override
-                        public void success(Object o, Response response) {
-                            HttpErrorCheck.checkCommitSus("编辑线索",response);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onBackPressed();
-                                }
-                            },1000);
-                        }
+//            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+//                    .editClue(clueId, map, new Callback<Object>() {
+//                        @Override
+//                        public void success(Object o, Response response) {
+//                            HttpErrorCheck.checkCommitSus("编辑线索",response);
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    onBackPressed();
+//                                }
+//                            },1000);
+//                        }
+//
+//                        @Override
+//                        public void failure(RetrofitError error) {
+//                            HttpErrorCheck.checkCommitEro(error);
+//                        }
+//                    });
 
+            ClueService.editClue(clueId,map).subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.COMMIT_DIALOG) {
+                @Override
+                public void onNext(Object o) {
+                    new Handler().postDelayed(new Runnable() {
                         @Override
-                        public void failure(RetrofitError error) {
-                            HttpErrorCheck.checkCommitEro(error);
+                        public void run() {
+                            onBackPressed();
                         }
-                    });
+                    },1000);
+                }
+            });
         }
     }
 }

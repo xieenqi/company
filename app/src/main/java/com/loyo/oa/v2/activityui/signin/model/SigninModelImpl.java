@@ -1,31 +1,23 @@
 package com.loyo.oa.v2.activityui.signin.model;
 
 import android.app.Activity;
-import android.os.Handler;
-import android.text.TextUtils;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
-import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.LegWork;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by xeq on 2016/12/15
@@ -45,34 +37,25 @@ public class SigninModelImpl implements SigninContract.Model {
     public void isPhotoSend() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("key", "need_pictures_switcher");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSetInfo(map, new Callback<SigninPictures>() {
-            @Override
-            public void success(SigninPictures result, Response response) {
-                HttpErrorCheck.checkResponse("签到时必须操作？？？", response);
-                presenter.isPhoto(result);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-            }
-        });
+        CustomerService.getSigninUploadPhotoConfig(map)
+                .subscribe(new DefaultLoyoSubscriber<SigninPictures>(LoyoErrorChecker.SILENCE) {
+                    @Override
+                    public void onNext(SigninPictures signinPictures) {
+                        presenter.isPhoto(signinPictures);
+                    }
+                });
     }
 
     @Override
     public void creatSigninSend(HashMap<String, Object> map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSignIn(map, new RCallback<LegWork>() {
-            @Override
-            public void success(final LegWork legWork, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建拜访", response);
-                presenter.creatSuccess(legWork);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+        CustomerService.addSignIn(map)
+                .subscribe(new DefaultLoyoSubscriber<LegWork>(LoyoErrorChecker.COMMIT_DIALOG) {
+                    @Override
+                    public void onNext(LegWork legWork) {
+                        presenter.creatSuccess(legWork);
+                        DialogHelp.successStatusLoad();
+                    }
+                });
     }
 
     @Override
@@ -92,34 +75,24 @@ public class SigninModelImpl implements SigninContract.Model {
 
     @Override
     public void getAttachmentSend(String uuid) {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                presenter.getAttachmentSuccess(attachments);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        AttachmentService.getAttachments(uuid)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
+                    @Override
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        presenter.getAttachmentSuccess(attachments);
+                    }
+                });
     }
 
     @Override
     public void deleteAttachmentSend(HashMap<String, Object> map, final Attachment delAttachment) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-            @Override
-            public void success(final Attachment attachment, final Response response) {
-                presenter.deleteAttachmentSuccess(delAttachment);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
+        AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
+                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                    @Override
+                    public void onNext(Attachment attachment) {
+                        presenter.deleteAttachmentSuccess(delAttachment);
+                    }
+                });
     }
 
 }
