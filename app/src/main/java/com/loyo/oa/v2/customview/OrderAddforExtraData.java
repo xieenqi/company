@@ -28,6 +28,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * com.loyo.oa.v2.customview
@@ -218,6 +219,7 @@ public class OrderAddforExtraData extends LinearLayout {
      */
     public void pickDate(final ContactLeftExtras extra, final TextView textView) {
         final Calendar cal = Calendar.getInstance();
+        Locale.setDefault(Locale.CHINA);//设置语言
         final DatePickerDialog mDialog = new DatePickerDialog(mContext, null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 

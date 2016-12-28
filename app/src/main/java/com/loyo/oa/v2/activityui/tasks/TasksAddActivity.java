@@ -285,6 +285,7 @@ public class TasksAddActivity extends BaseActivity {
         isCopy = mTask != null ? true : false;
         members.users = mTask.getMembers().users; //参与人
         newUser = mTask.getResponsiblePerson();   //负责人
+
         linear_task_approve.setVisibility(newUser.isCurrentUser() ? View.GONE : View.VISIBLE);
         switch_approve.setState(newUser.isCurrentUser() ? false : true);
     }
