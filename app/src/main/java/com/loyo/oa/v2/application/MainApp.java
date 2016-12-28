@@ -351,6 +351,15 @@ public class MainApp extends Application {
         init_DisplayImageOptions();
 
 
+<<<<<<< Updated upstream
+=======
+        //不知道为什么要设置语言，修复一下
+        Locale.setDefault(Locale.CHINA);
+        Configuration config = getResources().getConfiguration();
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        config.locale = Locale.SIMPLIFIED_CHINESE;
+        getResources().updateConfiguration(config, metrics);
+>>>>>>> Stashed changes
         cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
 //        df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());//设置日期格式

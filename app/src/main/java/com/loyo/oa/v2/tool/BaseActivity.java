@@ -203,7 +203,16 @@ public class BaseActivity extends Activity {
             MainApp.user = DBManager.Instance().getUser();
         }
 
+<<<<<<< Updated upstream
 
+=======
+        /*强制设置系统语言为中文*/
+        //不知道为什么要设置语言，修复一下
+        Locale.setDefault(Locale.CHINA);
+        Configuration config = new Configuration();
+        config.locale = Locale.SIMPLIFIED_CHINESE;
+        getBaseContext().getResources().updateConfiguration(config, null);
+>>>>>>> Stashed changes
         super.onResume();
     }
 
