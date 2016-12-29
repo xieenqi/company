@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"
-                android:hint="请输入分数"
+                android:hint="请评分（选填）"
                 android:inputType="numberDecimal"
                 android:lineSpacingExtra="6dp"
                 android:textColor="@color/text66"
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left|top"
-            android:hint="请输入点评内容"
+            android:hint="请输入点评内容(必填）"
             android:minHeight="@dimen/dimen_110"
             android:padding="10dp" />
 
