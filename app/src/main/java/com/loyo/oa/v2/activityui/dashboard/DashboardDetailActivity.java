@@ -52,6 +52,9 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     private int pageIndex=1;
     private int pageSize=1;
+    private String qType="1";
+    private String sortBy="1";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,11 +70,12 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void getPageData() {
+
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
-        map.put("qType", 1);
-        map.put("sortBy", 1);
+        map.put("qType", qType);
+        map.put("sortBy", sortBy);
         //根据type，判断请求的类型，构造参数
         if (DashborardType.CUS_FOLLOWUP == type) {
             //客户跟进
@@ -100,6 +104,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             @Override
             public void onNext(DashBoardListModel dashBoardListModel) {
                 adapter.addAll(dashBoardListModel.data.records);
+                lv_list.onRefreshComplete();
+
             }
         });
     }
@@ -164,7 +170,14 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
                 Log.d(TAG, "onMenuModelsSelected() called with: menuIndex = [" + menuIndex + "], key:" + key + ",value;" + value);
+                if(1==menuIndex){
+                    qType=key;
+                }else if(2==menuIndex){
+                    sortBy=key;
+                }else if(3==menuIndex){
 
+                }
+                getPageData();
 
 //
 //                if (menuIndex == 0) { //
@@ -207,12 +220,15 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         Log.i(TAG, "onPullDownToRefresh: ");
+        pageIndex=1;
+        getPageData();
 
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         Log.i(TAG, "onPullUpToRefresh: ");
-
+        pageIndex++;
+        getPageData();
     }
 }
