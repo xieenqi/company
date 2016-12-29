@@ -5,8 +5,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
+import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
 
 import me.itangqi.waveloadingview.WaveLoadingView;
 
@@ -18,7 +18,7 @@ public interface HomeDashboardPresenter {
 
     void initUi(WaveLoadingView wv1,WaveLoadingView wv2);
 
-    void screenControlView(String[] list,String title);
+    void screenControlViews(ScreenType screenType);
 
     void getFollowUpData(int type);
 

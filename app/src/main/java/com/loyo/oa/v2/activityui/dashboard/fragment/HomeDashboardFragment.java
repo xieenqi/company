@@ -18,6 +18,7 @@ import com.loyo.oa.v2.activityui.dashboard.DashboardDetailActivity;
 import com.loyo.oa.v2.activityui.dashboard.adapter.StockListAdapter;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
+import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
 import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyCountModel;
 import com.loyo.oa.v2.activityui.dashboard.model.StockListModel;
@@ -43,8 +44,6 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     private View mView;
     private RadioButton rb_customer, rb_clue;
-    private LinearLayout ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
-            ll_dashboard_order_money, ll_followup, ll_stock,ll_money;
     private RelativeLayout loading_view1, loading_view2, loading_view3;
     private LinearLayout loading_error1, loading_error2, loading_error3;
     private TextView tv_click_rest1, tv_click_rest2, tv_click_rest3;
@@ -52,12 +51,16 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private LinearLayout ll_case1, ll_case2, ll_case3;
     private CustomerListView lv_stocklist;
 
+    private LinearLayout ll_dashboard_followup, ll_dashboard_signin,
+            ll_dashboard_record, ll_dashboard_order_number,
+            ll_dashboard_order_money, ll_followup, ll_stock,ll_money;
+
     private TextView fw_totalsize, fw_count,
             visit_totalsize, visit_count,
             voice_totalsize, voice_count;
 
-    private TextView tv_target_count,tv_order_count,
-                     tv_target_money,tv_order_money;
+    private TextView tv_target_count,tv_order_count,  /*  目标数量 订单数量  */
+                     tv_target_money,tv_order_money;  /*  目标金额 订单金额  */
 
     private StockListAdapter mAdapter;
     private HomeDashboardPresenter mPresenter;
@@ -65,7 +68,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     private int followUpType = 5; //跟进 筛选
     private int stockType = 5;    //增量存量 筛选
+    private int moneyCnType = 9;  //数量金额 筛选
     private int followUpPage = 0; //0:客户 1:线索
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,6 +136,11 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      * */
     private void bindMoneyCountData(MoneyCountModel mcModel){
         LogUtil.dee("mcModel:"+MainApp.gson.toJson(mcModel));
+        tv_target_count.setText(mcModel.data.targetAmount+"");
+        tv_order_count.setText(mcModel.data.totalAmount+"");
+        tv_target_money.setText(mcModel.data.targetNumber+"");
+        tv_order_money.setText(mcModel.data.totalNumber+"");
+
     }
 
     private void initUI() {
@@ -203,15 +213,13 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
         Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
                 ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, tv_click_rest1);
-        getFollowUpData();
-        getStockData();
-        getMoneyCount();
+        getData(3,5);
     }
 
     /**
      * 获取跟进数据
      */
-    private void getFollowUpData() {
+    private void getFollowUpData(int type) {
         mPresenter.setOnSucssView(
                 loadAnim1,
                 ll_followup,
@@ -219,13 +227,13 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 loading_error1,
                 loading_view1,
                 LoadStatus.LOAD);
-        mPresenter.getFollowUpData(followUpType);
+        mPresenter.getFollowUpData(type);
     }
 
     /**
      * 获取存量增量
      */
-    private void getStockData() {
+    private void getStockData(int type) {
         mPresenter.setOnSucssView(
                 loadAnim2,
                 ll_stock,
@@ -233,13 +241,13 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 loading_error2,
                 loading_view2,
                 LoadStatus.LOAD);
-        mPresenter.getStockData(stockType);
+        mPresenter.getStockData(type);
     }
 
     /**
      * 获取数量金额
      * */
-    private void getMoneyCount(){
+    private void getMoneyCount(int type){
         mPresenter.setOnSucssView(
                 loadAnim3,
                 ll_money,
@@ -247,6 +255,33 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 loading_error3,
                 loading_view3,
                 LoadStatus.LOAD);
+        mPresenter.getMoneyCountData(type);
+    }
+
+    /**
+     * 数据调取
+     * @param  busType  请求业务类型(跟进 存量 金额..)
+     * @param  type     筛选数据类型(今天 昨天..)
+     * */
+    private void getData(int busType,int type){
+        switch (busType){
+            case 0:
+                getFollowUpData(type);
+                break;
+
+            case 1:
+                getStockData(type);
+                break;
+
+            case 2:
+                getMoneyCount(type);
+                break;
+            default:
+                getFollowUpData(type);
+                getStockData(type);
+                getMoneyCount(type);
+                break;
+        }
     }
 
     @Override
@@ -270,20 +305,17 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
             /*客户线索筛选*/
             case R.id.ll_case1:
-                list = new String[]{"今天", "昨天", "本周", "上周", "本月", "上月", "取消"};
-                mPresenter.screenControlView(list, "选择时间");
+                mPresenter.screenControlViews(ScreenType.FOLLOWUP);
                 break;
 
             /*增量存量筛选*/
             case R.id.ll_case2:
-                list = new String[]{"今天", "昨天", "本周", "上周", "本月", "上月", "取消"};
-                mPresenter.screenControlView(list, "选择时间");
+                mPresenter.screenControlViews(ScreenType.STOCK);
                 break;
 
             /*数量金额筛选*/
             case R.id.ll_case3:
-                list = new String[]{"本月", "上月", "本季度", "上季度", "本年", "去年", "取消"};
-                mPresenter.screenControlView(list, "选择时间");
+                mPresenter.screenControlViews(ScreenType.MONEY);
                 break;
 
             case R.id.ll_dashboard_followup:
@@ -329,17 +361,17 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
             /*跟进,点击重试*/
             case R.id.tv_click_rest1:
-                getFollowUpData();
+                getFollowUpData(followUpType);
                 break;
 
              /*增量存量,点击重试*/
             case R.id.tv_click_rest2:
-                getStockData();
+                getStockData(stockType);
                 break;
 
             /*数量金额,点击重试*/
             case R.id.tv_click_rest3:
-                getMoneyCount();
+                getMoneyCount(moneyCnType);
                 break;
         }
     }
@@ -353,8 +385,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     }
 
     @Override
-    public void setScreenVal(String val) {
-        Toast(val);
+    public void setScreenVal(ScreenType screenType,int type) {
+        Toast(type+"");
+        getData(screenType.type(),type);
     }
 
     // 获取跟进成功

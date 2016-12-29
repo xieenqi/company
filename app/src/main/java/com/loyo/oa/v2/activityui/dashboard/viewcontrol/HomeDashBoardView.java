@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.dashboard.viewcontrol;
 
+import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
 import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyCountModel;
 import com.loyo.oa.v2.activityui.dashboard.model.StockListModel;
@@ -11,7 +12,7 @@ import com.loyo.oa.v2.common.BaseView;
 
 public interface HomeDashBoardView extends BaseView{
 
-    void setScreenVal(String val);
+    void setScreenVal(ScreenType screenType,int type);
 
     void followUpSuccessEmbl(CsclueFowUp csclueFowUp);
 

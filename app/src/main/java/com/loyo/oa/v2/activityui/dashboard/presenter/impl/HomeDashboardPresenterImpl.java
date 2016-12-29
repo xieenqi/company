@@ -6,10 +6,11 @@ import android.graphics.drawable.AnimationDrawable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import com.library.module.widget.loading.LoadingLayout;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
+import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
 import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyCountModel;
 import com.loyo.oa.v2.activityui.dashboard.model.StockListModel;
@@ -17,7 +18,6 @@ import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.HashMap;
 import me.itangqi.waveloadingview.WaveLoadingView;
@@ -69,15 +69,45 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
     }
 
     @Override
-    public void screenControlView(String[] list,String title) {
-
-        final PaymentPopView popViewKind = new PaymentPopView(mContext, list, title);
+    public void screenControlViews(final ScreenType screenType) {
+        final PaymentPopView popViewKind = new PaymentPopView(mContext, screenType.screenTitle(), "选择时间");
         popViewKind.show();
         popViewKind.setCanceledOnTouchOutside(true);
         popViewKind.setCallback(new PaymentPopView.VaiueCallback() {
             @Override
             public void setValue(String value, int index) {
-                crolView.setScreenVal(value);
+                switch (value){
+                    case "今天":
+                        crolView.setScreenVal(screenType,1);
+                        break;
+                    case "昨天":
+                        crolView.setScreenVal(screenType,2);
+                        break;
+                    case "本周":
+                        crolView.setScreenVal(screenType,3);
+                        break;
+                    case "上周":
+                        crolView.setScreenVal(screenType,4);
+                        break;
+                    case "本月":
+                        crolView.setScreenVal(screenType,5);
+                        break;
+                    case "上月":
+                        crolView.setScreenVal(screenType,6);
+                        break;
+                    case "本季度":
+                        crolView.setScreenVal(screenType,7);
+                        break;
+                    case "上季度":
+                        crolView.setScreenVal(screenType,8);
+                        break;
+                    case "本年":
+                        crolView.setScreenVal(screenType,9);
+                        break;
+                    case "去年":
+                        crolView.setScreenVal(screenType,10);
+                        break;
+                }
             }
         });
     }
