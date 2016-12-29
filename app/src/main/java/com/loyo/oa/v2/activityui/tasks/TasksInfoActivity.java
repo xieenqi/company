@@ -75,9 +75,11 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -487,8 +489,9 @@ public class TasksInfoActivity extends BaseActivity {
             tv_task_content = (TextView) mView.findViewById(R.id.tv_task_content);
             tv_task_status = (TextView) mView.findViewById(R.id.tv_task_status);
             tv_reviewer = (TextView) mView.findViewById(R.id.tv_reviewer);
-            ratingBar_Task = (RatingBar) mView.findViewById(R.id.ratingBar_Task);
-            item_tasks_sorece = (LinearLayout) mView.findViewById(R.id.item_tasks_sorece);
+//            ratingBar_Task = (RatingBar) mView.findViewById(R.id.ratingBar_Task);
+//            item_tasks_sorece = (LinearLayout) mView.findViewById(R.id.item_tasks_sorece);
+            TextView tv_task_score = (TextView) mView.findViewById(R.id.tv_task_score);
 
             if (!TextUtils.isEmpty(reviewer.user.getName())) {
                 tv_reviewer.setText(reviewer.user.getName());
@@ -502,13 +505,16 @@ public class TasksInfoActivity extends BaseActivity {
                 tv_task_content.setText(reviewer.comment);
             }
 
-            if ("0".equals(reviewer.status)) {
-                item_tasks_sorece.setVisibility(View.GONE);
-            }
+//            if ("0".equals(reviewer.status)) {
+//                item_tasks_sorece.setVisibility(View.GONE);
+//            }
 
             if (!TextUtils.isEmpty(reviewer.score + "")) {
-                int rat = (reviewer.score / 20);
-                ratingBar_Task.setRating((float) (rat / 1.0));
+//                int rat = (reviewer.score / 20);
+//                ratingBar_Task.setRating((float) (rat / 1.0));
+                tv_task_score.setVisibility(View.VISIBLE);
+                tv_task_score.setText(reviewer.newScore.contains("-") ? "--" : reviewer.newScore + "分");
+
             }
 
             if ("1".equals(reviewer.status)) {

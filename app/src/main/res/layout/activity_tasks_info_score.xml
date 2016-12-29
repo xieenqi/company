@@ -68,16 +68,30 @@
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:text="任务评分"/>
 
-            <RatingBar
-                android:id="@+id/ratingBar_Task"
-                style="@style/roomRatingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="29dp"
-                android:gravity="right|center_vertical"
-                android:isIndicator="false"
-                android:max="100"
-                android:numStars="5"
-                android:stepSize="1"/>
+            <!--<RatingBar-->
+                <!--android:id="@+id/ratingBar_Task"-->
+                <!--style="@style/roomRatingBar"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="29dp"-->
+                <!--android:gravity="right|center_vertical"-->
+                <!--android:isIndicator="false"-->
+                <!--android:max="100"-->
+                <!--android:numStars="5"-->
+                <!--android:stepSize="1"/>-->
+            <EditText
+                android:id="@+id/et_score"
+                style="@style/edtText_normal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:hint="必填,请输入"
+                android:lineSpacingExtra="6dp"
+                android:textColor="@color/text66"
+                android:textColorHint="@color/text99"
+                android:textSize="15sp"
+                android:inputType="numberDecimal"
+                />
 
         </LinearLayout>
 
