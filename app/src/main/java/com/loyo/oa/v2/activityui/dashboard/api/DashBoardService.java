@@ -77,6 +77,7 @@ public class DashBoardService {
                 //订单金额
             case ORDER_NUMBER:
                 //订单数量
+                observable = dashBoard.getDashBoardSaleListData(params);
                 break;
         }
        return observable.compose(RetrofitAdapterFactory.<DashBoardListModel>compatApplySchedulers());

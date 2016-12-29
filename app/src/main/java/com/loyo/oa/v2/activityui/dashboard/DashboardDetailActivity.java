@@ -92,8 +92,12 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             //增量/存量
             map.put("tagItemId", getIntent().getStringExtra("tagItemId"));//tagItemId
             Log.i(TAG, "getPageData: "+getIntent().getStringExtra("tagItemId"));
-        } else if (DashborardType.ORDER_NUMBER == type || DashborardType.ORDER_MONEY == type) {
-            //订单数量，订单金额
+        } else if (DashborardType.ORDER_NUMBER == type){
+            //订单数量
+            map.put("sType", "1");
+        }else if( DashborardType.ORDER_MONEY == type) {
+            //订单金额
+            map.put("sType", "2");
         }
 
         //网络请求

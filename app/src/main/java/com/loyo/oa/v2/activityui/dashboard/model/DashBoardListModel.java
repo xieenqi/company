@@ -27,11 +27,18 @@ public class DashBoardListModel extends BaseBeanT<DashBoardListModel.Data>{
         //电话录音
         public String totalLength;
 
+
+
+        public String id;
+        public String name;
         //增量／存量
-        public String Id;
-        public String Name;
-        public Integer Count;
-        public Integer AddCount;
+        public Integer count;
+        public Integer addCount;
+
+        //订单数量和金额
+        public String orderNum;
+        public String targetNum;
+        public String finish_rate;
 
 
     }
