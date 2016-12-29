@@ -100,17 +100,27 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             map.put("sType", "2");
         }
 
+        ll_loading.setStatus(LoadingLayout.Loading);
         //网络请求
-        DashBoardService.getDashBoardListData(map, type).subscribe(new DefaultLoyoSubscriber<DashBoardListModel>() {
+        DashBoardService.getDashBoardListData(map, type).subscribe(new DefaultLoyoSubscriber<DashBoardListModel>(ll_loading) {
+            @Override
+            public void onError(Throwable e) {
+                if(pageIndex==1){
+                    super.onError(e);
+                }else{
+                    ll_loading.setStatus(LoadingLayout.Success);
+                    Toast(e.getMessage());
+                }
+            }
             @Override
             public void onNext(DashBoardListModel dashBoardListModel) {
+                ll_loading.setStatus(LoadingLayout.Success);
                 if (1 == pageIndex) {
                     adapter.reload(dashBoardListModel.data.records);
                 } else {
                     adapter.addAll(dashBoardListModel.data.records);
                 }
                 lv_list.onRefreshComplete();
-
             }
         });
     }
