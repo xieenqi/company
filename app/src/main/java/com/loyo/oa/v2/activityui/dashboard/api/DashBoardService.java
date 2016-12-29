@@ -3,6 +3,8 @@ package com.loyo.oa.v2.activityui.dashboard.api;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
 import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
 import com.loyo.oa.v2.activityui.dashboard.model.DashBoardListModel;
+import com.loyo.oa.v2.activityui.dashboard.model.MoneyCountModel;
+import com.loyo.oa.v2.activityui.dashboard.model.StockListModel;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.tool.Config_project;
 import java.util.HashMap;
@@ -24,6 +26,26 @@ public class DashBoardService {
                         .compose(RetrofitAdapterFactory.<CsclueFowUp>compatApplySchedulers());
     }
 
+
+    //获取增量和存量
+    public static Observable<StockListModel> getStock(HashMap<String, Object> params) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(IDashBoard.class)
+                        .getStock(params)
+                        .compose(RetrofitAdapterFactory.<StockListModel>compatApplySchedulers());
+    }
+
+    //获取数量和金额
+    public static Observable<MoneyCountModel> getMoneyCount(HashMap<String, Object> params) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(IDashBoard.class)
+                        .getMoneyCount(params)
+                        .compose(RetrofitAdapterFactory.<MoneyCountModel>compatApplySchedulers());
+    }
 
     //仪表盘 列表的数据接口
     public static Observable<DashBoardListModel> getDashBoardListData(HashMap<String, Object> params,DashborardType type) {

@@ -6,19 +6,20 @@ import android.graphics.drawable.AnimationDrawable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
 import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
+import com.loyo.oa.v2.activityui.dashboard.model.MoneyCountModel;
+import com.loyo.oa.v2.activityui.dashboard.model.StockListModel;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.HashMap;
-
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -81,14 +82,59 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
         });
     }
 
+    /*获取跟进*/
     @Override
-    public void getFollowUpData(LoadingLayout ll_loading,int type) {
+    public void getFollowUpData(int type) {
         HashMap<String,Object> map = new HashMap<>();
         map.put("qType",type);
-        DashBoardService.getFupCusClue(map).subscribe(new DefaultLoyoSubscriber<CsclueFowUp>(ll_loading) {
+        DashBoardService.getFupCusClue(map).subscribe(new DefaultLoyoSubscriber<CsclueFowUp>(null) {
             @Override
             public void onNext(CsclueFowUp csclueFowUp) {
-                crolView.followUpSuccessEmbl();
+                crolView.followUpSuccessEmbl(csclueFowUp);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                crolView.followUpErrorEmbl();
+            }
+        });
+    }
+
+    /*获取存量增量*/
+    @Override
+    public void getStockData(int type) {
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("qType",type);
+        DashBoardService.getStock(map).subscribe(new DefaultLoyoSubscriber<StockListModel>(null) {
+            @Override
+            public void onNext(StockListModel stockListModel) {
+                crolView.stockSuccessEmbl(stockListModel);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                crolView.stockErrorEmbl();
+            }
+        });
+    }
+
+    /*获取数量金额*/
+    @Override
+    public void getMoneyCountData(int type) {
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("qType",type);
+        DashBoardService.getMoneyCount(map).subscribe(new DefaultLoyoSubscriber<MoneyCountModel>(null) {
+            @Override
+            public void onNext(MoneyCountModel moneyCountModel) {
+                crolView.moneyConSuccessEmbl(moneyCountModel);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                crolView.moneyConErrorEmbl();
             }
         });
     }
@@ -103,10 +149,12 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
      * @param  loadview:   整个Layout
      *
      * */
+    @Override
     public void setOnSucssView(AnimationDrawable anim,LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status){
         modelView.setVisibility(status.getModelView());
         load.setVisibility(status.getLoadView());
         error.setVisibility(status.getErrorView());
         loadview.setVisibility(status.getLayoutView());
+        status.animEmbl(anim);
     }
 }
