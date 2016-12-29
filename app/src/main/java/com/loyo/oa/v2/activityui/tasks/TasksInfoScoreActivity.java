@@ -75,6 +75,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
 //            }
 //        });
         et_score.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
+        et_score.addTextChangedListener(OrderCommon.getTextWatcher());
     }
 
     void getTempTask() {
@@ -87,7 +88,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
             public void toggleToOn() {
                 task_info_switch.setState(true);
                 status = 1;
-                edt_content.setHint("请输入审核内容(可填)");
+                edt_content.setHint("请输入审核内容(选填)");
                 tasks_info_sorceview.setVisibility(View.VISIBLE);
             }
 
@@ -122,10 +123,10 @@ public class TasksInfoScoreActivity extends BaseActivity {
                     }
                     verfyTask(sorce, status, comment);
                 } else {
-                    if (TextUtils.isEmpty(sorce)) {
-                        Toast("请评分!");
-                        return;
-                    }
+//                    if (TextUtils.isEmpty(sorce)) {
+//                        Toast("请评分!");
+//                        return;
+//                    }
                     verfyTask(sorce, status, comment);
                 }
                 break;
@@ -144,7 +145,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("newScore", TextUtils.isEmpty(sorce) ? "-1" : sorce);
-        map.put("comment", comment);
+        map.put("comment", TextUtils.isEmpty(comment) ? "审核通过" : comment);
         map.put("status", status);
 
         LogUtil.dll("发送数据:" + MainApp.gson.toJson(map));

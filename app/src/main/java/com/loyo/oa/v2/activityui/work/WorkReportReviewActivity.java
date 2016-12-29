@@ -8,6 +8,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -63,6 +64,7 @@ public class WorkReportReviewActivity extends BaseActivity {
 //            }
 //        });
         et_score.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
+        et_score.addTextChangedListener(OrderCommon.getTextWatcher());
     }
 
     @Click(R.id.btn_workreport_review)
