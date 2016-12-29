@@ -91,12 +91,12 @@
                     >
 
                     <RelativeLayout
-                        android:id="@+id/layout_loaddiv1"
+                        android:id="@+id/loading_view1"
                         android:layout_width="match_parent"
                         android:layout_height="182dp">
 
                         <LinearLayout
-                            android:id="@+id/layout_rest1"
+                            android:id="@+id/loading_error1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -119,7 +119,7 @@
                                 />
 
                             <TextView
-                                android:id="@+id/tv_rest1"
+                                android:id="@+id/tv_click_rest1"
                                 android:layout_marginTop="@dimen/dimen_10"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -131,7 +131,7 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:id="@+id/layout_load1"
+                            android:id="@+id/loading_load1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/animation_loading"

@@ -15,7 +15,7 @@ public enum LoadStatus {
         }
 
         @Override
-        public int getRestView() {
+        public int getErrorView() {
             return View.GONE;
         }
 
@@ -36,7 +36,7 @@ public enum LoadStatus {
         }
 
         @Override
-        public int getRestView() {
+        public int getErrorView() {
             return View.GONE;
         }
 
@@ -57,7 +57,7 @@ public enum LoadStatus {
         }
 
         @Override
-        public int getRestView() {
+        public int getErrorView() {
             return View.VISIBLE;
         }
 
@@ -73,7 +73,7 @@ public enum LoadStatus {
     };
 
     public abstract int getLoadView();
-    public abstract int getRestView();
+    public abstract int getErrorView();
     public abstract int getLayoutView();
     public abstract int getModelView();
 

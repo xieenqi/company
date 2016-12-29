@@ -2,10 +2,14 @@ package com.loyo.oa.v2.activityui.dashboard.presenter.impl;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
+import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
 import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
@@ -86,5 +90,22 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
                 crolView.followUpSuccessEmbl();
             }
         });
+    }
+
+
+    /**
+     * 设置Loading状态
+     *
+     * @param  modelView:  展示数据view
+     * @param  load:       loading动画
+     * @param  error:      点击重试view
+     * @param  loadview:   整个Layout
+     *
+     * */
+    public void setOnSucssView(LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status){
+        modelView.setVisibility(status.getModelView());
+        load.setVisibility(status.getLoadView());
+        error.setVisibility(status.getErrorView());
+        loadview.setVisibility(status.getLayoutView());
     }
 }

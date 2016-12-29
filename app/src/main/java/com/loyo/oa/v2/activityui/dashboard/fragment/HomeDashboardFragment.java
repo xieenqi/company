@@ -1,24 +1,20 @@
 package com.loyo.oa.v2.activityui.dashboard.fragment;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.DashboardDetailActivity;
-import com.loyo.oa.v2.activityui.dashboard.DashboardLoadingView;
 import com.loyo.oa.v2.activityui.dashboard.adapter.StockListAdapter;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
@@ -31,6 +27,7 @@ import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
+
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -38,24 +35,22 @@ import me.itangqi.waveloadingview.WaveLoadingView;
  * Created by yyy on 16/12/9.
  */
 
-public class HomeDashboardFragment extends BaseFragment implements View.OnClickListener,HomeDashBoardView {
+public class HomeDashboardFragment extends BaseFragment implements View.OnClickListener, HomeDashBoardView {
 
     private View mView;
     private RadioButton rb_customer, rb_clue;
-    private LinearLayout ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record,ll_dashboard_order_number,
-            ll_dashboard_order_money,ll_followup;
-
-    private RelativeLayout layout_loaddiv1,layout_loaddiv2,layout_loaddiv3;
-    private LinearLayout layout_rest1,layout_rest2,layout_rest3;
-    private TextView tv_rest1,tv_rest2,tv_rest3;
-    private ImageView layout_load1,layout_load2,layout_load3;
-
-
+    private LinearLayout ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
+            ll_dashboard_order_money, ll_followup;
+    private RelativeLayout loading_view1, loading_view2, loading_view3;
+    private LinearLayout loading_error1, layout_rest2, layout_rest3;
+    private TextView tv_click_rest1, tv_click_rest2, tv_click_rest3;
+    private ImageView loading_load1, loading_load2, loading_load3;
     private LinearLayout ll_case1, ll_case2, ll_case3;
     private CustomerListView lv_stocklist;
 
     private StockListAdapter mAdapter;
     private HomeDashboardPresenter mPresenter;
+    private AnimationDrawable loadAnim1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +61,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (null == mView) {
-            mView =  inflater.inflate(R.layout.fragment_dashboard, container, false);
+            mView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         }
         initUI();
         return mView;
@@ -84,7 +79,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DashborardType.COMMON.setTttle("增量 存量");
                 DashborardType.COMMON.setPermission(BusinessOperation.AUGMENTER_STOCK);
-                if(!checkPermission(DashborardType.COMMON)){
+                if (!checkPermission(DashborardType.COMMON)) {
                     return;
                 }
                 Bundle bundle = new Bundle();
@@ -96,27 +91,27 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     private void initUI() {
 
-        mPresenter = new HomeDashboardPresenterImpl(mActivity,this);
+        mPresenter = new HomeDashboardPresenterImpl(mActivity, this);
         rb_customer = (RadioButton) mView.findViewById(R.id.rb_customer);
         rb_clue = (RadioButton) mView.findViewById(R.id.rb_clue);
         lv_stocklist = (CustomerListView) mView.findViewById(R.id.lv_stocklist);
         ll_dashboard_followup = (LinearLayout) mView.findViewById(R.id.ll_dashboard_followup);
         ll_dashboard_signin = (LinearLayout) mView.findViewById(R.id.ll_dashboard_signin);
         ll_dashboard_record = (LinearLayout) mView.findViewById(R.id.ll_dashboard_record);
-        ll_dashboard_order_number= (LinearLayout) mView.findViewById(R.id.ll_dashboard_order_number);
-        ll_dashboard_order_money= (LinearLayout) mView.findViewById(R.id.ll_dashboard_order_money);
+        ll_dashboard_order_number = (LinearLayout) mView.findViewById(R.id.ll_dashboard_order_number);
+        ll_dashboard_order_money = (LinearLayout) mView.findViewById(R.id.ll_dashboard_order_money);
         ll_case1 = (LinearLayout) mView.findViewById(R.id.ll_case1);
         ll_case2 = (LinearLayout) mView.findViewById(R.id.ll_case2);
         ll_case3 = (LinearLayout) mView.findViewById(R.id.ll_case3);
         ll_followup = (LinearLayout) mView.findViewById(R.id.ll_followup);
 
-        layout_loaddiv1 = (RelativeLayout) mView.findViewById(R.id.layout_loaddiv1);
+        loading_view1 = (RelativeLayout) mView.findViewById(R.id.loading_view1);
 
-        layout_rest1 = (LinearLayout) mView.findViewById(R.id.layout_rest1);
+        loading_error1 = (LinearLayout) mView.findViewById(R.id.loading_error1);
 
-        tv_rest1 = (TextView) mView.findViewById(R.id.tv_rest1);
+        tv_click_rest1 = (TextView) mView.findViewById(R.id.tv_click_rest1);
 
-        layout_load1 = (ImageView) mView.findViewById(R.id.layout_load1);
+        loading_load1 = (ImageView) mView.findViewById(R.id.loading_load1);
 
 
         rb_customer.setOnClickListener(this);
@@ -137,66 +132,55 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         ll_dashboard_record.setOnClickListener(this);
         ll_dashboard_order_number.setOnClickListener(this);
         ll_dashboard_order_money.setOnClickListener(this);
-        Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin,ll_dashboard_record,ll_dashboard_order_number,
+        Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
                 ll_dashboard_order_money);
         bindAdapter();
-
+        initAnim();
     }
 
-    /**
-     * 设置Loading状态
-     *
-     * @param  modlv:  展示数据view
-     * @param  load:   loading动画
-     * @param  rest:   点击重试
-     * @param  layout: 整个Layout
-     *
-     * */
-    public void setOnSucssView(LinearLayout modlv,ImageView load,LinearLayout rest,RelativeLayout layout,LoadStatus status){
-        load.setVisibility(status.getLoadView());
-        rest.setVisibility(status.getRestView());
-        layout.setVisibility(status.getLayoutView());
+    private void initAnim() {
+        loadAnim1 = (AnimationDrawable) mView.findViewById(R.id.loading_load1).getBackground();
     }
 
     @Override
     public void onClick(View view) {
 
         String[] list = null;
-        switch (view.getId()){
+        switch (view.getId()) {
 
 
             /*客户跟进*/
             case R.id.rb_customer:
                 Toast("1");
-                mPresenter.getFollowUpData(null,5);
+                mPresenter.getFollowUpData(null, 5);
                 break;
 
             /*线索跟进*/
             case R.id.rb_clue:
                 Toast("2");
-                mPresenter.getFollowUpData(null,5);
+                mPresenter.getFollowUpData(null, 5);
                 break;
 
             /*客户线索筛选*/
             case R.id.ll_case1:
                 list = new String[]{"今天", "昨天", "本周", "上周", "本月", "上月", "取消"};
-                mPresenter.screenControlView(list,"选择时间");
+                mPresenter.screenControlView(list, "选择时间");
                 break;
 
             /*增量存量筛选*/
             case R.id.ll_case2:
                 list = new String[]{"今天", "昨天", "本周", "上周", "本月", "上月", "取消"};
-                mPresenter.screenControlView(list,"选择时间");
+                mPresenter.screenControlView(list, "选择时间");
                 break;
 
             /*数量金额筛选*/
             case R.id.ll_case3:
                 list = new String[]{"本月", "上月", "本季度", "上季度", "本年", "去年", "取消"};
-                mPresenter.screenControlView(list,"选择时间");
+                mPresenter.screenControlView(list, "选择时间");
                 break;
 
             case R.id.ll_dashboard_followup:
-                if(!checkPermission(DashborardType.CUS_FOLLOWUP)){
+                if (!checkPermission(DashborardType.CUS_FOLLOWUP)) {
                     return;
                 }
                 Bundle bdFollowup = new Bundle();
@@ -204,7 +188,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdFollowup);
                 break;
             case R.id.ll_dashboard_signin:
-                if(!checkPermission(DashborardType.CUS_SIGNIN)){
+                if (!checkPermission(DashborardType.CUS_SIGNIN)) {
                     return;
                 }
                 Bundle bdSignin = new Bundle();
@@ -212,7 +196,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdSignin);
                 break;
             case R.id.ll_dashboard_record:
-                if(!checkPermission(DashborardType.CUS_CELL_RECORD)){
+                if (!checkPermission(DashborardType.CUS_CELL_RECORD)) {
                     return;
                 }
                 Bundle bdRecord = new Bundle();
@@ -220,7 +204,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdRecord);
                 break;
             case R.id.ll_dashboard_order_number:
-                if(!checkPermission(DashborardType.ORDER_NUMBER)){
+                if (!checkPermission(DashborardType.ORDER_NUMBER)) {
                     return;
                 }
                 Bundle bdOrderNumber = new Bundle();
@@ -228,7 +212,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdOrderNumber);
                 break;
             case R.id.ll_dashboard_order_money:
-                if(!checkPermission(DashborardType.ORDER_MONEY)){
+                if (!checkPermission(DashborardType.ORDER_MONEY)) {
                     return;
                 }
                 Bundle bdOrderMoney = new Bundle();
@@ -239,8 +223,8 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         }
     }
 
-    private boolean checkPermission(DashborardType per){
-        if(!PermissionManager.getInstance().hasPermission(per.getaPermission())){
+    private boolean checkPermission(DashborardType per) {
+        if (!PermissionManager.getInstance().hasPermission(per.getaPermission())) {
             Toast("无数据查看权限!");
             return false;
         }
@@ -252,15 +236,24 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         Toast(val);
     }
 
-    // 获取跟进成功处理
+    // 获取跟进成功
     @Override
     public void followUpSuccessEmbl() {
-        setOnSucssView(ll_followup,layout_load1,layout_rest1,layout_loaddiv1,LoadStatus.SUCCESS);
+        mPresenter.setOnSucssView(ll_followup,
+                loading_load1,
+                loading_error1,
+                loading_view1,
+                LoadStatus.SUCCESS);
     }
 
+    // 获取跟进失败
     @Override
     public void followUpErrorEmbl() {
-        setOnSucssView(ll_followup,layout_load1,layout_rest1,layout_loaddiv1,LoadStatus.ERROR);
+        mPresenter.setOnSucssView(ll_followup,
+                loading_load1,
+                loading_error1,
+                loading_view1,
+                LoadStatus.ERROR);
     }
 
     @Override
