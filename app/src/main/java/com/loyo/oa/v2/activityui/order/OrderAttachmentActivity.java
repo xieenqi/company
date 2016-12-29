@@ -136,19 +136,11 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
      * 上传附件信息
      */
     public void postAttaData() {
-        showLoading("");
         buildAttachment();
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud) {
                     @Override
                     public void onNext(ArrayList<AttachmentForNew> news) {
-                        cancelLoading();
                         getAttachments();
                     }
                 });
@@ -258,7 +250,7 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
                         controller.addUploadTask("file://" + path, null, uuid);
                     }
                     if (mSelectPath.size() > 0) {
-                        showLoading("");
+                        showCommitLoading();
                         controller.startUpload();
                     }
                 }
@@ -282,8 +274,6 @@ public class OrderAttachmentActivity extends BaseLoadingActivity implements View
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelLoading();
-
         // TODO: 上传失败提醒
         if (taskList.size() > 0) {
             postAttaData();

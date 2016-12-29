@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -192,9 +194,6 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
-        if (uploadNum == uploadSize) {
-            cancelLoading();
-        }
     }
 
     @Override
@@ -309,15 +308,16 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
             /*附件删除*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
 
+                showLoading2("");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                 HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("bizType", bizType);
                 map.put("uuid", uuid);
                 AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
-                        .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                        .subscribe(new DefaultLoyoSubscriber<Attachment>(hud) {
                             @Override
                             public void onNext(Attachment attachment) {
-                                Toast("删除附件成功!");
+                                LoyoToast.info(WfInEditActivity.this, "删除附件成功!");
                                 lstData_Attachment.remove(delAttachment);
                                 init_gridView_photo();
                             }
@@ -383,23 +383,25 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
     }
 
     @Override
-    public void showStatusProgress() {
-        showStatusLoading(false);
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String msg) {
-        showLoading(msg);
+    public LoyoProgressHUD showProgress(String msg) {
+        showLoading2(msg);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String msg) {
-        Toast(msg);
+        LoyoToast.info(this, msg);
     }
 
     /**

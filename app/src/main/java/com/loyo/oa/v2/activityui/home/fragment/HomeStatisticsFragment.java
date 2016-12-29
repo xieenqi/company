@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.home.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,21 +22,13 @@ import com.loyo.oa.v2.activityui.home.bean.HttpProcess;
 import com.loyo.oa.v2.activityui.home.bean.HttpSalechance;
 import com.loyo.oa.v2.activityui.home.bean.HttpStatistics;
 import com.loyo.oa.v2.activityui.home.cusview.LoopView;
-import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【统计】fragment
@@ -220,33 +211,13 @@ public class HomeStatisticsFragment extends BaseFragment {
      * 获取 【过程统计】 今日 本周 的数据
      */
     private void getProcessInfo(int type) {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
-//                .create(IStatistics.class).getProcessList(map, new Callback<List<HttpProcess>>() {
-//            @Override
-//            public void success(List<HttpProcess> result, Response response) {
-//                HttpErrorCheck.checkResponse("【过程统计】数据：", response);
-//                setprocessData(result);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-
-        StatisticsService.getProcessList(map).subscribe(new DefaultLoyoSubscriber<List<HttpProcess>>() {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
-
+        StatisticsService.getProcessList(map)
+                .subscribe(new DefaultLoyoSubscriber<List<HttpProcess>>(hud) {
             @Override
             public void onNext(List<HttpProcess> httpProcesses) {
-                DialogHelp.cancelLoading();
                 setprocessData(httpProcesses);
             }
         });
@@ -256,33 +227,13 @@ public class HomeStatisticsFragment extends BaseFragment {
      * 获取 【增量统计】 今日 本周 的数据
      */
     private void getBulkingInfo(int type) {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
-//                .create(IStatistics.class).getBulkingList(map, new Callback<List<HttpBulking>>() {
-//            @Override
-//            public void success(List<HttpBulking> result, Response response) {
-//                HttpErrorCheck.checkResponse("【增量统计】数据：", response);
-//                setBulkingData(result);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-
-        StatisticsService.getBulkingList(map).subscribe(new DefaultLoyoSubscriber<List<HttpBulking>>() {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
-
+        StatisticsService.getBulkingList(map)
+                .subscribe(new DefaultLoyoSubscriber<List<HttpBulking>>(hud) {
             @Override
             public void onNext(List<HttpBulking> httpBulkings) {
-                DialogHelp.cancelLoading();
                 setBulkingData(httpBulkings);
             }
         });
@@ -292,33 +243,13 @@ public class HomeStatisticsFragment extends BaseFragment {
      * 获取 【业绩目标】本周 本月 的数据
      */
     private void getAchievesInfo(int type) {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
-//                .create(IStatistics.class).getAchievesList(map, new Callback<List<HttpAchieves>>() {
-//            @Override
-//            public void success(List<HttpAchieves> result, Response response) {
-//                HttpErrorCheck.checkResponse("【业绩目标】数据：", response);
-//                setAchievesData(result);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-
-        StatisticsService.getAchievesList(map).subscribe(new DefaultLoyoSubscriber<List<HttpAchieves>>() {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
-
+        StatisticsService.getAchievesList(map)
+                .subscribe(new DefaultLoyoSubscriber<List<HttpAchieves>>(hud) {
             @Override
             public void onNext(List<HttpAchieves> result) {
-                DialogHelp.cancelLoading();
                 setAchievesData(result);
             }
         });
@@ -328,33 +259,12 @@ public class HomeStatisticsFragment extends BaseFragment {
      * 获取 【销售漏斗】本周 本月 的数据
      */
     private void getFunnelInfo(int type) {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
-//                .create(IStatistics.class).getFunnelList(map, new Callback<List<HttpSalechance>>() {
-//            @Override
-//            public void success(List<HttpSalechance> result, Response response) {
-//                HttpErrorCheck.checkResponse("【销售漏斗】数据：", response);
-//                setFunnelData(result);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-
         StatisticsService.getFunnelList(map).subscribe(new DefaultLoyoSubscriber<List<HttpSalechance>>() {
             @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
-
-            @Override
             public void onNext(List<HttpSalechance> result) {
-                DialogHelp.cancelLoading();
                 setFunnelData(result);
             }
         });

@@ -17,6 +17,7 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -47,7 +48,6 @@ import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.beans.SaleActivity;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -56,7 +56,6 @@ import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -378,8 +377,6 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
      * contact_name (联系人)
      */
     public void commitDynamic() {
-        cancelLoading();
-        showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         if (isCustom) {
             map.put("customerId", mCustomer.getId());
@@ -405,18 +402,16 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
 
         LogUtil.dee("新建跟进:" + MainApp.gson.toJson(map));
         CustomerService.addSaleactivity(map)
-                .subscribe(new DefaultLoyoSubscriber<SaleActivity>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<SaleActivity>(hud) {
                     @Override
                     public void onNext(SaleActivity saleActivity) {
-                        DialogHelp.successStatusLoad();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                cancelStatusLoading();
                                 AppBus.getInstance().post(new FollowUpRushEvent());
                                 app.finishActivity(FollowAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                             }
-                        },1000);
+                        },2000);
 
                     }
                 });
@@ -426,13 +421,11 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
      * 上传附件信息
      */
     public void postAttaData() {
-        showStatusLoading(false);
         buildAttachment();
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true) {
                     @Override
                     public void onNext(ArrayList<AttachmentForNew> news) {
-                        cancelStatusLoading();
                         commitDynamic();
                     }
                 });
@@ -528,7 +521,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
                     return;
                 }
 
-                showStatusLoading(false);
+                showCommitLoading();
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
 
@@ -771,10 +764,10 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelStatusLoading();
         int count = controller.failedTaskCount();
         if (count > 0) {
-            Toast(count + "个附件上传失败，请重试或者删除");
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
             return;
         }
         if (taskList.size() > 0) {

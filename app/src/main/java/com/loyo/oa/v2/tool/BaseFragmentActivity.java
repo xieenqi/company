@@ -19,11 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.library.module.common.SystemBarTintManager;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
@@ -40,7 +39,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     final String Tag = "BaseFragmentActivity";
     public SystemBarTintManager tintManager;
     public SweetAlertDialogView sweetAlertDialogView;
-    public LoadStatusView loadView;
+    public LoyoProgressHUD hud;
 
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
@@ -313,30 +312,63 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     /**
      * 展示带成功失败动画加载框
-     * */
-    public void showStatusLoading(boolean outTouch){
-        DialogHelp.showStatusLoading(outTouch,this);
+     */
+    public void showCommitLoading(boolean outTouch) {
+        if (hud != null) {
+            hud.dismiss();
+            hud = null;
+        }
+        hud = LoyoProgressHUD.commitHUD(this)
+                .setCancellable(outTouch)
+                .show();
+    }
+
+    public void showCommitLoading() {
+        if (hud != null) {
+            hud.dismiss();
+            hud = null;
+        }
+        hud = LoyoProgressHUD.commitHUD(this).show();
     }
 
     /**
      * 关闭带成功失败动画加载框
-     * */
-    public void cancelStatusLoading(){
-        DialogHelp.cancelStatusLoading();
+     */
+    public void cancelCommitLoading() {
+        if (hud != null) {
+            hud.dismiss();
+            hud = null;
+        }
     }
 
     /**
      * 加载loading的方法
      */
-    public void showLoading(String msg) {
-        DialogHelp.showLoading(this, msg, true);
+    public void showLoading2(String msg) {
+        if (hud != null) {
+            hud.dismiss();
+            hud = null;
+        }
+        hud = LoyoProgressHUD.spinHUD(this)
+                .setLabel(msg)
+                .show();
     }
 
-    public void showLoading(String msg, boolean Cancelable) {
-        DialogHelp.showLoading(this, msg, Cancelable);
+    public void showLoading2(String msg, boolean cancelable) {
+        if (hud != null) {
+            hud.dismiss();
+            hud = null;
+        }
+        hud = LoyoProgressHUD.spinHUD(this)
+                .setLabel(msg)
+                .setCancellable(cancelable)
+                .show();
     }
 
-    public static void cancelLoading() {
-        DialogHelp.cancelLoading();
+    public void cancelLoading2() {
+        if (hud != null) {
+            hud.dismiss();
+            hud = null;
+        }
     }
 }

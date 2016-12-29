@@ -16,12 +16,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.model.LatLng;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
@@ -31,13 +31,13 @@ import com.loyo.oa.v2.activityui.commonview.RecordUtils;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.activityui.signin.presenter.SigninPresenterImpl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonIdName;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
@@ -60,7 +60,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -398,7 +397,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 新增签到
      */
     private void addSignIn() {
-        showStatusLoading(false);
+        showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
         map.put("gpsInfo", loPosition + "," + laPosition);//当前定位信息
 //      map.put("address", mAddress.trim());//客户地址
@@ -554,22 +553,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-//    private String getDeviationDistance(double la, double lo) {
-//        LatLng ll = new LatLng(laPosition, loPosition);
-//        LatLng llCustomer = new LatLng(lo, la);// 地点的纬度，在-90 与90 之间的double 型数值。、地点的经度，在-180 与180 之间的double 型数值。
-//        LogUtil.d("偏差距离:" + AMapUtils.calculateLineDistance(ll, llCustomer));
-//        Double distance = Double.valueOf(Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer)));
-//        DecimalFormat df = new DecimalFormat("0.00");
-//        String distanceText;
-//        if (distance <= 1000) {
-//            distanceText = Utils.setValueDouble2(distance) + "m";
-//        } else {
-//            distanceText = df.format(distance / 1000) + "km";
-//        }
-//
-//        return distanceText;
-//    }//  104.073255,30.689493
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -595,24 +578,34 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD getHUD() {
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
 
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(this, message);
+    }
+
+    public SignInActivity() {
+
     }
 
     @Override
@@ -625,13 +618,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                cancelStatusLoading();
                 if (!TextUtils.isEmpty(legWork.getId())) {
                     AppBus.getInstance().post(new SigninRushEvent());
                     onBackPressed();
                 }
             }
-        }, 1000);
+        }, 2000);
     }
 
     @Override

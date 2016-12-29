@@ -1,17 +1,13 @@
 package com.loyo.oa.v2.network;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.IntDef;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.model.APIException;
 import com.loyo.oa.v2.network.model.LoyoError;
@@ -37,25 +33,13 @@ public class LoyoErrorChecker {
     public final static int SILENCE        = 1<<0;
     public final static int TOAST          = 1<<1;
     public final static int LOADING_LAYOUT = 1<<2;
-    public final static int COMMIT_DIALOG  = 1<<3;
+    public final static int PROGRESS_HUD = 1<<3;
 
-    @IntDef({SILENCE, TOAST, LOADING_LAYOUT, COMMIT_DIALOG})
+    @IntDef({SILENCE, TOAST, LOADING_LAYOUT, PROGRESS_HUD})
     @Retention(RetentionPolicy.SOURCE)
     public @interface CheckType {}
 
-    private static Toast mCurrentToast;
-
-    protected LoyoErrorChecker() {
-        throw new UnsupportedOperationException(); // 防止子类调用
-    }
-
-    private static void Toast(String msg) {
-        if (null != mCurrentToast) {
-            mCurrentToast.cancel();
-        }
-        mCurrentToast = Toast.makeText(MainApp.getMainApp().getBaseContext(), msg, Toast.LENGTH_SHORT);
-        mCurrentToast.setGravity(Gravity.CENTER, 0, 0);
-        mCurrentToast.show();
+    private LoyoErrorChecker() {
     }
 
     public static LoyoError loyoError(Throwable e) {
@@ -121,20 +105,20 @@ public class LoyoErrorChecker {
         checkLoyoError(e, type, null);
     }
 
-    public static void checkLoyoError(Throwable e, @CheckType int type, LoadingLayout layout) {
+    public static LoyoError checkLoyoError(Throwable e, @CheckType int type, LoadingLayout layout) {
         LoyoError error = LoyoErrorChecker.loyoError(e);
         if (type == LOADING_LAYOUT && layout == null) {
             type = TOAST;
         }
 
         if (error.loadingState == AuthFail) {
-            Toast(error.message);
+            LoyoToast.info(MainApp.getMainApp().getApplicationContext(), error.message);
             //到侧边栏 退出系统到登录界面
             Intent in = new Intent();
             in.setAction(ExtraAndResult.ACTION_USER_VERSION);
             in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
             LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
-            return;
+            return null;
         }
         switch (type) {
             case SILENCE:
@@ -148,23 +132,18 @@ public class LoyoErrorChecker {
                 layout.setNoNetworkText(error.message);
             }
             break;
-            case COMMIT_DIALOG:
+            case PROGRESS_HUD:
             {
-                DialogHelp.errorStatusLoading(error.message);
-                new Handler().postDelayed(new Runnable(){
-                    public void run() {
-                        DialogHelp.cancelStatusLoading();
-                    }
-                }, 1500);
+                // onCompleted 处理提示
             }
             break;
             default:
             {
-                // Toast(error.message);
                 LoyoToast.error(MainApp.getMainApp().getApplicationContext(), error.message);
             }
             break;
         }
+        return error;
 
     }
 }

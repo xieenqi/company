@@ -6,12 +6,13 @@ import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.DayofAttendance;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceList;
 import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
+import com.loyo.oa.v2.common.BaseView;
 
 /**
  * Created by yyy on 16/10/11.
  */
 
-public interface AttendanceListView {
+public interface AttendanceListView extends BaseView {
 
     /*获取列表数据成功处理*/
     void getListDataEmbl(HttpAttendanceList result);

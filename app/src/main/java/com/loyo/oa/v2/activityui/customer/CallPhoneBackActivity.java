@@ -128,19 +128,17 @@ public class CallPhoneBackActivity extends BaseActivity implements View.OnClickL
     }
 
     void requestCallBack2() {
-        showLoading("");
+        showLoading2("");
         CustomerService.cancelCallBack(callLogId)
-                .subscribe(new DefaultLoyoSubscriber<String>() {
+                .subscribe(new DefaultLoyoSubscriber<String>(hud) {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        cancelLoading();
                         finish();
                     }
 
                     @Override
                     public void onNext(String callbackId) {
-                        cancelLoading();
                         finish();
                     }
                 });

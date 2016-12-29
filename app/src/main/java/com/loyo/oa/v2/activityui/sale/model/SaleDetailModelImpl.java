@@ -5,17 +5,9 @@ import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activityui.sale.contract.SaleDetailContract;
-import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by xeq on 2016/11/30
@@ -76,14 +68,7 @@ public class SaleDetailModelImpl implements SaleDetailContract.Model {
         SaleService.editSaleStage(map,selectId).subscribe(new DefaultLoyoSubscriber<SaleProductEdit>() {
             @Override
             public void onNext(SaleProductEdit saleProductEdit) {
-                DialogHelp.cancelLoading();
                 mPersenter.editSaleStageSuccess();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
             }
         });
     }

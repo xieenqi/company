@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.sale.contract;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.common.BaseView;
@@ -14,6 +15,9 @@ import java.util.HashMap;
 
 public interface AddMySaleContract {
     interface View extends BaseView {
+
+        LoyoProgressHUD getHUD();
+
         void setDynamicUI(ArrayList<ContactLeftExtras> dynamicData);
 
         void setHintUI(boolean... booleen);
@@ -26,6 +30,8 @@ public interface AddMySaleContract {
     }
 
     interface Presenter extends BasePersenter {
+
+        LoyoProgressHUD getHUD();
 
         void getDynamic();
 

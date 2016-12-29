@@ -1,8 +1,5 @@
 package com.loyo.oa.v2.common.http;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -15,14 +12,9 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.login.DialogTipActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBean;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RemindWay;
-import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.service.CheckUpdateService;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.UpdateTipActivity;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.json.JSONException;
@@ -30,8 +22,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-import cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -56,43 +46,43 @@ public class HttpErrorCheck {
         mCurrentToast.show();
     }
 
-    public static void checkErrorForAttendance(RetrofitError error) {
-        DialogHelp.cancelLoading();
-        LogUtil.d("网络异常" + error.getMessage());
-        LogUtil.d("error接口URL：" + error.getUrl());
-
-        try {
-            String msg = Utils.convertStreamToString(error.getResponse().getBody().in());
-            LogUtil.d("error获得的：", msg);
-            JSONObject job = new JSONObject(msg);
-            if (500 == error.getResponse().getStatus()) {
-                Toast(job.getString("error"));
-            } else if (401 == error.getResponse().getStatus()) {
-                Toast(job.getString("error"));
-            } else if (404 == error.getResponse().getStatus()) {
-                Toast(job.getString("error"));
-            } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                Toast("请检查您的网络连接");
-            } else {
-                Toast(job.getString("error"));
-            }
-            LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            LogUtil.d("Body空err:" + error.getUrl());
-            e.printStackTrace();
-            Toast("没有更多数据了！");
-        } catch (JSONException e) {
-            LogUtil.d("JSON异常err:" + error.getUrl());
-            Toast("服务端数据异常");
-            e.printStackTrace();
-        }
-    }
+//    public static void checkErrorForAttendance(RetrofitError error) {
+//        DialogHelp.cancelLoading();
+//        LogUtil.d("网络异常" + error.getMessage());
+//        LogUtil.d("error接口URL：" + error.getUrl());
+//
+//        try {
+//            String msg = Utils.convertStreamToString(error.getResponse().getBody().in());
+//            LogUtil.d("error获得的：", msg);
+//            JSONObject job = new JSONObject(msg);
+//            if (500 == error.getResponse().getStatus()) {
+//                Toast(job.getString("error"));
+//            } else if (401 == error.getResponse().getStatus()) {
+//                Toast(job.getString("error"));
+//            } else if (404 == error.getResponse().getStatus()) {
+//                Toast(job.getString("error"));
+//            } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
+//                Toast("请检查您的网络连接");
+//            } else {
+//                Toast(job.getString("error"));
+//            }
+//            LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (NullPointerException e) {
+//            LogUtil.d("Body空err:" + error.getUrl());
+//            e.printStackTrace();
+//            Toast("没有更多数据了！");
+//        } catch (JSONException e) {
+//            LogUtil.d("JSON异常err:" + error.getUrl());
+//            Toast("服务端数据异常");
+//            e.printStackTrace();
+//        }
+//    }
 
 
     public static void checkError(RetrofitError error) {
-        DialogHelp.cancelLoading();
+//        DialogHelp.cancelLoading();
         LogUtil.d("网络异常" + error.getMessage());
         LogUtil.d("error接口URL：" + error.getUrl());
 
@@ -154,7 +144,7 @@ public class HttpErrorCheck {
      * @param loadingLayout //     * @param isLoading     true 只显示loading  false Toast
      */
     public static void checkError(RetrofitError error, LoadingLayout loadingLayout) {
-        DialogHelp.cancelLoading();
+        //DialogHelp.cancelLoading();
         LogUtil.d("loading网络异常: " + error.getMessage());
         LogUtil.d("error接口URL：" + error.getUrl());
 
@@ -212,7 +202,7 @@ public class HttpErrorCheck {
     }
 
     public static void checkResponse(String tag, Response response) {
-        DialogHelp.cancelLoading();
+        //DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(tag + " 接口成功result：" + result);
@@ -236,7 +226,7 @@ public class HttpErrorCheck {
      * @param loadingLayout
      */
     public static void checkResponse(String tag, Response response, LoadingLayout loadingLayout) {
-        DialogHelp.cancelLoading();
+        //DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(tag + " 接口成功result：" + result);
@@ -253,7 +243,7 @@ public class HttpErrorCheck {
     }
 
     public static void checkResponse(Response response) {
-        DialogHelp.cancelLoading();
+        //DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(" 接口成功result：" + result);
@@ -274,7 +264,7 @@ public class HttpErrorCheck {
      * 所有提交,成功检查(2.7.4新版提交方案)
      */
     public static void checkCommitSus(String tag, Response response) {
-        DialogHelp.successStatusLoad();
+        //DialogHelp.successStatusLoad();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(tag + " 接口成功result：" + result);
@@ -344,10 +334,10 @@ public class HttpErrorCheck {
             errorMsg = "服务端数据异常";
             e.printStackTrace();
         } finally {
-            DialogHelp.errorStatusLoading(errorMsg);
+            //DialogHelp.errorStatusLoading(errorMsg);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
-                    DialogHelp.cancelStatusLoading();
+                    //DialogHelp.cancelStatusLoading();
                 }
             }, 1500);
         }

@@ -31,7 +31,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.OrderAddforExtraData;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -260,11 +259,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 获取新建订单动态字段
      */
     public void getAddDynamic() {
-        showLoading("", false);
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 104);
         CustomerService.getAddCustomerJur(map)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         mCusList = contactLeftExtrasArrayList;
@@ -301,7 +300,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             }
         }
 
-        showStatusLoading(false);
+        showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             map.put("id", mOrderDetail.id);
@@ -336,16 +335,15 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      */
     public void editOrderData(HashMap<String, Object> map) {
         OrderService.editOrder(mOrderDetail.id, map)
-                .subscribe(new DefaultLoyoSubscriber<OrderAdd>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<OrderAdd>(hud) {
                     @Override
                     public void onNext(OrderAdd add) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                cancelStatusLoading();
                                 app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                             }
-                        },1000);
+                        },2000);
                     }
                 });
 
@@ -356,19 +354,18 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      */
     public void addOrderData(HashMap<String, Object> map) {
         OrderService.addOrder(map)
-                .subscribe(new DefaultLoyoSubscriber<OrderAdd>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<OrderAdd>(hud) {
                     @Override
                     public void onNext(OrderAdd add) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                cancelStatusLoading();
                                 app.finishActivity(OrderAddActivity.this,
                                         MainApp.ENTER_TYPE_LEFT,
                                         ExtraAndResult.REQUEST_CODE,
                                         new Intent());
                             }
-                        },1000);
+                        },2000);
                     }
                 });
     }

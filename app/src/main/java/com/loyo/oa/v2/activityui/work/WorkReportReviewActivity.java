@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.beans.WorkReport;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -75,32 +74,12 @@ public class WorkReportReviewActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("newScore", TextUtils.isEmpty(sorce) ? "-1" : sorce);
         map.put("comment", content);
-        showLoading("");
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).reviewWorkReport(mWorkReportId, map, new RCallback<WorkReport>() {
-//            @Override
-//            public void success(final WorkReport workReport, final Response response) {
-//                HttpErrorCheck.checkResponse(response);
-//                setResult(RESULT_OK);
-//                back();
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//                super.failure(error);
-//            }
-//        });
+        showLoading2("");
 
-        WorkReportService.reviewWorkReport(mWorkReportId,map).subscribe(new DefaultLoyoSubscriber<WorkReport>() {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
-
+        WorkReportService.reviewWorkReport(mWorkReportId,map)
+                .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud) {
             @Override
             public void onNext(WorkReport workReport) {
-                DialogHelp.cancelLoading();
                 setResult(RESULT_OK);
                 back();
             }

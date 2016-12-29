@@ -26,7 +26,6 @@ import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.adapter.SigninListAdapter;
@@ -289,9 +288,6 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
      * 获取Self列表数据
      */
     private void getData(boolean isPullOrDown) {
-        if (!isPullOrDown) {
-            showLoading("");
-        }
         HashMap<String, Object> map = new HashMap<>();
         map.put("timeType", Integer.parseInt(menuTimekey));
         map.put("xpath", departmentId);

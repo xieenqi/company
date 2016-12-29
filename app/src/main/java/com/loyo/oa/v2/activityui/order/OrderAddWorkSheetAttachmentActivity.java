@@ -110,21 +110,18 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
      * 上传附件信息
      */
     public void postAttaData() {
-        showLoading("");
         buildAttachment();
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true) {
 
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        cancelLoading();
                         controller.removeAllTask();
                     }
 
                     @Override
                     public void onNext(ArrayList<AttachmentForNew> news) {
-                        cancelLoading();
                         getAttachments();
                         controller.removeAllTask();
                     }
@@ -136,20 +133,10 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
      * 获取附件列表信息
      */
     void getAttachments() {
-        showLoading("");
         AttachmentService.getAttachments(uuid)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
-
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelLoading();
-                        finish();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud) {
                     @Override
                     public void onNext(ArrayList<Attachment> attachments) {
-                        cancelLoading();
                         mListAttachment = attachments;
                         attachmentCount = attachments.size();
                         bindAttachment();
@@ -234,7 +221,7 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
                         controller.addUploadTask("file://" + path, null, uuid);
                     }
                     if (mSelectPath.size() > 0) {
-                        showLoading("");
+                        showCommitLoading();
                         controller.startUpload();
                     }
                 }
@@ -258,8 +245,6 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelLoading();
-
         // TODO: 上传失败提醒
         if (taskList.size() >0) {
             postAttaData();

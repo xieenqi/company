@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.clue.presenter.impl;
 
 import android.content.Context;
 
-import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
@@ -11,18 +10,10 @@ import com.loyo.oa.v2.activityui.followup.api.FollowUpService;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by loyo_dev1 on 16/11/16.
@@ -97,26 +88,10 @@ public class ClueFollowUpListPresenterImpl implements ClueFollowUpListPresenter 
      */
     @Override
     public void getListData(HashMap<String, Object> map, final int page) {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).followUp(map, new RCallback<PaginationX<ClueFollowGroupModel>>() {
-//            @Override
-//            public void success(PaginationX<ClueFollowGroupModel> paginationX, Response response) {
-//                HttpErrorCheck.checkResponse("线索下跟进列表", response);
-//               ／ if (paginationX != null && paginationX.getRecords() != null)
-//                    crolView.getListDataSuccesseEmbl(paginationX);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error, crolView.getLoading(), page == 1 ? true : false);
-//                crolView.getListDataErrorEmbl();
-//                super.failure(error);
-//            }
-//        });
-
-        ClueService.followUp(map).subscribe(new DefaultLoyoSubscriber<PaginationX<ClueFollowGroupModel>>() {
+        ClueService.followUp(map)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<ClueFollowGroupModel>>(crolView.getLoading()) {
             @Override
             public void onNext(PaginationX<ClueFollowGroupModel> paginationX) {
-                DialogHelp.cancelLoading();
                 if (paginationX != null && paginationX.getRecords() != null) {
                     crolView.getListDataSuccesseEmbl(paginationX);
                 }

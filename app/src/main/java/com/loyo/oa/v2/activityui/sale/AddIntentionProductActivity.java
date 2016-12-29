@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
@@ -58,8 +60,6 @@ public class AddIntentionProductActivity extends BaseActivity implements AddInte
         setContentView(R.layout.activity_add_intention_product);
         mPersenter = new AddIntentionProductPresenterImpl(this);
         init();
-//        getData();
-        showLoading("");
         mPersenter.getProduct();
         getIntentData();
     }
@@ -122,7 +122,6 @@ public class AddIntentionProductActivity extends BaseActivity implements AddInte
      * 编辑意向产品
      */
     public void editProduct() {
-        showLoading("");
         final SaleIntentionalProduct data = assembleData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cId", saleId);
@@ -144,7 +143,6 @@ public class AddIntentionProductActivity extends BaseActivity implements AddInte
                 }
             }
         }
-        showLoading("");
         final SaleIntentionalProduct data = assembleData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cId", saleId);
@@ -342,23 +340,25 @@ public class AddIntentionProductActivity extends BaseActivity implements AddInte
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-        showLoading(message);
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(this, message);
     }
 
     @Override

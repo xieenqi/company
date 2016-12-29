@@ -8,10 +8,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.user.api.UserService;
 
@@ -70,15 +68,14 @@ public class SettingPasswordActivity extends BaseActivity {
             Toast("两次输入的新密码不一致");
             return;
         }
-        showLoading("");
+        showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
         map.put("oldpasswd", oldPassword);
         map.put("newpasswd", confirmNewPassword);
         UserService.updatePassword(map)
-                .subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
                     @Override
                     public void onNext(Object o) {
-                        DialogHelp.successStatusLoad();
                         showChangPwdSuccess();
                     }
                 });

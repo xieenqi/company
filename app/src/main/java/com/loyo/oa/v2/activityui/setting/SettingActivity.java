@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
@@ -51,7 +53,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             if ("com.loyo.oa.v2.ORGANIZATION_UPDATED".equals(intent.getAction())) {
                 //TODO 此处主要接受组织架构的跟新 以后其它的更新在规整
                 Toast("更新成功!");
-                cancelLoading();
+                cancelLoading2();
             }
         }
     };
@@ -123,7 +125,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.ll_update:
                 if (Utils.isNetworkAvailable(SettingActivity.this)) {
-                    showLoading("正在更新组织架构，请稍等", false);
+                    showLoading2("正在更新组织架构，请稍等", false);
                     rushHomeData();
                     initService();
                     SaleStageConfig.getSaleStage();
@@ -176,23 +178,25 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-        showLoading("");
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2("");
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-
+        LoyoToast.info(this, message);
     }
 
     @Override

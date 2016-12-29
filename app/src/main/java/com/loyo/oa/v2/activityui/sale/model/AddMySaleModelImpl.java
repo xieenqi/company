@@ -6,18 +6,10 @@ import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.SaleOpportunity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.AddMySaleContract;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by xeq on 2016/11/30
@@ -95,7 +87,8 @@ public class AddMySaleModelImpl implements AddMySaleContract.Model {
 //            }
 //        });
 
-        SaleService.addSaleOpportunity(map).subscribe(new DefaultLoyoSubscriber<SaleOpportunity>(LoyoErrorChecker.COMMIT_DIALOG) {
+        SaleService.addSaleOpportunity(map)
+                .subscribe(new DefaultLoyoSubscriber<SaleOpportunity>(mPersenter.getHUD()) {
             @Override
             public void onNext(SaleOpportunity saleOpportunity) {
                 mPersenter.creatSaleSuccess();
@@ -120,7 +113,8 @@ public class AddMySaleModelImpl implements AddMySaleContract.Model {
 //        });
 
 
-        SaleService.updateSaleOpportunity(map, chanceId).subscribe(new DefaultLoyoSubscriber<SaleOpportunity>(LoyoErrorChecker.COMMIT_DIALOG) {
+        SaleService.updateSaleOpportunity(map, chanceId)
+                .subscribe(new DefaultLoyoSubscriber<SaleOpportunity>(mPersenter.getHUD()) {
             @Override
             public void onNext(SaleOpportunity saleOpportunity) {
                 mPersenter.editSaleSuccess();

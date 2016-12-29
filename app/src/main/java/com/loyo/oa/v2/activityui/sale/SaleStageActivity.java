@@ -17,27 +17,20 @@ import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
+import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleField;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
-import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【销售阶段】【机会来源】【机会类型】
@@ -105,33 +98,14 @@ public class SaleStageActivity extends BaseActivity {
     }
 
     public void getData2() {
-        showLoading("");
+        showLoading2("");
         HashMap<String, String> map = new HashMap<>();
         map.put("name", SALE_TYPE == type ? "chance_type" : "chance_source");
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                create(ISale.class).getSaleSystem(map, new Callback<SaleField>() {
-//            @Override
-//            public void success(SaleField saleFilds, Response response) {
-//                HttpErrorCheck.checkResponse("销售阶段xt系统 类型 来源", response);
-//                adapterSourceType.setData(saleFilds.defVal);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
 
-        SaleService.getSaleSystem(map).subscribe(new DefaultLoyoSubscriber<SaleField>() {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
+        SaleService.getSaleSystem(map).subscribe(new DefaultLoyoSubscriber<SaleField>(hud) {
 
             @Override
             public void onNext(SaleField saleFilds) {
-                DialogHelp.cancelLoading();
                 adapterSourceType.setData(saleFilds.defVal);
             }
         });
@@ -141,20 +115,6 @@ public class SaleStageActivity extends BaseActivity {
      * 获取销售阶段 数据
      */
     public void getData() {
-//        showLoading("");//HttpSaleBuild.buildSale().
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                create(ISale.class).getSaleStage(new Callback<ArrayList<SaleStage>>() {
-//            @Override
-//            public void success(ArrayList<SaleStage> saleStage, Response response) {
-//                HttpErrorCheck.checkResponse("销售阶段", response);
-//                adapterStage.setData(saleStage);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
         adapterStage.setData(SaleStageConfig.getSaleStageCache());
     }
 

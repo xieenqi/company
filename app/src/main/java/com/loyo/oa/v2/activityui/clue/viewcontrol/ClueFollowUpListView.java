@@ -4,15 +4,15 @@ import android.view.ViewGroup;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
-import com.loyo.oa.v2.activityui.clue.model.ClueFollowUpListModel;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.BaseView;
 
 /**
  * Created by yyy on 16/11/14.
  */
 
-public interface ClueFollowUpListView {
+public interface ClueFollowUpListView extends BaseView {
 
     /*评论操作*/
     void commentEmbl(String id,int parent, int chuild);

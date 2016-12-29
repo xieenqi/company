@@ -1,12 +1,13 @@
 package com.loyo.oa.v2.activityui.other.viewcontrol;
 
 import com.loyo.oa.v2.beans.Bulletin;
+import com.loyo.oa.v2.common.BaseView;
 
 /**
  * Created by yyy on 16/10/9.
  */
 
-public interface BulletinAddView {
+public interface BulletinAddView extends BaseView{
 
     /*验证失败*/
     void verifyError(int code);

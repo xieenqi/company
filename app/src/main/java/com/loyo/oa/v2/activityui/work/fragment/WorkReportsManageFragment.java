@@ -90,11 +90,12 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
 
         LogUtil.dll("客户端发送数据:" + MainApp.gson.toJson(map));
         //这里借助CallBack接口调用，不能直接实现DefaultLoyoSubscriber，因为会有方法冲突
-        WorkReportService.getWorkReportsData(map).subscribe(new DefaultLoyoSubscriber<PaginationX<WorkReportRecord>>(LoyoErrorChecker.LOADING_LAYOUT) {
+        WorkReportService.getWorkReportsData(map)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<WorkReportRecord>>() {
             @Override
             public void onError(Throwable e) {
                 @LoyoErrorChecker.CheckType
-                int type= pagination.getPageIndex() != 1 ? LoyoErrorChecker.TOAST : LoyoErrorChecker.COMMIT_DIALOG;
+                int type= pagination.getPageIndex() != 1 ? LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
                 ((Callback)WorkReportsManageFragment.this).failure(null);
             }
 

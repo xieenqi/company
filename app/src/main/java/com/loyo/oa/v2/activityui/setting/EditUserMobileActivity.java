@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.setting;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -20,25 +19,13 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.activityui.setting.api.SettingService;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
-import static android.R.attr.action;
 
 /**
  * 更改 手机号【设置账号】
@@ -245,35 +232,10 @@ public class EditUserMobileActivity extends BaseActivity {
         map.put("tel", mobile);
         map.put("code", verificatioNumber);
         map.put("password", pwd);
-//        RestAdapterFactory.getInstance().build(Config_project.BIND_MOBLIE).create(IMobile.class).bindMobile(map, new RCallback<Object>() {
-//            @Override
-//            public void success(final Object o, final Response response) {
-//                HttpErrorCheck.checkResponse("绑定手机号码", response);
-//                Toast("绑定成功");
-//                onBackPressed();
-////                et_account.removeCallbacks(countRunner);
-////                Bundle bundle = new Bundle();
-////                bundle.putString("tel", mobile);
-////                app.startActivity(VerifyAccountActivity.this, ResetPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle);
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//                super.failure(error);
-//            }
-//        });
 
         SettingService.bindMobile(map).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
-
-            @Override
             public void onNext(Object o) {
-                DialogHelp.cancelLoading();
                 Toast("绑定成功");
                 onBackPressed();
             }

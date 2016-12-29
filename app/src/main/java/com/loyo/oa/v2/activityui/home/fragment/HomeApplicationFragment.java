@@ -46,7 +46,6 @@ import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateItem;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -217,7 +216,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
         //只有登录进来才加载loading
         if ("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))) {
-            showLoading("");
             SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, " ");
         }
         adapter = new AdapterHomeItem(mActivity);
@@ -410,53 +408,12 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 获取能否打卡的信息
      */
     private void getValidateInfo() {
-        DialogHelp.showLoading(getActivity(), "加载中...", true);
-//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
-//            @Override
-//            public void success(final ValidateInfo _validateInfo, final Response response) {
-//                HttpErrorCheck.checkResponse("考勤信息:", response);
-//                if (null == _validateInfo) {
-//                    Toast.makeText(getActivity(), "获取考勤信息失败", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                validateInfo = _validateInfo;
-//                for (ValidateItem validateItem : validateInfo.getValids()) {
-//                    if (validateItem.getType() == 1) {
-//                        inEnable = validateItem.isEnable();
-//                    } else if (validateItem.getType() == 2) {
-//                        outEnable = validateItem.isEnable();
-//                    }
-//                }
-//
-//                if (inEnable || outEnable) {
-//                    setAttendance();
-//                }
-//                //已打卡完毕 跳转考勤列表
-//                else {
-//                    Toast.makeText(getActivity(), "您今天已经打卡完毕", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(getActivity(), AttendanceManagerActivity_.class);
-//                    startActivity(intent);
-//                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-//                }
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-
-        AttendanceService.validateAttendance().subscribe(new DefaultLoyoSubscriber<ValidateInfo>() {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
+        showLoading2("加载中...");
+        AttendanceService.validateAttendance()
+                .subscribe(new DefaultLoyoSubscriber<ValidateInfo>(hud) {
 
             @Override
             public void onNext(ValidateInfo _validateInfo) {
-                DialogHelp.cancelLoading();
                 if (null == _validateInfo) {
                     Toast.makeText(getActivity(), "获取考勤信息失败", Toast.LENGTH_SHORT).show();
                     return;
@@ -611,23 +568,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 获取首页红点数据
      */
     void requestNumber() {
-        DialogHelp.cancelLoading();//列表出现消失dialog
-//        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
-//                getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
-//                    @Override
-//                    public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
-//                        HttpErrorCheck.checkResponse("a首页红点", response);
-//                        mItemNumbers = removalRedNumber(homeNumbers);
-//                        testJurl();
-//                        homefragment.onNetworkChanged(true);
-//                    }
-//
-//                    @Override
-//                    public void failure(final RetrofitError error) {
-//                        super.failure(error);
-//                    }
-//                });
-
         HomeService.getNumber().subscribe(new DefaultLoyoSubscriber<ArrayList<HttpMainRedDot>>() {
             @Override
             public void onNext(ArrayList<HttpMainRedDot> homeNumbers) {
@@ -819,18 +759,11 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         UMengTools.sendLocationInfo(address, longitude, latitude);
         map.put("originalgps", longitude + "," + latitude);
         LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
-        DialogHelp.showLoading(getActivity(), "", true);
-
-        AttendanceService.checkAttendance(map).subscribe(new DefaultLoyoSubscriber<AttendanceRecord>() {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
-
+        showLoading2("");
+        AttendanceService.checkAttendance(map)
+                .subscribe(new DefaultLoyoSubscriber<AttendanceRecord>(hud) {
             @Override
             public void onNext(AttendanceRecord attendanceRecord) {
-                DialogHelp.cancelLoading();
                 attendanceRecords = attendanceRecord;
                 attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "获取位置失败，请检查网络或GPS是否正常" : address);
                 if (attendanceRecord.getState() == 3) {
@@ -848,7 +781,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     @Override
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
-        DialogHelp.cancelLoading();
         Toast.makeText(getActivity(), "获取位置失败，请检查网络或GPS是否正常", Toast.LENGTH_SHORT).show();
     }
 

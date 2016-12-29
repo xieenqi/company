@@ -30,7 +30,6 @@ import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -246,7 +245,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //来自订单详情 新建回款
             case OrderEstimateListActivity.ODET_EST_ADD:
 
-                showStatusLoading(false);
+                showCommitLoading();
                 map = new HashMap<>();
                 if (null == uuid || TextUtils.isEmpty(uuid)) {
                     map.put("attachmentUUId", StringUtil.getUUID());
@@ -265,19 +264,18 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 map.put("payeeUser", mEstimateAdd.payeeUser);
                 LogUtil.dee("新建回款 数据:" + MainApp.gson.toJson(map));
                 OrderService.addPayEstimate(map)
-                        .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(LoyoErrorChecker.COMMIT_DIALOG) {
+                        .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
                             @Override
                             public void onNext(EstimateAdd add) {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        cancelStatusLoading();
                                         app.finishActivity(OrderAddEstimateActivity.this,
                                                 MainApp.ENTER_TYPE_LEFT,
                                                 RESULT_OK,
                                                 new Intent());
                                     }
-                                },1000);
+                                },2000);
                             }
                         });
 
@@ -286,7 +284,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //来自订单详情 编辑
             case OrderEstimateListActivity.ODET_EST_EDIT:
 
-                showStatusLoading(false);
+                showCommitLoading();
                 map = new HashMap<>();
                 map.put("attachmentUUId", mEstimateAdd.attachmentUUId);
                 map.put("attachmentCount", attamentSize);
@@ -301,16 +299,16 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 map.put("payeeUser", mEstimateAdd.payeeUser);
                 LogUtil.dee("编辑订单:" + MainApp.gson.toJson(map));
                 OrderService.editPayEstimate(id, map)
-                        .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(LoyoErrorChecker.COMMIT_DIALOG) {
+                        .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
                             @Override
                             public void onNext(EstimateAdd add) {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        cancelStatusLoading();
-                                        app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                        app.finishActivity(OrderAddEstimateActivity.this,
+                                                MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                                     }
-                                },1000);
+                                },2000);
                             }
                         });
                 break;
@@ -318,7 +316,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //来自计划生成 新建
             case OrderEstimateListActivity.ORDER_PLAN:
 
-                showStatusLoading(false);
+                showCommitLoading();
                 map = new HashMap<>();
                 map.put("attachmentUUId", mEstimateAdd.attachmentUUId);
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
@@ -332,19 +330,18 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 map.put("payeeUser", mEstimateAdd.payeeUser);
                 map.put("planId", planId);
                 OrderService.addPayEstimate(map)
-                        .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(LoyoErrorChecker.COMMIT_DIALOG) {
+                        .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
                             @Override
                             public void onNext(EstimateAdd add) {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        cancelStatusLoading();
                                         app.finishActivity(OrderAddEstimateActivity.this,
                                                 MainApp.ENTER_TYPE_LEFT,
                                                 RESULT_OK,
                                                 new Intent());
                                     }
-                                },1000);
+                                },2000);
                             }
                         });
 

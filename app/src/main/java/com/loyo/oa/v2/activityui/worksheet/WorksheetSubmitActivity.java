@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -28,12 +29,10 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -163,7 +162,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     void postAttaData() {
         buildAttachment();
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true/*dismissOnlyWhenError*/) {
                     @Override
                     public void onNext(ArrayList<AttachmentForNew> news) {
                         commitDynamic();
@@ -175,7 +174,6 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
      * 提交事件处理数据
      */
     void commitDynamic() {
-
         HashMap<String, Object> map = new HashMap<>();
         map.put("type", type);
         map.put("content", view_edit.getText().toString());
@@ -183,14 +181,13 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
         map.put("address", httpLoc);
         LogUtil.dee("提交事件信息：" + MainApp.gson.toJson(map));
         WorksheetService.setEventSubmit(id, map)
-                .subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
 
                     @Override
                     public void onNext(Object o) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                DialogHelp.successStatusLoad();
                                 if (type == 1) {
                                     AppBus.getInstance().post(new WorksheetDetail());
                                     WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
@@ -223,7 +220,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                     }
                 }
 
-                showStatusLoading(false);
+                showCommitLoading();
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
 
@@ -357,8 +354,8 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
         int count = controller.failedTaskCount();
         if (count > 0) {
-            Toast(count + "个附件上传失败，请重试或者删除");
-            cancelStatusLoading();
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
             return;
         }
         if (taskList.size() >0) {

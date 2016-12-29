@@ -7,17 +7,9 @@ import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninListView;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by loyo_dev1 on 16/11/16.
@@ -102,17 +94,16 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
 //            }
 //        });
 
-        SignInService.selfSignIn(map).subscribe(new DefaultLoyoSubscriber<BaseBeanT<PaginationX<SigninNewListModel>>>(crolView.getLoadingView()) {
+        SignInService.selfSignIn(map)
+                .subscribe(new DefaultLoyoSubscriber<BaseBeanT<PaginationX<SigninNewListModel>>>(crolView.getLoadingView()) {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                DialogHelp.cancelLoading();
                 crolView.getListDataErrorEmbl();
             }
 
             @Override
             public void onNext(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
-                DialogHelp.cancelLoading();
                 crolView.getListDataSuccesseEmbl(paginationX);
             }
         });

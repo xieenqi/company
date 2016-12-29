@@ -185,18 +185,11 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
      * 设置标签
      * */
     private void setLabel(){
-        showLoading("");
+        showLoading2("");
         CustomerService.setCusLabel(mCustomerId, convertNewTags())
-                .subscribe(new DefaultLoyoSubscriber<Contact>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
                     @Override
                     public void onNext(Contact contact) {
-                        cancelLoading();
                         finish();
                     }
                 });

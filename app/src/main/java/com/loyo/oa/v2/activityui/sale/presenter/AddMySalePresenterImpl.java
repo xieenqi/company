@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.sale.presenter;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.AddMySaleContract;
@@ -20,6 +21,10 @@ public class AddMySalePresenterImpl implements AddMySaleContract.Presenter {
     public AddMySalePresenterImpl(AddMySaleContract.View mView) {
         this.mView = mView;
         model = new AddMySaleModelImpl(this);
+    }
+
+    public LoyoProgressHUD getHUD() {
+        return mView.getHUD();
     }
 
     @Override

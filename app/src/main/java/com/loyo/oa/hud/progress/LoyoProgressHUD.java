@@ -22,6 +22,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +78,10 @@ public class LoyoProgressHUD {
     private @ColorInt int detailColor;
 
     private Style mStyle;
+
+    public Style getStyle() {
+        return mStyle;
+    }
 
     public LoyoProgressHUD(Context context) {
         mContext = context;
@@ -315,6 +320,9 @@ public class LoyoProgressHUD {
     }
 
     public void dismissWithSuccess(String msg) {
+        if (TextUtils.isEmpty(msg)) {
+            msg = "提交成功";
+        }
         if (mStyle == LOYO_COMMIT) {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismissWithSuccess(msg);
@@ -326,6 +334,9 @@ public class LoyoProgressHUD {
     }
 
     public void dismissWithError(String msg) {
+        if (TextUtils.isEmpty(msg)) {
+            msg = "提交失败";
+        }
         if (mStyle == LOYO_COMMIT) {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismissWithError(msg);

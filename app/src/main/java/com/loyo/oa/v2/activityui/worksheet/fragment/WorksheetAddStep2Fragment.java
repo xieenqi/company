@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -27,7 +28,6 @@ import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -126,7 +126,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
                 break;
             case R.id.img_title_right:
                 uuid = StringUtil.getUUID();
-                showStatusLoading(false);
+                showCommitLoading();
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
                 break;
@@ -163,8 +163,6 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         String orderId = mActivity.selectedOrder.id;
         String orderName = mActivity.selectedOrder.title;
         String templateId = mActivity.selectedType.id;
-
-        showStatusLoading(false);
         final HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("title", title);
         map.put("orderId", orderId);
@@ -178,13 +176,12 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         }
 
         WorksheetService.addWorksheet(map)
-                .subscribe(new DefaultLoyoSubscriber<Worksheet>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<Worksheet>(hud) {
                     @Override
                     public void onNext(final Worksheet worksheet) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                cancelStatusLoading();
                                 Intent intent = new Intent();
                                 intent.putExtra(ExtraAndResult.EXTRA_BOOLEAN, true);
                                 Worksheet ws = worksheet;
@@ -218,29 +215,11 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
      * 上传附件信息
      */
     public void postAttaData() {
-        showStatusLoading(false);
         buildAttachment();
-//        IAttachment service = RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT())
-//                .create(IAttachment.class);
-//        service.setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
-//            @Override
-//            public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-//                HttpErrorCheck.checkCommitSus("上传附件信息",response);
-//                cancelStatusLoading();
-//                commitWorksheet();
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkCommitEro(error);
-//            }
-//        });
-
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true/*dismissOnlyWhenError*/) {
                     @Override
                     public void onNext(ArrayList<AttachmentForNew> news) {
-                        cancelStatusLoading();
                         commitWorksheet();
                     }
                 });
@@ -283,10 +262,10 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelStatusLoading();
         int count = controller.failedTaskCount();
         if (count > 0) {
-            Toast(count + "个附件上传失败，请重试或者删除");
+            cancelCommitLoading();
+            LoyoToast.info(mActivity, count + "个附件上传失败，请重试或者删除");
             return;
         }
         if (taskList.size() > 0) {

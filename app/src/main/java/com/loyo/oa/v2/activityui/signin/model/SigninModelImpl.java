@@ -7,7 +7,6 @@ import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.LegWork;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -49,11 +48,10 @@ public class SigninModelImpl implements SigninContract.Model {
     @Override
     public void creatSigninSend(HashMap<String, Object> map) {
         CustomerService.addSignIn(map)
-                .subscribe(new DefaultLoyoSubscriber<LegWork>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<LegWork>(presenter.getHUD()) {
                     @Override
                     public void onNext(LegWork legWork) {
                         presenter.creatSuccess(legWork);
-                        DialogHelp.successStatusLoad();
                     }
                 });
     }

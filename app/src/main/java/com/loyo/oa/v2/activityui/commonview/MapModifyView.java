@@ -288,7 +288,6 @@ public class MapModifyView extends BaseActivity
             mTarget = cameraPosition.target;
             mLatLonPoint = new LatLonPoint(mTarget.latitude, mTarget.longitude);
             if (Utils.isNetworkAvailable(this)) {
-                showLoading("");
                 getAddress(mLatLonPoint);
             } else {
                 Toast("获取位置失败，请检查网络或GPS是否正常");
@@ -327,7 +326,7 @@ public class MapModifyView extends BaseActivity
      */
     @Override
     public void onPoiSearched(PoiResult result, int rCode) {
-        cancelLoading();
+        cancelLoading2();
         if (rCode == 1000) {
             if (result != null && result.getQuery() != null) {// 搜索poi的结果
                 if (result.getQuery().equals(query)) {// 是否是同一条
@@ -393,6 +392,7 @@ public class MapModifyView extends BaseActivity
      * 反Geo操作
      */
     public void getAddress(final LatLonPoint latLonPoint) {
+        showLoading2("");
         RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 300,
                 GeocodeSearch.AMAP);// 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
         geocoderSearch.getFromLocationAsyn(query);// 设置同步逆地理编码请求
@@ -411,11 +411,11 @@ public class MapModifyView extends BaseActivity
                 doSearchQuery(reGeoAddress, latLonPoint.getLatitude(), latLonPoint.getLongitude());
                 LogUtil.d("微调地图中心地址:" + reGeoAddress);
             } else {
-                cancelLoading();
+                cancelLoading2();
                 Toast("没有数据！");
             }
         } else {
-            cancelLoading();
+            cancelLoading2();
             Toast("获取位置失败，请检查网络或GPS是否正常！");
         }
     }

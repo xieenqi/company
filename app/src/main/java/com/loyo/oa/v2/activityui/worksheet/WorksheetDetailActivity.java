@@ -169,7 +169,6 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
                 .subscribe(new DefaultLoyoSubscriber<WorksheetDetail>(ll_loading) {
                     @Override
                     public void onNext(WorksheetDetail result) {
-                        cancelLoading();
                         detail = result;
                         loadData();
                     }
@@ -319,18 +318,11 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
      * @param status 5 意外终止  4 已完成
      */
     private void stopWorksheet(int status) {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("status", status);
         WorksheetService.setStopWorksheet(worksheetId, map)
-                .subscribe(new DefaultLoyoSubscriber<Object>() {
-
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
                     @Override
                     public void onNext(Object o) {
                         getData();
@@ -379,17 +371,11 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
      */
     private void setEventPersonal(String userId) {
 
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("responsorId", userId);
         WorksheetService.setEventPerson(eventId, map)
-                .subscribe(new DefaultLoyoSubscriber<Object>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
                     @Override
                     public void onNext(Object o) {
                         getData();
@@ -402,7 +388,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
      * 设置事件负责人
      */
     private void setAllEventPersonal(String userId) {
-        showLoading("");
+        showLoading2("");
         List<String> eventIsList = new ArrayList<>();
         for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
             eventIsList.add(detail.sheetEventsSupporter.get(i).id);
@@ -411,13 +397,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
         map.put("responsorId", userId);
         map.put("eventIds", eventIsList);
         WorksheetService.setAllEventPerson(map)
-                .subscribe(new DefaultLoyoSubscriber<Object>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
                     @Override
                     public void onNext(Object o) {
                         getData();

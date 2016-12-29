@@ -11,16 +11,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.api.AttendanceService;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.Utils;
@@ -238,36 +237,12 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         if (mAttachment.size() != 0) {
             map.put("attachementuuid", uuid);
         }
-        DialogHelp.showStatusLoading(false,mContext);
-//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
-//            @Override
-//            public void success(final AttendanceRecord attendanceRecord, final Response response) {
-//                HttpErrorCheck.checkCommitSus("确认打卡",response);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        DialogHelp.cancelStatusLoading();
-//                        crolView.attendanceSuccess();
-//                    }
-//                },1000);
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                HttpErrorCheck.checkCommitEro(error);
-//            }
-//        });
-
-        AttendanceService.confirmAttendance(map).subscribe(new DefaultLoyoSubscriber<AttendanceRecord>(LoyoErrorChecker.COMMIT_DIALOG) {
+        LoyoProgressHUD hud = crolView.showStatusProgress();
+        AttendanceService.confirmAttendance(map)
+                .subscribe(new DefaultLoyoSubscriber<AttendanceRecord>(hud, "打卡成功") {
             @Override
             public void onNext(AttendanceRecord attendanceRecord) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        DialogHelp.cancelStatusLoading();
-                        crolView.attendanceSuccess();
-                    }
-                },1000);
+                crolView.attendanceSuccess();
             }
         });
     }
@@ -277,15 +252,14 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
      * */
     @Override
     public void deleteAttachments(String uuid,final Attachment delAttachment) {
-        DialogHelp.showLoading(mActivity, "请稍后", true);
+        LoyoProgressHUD hud = crolView.showProgress("请稍后");
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("bizType", 0);
         map.put("uuid", uuid);
         AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
-                .subscribe(new DefaultLoyoSubscriber<Attachment>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud) {
                     @Override
                     public void onNext(Attachment attachment) {
-                        DialogHelp.cancelStatusLoading();
                         crolView.deleteAttaSuccessEmbl(delAttachment);
                     }
                 });
