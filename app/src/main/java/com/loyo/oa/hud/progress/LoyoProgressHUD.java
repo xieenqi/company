@@ -530,7 +530,7 @@ public class LoyoProgressHUD {
 
         public void dismissWithSuccess(String msg) {
             if (mCommitIndeterminate != null) {
-                mCommitIndeterminate.loadSucessState();
+                mCommitIndeterminate.loadSuccessState();
                 setLabel(msg);
             }
             Helper.dispatchDelayed(new Runnable() {

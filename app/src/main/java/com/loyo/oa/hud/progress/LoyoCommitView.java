@@ -45,19 +45,19 @@ class LoyoCommitView extends ImageView implements CommitIndeterminate {
     }
 
     @Override
-    public void loadSucessState() {
-        sucsAnim();
+    public void loadSuccessState() {
+        successAnimation();
     }
 
     @Override
     public void loadErrorState() {
-        erroAnim("");
+        errorAnimation("");
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        waitAnim();
+        waitAnimation();
     }
 
     @Override
@@ -67,7 +67,7 @@ class LoyoCommitView extends ImageView implements CommitIndeterminate {
     }
 
     /*等待动画*/
-    void waitAnim(){
+    void waitAnimation(){
         AnimationDrawable waitAnim = new AnimationDrawable();
         for (int i = 1; i <= 10; i++) {
             int id = getContext().getResources().getIdentifier("loadwait"+i,"drawable", getContext().getPackageName());
@@ -80,7 +80,7 @@ class LoyoCommitView extends ImageView implements CommitIndeterminate {
     }
 
     /*成功动画*/
-    void sucsAnim(){
+    void successAnimation(){
         AnimationDrawable sucsAnim = new AnimationDrawable();
         for (int i = 1; i <= 10; i++) {
             int id = getContext().getResources().getIdentifier("loadsucs"+i,"drawable", getContext().getPackageName());
@@ -93,7 +93,7 @@ class LoyoCommitView extends ImageView implements CommitIndeterminate {
     }
 
     /*失败动画*/
-    void erroAnim(String message){
+    void errorAnimation(String message){
         AnimationDrawable erroAnim = new AnimationDrawable();
         for (int i = 1; i <= 10; i++) {
             int id = getContext().getResources().getIdentifier("loaderro"+i,"drawable", getContext().getPackageName());

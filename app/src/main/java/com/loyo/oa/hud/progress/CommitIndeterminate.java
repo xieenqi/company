@@ -5,6 +5,6 @@ package com.loyo.oa.hud.progress;
  */
 
 public interface CommitIndeterminate extends Indeterminate {
-    void loadSucessState();
+    void loadSuccessState();
     void loadErrorState();
 }
