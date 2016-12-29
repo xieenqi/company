@@ -50,7 +50,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     private DashboardDetailAdapter adapter;
     private PullToRefreshListView lv_list;
 
-
+    private int pageIndex=1;
+    private int pageSize=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +68,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     @Override
     public void getPageData() {
         HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("pageIndex", pageIndex);
+        map.put("pageSize", pageSize);
         map.put("qType", 1);
         map.put("sortBy", 1);
         //根据type，判断请求的类型，构造参数
@@ -86,7 +89,10 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             map.put("activityObj", 2);
         }else if (DashborardType.COMMON == type) {
             //增量/存量
+            Log.i(TAG, "getPageData: 增量/存量");
             map.put("tagItemId", getIntent().getStringExtra("tagItemId"));//tagItemId
+        }else if(DashborardType.ORDER_NUMBER==type||DashborardType.ORDER_MONEY==type){
+            //订单数量，订单金额
         }
 
         //网络请求
@@ -158,6 +164,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
                 Log.d(TAG, "onMenuModelsSelected() called with: menuIndex = [" + menuIndex + "], key:" + key + ",value;" + value);
+
 
 //
 //                if (menuIndex == 0) { //

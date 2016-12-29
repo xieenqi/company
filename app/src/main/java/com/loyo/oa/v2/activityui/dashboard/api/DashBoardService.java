@@ -34,17 +34,27 @@ public class DashBoardService {
         switch (type){
             case CUS_FOLLOWUP:
             case SALE_FOLLOWUP:
+                //跟进
                 observable = dashBoard.getDashBoardFollwoUpListData(params);
                 break;
             case CUS_SIGNIN:
+                //客户拜访
                 observable = dashBoard.getDashBoardVisitListData(params);
                 break;
             case COMMON:
+                //增量，存量
                 observable = dashBoard.getDashBoardCommonListData(params);
                 break;
             case CUS_CELL_RECORD:
+                //客户电话录音
             case SALE_CELL_RECORD:
+                //线索电话录音
                 observable = dashBoard.getDashBoardCallListData(params);
+                break;
+            case ORDER_MONEY:
+                //订单金额
+            case ORDER_NUMBER:
+                //订单数量
                 break;
         }
        return observable.compose(RetrofitAdapterFactory.<DashBoardListModel>compatApplySchedulers());
