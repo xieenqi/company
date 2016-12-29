@@ -50,16 +50,18 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     private DashboardDetailAdapter adapter;
     private PullToRefreshListView lv_list;
 
-    private int pageIndex=1;
-    private int pageSize=1;
-    private String qType="1";
-    private String sortBy="1";
+    private int pageIndex = 1;
+    private HashMap<String, Object> map = new HashMap<String, Object>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getIntentData();
         initView();
+        map.put("pageIndex", pageIndex);
+        map.put("pageSize", "30");
+        map.put("qType", "1");
+        map.put("sortBy", "1");
         getPageData();
     }
 
@@ -71,11 +73,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     @Override
     public void getPageData() {
 
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("pageIndex", pageIndex);
-        map.put("pageSize", pageSize);
-        map.put("qType", qType);
-        map.put("sortBy", sortBy);
         //根据type，判断请求的类型，构造参数
         if (DashborardType.CUS_FOLLOWUP == type) {
             //客户跟进
@@ -88,14 +85,14 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             map.put("activityObj", 1);
         } else if (DashborardType.CUS_SIGNIN == type) {
             //客户拜访
-        }else if (DashborardType.SALE_CELL_RECORD == type) {
+        } else if (DashborardType.SALE_CELL_RECORD == type) {
             //获取线索电话录
             map.put("activityObj", 2);
-        }else if (DashborardType.COMMON == type) {
+        } else if (DashborardType.COMMON == type) {
             //增量/存量
             Log.i(TAG, "getPageData: 增量/存量");
             map.put("tagItemId", getIntent().getStringExtra("tagItemId"));//tagItemId
-        }else if(DashborardType.ORDER_NUMBER==type||DashborardType.ORDER_MONEY==type){
+        } else if (DashborardType.ORDER_NUMBER == type || DashborardType.ORDER_MONEY == type) {
             //订单数量，订单金额
         }
 
@@ -103,7 +100,11 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         DashBoardService.getDashBoardListData(map, type).subscribe(new DefaultLoyoSubscriber<DashBoardListModel>() {
             @Override
             public void onNext(DashBoardListModel dashBoardListModel) {
-                adapter.addAll(dashBoardListModel.data.records);
+                if (1 == pageIndex) {
+                    adapter.reload(dashBoardListModel.data.records);
+                } else {
+                    adapter.addAll(dashBoardListModel.data.records);
+                }
                 lv_list.onRefreshComplete();
 
             }
@@ -170,12 +171,21 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
                 Log.d(TAG, "onMenuModelsSelected() called with: menuIndex = [" + menuIndex + "], key:" + key + ",value;" + value);
-                if(1==menuIndex){
-                    qType=key;
-                }else if(2==menuIndex){
-                    sortBy=key;
-                }else if(3==menuIndex){
-
+                if (0 == menuIndex) {
+                    //时间
+                    map.put("qType",key);
+                } else if (1 == menuIndex) {
+                    //排序
+                    map.put("sortBy",key);
+                } else if (2 == menuIndex) {
+                    //部门或者人筛选
+                    if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
+                        map.put("xPath",model.getKey());
+                        map.remove("userId");
+                    } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
+                        map.put("userId",model.getKey());
+                        map.remove("xPath");
+                    }
                 }
                 getPageData();
 
@@ -220,7 +230,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         Log.i(TAG, "onPullDownToRefresh: ");
-        pageIndex=1;
+        pageIndex = 1;
         getPageData();
 
     }
