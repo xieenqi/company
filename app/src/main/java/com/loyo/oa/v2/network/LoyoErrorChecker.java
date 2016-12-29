@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -159,7 +160,8 @@ public class LoyoErrorChecker {
             break;
             default:
             {
-                Toast(error.message);
+                // Toast(error.message);
+                LoyoToast.error(MainApp.getMainApp().getApplicationContext(), error.message);
             }
             break;
         }

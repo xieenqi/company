@@ -43,11 +43,20 @@ public class InitDataService extends IntentService {
 
         UserService.getProfile()
                 .subscribe(new DefaultLoyoSubscriber<User>() {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        Intent intent = new Intent();
+                        intent.setAction(FinalVariables.ACTION_DATA_CHANGE);
+                        LocalBroadcastManager.getInstance(InitDataService.this).sendBroadcast(intent);
+                    }
+
                     @Override
                     public void onNext(User user) {
                         try {
                             String json = MainApp.gson.toJson(user);
-                            MainApp.user = user;
+                            user = user;
                             setRootMap(user);
                             DBManager.Instance().putUser(json);//保存用户信息
                             sendDataChangeBroad(user);

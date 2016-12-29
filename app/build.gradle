@@ -8,7 +8,7 @@ def outputPath = 'D:\\jenkins\\workspace\\loyo-android-v2\\app\\build\\apk'
 android {
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    buildToolsVersion '25'
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     packagingOptions {
@@ -33,12 +33,13 @@ android {
             res.srcDirs = ['src/main/res',
                            'src/main/res-photo-picker',
                            'src/main/res-smooth-checkbox',
-                           'src/main/res_loyo/customer',
-                           'src/main/res_loyo/saleopportunity',
-                           'src/main/res_loyo/setting',
-                           'src/main/res_loyo/worksheet',
-                           'src/main/res_loyo/order',
-                           'src/main/res_loyo/wfinstance']
+                           'src/main/res-loyo/customer',
+                           'src/main/res-loyo/saleopportunity',
+                           'src/main/res-loyo/setting',
+                           'src/main/res-loyo/worksheet',
+                           'src/main/res-loyo/order',
+                           'src/main/res-loyo/wfinstance',
+                           'src/main/res-hud']
         }
     }
     signingConfigs {

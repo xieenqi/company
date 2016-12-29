@@ -95,8 +95,8 @@ public class DialogHelp {
         loadingDialog.setCancelable(Cancelable);// 不可以用“返回键”取消
         loadingDialog.setCanceledOnTouchOutside(Cancelable);
         loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.FILL_PARENT,
-                LinearLayout.LayoutParams.FILL_PARENT));// 设置布局
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局
         loadingDialog.setCanceledOnTouchOutside(false);
         try {
             loadingDialog.show();
@@ -121,6 +121,7 @@ public class DialogHelp {
     public static void setLoadingMsg(String msg) {
         if (tipTextView != null && !TextUtils.isEmpty(msg)) {
             tipTextView.setText(msg);
+            tipTextView.setVisibility(View.VISIBLE);
         }
     }
 

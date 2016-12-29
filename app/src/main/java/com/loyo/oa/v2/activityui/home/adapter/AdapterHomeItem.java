@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.TestLoadingActivity;
 import com.loyo.oa.v2.activityui.contact.ContactsActivity;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
@@ -194,6 +195,15 @@ public class AdapterHomeItem extends BaseAdapter {
             item_newmain_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    if (true) {
+                        mIntent.setClass(activity, TestLoadingActivity.class);
+                        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, wfinstanceCount);
+                        activity.startActivity(mIntent);
+                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                        return;
+                    }
+
                     if (null != MainApp.lstDepartment && MainApp.lstDepartment.size() != 0) {
                         mIntent.setClass(activity, ContactsActivity.class);
                         activity.startActivity(mIntent);

@@ -121,12 +121,14 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 if (null != listView) {
                     listView.onRefreshComplete();
                 }
-                launch();
-                //更新侧边栏信息
-                Intent in = new Intent();
-                in.setAction(ExtraAndResult.ACTION_USER_VERSION);
-                in.putExtra(ExtraAndResult.EXTRA_DATA, "user");
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(in);
+                if (intent.getSerializableExtra("user") != null) {
+                    launch();
+                    //更新侧边栏信息
+                    Intent in = new Intent();
+                    in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+                    in.putExtra(ExtraAndResult.EXTRA_DATA, "user");
+                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(in);
+                }
             }
         }
     };
