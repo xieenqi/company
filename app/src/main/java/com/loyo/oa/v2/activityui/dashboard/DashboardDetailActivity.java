@@ -90,8 +90,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             map.put("activityObj", 2);
         } else if (DashborardType.COMMON == type) {
             //增量/存量
-            Log.i(TAG, "getPageData: 增量/存量");
             map.put("tagItemId", getIntent().getStringExtra("tagItemId"));//tagItemId
+            Log.i(TAG, "getPageData: "+getIntent().getStringExtra("tagItemId"));
         } else if (DashborardType.ORDER_NUMBER == type || DashborardType.ORDER_MONEY == type) {
             //订单数量，订单金额
         }
