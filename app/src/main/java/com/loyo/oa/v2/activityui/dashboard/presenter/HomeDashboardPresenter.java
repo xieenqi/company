@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.dashboard.presenter;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,5 +22,5 @@ public interface HomeDashboardPresenter {
 
     void getFollowUpData(LoadingLayout ll_loading,int type);
 
-    void setOnSucssView(LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status);
+    void setOnSucssView(AnimationDrawable anim,LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status);
 }

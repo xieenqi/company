@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,15 +19,21 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.adapter.DashboardDetailAdapter;
+import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
+import com.loyo.oa.v2.activityui.dashboard.model.DashBoardListModel;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 【仪表盘】详情页面
@@ -35,6 +42,7 @@ import java.util.List;
 
 public class DashboardDetailActivity extends BaseLoadingActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
+    private String TAG = "DashboardDetailActivity";
     private LinearLayout ll_back;
     private DropDownMenu filterMenu;
     private TextView tv_title;
@@ -48,6 +56,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         super.onCreate(savedInstanceState);
         getIntentData();
         initView();
+        getPageData();
     }
 
     @Override
@@ -57,11 +66,41 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void getPageData() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("qType", 1);
+        map.put("sortBy", 1);
+        //根据type，判断请求的类型，构造参数
+        if (DashborardType.CUS_FOLLOWUP == type) {
+            //客户跟进
+            map.put("activityObj", 1);
+        } else if (DashborardType.SALE_FOLLOWUP == type) {
+            //线索跟进
+            map.put("activityObj", 2);
+        } else if (DashborardType.CUS_CELL_RECORD == type) {
+            //客户电话录
+            map.put("activityObj", 1);
+        } else if (DashborardType.CUS_SIGNIN == type) {
+            //客户拜访
+        }else if (DashborardType.SALE_CELL_RECORD == type) {
+            //获取线索电话录
+            map.put("activityObj", 2);
+        }else if (DashborardType.COMMON == type) {
+            //增量/存量
+            map.put("tagItemId", getIntent().getStringExtra("tagItemId"));//tagItemId
+        }
 
+        //网络请求
+        DashBoardService.getDashBoardListData(map, type).subscribe(new DefaultLoyoSubscriber<DashBoardListModel>() {
+            @Override
+            public void onNext(DashBoardListModel dashBoardListModel) {
+                adapter.addAll(dashBoardListModel.data.records);
+            }
+        });
     }
 
     private void getIntentData() {
         Intent intent = getIntent();
+        //获取传入的类型数据，表示是哪种列表
         type = (DashborardType) intent.getSerializableExtra("type");
 
     }
@@ -74,7 +113,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         lv_list = (PullToRefreshListView) findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        adapter = new DashboardDetailAdapter(this);
+        adapter = new DashboardDetailAdapter(this, type);
         lv_list.setAdapter(adapter);
 
         ll_loading.setStatus(LoadingLayout.Success);
@@ -101,6 +140,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             title = "我";
             depts.add(OrganizationFilterModel.selfDepartment());
         }
+        //添加3个筛选字段
         List<FilterModel> options = new ArrayList<>();
         options.add("订单金额".equals(type.getTitle()) ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel() : DashboardFilterTimeModel.getFilterModel());
         options.add(type.getSort());
@@ -108,6 +148,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(this, options);
         filterMenu.setMenuAdapter(adapter);
+        //筛选菜单的回调
         adapter.setCallback(new OnMenuModelsSelected() {
             @Override
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
@@ -116,6 +157,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 String key = model.getKey();
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
+                Log.d(TAG, "onMenuModelsSelected() called with: menuIndex = [" + menuIndex + "], key:" + key + ",value;" + value);
+
 //
 //                if (menuIndex == 0) { //
 ////                    statusType = key;
@@ -156,11 +199,13 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        Log.i(TAG, "onPullDownToRefresh: ");
 
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        Log.i(TAG, "onPullUpToRefresh: ");
 
     }
 }

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.dashboard.presenter.impl;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -102,7 +103,7 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
      * @param  loadview:   整个Layout
      *
      * */
-    public void setOnSucssView(LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status){
+    public void setOnSucssView(AnimationDrawable anim,LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status){
         modelView.setVisibility(status.getModelView());
         load.setVisibility(status.getLoadView());
         error.setVisibility(status.getErrorView());

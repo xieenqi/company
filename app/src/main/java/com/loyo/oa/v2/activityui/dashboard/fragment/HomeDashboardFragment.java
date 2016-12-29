@@ -113,33 +113,35 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
         loading_load1 = (ImageView) mView.findViewById(R.id.loading_load1);
 
-
         rb_customer.setOnClickListener(this);
         rb_clue.setOnClickListener(this);
         ll_case1.setOnClickListener(this);
         ll_case2.setOnClickListener(this);
         ll_case3.setOnClickListener(this);
-
-        ll_case1.setOnTouchListener(Global.GetTouch());
-        ll_case2.setOnTouchListener(Global.GetTouch());
-        ll_case3.setOnTouchListener(Global.GetTouch());
-
-        mPresenter.initUi((WaveLoadingView) mView.findViewById(R.id.waveLoadingView1),
-                (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2));
-
         ll_dashboard_followup.setOnClickListener(this);
         ll_dashboard_signin.setOnClickListener(this);
         ll_dashboard_record.setOnClickListener(this);
         ll_dashboard_order_number.setOnClickListener(this);
         ll_dashboard_order_money.setOnClickListener(this);
+
+        mPresenter.initUi((WaveLoadingView) mView.findViewById(R.id.waveLoadingView1),
+                (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2));
+
         Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
-                ll_dashboard_order_money);
+                ll_dashboard_order_money,ll_case1,ll_case2,ll_case3);
         bindAdapter();
         initAnim();
     }
 
     private void initAnim() {
         loadAnim1 = (AnimationDrawable) mView.findViewById(R.id.loading_load1).getBackground();
+        mPresenter.setOnSucssView(
+                loadAnim1,
+                ll_followup,
+                loading_load1,
+                loading_error1,
+                loading_view1,
+                LoadStatus.LOAD);
     }
 
     @Override
@@ -239,7 +241,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     // 获取跟进成功
     @Override
     public void followUpSuccessEmbl() {
-        mPresenter.setOnSucssView(ll_followup,
+        mPresenter.setOnSucssView(
+                loadAnim1,
+                ll_followup,
                 loading_load1,
                 loading_error1,
                 loading_view1,
@@ -249,7 +253,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     // 获取跟进失败
     @Override
     public void followUpErrorEmbl() {
-        mPresenter.setOnSucssView(ll_followup,
+        mPresenter.setOnSucssView(
+                loadAnim1,
+                ll_followup,
                 loading_load1,
                 loading_error1,
                 loading_view1,

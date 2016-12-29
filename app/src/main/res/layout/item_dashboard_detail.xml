@@ -19,9 +19,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:maxLines="1"
-            android:text="tttt1111"
+            android:text="张三"
             android:textSize="15sp" />
 
         <TextView
@@ -29,9 +29,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:maxLines="1"
-            android:text="tttt222222333333333"
+            android:text="12"
             android:textSize="15sp" />
 
         <TextView
@@ -39,9 +39,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:maxLines="1"
-            android:text="tttt33333"
+            android:text="32"
             android:textSize="15sp" />
 
         <TextView
@@ -49,9 +49,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:maxLines="1"
-            android:text="tttt444444"
+            android:text="12:20:60"
             android:textSize="15sp" />
     </LinearLayout>
 

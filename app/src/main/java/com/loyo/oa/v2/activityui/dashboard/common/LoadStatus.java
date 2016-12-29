@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.dashboard.common;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.view.View;
 
 /**
@@ -28,6 +29,11 @@ public enum LoadStatus {
         public int getModelView() {
             return View.GONE;
         }
+
+        @Override
+        public void animEmbl(AnimationDrawable anim) {
+            anim.start();
+        }
     },
     SUCCESS{
         @Override
@@ -48,6 +54,11 @@ public enum LoadStatus {
         @Override
         public int getModelView() {
             return View.VISIBLE;
+        }
+
+        @Override
+        public void animEmbl(AnimationDrawable anim) {
+            anim.stop();
         }
     },
     ERROR{
@@ -70,12 +81,17 @@ public enum LoadStatus {
         public int getModelView() {
             return View.GONE;
         }
+
+        @Override
+        public void animEmbl(AnimationDrawable anim) {
+            anim.stop();
+        }
     };
 
     public abstract int getLoadView();
     public abstract int getErrorView();
     public abstract int getLayoutView();
     public abstract int getModelView();
-
+    public abstract void animEmbl(AnimationDrawable anim);
 
 }
