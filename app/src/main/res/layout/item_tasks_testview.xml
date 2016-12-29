@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <LinearLayout
         android:id="@+id/layout_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_15"
         android:layout_marginLeft="@dimen/dimen_14"
         android:layout_marginRight="@dimen/dimen_14"
         android:background="@drawable/round_bg_shpe3"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/dimen_15"
-        android:layout_marginBottom="@dimen/dimen_15"
-        >
+        android:paddingBottom="@dimen/dimen_15">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -29,8 +28,7 @@
                 android:layout_margin="10dp"
                 android:text="审核人:"
                 android:textColor="@color/text99"
-                android:textSize="15sp"
-                />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tv_reviewer"
@@ -38,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/tv_task_tester"
-                android:textColor="@color/text99"/>
+                android:textColor="@color/text99" />
 
             <TextView
                 android:id="@+id/tv_reviewtime"
@@ -47,7 +45,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:textColor="@color/text99"/>
+                android:textColor="@color/text99" />
 
         </RelativeLayout>
 
@@ -55,27 +53,37 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_3"
             android:background="@drawable/view_dashed_line"
-            android:layerType="software"/>
+            android:layerType="software" />
 
-        <LinearLayout
-            android:id="@+id/item_tasks_sorece"
-            android:layout_width="match_parent"
+        <!--<LinearLayout-->
+        <!--android:id="@+id/item_tasks_sorece"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<RatingBar-->
+        <!--android:id="@+id/ratingBar_Task"-->
+        <!--style="@style/roomRatingBar"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="@dimen/dimen_10"-->
+        <!--android:isIndicator="true"-->
+        <!--android:max="100"-->
+        <!--android:numStars="5"-->
+        <!--android:stepSize="1"/>-->
+
+        <!--</LinearLayout>-->
+        <TextView
+            android:id="@+id/tv_task_score"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginBottom="@dimen/dimen_5"
+            android:layout_marginLeft="@dimen/dimen_10"
+            android:text="nberbnormbrobrokb"
+            android:textColor="#ff9900"
+            android:textSize="16sp" />
 
-            <RatingBar
-                android:id="@+id/ratingBar_Task"
-                style="@style/roomRatingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10"
-                android:isIndicator="true"
-                android:max="100"
-                android:numStars="5"
-                android:stepSize="1"/>
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -88,16 +96,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dimen_5"
                 android:layout_marginLeft="@dimen/margin_side_edge"
-                android:textSize="15sp"
-                />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tv_task_content"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_side_edge"
-                android:textColor="@color/text33"
-                />
+                android:textColor="@color/text33" />
 
         </LinearLayout>
 
