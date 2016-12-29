@@ -20,7 +20,11 @@ public interface HomeDashboardPresenter {
 
     void screenControlView(String[] list,String title);
 
-    void getFollowUpData(LoadingLayout ll_loading,int type);
+    void getFollowUpData(int type);
+
+    void getStockData(int type);
+
+    void getMoneyCountData(int type);
 
     void setOnSucssView(AnimationDrawable anim,LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status);
 }

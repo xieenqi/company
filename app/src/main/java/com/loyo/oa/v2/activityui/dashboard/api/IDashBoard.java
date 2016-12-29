@@ -2,6 +2,8 @@ package com.loyo.oa.v2.activityui.dashboard.api;
 
 import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
 import com.loyo.oa.v2.activityui.dashboard.model.DashBoardListModel;
+import com.loyo.oa.v2.activityui.dashboard.model.MoneyCountModel;
+import com.loyo.oa.v2.activityui.dashboard.model.StockListModel;
 
 import java.util.HashMap;
 import retrofit.http.GET;
@@ -20,6 +22,18 @@ public interface IDashBoard {
      */
     @GET("/statistics/sale-activity/mobile/total")
     Observable<CsclueFowUp> getFupCusClue(@QueryMap HashMap<String, Object> map);
+
+    /**
+     * 增量/存量
+     */
+    @GET("/statistics/customer_stock_increment/mobile/total")
+    Observable<StockListModel> getStock(@QueryMap HashMap<String, Object> map);
+
+    /**
+     * 数量/金额
+     */
+    @GET("/statistics/order/mobile/total")
+    Observable<MoneyCountModel> getMoneyCount(@QueryMap HashMap<String, Object> map);
 
     /**
      *仪表盘 客户/线索跟进 列表数据接口

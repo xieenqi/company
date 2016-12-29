@@ -11,25 +11,24 @@ public class CsclueFowUp extends BaseBean {
 
     public Data data;
 
-    class Data {
-        public SaleActivity saleActivity;
-        public SaleSlead saleSlead;
+    public class Data {
+        public DsFowUpCustomer saleActivity;
+        public DsFowUpSale salesLead;
     }
 
-    class SaleActivity {
+    public class DsFowUpCustomer {
         public DivModel activity;
         public DivModel visit;
         public DivModel voice;
     }
-
-    class SaleSlead {
+    public class DsFowUpSale {
         public DivModel activity;
         public DivModel voice;
     }
 
-    class DivModel {
-        String name;
-        int totalCount;
-        int distinctCount;
+    public class DivModel {
+        public String name;
+        public int totalCount;
+        public int distinctCount;
     }
 }
