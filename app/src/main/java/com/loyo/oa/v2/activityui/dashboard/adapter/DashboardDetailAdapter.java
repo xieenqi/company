@@ -176,16 +176,28 @@ public class DashboardDetailAdapter extends BaseAdapter {
             }else if (DashborardType.COMMON == type) {
                 //增量/存量
                 if (0 == position) {
-                    text1.setText(records.get(0).Id + "");
-                    text2.setText(records.get(0).Name + "");
-                    text3.setText(records.get(0).Count + "");
-                    text4.setText(records.get(0).AddCount + "");
+                    text1.setText(records.get(0).name + "");
+                    text2.setText(records.get(0).count + "");
+                    text3.setText(records.get(0).addCount + "");
                 } else {
                     int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(records.get(tempP).Id + "");
-                    text2.setText(records.get(tempP).Name + "");
-                    text3.setText(records.get(tempP).Count + "");
-                    text4.setText(records.get(tempP).AddCount + "");
+                    text1.setText(records.get(tempP).name + "");
+                    text2.setText(records.get(tempP).count + "");
+                    text3.setText(records.get(tempP).addCount + "");
+                }
+            }else if (DashborardType.ORDER_MONEY == type||DashborardType.ORDER_NUMBER == type) {
+                // 订单数量和金额
+                if (0 == position) {
+                    text1.setText(records.get(0).name + "");
+                    text2.setText(records.get(0).orderNum + "");
+                    text3.setText(records.get(0).targetNum + "");
+                    text4.setText(records.get(0).finish_rate + "");
+                } else {
+                    int tempP = position - 1;//添加了一个表头，消去下标偏移
+                    text1.setText(records.get(tempP).name + "");
+                    text2.setText(records.get(tempP).orderNum + "");
+                    text3.setText(records.get(tempP).targetNum + "");
+                    text4.setText(records.get(tempP).finish_rate + "");
 
                 }
             }

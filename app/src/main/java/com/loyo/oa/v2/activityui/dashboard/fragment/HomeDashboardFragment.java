@@ -90,7 +90,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     /**
      * 绑定增量存量Adapter
      */
-    private void bindClAdapter(StockListModel stockListModel) {
+    private void bindClAdapter(final StockListModel stockListModel) {
         if (null == mAdapter) {
             mAdapter = new StockListAdapter(getActivity(), stockListModel);
             lv_stocklist.setAdapter(mAdapter);
@@ -105,8 +105,10 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 if (!checkPermission(DashborardType.COMMON)) {
                     return;
                 }
+                DashborardType.COMMON.setTttle(stockListModel.data.get(position).tagItemName);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("type", DashborardType.COMMON);
+                bundle.putSerializable("tagItemId",stockListModel.data.get(position).tagItemId);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
             }
         });
