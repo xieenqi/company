@@ -107,7 +107,6 @@
             android:name=".activityui.login.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activityui.login.LoginBQQActivity"
