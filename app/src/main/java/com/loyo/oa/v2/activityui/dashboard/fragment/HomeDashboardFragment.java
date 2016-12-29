@@ -42,11 +42,14 @@ import me.itangqi.waveloadingview.WaveLoadingView;
 
 public class HomeDashboardFragment extends BaseFragment implements View.OnClickListener, HomeDashBoardView {
 
+    private final int NULLNUM = 3;
+
     private View mView;
     private RadioButton rb_customer, rb_clue;
     private RelativeLayout loading_view1, loading_view2, loading_view3;
     private LinearLayout loading_error1, loading_error2, loading_error3;
     private TextView tv_click_rest1, tv_click_rest2, tv_click_rest3;
+    private TextView tv_screen_title1,tv_screen_title2,tv_screen_title3;
     private ImageView loading_load1, loading_load2, loading_load3;
     private LinearLayout ll_case1, ll_case2, ll_case3;
     private CustomerListView lv_stocklist;
@@ -66,10 +69,10 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private HomeDashboardPresenter mPresenter;
     private AnimationDrawable loadAnim1, loadAnim2,loadAnim3;
 
-    private int followUpType = 5; //跟进 筛选
-    private int stockType = 5;    //增量存量 筛选
-    private int moneyCnType = 9;  //数量金额 筛选
-    private int followUpPage = 0; //0:客户 1:线索
+    private int followUpType = 5;  //跟进 筛选
+    private int stockType    = 5;  //增量存量 筛选
+    private int moneyCnType  = 9;  //数量金额 筛选
+    private int followUpPage = 0;  //0:客户 1:线索
 
 
     @Override
@@ -139,9 +142,8 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private void bindMoneyCountData(MoneyCountModel mcModel){
         tv_target_count.setText(mcModel.data.targetAmount+"");
         tv_order_count.setText(mcModel.data.totalAmount+"");
-        tv_target_money.setText(mcModel.data.targetNumber+"");
-        tv_order_money.setText(mcModel.data.totalNumber+"");
-
+        tv_target_money.setText("￥"+mcModel.data.targetNumber);
+        tv_order_money.setText("￥"+mcModel.data.totalNumber);
     }
 
     private void initUI() {
@@ -173,6 +175,10 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         tv_click_rest1 = (TextView) mView.findViewById(R.id.tv_click_rest1);
         tv_click_rest2 = (TextView) mView.findViewById(R.id.tv_click_rest2);
         tv_click_rest3 = (TextView) mView.findViewById(R.id.tv_click_rest3);
+
+        tv_screen_title1 = (TextView) mView.findViewById(R.id.tv_screen_title1);
+        tv_screen_title2 = (TextView) mView.findViewById(R.id.tv_screen_title2);
+        tv_screen_title3 = (TextView) mView.findViewById(R.id.tv_screen_title3);
 
         loading_load1 = (ImageView) mView.findViewById(R.id.loading_load1);
         loading_load2 = (ImageView) mView.findViewById(R.id.loading_load2);
@@ -214,7 +220,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
         Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
                 ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, tv_click_rest1);
-        getData(3,5);
+        getData(NULLNUM,5,"");
     }
 
     /**
@@ -264,17 +270,20 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      * @param  busType  请求业务类型(跟进 存量 金额..)
      * @param  type     筛选数据类型(今天 昨天..)
      * */
-    private void getData(int busType,int type){
+    private void getData(int busType,int type,String value){
         switch (busType){
             case 0:
+                tv_screen_title1.setText(value);
                 getFollowUpData(type);
                 break;
 
             case 1:
+                tv_screen_title2.setText(value);
                 getStockData(type);
                 break;
 
             case 2:
+                tv_screen_title3.setText(value);
                 getMoneyCount(type);
                 break;
             default:
@@ -386,9 +395,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     }
 
     @Override
-    public void setScreenVal(ScreenType screenType,int type) {
-        Toast(type+"");
-        getData(screenType.type(),type);
+    public void setScreenVal(ScreenType screenType,int type,String value) {
+        Toast(value+":"+type);
+        getData(screenType.type(),type,value);
     }
 
     // 获取跟进成功

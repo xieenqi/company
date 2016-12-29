@@ -78,34 +78,34 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
             public void setValue(String value, int index) {
                 switch (value){
                     case "今天":
-                        crolView.setScreenVal(screenType,1);
+                        crolView.setScreenVal(screenType,1,value);
                         break;
                     case "昨天":
-                        crolView.setScreenVal(screenType,2);
+                        crolView.setScreenVal(screenType,2,value);
                         break;
                     case "本周":
-                        crolView.setScreenVal(screenType,3);
+                        crolView.setScreenVal(screenType,3,value);
                         break;
                     case "上周":
-                        crolView.setScreenVal(screenType,4);
+                        crolView.setScreenVal(screenType,4,value);
                         break;
                     case "本月":
-                        crolView.setScreenVal(screenType,5);
+                        crolView.setScreenVal(screenType,5,value);
                         break;
                     case "上月":
-                        crolView.setScreenVal(screenType,6);
+                        crolView.setScreenVal(screenType,6,value);
                         break;
                     case "本季度":
-                        crolView.setScreenVal(screenType,7);
+                        crolView.setScreenVal(screenType,7,value);
                         break;
                     case "上季度":
-                        crolView.setScreenVal(screenType,8);
+                        crolView.setScreenVal(screenType,8,value);
                         break;
                     case "本年":
-                        crolView.setScreenVal(screenType,9);
+                        crolView.setScreenVal(screenType,9,value);
                         break;
                     case "去年":
-                        crolView.setScreenVal(screenType,10);
+                        crolView.setScreenVal(screenType,10,value);
                         break;
                 }
             }

@@ -12,7 +12,7 @@ import com.loyo.oa.v2.common.BaseView;
 
 public interface HomeDashBoardView extends BaseView{
 
-    void setScreenVal(ScreenType screenType,int type);
+    void setScreenVal(ScreenType screenType,int type,String value);
 
     void followUpSuccessEmbl(CsclueFowUp csclueFowUp);
 

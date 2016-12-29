@@ -12,9 +12,9 @@ public class MoneyCountModel extends BaseBean{
 
     public class Model{
         public int totalAmount;
-        public float totalNumber;
+        public long totalNumber;
         public int targetAmount;
-        public int targetNumber;
+        public long targetNumber;
     }
 
 }
