@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_common_title"/>
+    <include layout="@layout/include_common_title" />
 
     <View
         style="@style/view_split"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,8 +22,7 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            >
+            android:layout_height="48dp">
 
             <TextView
                 style="@style/text_item1"
@@ -32,27 +31,25 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_side_edge"
-                android:text="是否通过"/>
+                android:text="是否通过" />
 
 
-            <com.loyo.oa.v2.activityui.commonview.SwitchView
+            <com.loyo.oa.v2.activityui.commonview.SwitchView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/task_info_switch"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dimen_5"
                 android:layout_marginRight="@dimen/dimen_16"
-                android:layout_marginTop="6dp"
-                />
+                android:layout_marginTop="6dp" />
 
 
         </RelativeLayout>
 
         <View
             style="@style/view_split"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent" />
 
         <LinearLayout
             android:id="@+id/tasks_info_sorceview"
@@ -66,18 +63,18 @@
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
-                android:text="任务评分"/>
+                android:text="任务评分" />
 
             <!--<RatingBar-->
-                <!--android:id="@+id/ratingBar_Task"-->
-                <!--style="@style/roomRatingBar"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="29dp"-->
-                <!--android:gravity="right|center_vertical"-->
-                <!--android:isIndicator="false"-->
-                <!--android:max="100"-->
-                <!--android:numStars="5"-->
-                <!--android:stepSize="1"/>-->
+            <!--android:id="@+id/ratingBar_Task"-->
+            <!--style="@style/roomRatingBar"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="29dp"-->
+            <!--android:gravity="right|center_vertical"-->
+            <!--android:isIndicator="false"-->
+            <!--android:max="100"-->
+            <!--android:numStars="5"-->
+            <!--android:stepSize="1"/>-->
             <EditText
                 android:id="@+id/et_score"
                 style="@style/edtText_normal"
@@ -85,19 +82,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:hint="必填,请输入"
+                android:hint="请输入分数"
+                android:inputType="numberDecimal"
                 android:lineSpacingExtra="6dp"
                 android:textColor="@color/text66"
                 android:textColorHint="@color/text99"
-                android:textSize="15sp"
-                android:inputType="numberDecimal"
-                />
+                android:textSize="15sp" />
 
         </LinearLayout>
 
         <View
             style="@style/view_split"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent" />
 
     </LinearLayout>
 
@@ -111,7 +107,7 @@
 
         <View
             style="@style/view_split"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent" />
 
         <EditText
             android:id="@+id/edt_content"
@@ -122,11 +118,11 @@
             android:gravity="left|top"
             android:hint="请输入审核内容(可填)"
             android:minHeight="80dp"
-            android:paddingTop="24px"/>
+            android:paddingTop="24px" />
 
         <View
             style="@style/view_split"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent" />
 
     </LinearLayout>
 
@@ -149,7 +145,7 @@
             android:layout_weight="1"
             android:background="@drawable/retange_blue"
             android:text="提 交"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

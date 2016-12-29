@@ -148,9 +148,11 @@ public class TasksInfoScoreActivity extends BaseActivity {
         map.put("status", status);
 
         LogUtil.dll("发送数据:" + MainApp.gson.toJson(map));
+        showStatusLoading(false);
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).verifyTask(mTask.getId(), map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
+                HttpErrorCheck.checkCommitSus("任务评分:", response);
                 if (task != null) {
                     isSave = false;
                     Intent intent = new Intent();
@@ -162,7 +164,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -173,23 +175,23 @@ public class TasksInfoScoreActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if (isSave) {
-            mTask.setScore(Integer.parseInt(et_score.getText().toString()));
-            String content = edt_content.getText().toString().trim();
-            if (!StringUtil.isEmpty(content)) {
-                mTask.setTaskComment(content);
-            }
-            mTask.setResponsiblePerson(null);
-            mTask.setAttachments(null);
-            mTask.setReviewComments(null);
-            mTask.setCreator(null);
-//          mTask.setJoinedUsers(null);
-
-            DBManager.Instance().putTaskScore(MainApp.gson.toJson(mTask), mTask.getId());
-        } else {
-            DBManager.Instance().deleteTaskScore(mTask.getId());
-        }
+//
+//        if (isSave) {
+////            mTask.setScore(Integer.parseInt(et_score.getText().toString()));
+//            String content = edt_content.getText().toString().trim();
+//            if (!StringUtil.isEmpty(content)) {
+//                mTask.setTaskComment(content);
+//            }
+//            mTask.setResponsiblePerson(null);
+//            mTask.setAttachments(null);
+//            mTask.setReviewComments(null);
+//            mTask.setCreator(null);
+////          mTask.setJoinedUsers(null);
+//
+//            DBManager.Instance().putTaskScore(MainApp.gson.toJson(mTask), mTask.getId());
+//        } else {
+//            DBManager.Instance().deleteTaskScore(mTask.getId());
+//        }
     }
 
 }
