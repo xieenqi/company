@@ -116,7 +116,7 @@
             android:layout_height="0px"
             android:layout_weight="1"
             android:gravity="left|top"
-            android:hint="请输入审核内容(可填)"
+            android:hint="请输入审核内容(选填)"
             android:minHeight="80dp"
             android:paddingTop="24px" />
 
@@ -144,7 +144,7 @@
             android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:background="@drawable/retange_blue"
-            android:text="提 交"
+            android:text="确 定"
             android:textColor="@color/white" />
 
     </LinearLayout>

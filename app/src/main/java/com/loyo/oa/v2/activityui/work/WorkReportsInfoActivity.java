@@ -100,12 +100,12 @@ public class WorkReportsInfoActivity extends BaseActivity {
     EditText edt_workReport_title;
     @ViewById
     EditText edt_content;
-//    @ViewById
+    //    @ViewById
 //    RatingBar ratingBar_workReport;
     @ViewById
     ViewGroup no_dysndata_workreports;
     @ViewById
-    TextView tv_crm,tv_work_score;
+    TextView tv_crm, tv_work_score;
     @ViewById
     GridView info_gridview_workreports;
     @ViewById
@@ -331,7 +331,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
             tv_review_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorkReport.reviewer.reviewedAt));
             btn_workreport_review.setVisibility(View.GONE);
 //            ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.score)).intValue() / 20);
-            tv_work_score.setText(mWorkReport.reviewer.newScore.contains("-") ? "--" : mWorkReport.reviewer.newScore + "分");
+            tv_work_score.setVisibility(mWorkReport.reviewer.newScore.contains("-") ? View.GONE : View.VISIBLE);
+            tv_work_score.setText(mWorkReport.reviewer.newScore + "分");
             if (!StringUtil.isEmpty(mWorkReport.reviewer.comment)) {
                 edt_content.setText(mWorkReport.reviewer.comment);
                 edt_content.setEnabled(false);

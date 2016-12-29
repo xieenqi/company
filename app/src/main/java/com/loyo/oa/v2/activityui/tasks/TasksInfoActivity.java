@@ -502,8 +502,8 @@ public class TasksInfoActivity extends BaseActivity {
             if (!TextUtils.isEmpty(reviewer.score + "")) {
 //                int rat = (reviewer.score / 20);
 //                ratingBar_Task.setRating((float) (rat / 1.0));
-                tv_task_score.setVisibility(View.VISIBLE);
-                tv_task_score.setText(reviewer.newScore.contains("-") ? "--" : reviewer.newScore + "分");
+                tv_task_score.setVisibility(reviewer.newScore.contains("-") ? View.GONE : View.VISIBLE);
+                tv_task_score.setText(reviewer.newScore + "分");
 
             }
 
