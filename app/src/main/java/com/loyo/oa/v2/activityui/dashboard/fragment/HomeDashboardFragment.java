@@ -142,9 +142,8 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private void bindMoneyCountData(MoneyCountModel mcModel){
         tv_target_count.setText(mcModel.data.targetAmount+"");
         tv_order_count.setText(mcModel.data.totalAmount+"");
-        tv_target_money.setText(mcModel.data.targetNumber+"");
-        tv_order_money.setText(mcModel.data.totalNumber+"");
-
+        tv_target_money.setText("￥"+mcModel.data.targetNumber);
+        tv_order_money.setText("￥"+mcModel.data.totalNumber);
     }
 
     private void initUI() {

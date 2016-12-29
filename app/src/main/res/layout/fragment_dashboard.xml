@@ -568,6 +568,7 @@
             <include layout="@layout/include_solid_line_left" />
 
             <RelativeLayout
+                android:layout_marginBottom="@dimen/dimen_20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -667,13 +668,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dimen_15"
-                            android:gravity="center_horizontal"
                             android:orientation="horizontal">
 
                             <TextView
+                                android:layout_marginLeft="@dimen/dimen_30"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="目标数量"
+                                android:textSize="@dimen/text_sp13"
                                 android:textColor="@color/text99" />
 
                             <TextView
@@ -681,7 +683,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/dimen_10"
-                                android:text="10000"
+                                android:textSize="@dimen/text_sp16"
                                 android:textColor="@color/text33" />
                         </LinearLayout>
 
@@ -689,13 +691,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dimen_15"
-                            android:gravity="center_horizontal"
                             android:orientation="horizontal">
 
                             <TextView
+                                android:layout_marginLeft="@dimen/dimen_30"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="订单数量"
+                                android:textSize="@dimen/text_sp13"
                                 android:textColor="@color/text99" />
 
                             <TextView
@@ -703,7 +706,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/dimen_10"
-                                android:text="10000"
+                                android:textSize="@dimen/text_sp16"
                                 android:textColor="@color/text33" />
                         </LinearLayout>
 
@@ -734,13 +737,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dimen_15"
-                            android:gravity="center_horizontal"
                             android:orientation="horizontal">
 
                             <TextView
+                                android:layout_marginLeft="@dimen/dimen_20"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="目标金额"
+                                android:textSize="@dimen/text_sp13"
                                 android:textColor="@color/text99" />
 
                             <TextView
@@ -748,7 +752,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/dimen_10"
-                                android:text="$10000"
+                                android:textSize="@dimen/text_sp16"
                                 android:textColor="@color/text33" />
                         </LinearLayout>
 
@@ -756,13 +760,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dimen_15"
-                            android:gravity="center_horizontal"
                             android:orientation="horizontal">
 
                             <TextView
+                                android:layout_marginLeft="@dimen/dimen_20"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="订单金额"
+                                android:textSize="@dimen/text_sp13"
                                 android:textColor="@color/text99" />
 
                             <TextView
@@ -770,7 +775,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/dimen_10"
-                                android:text="$10000"
+                                android:textSize="@dimen/text_sp16"
                                 android:textColor="@color/text33" />
                         </LinearLayout>
                     </LinearLayout>
