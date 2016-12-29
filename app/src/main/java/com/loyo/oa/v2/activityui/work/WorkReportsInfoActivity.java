@@ -100,12 +100,12 @@ public class WorkReportsInfoActivity extends BaseActivity {
     EditText edt_workReport_title;
     @ViewById
     EditText edt_content;
-    @ViewById
-    RatingBar ratingBar_workReport;
+//    @ViewById
+//    RatingBar ratingBar_workReport;
     @ViewById
     ViewGroup no_dysndata_workreports;
     @ViewById
-    TextView tv_crm;
+    TextView tv_crm,tv_work_score;
     @ViewById
     GridView info_gridview_workreports;
     @ViewById
@@ -330,8 +330,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
 //            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.reviewedAt + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             tv_review_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorkReport.reviewer.reviewedAt));
             btn_workreport_review.setVisibility(View.GONE);
-            ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.score)).intValue() / 20);
-
+//            ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.score)).intValue() / 20);
+            tv_work_score.setText(mWorkReport.reviewer.newScore.contains("-") ? "--" : mWorkReport.reviewer.newScore + "分");
             if (!StringUtil.isEmpty(mWorkReport.reviewer.comment)) {
                 edt_content.setText(mWorkReport.reviewer.comment);
                 edt_content.setEnabled(false);
@@ -347,8 +347,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             if (reviewer != null && reviewer.isCurrentUser()) {
                 btn_workreport_review.setVisibility(View.VISIBLE);
                 btn_workreport_review.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
-
-                ratingBar_workReport.setIsIndicator(false);
             } else {
                 btn_workreport_review.setVisibility(View.GONE);
             }

@@ -176,12 +176,11 @@
                         android:layout_marginLeft="@dimen/dimen_15"
                         android:layout_marginRight="@dimen/dimen_15"
                         android:paddingBottom="@dimen/dimen_10"
+                        android:selectAllOnFocus="true"
                         android:text=""
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp15"
                         android:textIsSelectable="true"
-                        android:selectAllOnFocus="true"
-                        />
+                        android:textSize="@dimen/text_sp15" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -398,18 +397,26 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
 
-                                <RatingBar
-                                    android:id="@+id/ratingBar_workReport"
-                                    style="@style/roomRatingBar"
+                                <!--<RatingBar-->
+                                <!--android:id="@+id/ratingBar_workReport"-->
+                                <!--style="@style/roomRatingBar"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_marginLeft="@dimen/dimen_10"-->
+                                <!--android:layout_marginTop="@dimen/dimen_10"-->
+                                <!--android:gravity="right|center_vertical"-->
+                                <!--android:isIndicator="true"-->
+                                <!--android:max="100"-->
+                                <!--android:numStars="5"-->
+                                <!--android:stepSize="1" />-->
+                                <TextView
+                                    android:id="@+id/tv_work_score"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/dimen_5"
                                     android:layout_marginLeft="@dimen/dimen_10"
-                                    android:layout_marginTop="@dimen/dimen_10"
-                                    android:gravity="right|center_vertical"
-                                    android:isIndicator="true"
-                                    android:max="100"
-                                    android:numStars="5"
-                                    android:stepSize="1" />
+                                    android:textColor="#ff9900"
+                                    android:textSize="16sp" />
 
                                 <EditText
                                     android:id="@+id/edt_content"

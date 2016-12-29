@@ -160,23 +160,23 @@ public class TasksInfoScoreActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if (isSave) {
-            mTask.setScore(Integer.parseInt(et_score.getText().toString()));
-            String content = edt_content.getText().toString().trim();
-            if (!StringUtil.isEmpty(content)) {
-                mTask.setTaskComment(content);
-            }
-            mTask.setResponsiblePerson(null);
-            mTask.setAttachments(null);
-            mTask.setReviewComments(null);
-            mTask.setCreator(null);
-//          mTask.setJoinedUsers(null);
-
-            DBManager.Instance().putTaskScore(MainApp.gson.toJson(mTask), mTask.getId());
-        } else {
-            DBManager.Instance().deleteTaskScore(mTask.getId());
-        }
+//
+//        if (isSave) {
+////            mTask.setScore(Integer.parseInt(et_score.getText().toString()));
+//            String content = edt_content.getText().toString().trim();
+//            if (!StringUtil.isEmpty(content)) {
+//                mTask.setTaskComment(content);
+//            }
+//            mTask.setResponsiblePerson(null);
+//            mTask.setAttachments(null);
+//            mTask.setReviewComments(null);
+//            mTask.setCreator(null);
+////          mTask.setJoinedUsers(null);
+//
+//            DBManager.Instance().putTaskScore(MainApp.gson.toJson(mTask), mTask.getId());
+//        } else {
+//            DBManager.Instance().deleteTaskScore(mTask.getId());
+//        }
     }
 
 }
