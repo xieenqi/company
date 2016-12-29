@@ -90,7 +90,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
             public void toggleToOff() {
                 task_info_switch.setState(false);
                 status = 0;
-                edt_content.setHint("请输入审核内容(必填)");
+                edt_content.setHint("请输入不通过原因(必填)");
                 tasks_info_sorceview.setVisibility(View.GONE);
             }
         });
