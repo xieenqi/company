@@ -180,7 +180,9 @@ public class TasksEditActivity extends BaseActivity {
             tv_deadline.setText(DateTool.getDateTimeFriendly(mTask.getPlanEndAt()));
         }
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
-        switch_approve.setState(mTask.isReviewFlag());
+
+        switch_approve.setState(mTask.getResponsiblePerson().isCurrentUser() ? false : mTask.isReviewFlag());
+        linear_task_approve.setVisibility(mTask.getResponsiblePerson().isCurrentUser() ? View.GONE : View.VISIBLE);
         edt_content.setText(mTask.getContent());
         edt_title.setText(mTask.getTitle());
         tv_mycustomer.setText(mTask.getCustomerName());
@@ -816,7 +818,8 @@ public class TasksEditActivity extends BaseActivity {
                             @Override
                             public void onError(Throwable e) {
                                 super.onError(e);
-                                cancelLoading();
+                                //cancelLoading();
+								Toast("删除附件失败!");
                             }
 
                             @Override

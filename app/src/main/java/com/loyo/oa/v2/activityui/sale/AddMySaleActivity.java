@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -264,6 +265,7 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
 
     public void estimateTime() {
         Calendar cal = Calendar.getInstance();
+        Locale.setDefault(Locale.CHINA);//设置语言
         final DatePickerDialog mDialog = new DatePickerDialog(this, null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 
