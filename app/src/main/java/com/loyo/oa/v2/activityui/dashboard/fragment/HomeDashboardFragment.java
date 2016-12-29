@@ -137,7 +137,6 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      * 绑定数量金额数据
      * */
     private void bindMoneyCountData(MoneyCountModel mcModel){
-        LogUtil.dee("mcModel:"+MainApp.gson.toJson(mcModel));
         tv_target_count.setText(mcModel.data.targetAmount+"");
         tv_order_count.setText(mcModel.data.totalAmount+"");
         tv_target_money.setText(mcModel.data.targetNumber+"");
