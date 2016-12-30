@@ -4,18 +4,15 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -59,6 +56,7 @@ public class WorkReportReviewActivity extends BaseActivity {
 //            }
 //        });
         et_score.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
+        et_score.addTextChangedListener(OrderCommon.getTextWatcher());
     }
 
     @Click(R.id.btn_workreport_review)
