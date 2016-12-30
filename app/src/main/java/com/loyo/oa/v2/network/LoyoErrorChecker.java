@@ -1,9 +1,14 @@
 package com.loyo.oa.v2.network;
 
+import android.content.Intent;
 import android.support.annotation.IntDef;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.model.APIException;
 import com.loyo.oa.v2.network.model.LoyoError;
 import com.loyo.oa.v2.tool.Utils;
@@ -111,44 +116,42 @@ public class LoyoErrorChecker {
 
     public static LoyoError checkLoyoError(Throwable e, @CheckType int type, LoadingLayout layout) {
         LoyoError error = LoyoErrorChecker.loyoError(e);
-//        if (type == LOADING_LAYOUT && layout == null) {
-//            type = TOAST;
-//        }
-//
-//        if (error.loadingState == AuthFail) {
-//            LoyoToast.info(MainApp.getMainApp().getApplicationContext(), error.message);
-//            //到侧边栏 退出系统到登录界面
-//            Intent in = new Intent();
-//            in.setAction(ExtraAndResult.ACTION_USER_VERSION);
-//            in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
-//            LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
-//            return null;
-//        }
-//        switch (type) {
-//            case SILENCE:
-//            {
-//                // 静默处理，不提示
-//            }
-//            break;
-//            case LOADING_LAYOUT:
-//            {
-//                layout.setStatus(error.loadingState); // TODO:
-//                layout.setNoNetworkText(error.message);
-//            }
-//            break;
-//            case PROGRESS_HUD:
-//            {
-//                // onCompleted 处理提示
-//            }
-//            break;
-//            default:
-//            {
-//                LoyoToast.error(MainApp.getMainApp().getApplicationContext(), error.message);
-//            }
-//            break;
-//        }
-//        return error;
+        if (type == LOADING_LAYOUT && layout == null) {
+            type = TOAST;
+        }
 
+        if (error.loadingState == AuthFail) {
+            LoyoToast.info(MainApp.getMainApp().getApplicationContext(), error.message);
+            //到侧边栏 退出系统到登录界面
+            Intent in = new Intent();
+            in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+            in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
+            LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
+            return null;
+        }
+        switch (type) {
+            case SILENCE:
+            {
+                // 静默处理，不提示
+            }
+            break;
+            case LOADING_LAYOUT:
+            {
+                layout.setStatus(error.loadingState); // TODO:
+                layout.setNoNetworkText(error.message);
+            }
+            break;
+            case PROGRESS_HUD:
+            {
+                // onCompleted 处理提示
+            }
+            break;
+            default:
+            {
+                LoyoToast.error(MainApp.getMainApp().getApplicationContext(), error.message);
+            }
+            break;
+        }
         return error;
 
     }
