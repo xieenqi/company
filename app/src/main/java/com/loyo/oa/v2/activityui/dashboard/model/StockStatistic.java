@@ -12,4 +12,12 @@ public class StockStatistic extends BaseBean{
     public String tagItemName;
     public int inCrement;
     public int stock;
+
+    public String getStock() {
+        return String.valueOf(stock);
+    }
+
+    public String getIncement() {
+        return String.valueOf(inCrement);
+    }
 }

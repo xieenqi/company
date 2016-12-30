@@ -55,8 +55,8 @@ public class StockListAdapter extends BaseAdapter{
         }
 
         holder.tv_title.setText(model.tagItemName);
-        holder.tv_zsize.setText(model.inCrement+"");
-        holder.tv_csize.setText(model.stock+"");
+        holder.tv_zsize.setText(model.getIncement());
+        holder.tv_csize.setText(model.getStock());
         return convertView;
     }
 
