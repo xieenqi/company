@@ -10,6 +10,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -42,11 +43,10 @@ public class InitDataService extends IntentService {
         }
 
         UserService.getProfile()
-                .subscribe(new DefaultLoyoSubscriber<User>() {
+                .subscribe(new DefaultLoyoSubscriber<User>(LoyoErrorChecker.SILENCE) {
 
                     @Override
                     public void onError(Throwable e) {
-                        super.onError(e);
                         Intent intent = new Intent();
                         intent.setAction(FinalVariables.ACTION_DATA_CHANGE);
                         LocalBroadcastManager.getInstance(InitDataService.this).sendBroadcast(intent);
@@ -56,7 +56,6 @@ public class InitDataService extends IntentService {
                     public void onNext(User user) {
                         try {
                             String json = MainApp.gson.toJson(user);
-                            user = user;
                             setRootMap(user);
                             DBManager.Instance().putUser(json);//保存用户信息
                             sendDataChangeBroad(user);

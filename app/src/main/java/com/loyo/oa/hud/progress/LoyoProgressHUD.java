@@ -220,7 +220,7 @@ public class LoyoProgressHUD {
      * @return Current HUD
      */
     public LoyoProgressHUD setLabel(String label) {
-        mProgressDialog.setLabel(label);
+        mProgressDialog.setLabel(TextUtils.isEmpty(label)?null:label);
         return this;
     }
 
