@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.dashboard.model.StockListModel;
+import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
 import java.util.ArrayList;
 
 /**
@@ -17,11 +17,11 @@ import java.util.ArrayList;
 public class StockListAdapter extends BaseAdapter{
 
     private Context mContext;
-    public ArrayList<StockListModel.Model> models;
+    public ArrayList<StockStatistic> models;
 
-    public StockListAdapter(Context mContext,StockListModel stockListModel){
+    public StockListAdapter(Context mContext,ArrayList<StockStatistic> stockListModel){
         this.mContext = mContext;
-        models = stockListModel.data;
+        models = stockListModel;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class StockListAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         ViewHolder holder = null;
-        StockListModel.Model model = models.get(position);
+        StockStatistic model = models.get(position);
         if(null == convertView){
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_dashstock, null);

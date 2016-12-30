@@ -1,12 +1,16 @@
 package com.loyo.oa.v2.activityui.dashboard.api;
 
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
-import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
-import com.loyo.oa.v2.activityui.dashboard.model.DashBoardListModel;
-import com.loyo.oa.v2.activityui.dashboard.model.MoneyCountModel;
-import com.loyo.oa.v2.activityui.dashboard.model.StockListModel;
+import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.StatisticRecord;
+import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
+import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.Config_project;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import rx.Observable;
 
@@ -17,42 +21,43 @@ import rx.Observable;
 public class DashBoardService {
 
     //获取客户和线索跟进
-    public static Observable<CsclueFowUp> getFupCusClue(HashMap<String, Object> params) {
+    public static Observable<FollowupStatistic> getFupCusClue(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IDashBoard.class)
                         .getFupCusClue(params)
-                        .compose(RetrofitAdapterFactory.<CsclueFowUp>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<FollowupStatistic>applySchedulers());
     }
 
 
     //获取增量和存量
-    public static Observable<StockListModel> getStock(HashMap<String, Object> params) {
+    public static Observable<ArrayList<StockStatistic>> getStock(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IDashBoard.class)
                         .getStock(params)
-                        .compose(RetrofitAdapterFactory.<StockListModel>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<ArrayList<StockStatistic>>applySchedulers());
     }
 
     //获取数量和金额
-    public static Observable<MoneyCountModel> getMoneyCount(HashMap<String, Object> params) {
+    public static Observable<MoneyStatistic> getMoneyCount(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IDashBoard.class)
                         .getMoneyCount(params)
-                        .compose(RetrofitAdapterFactory.<MoneyCountModel>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<MoneyStatistic>applySchedulers());
     }
 
     //仪表盘 列表的数据接口
-    public static Observable<DashBoardListModel> getDashBoardListData(HashMap<String, Object> params,DashborardType type) {
+    public static Observable<PaginationX<StatisticRecord>>
+    getDashBoardListData(HashMap<String, Object> params, DashborardType type) {
         IDashBoard dashBoard = RetrofitAdapterFactory.getInstance()
                 .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                 .create(IDashBoard.class);
-        Observable<DashBoardListModel> observable = null;
+        Observable<BaseResponse<PaginationX<StatisticRecord>>> observable = null;
         switch (type){
             case CUS_FOLLOWUP:
             case SALE_FOLLOWUP:
@@ -80,7 +85,7 @@ public class DashBoardService {
                 observable = dashBoard.getDashBoardSaleListData(params);
                 break;
         }
-       return observable.compose(RetrofitAdapterFactory.<DashBoardListModel>compatApplySchedulers());
+       return observable.compose(RetrofitAdapterFactory.<PaginationX<StatisticRecord>>applySchedulers());
 
     }
 
