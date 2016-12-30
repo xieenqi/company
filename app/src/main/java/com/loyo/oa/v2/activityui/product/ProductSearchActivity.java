@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.product.new275;
+package com.loyo.oa.v2.activityui.product;
 
 import android.os.Bundle;
 import android.view.KeyEvent;

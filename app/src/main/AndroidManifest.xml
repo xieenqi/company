@@ -847,19 +847,19 @@
 
         <!--新增购买产品-->
         <activity
-            android:name=".activityui.product.new275.AddBuyProductActivity"
+            android:name=".activityui.product.AddBuyProductActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
         <!--新增购买产品－产品详情-->
         <activity
-            android:name=".activityui.product.new275.ProductDetailActivity"
+            android:name=".activityui.product.ProductDetailActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
         <!--新增购买产品－产品选择－搜索产品-->
         <activity
-            android:name=".activityui.product.new275.ProductSearchActivity"
+            android:name=".activityui.product.ProductSearchActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />

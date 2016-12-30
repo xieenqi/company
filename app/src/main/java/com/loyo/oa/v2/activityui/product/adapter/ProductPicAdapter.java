@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.product.new275.adapter;
+package com.loyo.oa.v2.activityui.product.adapter;
 
 import android.app.Activity;
 import android.content.Context;

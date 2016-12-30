@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.product.new275;
+package com.loyo.oa.v2.activityui.product;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,16 +12,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
-import com.loyo.oa.v2.activityui.product.new275.adapter.ProductPicAdapter;
+import com.loyo.oa.v2.activityui.product.adapter.ProductPicAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
-
 import java.util.ArrayList;
 import java.util.List;
 
