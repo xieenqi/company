@@ -20,9 +20,9 @@ import com.loyo.oa.v2.activityui.dashboard.adapter.StockListAdapter;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
 import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
-import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
-import com.loyo.oa.v2.activityui.dashboard.model.MoneyCountModel;
-import com.loyo.oa.v2.activityui.dashboard.model.StockListModel;
+import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.presenter.impl.HomeDashboardPresenterImpl;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
@@ -35,6 +35,7 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import me.itangqi.waveloadingview.WaveLoadingView;
 
@@ -72,7 +73,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private HomeDashboardPresenter mPresenter;
     private AnimationDrawable loadAnim1, loadAnim2,loadAnim3;
 
-    private CsclueFowUp csclueFowUp;
+    private FollowupStatistic csclueFowUp;
 
     private int followUpType = 1;  //跟进 默认今天
     private int stockType    = 1;  //增量存量 默认今天
@@ -98,7 +99,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     /**
      * 绑定增量存量Adapter
      */
-    private void bindClAdapter(final StockListModel stockListModel) {
+    private void bindClAdapter(final ArrayList<StockStatistic> stockListModel) {
         if (null == mAdapter) {
             mAdapter = new StockListAdapter(getActivity(), stockListModel);
             lv_stocklist.setAdapter(mAdapter);
@@ -113,10 +114,10 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 if (!checkPermission(DashborardType.COMMON)) {
                     return;
                 }
-                DashborardType.COMMON.setTttle(stockListModel.data.get(position).tagItemName);
+                DashborardType.COMMON.setTttle(stockListModel.get(position).tagItemName);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("type", DashborardType.COMMON);
-                bundle.putSerializable("tagItemId",stockListModel.data.get(position).tagItemId);
+                bundle.putSerializable("tagItemId",stockListModel.get(position).tagItemId);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
             }
         });
@@ -127,32 +128,32 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      */
     private void bindFowUpData() {
         if (followUpPage == 0) {
-            fw_totalsize.setText(csclueFowUp.data.saleActivity.activity.totalCount + "");
-            fw_count.setText(csclueFowUp.data.saleActivity.activity.distinctCount + "");
-            visit_totalsize.setText(csclueFowUp.data.saleActivity.visit.totalCount + "");
-            visit_count.setText(csclueFowUp.data.saleActivity.visit.distinctCount + "");
-            voice_totalsize.setText(csclueFowUp.data.saleActivity.voice.totalCount + "");
-            voice_count.setText(csclueFowUp.data.saleActivity.voice.distinctCount + "");
+            fw_totalsize.setText(csclueFowUp.saleActivity.activity.totalCount + "");
+            fw_count.setText(csclueFowUp.saleActivity.activity.distinctCount + "");
+            visit_totalsize.setText(csclueFowUp.saleActivity.visit.totalCount + "");
+            visit_count.setText(csclueFowUp.saleActivity.visit.distinctCount + "");
+            voice_totalsize.setText(csclueFowUp.saleActivity.voice.totalCount + "");
+            voice_count.setText(csclueFowUp.saleActivity.voice.distinctCount + "");
         } else {
-            fw_totalsize.setText(csclueFowUp.data.salesLead.activity.totalCount + "");
-            fw_count.setText(csclueFowUp.data.salesLead.activity.distinctCount + "");
-            visit_totalsize.setText(csclueFowUp.data.salesLead.voice.totalCount + "");
-            visit_count.setText(csclueFowUp.data.salesLead.voice.distinctCount + "");
+            fw_totalsize.setText(csclueFowUp.salesLead.activity.totalCount + "");
+            fw_count.setText(csclueFowUp.salesLead.activity.distinctCount + "");
+            visit_totalsize.setText(csclueFowUp.salesLead.voice.totalCount + "");
+            visit_count.setText(csclueFowUp.salesLead.voice.distinctCount + "");
         }
     }
 
     /**
      * 绑定数量金额数据
      * */
-    private void bindMoneyCountData(MoneyCountModel mcModel){
+    private void bindMoneyCountData(MoneyStatistic mcModel){
 
         DecimalFormat df = new DecimalFormat("0.00");
 
-        long targetAmount = mcModel.data.targetAmount; /*  目标数量  */
-        long totalAmount  = mcModel.data.totalAmount;  /*  实际数量  */
+        long targetAmount = mcModel.targetAmount; /*  目标数量  */
+        long totalAmount  = mcModel.totalAmount;  /*  实际数量  */
 
-        long targetMoney = mcModel.data.targetNumber;  /*  目标金额  */
-        long totalMoney  = mcModel.data.totalNumber;   /*  实际金额  */
+        long targetMoney = mcModel.targetNumber;  /*  目标金额  */
+        long totalMoney  = mcModel.totalNumber;   /*  实际金额  */
 
         int mvNumValues = 100; /* 数量涨幅值 */
         int mvMonValues = 100; /* 金额涨幅值 */
@@ -438,7 +439,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     // 获取跟进成功
     @Override
-    public void followUpSuccessEmbl(CsclueFowUp csclueFowUp) {
+    public void followUpSuccessEmbl(FollowupStatistic csclueFowUp) {
         mPresenter.setOnSucssView(
                 loadAnim1,
                 ll_followup,
@@ -464,7 +465,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     // 获取存量增量成功
     @Override
-    public void stockSuccessEmbl(StockListModel stockListModel) {
+    public void stockSuccessEmbl(ArrayList<StockStatistic> stockListModel) {
         mPresenter.setOnSucssView(
                 loadAnim2,
                 ll_stock,
@@ -489,7 +490,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     // 获取数量金额成功
     @Override
-    public void moneyConSuccessEmbl(MoneyCountModel moneyCountModel) {
+    public void moneyConSuccessEmbl(MoneyStatistic moneyCountModel) {
         mPresenter.setOnSucssView(
                 loadAnim3,
                 ll_money,

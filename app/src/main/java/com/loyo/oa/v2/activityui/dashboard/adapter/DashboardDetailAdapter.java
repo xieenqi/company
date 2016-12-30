@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
-import com.loyo.oa.v2.activityui.dashboard.model.DashBoardListModel;
+import com.loyo.oa.v2.activityui.dashboard.model.StatisticRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class DashboardDetailAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater inflater;
-    private List<DashBoardListModel.Record> records = new ArrayList<>();//数据列表
+    private List<StatisticRecord> records = new ArrayList<>();//数据列表
     private DashborardType type;
 
     public DashboardDetailAdapter(Context context, DashborardType type) {
@@ -34,13 +34,13 @@ public class DashboardDetailAdapter extends BaseAdapter {
     }
 
     //加载更多
-    public void addAll(List<DashBoardListModel.Record> data) {
+    public void addAll(List<StatisticRecord> data) {
         records.addAll(data);
         notifyDataSetChanged();
     }
 
     //刷新
-    public void reload(List<DashBoardListModel.Record> data) {
+    public void reload(List<StatisticRecord> data) {
         records.clear();
         records.addAll(data);
         notifyDataSetChanged();

@@ -22,7 +22,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.adapter.DashboardDetailAdapter;
 import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
-import com.loyo.oa.v2.activityui.dashboard.model.DashBoardListModel;
+import com.loyo.oa.v2.activityui.dashboard.model.StatisticRecord;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -108,7 +109,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         }
 
         //网络请求
-        DashBoardService.getDashBoardListData(map, type).subscribe(new DefaultLoyoSubscriber<DashBoardListModel>(ll_loading) {
+        DashBoardService.getDashBoardListData(map, type)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<StatisticRecord>>(ll_loading) {
             @Override
             public void onError(Throwable e) {
                 if(adapter.isEmpty()){
@@ -118,17 +120,17 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 }
             }
             @Override
-            public void onNext(DashBoardListModel dashBoardListModel) {
+            public void onNext(PaginationX<StatisticRecord> listX) {
                 ll_loading.setStatus(LoadingLayout.Success);
                 lv_list.onRefreshComplete();
-                if(null==dashBoardListModel.data.records){
+                if(PaginationX.isEmpty(listX)){
                     Toast.makeText(DashboardDetailActivity.this, "没有数据", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (1 == pageIndex) {
-                    adapter.reload(dashBoardListModel.data.records);
+                    adapter.reload(listX.records);
                 } else {
-                    adapter.addAll(dashBoardListModel.data.records);
+                    adapter.addAll(listX.records);
                 }
 
             }

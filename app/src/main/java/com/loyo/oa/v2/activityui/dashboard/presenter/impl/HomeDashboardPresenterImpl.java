@@ -12,15 +12,15 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
 import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
-import com.loyo.oa.v2.activityui.dashboard.model.CsclueFowUp;
-import com.loyo.oa.v2.activityui.dashboard.model.MoneyCountModel;
-import com.loyo.oa.v2.activityui.dashboard.model.StockListModel;
+import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.LogUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.itangqi.waveloadingview.WaveLoadingView;
@@ -120,9 +120,9 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
     public void getFollowUpData(int type) {
         HashMap<String,Object> map = new HashMap<>();
         map.put("qType",type);
-        DashBoardService.getFupCusClue(map).subscribe(new DefaultLoyoSubscriber<CsclueFowUp>() {
+        DashBoardService.getFupCusClue(map).subscribe(new DefaultLoyoSubscriber<FollowupStatistic>() {
             @Override
-            public void onNext(CsclueFowUp csclueFowUp) {
+            public void onNext(FollowupStatistic csclueFowUp) {
                 crolView.followUpSuccessEmbl(csclueFowUp);
             }
 
@@ -139,9 +139,10 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
     public void getStockData(int type) {
         HashMap<String,Object> map = new HashMap<>();
         map.put("qType",type);
-        DashBoardService.getStock(map).subscribe(new DefaultLoyoSubscriber<StockListModel>() {
+        DashBoardService.getStock(map)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<StockStatistic>>() {
             @Override
-            public void onNext(StockListModel stockListModel) {
+            public void onNext(ArrayList<StockStatistic> stockListModel) {
                 crolView.stockSuccessEmbl(stockListModel);
             }
 
@@ -158,9 +159,9 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
     public void getMoneyCountData(int type) {
         HashMap<String,Object> map = new HashMap<>();
         map.put("qType",type);
-        DashBoardService.getMoneyCount(map).subscribe(new DefaultLoyoSubscriber<MoneyCountModel>() {
+        DashBoardService.getMoneyCount(map).subscribe(new DefaultLoyoSubscriber<MoneyStatistic>() {
             @Override
-            public void onNext(MoneyCountModel moneyCountModel) {
+            public void onNext(MoneyStatistic moneyCountModel) {
                 crolView.moneyConSuccessEmbl(moneyCountModel);
             }
 
