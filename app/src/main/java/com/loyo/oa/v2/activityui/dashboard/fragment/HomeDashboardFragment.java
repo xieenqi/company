@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
@@ -32,9 +33,7 @@ import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.LogUtil;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import me.itangqi.waveloadingview.WaveLoadingView;
@@ -128,17 +127,20 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      */
     private void bindFowUpData() {
         if (followUpPage == 0) {
-            fw_totalsize.setText(csclueFowUp.saleActivity.activity.totalCount + "");
-            fw_count.setText(csclueFowUp.saleActivity.activity.distinctCount + "");
-            visit_totalsize.setText(csclueFowUp.saleActivity.visit.totalCount + "");
-            visit_count.setText(csclueFowUp.saleActivity.visit.distinctCount + "");
-            voice_totalsize.setText(csclueFowUp.saleActivity.voice.totalCount + "");
-            voice_count.setText(csclueFowUp.saleActivity.voice.distinctCount + "");
+            fw_totalsize.setText(csclueFowUp.getActivityTotal());
+            fw_count.setText(csclueFowUp.getActivityDistinct());
+
+            visit_totalsize.setText(csclueFowUp.getVisitTotal());
+            visit_count.setText(csclueFowUp.getVisitDistinct());
+
+            voice_totalsize.setText(csclueFowUp.getVoiceTotal());
+            voice_count.setText(csclueFowUp.getVoiceDistinct());
         } else {
-            fw_totalsize.setText(csclueFowUp.salesLead.activity.totalCount + "");
-            fw_count.setText(csclueFowUp.salesLead.activity.distinctCount + "");
-            visit_totalsize.setText(csclueFowUp.salesLead.voice.totalCount + "");
-            visit_count.setText(csclueFowUp.salesLead.voice.distinctCount + "");
+            fw_totalsize.setText(csclueFowUp.getClueActivityTotal());
+            fw_count.setText(csclueFowUp.getClueActivityDistinct());
+
+            visit_totalsize.setText(csclueFowUp.getClueVoiceTotal());
+            visit_count.setText(csclueFowUp.getClueVoiceDistinct());
         }
     }
 
@@ -146,44 +148,18 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      * 绑定数量金额数据
      * */
     private void bindMoneyCountData(MoneyStatistic mcModel){
+        mPresenter.initWave(
+                (WaveLoadingView) mView.findViewById(R.id.waveLoadingView1),
+                (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2),
+                mcModel.getNumberPercent(),
+                mcModel.getMoneyPercent(),
+                mcModel.getNumberDisplayTitle(),
+                mcModel.getMoneyDisplayTitle());
 
-        DecimalFormat df = new DecimalFormat("0.00");
-
-        long targetAmount = mcModel.targetAmount; /*  目标数量  */
-        long totalAmount  = mcModel.totalAmount;  /*  实际数量  */
-
-        long targetMoney = mcModel.targetNumber;  /*  目标金额  */
-        long totalMoney  = mcModel.totalNumber;   /*  实际金额  */
-
-        int mvNumValues = 100; /* 数量涨幅值 */
-        int mvMonValues = 100; /* 金额涨幅值 */
-
-        String mvNumShow = "100%"; /* 数量涨幅百分比 */
-        String mvMonShow = "100%"; /* 金额涨幅百分比 */
-
-        if(targetAmount != 0 && targetAmount > totalAmount){
-            mvNumValues =  (int) Math.floor((double)totalAmount/targetAmount); //取整
-            mvNumShow = df.format(((double)totalAmount/targetAmount * 100))+"%";
-        }
-
-        if(targetMoney != 0 && targetMoney > totalMoney){
-            mvMonValues =  (int) Math.floor((double)totalMoney/targetMoney); //取整
-            mvMonShow = df.format(((double)totalMoney/targetMoney * 100))+"%";
-        }
-
-        LogUtil.dee("数量百分比值:"+ mvNumValues);
-        LogUtil.dee("数量百分比(两位小数):"+ mvNumShow);
-
-        LogUtil.dee("金额百分比值:"+ mvMonValues);
-        LogUtil.dee("金额百分比(两位小数):"+ mvMonShow);
-
-        mPresenter.initWave((WaveLoadingView) mView.findViewById(R.id.waveLoadingView1),
-                            (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2),
-                             mvNumValues,mvMonValues,mvNumShow,mvMonShow);
-        tv_target_count.setText(targetAmount+"");
-        tv_order_count.setText(totalAmount+"");
-        tv_target_money.setText("¥ " + targetMoney);
-        tv_order_money.setText("¥ " + totalMoney);
+        tv_target_count.setText(mcModel.getTargetAmount());
+        tv_order_count.setText(mcModel.getTotalAmount());
+        tv_target_money.setText(mcModel.getTargetMoney());
+        tv_order_money.setText(mcModel.getTotalMoney());
     }
 
     private void initUI() {

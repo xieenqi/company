@@ -26,4 +26,104 @@ public class FollowupStatistic {
         public int totalCount;
         public int distinctCount;
     }
+
+    public String getActivityTotal() {
+        String result= "";
+        try {
+            result = String.valueOf(saleActivity.activity.totalCount);
+        }
+        catch (Exception e) {
+        }
+        return result;
+    }
+
+    public String getActivityDistinct() {
+        String result= "";
+        try {
+            result = String.valueOf(saleActivity.activity.distinctCount);
+        }
+        catch (Exception e) {
+        }
+        return result;
+    }
+
+    public String getVisitTotal() {
+        String result= "";
+        try {
+            result = String.valueOf(saleActivity.visit.totalCount);
+        }
+        catch (Exception e) {
+        }
+        return result;
+    }
+
+    public String getVisitDistinct() {
+        String result= "";
+        try {
+            result = String.valueOf(saleActivity.visit.distinctCount);
+        }
+        catch (Exception e) {
+        }
+        return result;
+    }
+
+    public String getVoiceTotal() {
+        String result= "";
+        try {
+            result = String.valueOf(saleActivity.voice.totalCount);
+        }
+        catch (Exception e) {
+        }
+        return result;
+    }
+
+    public String getVoiceDistinct() {
+        String result= "";
+        try {
+            result = String.valueOf(saleActivity.voice.distinctCount);
+        }
+        catch (Exception e) {
+        }
+        return result;
+    }
+
+    public String getClueActivityTotal() {
+        String result= "";
+        try {
+            result = String.valueOf(salesLead.activity.totalCount);
+        }
+        catch (Exception e) {
+        }
+        return result;
+    }
+
+    public String getClueActivityDistinct() {
+        String result= "";
+        try {
+            result = String.valueOf(salesLead.activity.distinctCount);
+        }
+        catch (Exception e) {
+        }
+        return result;
+    }
+
+    public String getClueVoiceTotal() {
+        String result= "";
+        try {
+            result = String.valueOf(salesLead.voice.totalCount);
+        }
+        catch (Exception e) {
+        }
+        return result;
+    }
+
+    public String getClueVoiceDistinct() {
+        String result= "";
+        try {
+            result = String.valueOf(salesLead.voice.distinctCount);
+        }
+        catch (Exception e) {
+        }
+        return result;
+    }
 }
