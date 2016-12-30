@@ -74,9 +74,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     private CsclueFowUp csclueFowUp;
 
-    private int followUpType = 5;  //跟进 筛选
-    private int stockType    = 5;  //增量存量 筛选
-    private int moneyCnType  = 9;  //数量金额 筛选
+    private int followUpType = 1;  //跟进 默认今天
+    private int stockType    = 1;  //增量存量 默认今天
+    private int moneyCnType  = 5;  //数量金额 默认本月
     private int followUpPage = 0;  //0:客户 1:线索
 
 
@@ -146,39 +146,43 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      * */
     private void bindMoneyCountData(MoneyCountModel mcModel){
 
+        DecimalFormat df = new DecimalFormat("0.00");
+
         long targetAmount = mcModel.data.targetAmount; /*  目标数量  */
         long totalAmount  = mcModel.data.totalAmount;  /*  实际数量  */
 
         long targetMoney = mcModel.data.targetNumber;  /*  目标金额  */
         long totalMoney  = mcModel.data.totalNumber;   /*  实际金额  */
 
-        int mvNumValues; /* 数量涨幅值 */
-        int mvMonValues; /* 金额涨幅值 */
+        int mvNumValues = 100; /* 数量涨幅值 */
+        int mvMonValues = 100; /* 金额涨幅值 */
 
-        String mvNumShow = ""; /* 数量涨幅百分比 */
-        String mvMonShow = ""; /* 金额涨幅百分比 */
+        String mvNumShow = "100%"; /* 数量涨幅百分比 */
+        String mvMonShow = "100%"; /* 金额涨幅百分比 */
 
-        if(targetAmount != 0){
-            DecimalFormat df = new DecimalFormat("#.00");
-            mvNumValues = (int) (totalAmount/targetAmount);
-            mvNumShow = df.format((double) totalAmount/targetAmount)+"%";
-        }else{
-            mvNumValues = 100;
-            mvNumShow   = "100%";
+        if(targetAmount != 0 && targetAmount > totalAmount){
+            mvNumValues =  (int) Math.floor((double)totalAmount/targetAmount); //取整
+            mvNumShow = df.format(((double)totalAmount/targetAmount * 100))+"%";
         }
 
-        LogUtil.dee("mvNumValues:"+mvNumValues);
-        LogUtil.dee("mvNumShow:"+mvNumShow);
+        if(targetMoney != 0 && targetMoney > totalMoney){
+            mvMonValues =  (int) Math.floor((double)totalMoney/targetMoney); //取整
+            mvMonShow = df.format(((double)totalMoney/targetMoney * 100))+"%";
+        }
+
+        LogUtil.dee("数量百分比值:"+ mvNumValues);
+        LogUtil.dee("数量百分比(两位小数):"+ mvNumShow);
+
+        LogUtil.dee("金额百分比值:"+ mvMonValues);
+        LogUtil.dee("金额百分比(两位小数):"+ mvMonShow);
 
         mPresenter.initWave((WaveLoadingView) mView.findViewById(R.id.waveLoadingView1),
                             (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2),
-                            1,2,"1","2");
-        tv_target_count.setText(mcModel.data.targetAmount+"");
-        tv_order_count.setText(mcModel.data.totalAmount+"");
-        tv_target_money.setText("¥ "+mcModel.data.targetNumber);
-        tv_order_money.setText("¥ "+mcModel.data.totalNumber);
-
-
+                             mvNumValues,mvMonValues,mvNumShow,mvMonShow);
+        tv_target_count.setText(targetAmount+"");
+        tv_order_count.setText(totalAmount+"");
+        tv_target_money.setText("¥ " + targetMoney);
+        tv_order_money.setText("¥ " + totalMoney);
     }
 
     private void initUI() {
@@ -252,7 +256,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
         Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
                 ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, tv_click_rest1);
-        getData(NULLNUM,5,"");
+        getFollowUpData(followUpType);
+        getStockData(stockType);
+        getMoneyCount(moneyCnType);
     }
 
     /**
@@ -305,22 +311,20 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private void getData(int busType,int type,String value){
         switch (busType){
             case 0:
+                followUpType = type;
                 tv_screen_title1.setText(value);
                 getFollowUpData(type);
                 break;
 
             case 1:
+                stockType = type;
                 tv_screen_title2.setText(value);
                 getStockData(type);
                 break;
 
             case 2:
+                moneyCnType = type;
                 tv_screen_title3.setText(value);
-                getMoneyCount(type);
-                break;
-            default:
-                getFollowUpData(type);
-                getStockData(type);
                 getMoneyCount(type);
                 break;
         }
