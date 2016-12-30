@@ -150,60 +150,30 @@ public class DashboardDetailAdapter extends BaseAdapter {
 
         //判断不同的数据，绑定数据
         private void bindData(int position) {
-            if (DashboardType.CUS_FOLLOWUP == type || DashboardType.SALE_FOLLOWUP == type|| DashboardType.CUS_SIGNIN == type) {
-                //客户/线索 跟进/客户拜访
-                if (0 == position) {
-                    text1.setText(String.valueOf(records.get(0).userName));
-                    text2.setText(String.valueOf(records.get(0).totalCustomer));
-                    text3.setText(String.valueOf(records.get(0).total));
-                } else {
-                    int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(String.valueOf(records.get(tempP).userName));
-                    text2.setText(String.valueOf(records.get(tempP).totalCustomer));
-                    text3.setText(String.valueOf(records.get(tempP).total));
-                }
-            }else if (DashboardType.CUS_CELL_RECORD == type|| DashboardType.SALE_CELL_RECORD == type) {
-                //客户电话录/线索电话录
-                if (0 == position) {
-                    text1.setText(String.valueOf(records.get(0).userName));
-                    text2.setText(String.valueOf(records.get(0).totalCustomer));
-                    text3.setText(String.valueOf(records.get(0).total));
-                    text4.setText(String.valueOf(records.get(0).totalLength));
-                } else {
-                    int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(String.valueOf(records.get(tempP).userName));
-                    text2.setText(String.valueOf(records.get(tempP).totalCustomer));
-                    text3.setText(String.valueOf(records.get(tempP).total));
-                    text4.setText(String.valueOf(records.get(tempP).totalLength));
-                }
-            }else if (DashboardType.COMMON == type) {
-                //增量/存量
-                if (0 == position) {
-                    text1.setText(String.valueOf(records.get(0).name));
-                    text2.setText(String.valueOf(records.get(0).count));
-                    text3.setText(String.valueOf(records.get(0).addCount));
-                } else {
-                    int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(String.valueOf(records.get(tempP).name));
-                    text2.setText(String.valueOf(records.get(tempP).count));
-                    text3.setText(String.valueOf(records.get(tempP).addCount));
-                }
-            }else if (DashboardType.ORDER_MONEY == type|| DashboardType.ORDER_NUMBER == type) {
-                // 订单数量和金额
-                if (0 == position) {
-                    text1.setText(String.valueOf(records.get(0).name));
-                    text2.setText(String.valueOf(records.get(0).targetNum ));
-                    text3.setText(String.valueOf(records.get(0).orderNum));
-                    text4.setText(String.valueOf(records.get(0).finish_rate));
-                } else {
-                    int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(String.valueOf(records.get(tempP).name));
-                    text2.setText(String.valueOf(records.get(tempP).targetNum));
-                    text3.setText(String.valueOf(records.get(tempP).orderNum));
-                    text4.setText(String.valueOf(records.get(tempP).finish_rate));
 
+            ArrayList<String> displayColumns = null;
+            if (0 == position) {
+                displayColumns = records.get(0).getDsiplayColumnForType(type);
+            }
+            else {
+                displayColumns = records.get(position-1).getDsiplayColumnForType(type);
+            }
+
+            for (int i = 0; i < 4 && i < displayColumns.size(); i++) {
+                if (i == 0) {
+                    text1.setText(displayColumns.get(0));
+                }
+                else if (i == 1) {
+                    text2.setText(displayColumns.get(1));
+                }
+                else if (i == 2) {
+                    text3.setText(displayColumns.get(2));
+                }
+                else if (i == 3) {
+                    text4.setText(displayColumns.get(3));
                 }
             }
+
 
         }
 

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 /**
  * Created by EthanGong on 2016/12/30.
+ *
+ *  未使用
  */
 
 public interface AdapterRecordModel {
     String getName();
     ArrayList<String> getItems();
-    
+
     class RecordFollowupStatistic implements AdapterRecordModel {
         public Integer total;
         public Integer totalCustomer;
