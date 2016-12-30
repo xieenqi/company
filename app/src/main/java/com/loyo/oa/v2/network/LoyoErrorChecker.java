@@ -48,27 +48,27 @@ public class LoyoErrorChecker {
 
         if (e instanceof RetrofitError) {
             RetrofitError error = (RetrofitError) e;
-            try {
-                if (406 == error.getResponse().getStatus()) {
-                    try {
-                        String msg = Utils.convertStreamToString(
-                                error.getResponse().getBody().in());
-                        JSONObject jsonObject = new JSONObject(msg);
+            if (406 == error.getResponse().getStatus()) {
+                try {
+                    String msg = Utils.convertStreamToString(
+                            error.getResponse().getBody().in());
+                    JSONObject jsonObject = new JSONObject(msg);
 
-                        String errorMessage =  jsonObject.getString("error");
-                        if (TextUtils.isEmpty(errorMessage)) {
-                            errorMessage = "授权失败，请重新登录";
-                        }
-                        message = errorMessage;
+                    String errorMessage =  jsonObject.getString("error");
+                    if (TextUtils.isEmpty(errorMessage)) {
+                        errorMessage = "授权失败，请重新登录";
                     }
-                    catch (Exception exception) {
-                        message = "授权失败，请重新登录";
-                    }
-                    state = AuthFail;
-                } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    state = LoyoError.No_Network;
-                    message = "请检查您的网络连接";
-                } else {
+                    message = errorMessage;
+                }
+                catch (Exception exception) {
+                    message = "授权失败，请重新登录";
+                }
+                state = AuthFail;
+            } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                state = LoyoError.No_Network;
+                message = "请检查您的网络连接";
+            } else {
+                try {
                     String msg = Utils.convertStreamToString(
                             error.getResponse().getBody().in());
                     JSONObject jsonObject = new JSONObject(msg);
@@ -79,10 +79,11 @@ public class LoyoErrorChecker {
                     }
                     state = LoyoError.No_Network;
                     message = errorMessage;
+
+                } catch (Exception exception) {
+                    state = LoyoError.Error;
+                    message = "服务端数据异常";
                 }
-            } catch (Exception exception) {
-                state = LoyoError.No_Network;
-                message = error.getMessage();
             }
         }
         else if (e instanceof APIException) {
