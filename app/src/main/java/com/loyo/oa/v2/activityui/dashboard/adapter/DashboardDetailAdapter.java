@@ -52,6 +52,10 @@ public class DashboardDetailAdapter extends BaseAdapter {
         return records.size() + 1;
     }
 
+    public boolean isEmpty() {
+        return records == null || records.size() <= 0;
+    }
+
     @Override
     public Object getItem(int position) {
         return position;

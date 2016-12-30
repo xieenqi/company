@@ -33,8 +33,6 @@ import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import static com.loyo.oa.v2.activityui.dashboard.common.DashborardType.COMMON;
 import static com.loyo.oa.v2.activityui.dashboard.common.DashborardType.ORDER_MONEY;
@@ -105,16 +103,18 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             map.put("sType", "2");
         }
 
-        ll_loading.setStatus(LoadingLayout.Loading);
+        if (adapter.isEmpty()) {
+            ll_loading.setStatus(LoadingLayout.Loading);
+        }
+
         //网络请求
         DashBoardService.getDashBoardListData(map, type).subscribe(new DefaultLoyoSubscriber<DashBoardListModel>(ll_loading) {
             @Override
             public void onError(Throwable e) {
-                if(pageIndex==1){
+                if(adapter.isEmpty()){
                     super.onError(e);
                 }else{
                     ll_loading.setStatus(LoadingLayout.Success);
-                    Toast(e.getMessage());
                 }
             }
             @Override
