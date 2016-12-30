@@ -163,10 +163,12 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     break;
                 //考勤打卡
                 case BaseActivity.ATTENT_ADD:
+                    if(LocationUtilGD.permissionLocation(mActivity))
                     getValidateInfo();
                     break;
                 //拜访签到
                 case BaseActivity.SIGNIN_ADD:
+                    if(LocationUtilGD.permissionLocation(mActivity))
                     startActivityForResult(new Intent(getActivity(), SignInActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;

@@ -269,6 +269,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         if (!TextUtils.isEmpty(contactPhone)) {
             edt_contract_tel1.setText(contactPhone.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", ""));
         }
+        LocationUtilGD.permissionLocation(this);
     }
 
     LocationUtilGD locationGd;
@@ -328,10 +329,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
 
         /*分离必填与非必填字段*/
-        for(ExtraData ext : extDatas){
-            if(ext.getProperties().isRequired()){
+        for (ExtraData ext : extDatas) {
+            if (ext.getProperties().isRequired()) {
                 RextDatasModel.add(ext);
-            }else{
+            } else {
                 OpextDatasModel.add(ext);
             }
         }
@@ -455,11 +456,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*刷新地址*/
             case R.id.img_refresh_address:
-
-                mBundle = new Bundle();
-                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
-
+                if (LocationUtilGD.permissionLocation(this)) {
+                    mBundle = new Bundle();
+                    mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
+                    app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                }
                 break;
 
             /*查重*/
@@ -494,7 +495,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             /*提交*/
             case R.id.img_title_right:
 
-                if(!Utils.isNetworkAvailable(mContext)){
+                if (!Utils.isNetworkAvailable(mContext)) {
                     Toast("请检查您的网络连接");
                     return;
                 }
@@ -526,7 +527,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
                     Toast("请输入联系人姓名!");
                     return;
-                } else if(TextUtils.isEmpty(memo) && cusMemo){
+                } else if (TextUtils.isEmpty(memo) && cusMemo) {
                     Toast("请填写客户简介!");
                     return;
                 } else if (!testDynamicword()) {
@@ -629,7 +630,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     } else if (customerJur.label.contains("客户地址") && customerJur.required) {
                         cusDetialAdress = true;//详细地址必填
                         edit_address_details.setHint("请输入客户详细地址(必填)");
-                    } else if (customerJur.label.contains("简介") && customerJur.required){
+                    } else if (customerJur.label.contains("简介") && customerJur.required) {
                         cusMemo = true;
                         edt_content.setHint("客户简介(必填)");
                     }
@@ -660,7 +661,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         extDatas.addAll(RextDatasModel);
         extDatas.addAll(OpextDatasModel);
 
-        LogUtil.dee("extDatas:"+MainApp.gson.toJson(extDatas));
+        LogUtil.dee("extDatas:" + MainApp.gson.toJson(extDatas));
 
         if (extDatas != null) {
             for (ExtraData ext : extDatas) {
@@ -732,7 +733,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建客户",response);
+                HttpErrorCheck.checkCommitSus("新建客户", response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -747,7 +748,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             newUploadAttachement(customer);
                         }
                     }
-                },1000);
+                }, 1000);
             }
 
             @Override

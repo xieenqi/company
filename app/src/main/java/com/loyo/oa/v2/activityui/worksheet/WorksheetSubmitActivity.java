@@ -35,6 +35,7 @@ import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -212,7 +213,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                         }
                         app.finishActivity(WorksheetSubmitActivity.this, MainApp.ENTER_TYPE_LEFT, 0, new Intent());
                     }
-                },1000);
+                }, 1000);
             }
 
             @Override
@@ -260,9 +261,11 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
 
             /*定位选择*/
             case R.id.layout_location:
-                mBundle = new Bundle();
-                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                if (LocationUtilGD.permissionLocation(this)) {
+                    mBundle = new Bundle();
+                    mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
+                    app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                }
                 break;
 
             /*删除地址*/
@@ -305,7 +308,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                 break;
             /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
-                if (data != null){
+                if (data != null) {
                     int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
                     if (index >= 0) {
                         controller.removeTaskAt(index);
@@ -355,7 +358,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }
@@ -376,10 +379,9 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
             cancelStatusLoading();
             return;
         }
-        if (taskList.size() >0) {
+        if (taskList.size() > 0) {
             postAttaData();
-        }
-        else {
+        } else {
             commitDynamic();
         }
     }

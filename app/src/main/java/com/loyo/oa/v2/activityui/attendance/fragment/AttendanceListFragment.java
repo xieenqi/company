@@ -283,6 +283,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             /*打卡按钮*/
             case R.id.btn_add:
+                if(LocationUtilGD.permissionLocation(mActivity))
                 getValidateInfo();
                 break;
 

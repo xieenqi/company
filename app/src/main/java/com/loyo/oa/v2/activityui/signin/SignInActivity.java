@@ -112,6 +112,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         presenter.getIsPhoto();
         initUI();
+        LocationUtilGD.permissionLocation(this);
     }
 
     void initUI() {
@@ -341,17 +342,21 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
             /*选择客户*/
             case R.id.layout_customer_name:
-                Bundle b = new Bundle();//SigninSelectCustomerSearch
-                b.putDouble("lon", loPosition);
-                b.putDouble("lat", laPosition);
-                app.startActivityForResult(this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
+                if (LocationUtilGD.permissionLocation(this)) {
+                    Bundle b = new Bundle();
+                    b.putDouble("lon", loPosition);
+                    b.putDouble("lat", laPosition);
+                    app.startActivityForResult(this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
+                }
                 break;
 
             /*地址更新*/
             case R.id.tv_reset_address:
-                Bundle mBundle = new Bundle();
-                mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
-                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                if (LocationUtilGD.permissionLocation(this)) {
+                    Bundle mBundle = new Bundle();
+                    mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
+                    app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                }
                 break;
 
             case R.id.ll_contact://选择客户联系人
@@ -414,8 +419,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             map.put("memo", edt_memo.getText().toString());
         }
 
-        if(null != contactList && contactList.size() > 0){
-            if(null != contactList.get(0).telGroup && contactList.get(0).telGroup.size() > 0){
+        if (null != contactList && contactList.size() > 0) {
+            if (null != contactList.get(0).telGroup && contactList.get(0).telGroup.size() > 0) {
                 map.put("contactTpl", contactList.get(0).telGroup.get(0));
             }
         }

@@ -91,24 +91,24 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         CustomerTageConfig.getTage();
         WfinstanceBizformConfig.getBizform();
 
-        //兼容android6.0使用新的方式申请
-        PermissionTool.requestPermission(this,new String[]{"android.permission.ACCESS_FINE_LOCATION"},"请打开定位服务，允许快启使用你的位置",1);
+        //兼容android6.0使用新的方式申请  后台定位的 不需要弹出提示框 16-12-30
+//        PermissionTool.requestPermission(this,new String[]{"android.permission.ACCESS_FINE_LOCATION"},"请打开定位服务，允许快启使用你的位置",1);
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (1==requestCode){
-            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
-                @Override
-                public void success() {
-                }
-
-                @Override
-                public void fail() {
-                    Toast("没有定位权限,某些功能模块将不能使用!");
-                }
-            });
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        if (1==requestCode){
+//            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+//                @Override
+//                public void success() {
+//                }
+//
+//                @Override
+//                public void fail() {
+//                    Toast("没有定位权限,某些功能模块将不能使用!");
+//                }
+//            });
+//        }
+//    }
 
     @Override
     protected void onStart() {

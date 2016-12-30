@@ -149,7 +149,7 @@ public class LocationUtilGD {
         } else {
             new SweetAlertDialog(activity, SweetAlertDialog.NORMAL_TYPE)
                     .setTitleText("定位服务关闭")
-                    .setContentText("请手机应用权限管理中打开快启的定位（位置）和GPS权限")//解释原因
+                    .setContentText("请在手机应用权限管理中打开\n快启的定位（位置）和GPS权限")//解释原因
                     .setCancelText("取消")
                     .setConfirmText("开启")
                     .showCancelButton(true)

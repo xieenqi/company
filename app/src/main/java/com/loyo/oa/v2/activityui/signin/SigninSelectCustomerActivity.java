@@ -125,7 +125,7 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
         switch (requestCode) {
             case SEARCH_CUSTOMER:
             case CREAT_CUSTOMER:
-                ArrayList<Contact> contact = (ArrayList<Contact>) data.getSerializableExtra("contact");
+//                ArrayList<Contact> contact = (ArrayList<Contact>) data.getSerializableExtra("contact");
                 Intent intent = new Intent();
                 intent.putExtra("id", data.getStringExtra("id"));
                 intent.putExtra("name", data.getStringExtra("name"));
