@@ -50,7 +50,7 @@ public class LoyoErrorChecker {
             RetrofitError error = (RetrofitError) e;
             if (error.getResponse() == null) {
                 state = LoyoError.No_Network;
-                message = "网络异常";
+                message = "网络异常(网络超时或者无网络)";
             }
             else if (406 == error.getResponse().getStatus()) {
                 try {

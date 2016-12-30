@@ -21,7 +21,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.adapter.DashboardDetailAdapter;
 import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
-import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
+import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
 import com.loyo.oa.v2.activityui.dashboard.model.StatisticRecord;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.db.OrganizationManager;
@@ -35,9 +35,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.loyo.oa.v2.activityui.dashboard.common.DashborardType.COMMON;
-import static com.loyo.oa.v2.activityui.dashboard.common.DashborardType.ORDER_MONEY;
-import static com.loyo.oa.v2.activityui.dashboard.common.DashborardType.ORDER_NUMBER;
+import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.COMMON;
+import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.ORDER_MONEY;
+import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.ORDER_NUMBER;
 
 /**
  * 【仪表盘】详情页面
@@ -50,7 +50,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     private LinearLayout ll_back;
     private DropDownMenu filterMenu;
     private TextView tv_title;
-    private DashborardType type;
+    private DashboardType type;
     private DashboardDetailAdapter adapter;
     private PullToRefreshListView lv_list;
 
@@ -78,28 +78,28 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     public void getPageData() {
         map.put("pageIndex", pageIndex);
         //根据type，判断请求的类型，构造参数
-        if (DashborardType.CUS_FOLLOWUP == type) {
+        if (DashboardType.CUS_FOLLOWUP == type) {
             //客户跟进
             map.put("activityObj", 1);
-        } else if (DashborardType.SALE_FOLLOWUP == type) {
+        } else if (DashboardType.SALE_FOLLOWUP == type) {
             //线索跟进
             map.put("activityObj", 2);
-        } else if (DashborardType.CUS_CELL_RECORD == type) {
+        } else if (DashboardType.CUS_CELL_RECORD == type) {
             //客户电话录
             map.put("activityObj", 1);
-        } else if (DashborardType.CUS_SIGNIN == type) {
+        } else if (DashboardType.CUS_SIGNIN == type) {
             //客户拜访
-        } else if (DashborardType.SALE_CELL_RECORD == type) {
+        } else if (DashboardType.SALE_CELL_RECORD == type) {
             //获取线索电话录
             map.put("activityObj", 2);
         } else if (COMMON == type) {
             //增量/存量
             map.put("tagItemId", getIntent().getStringExtra("tagItemId"));//tagItemId
             Log.i(TAG, "getPageData: "+getIntent().getStringExtra("tagItemId"));
-        } else if (DashborardType.ORDER_NUMBER == type){
+        } else if (DashboardType.ORDER_NUMBER == type){
             //订单数量
             map.put("sType", "1");
-        }else if( DashborardType.ORDER_MONEY == type) {
+        }else if( DashboardType.ORDER_MONEY == type) {
             //订单金额
             map.put("sType", "2");
         }
@@ -140,7 +140,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     private void getIntentData() {
         Intent intent = getIntent();
         //获取传入的类型数据，表示是哪种列表
-        type = (DashborardType) intent.getSerializableExtra("type");
+        type = (DashboardType) intent.getSerializableExtra("type");
 
     }
 

@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
+import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
 import com.loyo.oa.v2.activityui.dashboard.model.StatisticRecord;
 
 import java.util.ArrayList;
@@ -25,9 +25,9 @@ public class DashboardDetailAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private List<StatisticRecord> records = new ArrayList<>();//数据列表
-    private DashborardType type;
+    private DashboardType type;
 
-    public DashboardDetailAdapter(Context context, DashborardType type) {
+    public DashboardDetailAdapter(Context context, DashboardType type) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.type = type;
@@ -113,14 +113,14 @@ public class DashboardDetailAdapter extends BaseAdapter {
                 ((TextView) item.getChildAt(0)).setText("总计");
                 setChildNumName(false);
 
-                bindDate(0);
+                bindData(0);
             } else {
                 //其他具体的内容
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
                 setChildViewColor(itemColor3);
                 setChildNumName(false);
-                bindDate(position);
+                bindData(position);
             }
         }
 
@@ -149,59 +149,58 @@ public class DashboardDetailAdapter extends BaseAdapter {
         }
 
         //判断不同的数据，绑定数据
-        private void bindDate(int position) {
-            if (DashborardType.CUS_FOLLOWUP == type || DashborardType.SALE_FOLLOWUP == type||DashborardType.CUS_SIGNIN == type) {
+        private void bindData(int position) {
+            if (DashboardType.CUS_FOLLOWUP == type || DashboardType.SALE_FOLLOWUP == type|| DashboardType.CUS_SIGNIN == type) {
                 //客户/线索 跟进/客户拜访
                 if (0 == position) {
-                    text1.setText(records.get(0).userName + "");
-                    text2.setText(records.get(0).totalCustomer + "");
-                    text3.setText(records.get(0).total + "");
+                    text1.setText(String.valueOf(records.get(0).userName));
+                    text2.setText(String.valueOf(records.get(0).totalCustomer));
+                    text3.setText(String.valueOf(records.get(0).total));
                 } else {
                     int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(records.get(tempP).userName + "");
-                    text2.setText(records.get(tempP).totalCustomer + "");
-                    text3.setText(records.get(tempP).total + "");
+                    text1.setText(String.valueOf(records.get(tempP).userName));
+                    text2.setText(String.valueOf(records.get(tempP).totalCustomer));
+                    text3.setText(String.valueOf(records.get(tempP).total));
                 }
-            }else if (DashborardType.CUS_CELL_RECORD == type||DashborardType.SALE_CELL_RECORD == type) {
+            }else if (DashboardType.CUS_CELL_RECORD == type|| DashboardType.SALE_CELL_RECORD == type) {
                 //客户电话录/线索电话录
                 if (0 == position) {
-                    text1.setText(records.get(0).userName + "");
-                    text2.setText(records.get(0).totalCustomer + "");
-                    text3.setText(records.get(0).total + "");
-                    text4.setText(records.get(0).totalLength + "");
+                    text1.setText(String.valueOf(records.get(0).userName));
+                    text2.setText(String.valueOf(records.get(0).totalCustomer));
+                    text3.setText(String.valueOf(records.get(0).total));
+                    text4.setText(String.valueOf(records.get(0).totalLength));
                 } else {
                     int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(records.get(tempP).userName + "");
-                    text2.setText(records.get(tempP).totalCustomer + "");
-                    text3.setText(records.get(tempP).total + "");
-                    text4.setText(records.get(tempP).totalLength + "");
-
+                    text1.setText(String.valueOf(records.get(tempP).userName));
+                    text2.setText(String.valueOf(records.get(tempP).totalCustomer));
+                    text3.setText(String.valueOf(records.get(tempP).total));
+                    text4.setText(String.valueOf(records.get(tempP).totalLength));
                 }
-            }else if (DashborardType.COMMON == type) {
+            }else if (DashboardType.COMMON == type) {
                 //增量/存量
                 if (0 == position) {
-                    text1.setText(records.get(0).name + "");
-                    text2.setText(records.get(0).count + "");
-                    text3.setText(records.get(0).addCount + "");
+                    text1.setText(String.valueOf(records.get(0).name));
+                    text2.setText(String.valueOf(records.get(0).count));
+                    text3.setText(String.valueOf(records.get(0).addCount));
                 } else {
                     int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(records.get(tempP).name + "");
-                    text2.setText(records.get(tempP).count + "");
-                    text3.setText(records.get(tempP).addCount + "");
+                    text1.setText(String.valueOf(records.get(tempP).name));
+                    text2.setText(String.valueOf(records.get(tempP).count));
+                    text3.setText(String.valueOf(records.get(tempP).addCount));
                 }
-            }else if (DashborardType.ORDER_MONEY == type||DashborardType.ORDER_NUMBER == type) {
+            }else if (DashboardType.ORDER_MONEY == type|| DashboardType.ORDER_NUMBER == type) {
                 // 订单数量和金额
                 if (0 == position) {
-                    text1.setText(records.get(0).name + "");
-                    text2.setText(records.get(0).targetNum + "");
-                    text3.setText(records.get(0).orderNum+ "");
-                    text4.setText(records.get(0).finish_rate + "");
+                    text1.setText(String.valueOf(records.get(0).name));
+                    text2.setText(String.valueOf(records.get(0).targetNum ));
+                    text3.setText(String.valueOf(records.get(0).orderNum));
+                    text4.setText(String.valueOf(records.get(0).finish_rate));
                 } else {
                     int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(records.get(tempP).name + "");
-                    text2.setText(records.get(tempP).targetNum + "");
-                    text3.setText(records.get(tempP).orderNum + "");
-                    text4.setText(records.get(tempP).finish_rate + "");
+                    text1.setText(String.valueOf(records.get(tempP).name));
+                    text2.setText(String.valueOf(records.get(tempP).targetNum));
+                    text3.setText(String.valueOf(records.get(tempP).orderNum));
+                    text4.setText(String.valueOf(records.get(tempP).finish_rate));
 
                 }
             }

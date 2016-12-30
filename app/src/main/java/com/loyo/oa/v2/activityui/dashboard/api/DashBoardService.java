@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.dashboard.api;
 
-import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
+import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
 import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
 import com.loyo.oa.v2.activityui.dashboard.model.StatisticRecord;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
@@ -53,7 +53,7 @@ public class DashBoardService {
 
     //仪表盘 列表的数据接口
     public static Observable<PaginationX<StatisticRecord>>
-    getDashBoardListData(HashMap<String, Object> params, DashborardType type) {
+    getDashBoardListData(HashMap<String, Object> params, DashboardType type) {
         IDashBoard dashBoard = RetrofitAdapterFactory.getInstance()
                 .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                 .create(IDashBoard.class);
