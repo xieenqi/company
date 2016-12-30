@@ -113,14 +113,14 @@ public class DashboardDetailAdapter extends BaseAdapter {
                 ((TextView) item.getChildAt(0)).setText("总计");
                 setChildNumName(false);
 
-                bindDate(0);
+                bindData(0);
             } else {
                 //其他具体的内容
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
                 setChildViewColor(itemColor3);
                 setChildNumName(false);
-                bindDate(position);
+                bindData(position);
             }
         }
 
@@ -149,7 +149,7 @@ public class DashboardDetailAdapter extends BaseAdapter {
         }
 
         //判断不同的数据，绑定数据
-        private void bindDate(int position) {
+        private void bindData(int position) {
             if (DashborardType.CUS_FOLLOWUP == type || DashborardType.SALE_FOLLOWUP == type||DashborardType.CUS_SIGNIN == type) {
                 //客户/线索 跟进/客户拜访
                 if (0 == position) {
