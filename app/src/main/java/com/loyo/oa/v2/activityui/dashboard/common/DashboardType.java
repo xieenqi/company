@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Created by xeq on 16/12/13.
  */
 
-public enum DashborardType implements Serializable {
+public enum DashboardType implements Serializable {
 
     //客户跟进
     CUS_FOLLOWUP {

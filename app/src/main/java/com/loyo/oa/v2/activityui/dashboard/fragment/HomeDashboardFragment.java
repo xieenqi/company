@@ -18,7 +18,7 @@ import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.DashboardDetailActivity;
 import com.loyo.oa.v2.activityui.dashboard.adapter.StockListAdapter;
-import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
+import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
 import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
 import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
@@ -108,14 +108,14 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         lv_stocklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DashborardType.COMMON.setTttle("增量 存量");
-                DashborardType.COMMON.setPermission(BusinessOperation.AUGMENTER_STOCK);
-                if (!checkPermission(DashborardType.COMMON)) {
+                DashboardType.COMMON.setTttle("增量 存量");
+                DashboardType.COMMON.setPermission(BusinessOperation.AUGMENTER_STOCK);
+                if (!checkPermission(DashboardType.COMMON)) {
                     return;
                 }
-                DashborardType.COMMON.setTttle(stockListModel.get(position).tagItemName);
+                DashboardType.COMMON.setTttle(stockListModel.get(position).tagItemName);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("type", DashborardType.COMMON);
+                bundle.putSerializable("type", DashboardType.COMMON);
                 bundle.putSerializable("tagItemId",stockListModel.get(position).tagItemId);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
             }
@@ -342,43 +342,43 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 break;
 
             case R.id.ll_dashboard_followup:
-                if (!checkPermission(DashborardType.CUS_FOLLOWUP)) {
+                if (!checkPermission(DashboardType.CUS_FOLLOWUP)) {
                     return;
                 }
                 Bundle bdFollowup = new Bundle();
-                bdFollowup.putSerializable("type", DashborardType.CUS_FOLLOWUP);
+                bdFollowup.putSerializable("type", DashboardType.CUS_FOLLOWUP);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdFollowup);
                 break;
             case R.id.ll_dashboard_signin:
-                if (!checkPermission(DashborardType.CUS_SIGNIN)) {
+                if (!checkPermission(DashboardType.CUS_SIGNIN)) {
                     return;
                 }
                 Bundle bdSignin = new Bundle();
-                bdSignin.putSerializable("type", DashborardType.CUS_SIGNIN);
+                bdSignin.putSerializable("type", DashboardType.CUS_SIGNIN);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdSignin);
                 break;
             case R.id.ll_dashboard_record:
-                if (!checkPermission(DashborardType.CUS_CELL_RECORD)) {
+                if (!checkPermission(DashboardType.CUS_CELL_RECORD)) {
                     return;
                 }
                 Bundle bdRecord = new Bundle();
-                bdRecord.putSerializable("type", DashborardType.CUS_CELL_RECORD);
+                bdRecord.putSerializable("type", DashboardType.CUS_CELL_RECORD);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdRecord);
                 break;
             case R.id.ll_dashboard_order_number:
-                if (!checkPermission(DashborardType.ORDER_NUMBER)) {
+                if (!checkPermission(DashboardType.ORDER_NUMBER)) {
                     return;
                 }
                 Bundle bdOrderNumber = new Bundle();
-                bdOrderNumber.putSerializable("type", DashborardType.ORDER_NUMBER);
+                bdOrderNumber.putSerializable("type", DashboardType.ORDER_NUMBER);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdOrderNumber);
                 break;
             case R.id.ll_dashboard_order_money:
-                if (!checkPermission(DashborardType.ORDER_MONEY)) {
+                if (!checkPermission(DashboardType.ORDER_MONEY)) {
                     return;
                 }
                 Bundle bdOrderMoney = new Bundle();
-                bdOrderMoney.putSerializable("type", DashborardType.ORDER_MONEY);
+                bdOrderMoney.putSerializable("type", DashboardType.ORDER_MONEY);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdOrderMoney);
                 break;
 
@@ -399,7 +399,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         }
     }
 
-    private boolean checkPermission(DashborardType per) {
+    private boolean checkPermission(DashboardType per) {
         if (!PermissionManager.getInstance().hasPermission(per.getaPermission())) {
             Toast("无数据查看权限!");
             return false;
