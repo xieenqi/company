@@ -32,6 +32,10 @@ import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
+
+import java.text.DecimalFormat;
+
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -67,6 +71,8 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private StockListAdapter mAdapter;
     private HomeDashboardPresenter mPresenter;
     private AnimationDrawable loadAnim1, loadAnim2,loadAnim3;
+
+    private CsclueFowUp csclueFowUp;
 
     private int followUpType = 5;  //跟进 筛选
     private int stockType    = 5;  //增量存量 筛选
@@ -119,7 +125,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     /**
      * 绑定跟进数据
      */
-    private void bindFowUpData(CsclueFowUp csclueFowUp) {
+    private void bindFowUpData() {
         if (followUpPage == 0) {
             fw_totalsize.setText(csclueFowUp.data.saleActivity.activity.totalCount + "");
             fw_count.setText(csclueFowUp.data.saleActivity.activity.distinctCount + "");
@@ -146,16 +152,23 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         long targetMoney = mcModel.data.targetNumber;  /*  目标金额  */
         long totalMoney  = mcModel.data.totalNumber;   /*  实际金额  */
 
-        int mvNumValues;
-        int mvMonValues;
+        int mvNumValues; /* 数量涨幅值 */
+        int mvMonValues; /* 金额涨幅值 */
 
-        String mvNumShow = "";
-        String mvMonShow = "";
+        String mvNumShow = ""; /* 数量涨幅百分比 */
+        String mvMonShow = ""; /* 金额涨幅百分比 */
 
         if(targetAmount != 0){
-
+            DecimalFormat df = new DecimalFormat("#.00");
+            mvNumValues = (int) (totalAmount/targetAmount);
+            mvNumShow = df.format((double) totalAmount/targetAmount)+"%";
+        }else{
+            mvNumValues = 100;
+            mvNumShow   = "100%";
         }
 
+        LogUtil.dee("mvNumValues:"+mvNumValues);
+        LogUtil.dee("mvNumShow:"+mvNumShow);
 
         mPresenter.initWave((WaveLoadingView) mView.findViewById(R.id.waveLoadingView1),
                             (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2),
@@ -164,6 +177,8 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         tv_order_count.setText(mcModel.data.totalAmount+"");
         tv_target_money.setText("¥ "+mcModel.data.targetNumber);
         tv_order_money.setText("¥ "+mcModel.data.totalNumber);
+
+
     }
 
     private void initUI() {
@@ -319,12 +334,14 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
             /*客户跟进*/
             case R.id.rb_customer:
                 followUpPage = 0;
+                bindFowUpData();
                 ll_dashboard_signin.setVisibility(View.VISIBLE);
                 break;
 
             /*线索跟进*/
             case R.id.rb_clue:
                 followUpPage = 1;
+                bindFowUpData();
                 ll_dashboard_signin.setVisibility(View.GONE);
                 break;
 
@@ -425,7 +442,8 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 loading_error1,
                 loading_view1,
                 LoadStatus.SUCCESS);
-        bindFowUpData(csclueFowUp);
+        this.csclueFowUp = csclueFowUp;
+        bindFowUpData();
     }
 
     // 获取跟进失败
