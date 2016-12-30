@@ -18,6 +18,7 @@ import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.HashMap;
 import me.itangqi.waveloadingview.WaveLoadingView;
@@ -37,7 +38,12 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
     }
 
     @Override
-    public void initWave(WaveLoadingView wv1, WaveLoadingView wv2) {
+    public void initWave(WaveLoadingView wv1, WaveLoadingView wv2,int countPert,int moneyPert,String countPertStr,String moneyPertStr) {
+
+        LogUtil.dee("countPert:"+countPert);
+        LogUtil.dee("moneyPert:"+moneyPert);
+        LogUtil.dee("countPertStr:"+countPertStr);
+        LogUtil.dee("moneyPertStr:"+moneyPertStr);
 
         wv1.setShapeType(WaveLoadingView.ShapeType.CIRCLE);
         //wv1.setTopTitle("Top Title");

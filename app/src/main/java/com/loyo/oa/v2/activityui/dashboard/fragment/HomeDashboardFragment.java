@@ -139,8 +139,27 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      * 绑定数量金额数据
      * */
     private void bindMoneyCountData(MoneyCountModel mcModel){
+
+        long targetAmount = mcModel.data.targetAmount; /*  目标数量  */
+        long totalAmount  = mcModel.data.totalAmount;  /*  实际数量  */
+
+        long targetMoney = mcModel.data.targetNumber;  /*  目标金额  */
+        long totalMoney  = mcModel.data.totalNumber;   /*  实际金额  */
+
+        int mvNumValues;
+        int mvMonValues;
+
+        String mvNumShow = "";
+        String mvMonShow = "";
+
+        if(targetAmount != 0){
+
+        }
+
+
         mPresenter.initWave((WaveLoadingView) mView.findViewById(R.id.waveLoadingView1),
-                            (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2));
+                            (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2),
+                            1,2,"1","2");
         tv_target_count.setText(mcModel.data.targetAmount+"");
         tv_order_count.setText(mcModel.data.totalAmount+"");
         tv_target_money.setText("¥ "+mcModel.data.targetNumber);

@@ -14,7 +14,7 @@ import me.itangqi.waveloadingview.WaveLoadingView;
 
 public interface HomeDashboardPresenter {
 
-    void initWave(WaveLoadingView wv1, WaveLoadingView wv2);
+    void initWave(WaveLoadingView wv1, WaveLoadingView wv2,int countPert,int moneyPert,String countPertStr,String moneyPertStr);
 
     void screenControlViews(ScreenType screenType);
 
