@@ -134,12 +134,15 @@ public class IntentionProductActivity extends BaseActivity {
                     onBackPressed();
                     break;
                 case R.id.ll_add:
-                    Bundle product = new Bundle();
+                    /*Bundle product = new Bundle();
                     product.putString("saleId", saleId);
                     product.putInt("data", fromPage);
                     product.putSerializable("productList", listData);
                     app.startActivityForResult(IntentionProductActivity.this, AddIntentionProductActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);*/
+                    app.startActivityForResult(IntentionProductActivity.this, AddBuyProductActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, new Bundle());
+
                     break;
             }
         }

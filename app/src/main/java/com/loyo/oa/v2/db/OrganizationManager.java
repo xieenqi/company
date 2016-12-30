@@ -265,7 +265,8 @@ public class OrganizationManager {
         }
 
         DBUser result = null;
-        String userId = MainApp.user.id;
+        String userId = null != MainApp.user ? MainApp.user.id : null;
+
         if (userId == null) {
             return result;
         }

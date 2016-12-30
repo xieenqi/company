@@ -847,7 +847,6 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
->>>>>>> temp-product
 
         <supports-screens
             android:anyDensity="true"
