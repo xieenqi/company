@@ -39,6 +39,7 @@ android {
                            'src/main/res-loyo/worksheet',
                            'src/main/res-loyo/order',
                            'src/main/res-loyo/wfinstance',
+                           'src/main/res_loyo/product',
                            'src/main/res-loyo/clue',
                            'src/main/res-loyo/common',
                            'src/main/res-loyo/followup',

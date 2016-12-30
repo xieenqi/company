@@ -574,12 +574,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activityui.sale.IntentionProductActivity"
+            android:name=".activityui.product.IntentionProductActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activityui.sale.AddIntentionProductActivity"
+            android:name=".activityui.product.AddIntentionProductActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
@@ -822,6 +822,32 @@
             android:name="com.loyo.oa.photo.PhotoPagerActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+            android:name=".activityui.product.SelectProductActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+
+
+        <!--新增购买产品-->
+        <activity
+            android:name=".activityui.product.AddBuyProductActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+        <!--新增购买产品－产品详情-->
+        <activity
+            android:name=".activityui.product.ProductDetailActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+        <!--新增购买产品－产品选择－搜索产品-->
+        <activity
+            android:name=".activityui.product.ProductSearchActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+>>>>>>> temp-product
 
         <supports-screens
             android:anyDensity="true"

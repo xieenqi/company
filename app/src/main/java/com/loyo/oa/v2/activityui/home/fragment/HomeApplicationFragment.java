@@ -36,6 +36,7 @@ import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.product.SelectProductActivity;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
@@ -247,7 +248,10 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMoreWindow(v);
+                //TODO 修改下面首页＋ 的入口
+                //测试调用
+                startActivity(new Intent(getActivity(), SelectProductActivity.class));
+                //showMoreWindow(v);
             }
         });
         items = DBManager.Instance().getHomeItem();

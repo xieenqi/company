@@ -13,6 +13,12 @@
         <!--<item name="android:windowFullscreen">true</item>-->
     </style>
 
+    <style name="SelectProductViewAnim">
+        <!-- PopupWindow左右弹出的效果 -->
+        <item name="android:windowEnterAnimation">@anim/enter_in_selectproduct</item>
+        <item name="android:windowExitAnimation">@anim/enter_out_selectproduct</item>
+    </style>
+
     <!--FragmentActivity的样式，目前主要是用到ActionBar的地方-->
     <style name="AppBaseTheme" parent="android:Theme.Light"></style>
 
