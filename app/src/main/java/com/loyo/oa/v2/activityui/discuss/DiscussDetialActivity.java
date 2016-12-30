@@ -20,11 +20,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.loyo.oa.common.utils.DateTool;
+
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.discuss.api.DiscussService;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
@@ -36,25 +39,22 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.HaitHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import retrofit.client.Response;
-
 
 /**
  * 【讨论详情界面】
@@ -93,7 +93,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
     private int mStatus;
     private boolean isOnce = true; // 让数据第一次定位的底部
 
-     /**
+    /**
      * 启动当前页面
      *
      * @param act
@@ -391,7 +391,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                     ll_loading.setStatus(LoadingLayout.Success);
                 }
             }
-       });
+        });
     }
 
     /**
@@ -421,7 +421,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
     private void addMineMessge(final long time, final String mineMessage) {
         //页面没有数据的时候发送信息就展现页面
         if (mPageDiscussion.getRecords().size() == 0)
-           ll_loading.setStatus(LoadingLayout.Success);
+            ll_loading.setStatus(LoadingLayout.Success);
         messages.put(time, mineMessage);
         HttpDiscussDet discussion = new HttpDiscussDet();
         HttpCrecter creacter = new HttpCrecter();
@@ -444,43 +444,22 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
         body.put("content", message);
         body.put("bizType", mBizType);
         body.put("mentionedUserIds", getAndClearSelectUser(message));
-//        LogUtil.d("发送的数据:" + MainApp.gson.toJson(body));
         mHaitSelectUsers.clear();
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class)
-//                .createDiscussion(body, new RCallback<Discussion>() {
-//                    @Override
-//                    public void success(final Discussion d, final Response response) {
-//                        HttpErrorCheck.checkResponse(response);
-//                    }
-//
-//                    @Override
-//                    public void failure(final RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-//                        super.failure(error);
-//                        new Handler().postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                adapter.removeAtTime(time);
-//                            }
-//                        }, 800);
-//                    }
-//                });
-
         DiscussService.createDiscussion(body).subscribe(new DefaultLoyoSubscriber<Discussion>() {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                DialogHelp.cancelLoading();
                 new Handler().postDelayed(new Runnable() {
+                    @Override
                     public void run() {
                         adapter.removeAtTime(time);
+
                     }
                 }, 800);
             }
 
             @Override
             public void onNext(Discussion discussion) {
-                DialogHelp.cancelLoading();
             }
         });
     }
@@ -750,7 +729,6 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
                     Toast("没有信息");
                     return;
                 }
-                showLoading("");
                 Common.getUserInfo(DiscussDetialActivity.this, app, user.id);
             }
         };
@@ -883,31 +861,15 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
         setResult(Activity.RESULT_OK);
         HashMap<String, Object> map = new HashMap<>();
         map.put("summaryId", summaryId);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
-//                .updateReadDot(map, new RCallback<Object>() {
-//                    @Override
-//                    public void success(final Object d, final Response response) {
-//                        HttpErrorCheck.checkResponse(response);
-//                        finishActivity();
-//                    }
-//
-//                    @Override
-//                    public void failure(final RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-//                        finishActivity();
-//                    }
-//                });
-
         DiscussService.updateReadDot(map).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
             public void onError(Throwable e) {
-                DialogHelp.cancelLoading();
+                super.onError(e);
                 finishActivity();
             }
 
             @Override
             public void onNext(Object o) {
-                DialogHelp.cancelLoading();
                 finishActivity();
             }
         });

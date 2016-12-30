@@ -9,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -20,8 +23,8 @@ import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.clue.presenter.impl.ClueFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
-import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
@@ -36,7 +39,9 @@ import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -180,9 +185,6 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
      * 获取列表数据
      */
     private void getData(boolean isPullOrDown) {
-        if (!isPullOrDown) {
-            showLoading("");
-        }
         HashMap<String, Object> map = new HashMap<>();
         map.put("salesId", clueId);
         map.put("typeId", "");
@@ -430,4 +432,25 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         playVoiceSize++;
     }
 
+    @Override
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
+
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showProgress(message);
+        return hud;
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelLoading2();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        LoyoToast.info(this, message);
+    }
 }

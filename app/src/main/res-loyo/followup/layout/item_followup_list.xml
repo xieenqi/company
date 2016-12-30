@@ -40,14 +40,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimen_10"
                     android:text="周杰伦"
-                    android:textColor="@color/title_bg1" />
+                    android:textColor="@color/title_bg1"
+                    android:textSize="@dimen/text_sp14"
+                    />
 
                 <TextView
                     android:id="@+id/tv_kind"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimen_5"
-                    android:text="# 短信" />
+                    android:text="# 短信"
+                    android:textSize="@dimen/text_sp14"
+                    />
 
             </LinearLayout>
 
@@ -67,6 +71,7 @@
                 android:layout_marginRight="14dp"
                 android:text=""
                 android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp13"
                 android:visibility="gone" />
 
             <com.loyo.oa.v2.customview.CustomerListView
@@ -168,7 +173,9 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text=""
-                    android:textColor="@color/title_bg1" />
+                    android:textColor="@color/title_bg1"
+                    android:textSize="@dimen/text_sp13"
+                    />
             </LinearLayout>
 
             <TextView
@@ -179,14 +186,15 @@
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="8dp"
                 android:text=""
-                android:textColor="@color/text99" />
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp13"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:layout_marginTop="@dimen/dimen_10">
-
                 <include layout="@layout/include_solid_line" />
             </LinearLayout>
 
@@ -209,14 +217,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="客户: "
-                    android:textColor="@color/text99" />
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp13"
+                    />
 
                 <TextView
                     android:id="@+id/tv_customer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/title_bg1" />
+                    android:textColor="@color/title_bg1"
+                    android:textSize="@dimen/text_sp13"
+                    />
 
             </LinearLayout>
 
@@ -240,14 +252,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="线索: "
-                    android:textColor="@color/text99" />
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp13"
+                    />
 
                 <TextView
                     android:id="@+id/tv_clue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/title_bg1" />
+                    android:textColor="@color/title_bg1"
+                    android:textSize="@dimen/text_sp13"
+                    />
 
             </LinearLayout>
 
@@ -268,14 +284,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="联系人: "
-                    android:textColor="@color/text99" />
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp13"
+                    />
 
                 <TextView
                     android:id="@+id/tv_contact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/text99" />
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp13"
+                    />
 
             </LinearLayout>
 
@@ -298,14 +318,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="下次跟进时间: "
-                    android:textColor="@color/text99" />
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp13"
+                    />
 
                 <TextView
                     android:id="@+id/tv_last_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/text99" />
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp13"
+                    />
 
             </LinearLayout>
 
@@ -332,14 +356,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dp"
                         android:text="创建时间: "
-                        android:textColor="@color/text99" />
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp13"
+                        />
 
                     <TextView
                         android:id="@+id/tv_create_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="@color/text99" />
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp13"
+                        />
                 </LinearLayout>
 
                 <ImageView

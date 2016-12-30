@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/common_activity_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_activity_con_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/dimen_50"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/common_layout_padding"
+            android:paddingLeft="@dimen/common_layout_padding">
+
+            <RelativeLayout
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:gravity="center">
+
+                <com.loyo.oa.v2.customview.RoundImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/icon_none_user" />
+
+                <ImageView
+                    android:id="@+id/iv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_content"
+                style="@style/common_text_line_second"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:ellipsize="end"
+                android:gravity="top"
+                android:singleLine="false"
+                android:layout_marginRight="@dimen/common_layout_padding"
+                android:maxLines="2"
+                android:text="" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/common_layout_padding"
+            android:layout_marginLeft="@dimen/common_layout_padding"
+            android:layout_marginRight="@dimen/common_layout_padding"
+            android:background="@color/common_activity_con_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_name"
+                style="@style/common_text_line_second"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="center_vertical|center_horizontal"
+                android:maxLines="2"
+                android:singleLine="false"
+                android:text=""
+                android:textSize="13dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_toLeftOf="@id/iv_action"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    style="@style/common_text_line_second"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical|left"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:text=""
+                    android:textSize="13dp" />
+
+                <View
+                    android:id="@+id/seperator"
+                    android:layout_width="0.5dp"
+                    android:layout_height="13dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/common_space_line" />
+
+                <TextView
+                    android:id="@+id/tv_time2"
+                    style="@style/common_text_line_second"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical|left"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:text=""
+                    android:textSize="13dp" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_action"
+                    android:layout_width="64dp"
+                    android:layout_height="27dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:drawablePadding="0dp"
+                    android:layout_marginLeft="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    style="@style/worksheet_btn_complete"
+                    android:layout_marginRight="5dp" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_action"-->
+                    <!--android:layout_width="64dp"-->
+                    <!--android:layout_height="27dp"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:layout_marginLeft="5dp" />-->
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <include layout="@layout/common_include_line_out_space" />
+</LinearLayout>

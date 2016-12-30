@@ -13,30 +13,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.api.ProjectService;
+import com.loyo.oa.v2.activityui.project.fragment.AttachmentFragment;
+import com.loyo.oa.v2.activityui.project.fragment.DiscussionFragment;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.activityui.project.fragment.AttachmentFragment;
-import com.loyo.oa.v2.activityui.project.fragment.DiscussionFragment;
-import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseChildMainListFragmentX;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.OnLoadSuccessCallback;
-import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 
 /**
@@ -383,24 +385,9 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * 项目重启/删除
      */
     public void restartProject() {
-        DialogHelp.showLoading(this, "", true);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
-//            @Override
-//            public void success(final Project o, final Response response) {
-//                HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);
-//                project.status = (project.status == 1 ? 0 : 1);
-////                restartActivity();//重启Activity  会重置isUpdate的状态
-//                getProject();
-//                isUpdate = true;
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-
-        ProjectService.UpdateStatus(project.getId(),project.status == 1 ? 2 : 1).subscribe(new DefaultLoyoSubscriber<Project>() {
+        showLoading2("");
+        ProjectService.UpdateStatus(project.getId(),project.status == 1 ? 2 : 1)
+                .subscribe(new DefaultLoyoSubscriber<Project>(hud) {
             @Override
             public void onNext(Project project) {
                 project.status = (project.status == 1 ? 0 : 1);

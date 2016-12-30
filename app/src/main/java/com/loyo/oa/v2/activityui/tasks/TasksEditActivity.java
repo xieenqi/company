@@ -37,7 +37,6 @@ import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -45,7 +44,6 @@ import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
@@ -203,29 +201,6 @@ public class TasksEditActivity extends BaseActivity {
         }
         setCornBodyinfo();
     }
-
-    /**
-     * 获取附件(编辑)
-     */
-    void getEditAttachments() {
-        showLoading("");
-        AttachmentService.getAttachments(mTask.getAttachmentUUId())
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelLoading();
-                    }
-
-                    @Override
-                    public void onNext(ArrayList<Attachment> attachments) {
-                        cancelLoading();
-                        mTask.setAttachments(attachments);
-                        init_gridView_photo();
-                    }
-                });
-    }
-
 
     /**
      * 重复任务数据拆解
@@ -478,7 +453,7 @@ public class TasksEditActivity extends BaseActivity {
     }
 
     void requestCommitTask(String title, String content) {
-        showStatusLoading(false);
+        showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
@@ -507,21 +482,19 @@ public class TasksEditActivity extends BaseActivity {
             map.put("reviewFlag", isState);
         }
         TaskService.updateTask(mTask.getId(), map)
-                .subscribe(new DefaultLoyoSubscriber<Task>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<Task>(hud) {
                     @Override
                     public void onNext(final Task task) {
-                        DialogHelp.successStatusLoad();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                cancelStatusLoading();
                                 task.setViewed(true);
                                 Intent intent = new Intent();
                                 intent.putExtra("data", task);
                                 setResult(Activity.RESULT_OK, intent);
                                 onBackPressed();
                             }
-                        }, 1000);
+                        }, 2000);
                     }
                 });
     }
@@ -531,13 +504,8 @@ public class TasksEditActivity extends BaseActivity {
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
-//                String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
-//                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-//                tv_deadline.setText(str);
-//                mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str, "yyyy-MM-dd HH:mm")));
-
-                long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, min, 0);
-                tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time));
+                long time = DateTool.getStamp(year, month, day, hour, min, 0);
+                tv_deadline.setText(DateTool.getDateTimeFriendly(time));
                 mTask.setPlanEndAt(time);
 
 
@@ -807,25 +775,15 @@ public class TasksEditActivity extends BaseActivity {
                 break;
             /*删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                showLoading("请稍候");
+                showCommitLoading();
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                 HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("bizType", 2);
                 map.put("uuid", uuid);
                 AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
-                        .subscribe(new DefaultLoyoSubscriber<Attachment>() {
-
-                            @Override
-                            public void onError(Throwable e) {
-                                super.onError(e);
-                                //cancelLoading();
-								Toast("删除附件失败!");
-                            }
-
+                        .subscribe(new DefaultLoyoSubscriber<Attachment>(hud, "删除附件成功!") {
                             @Override
                             public void onNext(Attachment attachment) {
-                                cancelLoading();
-                                Toast("删除附件成功!");
                                 mTask.getAttachments().remove(delAttachment);
                                 init_gridView_photo();
                             }

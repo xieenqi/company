@@ -14,9 +14,10 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gdragon"
             android:layout_marginTop="@dimen/dimen_10"
             android:layout_marginBottom="@dimen/dimen_10"
+            android:textSize="@dimen/text_sp14"
+            android:textColor="@color/text33"
             />
 
         <LinearLayout
@@ -37,6 +38,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="公司名称："
+                android:textSize="@dimen/text_sp13"
                 android:textColor="@color/text99" />
 
             <TextView
@@ -44,8 +46,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:textColor="@color/text99"
                 android:text="EAGame"
+                android:textSize="@dimen/text_sp13"
+                android:textColor="@color/text99"
                 />
         </LinearLayout>
 
@@ -66,6 +69,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="负责人："
+                android:textSize="@dimen/text_sp13"
                 android:textColor="@color/text99" />
 
             <TextView
@@ -73,6 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
+                android:textSize="@dimen/text_sp13"
                 android:textColor="@color/text99"
                 android:text="王宝强"
                 />
@@ -96,15 +101,18 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="跟进时间："
-                android:textColor="@color/text99" />
+                android:textSize="@dimen/text_sp13"
+                android:textColor="@color/text99"
+                />
 
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:textColor="@color/text99"
                 android:text="--"
+                android:textSize="@dimen/text_sp13"
+                android:textColor="@color/text99"
                 />
         </LinearLayout>
     </LinearLayout>

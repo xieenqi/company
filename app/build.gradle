@@ -8,7 +8,7 @@ def outputPath = 'D:\\jenkins\\workspace\\loyo-android-v2\\app\\build\\apk'
 android {
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 24
-    buildToolsVersion '25'
+    buildToolsVersion '24.0.2'
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     packagingOptions {
@@ -39,6 +39,13 @@ android {
                            'src/main/res-loyo/worksheet',
                            'src/main/res-loyo/order',
                            'src/main/res-loyo/wfinstance',
+                           'src/main/res-loyo/clue',
+                           'src/main/res-loyo/common',
+                           'src/main/res-loyo/followup',
+                           'src/main/res-loyo/project',
+                           'src/main/res-loyo/sale',
+                           'src/main/res-loyo/tasks',
+                           'src/main/res-loyo/workreports',
                            'src/main/res-hud']
         }
     }
