@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.tool;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
@@ -13,6 +14,8 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 
 import java.util.Date;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by pj on 16/1/29.
@@ -59,7 +62,7 @@ public class LocationUtilGD {
             locationClient.startLocation();
             locationClient.startAssistantLocation();
         } else {
-            Global.Toast("你没有配置定位权限");
+//            Global.Toast("你没有配置定位权限");
             DialogHelp.cancelLoading();
         }
     }
@@ -86,7 +89,7 @@ public class LocationUtilGD {
         //友盟统计定位失败的信息
         UMengTools.sendCustomErroInfo(context, location);
 //        String time = MainApp.getMainApp().df10.format(new Date(location.getTime()));
-        String time = com.loyo.oa.common.utils.DateTool.getDateTimeReal(location.getTime()/1000);
+        String time = com.loyo.oa.common.utils.DateTool.getDateTimeReal(location.getTime() / 1000);
         LogUtil.d("定位回调数据：" + "时间 : " + time +
                 " 模式 : " + location.getProvider()
                 + " 地址是否有效 : " + (!TextUtils.isEmpty(location.getAddress()))
@@ -139,10 +142,32 @@ public class LocationUtilGD {
     /**
      * 用户是否配置定位权限     * @return
      */
-    public static boolean permissionLocation() {
+    public static boolean permissionLocation(final Activity activity) {
         if (PackageManager.PERMISSION_GRANTED ==
                 MainApp.getMainApp().getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
             return true;
+        } else {
+            new SweetAlertDialog(activity, SweetAlertDialog.NORMAL_TYPE)
+                    .setTitleText("定位服务关闭")
+                    .setContentText("请手机应用权限管理中打开快启的定位（位置）和GPS权限")//解释原因
+                    .setCancelText("取消")
+                    .setConfirmText("开启")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            //取消
+                            sDialog.dismissWithAnimation();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            Utils.doSeting(activity);
+                            sDialog.dismissWithAnimation();
+                        }
+                    })
+                    .show();
         }
         return false;
     }

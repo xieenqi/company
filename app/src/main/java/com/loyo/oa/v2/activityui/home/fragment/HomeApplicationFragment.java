@@ -464,7 +464,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         /*工作日*/
         if (validateInfo.isWorkDay()) {
             /*加班*/
-            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) {
+            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation(mActivity)) {
                 popOutToast();
                 /*不加班*/
             } else {
