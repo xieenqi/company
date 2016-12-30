@@ -137,10 +137,12 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      * 绑定数量金额数据
      * */
     private void bindMoneyCountData(MoneyCountModel mcModel){
+        mPresenter.initWave((WaveLoadingView) mView.findViewById(R.id.waveLoadingView1),
+                            (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2));
         tv_target_count.setText(mcModel.data.targetAmount+"");
         tv_order_count.setText(mcModel.data.totalAmount+"");
-        tv_target_money.setText("￥"+mcModel.data.targetNumber);
-        tv_order_money.setText("￥"+mcModel.data.totalNumber);
+        tv_target_money.setText("¥ "+mcModel.data.targetNumber);
+        tv_order_money.setText("¥ "+mcModel.data.totalNumber);
     }
 
     private void initUI() {
@@ -211,9 +213,6 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         ll_dashboard_record.setOnClickListener(this);
         ll_dashboard_order_number.setOnClickListener(this);
         ll_dashboard_order_money.setOnClickListener(this);
-
-        mPresenter.initUi((WaveLoadingView) mView.findViewById(R.id.waveLoadingView1),
-                (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2));
 
         Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
                 ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, tv_click_rest1);

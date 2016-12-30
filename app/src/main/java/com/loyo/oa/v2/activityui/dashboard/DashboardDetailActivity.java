@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
@@ -34,6 +35,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import static com.loyo.oa.v2.activityui.dashboard.common.DashborardType.COMMON;
+import static com.loyo.oa.v2.activityui.dashboard.common.DashborardType.ORDER_MONEY;
+import static com.loyo.oa.v2.activityui.dashboard.common.DashborardType.ORDER_NUMBER;
 
 /**
  * 【仪表盘】详情页面
@@ -72,7 +77,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void getPageData() {
-
+        map.put("pageIndex", pageIndex);
         //根据type，判断请求的类型，构造参数
         if (DashborardType.CUS_FOLLOWUP == type) {
             //客户跟进
@@ -88,7 +93,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         } else if (DashborardType.SALE_CELL_RECORD == type) {
             //获取线索电话录
             map.put("activityObj", 2);
-        } else if (DashborardType.COMMON == type) {
+        } else if (COMMON == type) {
             //增量/存量
             map.put("tagItemId", getIntent().getStringExtra("tagItemId"));//tagItemId
             Log.i(TAG, "getPageData: "+getIntent().getStringExtra("tagItemId"));
@@ -115,12 +120,17 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             @Override
             public void onNext(DashBoardListModel dashBoardListModel) {
                 ll_loading.setStatus(LoadingLayout.Success);
+                lv_list.onRefreshComplete();
+                if(null==dashBoardListModel.data.records){
+                    Toast.makeText(DashboardDetailActivity.this, "没有数据", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (1 == pageIndex) {
                     adapter.reload(dashBoardListModel.data.records);
                 } else {
                     adapter.addAll(dashBoardListModel.data.records);
                 }
-                lv_list.onRefreshComplete();
+
             }
         });
     }
@@ -169,7 +179,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         }
         //添加3个筛选字段
         List<FilterModel> options = new ArrayList<>();
-        options.add("订单金额".equals(type.getTitle()) ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel() : DashboardFilterTimeModel.getFilterModel());
+        options.add(ORDER_MONEY==type||ORDER_NUMBER==type ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel() : DashboardFilterTimeModel.getFilterModel());
         options.add(type.getSort());
         options.add(new OrganizationFilterModel(depts, title));
 
@@ -203,30 +213,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 }
                 getPageData();
 
-//
-//                if (menuIndex == 0) { //
-////                    statusType = key;
-//                } else if (menuIndex == 1) { //
-//                    CommonSortType type = ((CommonSortTypeMenuModel) model).type;
-//                    if (type == CommonSortType.AMOUNT) {
-////                        field = "dealMoney";
-//                    } else if (type == CommonSortType.CREATE) {
-////                        field = "createdAt";
-//                    }
-//                } else if (menuIndex == 2) { //
-//                    // TODO:
-//                    if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
-////                        xPath = model.getKey();
-////                        userId = "";
-//                    } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
-////                        xPath = "";
-////                        userId = model.getKey();
-//                    }
-//                }
-////                ll_loading.setStatus(LoadingLayout.Loading);
-////                isPullDown = true;
-////                page = 1;
-////                getData();
             }
         });
     }
@@ -251,7 +237,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        Log.i(TAG, "onPullUpToRefresh: ");
+        Log.i(TAG, "onPullUpToRefresh: "+pageIndex);
         pageIndex++;
         getPageData();
     }

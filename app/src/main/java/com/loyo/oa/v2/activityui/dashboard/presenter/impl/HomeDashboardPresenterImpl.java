@@ -37,7 +37,7 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
     }
 
     @Override
-    public void initUi(WaveLoadingView wv1, WaveLoadingView wv2) {
+    public void initWave(WaveLoadingView wv1, WaveLoadingView wv2) {
 
         wv1.setShapeType(WaveLoadingView.ShapeType.CIRCLE);
         //wv1.setTopTitle("Top Title");
@@ -186,5 +186,10 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
         error.setVisibility(status.getErrorView());
         loadview.setVisibility(status.getLayoutView());
         status.animEmbl(anim);
+    }
+
+    @Override
+    public String getNumFormat(long num) {
+        return null;
     }
 }

@@ -152,8 +152,8 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/dimen_30"
+                            android:layout_height="@dimen/dimen_30"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="@dimen/margin_other_view"
                             android:background="@drawable/icon_dasignin" />
@@ -174,7 +174,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:layout_weight="1"
-                                    android:text="跟进动态" />
+                                    android:text="跟进动态"
+                                    android:textSize="@dimen/text_sp14"
+                                    />
 
                                 <LinearLayout
                                     android:layout_width="0dip"
@@ -187,13 +189,16 @@
                                         android:id="@+id/fw_totalsize"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="" />
+                                        android:textSize="@dimen/text_sp17"
+                                        />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="次数"
-                                        android:textColor="@color/diseditable" />
+                                        android:textColor="@color/diseditable"
+                                        android:textSize="@dimen/text_sp13"
+                                        />
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -207,12 +212,14 @@
                                         android:id="@+id/fw_count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="" />
+                                        android:textSize="@dimen/text_sp17"
+                                        />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="客户数"
+                                        android:textSize="@dimen/text_sp13"
                                         android:textColor="@color/diseditable" />
                                 </LinearLayout>
                             </LinearLayout>
@@ -231,8 +238,8 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/dimen_30"
+                            android:layout_height="@dimen/dimen_30"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="@dimen/margin_other_view"
                             android:background="@drawable/icon_dalocation" />
@@ -254,7 +261,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:layout_weight="1"
-                                    android:text="客户拜访" />
+                                    android:text="客户拜访"
+                                    android:textSize="@dimen/text_sp14"
+                                    />
 
                                 <LinearLayout
                                     android:layout_width="0dip"
@@ -267,12 +276,14 @@
                                         android:id="@+id/visit_totalsize"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="" />
+                                        android:textSize="@dimen/text_sp17"
+                                        />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="次数"
+                                        android:textSize="@dimen/text_sp13"
                                         android:textColor="@color/diseditable" />
                                 </LinearLayout>
 
@@ -287,12 +298,14 @@
                                         android:id="@+id/visit_count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="" />
+                                        android:textSize="@dimen/text_sp17"
+                                        />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="客户数"
+                                        android:textSize="@dimen/text_sp13"
                                         android:textColor="@color/diseditable" />
                                 </LinearLayout>
                             </LinearLayout>
@@ -312,8 +325,8 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/dimen_30"
+                            android:layout_height="@dimen/dimen_30"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="@dimen/margin_other_view"
                             android:background="@drawable/icon_daphone" />
@@ -334,7 +347,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:layout_weight="1"
-                                    android:text="电话录音" />
+                                    android:text="电话录音"
+                                    android:textSize="@dimen/text_sp14"
+                                    />
 
                                 <LinearLayout
                                     android:layout_width="0dip"
@@ -347,12 +362,14 @@
                                         android:id="@+id/voice_totalsize"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="" />
+                                        android:textSize="@dimen/text_sp17"
+                                        />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="次数"
+                                        android:textSize="@dimen/text_sp13"
                                         android:textColor="@color/diseditable" />
                                 </LinearLayout>
 
@@ -367,12 +384,14 @@
                                         android:id="@+id/voice_count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="" />
+                                        android:textSize="@dimen/text_sp17"
+                                        />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="客户数"
+                                        android:textSize="@dimen/text_sp13"
                                         android:textColor="@color/diseditable" />
                                 </LinearLayout>
                             </LinearLayout>
@@ -682,7 +701,7 @@
                                 android:id="@+id/tv_target_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/dimen_10"
+                                android:layout_marginLeft="@dimen/dimen_5"
                                 android:textSize="@dimen/text_sp16"
                                 android:textColor="@color/text33" />
                         </LinearLayout>
@@ -705,7 +724,7 @@
                                 android:id="@+id/tv_order_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/dimen_10"
+                                android:layout_marginLeft="@dimen/dimen_5"
                                 android:textSize="@dimen/text_sp16"
                                 android:textColor="@color/text33" />
                         </LinearLayout>
@@ -751,7 +770,7 @@
                                 android:id="@+id/tv_target_money"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/dimen_10"
+                                android:layout_marginLeft="@dimen/dimen_5"
                                 android:textSize="@dimen/text_sp16"
                                 android:textColor="@color/text33" />
                         </LinearLayout>
@@ -774,7 +793,7 @@
                                 android:id="@+id/tv_order_money"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/dimen_10"
+                                android:layout_marginLeft="@dimen/dimen_5"
                                 android:textSize="@dimen/text_sp16"
                                 android:textColor="@color/text33" />
                         </LinearLayout>

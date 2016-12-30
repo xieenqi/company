@@ -11,9 +11,9 @@ public class MoneyCountModel extends BaseBean{
     public Model data;
 
     public class Model{
-        public int totalAmount;
+        public long totalAmount;
         public long totalNumber;
-        public int targetAmount;
+        public long targetAmount;
         public long targetNumber;
     }
 

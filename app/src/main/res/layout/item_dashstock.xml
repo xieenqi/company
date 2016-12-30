@@ -22,9 +22,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:maxEms="10"
                 android:ellipsize="end"
+                android:maxEms="7"
                 android:singleLine="true"
+                android:textSize="@dimen/text_sp14"
                 />
 
             <LinearLayout
@@ -38,12 +39,14 @@
                     android:id="@+id/tv_zsize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="" />
+                    android:textSize="@dimen/text_sp17"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="增量"
+                    android:textSize="@dimen/text_sp13"
                     android:textColor="@color/diseditable" />
             </LinearLayout>
 
@@ -58,12 +61,14 @@
                     android:id="@+id/tv_csize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="" />
+                    android:textSize="@dimen/text_sp17"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="存量"
+                    android:textSize="@dimen/text_sp13"
                     android:textColor="@color/diseditable" />
             </LinearLayout>
         </LinearLayout>

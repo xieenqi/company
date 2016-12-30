@@ -4,10 +4,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
 import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
-
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -16,7 +14,7 @@ import me.itangqi.waveloadingview.WaveLoadingView;
 
 public interface HomeDashboardPresenter {
 
-    void initUi(WaveLoadingView wv1,WaveLoadingView wv2);
+    void initWave(WaveLoadingView wv1, WaveLoadingView wv2);
 
     void screenControlViews(ScreenType screenType);
 
@@ -27,4 +25,7 @@ public interface HomeDashboardPresenter {
     void getMoneyCountData(int type);
 
     void setOnSucssView(AnimationDrawable anim,LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status);
+
+    String getNumFormat(long num);
+
 }
