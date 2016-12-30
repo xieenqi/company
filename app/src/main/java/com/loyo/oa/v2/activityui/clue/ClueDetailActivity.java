@@ -363,15 +363,15 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
             }
         });
 
-         /*商务电话-直拨*/
-        callPhonePopView.directPhone(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callLive(phone, callType, name);
-//                contactProcessCallback.onCallBack(phone.replaceAll(" +", ""), mContact.getId(), mContact.getName().trim().toString(), DirectPhone, phoneType);
-                callPhonePopView.dismiss();
-            }
-        });
+//         /*商务电话-直拨*/
+//        callPhonePopView.directPhone(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                callLive(phone, callType, name);
+////                contactProcessCallback.onCallBack(phone.replaceAll(" +", ""), mContact.getId(), mContact.getName().trim().toString(), DirectPhone, phoneType);
+//                callPhonePopView.dismiss();
+//            }
+//        });
         /*普通电话*/
         callPhonePopView.commonlyPhone(new View.OnClickListener() {
             @Override
