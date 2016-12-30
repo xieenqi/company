@@ -9,8 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
@@ -26,27 +28,17 @@ import com.loyo.oa.v2.activityui.sale.contract.SaleDetailContract;
 import com.loyo.oa.v2.activityui.sale.presenter.SaleDetailPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【机会详情】
@@ -479,55 +471,36 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
      * 删除销售机会
      */
     public void deleteSale() {
-        showLoading("");
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
-//                .create(ISale.class)
-//                .deleteSaleOpportunity(selectId, new RCallback<SaleDetails>() {
-//                    @Override
-//                    public void success(SaleDetails saleDetails, Response response) {
-//                        HttpErrorCheck.checkResponse("删除", response);
-//                        app.finishActivity(SaleDetailsActivity.this, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, new Intent());
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-//                    }
-//                });
+        showLoading2("");
 
-        SaleService.deleteSaleOpportunity(selectId).subscribe(new DefaultLoyoSubscriber<SaleDetails>() {
+        SaleService.deleteSaleOpportunity(selectId).subscribe(new DefaultLoyoSubscriber<SaleDetails>(hud) {
             @Override
             public void onNext(SaleDetails saleDetails) {
-                DialogHelp.cancelLoading();
                 app.finishActivity(SaleDetailsActivity.this, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, new Intent());
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
             }
         });
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-        showLoading(message);
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(this, message);
     }
 
     @Override

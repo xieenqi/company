@@ -44,7 +44,6 @@ import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.WorkReport;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -53,7 +52,6 @@ import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.SingleRowWheelView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ImageInfo;
@@ -545,7 +543,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
 
                 //没有附件
-                showStatusLoading(false);
+                showCommitLoading();
                 if (pickPhots.size() == 0) {
                     requestCommitWork();
                     //有附件
@@ -617,36 +615,13 @@ public class WorkReportAddActivity extends BaseActivity {
      * 开启动态统计数据
      */
     public void openDynamic(final String startTime, final String endTime) {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("startTime", startTime);
         map.put("endTime", endTime);
-//        RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
-//                .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
-//                    @Override
-//                    public void success(final ArrayList<WorkReportDyn> dyn, final Response response) {
-//                        HttpErrorCheck.checkResponse(response);
-//                        dynList = dyn;
-//                        mHandler.sendEmptyMessage(UPDATE_SUCCESS);
-//                    }
-//
-//                    @Override
-//                    public void failure(final RetrofitError error) {
-//                        super.failure(error);
-//                        HttpErrorCheck.checkError(error);
-//                    }
-//                });
-
-        WorkReportService.getDynamic(map).subscribe(new DefaultLoyoSubscriber<ArrayList<WorkReportDyn>>() {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
-
+        WorkReportService.getDynamic(map).subscribe(new DefaultLoyoSubscriber<ArrayList<WorkReportDyn>>(hud) {
             @Override
             public void onNext(ArrayList<WorkReportDyn> dyn) {
-                DialogHelp.cancelLoading();
                 dynList = dyn;
                 mHandler.sendEmptyMessage(UPDATE_SUCCESS);
             }
@@ -658,34 +633,13 @@ public class WorkReportAddActivity extends BaseActivity {
      * 编辑报告请求
      */
     public void updateReport(final HashMap map) {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
-//            @Override
-//            public void success(final WorkReport workReport, final Response response) {
-//                HttpErrorCheck.checkCommitSus("编辑报告",response);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        cancelStatusLoading();
-//                        dealResult(workReport);
-//                    }
-//                },1000);
-//
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkCommitEro(error);
-//            }
-//        });
-
-        WorkReportService.updateWorkReport(mWorkReport.getId(),map).subscribe(new DefaultLoyoSubscriber<WorkReport>(LoyoErrorChecker.COMMIT_DIALOG) {
+        WorkReportService.updateWorkReport(mWorkReport.getId(),map)
+                .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud, "编辑报告成功") {
             @Override
             public void onNext(final WorkReport workReport) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        cancelStatusLoading();
                         dealResult(workReport);
                     }
                 },1000);
@@ -697,33 +651,13 @@ public class WorkReportAddActivity extends BaseActivity {
      * 新建报告请求
      */
     public void creteReport(final HashMap map) {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
-//            @Override
-//            public void success(final WorkReport workReport, final Response response) {
-//                HttpErrorCheck.checkCommitSus("新建报告",response);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        cancelStatusLoading();
-//                        dealResult(workReport);
-//                    }
-//                },1000);
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkCommitEro(error);
-//            }
-//        });
-
-        WorkReportService.createWorkReport(map).subscribe(new DefaultLoyoSubscriber<WorkReport>(LoyoErrorChecker.COMMIT_DIALOG) {
+        WorkReportService.createWorkReport(map)
+                .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud, "新建报告成功") {
             @Override
             public void onNext(final WorkReport workReport) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        cancelStatusLoading();
                         dealResult(workReport);
                     }
                 },1000);
@@ -945,7 +879,7 @@ public class WorkReportAddActivity extends BaseActivity {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
                         TypedString typedUuid = new TypedString(uuid);
                         AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                                .subscribe(new DefaultLoyoSubscriber<Attachment>(LoyoErrorChecker.COMMIT_DIALOG) {
+                                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud, true) {
                                     @Override
                                     public void onNext(Attachment attachment) {
                                         uploadSize++;

@@ -420,52 +420,13 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
      * 回拨查询
      */
     void callReturn(String phone, int callType, final String name) {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("salesleadId", data.sales.id);
         map.put("type", callType);
         map.put("mobile", phone);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getCallReturnInfo(map,
-//                new RCallback<CallBackCallid>() {
-//                    @Override
-//                    public void success(final CallBackCallid callBackCallid, final Response response) {
-//                        HttpErrorCheck.checkResponse("线索请求回拨", response);
-//                        try {
-//                            switch (callBackCallid.errcode) {
-//                                case 0:
-//                                    Bundle mBundle = new Bundle();
-//                                    mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
-//                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
-//                                    app.startActivity(ClueDetailActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-//                                    break;
-//
-//                                case 50000:
-//                                    Toast("主叫与被叫号码不能相同!");
-//                                    break;
-//
-//                                case 50001:
-//                                    Toast("余额不足!");
-//                                    break;
-//
-//                                case 50002:
-//                                    Toast("号码格式错误!");
-//                                    break;
-//                            }
-//                        } catch (NullPointerException e) {
-//                            e.printStackTrace();
-//                            Toast(e.getMessage());
-//                            finish();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void failure(final RetrofitError error) {
-//                        super.failure(error);
-//                        HttpErrorCheck.checkError(error);
-//                    }
-//                });
-
-        ClueService.getCallReturnInfo(map).subscribe(new DefaultLoyoSubscriber<CallBackCallid>() {
+        ClueService.getCallReturnInfo(map).
+                subscribe(new DefaultLoyoSubscriber<CallBackCallid>(hud) {
             @Override
             public void onNext(CallBackCallid callBackCallid) {
                 try {
@@ -711,7 +672,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
 //                    }
 //                });
 
-        ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.COMMIT_DIALOG) {
+        ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.PROGRESS_HUD) {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);

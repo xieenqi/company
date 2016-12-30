@@ -15,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceDetailsActivity_;
@@ -31,7 +33,6 @@ import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceListPresent
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ValidateItem;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
@@ -165,7 +166,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     if (view.getLastVisiblePosition() == view.getCount() - 1) {
                         //加载更多功能的代码
                         // Toast("到底部啦");
-                        if (type == 2 && null == DialogHelp.loadingDialog) {
+                        if (type == 2) {
                             loadMore();
                         }
                     }
@@ -448,7 +449,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      */
     private void getValidateInfo() {
         isAttAdd = true;
-        showLoading("加载中...");
         mPresenter.getValidateInfo();
     }
 
@@ -503,7 +503,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
         UMengTools.sendLocationInfo(address, longitude, latitude);
         map.put("originalgps", longitude + "," + latitude);
-        showLoading("");
+        showLoading2("");
         mPresenter.checkAttendance(map, address);
         LocationUtilGD.sotpLocation();
     }
@@ -511,7 +511,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     @Override
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
-        DialogHelp.cancelLoading();
+        cancelLoading2();
         Toast("获取位置失败，请检查网络或GPS是否正常");
     }
 
@@ -621,5 +621,27 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     @Subscribe
     public void onAddAttendance(AttendanceAddEevent event) {
         getData(1);
+    }
+
+    @Override
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
+
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelCommitLoading();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        LoyoToast.info(this.getActivity(), message);
     }
 }

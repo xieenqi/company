@@ -33,12 +33,20 @@ android {
             res.srcDirs = ['src/main/res',
                            'src/main/res-photo-picker',
                            'src/main/res-smooth-checkbox',
-                           'src/main/res_loyo/customer',
-                           'src/main/res_loyo/saleopportunity',
-                           'src/main/res_loyo/setting',
-                           'src/main/res_loyo/worksheet',
-                           'src/main/res_loyo/order',
-                           'src/main/res_loyo/wfinstance']
+                           'src/main/res-loyo/customer',
+                           'src/main/res-loyo/saleopportunity',
+                           'src/main/res-loyo/setting',
+                           'src/main/res-loyo/worksheet',
+                           'src/main/res-loyo/order',
+                           'src/main/res-loyo/wfinstance',
+                           'src/main/res-loyo/clue',
+                           'src/main/res-loyo/common',
+                           'src/main/res-loyo/followup',
+                           'src/main/res-loyo/project',
+                           'src/main/res-loyo/sale',
+                           'src/main/res-loyo/tasks',
+                           'src/main/res-loyo/workreports',
+                           'src/main/res-hud']
         }
     }
     signingConfigs {

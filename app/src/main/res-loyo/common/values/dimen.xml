@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--通用的边距，一般是内容到屏幕边-->
+    <dimen name="common_layout_padding">14dp</dimen>
+    <!--行高-->
+    <dimen name="common_line_height">48dp</dimen>
+    <!--行间距 -->
+    <dimen name="common_line_out_space">14dp</dimen>
+    <!--一般是文字行间距 -->
+    <dimen name="common_text_in_space">10dp</dimen>
+    <!--行文字，显示内容的次要文字，左右间距 -->
+    <dimen name="common_second_text_margin_horizontal">10dp</dimen>
+    <!--行文字，显示内容的次要文字，上下间距 -->
+    <dimen name="common_head_second_text_margin_vertical">5dp</dimen>
+
+    <!--标签，按钮的背景lable的圆角半径-->
+    <dimen name="common_lable_radius">3dp</dimen>
+</resources>

@@ -41,7 +41,6 @@ import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -52,7 +51,6 @@ import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ImageInfo;
@@ -357,23 +355,22 @@ public class TasksAddActivity extends BaseActivity {
 
         LogUtil.d("任务创建 发送的数据:" + MainApp.gson.toJson(map));
         TaskService.create(map)
-                .subscribe(new DefaultLoyoSubscriber<Task>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<Task>(hud) {
                     @Override
                     public void onNext(final Task task) {
-                        DialogHelp.successStatusLoad();
                         new Handler().postDelayed(new Runnable(){
                             public void run() {
-                                cancelStatusLoading();
                                 //不需要保存
                                 isSave = false;
                                 Intent intent = new Intent();
                                 intent.putExtra("data", task);
                                 setResult(0x09, intent);
                                 onBackPressed();
-                                if (isCopy)
+                                if (isCopy) {
                                     TasksInfoActivity.instance.finish();
+                                }
                             }
-                        }, 1000);
+                        }, 2000);
                     }
                 });
     }
@@ -427,7 +424,7 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
                 //没有附件
-                showStatusLoading(false);
+                showCommitLoading();
                 if (pickPhots.size() == 0) {
                     requestCommitTask();
                     //有附件
@@ -678,7 +675,7 @@ public class TasksAddActivity extends BaseActivity {
                         LogUtil.dee("typeFile:" + typedFile);
                         TypedString typedUuid = new TypedString(uuid);
                         AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                                .subscribe(new DefaultLoyoSubscriber<Attachment>(LoyoErrorChecker.COMMIT_DIALOG) {
+                                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud, true) {
 
                                     @Override
                                     public void onError(Throwable e) {

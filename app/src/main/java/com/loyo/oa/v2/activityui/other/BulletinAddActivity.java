@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.other;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,6 +10,8 @@ import android.widget.TextView;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -200,7 +201,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      * */
     @Override
     public void verifySuccess(String title,String content) {
-        showStatusLoading(false);
+        showCommitLoading();
         controller.startUpload();
         controller.notifyCompletionIfNeeded();
     }
@@ -229,7 +230,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      * */
     @Override
     public void showLoading() {
-        showLoading("正在提交");
+        showLoading2("正在提交");
     }
 
     /**
@@ -264,27 +265,13 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     }
 
     private void commitAttachment() {
-        showStatusLoading(false);
         buildAttachment();
         AttachmentService.setAttachementData(attachment)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>() {
-
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelStatusLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true) {
                     @Override
                     public void onNext(final ArrayList<AttachmentForNew> news) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                cancelStatusLoading();
-                                BulletinAddActivity.this.attachmentForNew = news;
-                                commitAnnouncement();
-                            }
-                        },1000);
+                        BulletinAddActivity.this.attachmentForNew = news;
+                        commitAnnouncement();
                     }
                 });
     }
@@ -333,10 +320,10 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelStatusLoading();
         int count = controller.failedTaskCount();
         if (count > 0) {
-            Toast(count + "个附件上传失败，请重试或者删除");
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
             return;
         }
         if (taskList.size() > 0) {
@@ -344,5 +331,27 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         } else {
             commitAnnouncement();
         }
+    }
+
+    @Override
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
+
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelLoading2();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        LoyoToast.info(this, message);
     }
 }

@@ -159,8 +159,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact, leftExtrases, contact, this);
             contactViewGroup.bindView(i + 1, layout_container, canEdit);
         }
-
-        cancelLoading();
     }
 
 
@@ -251,7 +249,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
 
     void requestClientInfo() {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("customerId", customerContact.getId());
         map.put("contactId", contactId);
@@ -259,7 +257,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         map.put("mobile", callNum);
         LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
         CustomerService.requestCallBack(map)
-                .subscribe(new DefaultLoyoSubscriber<CallBackCallid>() {
+                .subscribe(new DefaultLoyoSubscriber<CallBackCallid>(hud) {
                     @Override
                     public void onNext(CallBackCallid callBackCallid) {
                         try{

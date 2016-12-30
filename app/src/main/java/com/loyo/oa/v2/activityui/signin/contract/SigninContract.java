@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.signin.contract;
 
 import android.app.Activity;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
@@ -19,6 +20,9 @@ import java.util.HashMap;
 
 public interface SigninContract {
     interface View extends BaseView {
+
+        LoyoProgressHUD getHUD();
+
         void setIsPhoto(boolean isPicture);
 
         void creatSuccessUI(LegWork legWork);
@@ -31,6 +35,9 @@ public interface SigninContract {
     }
 
     interface Presenter extends BasePersenter {
+
+        LoyoProgressHUD getHUD();
+
         void getIsPhoto();
 
         void isPhoto(SigninPictures result);

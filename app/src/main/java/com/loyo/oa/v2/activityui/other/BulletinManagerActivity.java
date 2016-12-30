@@ -8,11 +8,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.LoadingView;
 import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinManagerPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinManagerView;
 import com.loyo.oa.v2.application.MainApp;
@@ -145,21 +146,24 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
 
     @Override
-    public void showMsg(String message) {
-        Toast(message);
+    public void showMsg(String message)
+    {
+        LoyoToast.info(this, message);
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     /**
      * 展示Loading
      */
     @Override
-    public void showProgress(String msg) {
-        showLoading(msg);
+    public LoyoProgressHUD showProgress(String msg) {
+        showLoading2(msg);
+        return hud;
     }
 
     /**
@@ -167,7 +171,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
      */
     @Override
     public void hideProgress() {
-
+        cancelLoading2();
     }
 
     /**

@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
@@ -95,23 +97,26 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-//        showLoading("");
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2("");
+        return hud;
     }
 
     @Override
     public void hideProgress() {
+        cancelLoading2();
         lv_list.onRefreshComplete();
     }
 
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(this.getActivity(), message);
     }
 
 

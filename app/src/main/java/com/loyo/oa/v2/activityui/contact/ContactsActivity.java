@@ -22,7 +22,6 @@ import com.loyo.oa.v2.activityui.contact.fragment.ContactsDepartmentFragment;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsInMyDeptFragment;
 import com.loyo.oa.v2.activityui.other.DepartmentUserSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
@@ -145,7 +144,6 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
             int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
             pager.setPageMargin(pageMargin);
             tabs.setViewPager(pager);
-            DialogHelp.cancelLoading();
         }
     }
 

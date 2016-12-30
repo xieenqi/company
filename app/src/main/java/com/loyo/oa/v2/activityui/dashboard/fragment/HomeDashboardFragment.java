@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.DashboardDetailActivity;
 import com.loyo.oa.v2.activityui.dashboard.adapter.StockListAdapter;
@@ -470,22 +472,24 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-
+        LoyoToast.info(this.getActivity(), message);
     }
 }

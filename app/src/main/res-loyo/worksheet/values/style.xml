@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="worksheet_btn_trans">
+        <item name="android:background">@drawable/worksheet_btn_bg_blue</item>
+        <item name="android:text">转移</item>
+        <item name="android:drawableLeft">@null</item>
+        <item name="android:textColor">#2c9dfc</item>
+    </style>
+
+    <style name="worksheet_btn_assignment">
+        <item name="android:background">@drawable/worksheet_btn_bg_red</item>
+        <item name="android:text">分派</item>
+        <item name="android:drawableLeft">@null</item>
+        <item name="android:textColor">#ff9363</item>
+
+    </style>
+
+    <style name="worksheet_btn_redo">
+        <item name="android:background">@drawable/worksheet_btn_bg_red</item>
+        <item name="android:text">重做</item>
+        <item name="android:drawableLeft">@drawable/no</item>
+        <item name="android:textColor">#ff9363</item>
+    </style>
+
+    <style name="worksheet_btn_complete">
+        <item name="android:background">@drawable/worksheet_btn_bg_blue</item>
+        <item name="android:text">完成</item>
+        <item name="android:drawableLeft">@drawable/yes</item>
+        <item name="android:textColor">#2c9dfc</item>
+
+    </style>
+</resources>

@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_common_title_edit" />
+
+    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:isFirstVisible="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </com.library.module.widget.loading.LoadingLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="@color/common_activity_con_bg"
+                android:orientation="vertical"
+                android:padding="@dimen/common_layout_padding">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edt_workReport_title"
+                        style="@style/common_text_line_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:focusable="false"
+                        android:gravity="left|center_vertical"
+                        android:maxWidth="250dp"
+                        android:singleLine="true"
+                        android:text="报告"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_status"
+                        style="@style/common_text_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_workReport_time"
+                    style="@style/common_text_line_third"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edt_workReport_title"
+                    android:layout_marginTop="15dp"
+                    android:text="2014.12.25 9:00" />
+
+
+            </LinearLayout>
+
+            <include layout="@layout/common_include_line_in_space" />
+
+            <LinearLayout
+                android:id="@+id/layout_crm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/common_activity_con_bg"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_layout_padding"
+                    android:background="@drawable/round_bg_shpe3"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_crm"
+                        style="@style/common_text_line_main"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:text="工作动态统计" />
+
+                    <include layout="@layout/include_dotted_line" />
+
+                    <com.loyo.oa.v2.customview.NoScroolGridView
+                        android:id="@+id/info_gridview_workreports"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="@dimen/dimen_10"
+                        android:listSelector="@android:color/transparent"
+                        android:numColumns="3" />
+
+                    <LinearLayout
+                        android:id="@+id/no_dysndata_workreports"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/icon_dysn_nodata" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="暂无统计数据"
+                            android:textColor="#999999" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_touch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/common_activity_con_bg"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_workContent"
+                    style="@style/common_text_line_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/common_layout_padding"
+                    android:layout_marginLeft="@dimen/common_layout_padding"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="false"
+                    android:textIsSelectable="true" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/common_layout_padding"
+                    android:layout_marginTop="@dimen/common_text_in_space"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/common_layout_padding">
+
+                    <TextView
+                        style="@style/common_text_line_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="top|left"
+                        android:text="点评人：" />
+
+                    <TextView
+                        android:id="@+id/tv_reviewer"
+                        style="@style/common_text_line_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/common_layout_padding"
+                        android:gravity="center_vertical|left"
+                        android:singleLine="false" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/common_layout_padding"
+                    android:layout_marginTop="@dimen/common_text_in_space"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/common_layout_padding">
+
+                    <TextView
+                        style="@style/common_text_line_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="top|left"
+                        android:text="抄送人："
+                        android:singleLine="false" />
+                    <TextView
+                        android:id="@+id/tv_toUser"
+                        style="@style/common_text_line_second"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|left"
+                        android:singleLine="false" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/common_layout_padding"
+                    android:layout_marginRight="@dimen/common_layout_padding"
+                    android:layout_marginTop="@dimen/common_text_in_space"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/common_layout_padding">
+
+                    <TextView
+                        style="@style/common_text_line_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="top|left"
+                        android:text="所属项目：" />
+
+                    <TextView
+                        android:id="@+id/tv_ptoject"
+                        style="@style/common_text_line_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/common_layout_padding"
+                        android:gravity="center_vertical|left"
+                        android:singleLine="false" />
+                </LinearLayout>
+
+                <include layout="@layout/common_include_line_in_space" />
+
+                <LinearLayout
+                    android:id="@+id/layout_discussion"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/common_activity_con_bg"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/common_line_height"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/common_layout_padding"
+                    android:paddingRight="@dimen/common_layout_padding">
+
+                    <TextView
+                        android:id="@+id/tv_discussion_count"
+                        style="@style/common_text_line_main"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left|center_vertical"
+                        android:hint="讨论（0）" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="9dp"
+                        android:scaleType="center"
+                        android:src="@drawable/common_right_arrow" />
+
+                </LinearLayout>
+
+                <include layout="@layout/common_include_line_in_space" />
+
+                <LinearLayout
+                    android:id="@+id/layout_attachment"
+                    android:paddingRight="@dimen/common_layout_padding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/common_activity_con_bg"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/common_line_height"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/common_layout_padding">
+
+                    <TextView
+                        android:id="@+id/tv_attachment_count"
+                        style="@style/common_text_line_main"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left|center_vertical"
+                        android:hint="附件（0）" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="9dp"
+                        android:scaleType="center"
+                        android:src="@drawable/common_right_arrow" />
+
+                </LinearLayout>
+                <include layout="@layout/common_include_line_in_space" />
+
+
+
+
+                <LinearLayout
+                    android:id="@+id/layout_score"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/common_activity_con_bg"
+                    android:paddingBottom="@dimen/common_layout_padding"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/common_layout_padding"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/common_line_height"
+                        android:text="点评"
+                        style="@style/common_text_line_main"/>
+
+                    <include layout="@layout/common_include_line_in_space" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/common_layout_padding"
+                        android:layout_marginRight="@dimen/common_layout_padding"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/round_bg_shpe3"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/common_line_height"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_reviewer_"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1"
+                                android:text="点评人："
+                                android:textColor="#999999" />
+
+                            <TextView
+                                android:id="@+id/tv_review_time"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical|right"
+                                android:text=""
+                                android:textColor="#999999"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <include layout="@layout/include_dotted_line" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <RatingBar
+                                android:id="@+id/ratingBar_workReport"
+                                style="@style/roomRatingBar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="10dp"
+                                android:gravity="right|center_vertical"
+                                android:isIndicator="true"
+                                android:max="100"
+                                android:numStars="5"
+                                android:stepSize="1" />
+
+                            <EditText
+                                android:id="@+id/edt_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@null"
+                                android:editable="false"
+                                android:paddingRight="@dimen/dimen_10"
+                                android:textColor="#333333"
+                                android:textColorHint="#999999"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_workreport_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_layout_padding"
+                    android:background="@drawable/common_lable_blue"
+                    android:text="点评"
+                    android:visibility="gone"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

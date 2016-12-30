@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
@@ -20,7 +22,6 @@ import com.loyo.oa.v2.activityui.discuss.persenter.MyDisscussPControl;
 import com.loyo.oa.v2.activityui.discuss.viewcontrol.MyDisscussVControl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 
@@ -133,23 +134,26 @@ public class MyDiscussActivity extends BaseLoadingActivity implements View.OnCli
 
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String msg) {
-        showLoading(msg);
+    public LoyoProgressHUD showProgress(String msg) {
+        showLoading2(msg);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
+        cancelLoading2();
         lv_discuss.onRefreshComplete();
     }
 
     @Override
     public void showMsg(String message) {
-
+        LoyoToast.info(this, message);
     }
 
     @Override

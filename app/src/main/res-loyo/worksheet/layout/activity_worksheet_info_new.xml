@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_common_title" />
+
+    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:isFirstVisible="true">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/common_activity_con_bg"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/common_layout_padding">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:singleLine="false"
+                                android:maxWidth="260dp"
+                                android:text=""
+                                style="@style/common_text_line_main"/>
+                            <TextView
+                                android:id="@+id/tv_status"
+                                android:layout_gravity="top"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/common_text_label"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_commit_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/common_text_line_third"
+                            android:layout_marginTop="15dp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <include layout="@layout/common_include_line_in_space" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/common_layout_padding"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tv_track_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:gravity="left"
+                        style="@style/common_text_line_second"/>
+
+                    <com.loyo.oa.v2.customview.CustomerListView
+                        android:id="@+id/lv_listview"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="12dp"
+                        android:layout_height="wrap_content"
+                        android:listSelector="@android:color/transparent" />
+                </LinearLayout>
+
+
+                <include layout="@layout/common_include_line_in_space" />
+                <!--  分派人 -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/common_layout_padding"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="分派人 : "
+                            style="@style/common_text_line_second"/>
+
+                        <TextView
+                            android:id="@+id/tv_Assignment_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/common_text_line_second" />
+
+                    </LinearLayout>
+
+                    <!-- 触发方式 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="触发方式 : "
+                            style="@style/common_text_line_second" />
+
+                        <TextView
+                            android:id="@+id/tv_boom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/common_text_line_second" />
+
+                    </LinearLayout>
+
+                    <!-- 关联订单 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="对应订单 : "
+                            style="@style/common_text_line_second" />
+
+                        <TextView
+                            android:id="@+id/tv_related_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/common_text_line_blue" />
+
+                    </LinearLayout>
+
+                    <!-- 关联客户 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="对应客户 : "
+                            style="@style/common_text_line_second" />
+
+                        <TextView
+                            android:id="@+id/tv_related_customer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/title_bg1"
+                            style="@style/common_text_line_blue"/>
+
+                    </LinearLayout>
+                    <!-- 事件负责人 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="事件负责人 : "
+                            style="@style/common_text_line_second" />
+
+                        <TextView
+                            android:id="@+id/tv_responsible_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/common_text_line_second" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <include layout="@layout/common_include_line_out_space"/>
+
+                <LinearLayout
+                    android:id="@+id/ll_times_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/common_layout_padding"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_assignment_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="分派时间 : "
+                            style="@style/common_text_line_third"/>
+
+                        <TextView
+                            android:id="@+id/tv_assignment_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/common_text_line_third" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_finish_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="完成时间 : "
+                            style="@style/common_text_line_third"/>
+
+                        <TextView
+                            android:id="@+id/tv_finish_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/common_text_line_third"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_termination_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="终止时间 : "
+                            style="@style/common_text_line_third" />
+
+                        <TextView
+                            android:id="@+id/tv_termination_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/common_text_line_third" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </com.library.module.widget.loading.LoadingLayout>
+</LinearLayout>

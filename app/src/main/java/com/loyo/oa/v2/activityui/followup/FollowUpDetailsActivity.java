@@ -450,42 +450,31 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
      * 获取详情数据
      */
     private void requestDetails() {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", id);
         map.put("split", true);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).getFollowUpDetails(map, new RCallback<BaseBeanT<FollowUpListModel>>() {
-//            @Override
-//            public void success(BaseBeanT<FollowUpListModel> followuplistmodel, Response response) {
-//                HttpErrorCheck.checkResponse("跟进详情", response,ll_loading);
-//                if (followuplistmodel.errcode != 0) {
-//                    Toast("获取拜访详情出错!");
-//                    finish();
-//                } else {
-//                    mFollowUpDelModel = followuplistmodel.data;
-//                    bindData();
-//                }
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error,ll_loading);
-//                super.failure(error);
-//            }
-//        });
 
-        FollowUpService.getFollowUpDetails(map).subscribe(new DefaultLoyoSubscriber<BaseBeanT<FollowUpListModel>>(ll_loading) {
-            @Override
-            public void onNext(BaseBeanT<FollowUpListModel> followuplistmodel) {
-                ll_loading.setStatus(LoadingLayout.Success);
-                if (followuplistmodel.errcode != 0) {
-                    Toast("获取拜访详情出错!");
-                    finish();
-                } else {
-                    mFollowUpDelModel = followuplistmodel.data;
-                    bindData();
-                }
-            }
+        FollowUpService.getFollowUpDetails(map)
+                .subscribe(new DefaultLoyoSubscriber<BaseBeanT<FollowUpListModel>>(ll_loading) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading2();
+                    }
+
+                    @Override
+                    public void onNext(BaseBeanT<FollowUpListModel> followuplistmodel) {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        cancelLoading2();
+                        if (followuplistmodel.errcode != 0) {
+                            Toast("获取拜访详情出错!");
+                            finish();
+                        } else {
+                            mFollowUpDelModel = followuplistmodel.data;
+                            bindData();
+                        }
+                    }
         });
     }
 

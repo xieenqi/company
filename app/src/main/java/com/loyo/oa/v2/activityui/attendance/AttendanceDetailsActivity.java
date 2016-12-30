@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
@@ -324,5 +326,27 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
             tv_confirmTime.setText(comfirmTime);
         }
         ll_loading.setStatus(LoadingLayout.Success);
+    }
+
+    @Override
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
+
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelCommitLoading();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        LoyoToast.info(this, message);
     }
 }

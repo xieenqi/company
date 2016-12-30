@@ -111,12 +111,11 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
      * 删除回款计划
      */
     public void deletePlanList(String id) {
-        showLoading("");
+        showLoading2("");
         OrderService.deletePlanEsstimateList(id)
-                .subscribe(new DefaultLoyoSubscriber<EstimatePlanAdd>() {
+                .subscribe(new DefaultLoyoSubscriber<EstimatePlanAdd>(hud) {
                     @Override
                     public void onNext(EstimatePlanAdd add) {
-                        cancelLoading();
                         getPlanList();
                     }
                 });
@@ -126,7 +125,6 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
      * 获取回款计划列表
      */
     public void getPlanList() {
-        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("orderId", orderId);
         OrderService.getPlanEstimateList(map)

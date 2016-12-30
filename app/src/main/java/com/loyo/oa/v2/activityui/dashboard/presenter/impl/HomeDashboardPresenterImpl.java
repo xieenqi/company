@@ -117,7 +117,7 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
     public void getFollowUpData(int type) {
         HashMap<String,Object> map = new HashMap<>();
         map.put("qType",type);
-        DashBoardService.getFupCusClue(map).subscribe(new DefaultLoyoSubscriber<CsclueFowUp>(null) {
+        DashBoardService.getFupCusClue(map).subscribe(new DefaultLoyoSubscriber<CsclueFowUp>() {
             @Override
             public void onNext(CsclueFowUp csclueFowUp) {
                 crolView.followUpSuccessEmbl(csclueFowUp);
@@ -136,7 +136,7 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
     public void getStockData(int type) {
         HashMap<String,Object> map = new HashMap<>();
         map.put("qType",type);
-        DashBoardService.getStock(map).subscribe(new DefaultLoyoSubscriber<StockListModel>(null) {
+        DashBoardService.getStock(map).subscribe(new DefaultLoyoSubscriber<StockListModel>() {
             @Override
             public void onNext(StockListModel stockListModel) {
                 crolView.stockSuccessEmbl(stockListModel);
@@ -155,7 +155,7 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
     public void getMoneyCountData(int type) {
         HashMap<String,Object> map = new HashMap<>();
         map.put("qType",type);
-        DashBoardService.getMoneyCount(map).subscribe(new DefaultLoyoSubscriber<MoneyCountModel>(null) {
+        DashBoardService.getMoneyCount(map).subscribe(new DefaultLoyoSubscriber<MoneyCountModel>() {
             @Override
             public void onNext(MoneyCountModel moneyCountModel) {
                 crolView.moneyConSuccessEmbl(moneyCountModel);

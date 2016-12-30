@@ -20,13 +20,11 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 
 import java.io.File;
@@ -218,9 +216,6 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      * 批量上传附件
      */
     private void newUploadAttachement(File file) {
-        if (uploadSize == 0) {
-            DialogHelp.showLoading(getActivity(), "正在上传", true);
-        }
         uploadSize++;
         TypedFile typedFile = new TypedFile("image/*", file);
         TypedString typedUuid = new TypedString(mProject.attachmentUUId);

@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.attendance.viewcontrol;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceDetial;
+import com.loyo.oa.v2.common.BaseView;
 
 import java.util.ArrayList;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * Created by yyy on 16/10/11.
  */
 
-public interface AttendanceDetailsView {
+public interface AttendanceDetailsView extends BaseView {
 
     /*确认外勤加班成功处理*/
     void confirmOutEmbl();

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/dimen_70"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="40dp"
+            android:layout_height="70dp"
+            android:clickable="false"
+            >
+
+            <CheckBox
+                android:id="@+id/cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_layout_padding"
+                android:layout_marginTop="10dp"
+                android:button="@drawable/selector_task_checkbox"
+                />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/item_childtask_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:id="@+id/item_tv_child_task_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/child_task_content_default"
+                android:textColor="@color/text33"
+                android:textSize="14sp"/>
+
+
+            <TextView
+                android:id="@+id/tv_label"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/item_tv_child_task_content"
+                android:gravity="center_vertical"
+                android:text="负责人:"
+                style="@style/common_text_line_third"
+                />
+
+            <TextView
+                android:id="@+id/item_tv_child_principal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_tv_child_task_content"
+                android:layout_marginLeft="14dp"
+                android:layout_toRightOf="@+id/tv_label"
+                android:gravity="center_vertical"
+                android:minHeight="40dp"
+                android:text="张可"
+                style="@style/common_text_line_third"
+
+                />
+
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/view_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="9dp"
+            android:scaleType="center"
+            android:layout_marginRight="@dimen/common_layout_padding"
+            android:src="@drawable/common_right_arrow" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="14dp"
+        android:background="@color/lineCC"
+        />
+</LinearLayout>

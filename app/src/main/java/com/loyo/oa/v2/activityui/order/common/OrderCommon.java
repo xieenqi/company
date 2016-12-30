@@ -110,6 +110,10 @@ public class OrderCommon {
     }
 
     public static TextWatcher getTextWatcher() {
+        return getTextWatcher(7);
+    }
+
+    public static TextWatcher getTextWatcher(final int number) {
         TextWatcher watcherMoney = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -121,8 +125,8 @@ public class OrderCommon {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!s.toString().contains(".") && s.toString().length() > 7) {
-                    s.delete(7, s.toString().length());
+                if (!s.toString().contains(".") && s.toString().length() > number) {
+                    s.delete(number, s.toString().length());
                 }
             }
         };

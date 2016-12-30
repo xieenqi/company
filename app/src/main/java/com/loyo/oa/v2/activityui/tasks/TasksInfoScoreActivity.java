@@ -2,6 +2,8 @@ package com.loyo.oa.v2.activityui.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.RatingBar;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.db.DBManager;
@@ -19,6 +22,7 @@ import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -37,9 +41,9 @@ public class TasksInfoScoreActivity extends BaseActivity {
     @ViewById
     ViewGroup img_title_left;
     @ViewById
-    EditText edt_content;
-    @ViewById
-    RatingBar ratingBar_Task;
+    EditText edt_content, et_score;
+    //    @ViewById
+//    RatingBar ratingBar_Task;
     @ViewById
     Button btn_task_agree;
 
@@ -47,25 +51,25 @@ public class TasksInfoScoreActivity extends BaseActivity {
     Task mTask;
 
     public String comment;
-    public int sorce = 0;
+    public String sorce;
     public int status = 1;
 
     public SwitchView task_info_switch;
     public LinearLayout tasks_info_sorceview;
-    private float score;
 
     @AfterViews
     void init() {
         super.setTitle("任务审核");
-//        setTouchView(R.id.layout_btn);
         getTempTask();
 
-        ratingBar_Task.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                score = v;
-            }
-        });
+//        ratingBar_Task.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+//            @Override
+//            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+//                score = v;
+//            }
+//        });
+        et_score.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
+        et_score.addTextChangedListener(OrderCommon.getTextWatcher());
     }
 
     void getTempTask() {
@@ -78,7 +82,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
             public void toggleToOn() {
                 task_info_switch.setState(true);
                 status = 1;
-                edt_content.setHint("请输入审核内容(可填)");
+                edt_content.setHint("请输入审核内容(选填)");
                 tasks_info_sorceview.setVisibility(View.VISIBLE);
             }
 
@@ -86,7 +90,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
             public void toggleToOff() {
                 task_info_switch.setState(false);
                 status = 0;
-                edt_content.setHint("请输入审核内容(必填)");
+                edt_content.setHint("请输入不通过原因(必填)");
                 tasks_info_sorceview.setVisibility(View.GONE);
             }
         });
@@ -104,7 +108,8 @@ public class TasksInfoScoreActivity extends BaseActivity {
             /*提交*/
             case R.id.btn_task_agree:
                 comment = edt_content.getText().toString().trim();
-                sorce = ratingBar_Task.getProgress() * 20;
+                sorce = et_score.getText().toString();
+
                 if (status == 0) {
                     if (comment.isEmpty()) {
                         Toast("点评内容不能为空!");
@@ -112,10 +117,10 @@ public class TasksInfoScoreActivity extends BaseActivity {
                     }
                     verfyTask(sorce, status, comment);
                 } else {
-                    if (!(score > 0)) {
-                        Toast("请评分!");
-                        return;
-                    }
+//                    if (TextUtils.isEmpty(sorce)) {
+//                        Toast("请评分!");
+//                        return;
+//                    }
                     verfyTask(sorce, status, comment);
                 }
                 break;
@@ -130,11 +135,11 @@ public class TasksInfoScoreActivity extends BaseActivity {
      *
      * @param sorce status comment
      */
-    private void verfyTask(final int sorce, final int status, final String comment) {
+    private void verfyTask(final String sorce, final int status, final String comment) {
 
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("score", sorce);
-        map.put("comment", comment);
+        map.put("newScore", TextUtils.isEmpty(sorce) ? "-1" : sorce);
+        map.put("comment", TextUtils.isEmpty(comment) ? "审核通过" : comment);
         map.put("status", status);
 
         LogUtil.dll("发送数据:" + MainApp.gson.toJson(map));
@@ -156,23 +161,23 @@ public class TasksInfoScoreActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if (isSave) {
-            mTask.setScore(ratingBar_Task.getProgress() * 20);
-            String content = edt_content.getText().toString().trim();
-            if (!StringUtil.isEmpty(content)) {
-                mTask.setTaskComment(content);
-            }
-            mTask.setResponsiblePerson(null);
-            mTask.setAttachments(null);
-            mTask.setReviewComments(null);
-            mTask.setCreator(null);
-//          mTask.setJoinedUsers(null);
-
-            DBManager.Instance().putTaskScore(MainApp.gson.toJson(mTask), mTask.getId());
-        } else {
-            DBManager.Instance().deleteTaskScore(mTask.getId());
-        }
+//
+//        if (isSave) {
+////            mTask.setScore(Integer.parseInt(et_score.getText().toString()));
+//            String content = edt_content.getText().toString().trim();
+//            if (!StringUtil.isEmpty(content)) {
+//                mTask.setTaskComment(content);
+//            }
+//            mTask.setResponsiblePerson(null);
+//            mTask.setAttachments(null);
+//            mTask.setReviewComments(null);
+//            mTask.setCreator(null);
+////          mTask.setJoinedUsers(null);
+//
+//            DBManager.Instance().putTaskScore(MainApp.gson.toJson(mTask), mTask.getId());
+//        } else {
+//            DBManager.Instance().deleteTaskScore(mTask.getId());
+//        }
     }
 
 }

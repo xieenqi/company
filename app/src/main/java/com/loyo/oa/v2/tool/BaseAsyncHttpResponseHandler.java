@@ -3,13 +3,13 @@ package com.loyo.oa.v2.tool;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.model.API_error;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
-import com.loyo.oa.v2.activityui.other.model.API_error;
 
 import org.apache.http.Header;
 
@@ -56,7 +56,7 @@ public abstract class BaseAsyncHttpResponseHandler extends AsyncHttpResponseHand
     public void onStart() {
         super.onStart();
         if (getActivity() != null) {
-            DialogHelp.showLoading(getActivity(), "正在上传", true);
+            //DialogHelp.showLoading(getActivity(), "正在上传", true);
             //getDialog().iLoadingTypeCount_Add(R.string.app_dialog_progress_commit);
         }
     }
@@ -65,14 +65,14 @@ public abstract class BaseAsyncHttpResponseHandler extends AsyncHttpResponseHand
     public void onFinish() {
         super.onFinish();
         if (getActivity() != null) {
-            DialogHelp.cancelLoading();
+            //DialogHelp.cancelLoading();
             //getDialog().iLoadingTypeCount_subtract();
         }
     }
 
     @Override
     public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-        DialogHelp.cancelLoading();
+        //DialogHelp.cancelLoading();
         switch (i) {
             case 401:
                 Global.Toast(R.string.app_Session_invalidation);

@@ -194,6 +194,15 @@ public class AdapterHomeItem extends BaseAdapter {
             item_newmain_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+//                    if (true) {
+//                        mIntent.setClass(activity, TestLoadingActivity.class);
+//                        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, wfinstanceCount);
+//                        activity.startActivity(mIntent);
+//                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                        return;
+//                    }
+
                     if (null != MainApp.lstDepartment && MainApp.lstDepartment.size() != 0) {
                         mIntent.setClass(activity, ContactsActivity.class);
                         activity.startActivity(mIntent);

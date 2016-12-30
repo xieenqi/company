@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
@@ -305,18 +306,20 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
     }
 
     @Override
-    public void showStatusProgress() {
-        showStatusLoading(false);
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String msg) {
-        showLoading(msg);
+    public LoyoProgressHUD showProgress(String msg) {
+        showLoading2(msg);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override

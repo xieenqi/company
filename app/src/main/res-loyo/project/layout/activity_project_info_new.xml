@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafafa"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_common_title_edit" />
+
+    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:isFirstVisible="true">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_project_des"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="@dimen/common_layout_padding">
+
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/tv_project_title"
+                        style="@style/common_text_line_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:singleLine="false"
+                        android:maxWidth="250dp"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_status"
+                        style="@style/common_text_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_project_extra"
+                    style="@style/common_text_line_second"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="9dp"
+                android:scaleType="center"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/common_right_arrow" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.loyo.oa.v2.customview.PagerSlidingTabStrip
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@android:color/white"
+                app:pstsIndicatorColor="@color/title_bg1"
+                app:pstsIndicatorHeight="1.5dp"
+                app:pstsShouldExpand="true"
+                app:pstsTabPaddingLeftRight="1dp"
+                app:pstsUnderlineHeight="0.5dp" />
+
+            <com.loyo.oa.v2.customview.NoScrollViewpager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tabs" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    </com.library.module.widget.loading.LoadingLayout>
+
+</LinearLayout>

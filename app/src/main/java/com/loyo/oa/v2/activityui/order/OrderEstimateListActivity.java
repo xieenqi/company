@@ -19,7 +19,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Utils;
@@ -201,12 +200,11 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
      */
     public void deleteData() {
 
-        showLoading("");
+        showLoading2("");
         OrderService.deletePayEstimate(mData.get(position).id)
-                .subscribe(new DefaultLoyoSubscriber<EstimateAdd>() {
+                .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
                     @Override
                     public void onNext(EstimateAdd add) {
-                        cancelLoading();
                         getData();
                     }
                 });
@@ -218,7 +216,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
      */
     public void getData() {
         OrderService.getPayEstimate(orderId)
-                .subscribe(new DefaultLoyoSubscriber<EstimateList>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<EstimateList>(ll_loading) {
                     @Override
                     public void onNext(EstimateList list) {
                         ll_loading.setStatus(LoadingLayout.Success);

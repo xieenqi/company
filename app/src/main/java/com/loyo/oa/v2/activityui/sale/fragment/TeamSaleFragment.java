@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.AdapterView;
 
 import com.library.module.widget.loading.LoadingLayout;
@@ -18,6 +17,7 @@ import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
 import com.loyo.oa.dropdownmenu.filtermenu.SaleStageMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -199,18 +199,20 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-        showLoading(message);
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override

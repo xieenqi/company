@@ -196,11 +196,11 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
      * 获取新建客户权限
      * */
     public void requestJurisdiction(){
-        showLoading("");
+        showLoading2("");
         HashMap<String,Object> map = new HashMap<>();
         map.put("bizType",100);
         CustomerService.getAddCustomerJur(map)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         mCusList = contactLeftExtrasArrayList;
                         for (ContactLeftExtras customerJur : contactLeftExtrasArrayList) {
@@ -278,7 +278,6 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
      * 批量上传附件
      */
     private void newUploadAttachement() {
-        showLoading("正在提交");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -290,14 +289,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                         TypedFile typedFile = new TypedFile("image/*", newFile);
                         TypedString typedUuid = new TypedString(uuid);
                         AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        super.onError(e);
-                                        cancelLoading();
-                                    }
-
+                                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud) {
                                     @Override
                                     public void onNext(Attachment attachment) {
                                         uploadSize++;
@@ -351,16 +343,9 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         map.put("salesleadId", mCluesales.id);
         LogUtil.dee("转移客户发送数据:"+MainApp.gson.toJson(map));
         CustomerService.addNewCustomer(map)
-                .subscribe(new DefaultLoyoSubscriber<Customer>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                     @Override
                     public void onNext(Customer customer) {
-                        cancelLoading();
                         try {
                             Customer retCustomer = customer;
                             Toast("转移成功");
@@ -438,23 +423,8 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                     return;
                 }
 
-/*                if(!customerContractTel.isEmpty()){
-                    if(!RegularCheck.isMobilePhone(customerContractTel)){
-                        Toast("手机号码格式不正确");
-                        return;
-                    }
-                }
-
-                if(!customerWrietele.isEmpty()){
-                    if(!RegularCheck.isPhone(customerWrietele)){
-                        Toast("座机号码格式不正确");
-                        return;
-                    }
-                }*/
-
-                //没有附件
+                showCommitLoading();
                 if (pickPhots.size() == 0) {
-                    showLoading("");
                     requestCommitTask();
                 } else {
                     newUploadAttachement();

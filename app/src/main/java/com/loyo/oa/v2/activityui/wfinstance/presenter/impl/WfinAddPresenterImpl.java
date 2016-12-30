@@ -3,10 +3,11 @@ package com.loyo.oa.v2.activityui.wfinstance.presenter.impl;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
+import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
@@ -18,11 +19,9 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 
@@ -60,6 +59,8 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     private PostBizExtData bizExtData;
     private List<WfinAddViewGroup> WfinObj = new ArrayList<WfinAddViewGroup>();
+
+    private LoyoProgressHUD hud;
 
 
     public WfinAddPresenterImpl(Activity mActivity, Context mContext, WfinAddView crolView, BizForm mBizForm) {
@@ -137,11 +138,9 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                         endTimeDate = (String) map.get(endTimeArr.get(i));
                     }
                 }
-//                startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
-//                endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
 
-                startTimelong= com.loyo.oa.common.utils.DateTool.getMinuteStamp(startTimeDate);
-                endTimelong= com.loyo.oa.common.utils.DateTool.getMinuteStamp(endTimeDate);
+                startTimelong= DateTool.getMinuteStamp(startTimeDate);
+                endTimelong= DateTool.getMinuteStamp(endTimeDate);
 
 
                 if (startTimelong >= endTimelong) {
@@ -151,7 +150,8 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
             }
         }
 
-        crolView.showStatusProgress();
+
+        hud = crolView.showStatusProgress();
         crolView.requestAddWfinVeriSuccess(workflowValues);
     }
 
@@ -159,7 +159,11 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
      * 新建审批请求
      */
     @Override
-    public void requestAddWfin(String title, String deptId, ArrayList<HashMap<String, Object>> workflowValues, String mTemplateId, String projectId, String uuid, String memo, ArrayList<ImageInfo> pickPhots) {
+    public void requestAddWfin(String title, String deptId,
+                               ArrayList<HashMap<String, Object>> workflowValues,
+                               String mTemplateId, String projectId,
+                               String uuid, String memo,
+                               ArrayList<ImageInfo> pickPhots) {
         bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizformId", mBizForm.getId());              //表单Id
@@ -176,36 +180,12 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         }
         map.put("memo", memo); //备注
         LogUtil.d("创建审批传参：" + MainApp.gson.toJson(map));
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
-//            @Override
-//            public void success(final WfInstance wfInstance, final Response response) {
-//                HttpErrorCheck.checkCommitSus("新建审批",response);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        DialogHelp.cancelStatusLoading();
-//                        crolView.requestAddWfinSuccessEmbl(wfInstance);
-//                    }
-//                }, 1000);
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                HttpErrorCheck.checkCommitEro(error);
-//                super.failure(error);
-//            }
-//        });
 
-        WfinstanceService.addWfInstance(map).subscribe(new DefaultLoyoSubscriber<WfInstance>(LoyoErrorChecker.COMMIT_DIALOG) {
+        WfinstanceService.addWfInstance(map)
+                .subscribe(new DefaultLoyoSubscriber<WfInstance>(hud, "新建审批成功") {
             @Override
             public void onNext(final WfInstance wfInstance) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        DialogHelp.cancelStatusLoading();
-                        crolView.requestAddWfinSuccessEmbl(wfInstance);
-                    }
-                }, 1000);
+                crolView.requestAddWfinSuccessEmbl(wfInstance);
             }
         });
     }
@@ -270,12 +250,11 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
                         TypedString typedUuid = new TypedString(uuid);
                         AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                                .subscribe(new DefaultLoyoSubscriber<Attachment>(LoyoErrorChecker.COMMIT_DIALOG) {
+                                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud, true) {
                                     @Override
                                     public void onNext(Attachment attachment) {
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
-                                            DialogHelp.cancelStatusLoading();
                                             crolView.uploadSuccessEmbl(pickPhots);
                                         }
                                     }

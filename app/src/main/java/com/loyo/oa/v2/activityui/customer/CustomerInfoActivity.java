@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,6 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.OrganizationalMember;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
@@ -42,7 +40,6 @@ import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -607,23 +604,16 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
         LogUtil.d("提交客户信息，发送的数据:" + MainApp.gson.toJson(map));
 
-        showStatusLoading(false);
+        showCommitLoading();
 
         CustomerService.updateCustomer(mCustomer.getId(), map)
-                .subscribe(new DefaultLoyoSubscriber<Customer>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                     @Override
                     public void onNext(final Customer customer) {
-                        DialogHelp.successStatusLoad();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                cancelStatusLoading();
-                                app.isCutomerEdit = true;
-                                customer.loc = mLocate;
-                                AppBus.getInstance().post(new EditCustomerEvent());
-                                finish();
-                            }
-                        }, 1000);
+                        app.isCutomerEdit = true;
+                        customer.loc = mLocate;
+                        AppBus.getInstance().post(new EditCustomerEvent());
+                        finish();
                     }
                 });
     }

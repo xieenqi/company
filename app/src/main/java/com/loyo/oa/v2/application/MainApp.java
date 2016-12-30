@@ -7,22 +7,17 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
 import android.text.Editable;
-import android.util.DisplayMetrics;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
@@ -69,11 +64,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import cn.jpush.android.api.JPushInterface;
-
-import static com.loyo.oa.v2.R.id.tv_content;
 
 
 public class MainApp extends Application {

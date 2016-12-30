@@ -38,7 +38,6 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.WfNodes;
 import com.loyo.oa.v2.activityui.work.adapter.WorkflowNodesListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
@@ -683,43 +682,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("comment", comment);
         map.put("type", type);
-//        LogUtil.dll("请求内容：" + MainApp.gson.toJson(map));
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(mWfInstance.getId(), map, new RCallback<WfInstance>() {
-//            @Override
-//            public void success(final WfInstance wfInstance_current, final Response response) {
-//                HttpErrorCheck.checkResponse("审批成功：", response);
-//                if (null != wfInstance_current) {
-//                    Toast("审批" + getString(R.string.app_succeed));
-//                    //如果不clear,会提示java.io.NotSerializableException
-//                    if (null != wfInstance_current.workflowValues) {
-//                        wfInstance_current.workflowValues.clear();
-//                    }
-//                    wfInstance_current.setViewed(true);
-//                    Intent intent = getIntent();
-//                    intent.putExtra("review", wfInstance_current);
-//                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-//                } else {
-//                    Toast("服务器错误");
-//                }
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
 
         WfinstanceService.doWfInstance(mWfInstance.getId(),map).subscribe(new DefaultLoyoSubscriber<WfInstance>() {
             @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
-
-            @Override
             public void onNext(WfInstance wfInstance_current) {
-                DialogHelp.cancelLoading();
                 if (null != wfInstance_current) {
                     Toast("审批" + getString(R.string.app_succeed));
                     //如果不clear,会提示java.io.NotSerializableException

@@ -22,19 +22,20 @@ import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.DynamicFilterTimeModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.followup.FollowSelectActivity;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
+import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
-import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
-import com.loyo.oa.v2.activityui.followup.FollowSelectActivity;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
@@ -43,8 +44,6 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -269,9 +268,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 获取Self列表数据
      */
     private void getData(boolean isPullOrDown) {
-        if (!isPullOrDown) {
-            showLoading("");
-        }
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", MainApp.user.id);//我的传id,团队则空着
         map.put("xpath", "");

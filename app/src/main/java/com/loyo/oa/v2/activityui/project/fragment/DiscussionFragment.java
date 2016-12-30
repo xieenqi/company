@@ -395,7 +395,6 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                     if (TextUtils.isEmpty(discussion.getCreator().getId()) || discussion.getCreator().id.equals(MainApp.user.id)) {
                         return;
                     }
-                    showLoading("");
                     Common.getUserInfo(getActivity(), app, discussion.getCreator().getId());
                 }
             });

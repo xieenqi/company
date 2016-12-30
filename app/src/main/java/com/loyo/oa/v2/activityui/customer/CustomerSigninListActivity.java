@@ -14,21 +14,20 @@ import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewGroupAdapter;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.activityui.customer.presenter.SigninListFragPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.SigninListFragPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerSigninNewListView;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
-import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -192,9 +191,6 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
      * 获取列表数据
      */
     private void getData(boolean isPullOrDown) {
-        if (!isPullOrDown) {
-            showLoading("");
-        }
         HashMap<String, Object> map = new HashMap<>();
         map.put("split", true);
         map.put("customerId", mCustomer.id);

@@ -23,7 +23,6 @@ import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
 
@@ -257,18 +256,17 @@ public class ChildTaskAddActivity extends BaseActivity {
         mChildTask.setTitle(et_child_add_content.getText().toString());
         mChildTask.setResponsiblePerson(newUser);
 
-        showStatusLoading(false);
+        showCommitLoading();
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("content", mChildTask.getTitle());
         map.put("responsiblePerson", mChildTask.getResponsiblePerson());
         TaskService.createChildTask(mTask.getId(), map)
-                .subscribe(new DefaultLoyoSubscriber<TaskCheckPoint>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<TaskCheckPoint>(hud) {
                     @Override
                     public void onNext(final TaskCheckPoint point) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                cancelStatusLoading();
                                 mChildTask = point;
                                 Intent intent = new Intent();
                                 intent.putExtra("childTask", point);

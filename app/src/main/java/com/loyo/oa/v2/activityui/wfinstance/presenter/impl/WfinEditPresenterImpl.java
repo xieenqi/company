@@ -2,11 +2,11 @@ package com.loyo.oa.v2.activityui.wfinstance.presenter.impl;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
@@ -16,11 +16,9 @@ import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinEditPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinEditView;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
 import com.loyo.oa.v2.customview.WfinEditViewGroup;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.io.File;
@@ -256,9 +254,7 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
      * */
     @Override
     public void requestEditWfin(String id,String title,String deptId,ArrayList<HashMap<String, Object>> workflowValues,String projectId,String memo) {
-        //crolView.showProgress("");
-        crolView.showStatusProgress();
-
+        LoyoProgressHUD hud = crolView.showStatusProgress();
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);                               //自定义标题
         map.put("deptId", deptId);                             //部门 id
@@ -266,35 +262,11 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
         map.put("projectId", projectId);                       //项目Id
         map.put("memo",memo); //备注
 
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(id, map, new RCallback<WfInstance>() {
-//            @Override
-//            public void success(final WfInstance wfInstance, final Response response) {
-//                HttpErrorCheck.checkCommitSus("编辑审批",response);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        DialogHelp.cancelStatusLoading();
-//                        crolView.requestEditWfinEmbl(wfInstance);
-//                    }
-//                },1000);
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                HttpErrorCheck.checkCommitEro(error);
-//                super.failure(error);
-//            }
-//        });
-        WfinstanceService.editWfInstance(id,map).subscribe(new DefaultLoyoSubscriber<WfInstance>(LoyoErrorChecker.COMMIT_DIALOG) {
+        WfinstanceService.editWfInstance(id,map)
+                .subscribe(new DefaultLoyoSubscriber<WfInstance>(hud, "编辑审批成功") {
             @Override
             public void onNext(final WfInstance wfInstance) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        DialogHelp.cancelStatusLoading();
-                        crolView.requestEditWfinEmbl(wfInstance);
-                    }
-                },1000);
+                crolView.requestEditWfinEmbl(wfInstance);
             }
         });
     }

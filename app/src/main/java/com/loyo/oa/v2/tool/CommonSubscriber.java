@@ -3,7 +3,6 @@ package com.loyo.oa.v2.tool;
 import android.app.Activity;
 import android.content.Context;
 
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 
 import java.io.Serializable;
@@ -30,19 +29,19 @@ public abstract class CommonSubscriber extends Subscriber<Serializable> {
 
     @Override
     public void onCompleted() {
-        DialogHelp.cancelLoading();
+        // DialogHelp.cancelLoading();
     }
 
     @Override
     public void onError(Throwable e) {
         Global.Toast("处理失败");
-        DialogHelp.cancelLoading();
+        // DialogHelp.cancelLoading();
     }
 
     @Override
     public void onStart() {
-        if(!DialogHelp.isShow())
-        DialogHelp.showLoading(mContext, "正在上传", true);
+//        if(!DialogHelp.isShow())
+//        DialogHelp.showLoading(mContext, "正在上传", true);
     }
 
 

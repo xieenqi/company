@@ -1,21 +1,12 @@
 package com.loyo.oa.v2.activityui.tasks;
 
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -70,9 +61,11 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -486,8 +479,9 @@ public class TasksInfoActivity extends BaseActivity {
             tv_task_content = (TextView) mView.findViewById(R.id.tv_task_content);
             tv_task_status = (TextView) mView.findViewById(R.id.tv_task_status);
             tv_reviewer = (TextView) mView.findViewById(R.id.tv_reviewer);
-            ratingBar_Task = (RatingBar) mView.findViewById(R.id.ratingBar_Task);
-            item_tasks_sorece = (LinearLayout) mView.findViewById(R.id.item_tasks_sorece);
+//            ratingBar_Task = (RatingBar) mView.findViewById(R.id.ratingBar_Task);
+//            item_tasks_sorece = (LinearLayout) mView.findViewById(R.id.item_tasks_sorece);
+            TextView tv_task_score = (TextView) mView.findViewById(R.id.tv_task_score);
 
             if (!TextUtils.isEmpty(reviewer.user.getName())) {
                 tv_reviewer.setText(reviewer.user.getName());
@@ -501,13 +495,16 @@ public class TasksInfoActivity extends BaseActivity {
                 tv_task_content.setText(reviewer.comment);
             }
 
-            if ("0".equals(reviewer.status)) {
-                item_tasks_sorece.setVisibility(View.GONE);
-            }
+//            if ("0".equals(reviewer.status)) {
+//                item_tasks_sorece.setVisibility(View.GONE);
+//            }
 
             if (!TextUtils.isEmpty(reviewer.score + "")) {
-                int rat = (reviewer.score / 20);
-                ratingBar_Task.setRating((float) (rat / 1.0));
+//                int rat = (reviewer.score / 20);
+//                ratingBar_Task.setRating((float) (rat / 1.0));
+                tv_task_score.setVisibility(reviewer.newScore.contains("-") ? View.GONE : View.VISIBLE);
+                tv_task_score.setText(reviewer.newScore + "分");
+
             }
 
             if ("1".equals(reviewer.status)) {

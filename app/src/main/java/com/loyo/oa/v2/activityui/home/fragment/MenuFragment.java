@@ -259,9 +259,9 @@ public class MenuFragment extends BaseFragment {
      * 获取个人资料
      */
     void updateUserinfo() {
-        showLoading("");
+        showLoading2("");
         UserService.getProfile()
-                .subscribe(new DefaultLoyoSubscriber<User>() {
+                .subscribe(new DefaultLoyoSubscriber<User>(hud) {
                     @Override
                     public void onNext(User user) {
                         String json = MainApp.gson.toJson(user);

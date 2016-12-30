@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
@@ -29,6 +30,10 @@ public class SigninPresenterImpl implements SigninContract.Presenter {
     public SigninPresenterImpl(SigninContract.View view) {
         this.view = view;
         model = new SigninModelImpl(this);
+    }
+
+    public LoyoProgressHUD getHUD() {
+        return view.getHUD();
     }
 
     @Override

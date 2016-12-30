@@ -21,7 +21,6 @@ import com.loyo.oa.v2.activityui.wfinstance.common.SubmitStatusMenuModel;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMySubmitPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMySubmitView;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -61,33 +60,11 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter {
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", 1);
         params.put("pageSize", 500);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
-//            @Override
-//            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
-//                HttpErrorCheck.checkResponse("审批自定义字段", response);
-//                if (null != bizFormPaginationX) {
-//                    mBizForms = bizFormPaginationX.getRecords();
-//                    if (null != mBizForms && !mBizForms.isEmpty()) {
-//                        _loadFilterOptions(mBizForms);
-//                    } else {
-//                        _loadFilterOptions(null);
-//                    }
-//                } else {
-//                    _loadFilterOptions(null);
-//                }
-//            }
-//        });
 
         WfinstanceService.getWfBizForms(params).subscribe(new DefaultLoyoSubscriber<PaginationX<BizForm>>() {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                DialogHelp.cancelLoading();
-            }
 
             @Override
             public void onNext(PaginationX<BizForm> bizFormPaginationX) {
-                DialogHelp.cancelLoading();
                 if (null != bizFormPaginationX) {
                     mBizForms = bizFormPaginationX.getRecords();
                     if (null != mBizForms && !mBizForms.isEmpty()) {

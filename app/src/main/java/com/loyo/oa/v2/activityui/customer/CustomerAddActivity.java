@@ -46,7 +46,6 @@ import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
@@ -359,7 +358,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 批量上传附件
      */
     private void newUploadAttachement(final Customer customer) {
-        showLoading("正在提交附件");
+        showLoading2("正在提交附件");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -371,12 +370,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         TypedFile typedFile = new TypedFile("image/*", newFile);
                         TypedString typedUuid = new TypedString(uuid);
                         AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud) {
                                     @Override
                                     public void onNext(Attachment attachment) {
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
-                                            cancelLoading();
                                             customerSendSucess(customer);
                                         }
                                     }
@@ -595,20 +593,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 获取新建客户权限
      */
     public void requestJurisdiction() {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
         CustomerService.getAddCustomerJur(map)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        cancelLoading();
-                    }
-
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
-                        cancelLoading();
                         mCustomerExtraDatas = contactLeftExtrasArrayList;
                         for (ContactLeftExtras customerJur : contactLeftExtrasArrayList) {
                             if (customerJur.label.contains("联系人") && customerJur.required) {
@@ -675,7 +666,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      */
     public void requestCommitTask() {
 
-        showStatusLoading(false);
+        showCommitLoading();
 
         HttpAddCustomer positionData = new HttpAddCustomer();
         positionData.loc.addr = customerAddress;
@@ -724,13 +715,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
 
         CustomerService.addNewCustomer(map)
-                .subscribe(new DefaultLoyoSubscriber<Customer>(LoyoErrorChecker.COMMIT_DIALOG) {
+                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                     @Override
                     public void onNext(final Customer customer) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                cancelStatusLoading();
                                 //没有附件
                                 if (customer == null || customer.id == null) {
                                     return;
