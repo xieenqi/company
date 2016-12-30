@@ -160,21 +160,27 @@ public class DashboardDetailAdapter extends BaseAdapter {
             }
 
             for (int i = 0; i < 4 && i < displayColumns.size(); i++) {
-                if (i == 0) {
-                    text1.setText(displayColumns.get(0));
-                }
-                else if (i == 1) {
-                    text2.setText(displayColumns.get(1));
-                }
-                else if (i == 2) {
-                    text3.setText(displayColumns.get(2));
-                }
-                else if (i == 3) {
-                    text4.setText(displayColumns.get(3));
-                }
+                getTextViewAtIndex(i).setText(displayColumns.get(i));
             }
+        }
 
-
+        private TextView getTextViewAtIndex(int index) {
+            TextView result = text1;
+            switch (index){
+                case 0:
+                    result = text1;
+                    break;
+                case 1:
+                    result = text2;
+                    break;
+                case 2:
+                    result = text3;
+                    break;
+                case 3:
+                    result = text4;
+                    break;
+            }
+            return result;
         }
 
     }
