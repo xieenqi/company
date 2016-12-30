@@ -76,7 +76,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void getPageData() {
-
+        map.put("pageIndex", pageIndex);
         //根据type，判断请求的类型，构造参数
         if (DashborardType.CUS_FOLLOWUP == type) {
             //客户跟进
@@ -231,7 +231,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        Log.i(TAG, "onPullUpToRefresh: ");
+        Log.i(TAG, "onPullUpToRefresh: "+pageIndex);
         pageIndex++;
         getPageData();
     }
