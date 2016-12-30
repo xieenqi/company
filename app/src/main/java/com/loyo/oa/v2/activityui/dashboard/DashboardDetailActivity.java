@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
@@ -119,12 +120,17 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             @Override
             public void onNext(DashBoardListModel dashBoardListModel) {
                 ll_loading.setStatus(LoadingLayout.Success);
+                lv_list.onRefreshComplete();
+                if(null==dashBoardListModel.data.records){
+                    Toast.makeText(DashboardDetailActivity.this, "没有数据", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (1 == pageIndex) {
                     adapter.reload(dashBoardListModel.data.records);
                 } else {
                     adapter.addAll(dashBoardListModel.data.records);
                 }
-                lv_list.onRefreshComplete();
+
             }
         });
     }
