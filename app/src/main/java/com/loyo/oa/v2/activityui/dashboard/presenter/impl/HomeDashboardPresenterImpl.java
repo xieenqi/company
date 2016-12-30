@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.dashboard.presenter.impl;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,6 +21,7 @@ import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 
 import java.util.HashMap;
+
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -181,10 +183,10 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
      * */
     @Override
     public void setOnSucssView(AnimationDrawable anim,LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status){
-        modelView.setVisibility(status.getModelView());
-        load.setVisibility(status.getLoadView());
-        error.setVisibility(status.getErrorView());
-        loadview.setVisibility(status.getLayoutView());
+        modelView.setVisibility(status.getModelView() == View.VISIBLE?View.VISIBLE:View.GONE);
+        load.setVisibility(status.getModelView() == View.VISIBLE?View.VISIBLE:View.GONE);
+        error.setVisibility(status.getModelView() == View.VISIBLE?View.VISIBLE:View.GONE);
+        loadview.setVisibility(status.getModelView() == View.VISIBLE?View.VISIBLE:View.GONE);
         status.animEmbl(anim);
     }
 }
