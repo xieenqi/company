@@ -147,7 +147,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
 
     @Override
     public void OnLocationGDFailed() {
-        Toast("定位失败");
+        Toast(R.string.LOCATION_FAILED);
         LocationUtilGD.sotpLocation();
     }
 

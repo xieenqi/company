@@ -490,7 +490,7 @@ public class MapModifyView extends BaseActivity
 
             @Override
             public void OnLocationGDFailed() {
-                Toast("获取位置失败，请检查网络或GPS是否正常");
+                Toast(R.string.LOCATION_FAILED);
                 LocationUtilGD.sotpLocation();
             }
         });

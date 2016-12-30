@@ -254,7 +254,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
             @Override
             public void OnLocationGDFailed() {
                 LocationUtilGD.sotpLocation();
-                Toast("定位失败！");
+//                Toast("定位失败！");
             }
         });
     }

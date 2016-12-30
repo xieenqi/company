@@ -807,7 +807,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        Toast.makeText(getActivity(), "获取位置失败，请检查网络或GPS是否正常", Toast.LENGTH_SHORT).show();
+        Toast(R.string.LOCATION_FAILED);
     }
 
     @Override

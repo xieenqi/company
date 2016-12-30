@@ -267,7 +267,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void OnLocationGDFailed() {
-                Toast("定位失败,请在网络和GPS信号良好时重试");
+                Toast(R.string.LOCATION_FAILED);
                 LocationUtilGD.sotpLocation();
             }
         });

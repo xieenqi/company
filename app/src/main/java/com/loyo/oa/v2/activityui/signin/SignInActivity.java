@@ -201,7 +201,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void OnLocationGDFailed() {
                 animation.reset();
-                Toast("定位失败,请在网络和GPS信号良好时重试");
+                Toast(R.string.LOCATION_FAILED);
                 boolean gpsOpen = Utils.isGPSOPen(mContext);
                 if (!gpsOpen) {
                     Global.ToastLong("建议开启GPS,重新定位");

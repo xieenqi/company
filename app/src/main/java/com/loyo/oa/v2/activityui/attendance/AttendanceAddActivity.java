@@ -120,7 +120,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     @Override
     public void OnLocationGDFailed() {
-        Toast("刷新位置失败");
+        Toast(R.string.LOCATION_FAILED);
         iv_refresh_address.clearAnimation();
         animation.reset();
         LocationUtilGD.sotpLocation();
@@ -128,8 +128,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     @AfterViews
     void initViews() {
-
-//        setTouchView(NO_SCROLL);
         switch (outKind) {
             case 0:
                 state = CLOCKIN_STATE_NO;
