@@ -9,4 +9,6 @@ public interface AddBuProductPersenter {
     void getProductDynm();
 
     void getProductDetails(String id);
+
+    void getAttachment(String uuid);
 }

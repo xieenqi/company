@@ -209,12 +209,14 @@
                         android:id="@+id/add_buy_product_more_grid_1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/product_layout_padding"
+                        android:layout_marginBottom="@dimen/dimen_10"
+                        android:layout_marginTop="@dimen/dimen_10"
                         android:gravity="center"
                         android:horizontalSpacing="@dimen/product_common_dimen"
                         android:listSelector="@android:color/transparent"
                         android:numColumns="4"
                         android:verticalSpacing="@dimen/product_common_dimen" />
+                    <include layout="@layout/include_product_line_space" />
                 </LinearLayout>
 
                 <LinearLayout

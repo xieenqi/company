@@ -3,19 +3,13 @@ package com.loyo.oa.v2.activityui.product;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-
 import com.library.module.widget.loading.LoadingLayout;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.product.adapter.SelectProductAdapter;
 import com.loyo.oa.v2.activityui.product.api.ProductService;
@@ -25,22 +19,19 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.LogUtil;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
 /**
  * 新增购买产品－产品选择－搜索产品
  */
-public class ProductSearchActivity extends BaseActivity {
+public class ProductSearchActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText edt_search;
     private ImageView iv_clean;
     private LoadingLayout ll_loading;
     private ListView listview;
+    private LinearLayout ll_back;
 
     private SelectProductAdapter mAdapter;
     public  PaginationX<ProductListModel> models;
@@ -57,6 +48,8 @@ public class ProductSearchActivity extends BaseActivity {
         edt_search = (EditText) findViewById(R.id.edt_search);
         listview = (ListView) findViewById(R.id.listview);
         ll_loading = (LoadingLayout) findViewById(R.id.ll_loading);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
+        ll_back.setOnClickListener(this);
 
         //返回按钮
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
@@ -136,5 +129,18 @@ public class ProductSearchActivity extends BaseActivity {
                 super.onError(e);
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+
+            //返回
+            case R.id.ll_back:
+                onBackPressed();
+                break;
+
+        }
     }
 }

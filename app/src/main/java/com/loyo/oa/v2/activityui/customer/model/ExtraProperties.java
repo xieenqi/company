@@ -10,6 +10,7 @@ import java.util.ArrayList;
  * 时间 : 15/9/30.
  */
 public class ExtraProperties implements Serializable {
+
     private String name;
     private String type;
     private String label;
