@@ -167,37 +167,6 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
     }
 
     /**
-     * 上传附件
-     * */
-    @Override
-    public void uploadAttachments(final String uuid, ArrayList<ImageInfo> pickPhots) {
-        try {
-            for (ImageInfo item : pickPhots) {
-                Uri uri = Uri.parse(item.path);
-                File newFile = Global.scal(mActivity, uri);
-                if (newFile != null && newFile.length() > 0) {
-                    if (newFile.exists()) {
-                        Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(mActivity) {
-                            @Override
-                            public void onNext(final Serializable serializable) {
-                                getAttachments(uuid);
-                            }
-
-                            @Override
-                            public void onError(final Throwable e) {
-                                super.onError(e);
-                                crolView.showMsg("网络异常");
-                            }
-                        });
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Global.ProcException(ex);
-        }
-    }
-
-    /**
      * 提交考勤信息
      * */
     @Override

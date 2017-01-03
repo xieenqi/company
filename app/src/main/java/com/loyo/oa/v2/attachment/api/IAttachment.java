@@ -11,14 +11,10 @@ import java.util.HashMap;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
-import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
-import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 import rx.Observable;
 
 
@@ -42,19 +38,6 @@ public interface IAttachment {
 
     @GET("/attachment/uuid/{uuid}")
     Observable<ArrayList<Attachment>> getAttachments(@Path("uuid") String uuid);
-
-    /**
-     * 上传附件
-     * @param uuid
-     * @param attachments
-     */
-    @Multipart
-    @POST("/attachment/")
-    Observable<Attachment> upload(@Part("uuid") TypedString uuid, @Part("bizType") int biz, @Part("attachments") TypedFile attachments);
-
-    @Multipart
-    @POST("/attachment/")
-    Observable<Attachment> newUpload(@Part("uuid") TypedString uuid, @Part("bizType") int biz, @Part("attachments") TypedFile attachments);
 
     /**
      * 获取阿里云附件Token

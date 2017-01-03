@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.tool.ImageInfo;
 
 import java.util.ArrayList;
 
@@ -16,9 +15,6 @@ public interface AttendanceAddPresenter {
 
     /*获取附件*/
     void getAttachments(String uuid);
-
-    /*上传附件*/
-    void uploadAttachments(String uuid,ArrayList<ImageInfo> pickPhots);
 
     /*提交考勤*/
     void commitAttendance(ArrayList<Attachment> mAttachment,boolean isPopup, int outKind,int state,String uuid,String address,String reason,long extraWorkStartTime,long serverTime,int lateMin,int earlyMin);
