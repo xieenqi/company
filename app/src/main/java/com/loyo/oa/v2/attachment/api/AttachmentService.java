@@ -10,8 +10,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 import rx.Observable;
 
 /**
@@ -45,14 +43,6 @@ public class AttachmentService {
                         .compose(RetrofitAdapterFactory.<ArrayList<Attachment>>compatApplySchedulers());
     }
 
-    public static Observable<Attachment> newUpload(TypedString uuid, int biz, TypedFile attachments) {
-        return
-                RetrofitAdapterFactory.getInstance()
-                        .build(Config_project.API_URL_ATTACHMENT())
-                        .create(IAttachment.class)
-                        .newUpload(uuid, biz, attachments)
-                        .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers());
-    }
 
     public static Observable<Attachment> pub(String id, int isOpen) {
         return

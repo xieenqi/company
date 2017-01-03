@@ -2,8 +2,6 @@ package com.loyo.oa.v2.activityui.wfinstance.presenter;
 
 import android.widget.LinearLayout;
 
-import com.loyo.oa.v2.tool.ImageInfo;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,8 +25,5 @@ public interface WfinAddPresenter {
 
     /*新增审批内容*/
     void addTypeData(LinearLayout wfinstance_data_container);
-
-    /*上传附件*/
-    void newUploadAttachement(String uuid,int bizType,ArrayList<ImageInfo> pickPhots);
 
 }

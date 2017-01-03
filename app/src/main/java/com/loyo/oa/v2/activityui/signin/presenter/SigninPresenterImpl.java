@@ -76,11 +76,6 @@ public class SigninPresenterImpl implements SigninContract.Presenter {
     }
 
     @Override
-    public void uploadAttachment(String uuid, File file, Activity activity) {
-        model.uploadAttachmentSend(uuid, file, activity);
-    }
-
-    @Override
     public void uploadAttachmentSuccess() {
         view.uploadAttachmentSuccessUI();
     }
