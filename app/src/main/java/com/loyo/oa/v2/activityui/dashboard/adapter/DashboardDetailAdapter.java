@@ -150,7 +150,6 @@ public class DashboardDetailAdapter extends BaseAdapter {
 
         //判断不同的数据，绑定数据
         private void bindData(int position) {
-
             ArrayList<String> displayColumns = null;
             if (0 == position) {
                 displayColumns = records.get(0).getDsiplayColumnForType(type);

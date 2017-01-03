@@ -10,8 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.product.model.ProductListModel;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
+
+import java.util.ArrayList;
 
 /**
  * 选择产品适配器
@@ -21,19 +24,21 @@ import com.loyo.oa.v2.tool.LogUtil;
 public class SelectProductAdapter extends BaseAdapter{
 
     Context mContext;
+    ArrayList<ProductListModel> models;
 
-    public SelectProductAdapter(Context mContext){
+    public SelectProductAdapter(Context mContext,ArrayList<ProductListModel> models){
         this.mContext = mContext;
+        this.models = models;
     }
 
     @Override
     public int getCount() {
-        return 15;
+        return models.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return models.get(position);
     }
 
     @Override
@@ -43,6 +48,7 @@ public class SelectProductAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
+        ProductListModel model = models.get(position);
         ViewHolder holder = null;
         if(null == convertView){
             holder = new ViewHolder();
@@ -55,11 +61,14 @@ public class SelectProductAdapter extends BaseAdapter{
             holder = (ViewHolder) convertView.getTag();
         }
 
+        holder.tv_name.setText(model.name);
+        holder.tv_size.setText("库存"+model.stock);
+
         holder.iv_details.setOnTouchListener(Global.GetTouch());
         holder.iv_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LogUtil.dee("进入");
+
             }
         });
 

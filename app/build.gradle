@@ -71,7 +71,7 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 2016122301
+        versionCode 2017010401
         versionName '1.4.8t'
     }
 
