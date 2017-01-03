@@ -70,11 +70,9 @@ public class AttachmentActivity extends BaseActivity implements UploadController
 
     private ArrayList<Attachment> mListAttachment;
     private AttachmentSwipeAdapter adapter;
-    private int uploadSize;
-    private int uploadNum;
     private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
 
-    UploadController controller;
+    private UploadController controller;
 
     @AfterViews
     void init() {

@@ -71,4 +71,10 @@ public interface IAttachment {
     @POST("/attachment/batch")
     Observable<ArrayList<AttachmentForNew>> setAttachementData(@Body ArrayList<AttachmentBatch> attachment);
 
+    /**
+     * 上传附件信息
+     * */
+    @POST("/attachment/batch")
+    Observable<ArrayList<Attachment>> setAttachementData2(@Body ArrayList<AttachmentBatch> attachment);
+
 }
