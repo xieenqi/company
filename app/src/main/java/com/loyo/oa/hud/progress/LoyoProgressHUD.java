@@ -307,7 +307,10 @@ public class LoyoProgressHUD {
 
     public void dismiss() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+            try {
+                mProgressDialog.dismiss();
+            }
+            catch (Exception e) {}
         }
     }
 
@@ -547,7 +550,12 @@ public class LoyoProgressHUD {
             Helper.dispatchDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    (ProgressDialog.this).dismiss();
+                    try {
+                        if ((ProgressDialog.this).isShowing()) {
+                            (ProgressDialog.this).dismiss();
+                        }
+                    }
+                    catch (Exception e) {}
                 }
             }, 1500);
         }
@@ -560,7 +568,12 @@ public class LoyoProgressHUD {
             Helper.dispatchDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    (ProgressDialog.this).dismiss();
+                    try {
+                        if ((ProgressDialog.this).isShowing()) {
+                            (ProgressDialog.this).dismiss();
+                        }
+                    }
+                    catch (Exception e) {}
                 }
             }, 1500);
         }
