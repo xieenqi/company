@@ -134,7 +134,7 @@ public class IntentionProductActivity extends BaseActivity {
                     onBackPressed();
                     break;
                 case R.id.ll_add:
-                    /*Bundle product = new Bundle();
+                   /* Bundle product = new Bundle();
                     product.putString("saleId", saleId);
                     product.putInt("data", fromPage);
                     product.putSerializable("productList", listData);

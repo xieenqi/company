@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
@@ -31,15 +30,12 @@ import com.loyo.oa.v2.activityui.product.viewcontrol.AddBuProductView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.CustomerInfoExtraData;
-import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AddBuyProductActivity extends BaseActivity implements AddBuProductView,View.OnClickListener {
 
@@ -56,6 +52,8 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     private TextView prdSize;
     private TextView prdKind;
     private TextView memo;
+    private TextView tv_discount;
+    private TextView tv_total;
 
     private LinearLayout layout_prdprice;
     private LinearLayout layout_prdsize;
@@ -63,7 +61,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     private LinearLayout llDefinedHolder;
     private LinearLayout selectProduct;
     private LinearLayout ll_back;
-    private EditText add_buy_product_et_1;
+    private EditText tv_price;
     private EditText add_buy_product_et_2;
 
     private ArrayList<ExtraData> extDatas;      //动态字段总汇
@@ -92,11 +90,13 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         prdSize = (TextView) findViewById(R.id.add_buy_product_tv_16);
         prdKind = (TextView) findViewById(R.id.add_buy_product_tv_18);
         memo = (TextView) findViewById(R.id.add_buy_product_more_tv_7);
+        tv_discount = (TextView) findViewById(R.id.tv_discount);
+        tv_total = (TextView) findViewById(R.id.add_buy_product_tv_15);
 
         layout_prdprice = (LinearLayout) findViewById(R.id.add_buy_product_ll_2);
         layout_prdsize = (LinearLayout) findViewById(R.id.add_buy_product_ll_3);
         layout_prdkind = (LinearLayout) findViewById(R.id.add_buy_product_ll_15);
-        add_buy_product_et_1 = (EditText) findViewById(R.id.add_buy_product_et_1);
+        tv_price = (EditText) findViewById(R.id.add_buy_product_et_1);
         add_buy_product_et_2 = (EditText) findViewById(R.id.add_buy_product_et_2);
 
         llDefinedHolder = (LinearLayout) findViewById(R.id.add_buy_product_more_definde);
@@ -160,14 +160,95 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         tvTitle.setText("新增购买产品");
         ivSubmit.setVisibility(View.VISIBLE);
         ivSubmit.setImageResource(R.drawable.right_submit1);
-        add_buy_product_et_1.setEnabled(false);
+        tv_price.setEnabled(false);
         add_buy_product_et_2.setEnabled(false);
 
         //添加点击的反馈效果
         Global.SetTouchView(ivSubmit, llMoreInfoBtn);
+        add_buy_product_et_2.addTextChangedListener(watcherNumber);
+        tv_price.addTextChangedListener(watcherPrice);
+
     }
 
-    //模拟添加自定义字段
+    /**
+     * 销售价
+     */
+    private TextWatcher watcherPrice = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!s.toString().contains(".") && s.toString().length() > 7) {
+                s.delete(7, s.toString().length());
+            }
+            setDiscount(s.toString());
+            if (!TextUtils.isEmpty(add_buy_product_et_2.getText().toString())) {
+                tv_total.setText((Utils.setValueDouble(transformationNumber(s.toString())
+                        * transformationNumber(add_buy_product_et_2.getText().toString()))) + "");
+            }
+        }
+    };
+
+    /**
+     * 销售数量
+     */
+    private TextWatcher watcherNumber = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!s.toString().contains(".") && s.toString().length() > 7) {
+                s.delete(7, s.toString().length());
+            }
+            if (!TextUtils.isEmpty(tv_price.getText().toString())) {
+                tv_total.setText(Utils.setValueDouble((transformationNumber(s.toString())
+                        * transformationNumber(tv_price.getText().toString()))) + "");
+            } else {
+                tv_total.setText("");
+            }
+        }
+    };
+
+    private double transformationNumber(String text) {
+        if (!TextUtils.isEmpty(text)) {
+            try {
+                return Double.valueOf(text);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Toast("你应该输入数字");
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 设置折扣
+     */
+    private void setDiscount(String salePrice) {
+        if (!TextUtils.isEmpty(tv_price.getText().toString()) && !"0".equals(tv_price.getText().toString())) {
+            tv_discount.setText(Utils.setValueDouble((transformationNumber(salePrice)
+                    / transformationNumber(tv_price.getText().toString()) * 100)) + "%");
+        } else {
+            tv_discount.setText("");
+        }
+    }
+
+    //添加自定义字段
     private void addDefined() {
         for(ExtraData extraData : detailsModel.extDatas) {
             View view = getLayoutInflater().inflate(R.layout.item_product_defined, null);
@@ -181,7 +262,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
 
     // 绑定产品数据
     private void bindData(){
-        add_buy_product_et_1.setEnabled(true);
+        tv_price.setEnabled(true);
         add_buy_product_et_2.setEnabled(true);
         llMoreInfoBtn.setVisibility(View.VISIBLE);
         layout_prdprice.setVisibility(View.VISIBLE);

@@ -834,6 +834,7 @@
             android:name=".activityui.product.AddBuyProductActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
             />
         <!--新增购买产品－产品详情-->
         <activity
