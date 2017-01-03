@@ -1,12 +1,14 @@
 package com.loyo.oa.v2.activityui.product;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
@@ -14,6 +16,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.product.adapter.SelectProductAdapter;
 import com.loyo.oa.v2.activityui.product.api.ProductService;
 import com.loyo.oa.v2.activityui.product.event.SelectProductEvent;
+import com.loyo.oa.v2.activityui.product.model.ProductClassifyModel;
 import com.loyo.oa.v2.activityui.product.model.ProductDynmModel;
 import com.loyo.oa.v2.activityui.product.model.ProductListModel;
 import com.loyo.oa.v2.activityui.product.view.SelectProductMenu;
@@ -22,6 +25,9 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorItem;
+import com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorView;
+import com.loyo.oa.v2.customview.classify_seletor.ItemAdapter;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -30,6 +36,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 选择产品
@@ -47,6 +54,8 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
     private LoadingLayout ll_loading;
 
     private PaginationX<ProductListModel> models;
+    private List<ClassifySeletorItem> data;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +118,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
         map.put("keyWords","");
         map.put("pageIndex",1);
         map.put("pageSize",100);
+
         ProductService.getProductList("",map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
             @Override
             public void onNext(PaginationX<ProductListModel> productDynmModel) {
@@ -126,7 +136,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
 
         switch (v.getId()){
 
@@ -138,6 +148,19 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
             // 分类
             case R.id.tv_add:
                 productMenu.showPopupWindow(v);
+
+//                if(null==data){
+//                    ProductService.getProductClassify().subscribe(new DefaultLoyoSubscriber<List<ClassifySeletorItem>>() {
+//                        @Override
+//                        public void onNext(List<ClassifySeletorItem> classifySeletorItems) {
+//                            data=classifySeletorItems;
+//                            showProductClassify(v);
+//                        }
+//                    });
+//                }else{
+//                    showProductClassify(v);
+//                }
+
                 break;
 
             // 搜索

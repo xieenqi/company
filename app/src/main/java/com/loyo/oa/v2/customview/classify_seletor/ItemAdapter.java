@@ -64,6 +64,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
+        Log.i(TAG, "onBindViewHolder: "+items.get(position).getId()+","+items.get(position).getName());
         holder.textView.setText(items.get(position).getName());
         //如果有下一级，就显示箭头，否则就不显示箭头
         ClassifySeletorItem item=items.get(position);

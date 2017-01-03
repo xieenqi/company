@@ -12,7 +12,10 @@ public class ClassifySeletorItem {
     public Boolean isRoot;
     public Integer level;
     public String parentId;
-    public Boolean isFinal=null;//是不是最后一级，为null，表示没有计算，为false为不是，为true是最后一级
+    public Boolean isFinal;//是不是最后一级，为null，表示没有计算，为false为不是，为true是最后一级
+
+
+    public ClassifySeletorItem(){}
 
     public ClassifySeletorItem(String id, String name, String path, Boolean isRoot, Integer level, String parentId) {
         this.id = id;

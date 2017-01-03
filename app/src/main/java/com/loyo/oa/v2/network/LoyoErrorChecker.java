@@ -43,6 +43,7 @@ public class LoyoErrorChecker {
     }
 
     public static LoyoError loyoError(Throwable e) {
+        e.printStackTrace();
         String message = "";
         @LoyoError.State int state = LoyoError.Success;
 

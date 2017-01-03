@@ -12,6 +12,7 @@ import com.loyo.oa.v2.R;
 
 /**
  * 选择产品分类适配器
+ * 不用了
  * Created by yyy on 16/12/22.
  */
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -67,6 +68,9 @@ public class ClassifySeletorView extends LinearLayout {
                     if (i.getParentId().equals(item.getId())) {
                         d.add(i);
                     }
+                }
+                for (ClassifySeletorItem seletorItem : d) {
+                    Log.i(TAG, "getData: "+seletorItem.getId()+","+seletorItem.getName());
                 }
                 return d;
             }

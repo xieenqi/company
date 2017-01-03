@@ -17,7 +17,7 @@
         android:layout_height="1dp"
         android:background="#e6e6e6" />
 
-    <com.example.jie.classifyseletor.view.SlideContainer
+    <com.loyo.oa.v2.customview.classify_seletor.SlideContainer
         android:id="@+id/customview_cs_sc_multi"
         android:layout_width="match_parent"
         android:layout_height="165dp" />
