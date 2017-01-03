@@ -51,7 +51,6 @@ public class AddBuProductPersenterImpl implements AddBuProductPersenter {
     @Override
     public void getProductDetails(String id) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizType",102);
         ProductService.getProductDetails(id).subscribe(new DefaultLoyoSubscriber<ProductDetails>() {
             @Override
             public void onNext(ProductDetails details) {

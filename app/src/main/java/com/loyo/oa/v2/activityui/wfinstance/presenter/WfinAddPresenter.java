@@ -14,10 +14,13 @@ import java.util.HashMap;
 public interface WfinAddPresenter {
 
     /*新建审批验证*/
-    void addWfinVeri(String deptId,ArrayList<ImageInfo> pickPhots);
+    void addWfinVeri(String deptId);
 
     /*新建审批请求*/
-    void requestAddWfin(String title,String deptId,ArrayList<HashMap<String, Object>> workflowValues,String mTemplateId,String projectId,String uuid,String memo,ArrayList<ImageInfo> pickPhots);
+    void requestAddWfin(String title,String deptId,ArrayList<HashMap<String, Object>> workflowValues,
+                        String mTemplateId,String projectId,
+                        String uuid,String memo,
+                        int attachmentCount);
 
     /*设置审批开始结束时间规范*/
     void setStartendTime();

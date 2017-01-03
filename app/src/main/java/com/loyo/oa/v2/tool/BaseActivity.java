@@ -96,6 +96,8 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        cancelCommitLoading();
+
         com.loyo.oa.v2.common.event.AppBus.getInstance().unregister(this);
         unRegisterBaseReceiver();
         //关闭键盘

@@ -76,5 +76,6 @@
     <string name="empty_text">暂无数据!</string>
     <string name="no_network_text">网络不给力!</string>
     <string name="title_activity_test_loading">TestLoadingActivity</string>
+    <string name="LOCATION_FAILED">网络或GPS信号弱，请检查网络或到空旷的地方重新定位!</string>
 
 </resources>

@@ -107,14 +107,14 @@ public class ContactViewGroup extends LinearLayout {
                 callPhonePopView.dismiss();
             }
         });
-        /*商务电话-直拨*/
-        callPhonePopView.directPhone(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                contactProcessCallback.onCallBack(phone.replaceAll(" +", ""), mContact.getId(), mContact.getName().trim().toString(), DirectPhone, phoneType);
-                callPhonePopView.dismiss();
-            }
-        });
+//        /*商务电话-直拨*/
+//        callPhonePopView.directPhone(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                contactProcessCallback.onCallBack(phone.replaceAll(" +", ""), mContact.getId(), mContact.getName().trim().toString(), DirectPhone, phoneType);
+//                callPhonePopView.dismiss();
+//            }
+//        });
         /*普通电话*/
         callPhonePopView.commonlyPhone(new OnClickListener() {
             @Override

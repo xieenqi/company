@@ -16,7 +16,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
-import com.loyo.oa.v2.activityui.clue.ClueTypeEnum;
+import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -87,7 +87,7 @@ public class FollowSelectClueFragment extends BaseFragment implements FollowSele
             @Override
             public void onClick(View v) {
                 Bundle b = new Bundle();
-                b.putInt(ExtraAndResult.EXTRA_TYPE, ClueTypeEnum.myCule.getType());
+                b.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, ClueType.MY_CLUE);
                 b.putBoolean("isSelect", true);
                 app.startActivity(mActivity, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }

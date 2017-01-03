@@ -249,6 +249,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     void updateUI(final WorkReport mWorkReport) {
         if (mWorkReport == null) {
+            ll_loading.setStatus(LoadingLayout.Success);
+            finish();
+            Toast("服务端异常没有返回数据");
             return;
         }
         if (!mWorkReport.isRelevant()) {//和本报告无关的人

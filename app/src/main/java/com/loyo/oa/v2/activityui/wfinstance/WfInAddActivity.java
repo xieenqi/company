@@ -11,9 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
@@ -22,6 +28,8 @@ import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinAddPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinAddView;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
@@ -29,11 +37,12 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +52,7 @@ import java.util.List;
  * 【新建审批】界面
  * Restruture by yyy on 16/10/18
  */
-public class WfInAddActivity extends BaseActivity implements WfinAddView {
+public class WfInAddActivity extends BaseActivity implements WfinAddView, UploadControllerCallback {
 
     /**
      * 部门选择 请求码
@@ -70,7 +79,6 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
     private TextView tv_dept;
     private TextView tv_project;
     private Button btn_add;
-    private CusGridView gridView_photo;
     private EditText edt_memo;
     private EditText tv_title;
     private ImageGridViewAdapter imageGridViewAdapter;
@@ -82,6 +90,9 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
     private ArrayList<ImageInfo> pickPhotsResult;
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
+
+    UploadController controller;
+    ImageUploadGridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +124,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
         tv_project = (TextView) findViewById(R.id.tv_project);
         tv_process = (TextView) findViewById(R.id.tv_process);
         btn_add = (Button) findViewById(R.id.btn_add);
-        gridView_photo = (CusGridView) findViewById(R.id.gridView_photo);
+        gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         tv_title = (EditText) findViewById(R.id.tv_title);
 
@@ -139,9 +150,12 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
 
         mPresenter = new WfinAddPresenterImpl(WfInAddActivity.this, mContext, this, mBizForm);
         mPresenter.setStartendTime();
-        init_gridView_photo();
         projectAddWfinstance();
         setDefaultDept();
+
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
+        controller.loadView(gridView);
     }
 
     /**
@@ -174,10 +188,10 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
     /**
      * 初始化adapter
      */
-    void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
-        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
-    }
+//    void init_gridView_photo() {
+//        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
+//        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
+//    }
 
     /**
      * 监听器
@@ -209,10 +223,12 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
                 //提交审批
                 case R.id.img_title_right:
                     //没有附件
-                    if (pickPhots.size() == 0) {
-                        mPresenter.addWfinVeri(deptId, pickPhots);
+                    showCommitLoading();
+                    if (controller.count() == 0) {
+                        mPresenter.addWfinVeri(deptId);
                     } else {
-                        mPresenter.newUploadAttachement(uuid, bizType, pickPhots);
+                        controller.startUpload();
+                        controller.notifyCompletionIfNeeded();
                     }
                     break;
 
@@ -237,23 +253,24 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
 
             /*相册选择 回调*/
             case PhotoPicker.REQUEST_CODE:
+                /*相册选择 回调*/
                 if (data != null) {
-                    pickPhotsResult = new ArrayList<>();
-                    mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        pickPhotsResult.add(new ImageInfo("file://" + path));
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
-                    pickPhots.addAll(pickPhotsResult);
-                    init_gridView_photo();
+                    controller.reloadGridView();
                 }
                 break;
 
             /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
-                int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
-                if (index >= 0) {
-                    pickPhots.remove(index);
-                    init_gridView_photo();
+                if (data != null) {
+                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0) {
+                        controller.removeTaskAt(index);
+                        controller.reloadGridView();
+                    }
                 }
                 break;
 
@@ -306,6 +323,11 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
     }
 
     @Override
+    public LoyoProgressHUD getHUD() {
+        return hud;
+    }
+
+    @Override
     public LoyoProgressHUD showStatusProgress() {
         showCommitLoading();
         return hud;
@@ -345,7 +367,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
     public void requestAddWfinVeriSuccess(ArrayList<HashMap<String, Object>> workflowValues) {
         mPresenter.requestAddWfin(tv_title.getText().toString(), deptId, workflowValues,
                 mTemplateId, projectId, uuid, edt_memo.getText().toString().trim(),
-                pickPhots);
+                controller.count());
 
     }
 
@@ -363,10 +385,85 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
     }
 
     /**
+     * 上传附件信息
+     */
+    public void postAttaData() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = bizType;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+        AttachmentService.setAttachementData2(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
+                    @Override
+                    public void onNext(ArrayList<Attachment> news) {
+                        mPresenter.addWfinVeri(deptId);
+                    }
+                });
+    }
+
+    /**
      * 附件上传成功处理
      */
     @Override
     public void uploadSuccessEmbl(ArrayList<ImageInfo> pickPhots) {
-        mPresenter.addWfinVeri(deptId, pickPhots);
+        //mPresenter.addWfinVeri(deptId, pickPhots);
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+        PhotoPicker.builder()
+                .setPhotoCount(9-controller.count())
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(this);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<String> selectedPhotos = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
+        }
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
+            return;
+        }
+        if (taskList.size() > 0) {
+            postAttaData();
+        } else {
+            mPresenter.addWfinVeri(deptId);
+        }
     }
 }

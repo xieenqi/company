@@ -62,101 +62,160 @@
                 <LinearLayout
                     android:id="@+id/add_buy_product_ll_2"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/product_common_line_height"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="@dimen/order_common_padding_right">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/add_buy_product_tv_3"
-                        style="@style/product_line_text_main"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="产品原价" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/product_common_line_height"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/order_common_padding_right">
 
-                    <TextView
-                        android:id="@+id/add_buy_product_tv_4"
-                        style="@style/product_line_text_second"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical" />
+                        <TextView
+                            android:id="@+id/add_buy_product_tv_3"
+                            style="@style/product_line_text_main"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="产品原价" />
+
+                        <TextView
+                            android:id="@+id/add_buy_product_tv_4"
+                            style="@style/product_line_text_second"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_product_line_space" />
                 </LinearLayout>
 
-                <include layout="@layout/include_product_line_space" />
 
                 <LinearLayout
                     android:id="@+id/add_buy_product_ll_3"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/product_common_line_height"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="@dimen/order_common_padding_right">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/add_buy_product_tv_5"
-                        style="@style/product_line_text_main"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="产品库存" />
 
-                    <TextView
-                        android:id="@+id/add_buy_product_tv_6"
-                        style="@style/product_line_text_second"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/product_common_line_height"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/order_common_padding_right">
+
+                        <TextView
+                            style="@style/product_line_text_main"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="产品库存" />
+
+                        <TextView
+                            android:id="@+id/add_buy_product_tv_16"
+                            style="@style/product_line_text_second"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_product_line_space" />
                 </LinearLayout>
 
-                <include layout="@layout/include_product_line_space" />
+                <LinearLayout
+                    android:id="@+id/add_buy_product_ll_15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/product_common_line_height"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/order_common_padding_right">
+
+                        <TextView
+                            android:id="@+id/add_buy_product_tv_6"
+                            style="@style/product_line_text_main"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="产品分类" />
+
+                        <TextView
+                            android:id="@+id/add_buy_product_tv_18"
+                            style="@style/product_line_text_second"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_product_line_space" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/add_buy_product_more_ll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <!--自定义字段，可能有很多，所以，做一个linearlayout-->
                     <LinearLayout
                         android:id="@+id/add_buy_product_more_definde"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                    </LinearLayout>
+                        android:orientation="vertical" />
 
                     <LinearLayout
                         android:id="@+id/add_buy_product_more_ll_5"
                         android:layout_width="match_parent"
-                        android:gravity="center_vertical"
-                        android:layout_height="@dimen/product_common_line_height"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingRight="@dimen/order_common_padding_right"
-                        android:visibility="gone"
-                        >
+                        android:visibility="visible">
 
-                        <TextView
-                            android:id="@+id/add_buy_product_more_tv_7"
-                            style="@style/product_line_text_main"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="备注" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/product_common_line_height"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingRight="@dimen/order_common_padding_right">
 
+                            <TextView
+                                style="@style/product_line_text_main"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="备注" />
+
+                            <TextView
+                                android:id="@+id/add_buy_product_more_tv_7"
+                                style="@style/product_line_text_second"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="right|center_vertical" />
+                        </LinearLayout>
+
+                        <include layout="@layout/include_product_line_space" />
                     </LinearLayout>
+
                     <com.loyo.oa.v2.customview.CusGridView
                         android:id="@+id/add_buy_product_more_grid_1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginRight="@dimen/product_layout_padding"
                         android:gravity="center"
+                        android:horizontalSpacing="@dimen/product_common_dimen"
                         android:listSelector="@android:color/transparent"
                         android:numColumns="4"
-                        android:horizontalSpacing="@dimen/product_common_dimen"
                         android:verticalSpacing="@dimen/product_common_dimen" />
                 </LinearLayout>
-
-                <include layout="@layout/include_product_line_space" />
 
                 <LinearLayout
                     android:id="@+id/add_buy_product_ll_4"
@@ -164,7 +223,8 @@
                     android:layout_height="@dimen/product_common_line_height"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
-                    android:paddingRight="@dimen/order_common_padding_right">
+                    android:paddingRight="@dimen/order_common_padding_right"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -314,6 +374,8 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical" />
                 </LinearLayout>
+
+                <include layout="@layout/include_product_line_space" />
 
                 <EditText
                     android:id="@+id/add_buy_product_et_3"

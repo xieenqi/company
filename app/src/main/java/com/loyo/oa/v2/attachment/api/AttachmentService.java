@@ -98,4 +98,13 @@ public class AttachmentService {
                         .setAttachementData(attachment)
                         .compose(RetrofitAdapterFactory.<ArrayList<AttachmentForNew>>compatApplySchedulers());
     }
+
+    public static Observable<ArrayList<Attachment>> setAttachementData2(ArrayList<AttachmentBatch> attachment) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(Config_project.API_URL_ATTACHMENT())
+                        .create(IAttachment.class)
+                        .setAttachementData2(attachment)
+                        .compose(RetrofitAdapterFactory.<ArrayList<Attachment>>compatApplySchedulers());
+    }
 }

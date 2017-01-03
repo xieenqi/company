@@ -40,6 +40,7 @@ import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
@@ -51,6 +52,8 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
@@ -67,6 +70,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit.http.HEAD;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
@@ -265,6 +269,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         if (!TextUtils.isEmpty(contactPhone)) {
             edt_contract_tel1.setText(contactPhone.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", ""));
         }
+        LocationUtilGD.permissionLocation(this);
     }
 
     LocationUtilGD locationGd;
@@ -285,7 +290,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void OnLocationGDFailed() {
-                Toast("获取位置失败，请检查网络或GPS是否正常");
+                Toast(R.string.LOCATION_FAILED);
                 LocationUtilGD.sotpLocation();
             }
         });
@@ -324,10 +329,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
 
         /*分离必填与非必填字段*/
-        for(ExtraData ext : extDatas){
-            if(ext.getProperties().isRequired()){
+        for (ExtraData ext : extDatas) {
+            if (ext.getProperties().isRequired()) {
                 RextDatasModel.add(ext);
-            }else{
+            } else {
                 OpextDatasModel.add(ext);
             }
         }
@@ -444,11 +449,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*刷新地址*/
             case R.id.img_refresh_address:
-
-                mBundle = new Bundle();
-                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
-
+                if (LocationUtilGD.permissionLocation(this)) {
+                    mBundle = new Bundle();
+                    mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
+                    app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                }
                 break;
 
             /*查重*/
@@ -483,7 +488,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             /*提交*/
             case R.id.img_title_right:
 
-                if(!Utils.isNetworkAvailable(mContext)){
+                if (!Utils.isNetworkAvailable(mContext)) {
                     Toast("请检查您的网络连接");
                     return;
                 }
@@ -515,7 +520,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
                     Toast("请输入联系人姓名!");
                     return;
-                } else if(TextUtils.isEmpty(memo) && cusMemo){
+                } else if (TextUtils.isEmpty(memo) && cusMemo) {
                     Toast("请填写客户简介!");
                     return;
                 } else if (!testDynamicword()) {
@@ -641,7 +646,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         extDatas.addAll(RextDatasModel);
         extDatas.addAll(OpextDatasModel);
 
-        LogUtil.dee("extDatas:"+MainApp.gson.toJson(extDatas));
+        LogUtil.dee("extDatas:" + MainApp.gson.toJson(extDatas));
 
         if (extDatas != null) {
             for (ExtraData ext : extDatas) {

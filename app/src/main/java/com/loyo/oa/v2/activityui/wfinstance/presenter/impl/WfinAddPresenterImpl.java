@@ -74,7 +74,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
      * 新建审批验证
      */
     @Override
-    public void addWfinVeri(String deptId, ArrayList<ImageInfo> pickPhots) {
+    public void addWfinVeri(String deptId) {
         if (submitData.isEmpty()) {
             crolView.showMsg("请输入审批内容");
             return;
@@ -149,9 +149,6 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                 }
             }
         }
-
-
-        hud = crolView.showStatusProgress();
         crolView.requestAddWfinVeriSuccess(workflowValues);
     }
 
@@ -163,7 +160,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                                ArrayList<HashMap<String, Object>> workflowValues,
                                String mTemplateId, String projectId,
                                String uuid, String memo,
-                               ArrayList<ImageInfo> pickPhots) {
+                               int attachmentCount) {
         bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizformId", mBizForm.getId());              //表单Id
@@ -173,8 +170,8 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         map.put("wftemplateId", mTemplateId);                //流程模板Id
         map.put("projectId", projectId);                     //项目Id
         map.put("bizCode", mBizForm.getBizCode());           //流程类型
-        if (uuid != null && pickPhots.size() > 0) {
-            bizExtData.setAttachmentCount(pickPhots.size());
+        if (uuid != null && attachmentCount > 0) {
+            bizExtData.setAttachmentCount(attachmentCount);
             map.put("attachmentUUId", uuid);
             map.put("bizExtData", bizExtData);
         }
@@ -182,8 +179,9 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         LogUtil.d("创建审批传参：" + MainApp.gson.toJson(map));
 
         WfinstanceService.addWfInstance(map)
-                .subscribe(new DefaultLoyoSubscriber<WfInstance>(hud, "新建审批成功") {
-            @Override
+                .subscribe(new DefaultLoyoSubscriber<WfInstance>(crolView.getHUD(), "新建审批成功") {
+
+                    @Override
             public void onNext(final WfInstance wfInstance) {
                 crolView.requestAddWfinSuccessEmbl(wfInstance);
             }

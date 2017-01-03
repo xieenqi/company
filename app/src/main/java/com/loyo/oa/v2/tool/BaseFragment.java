@@ -43,6 +43,7 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
 
     public void onDestroy() {
         super.onDestroy();
+        cancelCommitLoading();
         AppBus.getInstance().unregister(this);
     }
 

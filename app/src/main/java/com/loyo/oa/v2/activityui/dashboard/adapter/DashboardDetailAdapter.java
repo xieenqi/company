@@ -150,61 +150,36 @@ public class DashboardDetailAdapter extends BaseAdapter {
 
         //判断不同的数据，绑定数据
         private void bindData(int position) {
-            if (DashboardType.CUS_FOLLOWUP == type || DashboardType.SALE_FOLLOWUP == type|| DashboardType.CUS_SIGNIN == type) {
-                //客户/线索 跟进/客户拜访
-                if (0 == position) {
-                    text1.setText(String.valueOf(records.get(0).userName));
-                    text2.setText(String.valueOf(records.get(0).totalCustomer));
-                    text3.setText(String.valueOf(records.get(0).total));
-                } else {
-                    int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(String.valueOf(records.get(tempP).userName));
-                    text2.setText(String.valueOf(records.get(tempP).totalCustomer));
-                    text3.setText(String.valueOf(records.get(tempP).total));
-                }
-            }else if (DashboardType.CUS_CELL_RECORD == type|| DashboardType.SALE_CELL_RECORD == type) {
-                //客户电话录/线索电话录
-                if (0 == position) {
-                    text1.setText(String.valueOf(records.get(0).userName));
-                    text2.setText(String.valueOf(records.get(0).totalCustomer));
-                    text3.setText(String.valueOf(records.get(0).total));
-                    text4.setText(String.valueOf(records.get(0).totalLength));
-                } else {
-                    int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(String.valueOf(records.get(tempP).userName));
-                    text2.setText(String.valueOf(records.get(tempP).totalCustomer));
-                    text3.setText(String.valueOf(records.get(tempP).total));
-                    text4.setText(String.valueOf(records.get(tempP).totalLength));
-                }
-            }else if (DashboardType.COMMON == type) {
-                //增量/存量
-                if (0 == position) {
-                    text1.setText(String.valueOf(records.get(0).name));
-                    text2.setText(String.valueOf(records.get(0).addCount));
-                    text3.setText(String.valueOf(records.get(0).count));
-                } else {
-                    int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(String.valueOf(records.get(tempP).name));
-                    text2.setText(String.valueOf(records.get(tempP).addCount));
-                    text3.setText(String.valueOf(records.get(tempP).count));
-                }
-            }else if (DashboardType.ORDER_MONEY == type|| DashboardType.ORDER_NUMBER == type) {
-                // 订单数量和金额
-                if (0 == position) {
-                    text1.setText(String.valueOf(records.get(0).name));
-                    text2.setText(String.valueOf(records.get(0).targetNum ));
-                    text3.setText(String.valueOf(records.get(0).orderNum));
-                    text4.setText(String.valueOf(records.get(0).finish_rate));
-                } else {
-                    int tempP = position - 1;//添加了一个表头，消去下标偏移
-                    text1.setText(String.valueOf(records.get(tempP).name));
-                    text2.setText(String.valueOf(records.get(tempP).targetNum));
-                    text3.setText(String.valueOf(records.get(tempP).orderNum));
-                    text4.setText(String.valueOf(records.get(tempP).finish_rate));
-
-                }
+            ArrayList<String> displayColumns = null;
+            if (0 == position) {
+                displayColumns = records.get(0).getDsiplayColumnForType(type);
+            }
+            else {
+                displayColumns = records.get(position-1).getDsiplayColumnForType(type);
             }
 
+            for (int i = 0; i < 4 && i < displayColumns.size(); i++) {
+                getTextViewAtIndex(i).setText(displayColumns.get(i));
+            }
+        }
+
+        private TextView getTextViewAtIndex(int index) {
+            TextView result = text1;
+            switch (index){
+                case 0:
+                    result = text1;
+                    break;
+                case 1:
+                    result = text2;
+                    break;
+                case 2:
+                    result = text3;
+                    break;
+                case 3:
+                    result = text4;
+                    break;
+            }
+            return result;
         }
 
     }

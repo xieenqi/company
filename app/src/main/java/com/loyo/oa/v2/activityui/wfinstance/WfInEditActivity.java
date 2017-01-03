@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activityui.wfinstance;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +12,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -25,22 +26,16 @@ import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinEditPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinEditPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinEditView;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.ImageInfo;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -76,7 +71,6 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
     private TextView tv_dept;
     private TextView tv_project;
     private Button btn_add;
-    private CusGridView gridView_photo;
     private EditText edt_memo;
     private EditText tv_title;
 
@@ -89,6 +83,8 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
 
     private LinearLayout ll_attch_file;//附件
     private TextView tv_attch_file;//显示附件数量
+    UploadController controller;
+    ImageUploadGridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +113,7 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
         tv_dept = (TextView) findViewById(R.id.tv_dept);
         tv_project = (TextView) findViewById(R.id.tv_project);
         btn_add = (Button) findViewById(R.id.btn_add);
-        gridView_photo = (CusGridView) findViewById(R.id.gridView_photo);
+        gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         tv_title = (EditText) findViewById(R.id.tv_title);
 
@@ -154,15 +150,13 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
 
         tv_title.setText(cusTitle);
         edt_memo.setText(memo);
-        gridView_photo.setVisibility(View.GONE);
+        gridView.setVisibility(View.GONE);
 
         //设置附件
         tv_attch_file.setText("附件" + "（" + mWfInstance.bizExtData.getAttachmentCount() + "）");
 
-        //init_gridView_photo();
         projectAddWfinstance();
         setDefaultDept();
-        //mPresenter.getAttachments(uuid);
     }
 
     /**
@@ -186,14 +180,6 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
             ll_project.setEnabled(false);
             tv_project.setText(projectTitle);
         }
-    }
-
-    /**
-     * adapter初始化
-     */
-    void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
-        SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
     @Override
@@ -244,7 +230,7 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
                 case R.id.btn_add:
                     mPresenter.addTypeData(wfinstance_data_container);
                     break;
-                //附件上传
+                //附件列表
                 case R.id.ll_attach_file:
 
                     Bundle bundle = new Bundle();
@@ -252,7 +238,8 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
                     bundle.putSerializable("uuid", mWfInstance.attachmentUUId);//因为只有自己提交的请求审批,才可以修改,所以,不需要判断订单,汇款之类的传过来的id
                     bundle.putBoolean("isOver", false);//表示可以编辑
                     bundle.putInt("bizType", 12);
-                    app.startActivityForResult(WfInEditActivity.this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
+                    app.startActivityForResult(WfInEditActivity.this, AttachmentActivity_.class,
+                            MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
 
                     break;
                 default:
@@ -282,48 +269,6 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
             return;
         }
         switch (requestCode) {
-
-            //上传附件回调
-            case MainApp.GET_IMG:
-                try {
-                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
-                    uploadSize = 0;
-                    uploadNum = pickPhots.size();
-                    for (ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(this, uri);
-
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                mPresenter.newUploadAttachement(uuid, newFile);
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
-                }
-
-                break;
-
-            /*附件删除*/
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-
-                showLoading2("");
-                final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("bizType", bizType);
-                map.put("uuid", uuid);
-                AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
-                        .subscribe(new DefaultLoyoSubscriber<Attachment>(hud) {
-                            @Override
-                            public void onNext(Attachment attachment) {
-                                LoyoToast.info(WfInEditActivity.this, "删除附件成功!");
-                                lstData_Attachment.remove(delAttachment);
-                                init_gridView_photo();
-                            }
-                        });
-
-                break;
             case MSG_ATTACHMENT:
                 if (data == null || data.getExtras() == null) {
                     return;
@@ -405,15 +350,6 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
     }
 
     /**
-     * 获取附件成功处理
-     */
-    @Override
-    public void getAttachmentsEmbl(ArrayList<Attachment> attachments) {
-        lstData_Attachment = attachments;
-        init_gridView_photo();
-    }
-
-    /**
      * 请求编辑验证
      */
     @Override
@@ -422,6 +358,11 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
                 tv_title.getText().toString(),
                 deptId, workflowValues,
                 projectId, edt_memo.getText().toString().trim());
+    }
+
+    @Override
+    public void getAttachmentsEmbl(ArrayList<Attachment> attachments) {
+
     }
 
     /**

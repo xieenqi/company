@@ -23,5 +23,6 @@ public class ProductDetails {
     public String unit;
     public String unitPrice;
     public String memo;
+    public String stock;
 
 }

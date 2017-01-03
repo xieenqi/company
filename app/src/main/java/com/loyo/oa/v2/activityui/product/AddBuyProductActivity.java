@@ -50,11 +50,23 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     private ImageView ivMore;
     private GridView gridViewPic;
     private EditText etBuyNum;
+
+
+    private TextView selectText;
+    private TextView prdPrice;
+    private TextView prdSize;
+    private TextView prdKind;
+    private TextView memo;
+
+    private LinearLayout layout_prdprice;
+    private LinearLayout layout_prdsize;
+    private LinearLayout layout_prdkind;
     private LinearLayout llDefinedHolder;
     private LinearLayout selectProduct;
 
-    private ArrayList<ExtraData> extDatas;   //动态字段总汇
+    private ArrayList<ExtraData> extDatas;      //动态字段总汇
     private AddBuProductPersenter mPersenter;
+    private ProductDetails detailsModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +85,22 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         ivMore = (ImageView) findViewById(R.id.add_buy_product_iv_1);
         gridViewPic = (GridView) findViewById(R.id.add_buy_product_more_grid_1);
         etBuyNum = (EditText) findViewById(R.id.add_buy_product_et_2);
+        selectText = (TextView) findViewById(R.id.add_buy_product_tv_2);
+        prdPrice = (TextView) findViewById(R.id.add_buy_product_tv_4);
+        prdSize = (TextView) findViewById(R.id.add_buy_product_tv_16);
+        prdKind = (TextView) findViewById(R.id.add_buy_product_tv_18);
+        memo = (TextView) findViewById(R.id.add_buy_product_more_tv_7);
+
+        layout_prdprice = (LinearLayout) findViewById(R.id.add_buy_product_ll_2);
+        layout_prdsize = (LinearLayout) findViewById(R.id.add_buy_product_ll_3);
+        layout_prdkind = (LinearLayout) findViewById(R.id.add_buy_product_ll_15);
+
         llDefinedHolder = (LinearLayout) findViewById(R.id.add_buy_product_more_definde);
         selectProduct   = (LinearLayout) findViewById(R.id.add_buy_product_ll_1);
         selectProduct.setOnClickListener(this);
 
-
-        mPersenter.getProductDynm();
+        selectText.setText("请选择");
+        //mPersenter.getProductDynm();
 
         etBuyNum.addTextChangedListener(new TextWatcher() {
             @Override
@@ -93,9 +115,9 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
             public void afterTextChanged(Editable s) {
                 if (!TextUtils.isEmpty(s + "")) {
                     int num = Integer.parseInt(s + "");
-                    if (num > 10) {
+                    if (num > Integer.parseInt(detailsModel.stock)) {
                         Toast("库存不足");
-                        etBuyNum.setText("10");
+                        etBuyNum.setText(detailsModel.stock+"");
                     }
                 }
             }
@@ -116,8 +138,6 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
                         MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
             }
         });
-
-
         gridViewPic.setAdapter(picAdapter);
 
         //查看产品详细的点击事件
@@ -157,6 +177,20 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         }
     }
 
+    // 绑定产品数据
+    private void bindData(){
+        llMoreInfoBtn.setVisibility(View.VISIBLE);
+        layout_prdprice.setVisibility(View.VISIBLE);
+        layout_prdsize.setVisibility(View.VISIBLE);
+        layout_prdkind.setVisibility(View.VISIBLE);
+
+        selectText.setText(detailsModel.name);
+        prdPrice.setText(detailsModel.unitPrice);
+        prdSize.setText(detailsModel.stock);
+        prdKind.setText(detailsModel.category);
+        memo.setText(detailsModel.memo);
+    }
+
     // 获取动态字段成功
     @Override
     public void getDynmSuccessEmbl(ArrayList<ProductDynmModel> model) {
@@ -190,7 +224,8 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     // 获取产品详情成功
     @Override
     public void getDetailsSuccessEmbl(ProductDetails details) {
-
+        detailsModel = details;
+        bindData();
     }
 
     // 获取产品详情失败

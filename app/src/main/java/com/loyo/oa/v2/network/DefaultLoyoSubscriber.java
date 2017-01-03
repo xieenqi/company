@@ -90,6 +90,7 @@ public abstract class DefaultLoyoSubscriber<T> extends Subscriber<T> {
     @Override
     public void onError(Throwable e) {
         mError = LoyoErrorChecker.checkLoyoError(e, type, getLoadingLayout());
+        onCompleted();
     }
 
     @Override
