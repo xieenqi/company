@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,14 +23,17 @@ import android.widget.TextView;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.work.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.activityui.work.bean.HttpDefaultComment;
@@ -39,6 +41,7 @@ import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PostBizExtData;
@@ -46,10 +49,8 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.SingleRowWheelView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -57,6 +58,7 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.WeeksDialog;
 
@@ -68,22 +70,18 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
-
 /**
  * 【工作报告】新建 编辑
  */
 
 @EActivity(R.layout.activity_workreports_add)
-public class WorkReportAddActivity extends BaseActivity {
+public class WorkReportAddActivity extends BaseActivity implements UploadControllerCallback {
 
     public static final int TYPE_CREATE = 1; //报告创建
     public static final int TYPE_EDIT = 2; //报告编辑
@@ -124,8 +122,8 @@ public class WorkReportAddActivity extends BaseActivity {
     ViewGroup layout_del;
     @ViewById
     ImageView img_title_toUser;
-    @ViewById
-    CusGridView gridView_photo;
+    @ViewById(R.id.image_upload_grid_view)
+    ImageUploadGridView gridView;
     @ViewById
     GridView gv_workreports;
     @ViewById
@@ -155,9 +153,10 @@ public class WorkReportAddActivity extends BaseActivity {
     private String content;
 
     private WeeksDialog weeksDialog = null;
-    private SignInGridViewAdapter signInGridViewAdapter;
-    private ImageGridViewAdapter imageGridViewAdapter;
     private workReportAddgridViewAdapter workGridViewAdapter;
+
+    UploadController controller;
+
     private ArrayList<Attachment> lstData_Attachment = null;
     private ArrayList<OrganizationalMember> users = new ArrayList<>();
     private ArrayList<OrganizationalMember> depts = new ArrayList<>();
@@ -287,7 +286,6 @@ public class WorkReportAddActivity extends BaseActivity {
         } else {
             rg.check(R.id.rb1);
         }
-        init_gridView_photo();
 
         /*来自不同的业务 判断*/
         if (type == TYPE_EDIT) {
@@ -296,38 +294,22 @@ public class WorkReportAddActivity extends BaseActivity {
             rb2.setEnabled(false);
             rb3.setEnabled(false);
             //getEditAttachments();
-            gridView_photo.setVisibility(View.GONE);
+            gridView.setVisibility(View.GONE);
 
         } else if (type == TYPE_PROJECT) {
             projectAddWorkReport();
         }
         initRetroDate();
         getDefaultComment();
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
+        controller.loadView(gridView);
     }
 
     /**
      * 获取默认点评人
      */
     private void getDefaultComment() {
-//        RestAdapterFactory.getInstance().build(Config_project.ADD_WORK_REPORT_PL).create(IWorkReport.class)
-//                .defaultComment(new RCallback<HttpDefaultComment>() {
-//                    @Override
-//                    public void success(final HttpDefaultComment reviewer, final Response response) {
-//                        HttpErrorCheck.checkResponse("报告默认点评人：", response);
-//                        mReviewer = new Reviewer();
-//                        if (reviewer.reviewer != null) {
-//                            mReviewer.user = reviewer.reviewer.user;
-//                            tv_reviewer.setText(reviewer.reviewer.user.getName());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void failure(final RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-//                        super.failure(error);
-//                    }
-//                });
-
         WorkReportService.defaultComment().subscribe(new DefaultLoyoSubscriber<HttpDefaultComment>() {
             @Override
             public void onNext(HttpDefaultComment reviewer) {
@@ -368,21 +350,6 @@ public class WorkReportAddActivity extends BaseActivity {
         }
         return joinUser.toString();
 
-    }
-
-
-    /**
-     * 获取附件(编辑)
-     */
-    private void getEditAttachments() {
-        AttachmentService.getAttachments(uuid)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
-                    @Override
-                    public void onNext(ArrayList<Attachment> attachments) {
-                        lstData_Attachment = attachments;
-                        edit_gridView_photo();
-                    }
-                });
     }
 
     /**
@@ -493,28 +460,6 @@ public class WorkReportAddActivity extends BaseActivity {
 
     }
 
-    /**
-     * 编辑gridView绑定
-     */
-    void edit_gridView_photo() {
-        if (lstData_Attachment == null) {
-            lstData_Attachment = new ArrayList<>();
-        }
-        for (Attachment attachment : lstData_Attachment) {
-            pickPhots.add(new ImageInfo(attachment.url));
-        }
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
-        SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
-    }
-
-    /**
-     * 新建gridView绑定
-     */
-    void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
-        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
-    }
-
     @Click({R.id.tv_resignin, R.id.img_title_left, R.id.img_title_right, R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_del, R.id.layout_mproject})
     void onClick(final View v) {
         Bundle mBundle;
@@ -544,11 +489,12 @@ public class WorkReportAddActivity extends BaseActivity {
 
                 //没有附件
                 showCommitLoading();
-                if (pickPhots.size() == 0) {
+                if (controller.count() == 0) {
                     requestCommitWork();
                     //有附件
                 } else {
-                    newUploadAttachement();
+                    controller.startUpload();
+                    controller.notifyCompletionIfNeeded();
                 }
 
                 break;
@@ -818,15 +764,11 @@ public class WorkReportAddActivity extends BaseActivity {
      * 提交报告
      */
     private void requestCommitWork() {
-        /*if (pickPhots.size() == 0) {
-            showStatusLoading(false);
-        }*/
-
         bizExtData = new PostBizExtData();
         if (type == TYPE_EDIT) {
             bizExtData.setAttachmentCount(mWorkReport.bizExtData.getAttachmentCount());
         } else {
-            bizExtData.setAttachmentCount(pickPhots.size());
+            bizExtData.setAttachmentCount(controller.count());
         }
         isDelayed = tv_time.getText().toString().contains("补签") ? true : false;
         if (mSelectType == 2 && isDelayed) {
@@ -862,64 +804,6 @@ public class WorkReportAddActivity extends BaseActivity {
             creteReport(map);
         }
     }
-
-    /**
-     * 批量上传附件
-     */
-    private void newUploadAttachement() {
-        try {
-            uploadSize = 0;
-            uploadNum = pickPhots.size();
-            LogUtil.dee("pickPhots siez:" + pickPhots.size());
-            for (ImageInfo item : pickPhots) {
-                Uri uri = Uri.parse(item.path);
-                File newFile = Global.scal(this, uri);
-                if (newFile != null && newFile.length() > 0) {
-                    if (newFile.exists()) {
-                        TypedFile typedFile = new TypedFile("image/*", newFile);
-                        TypedString typedUuid = new TypedString(uuid);
-                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud, true) {
-                                    @Override
-                                    public void onNext(Attachment attachment) {
-                                        uploadSize++;
-                                        if (uploadSize == uploadNum) {
-                                            requestCommitWork();
-                                        }
-                                    }
-                                });
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Global.ProcException(ex);
-        }
-    }
-
-    /**
-     * 删除附件
-     */
-    private void deleteAttachement(final Intent data) {
-        try {
-            final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-            HashMap<String, Object> map = new HashMap<String, Object>();
-            map.put("bizType", bizType);
-            map.put("uuid", uuid);
-            AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
-                    .subscribe(new DefaultLoyoSubscriber<Attachment>() {
-                        @Override
-                        public void onNext(Attachment attachment) {
-                            Toast("删除附件成功!");
-                            lstData_Attachment.remove(delAttachment);
-                            signInGridViewAdapter.notifyDataSetChanged();
-                        }
-                    });
-
-        } catch (Exception e) {
-            Global.ProcException(e);
-        }
-    }
-
 
     /**
      * 选人回调
@@ -985,28 +869,24 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*相册选择 回调*/
             case PhotoPicker.REQUEST_CODE:
+                /*相册选择 回调*/
                 if (data != null) {
-                    pickPhotsResult = new ArrayList<>();
-                    mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        pickPhotsResult.add(new ImageInfo("file://" + path));
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
-                    pickPhots.addAll(pickPhotsResult);
-                    init_gridView_photo();
+                    controller.reloadGridView();
                 }
                 break;
 
-            /*删除附件回调*/
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                if (type == TYPE_EDIT) {
-                    deleteAttachement(data);
-                }
-                break;
+            /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
-                int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
-                if (index >= 0) {
-                    pickPhots.remove(index);
-                    init_gridView_photo();
+                if (data != null) {
+                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0) {
+                        controller.removeTaskAt(index);
+                        controller.reloadGridView();
+                    }
                 }
                 break;
 
@@ -1047,6 +927,81 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 上传附件信息
+     */
+    public void postAttaData() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = bizType;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+        AttachmentService.setAttachementData2(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
+                    @Override
+                    public void onNext(ArrayList<Attachment> news) {
+                        requestCommitWork();
+                    }
+                });
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+        PhotoPicker.builder()
+                .setPhotoCount(9-controller.count())
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(this);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<String> selectedPhotos = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
+        }
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
+            return;
+        }
+        if (taskList.size() > 0) {
+            postAttaData();
+        } else {
+            requestCommitWork();
         }
     }
 
