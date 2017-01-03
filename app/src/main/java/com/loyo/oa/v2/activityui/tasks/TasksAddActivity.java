@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -21,8 +20,13 @@ import android.widget.TextView;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
@@ -36,6 +40,7 @@ import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.PostBizExtData;
@@ -46,7 +51,6 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.db.DBManager;
@@ -56,6 +60,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -64,20 +69,18 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
+import static com.loyo.oa.v2.R.id.image_upload_grid_view;
 
 /**
  * 【创建任务】 页面
  */
 @EActivity(R.layout.activity_tasks_add)
-public class TasksAddActivity extends BaseActivity {
+public class TasksAddActivity extends BaseActivity implements UploadControllerCallback {
 
     @ViewById
     ViewGroup img_title_left;
@@ -127,8 +130,8 @@ public class TasksAddActivity extends BaseActivity {
     EditText edt_content;
     @ViewById
     EditText edt_title;
-    @ViewById
-    CusGridView gridView_photo;
+    @ViewById(image_upload_grid_view)
+    ImageUploadGridView gridView;
     @Extra
     String projectId;
     @Extra
@@ -141,6 +144,8 @@ public class TasksAddActivity extends BaseActivity {
     String customerId;
     @Extra(ExtraAndResult.EXTRA_NAME)
     String customerName;
+
+    UploadController controller;
 
     private AlertDialog dialog_Product;
     private ImageGridViewAdapter imageGridViewAdapter;
@@ -191,7 +196,6 @@ public class TasksAddActivity extends BaseActivity {
         strBuf = new StringBuffer();
         switch_approve.setState(true);
         edt_content.addTextChangedListener(new CountTextWatcher(wordcount));
-        init_gridView_photo();
         getTempTask();
 
         projectAddTask();
@@ -206,6 +210,10 @@ public class TasksAddActivity extends BaseActivity {
         LogUtil.dee("方法1:"+ locale);
         LogUtil.dee("方法2:"+ Locale.getDefault().toString());
         LogUtil.dee("方法3:"+ Locale.getDefault().getLanguage());
+
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
+        controller.loadView(gridView);
     }
 
     /**
@@ -304,23 +312,12 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     /**
-     * 图片列表绑定
-     */
-    void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
-        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
-    }
-
-    /**
      * 新建任务 POST提交
      */
 
     void requestCommitTask() {
-        /*if (pickPhots.size() == 0) {
-            showStatusLoading(false);
-        }*/
         bizExtData = new PostBizExtData();
-        bizExtData.setAttachmentCount(pickPhots.size());
+        bizExtData.setAttachmentCount(controller.count());
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
@@ -425,12 +422,13 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 //没有附件
                 showCommitLoading();
-                if (pickPhots.size() == 0) {
+                if (controller.count() == 0) {
                     requestCommitTask();
                     //有附件
                 } else {
                     img_title_right.setEnabled(false);
-                    newUploadAttachement();
+                    controller.startUpload();
+                    controller.notifyCompletionIfNeeded();
                 }
                 break;
 
@@ -659,45 +657,70 @@ public class TasksAddActivity extends BaseActivity {
         tv_responsiblePerson.setText(newUser.getName());
     }
 
+//    /**
+//     * 批量上传附件
+//     */
+//    private void newUploadAttachement() {
+//        try {
+//            uploadSize = 0;
+//            uploadNum = pickPhots.size();
+//            for (ImageInfo item : pickPhots) {
+//                Uri uri = Uri.parse(item.path);
+//                File newFile = Global.scal(this, uri);
+//                if (newFile != null && newFile.length() > 0) {
+//                    if (newFile.exists()) {
+//                        TypedFile typedFile = new TypedFile("image/*", newFile);
+//                        LogUtil.dee("typeFile:" + typedFile);
+//                        TypedString typedUuid = new TypedString(uuid);
+//                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
+//                                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud, true) {
+//
+//                                    @Override
+//                                    public void onError(Throwable e) {
+//                                        super.onError(e);
+//                                        img_title_right.setEnabled(true);
+//                                    }
+//
+//                                    @Override
+//                                    public void onNext(Attachment attachment) {
+//                                        uploadSize++;
+//                                        if (uploadSize == uploadNum) {
+//                                            requestCommitTask();
+//                                        }
+//                                    }
+//                                });
+//                    }
+//                }
+//            }
+//        } catch (Exception ex) {
+//            Global.ProcException(ex);
+//            Toast("图片过大");
+//        }
+//    }
+
     /**
-     * 批量上传附件
+     * 上传附件信息
      */
-    private void newUploadAttachement() {
-        try {
-            uploadSize = 0;
-            uploadNum = pickPhots.size();
-            for (ImageInfo item : pickPhots) {
-                Uri uri = Uri.parse(item.path);
-                File newFile = Global.scal(this, uri);
-                if (newFile != null && newFile.length() > 0) {
-                    if (newFile.exists()) {
-                        TypedFile typedFile = new TypedFile("image/*", newFile);
-                        LogUtil.dee("typeFile:" + typedFile);
-                        TypedString typedUuid = new TypedString(uuid);
-                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud, true) {
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        super.onError(e);
-                                        img_title_right.setEnabled(true);
-                                    }
-
-                                    @Override
-                                    public void onNext(Attachment attachment) {
-                                        uploadSize++;
-                                        if (uploadSize == uploadNum) {
-                                            requestCommitTask();
-                                        }
-                                    }
-                                });
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Global.ProcException(ex);
-            Toast("图片过大");
+    public void postAttaData() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = bizType;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
         }
+        AttachmentService.setAttachementData2(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
+                    @Override
+                    public void onNext(ArrayList<Attachment> news) {
+                        requestCommitTask();
+                    }
+                });
     }
 
     @Override
@@ -736,60 +759,26 @@ public class TasksAddActivity extends BaseActivity {
 
             /*相册选择 回调*/
             case PhotoPicker.REQUEST_CODE:
+                /*相册选择 回调*/
                 if (data != null) {
-                    pickPhotsResult = new ArrayList<>();
-                    mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        pickPhotsResult.add(new ImageInfo("file://" + path));
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
-                    pickPhots.addAll(pickPhotsResult);
-                    init_gridView_photo();
+                    controller.reloadGridView();
                 }
                 break;
 
             /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
-                int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
-                if (index >= 0) {
-                    pickPhots.remove(index);
-                    init_gridView_photo();
+                if (data != null) {
+                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0) {
+                        controller.removeTaskAt(index);
+                        controller.reloadGridView();
+                    }
                 }
                 break;
-
-
-//            /*用户单选, 负责人*/ 被替代了
-//            case FinalVariables.REQUEST_ONLY:
-//                NewUser u = (NewUser) data.getSerializableExtra("data");
-//                newUser = u;
-//                tv_responsiblePerson.setText(newUser.getName());
-//                break;
-//
-//            /*用户选择, 参与人*/
-//            case FinalVariables.REQUEST_ALL_SELECT:
-//                members = (Members) data.getSerializableExtra("data");
-//                if (null == members) {
-//                    tv_toUsers.setText("无参与人");
-//                } else {
-//                    joinName = new StringBuffer();
-//                    joinUserId = new StringBuffer();
-//                    if (null != members.depts) {
-//                        for (NewUser newUser : members.depts) {
-//                            joinName.append(newUser.getName() + ",");
-//                            joinUserId.append(newUser.getId() + ",");
-//                        }
-//                    }
-//                    if (null != members.users) {
-//                        for (NewUser newUser : members.users) {
-//                            joinName.append(newUser.getName() + ",");
-//                            joinUserId.append(newUser.getId() + ",");
-//                        }
-//                    }
-//                    if (!TextUtils.isEmpty(joinName)) {
-//                        joinName.deleteCharAt(joinName.length() - 1);
-//                    }
-//                    tv_toUsers.setText(joinName.toString());
-//                }
-//                break;
 
             /*用户单选, 负责人*/
             case FinalVariables.REQUEST_ONLY:
@@ -865,6 +854,55 @@ public class TasksAddActivity extends BaseActivity {
 
             mTask.setAttachments(null);
             DBManager.Instance().putTask(MainApp.gson.toJson(mTask));
+        }
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+        PhotoPicker.builder()
+                .setPhotoCount(9-controller.count())
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(this);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<String> selectedPhotos = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
+        }
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
+            return;
+        }
+        if (taskList.size() > 0) {
+            postAttaData();
+        } else {
+            requestCommitTask();
         }
     }
 

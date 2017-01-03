@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -46,10 +45,7 @@ import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -58,8 +54,6 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -747,47 +741,6 @@ public class TasksEditActivity extends BaseActivity {
                     }
                     tv_toUsers.setText(joinName.toString());
                 }
-                break;
-
-
-            case MainApp.GET_IMG:
-                try {
-                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
-                    for (ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(this, uri);
-
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                Utils.uploadAttachment(mTask.getAttachmentUUId(), 2, newFile).subscribe(new CommonSubscriber(this) {
-                                    @Override
-                                    public void onNext(final Serializable serializable) {
-                                        getAttachments();
-                                    }
-                                });
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
-                }
-
-                break;
-            /*删除附件回调*/
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                showCommitLoading();
-                final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("bizType", 2);
-                map.put("uuid", uuid);
-                AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
-                        .subscribe(new DefaultLoyoSubscriber<Attachment>(hud, "删除附件成功!") {
-                            @Override
-                            public void onNext(Attachment attachment) {
-                                mTask.getAttachments().remove(delAttachment);
-                                init_gridView_photo();
-                            }
-                        });
                 break;
 
             default:

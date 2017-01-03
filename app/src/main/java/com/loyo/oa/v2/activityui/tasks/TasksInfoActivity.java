@@ -41,7 +41,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
@@ -50,7 +49,6 @@ import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 
@@ -65,9 +63,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【任务详情】
@@ -856,13 +851,6 @@ public class TasksInfoActivity extends BaseActivity {
                 }
             });
         dialog.show();
-    }
-
-    @Click(R.id.tv_upload)
-    void openUpload() {
-        Intent intent = new Intent(this, SelectPicPopupWindow.class);
-        intent.putExtra("localpic", true);
-        startActivityForResult(intent, MainApp.GET_IMG);
     }
 
     /*任务提交完成*/
