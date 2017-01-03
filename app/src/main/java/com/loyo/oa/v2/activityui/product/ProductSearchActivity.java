@@ -1,11 +1,15 @@
 package com.loyo.oa.v2.activityui.product;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
@@ -14,26 +18,45 @@ import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.product.adapter.SelectProductAdapter;
+import com.loyo.oa.v2.activityui.product.api.ProductService;
+import com.loyo.oa.v2.activityui.product.event.SelectProductEvent;
+import com.loyo.oa.v2.activityui.product.model.ProductListModel;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
+import com.loyo.oa.v2.tool.LogUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
  * 新增购买产品－产品选择－搜索产品
  */
-public class ProductSearchActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2  {
+public class ProductSearchActivity extends BaseActivity {
 
-    private PullToRefreshListView listView;
     private EditText edt_search;
     private ImageView iv_clean;
+    private LoadingLayout ll_loading;
+    private ListView listview;
+
+    private SelectProductAdapter mAdapter;
+    public  PaginationX<ProductListModel> models;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_product_search);
         initView();
     }
 
     private void initView(){
         edt_search = (EditText) findViewById(R.id.edt_search);
+        listview = (ListView) findViewById(R.id.listview);
+        ll_loading = (LoadingLayout) findViewById(R.id.ll_loading);
 
         //返回按钮
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
@@ -51,43 +74,67 @@ public class ProductSearchActivity extends BaseLoadingActivity implements PullTo
             }
         });
 
-        edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        //搜索文本监听
+        edt_search.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    //开始搜索
-                }
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                getProductList(s.toString());
             }
         });
 
-
-        listView= (PullToRefreshListView) findViewById(R.id.lv_list);
-        //首次进来不加载数据 默认成功
-        ll_loading.setStatus(LoadingLayout.Success);
-        getPageData();
-    }
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SelectProductEvent event = new SelectProductEvent();
+                event.bundle = new Bundle();
+                event.bundle.putString("id",models.getRecords().get(position).id);
+                AppBus.getInstance().post(event);
+                finish();
+            }
+        });
     }
 
-    @Override
-    public void setLayoutView() {
-        //有一个布局叫做activity_public_search，但是为了模块独立，先自己写，后面优化
-        setContentView(R.layout.activity_product_search);
+    // adapter绑定
+    void bindAdapter(){
+        if(null == mAdapter){
+            mAdapter = new SelectProductAdapter(this,models.getRecords());
+            listview.setAdapter(mAdapter);
+        }else{
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
-    @Override
-    public void getPageData() {
-        //获取数据
-        SelectProductAdapter selectProductAdapter=new SelectProductAdapter(this);
-        listView.setAdapter(selectProductAdapter);
+    // 获取产品列表
+    void getProductList(String words){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("keyWords",words);
+        map.put("pageIndex",1);
+        map.put("pageSize",100);
+        ProductService.getProductList("",map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
+            @Override
+            public void onNext(PaginationX<ProductListModel> productDynmModel) {
+                if(productDynmModel.getRecords().size() == 0){
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                }else{
+                    ll_loading.setStatus(LoadingLayout.Success);
+                    models = productDynmModel;
+                    bindAdapter();
+                }
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
+        });
     }
 }

@@ -180,13 +180,13 @@ public class DashboardDetailAdapter extends BaseAdapter {
                 //增量/存量
                 if (0 == position) {
                     text1.setText(String.valueOf(records.get(0).name));
-                    text2.setText(String.valueOf(records.get(0).count));
-                    text3.setText(String.valueOf(records.get(0).addCount));
+                    text2.setText(String.valueOf(records.get(0).addCount));
+                    text3.setText(String.valueOf(records.get(0).count));
                 } else {
                     int tempP = position - 1;//添加了一个表头，消去下标偏移
                     text1.setText(String.valueOf(records.get(tempP).name));
-                    text2.setText(String.valueOf(records.get(tempP).count));
-                    text3.setText(String.valueOf(records.get(tempP).addCount));
+                    text2.setText(String.valueOf(records.get(tempP).addCount));
+                    text3.setText(String.valueOf(records.get(tempP).count));
                 }
             }else if (DashboardType.ORDER_MONEY == type|| DashboardType.ORDER_NUMBER == type) {
                 // 订单数量和金额

@@ -1,12 +1,10 @@
 package com.loyo.oa.v2.activityui.product.model;
 
-import java.util.ArrayList;
-
 /**
- * Created by yyy on 16/12/30.
+ * Created by yyy on 17/1/3.
  */
 
-public class ProductDynmModel {
+public class ProductDetails {
 
     public String name;
     public String fieldName;
@@ -20,6 +18,10 @@ public class ProductDynmModel {
     public boolean isCustom;
     public boolean canEdit;
     public String val;
-    public ArrayList<String> defVal = new ArrayList<>();
+    public String attachmentUUId;
+    public String category;
+    public String unit;
+    public String unitPrice;
+    public String memo;
 
 }
