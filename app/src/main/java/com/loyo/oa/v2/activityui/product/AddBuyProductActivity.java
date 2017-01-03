@@ -67,6 +67,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     private ArrayList<ExtraData> extDatas;      //动态字段总汇
     private AddBuProductPersenter mPersenter;
     private ProductDetails detailsModel;
+    private ArrayList<Attachment> mListAttachment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,6 +232,16 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     // 获取产品详情失败
     @Override
     public void getDetailsErrorEmbl() {
+
+    }
+
+    @Override
+    public void getAttachmentEmbl() {
+
+    }
+
+    @Override
+    public void getAttachmentErrorEmbl() {
 
     }
 

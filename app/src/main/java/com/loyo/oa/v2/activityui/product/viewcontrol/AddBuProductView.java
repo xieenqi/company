@@ -20,4 +20,8 @@ public interface AddBuProductView {
 
     void getDetailsErrorEmbl();
 
+    void getAttachmentEmbl();
+
+    void getAttachmentErrorEmbl();
+
 }
