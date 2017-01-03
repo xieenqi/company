@@ -1,26 +1,30 @@
 package com.loyo.oa.v2.activityui.attachment;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
+import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -29,11 +33,7 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.File;
 import java.util.ArrayList;
-
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 
 /**
@@ -41,7 +41,7 @@ import retrofit.mime.TypedString;
  */
 
 @EActivity(R.layout.activity_attachment)
-public class AttachmentActivity extends BaseActivity {
+public class AttachmentActivity extends BaseActivity implements UploadControllerCallback {
 
     @Extra("users")
     ArrayList<User> mUserList;
@@ -72,10 +72,17 @@ public class AttachmentActivity extends BaseActivity {
     private AttachmentSwipeAdapter adapter;
     private int uploadSize;
     private int uploadNum;
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
+
+    UploadController controller;
 
     @AfterViews
     void init() {
         super.setTitle("附件");
+
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
+
         if (fromPage == Common.CUSTOMER_PAGE) {
             tv_upload.setVisibility( canAdd? View.VISIBLE: View.GONE);
         } else {
@@ -102,8 +109,10 @@ public class AttachmentActivity extends BaseActivity {
         AttachmentService.getAttachments(uuid)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(ll_loading) {
                     public void onError(Throwable e) {
-                        super.onError(e);
-                        finish();
+                        @LoyoErrorChecker.CheckType
+                        int type = ListUtil.IsEmpty(mListAttachment)?
+                                LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                     }
                     @Override
                     public void onNext(ArrayList<Attachment> attachments) {
@@ -124,7 +133,8 @@ public class AttachmentActivity extends BaseActivity {
 
         Attachment.Sort(mListAttachment);
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList,mListViewAttachment, bizType, uuid, isOver);
+            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment,
+                    mUserList, mListViewAttachment, bizType, uuid, isOver);
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
                 @Override
                 public void afterDelete(final Attachment attachment) {
@@ -166,10 +176,16 @@ public class AttachmentActivity extends BaseActivity {
      */
     @Click(R.id.tv_upload)
     void addAttachment() {
-        Intent intent = new Intent(this, SelectPicPopupWindow.class);
-        intent.putExtra("localpic", true);
-        intent.putExtra("addpg", false);
-        startActivityForResult(intent, MainApp.GET_IMG);
+//        Intent intent = new Intent(this, SelectPicPopupWindow.class);
+//        intent.putExtra("localpic", true);
+//        intent.putExtra("addpg", false);
+//        startActivityForResult(intent, PhotoPicker.REQUEST_CODE);
+
+        PhotoPicker.builder()
+                .setPhotoCount(9)
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(this);
     }
 
     @Override
@@ -194,25 +210,16 @@ public class AttachmentActivity extends BaseActivity {
                 break;
 
             //附件上传回调
-            case MainApp.GET_IMG:
-                try {
-                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
-                    if (pickPhots == null) {
-                        return;
+            case PhotoPicker.REQUEST_CODE:
+                if (data != null) {
+                    ArrayList<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    for (String path : mSelectPath) {
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
-                    uploadSize = 0;
-                    uploadNum = pickPhots.size();
-                    for (ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(this, uri);
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                newUploadAttachement(newFile);
-                            }
-                        }
+                    if (mSelectPath.size() > 0) {
+                        showCommitLoading();
+                        controller.startUpload();
                     }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
                 }
 
                 break;
@@ -223,20 +230,80 @@ public class AttachmentActivity extends BaseActivity {
         }
     }
 
+//    /**
+//     * 批量上传附件
+//     */
+//    private void newUploadAttachement(File file) {
+//        uploadSize++;
+//        showCommitLoading();
+//        TypedFile typedFile = new TypedFile("image/*", file);
+//        TypedString typedUuid = new TypedString(uuid);
+//        AttachmentService.newUpload(typedUuid, bizType, typedFile)
+//                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud) {
+//                    @Override
+//                    public void onNext(Attachment attachment) {
+//                        getAttachments();
+//                    }
+//                });
+//    }
+
+    private void buildAttachment() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = bizType;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+    }
+
     /**
-     * 批量上传附件
+     * 上传附件信息
      */
-    private void newUploadAttachement(File file) {
-        uploadSize++;
-        showCommitLoading();
-        TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedUuid = new TypedString(uuid);
-        AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud) {
+    public void postAttaData() {
+        buildAttachment();
+        AttachmentService.setAttachementData(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud) {
+
                     @Override
-                    public void onNext(Attachment attachment) {
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        controller.removeAllTask();
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<AttachmentForNew> news) {
                         getAttachments();
+                        controller.removeAllTask();
                     }
                 });
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+        // TODO: 上传失败提醒
+        if (taskList.size() >0) {
+            postAttaData();
+        }
     }
 }
