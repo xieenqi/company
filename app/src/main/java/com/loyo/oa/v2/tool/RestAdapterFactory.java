@@ -79,8 +79,8 @@ public class RestAdapterFactory {
                     request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
                     request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
                     request.addHeader("LoyoVersionName", Global.getVersionName());
-//                    request.addHeader("LoyoVersionCode", "2016120501");//此处不能写死 兼容版本 我们传本号大于传给服务端的就ok
-                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
+                    request.addHeader("LoyoVersionCode", "2017010301");//此处不能写死 兼容版本 我们传本号大于传给服务端的就ok
+                    request.addHeader("AppVersion", String.valueOf(Global.getVersion()));
 
                 }
             };
