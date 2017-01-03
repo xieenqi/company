@@ -17,7 +17,7 @@ import com.loyo.oa.v2.common.Global;
 public class CallPhonePopView extends Dialog {
 
     private TextView tv_title,tv_business,tv_commonly,tv_cancel,tv_error;
-    private TextView tv_direct, tv_direct_error;
+//    private TextView tv_direct, tv_direct_error;
     private String   title;
     private boolean  checkTag;
 
@@ -37,8 +37,8 @@ public class CallPhonePopView extends Dialog {
         tv_business = (TextView) findViewById(R.id.tv_business);
         tv_commonly = (TextView) findViewById(R.id.tv_commonly);
         tv_error    = (TextView) findViewById(R.id.tv_error);
-        tv_direct    = (TextView) findViewById(R.id.tv_direct);
-        tv_direct_error    = (TextView) findViewById(R.id.tv_direct_error);
+//        tv_direct    = (TextView) findViewById(R.id.tv_direct);
+//        tv_direct_error    = (TextView) findViewById(R.id.tv_direct_error);
 
         tv_commonly.setOnTouchListener(Global.GetTouch());
         tv_business.setOnTouchListener(Global.GetTouch());
@@ -48,10 +48,10 @@ public class CallPhonePopView extends Dialog {
 
         if(checkTag){
             tv_error.setVisibility(View.GONE);
-            tv_direct_error.setVisibility(View.GONE);
+//            tv_direct_error.setVisibility(View.GONE);
         }else{
             tv_business.setVisibility(View.GONE);
-            tv_direct.setVisibility(View.GONE);
+//            tv_direct.setVisibility(View.GONE);
         }
 
     }
@@ -68,13 +68,13 @@ public class CallPhonePopView extends Dialog {
         return this;
     }
 
-    /**
-     * 商务电话-直拨
-     * */
-    public CallPhonePopView directPhone(View.OnClickListener onClickListener){
-        tv_direct.setOnClickListener(onClickListener);
-        return this;
-    }
+//    /**
+//     * 商务电话-直拨
+//     * */
+//    public CallPhonePopView directPhone(View.OnClickListener onClickListener){
+////        tv_direct.setOnClickListener(onClickListener);
+//        return this;
+//    }
 
     /**
      * 普通电话电话

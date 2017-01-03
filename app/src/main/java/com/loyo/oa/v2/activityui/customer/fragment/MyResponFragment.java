@@ -255,7 +255,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
             @Override
             public void OnLocationGDFailed() {
                 LocationUtilGD.sotpLocation();
-                Toast("定位失败！");
+//                Toast("定位失败！");
             }
         });
     }

@@ -1502,9 +1502,21 @@ public class Utils {
      * @param context
      */
     public static void doSeting(Context context) {
-        Uri packageURI = Uri.parse("package:" + "com.loyo.oa.v2");
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
-        context.startActivity(intent);
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 9) {
+            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            localIntent.setData(Uri.fromParts("package", MainApp.getMainApp().getPackageName(), null));
+        } else if (Build.VERSION.SDK_INT <= 8) {
+            localIntent.setAction(Intent.ACTION_VIEW);
+            localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+            localIntent.putExtra("com.android.settings.ApplicationPkgName", MainApp.getMainApp().getPackageName());
+        }
+        context.startActivity(localIntent);
+
+//        Uri packageURI = Uri.parse("package:" + "com.loyo.oa.v2");
+//        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+//        context.startActivity(intent);
     }
 
     /**

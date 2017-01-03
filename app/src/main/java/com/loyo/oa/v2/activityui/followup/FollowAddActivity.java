@@ -57,6 +57,8 @@ import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -103,7 +105,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
     private View view;//用来处理权限动态申请
     private MultiFunctionModule mfmodule;
 
-    private long nextFollowUpTime=0;//下次跟进时间
+    private long nextFollowUpTime = 0;//下次跟进时间
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -200,11 +202,11 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(RECORD_REQUEST==requestCode){
+        if (RECORD_REQUEST == requestCode) {
             PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
                 @Override
                 public void success() {
-                   startRecord(view);
+                    startRecord(view);
                 }
 
                 @Override
@@ -216,7 +218,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
     }
 
     //开始录音
-    private void startRecord(View v){
+    private void startRecord(View v) {
         if (ll_record.getChildCount() >= 3) {
             Toast("最多只能添加3条语音");
             return;
@@ -231,6 +233,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
             v.setTag(true);
         }
     }
+
     /**
      * 初始化底部多功能部件
      */
@@ -258,7 +261,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
 //                } else {
 //                    Toast("你没有配置录音或者储存权限");
 //                }
-                view=v;
+                view = v;
                 if (PermissionTool.requestPermission(FollowAddActivity.this, new String[]{
                                 Manifest.permission.RECORD_AUDIO, //录音权限
                                 Manifest.permission.READ_PHONE_STATE,//读取设备权限
@@ -321,13 +324,15 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
         mfmodule.setLocationClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle mBundle = new Bundle();
-                mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
+                if (LocationUtilGD.permissionLocation(FollowAddActivity.this)) {
+                    Bundle mBundle = new Bundle();
+                    mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
 //                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
 //
 //                Bundle mBundle = new Bundle();
 //                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(FollowAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                    app.startActivityForResult(FollowAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                }
             }
         });
         /*@相关人员*/
@@ -388,8 +393,8 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
         if (attachment.size() != 0) {
             map.put("uuid", uuid);
         }
-        if (0!=nextFollowUpTime) {
-            map.put("remindAt",nextFollowUpTime);
+        if (0 != nextFollowUpTime) {
+            map.put("remindAt", nextFollowUpTime);
         }
         if (!TextUtils.isEmpty(contactId)) {
             map.put("contactId", contactId);
@@ -466,7 +471,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onCancel() {
                 tv_remain_time.setText("不提醒");
-                nextFollowUpTime=0;
+                nextFollowUpTime = 0;
             }
         }, false, "不提醒");
     }

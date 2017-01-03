@@ -34,6 +34,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -242,9 +243,11 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
 
             /*定位选择*/
             case R.id.layout_location:
-                mBundle = new Bundle();
-                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                if (LocationUtilGD.permissionLocation(this)) {
+                    mBundle = new Bundle();
+                    mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
+                    app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                }
                 break;
 
             /*删除地址*/
@@ -287,7 +290,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                 break;
             /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
-                if (data != null){
+                if (data != null) {
                     int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
                     if (index >= 0) {
                         controller.removeTaskAt(index);
@@ -337,7 +340,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }
@@ -358,10 +361,9 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
             LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
             return;
         }
-        if (taskList.size() >0) {
+        if (taskList.size() > 0) {
             postAttaData();
-        }
-        else {
+        } else {
             commitDynamic();
         }
     }

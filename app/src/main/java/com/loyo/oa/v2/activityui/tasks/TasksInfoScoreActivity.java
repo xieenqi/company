@@ -9,19 +9,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -141,10 +139,10 @@ public class TasksInfoScoreActivity extends BaseActivity {
         map.put("newScore", TextUtils.isEmpty(sorce) ? "-1" : sorce);
         map.put("comment", TextUtils.isEmpty(comment) ? "审核通过" : comment);
         map.put("status", status);
-
+        showCommitLoading();
         LogUtil.dll("发送数据:" + MainApp.gson.toJson(map));
         TaskService.verifyTask(mTask.getId(), map)
-                .subscribe(new DefaultLoyoSubscriber<Task>() {
+                .subscribe(new DefaultLoyoSubscriber<Task>(hud) {
                     @Override
                     public void onNext(Task task) {
                         isSave = false;

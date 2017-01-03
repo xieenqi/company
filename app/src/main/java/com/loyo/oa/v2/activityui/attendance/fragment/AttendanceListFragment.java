@@ -284,6 +284,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             /*打卡按钮*/
             case R.id.btn_add:
+                if(LocationUtilGD.permissionLocation(mActivity))
                 getValidateInfo();
                 break;
 
@@ -427,7 +428,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         /*工作日*/
         if (validateInfo.isWorkDay()) {
 
-            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) { /*加班*/
+            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation(mActivity)) { /*加班*/
                 popOutToast();
 
             } else { /*非加班*/
@@ -512,7 +513,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
         cancelLoading2();
-        Toast("获取位置失败，请检查网络或GPS是否正常");
+        Toast(R.string.LOCATION_FAILED);
     }
 
     /**

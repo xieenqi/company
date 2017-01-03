@@ -47,6 +47,7 @@ import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateItem;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -160,10 +161,12 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     break;
                 //考勤打卡
                 case BaseActivity.ATTENT_ADD:
+                    if(LocationUtilGD.permissionLocation(mActivity))
                     getValidateInfo();
                     break;
                 //拜访签到
                 case BaseActivity.SIGNIN_ADD:
+                    if(LocationUtilGD.permissionLocation(mActivity))
                     startActivityForResult(new Intent(getActivity(), SignInActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
@@ -458,7 +461,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         /*工作日*/
         if (validateInfo.isWorkDay()) {
             /*加班*/
-            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) {
+            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation(mActivity)) {
                 popOutToast();
                 /*不加班*/
             } else {
@@ -785,7 +788,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     @Override
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
-        Toast.makeText(getActivity(), "获取位置失败，请检查网络或GPS是否正常", Toast.LENGTH_SHORT).show();
+        // DialogHelp.cancelLoading();
+        Toast(R.string.LOCATION_FAILED);
     }
 
     @Override
