@@ -16,11 +16,11 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
+import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.fragment.MyClueFragment;
 import com.loyo.oa.v2.activityui.clue.fragment.TeamClueFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -127,15 +127,15 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
 
             /*搜索*/
             case R.id.img_title_search_right:
-                int type;
+                ClueType type;
                 if (mIndex == 0) {
-                    type = 1;
+                    type = ClueType.MY_CLUE;
                 } else {
-                    type = 2;
+                    type = ClueType.TEAM_CLUE;
                 }
                 LogUtil.dee("type:" + type);
                 Bundle b = new Bundle();
-                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
+                b.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, type);
                 app.startActivity(this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }

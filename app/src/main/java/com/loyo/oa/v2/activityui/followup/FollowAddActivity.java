@@ -26,7 +26,7 @@ import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
-import com.loyo.oa.v2.activityui.clue.ClueTypeEnum;
+import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
@@ -57,7 +57,6 @@ import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -570,7 +569,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
             /*线索写跟进选择线索*/
             case R.id.ll_clue_company:
                 Bundle bCule = new Bundle();
-                bCule.putInt(ExtraAndResult.EXTRA_TYPE, ClueTypeEnum.myCule.getType());
+                bCule.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, ClueType.MY_CLUE);
                 bCule.putBoolean("isSelect", true);
                 bCule.putBoolean("isResult", true);
                 app.startActivityForResult(FollowAddActivity.this, ClueSearchActivity.class,

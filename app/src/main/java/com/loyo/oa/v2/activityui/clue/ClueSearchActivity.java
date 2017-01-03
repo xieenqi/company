@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +21,11 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
+import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
@@ -43,6 +42,7 @@ import java.util.HashMap;
 
 public class ClueSearchActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2 {
 
+    public final static String KEY_SEARCH_TYPE = "com.loyo.clue.SEARCH_TYPE";
 
     private String strSearch;
     private EditText edt_search;
@@ -53,7 +53,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
     private Bundle mBundle;
     private LayoutInflater mInflater;
 
-    private int fromPage;
+    private ClueType type;
     private int page = 1;
     private boolean isPullDown = true, isSelect, isResult;//是否加载第一页数据供选择  isResult是否设置返回值
     private Intent mIntent;
@@ -84,7 +84,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
      */
     void initView() {
         mBundle = getIntent().getExtras();
-        fromPage = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
+        type = (ClueType) mBundle.getSerializable(ClueSearchActivity.KEY_SEARCH_TYPE);
         isSelect = mBundle.getBoolean("isSelect", false);
         isResult = mBundle.getBoolean("isResult", false);
         mInflater = LayoutInflater.from(this);
@@ -183,19 +183,11 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
         map.put("pageIndex", page);
         map.put("pageSize", 15);
         map.put("keyword", strSearch);
-//        if (fromPage == 1) {
-//            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                    create(IClue.class).getMyCluelist(map, this);
-//        } else if (fromPage == 2) {
-//            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                    create(IClue.class).getTeamCluelist(map, this);
-//        }
-
 
         //新的网络模块
-        if (fromPage == 1) {
+        if (type == ClueType.MY_CLUE) {
             ClueService.getMyClueList(map).subscribe(getDefaultLoyoSubscriber());
-        } else if (fromPage == 2) {
+        } else if (type == ClueType.TEAM_CLUE) {
             ClueService.getTeamClueList(map).subscribe(getDefaultLoyoSubscriber());
         }
     }

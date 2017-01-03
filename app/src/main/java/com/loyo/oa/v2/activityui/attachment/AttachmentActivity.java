@@ -228,10 +228,11 @@ public class AttachmentActivity extends BaseActivity {
      */
     private void newUploadAttachement(File file) {
         uploadSize++;
+        showCommitLoading();
         TypedFile typedFile = new TypedFile("image/*", file);
         TypedString typedUuid = new TypedString(uuid);
         AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud) {
                     @Override
                     public void onNext(Attachment attachment) {
                         getAttachments();
