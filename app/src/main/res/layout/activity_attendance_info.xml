@@ -155,15 +155,17 @@
                     android:textColor="@color/text99"
                     android:textSize="12sp" />
 
-                <GridView
-                    android:id="@+id/gridView_photo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:layout_marginRight="@dimen/margin_other_view"
+                <com.loyo.oa.common.view.LYGridLayout
+                    android:animateLayoutChanges="false"
+                    android:id="@+id/grid"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:gravity="center"
                     android:listSelector="@android:color/transparent"
-                    android:numColumns="3" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:numColumns="3"
+                    />
 
                 <LinearLayout
                     android:id="@+id/ll_confirm"

@@ -2,6 +2,7 @@ package com.loyo.oa.common.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.GridLayout;
 
 /**
@@ -21,20 +22,22 @@ public class LYGridLayout extends GridLayout {
         super(context, attrs, defStyleAttr);
     }
 
-//    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-//        super.onLayout(changed, left, top, right, bottom);
-//        int column = getColumnCount();
-//        int width = getMeasuredWidth();
-//        if (column != 0) {
-//            width = width/column;
-//        }
-//        for (int i = 0; i < getChildCount(); i++) {
-//            View child = getChildAt(i);
-//            GridLayout.LayoutParams lp = (GridLayout.LayoutParams)child.getLayoutParams();
-//            lp.width = width;
-//            lp.height = width;
-//            child.requestLayout();
-//        }
-//
-//    }
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        int column = 3;
+        int width = getMeasuredWidth();
+        if (column != 0) {
+            width = width/column;
+        }
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            GridLayout.LayoutParams lp = (GridLayout.LayoutParams)child.getLayoutParams();
+            lp.width = width;
+            lp.height = width;
+            child.requestLayout();
+        }
+
+    }
+
+
 }
