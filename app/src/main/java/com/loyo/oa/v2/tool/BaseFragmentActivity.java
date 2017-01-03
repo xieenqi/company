@@ -128,6 +128,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     @Override
     protected void onDestroy() {
+        cancelCommitLoading();
         AppBus.getInstance().unregister(this);
         unRegisterBaseReceiver();
         //关闭键盘

@@ -30,7 +30,6 @@ import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -259,6 +258,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                 }*/
                 showCommitLoading();
                 controller.startUpload();
+                controller.notifyCompletionIfNeeded();
                 break;
 
             /*刷新地址*/
@@ -304,12 +304,15 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     /**
      * 附件删除回调
      */
-    @OnActivityResult(FinalVariables.REQUEST_DEAL_ATTACHMENT)
+    @OnActivityResult(PhotoPreview.REQUEST_CODE)
     void onDealImageResult(final Intent data) {
-        if (null == data) {
-            return;
+        if (data != null) {
+            int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+            if (index >= 0) {
+                controller.removeTaskAt(index);
+                controller.reloadGridView();
+            }
         }
-        mPresenter.deleteAttachments(uuid, (Attachment) data.getSerializableExtra("delAtm"));
     }
 
     /**
