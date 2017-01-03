@@ -19,7 +19,6 @@ import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.event.WfinRushEvent;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinEditPresenter;
@@ -77,8 +76,6 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
     private WfInstance mWfInstance;
     private BizForm mBizForm;
     private ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
-    private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-    private SignInGridViewAdapter signInGridViewAdapter;
     private WfinEditPresenter mPresenter;
 
     private LinearLayout ll_attch_file;//附件

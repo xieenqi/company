@@ -36,7 +36,6 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.activityui.signin.presenter.SigninPresenterImpl;
@@ -57,7 +56,6 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
@@ -84,7 +82,6 @@ public class SignInActivity extends BaseActivity
     private ImageView iv_at_delete;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID(), customerId = "", customerName, customerAddress;
-    private SignInGridViewAdapter signInGridViewAdapter;
     private double laPosition, loPosition;
     boolean mLocationFlag = false;  //是否定位完成的标记
     private Customer mCustomer;
@@ -273,14 +270,14 @@ public class SignInActivity extends BaseActivity
         mfmodule.setPictureClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (signInGridViewAdapter.getCount() >= 9) {
+                if (controller.count() >= 9) {
                     Toast("最多只能加9张图片");
                 } else {
-                    Intent intent = new Intent(SignInActivity.this, SelectPicPopupWindow.class);
-                    intent.putExtra("localpic", false);//是否可以选择相册
-                    intent.putExtra("imgsize", 9 - pcitureNumber);//还可以选多少张图片
-                    intent.putExtra("addpg", true);
-                    startActivityForResult(intent, MainApp.GET_IMG);
+                    PhotoPicker.builder()
+                            .setPhotoCount(9-controller.count())
+                            .setShowCamera(true)
+                            .setPreviewEnabled(false)
+                            .start(SignInActivity.this);
                 }
             }
         });

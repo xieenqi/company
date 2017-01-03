@@ -142,7 +142,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
 
             // 返回
             case R.id.img_back:
-                Toast("返回");
+                onBackPressed();
                 break;
 
             // 分类

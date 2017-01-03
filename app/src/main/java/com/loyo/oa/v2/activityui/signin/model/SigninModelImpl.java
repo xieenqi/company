@@ -57,21 +57,6 @@ public class SigninModelImpl implements SigninContract.Model {
     }
 
     @Override
-    public void uploadAttachmentSend(String uuid, File file, Activity activity) {
-        Utils.uploadAttachment(uuid, 0, file).subscribe(new CommonSubscriber(activity) {
-            @Override
-            public void onNext(final Serializable serializable) {
-                presenter.uploadAttachmentSuccess();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-            }
-        });
-    }
-
-    @Override
     public void getAttachmentSend(String uuid) {
         AttachmentService.getAttachments(uuid)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {

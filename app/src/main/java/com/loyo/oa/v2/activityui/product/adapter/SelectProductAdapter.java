@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.product.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.product.ProductDetailActivity;
 import com.loyo.oa.v2.activityui.product.model.ProductListModel;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -48,7 +50,7 @@ public class SelectProductAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        ProductListModel model = models.get(position);
+        final ProductListModel model = models.get(position);
         ViewHolder holder = null;
         if(null == convertView){
             holder = new ViewHolder();
@@ -68,7 +70,9 @@ public class SelectProductAdapter extends BaseAdapter{
         holder.iv_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent mIntent = new Intent(mContext, ProductDetailActivity.class);
+                mIntent.putExtra("id",model.id);
+                mContext.startActivity(mIntent);
             }
         });
 

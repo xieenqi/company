@@ -27,7 +27,6 @@ import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceAddPresenterImpl;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.common.Global;
@@ -105,7 +104,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
 
     private AttendanceAddPresenter mPresenter;
-    private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private static String tvTimeName;
@@ -214,18 +212,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         //init_gridView_photo();
         mPresenter.countDown();
     }
-
-    /**
-     * 初始化附件列表
-     */
-//    private void init_gridView_photo() {
-//        if (null == adapter) {
-//            adapter = new SignInGridViewAdapter(this, attachments, true, true, ExtraAndResult.FROMPAGE_ATTENDANCE);
-//        } else {
-//            adapter.setDataSource(attachments);
-//        }
-//        SignInGridViewAdapter.setAdapter(gridView_photo, adapter);
-//    }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.iv_refresh_address})
     void onClick(final View v) {

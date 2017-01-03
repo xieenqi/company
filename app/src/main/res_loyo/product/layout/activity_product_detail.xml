@@ -14,6 +14,12 @@
         android:layout_height="match_parent"
         android:scrollbars="none">
 
+        <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ll_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:isFirstVisible="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,7 +40,7 @@
                     style="@style/product_line_text_main"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="选择产品" />
+                    android:text="名称" />
 
                 <TextView
                     android:id="@+id/product_detail_tv_2"
@@ -43,19 +49,11 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/order_common_arrow_margin_left"
-                    android:scaleType="center"
-                    android:src="@drawable/order_right_arrow" />
             </LinearLayout>
 
             <include layout="@layout/include_product_line_space" />
 
             <LinearLayout
-                android:id="@+id/product_detail_ll_2"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/product_common_line_height"
                 android:gravity="center_vertical"
@@ -63,14 +61,13 @@
                 android:paddingRight="@dimen/order_common_padding_right">
 
                 <TextView
-                    android:id="@+id/product_detail_tv_3"
                     style="@style/product_line_text_main"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="产品原价" />
+                    android:text="分类" />
 
                 <TextView
-                    android:id="@+id/product_detail_tv_4"
+                    android:id="@+id/product_detail_more_tv_2"
                     style="@style/product_line_text_second"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -93,10 +90,10 @@
                     style="@style/product_line_text_main"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="产品库存" />
+                    android:text="单价" />
 
                 <TextView
-                    android:id="@+id/product_detail_tv_6"
+                    android:id="@+id/product_detail_tv_4"
                     style="@style/product_line_text_second"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -108,7 +105,6 @@
             <include layout="@layout/include_product_line_space" />
 
             <LinearLayout
-                android:id="@+id/product_detail_more_ll_1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/product_common_line_height"
                 android:gravity="center_vertical"
@@ -116,14 +112,37 @@
                 android:paddingRight="@dimen/order_common_padding_right">
 
                 <TextView
-                    android:id="@+id/product_detail_more_tv_1"
                     style="@style/product_line_text_main"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="产品分类" />
+                    android:text="单位" />
 
                 <TextView
-                    android:id="@+id/product_detail_more_tv_2"
+                    android:id="@+id/product_detail_tv_7"
+                    style="@style/product_line_text_second"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical" />
+            </LinearLayout>
+
+            <include layout="@layout/include_product_line_space" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/product_common_line_height"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingRight="@dimen/order_common_padding_right">
+
+                <TextView
+                    style="@style/product_line_text_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="库存" />
+
+                <TextView
+                    android:id="@+id/product_detail_tv_6"
                     style="@style/product_line_text_second"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -169,7 +188,6 @@
             <include layout="@layout/include_product_line_space" />
 
             <LinearLayout
-                android:id="@+id/product_detail_more_ll_4"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/product_common_line_height"
                 android:gravity="center_vertical"
@@ -177,7 +195,6 @@
                 android:paddingRight="@dimen/order_common_padding_right">
 
                 <TextView
-                    android:id="@+id/product_detail_more_tv_5"
                     style="@style/product_line_text_main"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -215,13 +232,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/product_layout_padding"
+                android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:horizontalSpacing="@dimen/product_common_dimen"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="4"
                 android:verticalSpacing="@dimen/product_common_dimen" />
-
-
         </LinearLayout>
+        </com.library.module.widget.loading.LoadingLayout>
     </ScrollView>
 </LinearLayout>

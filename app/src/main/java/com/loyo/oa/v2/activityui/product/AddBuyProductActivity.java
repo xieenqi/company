@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
@@ -31,15 +30,12 @@ import com.loyo.oa.v2.activityui.product.viewcontrol.AddBuProductView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.CustomerInfoExtraData;
-import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AddBuyProductActivity extends BaseActivity implements AddBuProductView,View.OnClickListener {
 
@@ -51,23 +47,26 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     private GridView gridViewPic;
     private EditText etBuyNum;
 
-
     private TextView selectText;
     private TextView prdPrice;
     private TextView prdSize;
     private TextView prdKind;
     private TextView memo;
+    private TextView tv_discount;
+    private TextView tv_total;
 
     private LinearLayout layout_prdprice;
     private LinearLayout layout_prdsize;
     private LinearLayout layout_prdkind;
     private LinearLayout llDefinedHolder;
     private LinearLayout selectProduct;
+    private LinearLayout ll_back;
+    private EditText tv_price;
+    private EditText add_buy_product_et_2;
 
     private ArrayList<ExtraData> extDatas;      //动态字段总汇
     private AddBuProductPersenter mPersenter;
     private ProductDetails detailsModel;
-    private ArrayList<Attachment> mListAttachment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,17 +90,22 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         prdSize = (TextView) findViewById(R.id.add_buy_product_tv_16);
         prdKind = (TextView) findViewById(R.id.add_buy_product_tv_18);
         memo = (TextView) findViewById(R.id.add_buy_product_more_tv_7);
+        tv_discount = (TextView) findViewById(R.id.tv_discount);
+        tv_total = (TextView) findViewById(R.id.add_buy_product_tv_15);
 
         layout_prdprice = (LinearLayout) findViewById(R.id.add_buy_product_ll_2);
         layout_prdsize = (LinearLayout) findViewById(R.id.add_buy_product_ll_3);
         layout_prdkind = (LinearLayout) findViewById(R.id.add_buy_product_ll_15);
+        tv_price = (EditText) findViewById(R.id.add_buy_product_et_1);
+        add_buy_product_et_2 = (EditText) findViewById(R.id.add_buy_product_et_2);
 
         llDefinedHolder = (LinearLayout) findViewById(R.id.add_buy_product_more_definde);
         selectProduct   = (LinearLayout) findViewById(R.id.add_buy_product_ll_1);
+        ll_back   = (LinearLayout) findViewById(R.id.ll_back);
         selectProduct.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
 
         selectText.setText("请选择");
-        //mPersenter.getProductDynm();
 
         etBuyNum.addTextChangedListener(new TextWatcher() {
             @Override
@@ -116,7 +120,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
             public void afterTextChanged(Editable s) {
                 if (!TextUtils.isEmpty(s + "")) {
                     int num = Integer.parseInt(s + "");
-                    if (num > Integer.parseInt(detailsModel.stock)) {
+                    if (num > detailsModel.stock) {
                         Toast("库存不足");
                         etBuyNum.setText(detailsModel.stock+"");
                     }
@@ -124,22 +128,19 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
             }
         });
 
-        final List<Attachment> data = new ArrayList<>();
-        ProductPicAdapter picAdapter = new ProductPicAdapter(this, data);
 
         /*图片预览*/
         gridViewPic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("data", data.get(position));
+                bundle.putSerializable("data", detailsModel.attachment);
                 bundle.putInt("position", position);
                 bundle.putBoolean("isEdit", false);
                 MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
                         MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
             }
         });
-        gridViewPic.setAdapter(picAdapter);
 
         //查看产品详细的点击事件
         llMoreInfoBtn.setOnClickListener(new View.OnClickListener() {
@@ -159,37 +160,124 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         tvTitle.setText("新增购买产品");
         ivSubmit.setVisibility(View.VISIBLE);
         ivSubmit.setImageResource(R.drawable.right_submit1);
+        tv_price.setEnabled(false);
+        add_buy_product_et_2.setEnabled(false);
 
         //添加点击的反馈效果
         Global.SetTouchView(ivSubmit, llMoreInfoBtn);
-        //addDefined();
+        add_buy_product_et_2.addTextChangedListener(watcherNumber);
+        tv_price.addTextChangedListener(watcherPrice);
+
     }
 
-    //模拟添加自定义字段
+    /**
+     * 销售价
+     */
+    private TextWatcher watcherPrice = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!s.toString().contains(".") && s.toString().length() > 7) {
+                s.delete(7, s.toString().length());
+            }
+            setDiscount(s.toString());
+            if (!TextUtils.isEmpty(add_buy_product_et_2.getText().toString())) {
+                tv_total.setText((Utils.setValueDouble(transformationNumber(s.toString())
+                        * transformationNumber(add_buy_product_et_2.getText().toString()))) + "");
+            }
+        }
+    };
+
+    /**
+     * 销售数量
+     */
+    private TextWatcher watcherNumber = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!s.toString().contains(".") && s.toString().length() > 7) {
+                s.delete(7, s.toString().length());
+            }
+            if (!TextUtils.isEmpty(tv_price.getText().toString())) {
+                tv_total.setText(Utils.setValueDouble((transformationNumber(s.toString())
+                        * transformationNumber(tv_price.getText().toString()))) + "");
+            } else {
+                tv_total.setText("");
+            }
+        }
+    };
+
+    private double transformationNumber(String text) {
+        if (!TextUtils.isEmpty(text)) {
+            try {
+                return Double.valueOf(text);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Toast("你应该输入数字");
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 设置折扣
+     */
+    private void setDiscount(String salePrice) {
+        if (!TextUtils.isEmpty(tv_price.getText().toString()) && !"0".equals(tv_price.getText().toString())) {
+            tv_discount.setText(Utils.setValueDouble((transformationNumber(salePrice)
+                    / transformationNumber(tv_price.getText().toString()) * 100)) + "%");
+        } else {
+            tv_discount.setText("");
+        }
+    }
+
+    //添加自定义字段
     private void addDefined() {
-        for (int i = 0; i < 5; i++) {
+        for(ExtraData extraData : detailsModel.extDatas) {
             View view = getLayoutInflater().inflate(R.layout.item_product_defined, null);
             TextView tvTempTitle = (TextView) view.findViewById(R.id.add_product_defined_tv_1);
             TextView tvTempText = (TextView) view.findViewById(R.id.add_product_defined_tv_2);
-            tvTempTitle.setText("标题：" + i);
-            tvTempText.setText("content:" + i);
+            tvTempTitle.setText(extraData.getProperties().getLabel());
+            tvTempText.setText(extraData.getVal());
             llDefinedHolder.addView(view);
-
         }
     }
 
     // 绑定产品数据
     private void bindData(){
+        tv_price.setEnabled(true);
+        add_buy_product_et_2.setEnabled(true);
         llMoreInfoBtn.setVisibility(View.VISIBLE);
         layout_prdprice.setVisibility(View.VISIBLE);
         layout_prdsize.setVisibility(View.VISIBLE);
         layout_prdkind.setVisibility(View.VISIBLE);
 
         selectText.setText(detailsModel.name);
-        prdPrice.setText(detailsModel.unitPrice);
-        prdSize.setText(detailsModel.stock);
+        prdPrice.setText(detailsModel.unitPrice+"");
+        prdSize.setText(detailsModel.stock+"");
         prdKind.setText(detailsModel.category);
         memo.setText(detailsModel.memo);
+        addDefined();
+
+        ProductPicAdapter picAdapter = new ProductPicAdapter(this, detailsModel.attachment);
+        gridViewPic.setAdapter(picAdapter);
     }
 
     // 获取动态字段成功
@@ -227,6 +315,8 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     public void getDetailsSuccessEmbl(ProductDetails details) {
         detailsModel = details;
         bindData();
+        if(!TextUtils.isEmpty(details.attachmentUUId) || null != details.attachmentUUId);
+        //mPersenter.getAttachment(details.attachmentUUId);
     }
 
     // 获取产品详情失败
@@ -235,11 +325,14 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
 
     }
 
+    // 获取附件成功
     @Override
-    public void getAttachmentEmbl() {
-
+    public void getAttachmentSuccessEmbl(ArrayList<Attachment> attachments) {
+        ProductPicAdapter picAdapter = new ProductPicAdapter(this, attachments);
+        gridViewPic.setAdapter(picAdapter);
     }
 
+    // 获取附件失败
     @Override
     public void getAttachmentErrorEmbl() {
 
@@ -261,6 +354,11 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
             case R.id.add_buy_product_ll_1:
                 Intent mIntent = new Intent(AddBuyProductActivity.this,SelectProductActivity.class);
                 startActivity(mIntent);
+                break;
+
+            //后退
+            case R.id.ll_back:
+                onBackPressed();
                 break;
 
         }

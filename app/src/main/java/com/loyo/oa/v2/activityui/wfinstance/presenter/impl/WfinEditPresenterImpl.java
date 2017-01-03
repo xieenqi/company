@@ -21,15 +21,11 @@ import com.loyo.oa.v2.customview.WfinEditViewGroup;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.LogUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 import static com.loyo.oa.v2.common.Global.Toast;
 
@@ -69,26 +65,6 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
                     @Override
                     public void onNext(ArrayList<Attachment> attachments) {
                         crolView.getAttachmentsEmbl(attachments);
-                    }
-                });
-    }
-
-    /**
-     * 上传附件
-     * */
-    @Override
-    public void newUploadAttachement(final String uuid, File file) {
-        if (uploadSize == 0) {
-            crolView.showProgress("正在上传");
-        }
-        uploadSize++;
-        TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedUuid = new TypedString(uuid);
-        AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
-                    @Override
-                    public void onNext(Attachment attachment) {
-                        getAttachments(uuid);
                     }
                 });
     }

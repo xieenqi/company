@@ -179,7 +179,6 @@ public class AddIntentionProductActivity extends BaseActivity implements AddInte
                             finish();
                         }
                     }
-
                     break;
                 case R.id.ll_poduct:
                     SelectProduct();

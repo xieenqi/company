@@ -173,6 +173,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical" />
 
+                    <include layout="@layout/include_product_line_space" />
+
                     <LinearLayout
                         android:id="@+id/add_buy_product_more_ll_5"
                         android:layout_width="match_parent"
@@ -201,20 +203,20 @@
                                 android:layout_weight="1"
                                 android:gravity="right|center_vertical" />
                         </LinearLayout>
-
-                        <include layout="@layout/include_product_line_space" />
                     </LinearLayout>
 
                     <com.loyo.oa.v2.customview.CusGridView
                         android:id="@+id/add_buy_product_more_grid_1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/product_layout_padding"
+                        android:layout_marginBottom="@dimen/dimen_10"
+                        android:layout_marginTop="@dimen/dimen_10"
                         android:gravity="center"
                         android:horizontalSpacing="@dimen/product_common_dimen"
                         android:listSelector="@android:color/transparent"
                         android:numColumns="4"
                         android:verticalSpacing="@dimen/product_common_dimen" />
+                    <include layout="@layout/include_product_line_space" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -341,7 +343,7 @@
                         android:text="折扣" />
 
                     <TextView
-                        android:id="@+id/add_buy_product_tv_13"
+                        android:id="@+id/tv_discount"
                         style="@style/product_line_text_second"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"

@@ -22,16 +22,13 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.Project;
@@ -115,7 +112,6 @@ public class TasksEditActivity extends BaseActivity {
     @Extra("type")
     Boolean isCreator;
 
-    private SignInGridViewAdapter signInGridViewAdapter;
     private AlertDialog dialog_Product;
     private String uuid = StringUtil.getUUID();
     private ArrayList<OrganizationalMember> userss;
@@ -282,21 +278,6 @@ public class TasksEditActivity extends BaseActivity {
         }
     }
 
-
-    /**
-     * 获取附件
-     */
-    void getAttachments() {
-        AttachmentService.getAttachments(mTask.getAttachmentUUId())
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
-                    @Override
-                    public void onNext(ArrayList<Attachment> attachments) {
-                        mTask.setAttachments(attachments);
-                        init_gridView_photo();
-                    }
-                });
-    }
-
     /*POST数据保存，防止不作任何编辑操作，没有POST数据*/
     void savePostData() {
 
@@ -315,12 +296,6 @@ public class TasksEditActivity extends BaseActivity {
         member.users = userss;
         newUser = mTask.getResponsiblePerson();
 
-    }
-
-
-    void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, mTask.getAttachments(), true, true, isCreator, 0);
-        SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer, R.id.layout_retask})

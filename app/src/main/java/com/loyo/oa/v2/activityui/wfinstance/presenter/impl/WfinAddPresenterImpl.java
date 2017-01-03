@@ -2,13 +2,11 @@ package com.loyo.oa.v2.activityui.wfinstance.presenter.impl;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
@@ -16,25 +14,18 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.WfInstanceAdd;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinAddPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinAddView;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 /**
  * 【新建审批】Presenter
@@ -228,40 +219,6 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         WfinObj.add(viewGroup);//新增一个内容 就存起来
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             isRequiredList.add(mBizForm.getFields().get(i).isRequired());
-        }
-    }
-
-    /**
-     * 上传附件
-     */
-    @Override
-    public void newUploadAttachement(String uuid, int bizType, final ArrayList<ImageInfo> pickPhots) {
-        crolView.showStatusProgress();
-        try {
-            uploadSize = 0;
-            uploadNum = pickPhots.size();
-            for (ImageInfo item : pickPhots) {
-                Uri uri = Uri.parse(item.path);
-                File newFile = Global.scal(mActivity, uri);
-                if (newFile != null && newFile.length() > 0) {
-                    if (newFile.exists()) {
-                        TypedFile typedFile = new TypedFile("image/*", newFile);
-                        TypedString typedUuid = new TypedString(uuid);
-                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
-                                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud, true) {
-                                    @Override
-                                    public void onNext(Attachment attachment) {
-                                        uploadSize++;
-                                        if (uploadSize == uploadNum) {
-                                            crolView.uploadSuccessEmbl(pickPhots);
-                                        }
-                                    }
-                                });
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Global.ProcException(ex);
         }
     }
 }
