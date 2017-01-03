@@ -29,25 +29,33 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:paddingTop="5dp">
-
         <Button
             android:id="@+id/customview_cs_main_reset"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:padding="0dp"
-            android:text="取消全部"
-            android:textSize="14sp" />
+            android:layout_width="@dimen/dimen_80"
+            android:layout_height="@dimen/dimen_30"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_other_view"
+            android:background="@drawable/selepro_shape"
+            android:gravity="center"
+            android:text="全部取消"
+            android:textColor="@color/text33" />
+
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
-
         <Button
             android:id="@+id/customview_cs_main_ok"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:padding="0dp"
-            android:text="完成" />
+            android:layout_width="@dimen/dimen_80"
+            android:layout_height="@dimen/dimen_30"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_other_view"
+            android:background="@drawable/selepro_shape"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/title_bg1" />
+
     </LinearLayout>
 </LinearLayout>

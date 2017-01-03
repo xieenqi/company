@@ -56,7 +56,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
     private PaginationX<ProductListModel> models;
     private List<ClassifySeletorItem> data;
 
-
+    private String categoryId;//分类id
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,7 +119,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
         map.put("pageIndex",1);
         map.put("pageSize",100);
 
-        ProductService.getProductList("",map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
+        ProductService.getProductList(categoryId,map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
             @Override
             public void onNext(PaginationX<ProductListModel> productDynmModel) {
                 ll_loading.setStatus(LoadingLayout.Success);
@@ -147,20 +147,23 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
 
             // 分类
             case R.id.tv_add:
-                productMenu.showPopupWindow(v);
-
-//                if(null==data){
-//                    ProductService.getProductClassify().subscribe(new DefaultLoyoSubscriber<List<ClassifySeletorItem>>() {
-//                        @Override
-//                        public void onNext(List<ClassifySeletorItem> classifySeletorItems) {
-//                            data=classifySeletorItems;
-//                            showProductClassify(v);
-//                        }
-//                    });
-//                }else{
-//                    showProductClassify(v);
-//                }
-
+                productMenu.showPopupWindow(v, new ClassifySeletorView.SeletorListener() {
+                    @Override
+                    public void clickItem(boolean isSelected, ItemAdapter.ItemViewHolder holder, int position, ClassifySeletorItem item) {
+                    }
+                    @Override
+                    public void clickReset() {
+                    }
+                    @Override
+                    public void clickOk(List<ClassifySeletorItem> selectItem) {
+                        productMenu.dismiss();
+                        popWindowDimsEmbl();
+                        if(selectItem.size()>0){
+                            categoryId=selectItem.get(0).getId();
+                            getProductList();
+                        }
+                    }
+                });
                 break;
 
             // 搜索

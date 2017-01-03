@@ -28,7 +28,7 @@ import java.util.List;
  * Created by yyy on 16/12/22.
  */
 
-public class SelectProductMenu extends PopupWindow implements View.OnClickListener {
+public class SelectProductMenu extends PopupWindow  {
 
     private Context mContext;
     private boolean isShow = false;
@@ -50,8 +50,8 @@ public class SelectProductMenu extends PopupWindow implements View.OnClickListen
     }
 
     void initUI() {
-//        View view = LayoutInflater.from(mContext).inflate(R.layout.view_selectproduct,null);
-//        this.setContentView(view);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.view_selectproduct,null);
+//        this.setContentView(view／);
 //        this.setAnimationStyle(R.style.SelectProductViewAnim);
 //        this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
 //        this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -86,7 +86,7 @@ public class SelectProductMenu extends PopupWindow implements View.OnClickListen
 //        });
 //
 //        mAdapter = new SelectProductMenuAdapter(mContext);
-//        listview.setAdapter(mAdapter);
+//        listview.setAdapter(mAd／ap／ter);
 
         classifySeletorView = new ClassifySeletorView(mContext);
         this.setContentView(classifySeletorView);
@@ -97,33 +97,18 @@ public class SelectProductMenu extends PopupWindow implements View.OnClickListen
     }
 
     // show view
-    public void showPopupWindow(final View parent) {
+    public void showPopupWindow(final View parent, final ClassifySeletorView.SeletorListener listener) {
         if (!isShow) {
             isShow = true;
             if (null == data) {
                 ProductService.getProductClassify().subscribe(new DefaultLoyoSubscriber<List<ClassifySeletorItem>>() {
                     @Override
                     public void onNext(List<ClassifySeletorItem> classifySeletorItems) {
-                        for (ClassifySeletorItem classifySeletorItem : classifySeletorItems) {
-                            Log.i("tttt", "onNext: "+classifySeletorItem.getName()+","+classifySeletorItem.getId());
-                        }
+
                         data = classifySeletorItems;
-                        classifySeletorView.setup(data, new ClassifySeletorView.SeletorListener() {
-                            @Override
-                            public void clickItem(boolean isSelected, ItemAdapter.ItemViewHolder holder, int position, ClassifySeletorItem item) {
-                                super.clickItem(isSelected, holder, position, item);
-                            }
-
-                            @Override
-                            public void clickReset() {
-                                super.clickReset();
-                            }
-
-                            @Override
-                            public void clickOk(List<ClassifySeletorItem> selectItem) {
-                                super.clickOk(selectItem);
-                            }
-                        });
+                        classifySeletorView.setup(classifySeletorItems, listener);
+                        //单选，不能放在上面，没有setup，不可以设置。
+                        classifySeletorView.setSingleSelete(true);
                         SelectProductMenu.this.showAsDropDown(parent);
                         viewCrol.popWindowShowEmbl();
                     }
@@ -142,21 +127,21 @@ public class SelectProductMenu extends PopupWindow implements View.OnClickListen
     }
 
 
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-
-            // 确定
-            case R.id.tv_commit:
-
-                break;
-
-            // 取消
-            case R.id.tv_cancel:
-
-                break;
-
-        }
-    }
+//    @Override
+//    public void onClick(View v) {
+//
+//        switch (v.getId()) {
+//
+//            // 确定
+//            case R.id.tv_commit:
+//
+//                break;
+//
+//            // 取消
+//            case R.id.tv_cancel:
+//
+//                break;
+//
+//        }
+//    }
 }
