@@ -31,6 +31,7 @@ public class PhotoPicker {
 
   public final static String EXTRA_SINGLE_MODE     = "SINGLE_MODE";
   public final static String EXTRA_CROP_ENABLED    = "CROP_ENABLED";
+  public final static String CAMERA_CAPTURE_ENABLED    = "CAMERA_CAPTURE_ENABLED";
 
   public static PhotoPickerBuilder builder() {
     return new PhotoPickerBuilder();
@@ -139,6 +140,11 @@ public class PhotoPicker {
 
     public PhotoPickerBuilder setCropEnabled(boolean cropEnabled) {
       mPickerOptionsBundle.putBoolean(EXTRA_CROP_ENABLED, cropEnabled);
+      return this;
+    }
+
+    public PhotoPickerBuilder setCameraCapture(boolean cameraCapture) {
+      mPickerOptionsBundle.putBoolean(CAMERA_CAPTURE_ENABLED, cameraCapture);
       return this;
     }
   }

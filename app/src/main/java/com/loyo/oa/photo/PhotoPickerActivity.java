@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
+import static com.loyo.oa.photo.PhotoPicker.CAMERA_CAPTURE_ENABLED;
 import static com.loyo.oa.photo.PhotoPicker.DEFAULT_COLUMN_NUMBER;
 import static com.loyo.oa.photo.PhotoPicker.DEFAULT_MAX_COUNT;
 import static com.loyo.oa.photo.PhotoPicker.EXTRA_CROP_ENABLED;
@@ -57,6 +58,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
   private boolean showGif     = false;
   private boolean singleMode  = false;
   private boolean cropEnabled = false;
+  private boolean cameraCaptureEnabled = false;
 
   private int columnNumber = DEFAULT_COLUMN_NUMBER;
   private ArrayList<String> originalPhotos = null;
@@ -70,6 +72,10 @@ public class PhotoPickerActivity extends AppCompatActivity {
     this.showGif         = getIntent().getBooleanExtra(EXTRA_SHOW_GIF, false);
     this.singleMode      = getIntent().getBooleanExtra(EXTRA_SINGLE_MODE, false);
     this.cropEnabled     = getIntent().getBooleanExtra(EXTRA_CROP_ENABLED, false);
+    this.cameraCaptureEnabled     = getIntent().getBooleanExtra(CAMERA_CAPTURE_ENABLED, false);
+    if (this.cameraCaptureEnabled) {
+      this.singleMode = true;
+    }
 
     setShowGif(showGif);
 
@@ -82,10 +88,15 @@ public class PhotoPickerActivity extends AppCompatActivity {
 
     pickerFragment = (PhotoPickerFragment) getSupportFragmentManager().findFragmentByTag("tag");
     if (pickerFragment == null) {
-      pickerFragment = PhotoPickerFragment
-          .newInstance(showCamera, showGif,
-                  previewEnabled, singleMode, cropEnabled,
-                  columnNumber, maxCount, originalPhotos);
+      if (this.cameraCaptureEnabled) {
+        pickerFragment = PhotoPickerFragment.newInstance(true);
+      }
+      else {
+        pickerFragment = PhotoPickerFragment
+                .newInstance(showCamera, showGif,
+                        previewEnabled, singleMode, cropEnabled,
+                        columnNumber, maxCount, originalPhotos);
+      }
 
       getSupportFragmentManager()
           .beginTransaction()
