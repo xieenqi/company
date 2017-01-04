@@ -36,8 +36,8 @@ public class StatisticRecord {
             //客户/线索 跟进/客户拜访
             return new ArrayList<String>(){{
                 add(userName);
-                add(String.valueOf(totalCustomer));
                 add(String.valueOf(total));
+                add(String.valueOf(totalCustomer));
             }};
 
 
@@ -45,8 +45,8 @@ public class StatisticRecord {
             //客户电话录/线索电话录
             return new ArrayList<String>(){{
                 add(userName);
-                add(String.valueOf(totalCustomer));
                 add(String.valueOf(total));
+                add(String.valueOf(totalCustomer));
                 add(String.valueOf(totalLength));
             }};
 
@@ -54,8 +54,8 @@ public class StatisticRecord {
             //增量/存量
             return new ArrayList<String>(){{
                 add(name);
-                add(String.valueOf(count));
                 add(String.valueOf(addCount));
+                add(String.valueOf(count));
             }};
 
         }else if (DashboardType.ORDER_MONEY == type|| DashboardType.ORDER_NUMBER == type) {

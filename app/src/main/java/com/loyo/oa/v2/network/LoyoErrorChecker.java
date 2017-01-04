@@ -43,6 +43,7 @@ public class LoyoErrorChecker {
     }
 
     public static LoyoError loyoError(Throwable e) {
+        e.printStackTrace();
         String message = "";
         @LoyoError.State int state = LoyoError.Success;
 
@@ -121,7 +122,7 @@ public class LoyoErrorChecker {
         }
 
         if (error.loadingState == AuthFail) {
-            LoyoToast.info(MainApp.getMainApp().getApplicationContext(), error.message);
+            // LoyoToast.info(MainApp.getMainApp().getApplicationContext(), error.message);
             //到侧边栏 退出系统到登录界面
             Intent in = new Intent();
             in.setAction(ExtraAndResult.ACTION_USER_VERSION);

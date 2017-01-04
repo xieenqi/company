@@ -33,6 +33,7 @@ android {
             res.srcDirs = ['src/main/res',
                            'src/main/res-photo-picker',
                            'src/main/res-smooth-checkbox',
+                           'src/main/res_customview',
                            'src/main/res-loyo/customer',
                            'src/main/res-loyo/saleopportunity',
                            'src/main/res-loyo/setting',

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -110,7 +111,7 @@ public class DashboardDetailAdapter extends BaseAdapter {
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
                 setChildViewColor(itemColor2);
-                ((TextView) item.getChildAt(0)).setText("总计");
+                ((TextView) ((FrameLayout)item.getChildAt(0)).getChildAt(0)).setText("总计");
                 setChildNumName(false);
 
                 bindData(0);
@@ -127,7 +128,7 @@ public class DashboardDetailAdapter extends BaseAdapter {
         //设置一行，每一个字段的颜色
         private void setChildViewColor(int color) {
             for (int i = 0; i < item.getChildCount(); i++) {
-                ((TextView) item.getChildAt(i)).setTextColor(color);
+                ((TextView) ((FrameLayout)item.getChildAt(i)).getChildAt(0)).setTextColor(color);
             }
         }
 
@@ -138,7 +139,7 @@ public class DashboardDetailAdapter extends BaseAdapter {
                 //如果是表头，就设置一下表头
                 if (isTableNum) {
                     for (int j = 0; j < heads.length; j++) {
-                        ((TextView) item.getChildAt(j)).setText(heads[j]);
+                        ((TextView) ((FrameLayout)item.getChildAt(j)).getChildAt(0)).setText(heads[j]);
                     }
                 }
                 //把多余的字段，隐藏了。

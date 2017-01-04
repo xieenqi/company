@@ -336,6 +336,8 @@ public class MenuFragment extends BaseFragment {
         /* 清空组织架构 */
         OrganizationManager.clearOrganizationData();
         SharedUtil.clearInfo(app);//清楚本地登录状态 即缓存信息
+        /* 欢迎提示不清除 */
+        SharedUtil.putBoolean(mActivity, ExtraAndResult.WELCOM_KEY, true);
         ExitActivity.getInstance().finishAllActivity();
         app.startActivity(mActivity, LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
     }
