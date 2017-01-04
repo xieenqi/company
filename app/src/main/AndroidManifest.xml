@@ -100,8 +100,7 @@
         <activity
             android:name=".activityui.login.WelcomeActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activityui.login.LoginActivity"
             android:launchMode="singleTop"
@@ -825,29 +824,24 @@
         <activity
             android:name=".activityui.product.SelectProductActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
-
-        <!--新增购买产品-->
+        <!-- 新增购买产品 -->
         <activity
             android:name=".activityui.product.AddBuyProductActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="adjustResize"
-            />
-        <!--新增购买产品－产品详情-->
+            android:windowSoftInputMode="adjustResize"/>
+        <!-- 新增购买产品－产品详情 -->
         <activity
             android:name=".activityui.product.ProductDetailActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
-        <!--新增购买产品－产品选择－搜索产品-->
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <!-- 新增购买产品－产品选择－搜索产品 -->
         <activity
             android:name=".activityui.product.ProductSearchActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <supports-screens
             android:anyDensity="true"
@@ -1018,6 +1012,8 @@
         <activity
             android:name=".activityui.TestLoadingActivity"
             android:label="@string/title_activity_test_loading">
+        </activity>
+        <activity android:name="com.loyo.oa.photo.PhotoCaptureActivity">
         </activity>
     </application>
 
