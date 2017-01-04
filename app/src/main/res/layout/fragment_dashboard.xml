@@ -653,7 +653,6 @@
                     android:visibility="gone"
                     >
 
-
                     <LinearLayout
                         android:id="@+id/ll_dashboard_order_number"
                         android:layout_width="0dip"

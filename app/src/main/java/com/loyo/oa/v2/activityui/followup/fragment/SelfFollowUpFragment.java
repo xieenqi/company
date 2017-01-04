@@ -268,6 +268,11 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 获取Self列表数据
      */
     private void getData(boolean isPullOrDown) {
+        if(null == MainApp.user || null == MainApp.user.id){
+            Toast("正在拉去数据,请稍后..");
+            getActivity().finish();
+            return;
+        }
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", MainApp.user.id);//我的传id,团队则空着
         map.put("xpath", "");

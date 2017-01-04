@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.tool.LogUtil;
+
 import java.util.ArrayList;
 
 /**
@@ -53,9 +56,8 @@ public class StockListAdapter extends BaseAdapter{
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
-
         holder.tv_title.setText(model.tagItemName);
-        holder.tv_zsize.setText(model.getIncement());
+        holder.tv_zsize.setText(model.getIncement().equals("0") ? model.getIncement() : "+"+model.getIncement());
         holder.tv_csize.setText(model.getStock());
         return convertView;
     }
