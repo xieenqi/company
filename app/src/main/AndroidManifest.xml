@@ -76,6 +76,13 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
+        <provider
+            android:name="com.tencent.mid.api.MidProvider"
+            android:authorities="${applicationId}.TENCENT.MID.V3"
+            android:exported="true" >
+        </provider>
+
+
         <!-- android:theme="@style/AppStartLoadTranslucent" -->
         <activity
             android:name=".activityui.home.LauncherActivity_"
@@ -1008,6 +1015,9 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="ukuaiqi"/>
+        <meta-data android:name="TA_APPKEY" android:value="AB8N5RVI66WY"/>
+        <meta-data android:name="InstallChannel" android:value="loyo"/>
+
 
         <activity
             android:name=".activityui.TestLoadingActivity"
