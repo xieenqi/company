@@ -111,7 +111,7 @@ public class DashboardDetailAdapter extends BaseAdapter {
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
                 setChildViewColor(itemColor2);
-                ((TextView) item.getChildAt(0)).setText("总计");
+                ((TextView) ((FrameLayout)item.getChildAt(0)).getChildAt(0)).setText("总计");
                 setChildNumName(false);
 
                 bindData(0);
@@ -139,7 +139,7 @@ public class DashboardDetailAdapter extends BaseAdapter {
                 //如果是表头，就设置一下表头
                 if (isTableNum) {
                     for (int j = 0; j < heads.length; j++) {
-                        ((TextView) item.getChildAt(j)).setText(heads[j]);
+                        ((TextView) ((FrameLayout)item.getChildAt(j)).getChildAt(0)).setText(heads[j]);
                     }
                 }
                 //把多余的字段，隐藏了。
