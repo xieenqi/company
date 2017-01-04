@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
@@ -33,9 +32,9 @@ import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
-
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -44,8 +43,6 @@ import me.itangqi.waveloadingview.WaveLoadingView;
  */
 
 public class HomeDashboardFragment extends BaseFragment implements View.OnClickListener, HomeDashBoardView {
-
-    private final int NULLNUM = 3;
 
     private View mView;
     private RadioButton rb_customer, rb_clue;
@@ -98,13 +95,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     /**
      * 绑定增量存量Adapter
      */
-    private void bindClAdapter(final ArrayList<StockStatistic> stockListModel) {
-        if (null == mAdapter) {
-            mAdapter = new StockListAdapter(getActivity(), stockListModel);
-            lv_stocklist.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
+    private void bindClAdapter(final ArrayList<StockStatistic> model) {
+        mAdapter = new StockListAdapter(getActivity(), model);
+        lv_stocklist.setAdapter(mAdapter);
         lv_stocklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -113,11 +106,11 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 if (!checkPermission(DashboardType.COMMON)) {
                     return;
                 }
-                DashboardType.COMMON.setTttle(stockListModel.get(position).tagItemName);
+                DashboardType.COMMON.setTttle(model.get(position).tagItemName);
                 Bundle bundle = new Bundle();
                 bundle.putInt("time", stockType);
                 bundle.putSerializable("type", DashboardType.COMMON);
-                bundle.putSerializable("tagItemId",stockListModel.get(position).tagItemId);
+                bundle.putSerializable("tagItemId",model.get(position).tagItemId);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
             }
         });
@@ -157,10 +150,15 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 mcModel.getNumberDisplayTitle(),
                 mcModel.getMoneyDisplayTitle());
 
-        tv_target_count.setText(mcModel.getTargetAmount());
+        /*tv_target_count.setText(mcModel.getTargetAmount());
         tv_order_count.setText(mcModel.getTotalAmount());
         tv_target_money.setText(mcModel.getTargetMoney());
-        tv_order_money.setText(mcModel.getTotalMoney());
+        tv_order_money.setText(mcModel.getTotalMoney());*/
+
+        tv_target_count.setText(mcModel.getTargetNumber());
+        tv_order_count.setText(mcModel.getTotalNumber());
+        tv_target_money.setText(mcModel.getTargetAmount());
+        tv_order_money.setText(mcModel.getTotalAmount());
     }
 
     private void initUI() {
@@ -313,44 +311,49 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
         switch (view.getId()) {
 
-            /*客户跟进*/
+            /** 客户跟进 */
             case R.id.rb_customer:
                 followUpPage = 0;
                 bindFowUpData();
                 ll_dashboard_signin.setVisibility(View.VISIBLE);
                 break;
 
-            /*线索跟进*/
+            /** 线索跟进 */
             case R.id.rb_clue:
                 followUpPage = 1;
                 bindFowUpData();
                 ll_dashboard_signin.setVisibility(View.GONE);
                 break;
 
-            /*客户线索筛选*/
+            /** 客户线索筛选 */
             case R.id.ll_case1:
                 mPresenter.screenControlViews(ScreenType.FOLLOWUP);
                 break;
 
-            /*增量存量筛选*/
+            /** 增量存量筛选 */
             case R.id.ll_case2:
                 mPresenter.screenControlViews(ScreenType.STOCK);
                 break;
 
-            /*数量金额筛选*/
+            /** 数量金额筛选 */
             case R.id.ll_case3:
                 mPresenter.screenControlViews(ScreenType.MONEY);
                 break;
-
+            /** 跳转跟进列表 */
             case R.id.ll_dashboard_followup:
                 if (!checkPermission(DashboardType.CUS_FOLLOWUP)) {
                     return;
                 }
                 Bundle bdFollowup = new Bundle();
                 bdFollowup.putInt("time", followUpType);
-                bdFollowup.putSerializable("type", DashboardType.CUS_FOLLOWUP);
+                if(followUpPage == 0){
+                    bdFollowup.putSerializable("type", DashboardType.CUS_FOLLOWUP);
+                }else{
+                    bdFollowup.putSerializable("type", DashboardType.SALE_FOLLOWUP);
+                }
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdFollowup);
                 break;
+            /** 跳转拜访 */
             case R.id.ll_dashboard_signin:
                 if (!checkPermission(DashboardType.CUS_SIGNIN)) {
                     return;
@@ -360,6 +363,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 bdSignin.putSerializable("type", DashboardType.CUS_SIGNIN);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdSignin);
                 break;
+            /** 电话录音 */
             case R.id.ll_dashboard_record:
                 if (!checkPermission(DashboardType.CUS_CELL_RECORD)) {
                     return;
@@ -369,6 +373,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 bdRecord.putSerializable("type", DashboardType.CUS_CELL_RECORD);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdRecord);
                 break;
+            /** 目标数量 */
             case R.id.ll_dashboard_order_number:
                 if (!checkPermission(DashboardType.ORDER_NUMBER)) {
                     return;
@@ -378,6 +383,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 bdOrderNumber.putSerializable("type", DashboardType.ORDER_NUMBER);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdOrderNumber);
                 break;
+            /** 目标金额 */
             case R.id.ll_dashboard_order_money:
                 if (!checkPermission(DashboardType.ORDER_MONEY)) {
                     return;
@@ -388,17 +394,17 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdOrderMoney);
                 break;
 
-            /*跟进,点击重试*/
+            /** 跟进,点击重试 */
             case R.id.tv_click_rest1:
                 getFollowUpData(followUpType);
                 break;
 
-             /*增量存量,点击重试*/
+             /** 增量存量,点击重试 */
             case R.id.tv_click_rest2:
                 getStockData(stockType);
                 break;
 
-            /*数量金额,点击重试*/
+            /** 数量金额,点击重试 */
             case R.id.tv_click_rest3:
                 getMoneyCount(moneyCnType);
                 break;
@@ -415,7 +421,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     @Override
     public void setScreenVal(ScreenType screenType,int type,String value) {
-        Toast(value+":"+type);
+        //Toast(value+":"+type);
         getData(screenType.type(),type,value);
     }
 

@@ -16,6 +16,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsDepartmentFragment;
@@ -88,6 +89,10 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     }
 
     void initUI() {
+        if(null == MainApp.user){
+            Toast("正在拉去数据,请稍后..");
+            return;
+        }
         if (MainApp.user.depts.size() > 0) {
             myDeptId = MainApp.user.depts.get(0).getShortDept().getId();
         } else {

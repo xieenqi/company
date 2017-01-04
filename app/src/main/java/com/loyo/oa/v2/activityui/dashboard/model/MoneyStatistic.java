@@ -16,19 +16,19 @@ public class MoneyStatistic {
     public long targetNumber;
 
     public String getTotalAmount() {
-        return String.valueOf(totalAmount);
+        return "¥ " + String.valueOf(totalAmount);
     }
 
-    public String getTotalMoney() {
-        return "¥ " + String.valueOf(totalNumber);
+    public String getTotalNumber() {
+        return String.valueOf(totalNumber);
     }
 
     public String getTargetAmount() {
-        return String.valueOf(targetAmount);
+        return "¥ " + String.valueOf(targetAmount);
     }
 
-    public String getTargetMoney() {
-        return "¥ " + String.valueOf(targetNumber);
+    public String getTargetNumber() {
+        return String.valueOf(targetNumber);
     }
 
     public int getNumberPercent(){
