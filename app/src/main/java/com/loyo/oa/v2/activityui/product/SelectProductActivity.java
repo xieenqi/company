@@ -54,9 +54,8 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
     private LoadingLayout ll_loading;
 
     private PaginationX<ProductListModel> models;
-    private List<ClassifySeletorItem> data;
 
-    private String categoryId;//分类id
+    private String categoryId="";//分类id，默认加载的时候为""
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,7 +118,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
         map.put("pageIndex",1);
         map.put("pageSize",100);
 
-        ProductService.getProductList(categoryId,map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
+        ProductService.getProductList(categoryId+"",map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
             @Override
             public void onNext(PaginationX<ProductListModel> productDynmModel) {
                 ll_loading.setStatus(LoadingLayout.Success);
@@ -162,6 +161,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
                             categoryId=selectItem.get(0).getId();
                             getProductList();
                         }
+                        Log.i("tttt", "clickOk: "+selectItem.get(0).getId());
                     }
                 });
                 break;

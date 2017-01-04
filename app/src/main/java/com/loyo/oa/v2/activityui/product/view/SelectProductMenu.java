@@ -21,6 +21,7 @@ import com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorItem;
 import com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorView;
 import com.loyo.oa.v2.customview.classify_seletor.ItemAdapter;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 
 import java.util.List;
 
@@ -50,44 +51,6 @@ public class SelectProductMenu extends PopupWindow  {
     }
 
     void initUI() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.view_selectproduct,null);
-//        this.setContentView(view／);
-//        this.setAnimationStyle(R.style.SelectProductViewAnim);
-//        this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-//        this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-//        this.setOutsideTouchable(true);
-//
-//        tv_cancel = (TextView) view.findViewById(R.id.tv_cancel);
-//        tv_commit = (TextView) view.findViewById(R.id.tv_commit);
-//        listview = (ListView)  view.findViewById(R.id.listview);
-//        layout_hs = (LinearLayout) view.findViewById(R.id.layout_hs);
-//
-//
-//        tv_cancel.setOnClickListener(this);
-//        tv_commit.setOnClickListener(this);
-//        tv_cancel.setOnTouchListener(Global.GetTouch());
-//        tv_commit.setOnTouchListener(Global.GetTouch());
-//
-//        for(int i = 0;i<5;i++){
-//            layout_hs.addView(new RouteControlsView(mContext));
-//        }
-//
-//        this.setOnDismissListener(new OnDismissListener() {
-//            @Override
-//            public void onDismiss() {
-//                viewCrol.popWindowDimsEmbl();
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        isShow = false;
-//                    }
-//                },500);
-//            }
-//        });
-//
-//        mAdapter = new SelectProductMenuAdapter(mContext);
-//        listview.setAdapter(mAd／ap／ter);
-
         classifySeletorView = new ClassifySeletorView(mContext);
         this.setContentView(classifySeletorView);
         this.setAnimationStyle(R.style.SelectProductViewAnim);
@@ -101,10 +64,9 @@ public class SelectProductMenu extends PopupWindow  {
         if (!isShow) {
             isShow = true;
             if (null == data) {
-                ProductService.getProductClassify().subscribe(new DefaultLoyoSubscriber<List<ClassifySeletorItem>>() {
+                ProductService.getProductClassify().subscribe(new DefaultLoyoSubscriber<List<ClassifySeletorItem>>(LoyoErrorChecker.TOAST) {
                     @Override
                     public void onNext(List<ClassifySeletorItem> classifySeletorItems) {
-
                         data = classifySeletorItems;
                         classifySeletorView.setup(classifySeletorItems, listener);
                         //单选，不能放在上面，没有setup，不可以设置。
@@ -118,7 +80,6 @@ public class SelectProductMenu extends PopupWindow  {
                 viewCrol.popWindowShowEmbl();
             }
 
-
         } else {
             isShow = false;
             this.dismiss();
@@ -126,22 +87,4 @@ public class SelectProductMenu extends PopupWindow  {
         }
     }
 
-
-//    @Override
-//    public void onClick(View v) {
-//
-//        switch (v.getId()) {
-//
-//            // 确定
-//            case R.id.tv_commit:
-//
-//                break;
-//
-//            // 取消
-//            case R.id.tv_cancel:
-//
-//                break;
-//
-//        }
-//    }
 }
