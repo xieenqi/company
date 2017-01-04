@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.photo.PhotoCapture;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -305,7 +306,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 选择附件回调
      */
     //@OnActivityResult(MainApp.GET_IMG)
-    @OnActivityResult(PhotoPicker.REQUEST_CODE)
+    @OnActivityResult(PhotoCapture.REQUEST_CODE)
     void onGetImageResult(final Intent data) {
         if (null == data) {
             return;
@@ -443,8 +444,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     @Override
     public void onAddEvent(UploadController controller) {
-        PhotoPicker.builder()
-                .setCameraCapture(true)
+        PhotoCapture.builder()
                 .start(this);
     }
 
