@@ -167,7 +167,7 @@ public class MainApp extends Application {
         loadIndustryCodeTable();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
-        initMTAConfig(true);
+        initMTAConfig(!BuildConfig.DEBUG);
         GlideManager.getInstance().initWithContext(getApplicationContext());
         VoIPManager.getInstance().init(this);
         initLoadingConfig();
