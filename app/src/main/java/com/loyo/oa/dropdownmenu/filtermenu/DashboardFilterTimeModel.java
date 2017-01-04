@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DashboardFilterTimeModel {
 
-    public static FilterModel getFilterModel() {
+    public static FilterModel getFilterModel(DynamicFilterByTime defaultValue) {
 
         List<MenuModel> list = new ArrayList<>();
         list.add(new MenuFilterByTimeModel(DynamicFilterByTime.TODAY));
@@ -24,21 +24,21 @@ public class DashboardFilterTimeModel {
         list.add(new MenuFilterByTimeModel(DynamicFilterByTime.TOMONTH));
         list.add(new MenuFilterByTimeModel(DynamicFilterByTime.LASTMONTH));
 
-        FilterModel model = new FilterModel(list, DynamicFilterByTime.TODAY.value, MenuListType.SINGLE_LIST_SINGLE_SEL);
+        FilterModel model = new FilterModel(list, defaultValue.value, MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 
-    public static FilterModel getDashboardOrderMOneyFilterModel() {
+    public static FilterModel getDashboardOrderMOneyFilterModel(DynamicFilterByTime defaultValue) {
 
         List<MenuModel> list = new ArrayList<>();
-        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.TOMONTH2));
-        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.LASTMONTH2));
-        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.QUARTER));
+        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.TOMONTH));
+        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.LASTMONTH));
+        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.TOQUARTER));
         list.add(new MenuFilterByTimeModel(DynamicFilterByTime.LASQUARTER));
-        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.YEAR));
+        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.TOYEAR));
         list.add(new MenuFilterByTimeModel(DynamicFilterByTime.LASYEAR));
 
-        FilterModel model = new FilterModel(list, DynamicFilterByTime.TOMONTH2.value, MenuListType.SINGLE_LIST_SINGLE_SEL);
+        FilterModel model = new FilterModel(list,defaultValue.value, MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 
