@@ -105,8 +105,8 @@ import rx.Observable;
  */
 public class Utils {
 
-    public static final int CALL_REQUEST=0x1;//打电话的权限申请
-    public static final int SEND_SMS_REQUEST=0x2;//发短信的权限申请
+    public static final int CALL_REQUEST = 0x1;//打电话的权限申请
+    public static final int SEND_SMS_REQUEST = 0x2;//发短信的权限申请
 
     static ProgressDialog progressDialog;
     static ProgressDialog progressDialogAtt;
@@ -125,7 +125,6 @@ public class Utils {
 
     /**
      * 根据当前选择的秒数还原时间点
-     *
      */
 
     private static String getCheckTimeBySeconds(float progress, float totalSeconds2, String startTimeStr) {
@@ -255,7 +254,7 @@ public class Utils {
 
     /**
      * MD5加密
-     * */
+     */
     public static String md5(String string) {
         byte[] hash;
         try {
@@ -277,7 +276,7 @@ public class Utils {
 
     /**
      * 图片二值化
-     * */
+     */
     public static Bitmap toGrayscale(Bitmap bmpOriginal) {
         int width, height;
         height = bmpOriginal.getHeight();
@@ -666,7 +665,7 @@ public class Utils {
 //            }, "提示", "需要使用短信权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
 //        }
 
-        if(PermissionTool.requestPermission(context,Manifest.permission.SEND_SMS,"发短信功能被禁用",SEND_SMS_REQUEST)){
+        if (PermissionTool.requestPermission(context, Manifest.permission.SEND_SMS, "发短信功能被禁用", SEND_SMS_REQUEST)) {
             Uri uri = Uri.parse("smsto:" + tel);
             Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
             sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -707,7 +706,7 @@ public class Utils {
 //                }
 //            },"提示","需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
 //        }
-        if (PermissionTool.requestPermission(context, Manifest.permission.CALL_PHONE, "打电话被禁用",CALL_REQUEST)) {
+        if (PermissionTool.requestPermission(context, Manifest.permission.CALL_PHONE, "打电话被禁用", CALL_REQUEST)) {
             Intent sendIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
             sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(sendIntent);//这里显红，不管他，工具类已经处理，IDE的问题
@@ -749,8 +748,12 @@ public class Utils {
         new LocationUtilGD(context, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
-                Uri uri;
+                Uri uri = null;
                 if (hasMapApp(context)) {
+//                    Intent intent = new Intent();
+//                    intent.setAction(Intent.ACTION_MAIN);
+//                    intent.addCategory(Intent.CATEGORY_APP_MAPS);
+//                    context.startActivity(intent);
                     uri = Uri.parse("geo: " + toLat + "," + toLng + "?q=" + addres);
                 } else {
                     uri = Uri.parse("http://m.amap.com/?from=" + latitude + "," + longitude + "(" + address + ")&to=" + toLat + "," + toLng + "(" + addres + ")");
@@ -767,24 +770,7 @@ public class Utils {
                 Global.Toast("获取当前位置失败,无法规划路径");
                 LocationUtilGD.sotpLocation();
             }
-
-//            @Override
-//            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-///*                Intent intent;
-//                try {
-//                    intent = Intent.getIntent("intent://map/direction?origin=latlng:"+latitude+","+longitude+"|name:我家&destination=大雁塔&mode=driving®ion=西安&referer=Autohome|GasStation#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
-//                    context.startActivity(intent); //启动调用
-//                } catch (URISyntaxException e) {
-//                    e.printStackTrace();
-//                }*/
-//            }
-//
-//            @Override
-//            public void OnLocationFailed() {
-//
-//            }
         }
-
         );
     }
 
@@ -1564,13 +1550,13 @@ public class Utils {
         }
     }
 
-    public static String getRingDuring(String mUri){
-        String duration=null;
+    public static String getRingDuring(String mUri) {
+        String duration = null;
         android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
 
         try {
             if (mUri != null) {
-                HashMap<String, String> headers=null;
+                HashMap<String, String> headers = null;
                 if (headers == null) {
                     headers = new HashMap<String, String>();
                     headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
@@ -1616,11 +1602,11 @@ public class Utils {
 
     /**
      * 自动弹出软键盘
-     * */
-    public static void autoKeyBoard(Context mContext,EditText editText){
+     */
+    public static void autoKeyBoard(Context mContext, EditText editText) {
         editText.requestFocus();
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0,InputMethodManager.SHOW_FORCED);
+        imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
     }
 
     /**
@@ -1649,7 +1635,7 @@ public class Utils {
     /**
      * 关闭软键盘
      */
-    public static void hideInputKeyboard(EditText et,Context mContext) {
+    public static void hideInputKeyboard(EditText et, Context mContext) {
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
@@ -1657,16 +1643,16 @@ public class Utils {
     /**
      * 客户下跟进拜访,滑动隐藏(ListView)
      */
-    public static void btnSpcHideForListViewCus(final Context mContext,final ListView listView,final ViewGroup add, final LinearLayout menu,final EditText editText) {
+    public static void btnSpcHideForListViewCus(final Context mContext, final ListView listView, final ViewGroup add, final LinearLayout menu, final EditText editText) {
         lastVisibleItemPosition = 0;
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 editText.setText("");
-                hideInputKeyboard(editText,mContext);
+                hideInputKeyboard(editText, mContext);
                 menu.setVisibility(View.GONE);
 
-                if(menu.getVisibility() == View.GONE){
+                if (menu.getVisibility() == View.GONE) {
                     add.setVisibility(View.VISIBLE);
                 }
 
@@ -1698,13 +1684,13 @@ public class Utils {
     /**
      * 添加按钮,底部评论菜单,滑动隐藏(ListView)
      */
-    public static void btnSpcHideForListView(final Context mContext,final ListView listView, final LinearLayout menu,final EditText editText) {
+    public static void btnSpcHideForListView(final Context mContext, final ListView listView, final LinearLayout menu, final EditText editText) {
         lastVisibleItemPosition = 0;
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 editText.setText("");
-                hideInputKeyboard(editText,mContext);
+                hideInputKeyboard(editText, mContext);
                 menu.setVisibility(View.GONE);
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     scrollFlag = true;
@@ -1723,13 +1709,13 @@ public class Utils {
     /**
      * 添加按钮,底部评论菜单,滑动隐藏(ListView)
      */
-    public static void btnSpcHideForListViewTest(final Context mContext,final ListView listView, final View btn, final LinearLayout menu,final EditText editText) {
+    public static void btnSpcHideForListViewTest(final Context mContext, final ListView listView, final View btn, final LinearLayout menu, final EditText editText) {
         lastVisibleItemPosition = 0;
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 editText.setText("");
-                hideInputKeyboard(editText,mContext);
+                hideInputKeyboard(editText, mContext);
                 menu.setVisibility(View.GONE);
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     scrollFlag = true;
@@ -1770,7 +1756,7 @@ public class Utils {
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                LogUtil.dee("scrollState:"+scrollState);
+                LogUtil.dee("scrollState:" + scrollState);
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     scrollFlag = true;
                 } else {
