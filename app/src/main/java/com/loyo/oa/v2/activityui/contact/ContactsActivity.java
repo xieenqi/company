@@ -91,6 +91,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     void initUI() {
         if(null == MainApp.user){
             Toast("正在拉去数据,请稍后..");
+            finish();
             return;
         }
         if (MainApp.user.depts.size() > 0) {
