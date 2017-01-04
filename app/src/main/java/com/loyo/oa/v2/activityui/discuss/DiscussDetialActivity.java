@@ -857,16 +857,17 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
     /**
      * 刷新红点
      */
+    /* TODO: 请求出错 */
     private void refreshRedDot() {
         setResult(Activity.RESULT_OK);
         HashMap<String, Object> map = new HashMap<>();
         map.put("summaryId", summaryId);
-        DiscussService.updateReadDot(map).subscribe(new DefaultLoyoSubscriber<Object>() {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                finishActivity();
-            }
+        DiscussService.updateReadDot(map).subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.SILENCE) {
+//            @Override
+//            public void onError(Throwable e) {
+//                super.onError(e);
+//                finishActivity();
+//            }
 
             @Override
             public void onNext(Object o) {
