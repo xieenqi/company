@@ -33,9 +33,8 @@ public class SlideContainer extends FrameLayout implements ItemAdapter.OnItemCli
     private SlideContainListener slideContainListener;//获取数据的接口，把数据加载这个委托出去
     private boolean allowClick = true;//是否允许点击，避免动画过程中点击，造成数据混乱
     private Map<String, ClassifySeletorItem> path = new HashMap<>();//用来存储选择的路径
-
-
     private  ItemAdapter itemAdapter1, itemAdapter2;
+    private View maskView1,maskView2;
     public SlideContainer(Context context) {
         super(context);
         throw new UnsupportedOperationException("不支持java代码实例化，T_T");
