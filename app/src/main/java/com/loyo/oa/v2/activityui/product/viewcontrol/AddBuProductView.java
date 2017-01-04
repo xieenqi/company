@@ -25,4 +25,6 @@ public interface AddBuProductView {
 
     void getAttachmentErrorEmbl();
 
+    void textWatcherCallback(int type,String s);
+
 }

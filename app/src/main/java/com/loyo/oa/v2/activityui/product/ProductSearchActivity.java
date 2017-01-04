@@ -87,11 +87,15 @@ public class ProductSearchActivity extends BaseActivity implements View.OnClickL
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SelectProductEvent event = new SelectProductEvent();
-                event.bundle = new Bundle();
-                event.bundle.putString("id",models.getRecords().get(position).id);
-                AppBus.getInstance().post(event);
-                finish();
+                if(models.getRecords().get(position).stock == 0){
+                    Toast("库存不足");
+                }else{
+                    SelectProductEvent event = new SelectProductEvent();
+                    event.bundle = new Bundle();
+                    event.bundle.putString("id",models.getRecords().get(position).id);
+                    AppBus.getInstance().post(event);
+                    finish();
+                }
             }
         });
     }

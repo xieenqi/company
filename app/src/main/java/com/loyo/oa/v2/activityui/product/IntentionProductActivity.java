@@ -306,8 +306,10 @@ public class IntentionProductActivity extends BaseActivity {
                     product.putString("saleId", saleId);
                     product.putInt("data", ActionCode.SALE_PRO_EDIT);
                     product.putSerializable(ExtraAndResult.EXTRA_DATA, item);
-                    app.startActivityForResult(IntentionProductActivity.this, AddIntentionProductActivity.class,
+                    app.startActivityForResult(IntentionProductActivity.this, AddBuyProductActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, product);
+                    /*app.startActivityForResult(IntentionProductActivity.this, AddIntentionProductActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, product);*/
                 }
             });
 

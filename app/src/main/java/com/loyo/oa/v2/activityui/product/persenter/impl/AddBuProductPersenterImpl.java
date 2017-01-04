@@ -1,5 +1,9 @@
 package com.loyo.oa.v2.activityui.product.persenter.impl;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.product.api.ProductService;
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
@@ -81,5 +85,26 @@ public class AddBuProductPersenterImpl implements AddBuProductPersenter {
                         addBuProductView.getAttachmentSuccessEmbl(attachments);
                     }
                 });
+    }
+
+    @Override
+    public void setWatcherOnClick(EditText editText,int type) {
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }
