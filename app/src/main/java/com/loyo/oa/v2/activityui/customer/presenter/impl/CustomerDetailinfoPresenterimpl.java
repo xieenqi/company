@@ -29,7 +29,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.voip.VoIPCallActivity;
 
 import java.util.HashMap;
 
@@ -203,20 +202,6 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
             @Override
             public void onClick(View v) {
                 callReturn(phone, callType, name);
-                callPhonePopView.dismiss();
-            }
-        });
-         /*商务电话-直拨*/
-        callPhonePopView.directPhone(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle mBundle = new Bundle();
-                mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone);
-                mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name);
-                mBundle.putString(VoIPCallActivity.CALLEE_USER_KEY, contactId);
-                mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, customerId);
-                mBundle.putInt(VoIPCallActivity.CALLEE_USER_TYPE, callType);
-                MainApp.getMainApp().startActivity(mActivity, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 callPhonePopView.dismiss();
             }
         });

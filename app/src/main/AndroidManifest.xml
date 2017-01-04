@@ -53,9 +53,6 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-
     <application
         android:name=".application.MainApp"
         android:allowBackup="true"
@@ -950,11 +947,11 @@
             </intent-filter>
         </service>
 
-        <service android:name="com.yzxtcp.service.YzxIMCoreService" />
+        <!--<service android:name="com.yzxtcp.service.YzxIMCoreService" />-->
 
-        <receiver android:name="com.loyo.oa.common.patch.AlarmReceiver"></receiver>
-        <receiver android:name="com.yzxtcp.tools.tcp.receiver.MsgBackReceiver"></receiver>
-        <receiver android:name="com.yzx.tools.RtppReceiver" />
+        <!--<receiver android:name="com.loyo.oa.common.patch.AlarmReceiver"></receiver>-->
+        <!--<receiver android:name="com.yzxtcp.tools.tcp.receiver.MsgBackReceiver"></receiver>-->
+        <!--<receiver android:name="com.yzx.tools.RtppReceiver" />-->
 
         <!-- Required SDK核心功能 -->
         <receiver

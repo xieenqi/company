@@ -28,7 +28,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.voip.VoIPCallActivity;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -338,14 +337,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 //
         if (callType == ContactViewGroup.CallbackPhone) {
             requestClientInfo();
-        } else if (callType == ContactViewGroup.DirectPhone) {
-            Bundle mBundle = new Bundle();
-            mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, callNum);
-            mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
-            mBundle.putString(VoIPCallActivity.CALLEE_USER_KEY, contactId);
-            mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, customerContact.getId());
-            mBundle.putInt(VoIPCallActivity.CALLEE_USER_TYPE, callType);
-            app.startActivity(CustomerContactManageActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
         }
     }
 
