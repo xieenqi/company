@@ -32,8 +32,8 @@ public interface IProduct {
     /**
      * 产品列表
      */
-    @GET("/product/{categoryId}")
-    Observable<BaseResponse<PaginationX<ProductListModel>>> getSerachProduct(@Path("categoryId") String categoryId, @QueryMap HashMap<String, Object> map);
+    @GET("/product/")
+    Observable<BaseResponse<PaginationX<ProductListModel>>> getSerachProduct( @QueryMap HashMap<String, Object> map);
 
     /**
      * 产品详情

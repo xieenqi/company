@@ -121,8 +121,8 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
         map.put("keyWords","");
         map.put("pageIndex",1);
         map.put("pageSize",100);
-
-        ProductService.getProductList(categoryId+"",map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
+        map.put("categoryId",categoryId);
+        ProductService.getProductList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
             @Override
             public void onNext(PaginationX<ProductListModel> productDynmModel) {
                 ll_loading.setStatus(LoadingLayout.Success);
@@ -165,7 +165,6 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
                             categoryId=selectItem.get(0).getId();
                             getProductList();
                         }
-                        Log.i("tttt", "clickOk: "+selectItem.get(0).getId());
                     }
                 });
                 break;
