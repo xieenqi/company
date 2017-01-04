@@ -115,6 +115,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 }
                 DashboardType.COMMON.setTttle(stockListModel.get(position).tagItemName);
                 Bundle bundle = new Bundle();
+                bundle.putInt("time", stockType);
                 bundle.putSerializable("type", DashboardType.COMMON);
                 bundle.putSerializable("tagItemId",stockListModel.get(position).tagItemId);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
@@ -346,6 +347,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                     return;
                 }
                 Bundle bdFollowup = new Bundle();
+                bdFollowup.putInt("time", followUpType);
                 bdFollowup.putSerializable("type", DashboardType.CUS_FOLLOWUP);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdFollowup);
                 break;
@@ -354,6 +356,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                     return;
                 }
                 Bundle bdSignin = new Bundle();
+                bdSignin.putInt("time", followUpType);
                 bdSignin.putSerializable("type", DashboardType.CUS_SIGNIN);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdSignin);
                 break;
@@ -362,6 +365,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                     return;
                 }
                 Bundle bdRecord = new Bundle();
+                bdRecord.putInt("time", followUpType);
                 bdRecord.putSerializable("type", DashboardType.CUS_CELL_RECORD);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdRecord);
                 break;
@@ -370,6 +374,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                     return;
                 }
                 Bundle bdOrderNumber = new Bundle();
+                bdOrderNumber.putInt("time", moneyCnType);
                 bdOrderNumber.putSerializable("type", DashboardType.ORDER_NUMBER);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdOrderNumber);
                 break;
@@ -378,6 +383,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                     return;
                 }
                 Bundle bdOrderMoney = new Bundle();
+                bdOrderMoney.putInt("time", moneyCnType);
                 bdOrderMoney.putSerializable("type", DashboardType.ORDER_MONEY);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdOrderMoney);
                 break;

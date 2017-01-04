@@ -13,6 +13,7 @@ import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.DashboardFilterTimeModel;
+import com.loyo.oa.dropdownmenu.filtermenu.DynamicFilterByTime;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
@@ -56,16 +57,18 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     private int pageIndex = 1;
     private HashMap<String, Object> map = new HashMap<String, Object>();
+    private DynamicFilterByTime defaultTime;//默认的显示时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getIntentData();
-        initView();
         map.put("pageIndex", pageIndex);
         map.put("pageSize", "30");
-        map.put("qType", "1");
+        map.put("qType", "0");
         map.put("sortBy", "1");
+
+        getIntentData();
+        initView();
         getPageData();
     }
 
@@ -141,8 +144,50 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         Intent intent = getIntent();
         //获取传入的类型数据，表示是哪种列表
         type = (DashboardType) intent.getSerializableExtra("type");
-
+        getDefaultTime(intent.getIntExtra("time",0));
     }
+
+    //获取上一页传过来的显示时间
+    private void getDefaultTime(int iTime){
+        switch (iTime){
+            case 1://今天
+                defaultTime=DynamicFilterByTime.TODAY;
+                break;
+            case 2://"昨天"
+                defaultTime=DynamicFilterByTime.YESTERDAY;
+                break;
+            case 3://"本周"
+                defaultTime=DynamicFilterByTime.TOWEEK;
+                break;
+            case 4://"上周"
+                defaultTime=DynamicFilterByTime.LASTWEEK;
+                break;
+            case 5://本月"
+                defaultTime=DynamicFilterByTime.TOMONTH;
+                break;
+            case 6://"上月"
+                defaultTime=DynamicFilterByTime.LASTMONTH;
+                break;
+            case 7://"本季度"
+                defaultTime=DynamicFilterByTime.TOQUARTER;
+                break;
+            case 8://上季度"
+                defaultTime=DynamicFilterByTime.LASQUARTER;
+                break;
+            case 9://"本年"
+                defaultTime=DynamicFilterByTime.TOYEAR;
+                break;
+            case 10://"去年"
+                defaultTime=DynamicFilterByTime.LASYEAR;
+                break;
+            default:// 不限
+                defaultTime=DynamicFilterByTime.UNLIMITED;
+
+        }
+        //设置默认的显示时间
+        map.put("qType",defaultTime.getKey());
+    }
+
 
     private void initView() {
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -181,7 +226,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         }
         //添加3个筛选字段
         List<FilterModel> options = new ArrayList<>();
-        options.add(ORDER_MONEY==type||ORDER_NUMBER==type ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel() : DashboardFilterTimeModel.getFilterModel());
+        options.add(ORDER_MONEY==type||ORDER_NUMBER==type ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel(defaultTime) : DashboardFilterTimeModel.getFilterModel(defaultTime));
         options.add(type.getSort());
         options.add(new OrganizationFilterModel(depts, title));
 
@@ -206,7 +251,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 } else if (2 == menuIndex) {
                     //部门或者人筛选
                     if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
-                        map.put("xPath",model.getKey());
+                        map.put("xpath",model.getKey());
                         map.remove("userId");
                     } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
                         map.put("userId",model.getKey());
@@ -218,6 +263,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             }
         });
     }
+
+
 
     @Override
     public void onClick(View v) {
