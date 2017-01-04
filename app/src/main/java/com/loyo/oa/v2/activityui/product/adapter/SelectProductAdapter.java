@@ -26,6 +26,9 @@ import java.util.ArrayList;
 public class SelectProductAdapter extends BaseAdapter{
 
     Context mContext;
+
+
+
     ArrayList<ProductListModel> models;
 
     public SelectProductAdapter(Context mContext,ArrayList<ProductListModel> models){
@@ -33,6 +36,10 @@ public class SelectProductAdapter extends BaseAdapter{
         this.models = models;
     }
 
+    public void setModels(ArrayList<ProductListModel> models) {
+        this.models = models;
+        notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
         return models.size();
