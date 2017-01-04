@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.product.adapter.SelectProductMenuAdapter;
 import com.loyo.oa.v2.activityui.product.api.ProductService;
@@ -43,6 +44,7 @@ public class SelectProductMenu extends PopupWindow  {
 
     private List<ClassifySeletorItem> data;
     private ClassifySeletorView classifySeletorView;
+    private LoadingLayout ll_layout;
 
     public SelectProductMenu(Context mContext, SelectProMenuView selectProMenuView) {
         this.mContext = mContext;
@@ -52,6 +54,9 @@ public class SelectProductMenu extends PopupWindow  {
 
     void initUI() {
         classifySeletorView = new ClassifySeletorView(mContext);
+        ll_layout=new LoadingLayout(mContext);
+        ll_layout.addView(ll_layout);
+        ll_layout.setStatus(LoadingLayout.Success);
         this.setContentView(classifySeletorView);
         this.setAnimationStyle(R.style.SelectProductViewAnim);
         this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
@@ -64,15 +69,17 @@ public class SelectProductMenu extends PopupWindow  {
         if (!isShow) {
             isShow = true;
             if (null == data) {
-                ProductService.getProductClassify().subscribe(new DefaultLoyoSubscriber<List<ClassifySeletorItem>>(LoyoErrorChecker.TOAST) {
+                ll_layout.setStatus(LoadingLayout.Loading);
+                SelectProductMenu.this.showAsDropDown(parent);
+                viewCrol.popWindowShowEmbl();
+                ProductService.getProductClassify().subscribe(new DefaultLoyoSubscriber<List<ClassifySeletorItem>>(ll_layout) {
                     @Override
                     public void onNext(List<ClassifySeletorItem> classifySeletorItems) {
+                        ll_layout.setStatus(LoadingLayout.Success);
                         data = classifySeletorItems;
                         classifySeletorView.setup(classifySeletorItems, listener);
                         //单选，不能放在上面，没有setup，不可以设置。
                         classifySeletorView.setSingleSelete(true);
-                        SelectProductMenu.this.showAsDropDown(parent);
-                        viewCrol.popWindowShowEmbl();
                     }
                 });
             } else {

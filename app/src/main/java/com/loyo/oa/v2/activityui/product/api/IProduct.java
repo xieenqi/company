@@ -32,7 +32,7 @@ public interface IProduct {
     /**
      * 产品列表
      */
-    @GET("/product/")
+    @GET("/product")
     Observable<BaseResponse<PaginationX<ProductListModel>>> getSerachProduct( @QueryMap HashMap<String, Object> map);
 
     /**

@@ -163,8 +163,10 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
                         popWindowDimsEmbl();
                         if(selectItem.size()>0){
                             categoryId=selectItem.get(0).getId();
-                            getProductList();
+                        }else{
+                            categoryId="";
                         }
+                        getProductList();
                     }
                 });
                 break;
