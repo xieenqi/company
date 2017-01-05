@@ -76,7 +76,6 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private int moneyCnType  = 5;  //数量金额 默认本月
     private int followUpPage = 0;  //0:客户 1:线索
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

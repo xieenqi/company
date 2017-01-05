@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -117,6 +118,8 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         layout_prdkind = (LinearLayout) findViewById(R.id.add_buy_product_ll_15);
         et_price = (EditText) findViewById(R.id.et_price);
         et_number = (EditText) findViewById(R.id.et_number);
+        et_number.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        et_price.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         llDefinedHolder = (LinearLayout) findViewById(R.id.add_buy_product_more_definde);
         selectProduct   = (LinearLayout) findViewById(R.id.add_buy_product_ll_1);
@@ -389,20 +392,22 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
             layout_image.setVisibility(View.GONE);
         }
 
-
         et_number.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 if (!TextUtils.isEmpty(s + "")) {
-                    int num = Integer.parseInt(s + "");
+                    float num = Float.parseFloat(s + "");
                     if (stockEnabled && num > detailsModel.stock) {
                         Toast("库存不足");
                         et_number.setText(detailsModel.getStock()+"");
