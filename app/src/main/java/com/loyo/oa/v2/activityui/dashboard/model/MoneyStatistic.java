@@ -47,9 +47,6 @@ public class MoneyStatistic {
         String mvNumShow = "0%"; /* 数量涨幅百分比 */
         if(targetAmount != 0){
             double percent = ((double)totalAmount/targetAmount);
-            if (percent >1) {
-                percent = 1;
-            }
             mvNumShow = numberFormatter.format(percent*100)+"%";
         }
         return mvNumShow;
@@ -77,9 +74,6 @@ public class MoneyStatistic {
         String mvMonShow = "0%"; /* 金额涨幅百分比 */
         if(targetMoney != 0){
             double percent = ((double)totalMoney/targetMoney);
-            if (percent >1) {
-                percent = 1;
-            }
             mvMonShow = numberFormatter.format(percent * 100)+"%";
         }
         return mvMonShow;
