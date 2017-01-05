@@ -34,7 +34,7 @@ public interface IAttachment {
 
     //删除附件(新加入UUID)
     @DELETE("/attachment/{id}")
-    Observable<Attachment> remove(@Path("id") String id, @QueryMap HashMap<String, Object> map);
+    Observable<Object> remove(@Path("id") String id, @QueryMap HashMap<String, Object> map);
 
     @GET("/attachment/uuid/{uuid}")
     Observable<ArrayList<Attachment>> getAttachments(@Path("uuid") String uuid);

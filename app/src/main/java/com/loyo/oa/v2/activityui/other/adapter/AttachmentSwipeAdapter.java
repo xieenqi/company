@@ -25,7 +25,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -244,19 +243,18 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                             map.put("bizType", bizType);
                             map.put("uuid", uuid);
                             AttachmentService.remove(attachment.getId(), map)
-                                    .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                                    .subscribe(new DefaultLoyoSubscriber<Object>() {
 
+                                        @Override
                                         public void onError(Throwable e) {
                                             super.onError(e);
-                                            Utils.dialogDismiss();
                                         }
 
                                         @Override
-                                        public void onNext(Attachment attachment) {
+                                        public void onNext(Object object) {
                                             if (mAction != null) {
                                                 mAction.afterDelete(attachment);
                                             }
-                                            Utils.dialogDismiss();
                                         }
                                     });
 

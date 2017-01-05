@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.attendance.presenter.impl;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.SpannableStringBuilder;
@@ -18,14 +17,9 @@ import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.Utils;
 
-import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -226,9 +220,9 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         map.put("bizType", 0);
         map.put("uuid", uuid);
         AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
-                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud) {
+                .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
                     @Override
-                    public void onNext(Attachment attachment) {
+                    public void onNext(Object attachment) {
                         crolView.deleteAttaSuccessEmbl(delAttachment);
                     }
                 });

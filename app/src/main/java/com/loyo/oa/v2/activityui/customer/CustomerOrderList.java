@@ -35,8 +35,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.loyo.oa.v2.R.id.listView;
-
 /**
  * 客户详情 【订单】列表
  * Created by xeq on 16/8/8.
@@ -172,18 +170,17 @@ public class CustomerOrderList extends BaseLoadingActivity implements View.OnCli
                     @Override
                     public void onNext(PaginationX<OrderListItem> orderListItemPaginationX) {
                         listView_demands.onRefreshComplete();
-                        if (PaginationX.isEmpty(orderListItemPaginationX)) {
-                            Toast("没有数据");
-                            return;
-                        }
-                        if (!isPullDown) {
-                            listData.addAll(orderListItemPaginationX.records);
-                        } else {
-                            listData = orderListItemPaginationX.records;
-                        }
-                        listAdapter.setData(listData);
                         ll_loading.setStatus(LoadingLayout.Success);
-                        if (isPullDown && listData.size() == 0)
+                        if (! PaginationX.isEmpty(orderListItemPaginationX)) {
+                            if (!isPullDown) {
+                                listData.addAll(orderListItemPaginationX.records);
+                            } else {
+                                listData = orderListItemPaginationX.records;
+                            }
+                        }
+
+                        listAdapter.setData(listData);
+                        if (listData.size() == 0)
                             ll_loading.setStatus(LoadingLayout.Empty);
                     }
                 });

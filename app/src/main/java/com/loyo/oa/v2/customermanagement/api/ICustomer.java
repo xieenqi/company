@@ -16,7 +16,6 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
-import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.beans.CustomerFollowUpModel;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -189,7 +188,7 @@ public interface ICustomer {
     Observable<ArrayList<Product>> getProducts();
 
     @GET("/salestage")
-    Observable<SaleStage> getSaleStges();
+    Observable<ArrayList<SaleStage>> getSaleStges();
 
 
     /**

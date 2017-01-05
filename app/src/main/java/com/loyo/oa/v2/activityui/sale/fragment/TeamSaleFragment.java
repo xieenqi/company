@@ -89,7 +89,7 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
 
     public void initView(View view) {
 //        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
-        mSaleStages= SaleStageConfig.getSaleStageCache();
+        mSaleStages= SaleStageConfig.getSaleStage(true);
         ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
