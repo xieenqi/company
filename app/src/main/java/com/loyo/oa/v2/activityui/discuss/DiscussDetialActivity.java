@@ -869,7 +869,6 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
 
             @Override
             public void onNext(Object o) {
-                finishActivity();
             }
         });
     }
