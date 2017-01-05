@@ -19,6 +19,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 
 public class ProductDetailActivity extends BaseActivity implements View.OnClickListener{
 
@@ -27,6 +28,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     private GridView gridViewPic;
     private LinearLayout llDefinedHolder;
     private LinearLayout ll_back;
+    private LinearLayout layout_stock;
     private LoadingLayout ll_loading;
     private ProductDetails detailsModel;
     private String id;
@@ -38,6 +40,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     private TextView prdKind; //产品分类
     private TextView memo;    //备注
 
+    private boolean isStockEnable = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +51,12 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
     private void initView(){
         id = getIntent().getStringExtra("id");
+        isStockEnable = getIntent().getBooleanExtra("enable",true);
         if(TextUtils.isEmpty(id)){
             Toast("参数异常");
             finish();
         }
-
+        LogUtil.dee("enable:"+isStockEnable);
         ll_loading = (LoadingLayout) findViewById(R.id.ll_loading);
         tvTitle= (TextView) findViewById(R.id.tv_title);
         prdName = (TextView) findViewById(R.id.product_detail_tv_2);
@@ -61,6 +66,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         prdFk = (TextView) findViewById(R.id.product_detail_tv_7);
         memo = (TextView) findViewById(R.id.product_detail_more_tv_6);
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
+        layout_stock = (LinearLayout) findViewById(R.id.layout_stock);
 
         llDefinedHolder= (LinearLayout) findViewById(R.id.product_detail_more_defined);
         gridViewPic= (GridView) findViewById(R.id.product_detail_more_grid_1);
@@ -75,8 +81,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         });
 
         ll_back.setOnClickListener(this);
-
         tvTitle.setText("产品详细");
+        layout_stock.setVisibility(isStockEnable ? View.VISIBLE : View.GONE);
         getProductDetails();
     }
 

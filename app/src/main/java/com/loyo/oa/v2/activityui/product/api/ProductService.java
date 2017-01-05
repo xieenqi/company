@@ -32,13 +32,13 @@ public class ProductService {
     }
 
     //获取产品列表
-    public static Observable<PaginationX<ProductListModel>> getProductList(HashMap<String, Object> params) {
+    public static Observable<ProductListModel> getProductList(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IProduct.class)
                         .getSerachProduct(params)
-                        .compose(RetrofitAdapterFactory.<PaginationX<ProductListModel>>applySchedulers());
+                        .compose(RetrofitAdapterFactory.<ProductListModel>applySchedulers());
     }
 
     //获取产品详情

@@ -81,6 +81,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     private String saleId = "";
     private String oldId = "";
     private int fromPage = 0;
+    private boolean isStockEnable = true;
     private ArrayList<SaleIntentionalProduct> productListData;
 
     @Override
@@ -500,8 +501,11 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     public void selectProductCallBack(SelectProductEvent event){
         Bundle mBundle = event.bundle;
         productId = mBundle.getString("id");
+        isStockEnable = mBundle.getBoolean("enable");
+        LogUtil.dee("enable:"+isStockEnable);
         ll_loading.setStatus(LoadingLayout.Loading);
         mPersenter.getProductDetails(productId);
+        layout_prdsize.setVisibility(isStockEnable ? View.VISIBLE : View.GONE);
     }
 
     @Override

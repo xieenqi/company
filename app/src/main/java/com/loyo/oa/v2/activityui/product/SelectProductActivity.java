@@ -1,23 +1,18 @@
 package com.loyo.oa.v2.activityui.product;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.product.adapter.SelectProductAdapter;
 import com.loyo.oa.v2.activityui.product.api.ProductService;
 import com.loyo.oa.v2.activityui.product.event.SelectProductEvent;
-import com.loyo.oa.v2.activityui.product.model.ProductClassifyModel;
-import com.loyo.oa.v2.activityui.product.model.ProductDynmModel;
 import com.loyo.oa.v2.activityui.product.model.ProductListModel;
 import com.loyo.oa.v2.activityui.product.view.SelectProductMenu;
 import com.loyo.oa.v2.activityui.product.viewcontrol.SelectProMenuView;
@@ -30,8 +25,6 @@ import com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorView;
 import com.loyo.oa.v2.customview.classify_seletor.ItemAdapter;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
-
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -52,10 +45,12 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
     private SelectProductMenu productMenu;
     private SelectProductAdapter mAdapter;
     private LoadingLayout ll_loading;
-
-    private PaginationX<ProductListModel> models;
+    private ProductListModel models;
+    public ArrayList<ProductListModel.ProductList> products;
 
     private String categoryId="";//分类id，默认加载的时候为""
+    public boolean stockEnabled;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +60,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
 
     void bindAdapter(){
         if(null == mAdapter){
-            mAdapter = new SelectProductAdapter(this,models.getRecords());
+            mAdapter = new SelectProductAdapter(this,products,stockEnabled);
             lv_listview.setAdapter(mAdapter);
         }else{
             mAdapter.notifyDataSetChanged();
@@ -100,12 +95,12 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
         lv_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(models.getRecords().get(position).stock == 0){
+                if(products.get(position).stock == 0){
                     Toast("库存不足");
                 }else{
                     SelectProductEvent event = new SelectProductEvent();
                     event.bundle = new Bundle();
-                    event.bundle.putString("id",models.getRecords().get(position).id);
+                    event.bundle.putString("id",products.get(position).id);
                     AppBus.getInstance().post(event);
                     finish();
                 }
@@ -122,15 +117,17 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
         map.put("pageIndex",1);
         map.put("pageSize",100);
         map.put("categoryId",categoryId);
-        ProductService.getProductList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>(ll_loading) {
+        ProductService.getProductList(map).subscribe(new DefaultLoyoSubscriber<ProductListModel>(ll_loading) {
             @Override
-            public void onNext(PaginationX<ProductListModel> productDynmModel) {
-                if(productDynmModel.isEmpty(productDynmModel)){
+            public void onNext(ProductListModel productDynmModel) {
+                products = productDynmModel.records.products;
+                stockEnabled = productDynmModel.records.stockEnabled;
+                if(products.size() == 0){
                     ll_loading.setStatus(LoadingLayout.Empty);
                 }else{
                     ll_loading.setStatus(LoadingLayout.Success);
                     if(null != mAdapter){
-                        mAdapter.setModels(productDynmModel.getRecords());
+                        mAdapter.setModels(productDynmModel.records.products);
                     }else{
                         models=productDynmModel;
                         bindAdapter();
