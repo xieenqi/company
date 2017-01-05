@@ -115,7 +115,7 @@ public class SaleStageActivity extends BaseActivity {
      * 获取销售阶段 数据
      */
     public void getData() {
-        adapterStage.setData(SaleStageConfig.getSaleStageCache());
+        adapterStage.setData(SaleStageConfig.getSaleStage(true));
     }
 
     /**

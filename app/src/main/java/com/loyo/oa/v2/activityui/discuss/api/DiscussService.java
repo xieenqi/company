@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.discuss.api;
 
-import com.loyo.oa.v2.activityui.clue.api.IClue;
 import com.loyo.oa.v2.activityui.discuss.HttpDiscussDet;
 import com.loyo.oa.v2.activityui.discuss.HttpDiscussItem;
 import com.loyo.oa.v2.activityui.discuss.HttpMyDiscussItem;
@@ -57,7 +56,7 @@ public class DiscussService {
                         .build(/*TODO:*/Config_project.API_URL_EXTRA())
                         .create(IDiscuss.class)
                         .updateReadDot(params)
-                        .compose(RetrofitAdapterFactory.<Object>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<Object>compatApplyCanBeEmptySchedulers());
     }
 
     //讨论

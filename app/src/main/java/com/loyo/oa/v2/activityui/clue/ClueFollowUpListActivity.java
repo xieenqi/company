@@ -350,6 +350,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         listView.onRefreshComplete();
         if (isPullOrDown||needToRefresh) {//增加了的，就要清除老数据
             listModel.clear();
+            needToRefresh = false;
         }
         mPagination = paginationX;
         listModel.addAll(paginationX.getRecords());
