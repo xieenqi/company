@@ -45,6 +45,7 @@ android {
                            'src/main/res-loyo/common',
                            'src/main/res-loyo/followup',
                            'src/main/res-loyo/project',
+                           'src/main/res-loyo/product',
                            'src/main/res-loyo/sale',
                            'src/main/res-loyo/tasks',
                            'src/main/res-loyo/workreports',
