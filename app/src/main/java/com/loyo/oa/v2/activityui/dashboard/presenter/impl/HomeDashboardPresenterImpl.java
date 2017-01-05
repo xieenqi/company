@@ -128,7 +128,6 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
 
             @Override
             public void onError(Throwable e) {
-                super.onError(e);
                 crolView.followUpErrorEmbl();
             }
         });
@@ -148,7 +147,6 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
 
             @Override
             public void onError(Throwable e) {
-                super.onError(e);
                 crolView.stockErrorEmbl();
             }
         });
@@ -167,7 +165,6 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
 
             @Override
             public void onError(Throwable e) {
-                super.onError(e);
                 crolView.moneyConErrorEmbl();
             }
         });

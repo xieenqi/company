@@ -73,6 +73,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private int stockType = 1;  //增量存量 默认今天
     private int moneyCnType = 5;  //数量金额 默认本月
     private int followUpPage = 0;  //0:客户 1:线索
+    private boolean isLoading;
 
     @Nullable
     @Override
@@ -219,6 +220,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
         Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
                 ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, tv_click_rest1);
+        isLoading = true;
         getPageData();
     }
 
@@ -232,6 +234,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      * 选择此页面刷新全部数据
      */
     public void onInIt() {
+        isLoading = false;
         getPageData();
     }
 
@@ -245,7 +248,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 loading_load1,
                 loading_error1,
                 loading_view1,
-                LoadStatus.LOAD);
+                isLoading ? LoadStatus.LOAD : LoadStatus.SUCCESS);
         mPresenter.getFollowUpData(type);
     }
 
@@ -259,7 +262,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 loading_load2,
                 loading_error2,
                 loading_view2,
-                LoadStatus.LOAD);
+                isLoading ? LoadStatus.LOAD : LoadStatus.SUCCESS);
         mPresenter.getStockData(type);
     }
 
@@ -273,7 +276,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 loading_load3,
                 loading_error3,
                 loading_view3,
-                LoadStatus.LOAD);
+                isLoading ? LoadStatus.LOAD : LoadStatus.SUCCESS);
         mPresenter.getMoneyCountData(type);
     }
 
@@ -395,16 +398,19 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
             /** 跟进,点击重试 */
             case R.id.tv_click_rest1:
+                isLoading = true;
                 getFollowUpData(followUpType);
                 break;
 
             /** 增量存量,点击重试 */
             case R.id.tv_click_rest2:
+                isLoading = true;
                 getStockData(stockType);
                 break;
 
             /** 数量金额,点击重试 */
             case R.id.tv_click_rest3:
+                isLoading = true;
                 getMoneyCount(moneyCnType);
                 break;
         }
@@ -421,6 +427,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     @Override
     public void setScreenVal(ScreenType screenType, int type, String value) {
         //Toast(value+":"+type);
+        isLoading = true;
         getData(screenType.type(), type, value);
     }
 

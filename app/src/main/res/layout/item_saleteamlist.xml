@@ -103,10 +103,6 @@
 
     </LinearLayout>
 
-    <include
-        layout="@layout/include_solid_line_left"
-        android:layout_width="wrap_content"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="@dimen/dimen_5" />
+    <include layout="@layout/include_solid_line_left"/>
 
 </LinearLayout>
