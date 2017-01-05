@@ -27,10 +27,10 @@
 #==================protobuf======================
 -dontwarn com.google.**
 -keep class com.google.protobuf.** {*;}
-#百度的免混淆
--keep class com.baidu.** {*;}
--keep class vi.com.** {*;}
--dontwarn com.baidu.**
+##百度的免混淆
+#-keep class com.baidu.** {*;}
+#-keep class vi.com.** {*;}
+#-dontwarn com.baidu.**
 #高德的免混淆
 -keep class com.amap.api.maps2d.**{*;}
 -keep class com.amap.api.mapcore2d.**{*;}
@@ -48,18 +48,6 @@ public static final int *;
 #避免混淆Bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
-
-#==================yzx==========================
--dontwarn com.yzxtcp.**
--keep class com.yzxtcp.** {*;}
--dontwarn com.gl.softphone.**
--keep class com.gl.softphone.** {*;}
--dontwarn com.yzx.**
--keep class com.yzx.** {*;}
--dontwarn org.bson.**
--keep class org.bson.** {*;}
--dontwarn org.webrtc.**
--keep class org.webrtc.** {*;}
 
 #glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
