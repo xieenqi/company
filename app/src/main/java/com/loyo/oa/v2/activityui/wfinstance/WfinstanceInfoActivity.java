@@ -223,7 +223,13 @@ public class WfinstanceInfoActivity extends BaseActivity {
 //            }
 //        });
 
-        WfinstanceService.getWfInstance(wfInstanceId).subscribe(new DefaultLoyoSubscriber<WfInstance>(LoyoErrorChecker.LOADING_LAYOUT) {
+        WfinstanceService.getWfInstance(wfInstanceId).subscribe(new DefaultLoyoSubscriber<WfInstance>(ll_loading) {
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
+
             @Override
             public void onNext(WfInstance wfInstance_current) {
                 mWfInstance = wfInstance_current;

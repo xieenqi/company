@@ -6,6 +6,7 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.WfTemplate;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
+import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,7 +94,7 @@ public interface IWfinstance {
      * 获取审批详情
      */
     @GET("/wfinstance/{id}")
-    Observable<WfInstance> getWfInstance(@Path("id") String id);
+    Observable<BaseResponse<WfInstance>> getWfInstance(@Path("id") String id);
 
     /**
      * 删除审批详情

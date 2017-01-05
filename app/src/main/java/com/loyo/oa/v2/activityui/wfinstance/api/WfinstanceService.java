@@ -126,7 +126,7 @@ public class WfinstanceService {
                 .build(/*TODO:*/Config_project.API_URL())
                 .create(IWfinstance.class)
                 .getWfInstance(id)
-                .compose(RetrofitAdapterFactory.<WfInstance>compatApplySchedulers());
+                .compose(RetrofitAdapterFactory.<WfInstance>applySchedulers());
     }
 
     // 删除审批详情
