@@ -289,7 +289,7 @@
             android:name=".activityui.tasks.TasksInfoActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.tasks.ChildTaskMnageActivity_"
             android:launchMode="singleTop"
