@@ -200,8 +200,6 @@ dependencies {
     compile project(path: ':LibraryModule')
     compile project(':library:circularprogressbutton')
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
-    compile files('libs/mid-sdk-3.6.jar')
-    compile files('libs/mta-sdk-2.2.1.jar')
 }
 
 apt {
