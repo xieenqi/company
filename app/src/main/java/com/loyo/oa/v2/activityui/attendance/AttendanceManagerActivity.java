@@ -68,6 +68,16 @@ public class AttendanceManagerActivity extends BaseFragmentActivity {
     public static final float ROTATE_PIVOT_Y = 0.5f;
     public static final int ROTATE_TIME = 200;
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        if(savedInstanceState!= null) {
+            String FRAGMENTS_TAG = "Android:support:fragments";
+            savedInstanceState.remove(FRAGMENTS_TAG);
+        }
+        super.onCreate(savedInstanceState);
+    }
+
     @AfterViews
     void initViews() {
         setTouchView(-1);

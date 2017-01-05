@@ -321,7 +321,6 @@
                             android:gravity="left"
                             android:layout_marginTop="@dimen/wfinstance_text_line_space"
                             android:textIsSelectable="true"
-                            android:selectAllOnFocus="true"
                             />
 
                     </LinearLayout>

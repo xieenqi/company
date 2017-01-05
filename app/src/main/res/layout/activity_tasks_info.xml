@@ -92,7 +92,6 @@
                     android:text=""
                     android:textSize="@dimen/text_sp15"
                     android:textIsSelectable="true"
-                    android:selectAllOnFocus="true"
                     />
 
                 <View

@@ -72,7 +72,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/common_layout_padding"
                     android:gravity="left|top"
-                    android:selectAllOnFocus="true"
                     android:singleLine="false"
                     android:textIsSelectable="true" />
 
