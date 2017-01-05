@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 /**
  * 分类选择器
  * 2种使用的方式
@@ -69,9 +68,6 @@ public class ClassifySeletorView extends LinearLayout {
                         d.add(i);
                     }
                 }
-                for (ClassifySeletorItem seletorItem : d) {
-                    Log.i(TAG, "getData: "+seletorItem.getId()+","+seletorItem.getName());
-                }
                 return d;
             }
 
@@ -100,6 +96,8 @@ public class ClassifySeletorView extends LinearLayout {
             @Override
             public void clickItem(boolean isSelected, ItemAdapter.ItemViewHolder holder, int position, ClassifySeletorItem item) {
                 seletorListener.clickItem(isSelected, holder, position, item);
+                Log.i(TAG, "clickItem: "+item.getName());
+
             }
 
             @Override
@@ -131,18 +129,20 @@ public class ClassifySeletorView extends LinearLayout {
         btnReset.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                titleAdapter.setPage(0);
-                slideContainer.setPage(0);
-                slideContainer.reset();
-                classifySeletorListener.clickReset();
+                if( slideContainer.reset()){
+                    titleAdapter.setPage(0);
+                    slideContainer.setPage(0);
+                    slideContainer.clearSelected();//要下班回家吃饭了，粗爆的设置
+                    classifySeletorListener.clickReset();
+                }
             }
         });
         titleAdapter = new TitleAdapter(context, rvTitle);
         //委托一下，标题被点击
         titleAdapter.setOnItemClickListener(new TitleAdapter.OnItemClickListener() {
             @Override
-            public void click(TitleAdapter.TitleViewHolder holder, int position, ClassifySeletorItem item) {
-                slideContainer.setPage(position);
+            public boolean click(TitleAdapter.TitleViewHolder holder, int position, ClassifySeletorItem item) {
+                return slideContainer.setPage(position);
             }
         });
 
@@ -172,14 +172,10 @@ public class ClassifySeletorView extends LinearLayout {
             }
 
             @Override
-            public List<ClassifySeletorItem> pageBack(int currentPage, ClassifySeletorItem item) {
+            public void pageBack(int currentPage, ClassifySeletorItem item) {
                 //返回的时候，还要加载数据
                 titleAdapter.pop();
-                if (null == item) {
-                    return classifySeletorListener.getData(2, firstHeadItem);
-                } else {
-                    return classifySeletorListener.getData(currentPage + 1, item);
-                }
+
             }
 
             @Override

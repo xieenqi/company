@@ -32,6 +32,8 @@ import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
+
 import java.util.ArrayList;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
@@ -58,7 +60,8 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     private TextView fw_totalsize, fw_count,
             visit_totalsize, visit_count,
-            voice_totalsize, voice_count;
+            voice_totalsize, voice_count,
+            tv_nums1,tv_nums2,tv_nums3;
 
     private TextView tv_target_count, tv_order_count,  /*  目标数量 订单数量  */
             tv_target_money, tv_order_money;  /*  目标金额 订单金额  */
@@ -114,20 +117,24 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      */
     private void bindFowUpData() {
         if (followUpPage == 0) {
+            tv_nums1.setText("客户数");
+            tv_nums2.setText("客户数");
+            tv_nums3.setText("客户数");
             fw_totalsize.setText(csclueFowUp.getActivityTotal());
             fw_count.setText(csclueFowUp.getActivityDistinct());
-
             visit_totalsize.setText(csclueFowUp.getVisitTotal());
             visit_count.setText(csclueFowUp.getVisitDistinct());
 
             voice_totalsize.setText(csclueFowUp.getVoiceTotal());
             voice_count.setText(csclueFowUp.getVoiceDistinct());
         } else {
+            tv_nums1.setText("线索数");
+            tv_nums3.setText("线索数");
             fw_totalsize.setText(csclueFowUp.getClueActivityTotal());
             fw_count.setText(csclueFowUp.getClueActivityDistinct());
 
-            visit_totalsize.setText(csclueFowUp.getClueVoiceTotal());
-            visit_count.setText(csclueFowUp.getClueVoiceDistinct());
+            voice_totalsize.setText(csclueFowUp.getClueVoiceTotal());
+            voice_count.setText(csclueFowUp.getClueVoiceDistinct());
         }
     }
 
@@ -199,6 +206,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         tv_order_count = (TextView) mView.findViewById(R.id.tv_order_count);
         tv_target_money = (TextView) mView.findViewById(R.id.tv_target_money);
         tv_order_money = (TextView) mView.findViewById(R.id.tv_order_money);
+        tv_nums1 = (TextView) mView.findViewById(R.id.tv_nums1);
+        tv_nums2 = (TextView) mView.findViewById(R.id.tv_nums2);
+        tv_nums3 = (TextView) mView.findViewById(R.id.tv_nums3);
 
         voice_count = (TextView) mView.findViewById(R.id.voice_count);
         visit_count = (TextView) mView.findViewById(R.id.visit_count);
@@ -372,7 +382,11 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 }
                 Bundle bdRecord = new Bundle();
                 bdRecord.putInt("time", followUpType);
-                bdRecord.putSerializable("type", DashboardType.CUS_CELL_RECORD);
+                if (followUpPage == 0) {
+                    bdRecord.putSerializable("type", DashboardType.CUS_CELL_RECORD);
+                } else {
+                    bdRecord.putSerializable("type", DashboardType.SALE_CELL_RECORD);
+                }
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdRecord);
                 break;
             /** 目标数量 */

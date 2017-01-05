@@ -35,24 +35,13 @@ public class MoneyStatistic {
         int mvNumValues = 0; /* 数量涨幅值 */
         if(targetAmount != 0){
             double percent = ((double)totalAmount/targetAmount);
-            if (percent >1) {
-                percent = 1;
+            if (percent > 1) {
+                mvNumValues = 100;
+            }else{
+                mvNumValues =  (int) Math.floor(percent*100); //取整
             }
-            mvNumValues =  (int) Math.floor(percent); //取整
         }
         return mvNumValues;
-    }
-
-    public String getNumberDisplayTitle() {
-        String mvNumShow = "0%"; /* 数量涨幅百分比 */
-        if(targetAmount != 0){
-            double percent = ((double)totalAmount/targetAmount);
-            if (percent >1) {
-                percent = 1;
-            }
-            mvNumShow = numberFormatter.format(percent*100)+"%";
-        }
-        return mvNumShow;
     }
 
     public int getMoneyPercent(){
@@ -63,11 +52,21 @@ public class MoneyStatistic {
         if(targetMoney != 0){
             double percent = ((double)totalMoney/targetMoney);
             if (percent >1) {
-                percent = 1;
+                mvMonValues = 100;
+            }else{
+                mvMonValues =  (int) Math.floor(percent*100); //取整
             }
-            mvMonValues =  (int) Math.floor(percent); //取整
         }
         return mvMonValues;
+    }
+
+    public String getNumberDisplayTitle() {
+        String mvNumShow = "0%"; /* 数量涨幅百分比 */
+        if(targetAmount != 0){
+            double percent = ((double)totalAmount/targetAmount);
+            mvNumShow = numberFormatter.format(percent*100)+"%";
+        }
+        return mvNumShow;
     }
 
     public String getMoneyDisplayTitle() {
@@ -77,9 +76,6 @@ public class MoneyStatistic {
         String mvMonShow = "0%"; /* 金额涨幅百分比 */
         if(targetMoney != 0){
             double percent = ((double)totalMoney/targetMoney);
-            if (percent >1) {
-                percent = 1;
-            }
             mvMonShow = numberFormatter.format(percent * 100)+"%";
         }
         return mvMonShow;

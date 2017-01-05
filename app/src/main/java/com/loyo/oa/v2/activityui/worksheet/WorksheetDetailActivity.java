@@ -189,7 +189,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
             {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(ExtraAndResult.CC_USER_ID, detail.id);
-                app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
+                app.startActivityForResult(this, WorksheetInfoActivity.class, MainApp.ENTER_TYPE_RIGHT, this.RESULT_FIRST_USER, bundle);
             }
             break;
             case R.id.tv_setting://批量设置
