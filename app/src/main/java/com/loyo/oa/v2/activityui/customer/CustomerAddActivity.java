@@ -561,6 +561,14 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("bizType", 100);
         CustomerService.getAddCustomerJur(map)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        LoyoToast.error(CustomerAddActivity.this, "获取数据失败，请重试");
+                        finish();
+                    }
+
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         mCustomerExtraDatas = contactLeftExtrasArrayList;
