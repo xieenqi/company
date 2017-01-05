@@ -54,9 +54,8 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
     private LoadingLayout ll_loading;
 
     private PaginationX<ProductListModel> models;
-    private List<ClassifySeletorItem> data;
 
-    private String categoryId;//分类id
+    private String categoryId="";//分类id，默认加载的时候为""
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,16 +118,25 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
     // 获取产品列表
     void getProductList(){
         HashMap<String, Object> map = new HashMap<>();
-        map.put("keyWords","");
+//      map.put("keyWords","");
         map.put("pageIndex",1);
         map.put("pageSize",100);
-
-        ProductService.getProductList("",map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
+        map.put("categoryId",categoryId);
+        ProductService.getProductList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>(ll_loading) {
             @Override
             public void onNext(PaginationX<ProductListModel> productDynmModel) {
-                ll_loading.setStatus(LoadingLayout.Success);
-                models = productDynmModel;
-                bindAdapter();
+                if(productDynmModel.isEmpty(productDynmModel)){
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                }else{
+                    ll_loading.setStatus(LoadingLayout.Success);
+                    if(null != mAdapter){
+                        mAdapter.setModels(productDynmModel.getRecords());
+                    }else{
+                        models=productDynmModel;
+                        bindAdapter();
+                    }
+                   bindAdapter();
+                }
             }
 
             @Override
@@ -141,9 +149,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onClick(final View v) {
-
         switch (v.getId()){
-
             // 返回
             case R.id.img_back:
                 onBackPressed();
@@ -163,9 +169,13 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
                         productMenu.dismiss();
                         popWindowDimsEmbl();
                         if(selectItem.size()>0){
+                            //单选，直接取下标0的数据
                             categoryId=selectItem.get(0).getId();
-                            getProductList();
+                        }else{
+                            Toast("你没有选择产品分类,显示全部产品");
+                            categoryId="";
                         }
+                        getProductList();
                     }
                 });
                 break;

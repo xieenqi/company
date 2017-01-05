@@ -371,7 +371,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
 
         tv_product.setText(detailsModel.name);
         tv_price.setText(detailsModel.unitPrice+"");
-        prdSize.setText(detailsModel.stock+"");
+        prdSize.setText(detailsModel.getStock()+"");
         prdKind.setText(detailsModel.category);
         memo.setText(detailsModel.memo);
         addDefined();
@@ -394,7 +394,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
                     int num = Integer.parseInt(s + "");
                     if (num > detailsModel.stock) {
                         Toast("库存不足");
-                        et_number.setText(detailsModel.stock+"");
+                        et_number.setText(detailsModel.getStock()+"");
                     }else{
                         if (!s.toString().contains(".") && s.toString().length() > 7) {
                             s.delete(7, s.toString().length());

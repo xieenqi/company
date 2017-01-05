@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyMemberFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
@@ -134,6 +133,12 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private void initView() {
 
         setTitle("我负责的");
+        /**
+        * TODO: crash
+        * */
+        img_title_left.setVisibility(View.INVISIBLE);
+        //StatService.trackCustomKVEvent(this, "loyo_crm_crash", null);
+        /////////
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);

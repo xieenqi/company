@@ -10,7 +10,9 @@ public class ProductListModel implements Serializable{
 
     public String id;
     public String name;
-    public int stock;
+    public float stock;
 
-
+    public String getStock(){
+        return stock > 1 ? (int) stock+"" : stock+"";
+    }
 }

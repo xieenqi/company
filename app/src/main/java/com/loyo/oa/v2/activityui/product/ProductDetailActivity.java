@@ -87,7 +87,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
         prdName.setText(detailsModel.name);
         prdPrice.setText(detailsModel.unitPrice+"");
-        prdSize.setText(detailsModel.stock+"");
+        prdSize.setText(detailsModel.getStock()+"");
         prdKind.setText(detailsModel.category);
         prdFk.setText(detailsModel.unit);
         memo.setText(detailsModel.memo);

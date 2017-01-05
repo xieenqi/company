@@ -251,10 +251,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 修改下面首页＋ 的入口
-                //测试调用
-                startActivity(new Intent(getActivity(), SelectProductActivity.class));
-                //showMoreWindow(v);
+                showMoreWindow(v);
             }
         });
         items = DBManager.Instance().getHomeItem();

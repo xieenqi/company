@@ -112,7 +112,7 @@ public class ProductSearchActivity extends BaseActivity {
         map.put("keyWords",words);
         map.put("pageIndex",1);
         map.put("pageSize",100);
-        ProductService.getProductList("",map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
+        ProductService.getProductList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<ProductListModel>>() {
             @Override
             public void onNext(PaginationX<ProductListModel> productDynmModel) {
                 if(productDynmModel.getRecords().size() == 0){
