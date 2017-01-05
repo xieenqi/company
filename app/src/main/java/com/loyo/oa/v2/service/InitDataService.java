@@ -57,6 +57,7 @@ public class InitDataService extends IntentService {
                         try {
                             String json = MainApp.gson.toJson(user);
                             setRootMap(user);
+                            MainApp.user = user;
                             DBManager.Instance().putUser(json);//保存用户信息
                             sendDataChangeBroad(user);
                         } catch (Exception E) {

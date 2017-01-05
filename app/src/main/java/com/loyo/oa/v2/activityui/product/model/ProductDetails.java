@@ -18,14 +18,20 @@ public class ProductDetails {
     public String category_path;
     public String name;
     public String unit;
-    public int unitPrice;
+    public float unitPrice;
     public String memo;
     public float stock;
     public ArrayList<ExtraData> extDatas = new ArrayList<>();
     public ArrayList<Attachment> attachment = new ArrayList<>();
 
     public String getStock(){
-        return stock > 1 ? (int) stock+"" : stock+"";
+        int stockInt = (int)stock;
+        if (stock == stockInt) {
+            return String.valueOf(stockInt);
+        }
+        else {
+            return String.valueOf(stock);
+        }
     }
 
 }

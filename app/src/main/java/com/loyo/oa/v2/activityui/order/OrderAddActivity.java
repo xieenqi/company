@@ -367,6 +367,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                             }
                         },2000);
                     }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
                 });
     }
 

@@ -86,7 +86,7 @@
                                 style="@style/product_line_text_main"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:text="产品原价" />
+                                android:text="单价" />
 
                             <TextView
                                 android:id="@+id/tv_price"
@@ -119,7 +119,7 @@
                                 style="@style/product_line_text_main"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:text="产品库存" />
+                                android:text="库存" />
 
                             <TextView
                                 android:id="@+id/add_buy_product_tv_16"
@@ -159,7 +159,7 @@
                                     style="@style/product_line_text_main"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:text="产品分类" />
+                                    android:text="分类" />
 
                                 <TextView
                                     android:id="@+id/add_buy_product_tv_18"
@@ -353,7 +353,7 @@
                             android:gravity="center_vertical|right"
                             android:hint="必填,请输入"
                             android:inputType="numberDecimal"
-                            android:maxLength="10"
+                            android:maxLength="18"
                             android:minHeight="@dimen/product_common_line_height" />
 
                     </LinearLayout>
@@ -383,8 +383,7 @@
                             android:background="@color/white"
                             android:gravity="center_vertical|right"
                             android:hint="必填,请输入"
-                            android:inputType="number"
-                            android:maxLength="10"
+                            android:maxLength="18"
                             android:minHeight="@dimen/product_common_line_height" />
                     </LinearLayout>
 

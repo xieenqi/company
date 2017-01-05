@@ -49,7 +49,7 @@ public class OrderService {
                         .build(Config_project.API_URL_CUSTOMER())
                         .create(IOrder.class)
                         .editOrder(id, map)
-                        .compose(RetrofitAdapterFactory.<OrderAdd>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<OrderAdd>applySchedulers());
     }
 
     public static
@@ -59,7 +59,7 @@ public class OrderService {
                         .build(Config_project.API_URL_CUSTOMER())
                         .create(IOrder.class)
                         .addOrder(map)
-                        .compose(RetrofitAdapterFactory.<OrderAdd>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<OrderAdd>applySchedulers());
     }
 
     public static
