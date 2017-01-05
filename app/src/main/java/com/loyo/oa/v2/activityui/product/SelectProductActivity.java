@@ -118,7 +118,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
     // 获取产品列表
     void getProductList(){
         HashMap<String, Object> map = new HashMap<>();
-//        map.put("keyWords","");
+//      map.put("keyWords","");
         map.put("pageIndex",1);
         map.put("pageSize",100);
         map.put("categoryId",categoryId);
@@ -135,7 +135,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
                         models=productDynmModel;
                         bindAdapter();
                     }
-                    bindAdapter();
+                   bindAdapter();
                 }
             }
 

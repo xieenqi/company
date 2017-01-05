@@ -699,6 +699,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     }
 
     @Override
+    public LoyoProgressHUD getHUD() {
+        return hud;
+    }
+
+    @Override
     public LoyoProgressHUD showStatusProgress() {
         showCommitLoading();
         return hud;

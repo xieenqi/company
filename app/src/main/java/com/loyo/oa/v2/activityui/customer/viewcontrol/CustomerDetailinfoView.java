@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.customer.viewcontrol;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.BaseView;
@@ -30,4 +31,6 @@ public interface CustomerDetailinfoView extends BaseView{
     void setPopViewEmbl(boolean mespray,String message);
 
     LoadingLayout getLoadigLayout();
+
+    LoyoProgressHUD getHUD();
 }

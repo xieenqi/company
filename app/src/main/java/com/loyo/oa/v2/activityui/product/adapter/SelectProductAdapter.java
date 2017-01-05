@@ -71,7 +71,7 @@ public class SelectProductAdapter extends BaseAdapter{
         }
 
         holder.tv_name.setText(model.name);
-        holder.tv_size.setText("库存"+model.stock);
+        holder.tv_size.setText("库存"+model.getStock());
 
         holder.iv_details.setOnTouchListener(Global.GetTouch());
         holder.iv_details.setOnClickListener(new View.OnClickListener() {
