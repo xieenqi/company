@@ -12,5 +12,4 @@ public class ProductListModel implements Serializable{
     public String name;
     public int stock;
 
-
 }
