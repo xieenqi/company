@@ -1,7 +1,5 @@
 package com.loyo.oa.v2.activityui.signin.model;
 
-import android.app.Activity;
-
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
@@ -10,11 +8,7 @@ import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Utils;
 
-import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -70,9 +64,9 @@ public class SigninModelImpl implements SigninContract.Model {
     @Override
     public void deleteAttachmentSend(HashMap<String, Object> map, final Attachment delAttachment) {
         AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
-                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                .subscribe(new DefaultLoyoSubscriber<Object>() {
                     @Override
-                    public void onNext(Attachment attachment) {
+                    public void onNext(Object attachment) {
                         presenter.deleteAttachmentSuccess(delAttachment);
                     }
                 });

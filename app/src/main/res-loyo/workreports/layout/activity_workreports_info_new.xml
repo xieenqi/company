@@ -149,14 +149,14 @@
                 android:layout_height="match_parent"
                 android:background="@color/common_activity_con_bg"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/tv_workContent"
                     style="@style/common_text_line_main"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/common_layout_padding"
                     android:layout_marginLeft="@dimen/common_layout_padding"
-                    android:selectAllOnFocus="true"
+                    android:layout_marginRight="@dimen/common_layout_padding"
                     android:singleLine="false"
                     android:textIsSelectable="true" />
 
@@ -200,8 +200,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="top|left"
-                        android:text="抄送人："
-                        android:singleLine="false" />
+                        android:singleLine="false"
+                        android:text="抄送人：" />
+
                     <TextView
                         android:id="@+id/tv_toUser"
                         style="@style/common_text_line_second"
@@ -274,14 +275,14 @@
 
                 <LinearLayout
                     android:id="@+id/layout_attachment"
-                    android:paddingRight="@dimen/common_layout_padding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/common_activity_con_bg"
                     android:gravity="center_vertical"
                     android:minHeight="@dimen/common_line_height"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/common_layout_padding">
+                    android:paddingLeft="@dimen/common_layout_padding"
+                    android:paddingRight="@dimen/common_layout_padding">
 
                     <TextView
                         android:id="@+id/tv_attachment_count"
@@ -300,9 +301,8 @@
                         android:src="@drawable/common_right_arrow" />
 
                 </LinearLayout>
+
                 <include layout="@layout/common_include_line_in_space" />
-
-
 
 
                 <LinearLayout
@@ -310,19 +310,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/common_activity_con_bg"
-                    android:paddingBottom="@dimen/common_layout_padding"
                     android:orientation="vertical"
-                    android:visibility="gone"
-                    >
+                    android:paddingBottom="@dimen/common_layout_padding"
+                    android:visibility="gone">
 
                     <TextView
+                        style="@style/common_text_line_main"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/common_layout_padding"
                         android:gravity="center_vertical"
                         android:minHeight="@dimen/common_line_height"
-                        android:text="点评"
-                        style="@style/common_text_line_main"/>
+                        android:text="点评" />
 
                     <include layout="@layout/common_include_line_in_space" />
 
@@ -365,10 +364,11 @@
                         </LinearLayout>
 
                         <FrameLayout
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp">
+
                             <include layout="@layout/include_dotted_line" />
 
                         </FrameLayout>
@@ -417,8 +417,8 @@
                     android:layout_margin="@dimen/common_layout_padding"
                     android:background="@drawable/common_lable_blue"
                     android:text="点评"
-                    android:visibility="gone"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </LinearLayout>

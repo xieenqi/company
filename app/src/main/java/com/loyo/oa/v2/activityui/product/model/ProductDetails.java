@@ -20,8 +20,12 @@ public class ProductDetails {
     public String unit;
     public int unitPrice;
     public String memo;
-    public int stock;
+    public float stock;
     public ArrayList<ExtraData> extDatas = new ArrayList<>();
     public ArrayList<Attachment> attachment = new ArrayList<>();
+
+    public String getStock(){
+        return stock > 1 ? (int) stock+"" : stock+"";
+    }
 
 }

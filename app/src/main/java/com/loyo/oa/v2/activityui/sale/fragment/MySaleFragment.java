@@ -68,7 +68,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
     private void initView(View view) {
 //        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
-        mSaleStages= SaleStageConfig.getSaleStageCache();
+        mSaleStages= SaleStageConfig.getSaleStage(true);
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());

@@ -45,6 +45,7 @@ android {
                            'src/main/res-loyo/common',
                            'src/main/res-loyo/followup',
                            'src/main/res-loyo/project',
+                           'src/main/res-loyo/product',
                            'src/main/res-loyo/sale',
                            'src/main/res-loyo/tasks',
                            'src/main/res-loyo/workreports',
@@ -200,8 +201,6 @@ dependencies {
     compile project(path: ':LibraryModule')
     compile project(':library:circularprogressbutton')
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
-    compile files('libs/mid-sdk-3.6.jar')
-    compile files('libs/mta-sdk-2.2.1.jar')
 }
 
 apt {

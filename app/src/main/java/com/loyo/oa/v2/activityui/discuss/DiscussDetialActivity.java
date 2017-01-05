@@ -144,6 +144,9 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
         screenWidth = this.getWindowManager().getDefaultDisplay().getWidth();
         //阀值设置为屏幕高度的1/3, 用于判断软件盘的弹起和收起
         keyHeight = screenHeight / 3;
+        if (!TextUtils.isEmpty(bizTypeId)) {
+            refreshRedDot();
+        }
     }
 
     private void initView() {
@@ -192,6 +195,10 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
         bindDiscussion();
         getPageData();
+
+        if (!TextUtils.isEmpty(bizTypeId) && !TextUtils.isEmpty(summaryId)) {
+            refreshRedDot();
+        }
     }
 
     private void assignViews() {
@@ -257,12 +264,7 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
     //返回页面先调用读取接口
     @Override
     public void onBackPressed() {
-        if (!TextUtils.isEmpty(bizTypeId)) {
-            refreshRedDot();
-        } else {
-            finishActivity();
-        }
-
+        finishActivity();
     }
 
     private void finishActivity() {
@@ -370,8 +372,8 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             public void onError(Throwable e) {
                 lv_notice.onRefreshComplete();
                 @LoyoErrorChecker.CheckType
-                int type=pageIndex!=1? LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
-                LoyoErrorChecker.checkLoyoError(e,type,ll_loading);
+                int type = pageIndex != 1 ? LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
             }
 
             @Override
@@ -863,15 +865,10 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
         HashMap<String, Object> map = new HashMap<>();
         map.put("summaryId", summaryId);
         DiscussService.updateReadDot(map).subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.SILENCE) {
-//            @Override
-//            public void onError(Throwable e) {
-//                super.onError(e);
-//                finishActivity();
-//            }
 
             @Override
             public void onNext(Object o) {
-                finishActivity();
+                //finishActivity();
             }
         });
     }

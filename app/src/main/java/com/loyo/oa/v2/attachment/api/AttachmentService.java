@@ -71,13 +71,13 @@ public class AttachmentService {
                         .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers());
     }
 
-    public static Observable<Attachment> remove(String id, HashMap<String, Object> map) {
+    public static Observable<Object> remove(String id, HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_ATTACHMENT())
                         .create(IAttachment.class)
                         .remove(id, map)
-                        .compose(RetrofitAdapterFactory.<Attachment>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<Object>compatApplyCanBeEmptySchedulers());
     }
 
     public static Observable<ArrayList<AttachmentForNew>> setAttachementData(ArrayList<AttachmentBatch> attachment) {

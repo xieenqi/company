@@ -131,14 +131,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     }
 
     private void initView() {
-
         setTitle("我负责的");
-        /**
-        * TODO: crash
-        * */
-        img_title_left.setVisibility(View.INVISIBLE);
-        //StatService.trackCustomKVEvent(this, "loyo_crm_crash", null);
-        /////////
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);

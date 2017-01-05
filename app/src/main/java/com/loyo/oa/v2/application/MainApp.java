@@ -25,9 +25,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.library.module.widget.loading.LoadingLayout;
-import com.loyo.oa.common.crash.Crash;
 import com.loyo.oa.photo.PhotoPicker;
-import com.loyo.oa.v2.BuildConfig;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.customer.model.Industry;
@@ -61,14 +59,10 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.stat.StatConfig;
-import com.tencent.stat.StatReportStrategy;
-import com.tencent.stat.StatService;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -166,20 +160,10 @@ public class MainApp extends Application {
         loadIndustryCodeTable();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
-        initMTAConfig(!BuildConfig.DEBUG);
         GlideManager.getInstance().initWithContext(getApplicationContext());
         initLoadingConfig();
         menuIds.add(R.id.copy);
         menuIds.add(R.id.paste);
-
-        Crash crash = Crash.getLatestCrash(this);
-        if (crash != null) {
-            Properties prop = new Properties();
-            prop.setProperty("background", crash.isBackground?"true":"false");
-            prop.setProperty("stack_trace", crash.stackTrace);
-            StatService.trackCustomKVEvent(MainApp.this, "loyo_crm_crash", prop);
-            Crash.clearLatestCrash(this);
-        }
     }
 
     private void initLoadingConfig() {
@@ -799,41 +783,5 @@ public class MainApp extends Application {
     public void onTrimMemory(int level) {
         // 程序在内存清理的时候执行
         super.onTrimMemory(level);
-    }
-
-    private void initMTAConfig(boolean isDebugMode) {
-        if (isDebugMode) {
-             StatConfig.setDebugEnable(true);
-             StatConfig.setAutoExceptionCaught(true);
-//             StatConfig.setEnableSmartReporting(false);
-             Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-                 @Override
-                 public void uncaughtException(Thread thread, Throwable ex) {
-                     Crash.saveCrash(MainApp.this, ex, !MainApp.isActive);
-                 }
-             });
-            //StatConfig.setMaxBatchReportCount(3);
-            StatConfig.setStatSendStrategy(StatReportStrategy.BATCH);
-//             StatConfig.setReportEventsByOrder(false);
-//             StatConfig.setNumEventsCachedInMemory(30);
-//             StatConfig.setFlushDBSpaceMS(10 * 1000);
-//             StatService.flushDataToDB(getApplicationContext());
-//
-//             StatConfig.setEnableSmartReporting(false);
-//             StatConfig.setSendPeriodMinutes(1);
-//             StatConfig.setStatSendStrategy(StatReportStrategy.PERIOD);
-        } else {
-            StatConfig.setDebugEnable(false);
-            StatConfig.setAutoExceptionCaught(true);
-            StatConfig.setMaxBatchReportCount(3);
-            StatConfig.setStatSendStrategy(StatReportStrategy.BATCH);
-            Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-                @Override
-                public void uncaughtException(Thread thread, Throwable ex) {
-                    Crash.saveCrash(MainApp.this, ex, !MainApp.isActive);
-                }
-            });
-        }
-        StatConfig.setEnableStatService(!BuildConfig.DEBUG);
     }
 }

@@ -298,7 +298,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 跳转考勤界面，封装数据
      */
     public void intentValue() {
-        Intent intent = new Intent(mActivity, AttendanceAddActivity_.class);
+        Intent intent = new Intent(MainApp.getMainApp(), AttendanceAddActivity_.class);
         intent.putExtra("mAttendanceRecord", attendanceRecords);
         intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
         intent.putExtra("isPopup", validateInfo.isPopup());
@@ -309,8 +309,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         intent.putExtra("earlyMin", attendanceRecords.getEarlyMin());
 
         startActivity(intent);
-        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-
     }
 
 
@@ -486,6 +484,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         ll_loading.setStatus(LoadingLayout.Success);
         if (attendances.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
+
+        btn_add.setVisibility(1 == type ? View.VISIBLE : View.GONE);
     }
 
     /**

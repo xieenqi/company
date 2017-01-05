@@ -89,31 +89,6 @@ public class RetrofitAdapterFactory {
         return adapter;
     }
 
-    static final Observable.Transformer syncTransformer = new Observable.Transformer() {
-        @Override
-        public Object call(Object observable) {
-            return ((Observable) observable).flatMap(new Func1() {
-                        @Override
-                        public Object call(Object response) {
-                            return flatResponse((BaseResponse<Object>)response);
-                        }
-                    });
-        }
-    };
-
-    static final Observable.Transformer compatSyncTransformer = new Observable.Transformer() {
-        @Override
-        public Object call(Object observable) {
-            return ((Observable) observable).flatMap(new Func1() {
-                        @Override
-                        public Object call(Object response) {
-                            return compatFlatResponse(response);
-                        }
-                    })
-                    ;
-        }
-    };
-
     static final Observable.Transformer transformer = new Observable.Transformer() {
         @Override
         public Object call(Object observable) {
@@ -128,6 +103,20 @@ public class RetrofitAdapterFactory {
         }
     };
 
+    static final Observable.Transformer compatCanBeEmptyTransformer = new Observable.Transformer() {
+        @Override
+        public Object call(Object observable) {
+            return ((Observable) observable).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .flatMap(new Func1() {
+                        @Override
+                        public Object call(Object response) {
+                            return compatFlatCanBeEmptyResponse(response);
+                        }
+                    })
+                    ;
+        }
+    };
     static final Observable.Transformer compatTransformer = new Observable.Transformer() {
         @Override
         public Object call(Object observable) {
@@ -147,12 +136,8 @@ public class RetrofitAdapterFactory {
         return (Observable.Transformer<BaseResponse<T>, T>) transformer;
     }
 
-    public static <T> Observable.Transformer<T, T> compatApplySyncSchedulers() {
-        return (Observable.Transformer<T, T>) compatSyncTransformer;
-    }
-
-    public static <T> Observable.Transformer<BaseResponse<T>, T> applySyncSchedulers() {
-        return (Observable.Transformer<BaseResponse<T>, T>) syncTransformer;
+    public static <T> Observable.Transformer<T, T> compatApplyCanBeEmptySchedulers() {
+        return (Observable.Transformer<T, T>) compatCanBeEmptyTransformer;
     }
 
     public static <T> Observable.Transformer<T, T> compatApplySchedulers() {
@@ -199,6 +184,23 @@ public class RetrofitAdapterFactory {
                                 response));
                     }
                     return;
+                }
+
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onCompleted();
+                }
+
+            }
+        });
+    }
+
+    public static <T> Observable<T> compatFlatCanBeEmptyResponse(final T response) {
+        return Observable.create(new Observable.OnSubscribe<T>() {
+
+            @Override
+            public void call(Subscriber<? super T> subscriber) {
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onNext(response);
                 }
 
                 if (!subscriber.isUnsubscribed()) {

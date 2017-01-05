@@ -1,17 +1,14 @@
 package com.loyo.oa.v2.activityui.product.api;
 
-import com.loyo.oa.v2.activityui.product.model.ProductClassifyModel;
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
 import com.loyo.oa.v2.activityui.product.model.ProductDynmModel;
 import com.loyo.oa.v2.activityui.product.model.ProductListModel;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorItem;
 import com.loyo.oa.v2.network.model.BaseResponse;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;

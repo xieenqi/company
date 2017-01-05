@@ -176,7 +176,6 @@
                         android:layout_marginLeft="@dimen/dimen_15"
                         android:layout_marginRight="@dimen/dimen_15"
                         android:paddingBottom="@dimen/dimen_10"
-                        android:selectAllOnFocus="true"
                         android:text=""
                         android:textColor="@color/text33"
                         android:textIsSelectable="true"

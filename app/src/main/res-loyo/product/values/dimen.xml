@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="product_common_line_height">48dp</dimen>
+    <dimen name="product_layout_padding">14dp</dimen>
+    <dimen name="product_common_dimen">10dp</dimen>
+</resources>

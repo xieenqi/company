@@ -73,12 +73,6 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <provider
-            android:name="com.tencent.mid.api.MidProvider"
-            android:authorities="${applicationId}.TENCENT.MID.V3"
-            android:exported="true" >
-        </provider>
-
 
         <!-- android:theme="@style/AppStartLoadTranslucent" -->
         <activity
@@ -295,7 +289,7 @@
             android:name=".activityui.tasks.TasksInfoActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.tasks.ChildTaskMnageActivity_"
             android:launchMode="singleTop"
@@ -1007,8 +1001,6 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="ukuaiqi"/>
-        <meta-data android:name="TA_APPKEY" android:value="AB8N5RVI66WY"/>
-        <meta-data android:name="InstallChannel" android:value="loyo"/>
 
 
         <activity
