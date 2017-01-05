@@ -8,13 +8,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.product.ProductDetailActivity;
 import com.loyo.oa.v2.activityui.product.model.ProductListModel;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -25,18 +23,17 @@ import java.util.ArrayList;
 
 public class SelectProductAdapter extends BaseAdapter{
 
-    Context mContext;
+    private boolean isStockEnable = true; //库存开关
+    private Context mContext;
+    private ArrayList<ProductListModel.ProductList> models;
 
-
-
-    ArrayList<ProductListModel> models;
-
-    public SelectProductAdapter(Context mContext,ArrayList<ProductListModel> models){
+    public SelectProductAdapter(Context mContext,ArrayList<ProductListModel.ProductList> models,boolean isStockEnable){
         this.mContext = mContext;
         this.models = models;
+        this.isStockEnable = isStockEnable;
     }
 
-    public void setModels(ArrayList<ProductListModel> models) {
+    public void setModels(ArrayList<ProductListModel.ProductList> models) {
         this.models = models;
         notifyDataSetChanged();
     }
@@ -57,7 +54,7 @@ public class SelectProductAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        final ProductListModel model = models.get(position);
+        final ProductListModel.ProductList model = models.get(position);
         ViewHolder holder = null;
         if(null == convertView){
             holder = new ViewHolder();
@@ -71,14 +68,14 @@ public class SelectProductAdapter extends BaseAdapter{
         }
 
         holder.tv_name.setText(model.name);
-        holder.tv_size.setText("库存"+model.getStock());
-
+        holder.tv_size.setText(isStockEnable ? "库存"+model.getStock() : "");
         holder.iv_details.setOnTouchListener(Global.GetTouch());
         holder.iv_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent mIntent = new Intent(mContext, ProductDetailActivity.class);
                 mIntent.putExtra("id",model.id);
+                mIntent.putExtra("enable",isStockEnable);
                 mContext.startActivity(mIntent);
             }
         });

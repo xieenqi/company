@@ -57,7 +57,6 @@ public class AttendanceListPresenterImpl implements AttendanceListPresenter {
     @Override
     public void getTeamData(int qtime) {
         LoyoProgressHUD hud = crolView.showProgress("");
-
         AttendanceService.getTeamCount(qtime).subscribe(new DefaultLoyoSubscriber<AttendanceList>(hud) {
             @Override
             public void onNext(AttendanceList mAttendanceList) {

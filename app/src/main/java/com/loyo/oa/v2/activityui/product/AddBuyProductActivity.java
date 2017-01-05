@@ -65,6 +65,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     private LinearLayout llDefinedHolder;
     private LinearLayout selectProduct;
     private LinearLayout ll_back;
+    private LinearLayout layout_image;
     private EditText et_price;
     private EditText et_number;
     private EditText et_remake;
@@ -81,6 +82,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     private String saleId = "";
     private String oldId = "";
     private int fromPage = 0;
+    private boolean stockEnabled = true;
     private ArrayList<SaleIntentionalProduct> productListData;
 
     @Override
@@ -96,6 +98,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         ivSubmit = (ImageView) findViewById(R.id.iv_submit);
         llMoreInfoBtn = (LinearLayout) findViewById(R.id.add_buy_product_ll_4);
         llMoreInfoShow = (LinearLayout) findViewById(R.id.add_buy_product_more_ll);
+        layout_image = (LinearLayout) findViewById(R.id.layout_image);
         ivMore = (ImageView) findViewById(R.id.add_buy_product_iv_1);
         gridViewPic = (GridView) findViewById(R.id.add_buy_product_more_grid_1);
         et_number = (EditText) findViewById(R.id.et_number);
@@ -368,7 +371,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         et_number.setEnabled(true);
         llMoreInfoBtn.setVisibility(View.VISIBLE);
         layout_prdprice.setVisibility(View.VISIBLE);
-        layout_prdsize.setVisibility(View.VISIBLE);
+        layout_prdsize.setVisibility(stockEnabled ? View.VISIBLE : View.GONE);
         layout_prdkind.setVisibility(View.VISIBLE);
 
         tv_product.setText(detailsModel.name);
@@ -378,9 +381,14 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         memo.setText(detailsModel.memo);
         tv_unit.setText(detailsModel.unit);
         addDefined();
+        if(detailsModel.attachment.size() > 0){
+            layout_image.setVisibility(View.VISIBLE);
+            ProductPicAdapter picAdapter = new ProductPicAdapter(this, detailsModel.attachment);
+            gridViewPic.setAdapter(picAdapter);
+        }else{
+            layout_image.setVisibility(View.GONE);
+        }
 
-        ProductPicAdapter picAdapter = new ProductPicAdapter(this, detailsModel.attachment);
-        gridViewPic.setAdapter(picAdapter);
 
         et_number.addTextChangedListener(new TextWatcher() {
             @Override
@@ -395,7 +403,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
             public void afterTextChanged(Editable s) {
                 if (!TextUtils.isEmpty(s + "")) {
                     int num = Integer.parseInt(s + "");
-                    if (num > detailsModel.stock) {
+                    if (stockEnabled && num > detailsModel.stock) {
                         Toast("库存不足");
                         et_number.setText(detailsModel.getStock()+"");
                     }else{
@@ -449,7 +457,6 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     public void getDetailsSuccessEmbl(ProductDetails details) {
         ll_loading.setStatus(LoadingLayout.Success);
         detailsModel = details;
-        LogUtil.dee("成功:"+MainApp.gson.toJson(details));
         bindData();
         if(!TextUtils.isEmpty(details.attachmentUUId) || null != details.attachmentUUId);
     }
@@ -500,8 +507,10 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     public void selectProductCallBack(SelectProductEvent event){
         Bundle mBundle = event.bundle;
         productId = mBundle.getString("id");
+        stockEnabled = mBundle.getBoolean("enable");
         ll_loading.setStatus(LoadingLayout.Loading);
         mPersenter.getProductDetails(productId);
+        LogUtil.dee("新增stockEnabled:"+stockEnabled);
     }
 
     @Override
