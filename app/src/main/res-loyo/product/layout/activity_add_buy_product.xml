@@ -353,7 +353,7 @@
                             android:gravity="center_vertical|right"
                             android:hint="必填,请输入"
                             android:inputType="numberDecimal"
-                            android:maxLength="10"
+                            android:maxLength="18"
                             android:minHeight="@dimen/product_common_line_height" />
 
                     </LinearLayout>
@@ -383,8 +383,7 @@
                             android:background="@color/white"
                             android:gravity="center_vertical|right"
                             android:hint="必填,请输入"
-                            android:inputType="number"
-                            android:maxLength="10"
+                            android:maxLength="18"
                             android:minHeight="@dimen/product_common_line_height" />
                     </LinearLayout>
 

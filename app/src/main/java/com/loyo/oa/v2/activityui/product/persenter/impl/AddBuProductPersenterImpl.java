@@ -4,6 +4,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.product.api.ProductService;
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
@@ -12,10 +13,6 @@ import com.loyo.oa.v2.activityui.product.persenter.AddBuProductPersenter;
 import com.loyo.oa.v2.activityui.product.viewcontrol.AddBuProductView;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.network.model.BaseResponse;
-import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,9 +24,11 @@ import java.util.HashMap;
 public class AddBuProductPersenterImpl implements AddBuProductPersenter {
 
     private AddBuProductView addBuProductView;
+    private LoadingLayout ll_loading;
 
-    public AddBuProductPersenterImpl(AddBuProductView addBuProductView){
+    public AddBuProductPersenterImpl(AddBuProductView addBuProductView,LoadingLayout ll_loading){
         this.addBuProductView = addBuProductView;
+        this.ll_loading = ll_loading;
     }
 
     /**
@@ -39,7 +38,7 @@ public class AddBuProductPersenterImpl implements AddBuProductPersenter {
     public void getProductDynm() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType",102);
-        ProductService.getProductDynm(map).subscribe(new DefaultLoyoSubscriber<ArrayList<ProductDynmModel>>() {
+        ProductService.getProductDynm(map).subscribe(new DefaultLoyoSubscriber<ArrayList<ProductDynmModel>>(ll_loading) {
             @Override
             public void onNext(ArrayList<ProductDynmModel> productDynmModel) {
                 addBuProductView.getDynmSuccessEmbl(productDynmModel);
@@ -59,7 +58,7 @@ public class AddBuProductPersenterImpl implements AddBuProductPersenter {
     @Override
     public void getProductDetails(String id) {
         HashMap<String, Object> map = new HashMap<>();
-        ProductService.getProductDetails(id).subscribe(new DefaultLoyoSubscriber<ProductDetails>() {
+        ProductService.getProductDetails(id).subscribe(new DefaultLoyoSubscriber<ProductDetails>(ll_loading) {
             @Override
             public void onNext(ProductDetails details) {
                 addBuProductView.getDetailsSuccessEmbl(details);
