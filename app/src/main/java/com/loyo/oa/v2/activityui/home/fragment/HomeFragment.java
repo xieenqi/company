@@ -223,8 +223,8 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
             ((MainHomeActivity) getActivity()).gotoStart();
         }
 //        title.get(index).setChecked(true);// 设置被选中，否则布局里面的背景不会切换
-        if (1 == index && null != mHomeStatisticsFragment) {
-            mHomeStatisticsFragment.onInIt();
+        if (1 == index && null != mHomeDashboardFragment) {
+            mHomeDashboardFragment.onInIt();
         }
     }
 
