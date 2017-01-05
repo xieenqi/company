@@ -51,7 +51,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.voip.VoIPManager;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -169,7 +168,6 @@ public class MainApp extends Application {
         JPushInterface.init(this);
         initMTAConfig(!BuildConfig.DEBUG);
         GlideManager.getInstance().initWithContext(getApplicationContext());
-        VoIPManager.getInstance().init(this);
         initLoadingConfig();
         menuIds.add(R.id.copy);
         menuIds.add(R.id.paste);
