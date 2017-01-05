@@ -33,16 +33,24 @@ public class MoneyStatistic {
 
     public int getNumberPercent(){
         int mvNumValues = 0; /* 数量涨幅值 */
-        if(targetAmount != 0 && targetAmount > totalAmount){
-            mvNumValues =  (int) Math.floor((double)totalAmount/targetAmount); //取整
+        if(targetAmount != 0){
+            double percent = ((double)totalAmount/targetAmount);
+            if (percent >1) {
+                percent = 1;
+            }
+            mvNumValues =  (int) Math.floor(percent); //取整
         }
         return mvNumValues;
     }
 
     public String getNumberDisplayTitle() {
         String mvNumShow = "0%"; /* 数量涨幅百分比 */
-        if(targetAmount != 0 && targetAmount > totalAmount){
-            mvNumShow = numberFormatter.format(((double)totalAmount/targetAmount * 100))+"%";
+        if(targetAmount != 0){
+            double percent = ((double)totalAmount/targetAmount);
+            if (percent >1) {
+                percent = 1;
+            }
+            mvNumShow = numberFormatter.format(percent*100)+"%";
         }
         return mvNumShow;
     }
@@ -52,8 +60,12 @@ public class MoneyStatistic {
         long totalMoney  = totalNumber;   /*  实际金额  */
 
         int mvMonValues = 0; /* 金额涨幅值 */
-        if(targetMoney != 0 && targetMoney > totalMoney){
-            mvMonValues =  (int) Math.floor((double)totalMoney/targetMoney); //取整
+        if(targetMoney != 0){
+            double percent = ((double)totalMoney/targetMoney);
+            if (percent >1) {
+                percent = 1;
+            }
+            mvMonValues =  (int) Math.floor(percent); //取整
         }
         return mvMonValues;
     }
@@ -63,8 +75,12 @@ public class MoneyStatistic {
         long totalMoney  = totalNumber;   /*  实际金额  */
 
         String mvMonShow = "0%"; /* 金额涨幅百分比 */
-        if(targetMoney != 0 && targetMoney > totalMoney){
-            mvMonShow = numberFormatter.format(((double)totalMoney/targetMoney * 100))+"%";
+        if(targetMoney != 0){
+            double percent = ((double)totalMoney/targetMoney);
+            if (percent >1) {
+                percent = 1;
+            }
+            mvMonShow = numberFormatter.format(percent * 100)+"%";
         }
         return mvMonShow;
     }
