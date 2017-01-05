@@ -43,6 +43,7 @@ public class LoyoProgressHUD {
         return LoyoProgressHUD.create(context)
                 .setDimAmount(0.382f)
                 .setWindowColor(Color.WHITE)
+                .setCancellable(true)
                 .setLabelColor(context.getResources().getColor(R.color.text66))
                 .setStyle(Style.LOYO_SPIN);
     }
