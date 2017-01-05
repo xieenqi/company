@@ -524,12 +524,13 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         if (type == 1) {
             attendanceList = result.records;
             initStatistics();
-
         } else {
             mPresenter.getTeamData(qtime);
         }
         bindData(result);
-
+        if(btn_add.getVisibility() == View.GONE){
+            btn_add.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

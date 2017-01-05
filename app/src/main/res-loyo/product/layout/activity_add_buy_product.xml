@@ -108,7 +108,6 @@
                         android:orientation="vertical"
                         android:visibility="gone">
 
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/product_common_line_height"
@@ -130,6 +129,7 @@
                                 android:layout_weight="1"
                                 android:gravity="right|center_vertical" />
                         </LinearLayout>
+
                         <include layout="@layout/include_product_line_space" />
                     </LinearLayout>
 
@@ -170,7 +170,9 @@
                                     android:gravity="right|center_vertical" />
                             </LinearLayout>
                         </LinearLayout>
+
                         <include layout="@layout/include_product_line_space" />
+
                         <LinearLayout
                             android:id="@+id/add_buy_product_ll_16"
                             android:layout_width="match_parent"
@@ -200,7 +202,6 @@
                                     android:gravity="right|center_vertical" />
                             </LinearLayout>
                         </LinearLayout>
-
 
 
                         <!--自定义字段，可能有很多，所以，做一个linearlayout-->
@@ -245,32 +246,40 @@
                         <include layout="@layout/include_product_line_space" />
 
                         <LinearLayout
+                            android:id="@+id/layout_image"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/product_common_line_height"
+                            android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingRight="@dimen/order_common_padding_right">
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/product_common_line_height"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingRight="@dimen/order_common_padding_right">
 
-                            <TextView
-                                style="@style/product_line_text_main"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    style="@style/product_line_text_main"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="产品图片" />
+                            </LinearLayout>
+
+                            <com.loyo.oa.v2.customview.CusGridView
+                                android:id="@+id/add_buy_product_more_grid_1"
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="产品图片" />
+                                android:layout_marginBottom="@dimen/dimen_10"
+                                android:layout_marginTop="@dimen/dimen_10"
+                                android:gravity="center"
+                                android:horizontalSpacing="@dimen/product_common_dimen"
+                                android:listSelector="@android:color/transparent"
+                                android:numColumns="4"
+                                android:verticalSpacing="@dimen/product_common_dimen" />
+
+                            <include layout="@layout/include_product_line_space" />
                         </LinearLayout>
-
-                        <com.loyo.oa.v2.customview.CusGridView
-                            android:id="@+id/add_buy_product_more_grid_1"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="@dimen/dimen_10"
-                            android:layout_marginTop="@dimen/dimen_10"
-                            android:gravity="center"
-                            android:horizontalSpacing="@dimen/product_common_dimen"
-                            android:listSelector="@android:color/transparent"
-                            android:numColumns="4"
-                            android:verticalSpacing="@dimen/product_common_dimen" />
-
-                        <include layout="@layout/include_product_line_space" />
                     </LinearLayout>
 
                     <LinearLayout
