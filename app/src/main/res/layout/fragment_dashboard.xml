@@ -218,6 +218,7 @@
                                         />
 
                                     <TextView
+                                        android:id="@+id/tv_nums1"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="客户数"
@@ -304,6 +305,7 @@
                                         />
 
                                     <TextView
+                                        android:id="@+id/tv_nums2"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="客户数"
@@ -390,6 +392,7 @@
                                         />
 
                                     <TextView
+                                        android:id="@+id/tv_nums3"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="客户数"

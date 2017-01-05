@@ -166,7 +166,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     }
                 } else {
                     isOk = false;
-                    textColor = R.color.text66;
+                    textColor = R.color.text99;
 //                    Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(DateTool.DATE_FORMATE_SPLITE_BY_POINT), "yyyy.MM.dd HH:mm"));
                     long nowTime = com.loyo.oa.common.utils.DateTool.getStamp(true);
                     if (nowTime > task.planendAt && task.status == Task.STATUS_PROCESSING) {
