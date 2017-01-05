@@ -58,7 +58,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     private TextView memo;
     private TextView tv_discount;
     private TextView tv_total;
-
+    private TextView tv_unit;
     private LinearLayout layout_prdprice;
     private LinearLayout layout_prdsize;
     private LinearLayout layout_prdkind;
@@ -121,6 +121,8 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         selectProduct.setOnClickListener(this);
         ll_back.setOnClickListener(this);
         ivSubmit.setOnClickListener(this);
+
+        tv_unit= (TextView) findViewById(R.id.add_buy_product_tv_21);
 
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
@@ -374,6 +376,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         prdSize.setText(detailsModel.getStock()+"");
         prdKind.setText(detailsModel.category);
         memo.setText(detailsModel.memo);
+        tv_unit.setText(detailsModel.unit);
         addDefined();
 
         ProductPicAdapter picAdapter = new ProductPicAdapter(this, detailsModel.attachment);

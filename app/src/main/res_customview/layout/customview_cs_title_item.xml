@@ -15,8 +15,10 @@
         <ImageView
             android:id="@+id/customview_cs_rv_title_iv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop"
+            android:paddingTop="3dp"
             android:paddingRight="5dp"
             android:src="@drawable/customview_cs_right_arrow" />
 
@@ -28,6 +30,6 @@
             android:ellipsize="end"
             android:maxEms="4"
             android:singleLine="true"
-            android:text="分分类分类分类分类类" />
+            android:text="分类分类分类分类" />
     </LinearLayout>
 </LinearLayout>

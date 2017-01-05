@@ -15,4 +15,5 @@ public class ProductListModel implements Serializable{
     public String getStock(){
         return stock > 1 ? (int) stock+"" : stock+"";
     }
+
 }

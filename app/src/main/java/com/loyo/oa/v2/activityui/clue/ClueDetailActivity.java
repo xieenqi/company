@@ -46,7 +46,6 @@ import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.voip.VoIPCallActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -366,15 +365,6 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
             }
         });
 
-//         /*商务电话-直拨*/
-//        callPhonePopView.directPhone(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                callLive(phone, callType, name);
-////                contactProcessCallback.onCallBack(phone.replaceAll(" +", ""), mContact.getId(), mContact.getName().trim().toString(), DirectPhone, phoneType);
-//                callPhonePopView.dismiss();
-//            }
-//        });
         /*普通电话*/
         callPhonePopView.commonlyPhone(new View.OnClickListener() {
             @Override
@@ -459,18 +449,6 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         });
     }
 
-    /**
-     * 直播查询
-     */
-    void callLive(final String phone, int callType, final String name) {
-
-        Bundle mBundle = new Bundle();
-        mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone);
-        mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name);
-        mBundle.putString(VoIPCallActivity.CALLEE_SALE_KEY, data.sales.id);
-        mBundle.putInt(VoIPCallActivity.CALLEE_USER_TYPE, callType);
-        app.startActivity(ClueDetailActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-    }
 
     /**
      * 跳转跟进列表

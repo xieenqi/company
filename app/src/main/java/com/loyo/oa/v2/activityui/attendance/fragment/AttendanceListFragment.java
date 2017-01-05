@@ -298,7 +298,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 跳转考勤界面，封装数据
      */
     public void intentValue() {
-        Intent intent = new Intent(getActivity(), AttendanceAddActivity_.class);
+        Intent intent = new Intent(mActivity, AttendanceAddActivity_.class);
         intent.putExtra("mAttendanceRecord", attendanceRecords);
         intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
         intent.putExtra("isPopup", validateInfo.isPopup());

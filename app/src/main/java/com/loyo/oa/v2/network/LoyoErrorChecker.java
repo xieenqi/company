@@ -11,6 +11,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.model.APIException;
 import com.loyo.oa.v2.network.model.LoyoError;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.json.JSONObject;
@@ -43,7 +44,7 @@ public class LoyoErrorChecker {
     }
 
     public static LoyoError loyoError(Throwable e) {
-        e.printStackTrace();
+        if(!Config_project.isRelease)e.printStackTrace();
         String message = "";
         @LoyoError.State int state = LoyoError.Success;
 
