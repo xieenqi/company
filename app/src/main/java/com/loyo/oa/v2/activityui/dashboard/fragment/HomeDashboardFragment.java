@@ -372,7 +372,11 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 }
                 Bundle bdRecord = new Bundle();
                 bdRecord.putInt("time", followUpType);
-                bdRecord.putSerializable("type", DashboardType.CUS_CELL_RECORD);
+                if (followUpPage == 0) {
+                    bdRecord.putSerializable("type", DashboardType.CUS_CELL_RECORD);
+                } else {
+                    bdRecord.putSerializable("type", DashboardType.SALE_CELL_RECORD);
+                }
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdRecord);
                 break;
             /** 目标数量 */
