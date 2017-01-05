@@ -39,10 +39,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/view_ack"
+                    android:maxEms="15"
                     android:ellipsize="end"
+                    android:singleLine="true"
                     android:text="标题"
                     android:textColor="@color/text33"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    />
 
             </RelativeLayout>
 
