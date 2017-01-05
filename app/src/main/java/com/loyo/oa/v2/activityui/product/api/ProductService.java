@@ -1,14 +1,13 @@
 package com.loyo.oa.v2.activityui.product.api;
 
-import com.loyo.oa.v2.activityui.product.model.ProductClassifyModel;
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
 import com.loyo.oa.v2.activityui.product.model.ProductDynmModel;
 import com.loyo.oa.v2.activityui.product.model.ProductListModel;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorItem;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
-import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.Config_project;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,7 @@ public class ProductService {
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IProduct.class)
                         .getProductDynm(params)
-                        .compose(RetrofitAdapterFactory.<ArrayList<ProductDynmModel>>compatApplySyncSchedulers());
+                        .compose(RetrofitAdapterFactory.<ArrayList<ProductDynmModel>>compatApplySchedulers());
     }
 
     //获取产品列表

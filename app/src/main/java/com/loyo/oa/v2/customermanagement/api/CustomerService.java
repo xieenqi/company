@@ -338,13 +338,13 @@ public class CustomerService {
 
     }
 
-    public static Observable<SaleStage> getSaleStges() {
+    public static Observable<ArrayList<SaleStage>> getSaleStges() {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ICustomer.class)
                         .getSaleStges()
-                        .compose(RetrofitAdapterFactory.<SaleStage>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<ArrayList<SaleStage>>compatApplySchedulers());
     }
 
     public static Observable<ArrayList<Industry>> getIndustry() {

@@ -16,9 +16,15 @@ public class SaleStageConfig {
     /* 从网络获取 */
     public static void getSaleStage() {
         CustomerService.getSaleStges()
-                .subscribe(new DefaultLoyoSubscriber<SaleStage>(LoyoErrorChecker.SILENCE) {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<SaleStage>>(LoyoErrorChecker.SILENCE) {
+
                     @Override
-                    public void onNext(SaleStage saleStage) {
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<SaleStage> saleStage) {
                         String json = MainApp.gson.toJson(saleStage);
                         SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE);
                         SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE, json);
@@ -45,7 +51,7 @@ public class SaleStageConfig {
     public static ArrayList<SaleStage> getSaleStage(boolean fetchIfEmpty) {
         ArrayList<SaleStage> result = getSaleStageCache();
 
-        if (fetchIfEmpty && result == null) {
+        if (fetchIfEmpty && (result == null || result.size()==0)) {
             getSaleStage();
         }
 

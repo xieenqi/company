@@ -195,6 +195,10 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
         bindDiscussion();
         getPageData();
+
+        if (!TextUtils.isEmpty(bizTypeId) && !TextUtils.isEmpty(summaryId)) {
+            refreshRedDot();
+        }
     }
 
     private void assignViews() {
@@ -861,14 +865,10 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
         HashMap<String, Object> map = new HashMap<>();
         map.put("summaryId", summaryId);
         DiscussService.updateReadDot(map).subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.SILENCE) {
-//            @Override
-//            public void onError(Throwable e) {
-//                super.onError(e);
-//                finishActivity();
-//            }
 
             @Override
             public void onNext(Object o) {
+                //finishActivity();
             }
         });
     }

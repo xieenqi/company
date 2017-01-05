@@ -151,6 +151,9 @@ public class LoyoErrorChecker {
             default:
             {
                 LoyoToast.error(MainApp.getMainApp().getApplicationContext(), error.message);
+                if (layout != null) {
+                    layout.setStatus(LoadingLayout.Success);
+                }
             }
             break;
         }
