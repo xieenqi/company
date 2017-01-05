@@ -614,15 +614,20 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
      */
     private void editAreaAndSource(final int function) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("name", section1_username.getText().toString());
-        map.put("companyName", section1_company_name.getText().toString());
-        map.put("cellphone", contact_mobile.getText().toString());
-        map.put("tel", contact_wiretel.getText().toString());
-        map.put("address", tv_address.getText().toString());
-        map.put("remark", clue_note.getText().toString());
-        map.put("region", regional);
-        map.put("source", clue_source.getText().toString());
-        map.put("status", clueStatus);
+        if (function != 3) {
+            map.put("name", section1_username.getText().toString());
+            map.put("companyName", section1_company_name.getText().toString());
+            map.put("cellphone", contact_mobile.getText().toString());
+            map.put("tel", contact_wiretel.getText().toString());
+            map.put("address", tv_address.getText().toString());
+            map.put("remark", clue_note.getText().toString());
+            map.put("region", regional);
+            map.put("source", clue_source.getText().toString());
+        }
+        else {
+            map.put("status", clueStatus);
+        }
+
         LogUtil.d(app.gson.toJson(map));
 //        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
 //                .editClue(clueId, map, new Callback<Object>() {

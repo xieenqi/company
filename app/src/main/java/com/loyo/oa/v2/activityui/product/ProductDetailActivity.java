@@ -56,7 +56,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
             Toast("参数异常");
             finish();
         }
-        LogUtil.dee("enable:"+isStockEnable);
+        LogUtil.dee("详情isStockEnable:"+isStockEnable);
         ll_loading = (LoadingLayout) findViewById(R.id.ll_loading);
         tvTitle= (TextView) findViewById(R.id.tv_title);
         prdName = (TextView) findViewById(R.id.product_detail_tv_2);

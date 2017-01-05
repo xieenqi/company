@@ -18,6 +18,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,12 +88,13 @@ public class ProductSearchActivity extends BaseActivity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(products.get(position).stock == 0){
+                if(stockEnabled && products.get(position).stock == 0){
                     Toast("库存不足");
                 }else{
                     SelectProductEvent event = new SelectProductEvent();
                     event.bundle = new Bundle();
                     event.bundle.putString("id",products.get(position).id);
+                    event.bundle.putBoolean("enable",stockEnabled);
                     AppBus.getInstance().post(event);
                     finish();
                 }
@@ -121,6 +123,7 @@ public class ProductSearchActivity extends BaseActivity {
             public void onNext(ProductListModel productDynmModel) {
                 products = productDynmModel.records.products;
                 stockEnabled = productDynmModel.records.stockEnabled;
+                LogUtil.dee("搜索stockEnabled:"+stockEnabled);
                 if(products.size() == 0){
                     ll_loading.setStatus(LoadingLayout.Empty);
                 }else{

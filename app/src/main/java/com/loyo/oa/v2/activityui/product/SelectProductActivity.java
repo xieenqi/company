@@ -25,6 +25,8 @@ import com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorView;
 import com.loyo.oa.v2.customview.classify_seletor.ItemAdapter;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -95,18 +97,18 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
         lv_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(products.get(position).stock == 0){
+                if(stockEnabled && products.get(position).stock == 0){
                     Toast("库存不足");
                 }else{
                     SelectProductEvent event = new SelectProductEvent();
                     event.bundle = new Bundle();
                     event.bundle.putString("id",products.get(position).id);
+                    event.bundle.putBoolean("enable",stockEnabled);
                     AppBus.getInstance().post(event);
                     finish();
                 }
             }
         });
-
         getProductList();
     }
 
@@ -122,6 +124,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
             public void onNext(ProductListModel productDynmModel) {
                 products = productDynmModel.records.products;
                 stockEnabled = productDynmModel.records.stockEnabled;
+                LogUtil.dee("选择stockEnabled:"+stockEnabled);
                 if(products.size() == 0){
                     ll_loading.setStatus(LoadingLayout.Empty);
                 }else{

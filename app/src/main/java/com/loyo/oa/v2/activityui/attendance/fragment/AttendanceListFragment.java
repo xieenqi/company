@@ -486,6 +486,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         ll_loading.setStatus(LoadingLayout.Success);
         if (attendances.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
+
+        btn_add.setVisibility(1 == type ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -524,12 +526,13 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         if (type == 1) {
             attendanceList = result.records;
             initStatistics();
-
         } else {
             mPresenter.getTeamData(qtime);
         }
         bindData(result);
-
+        if(btn_add.getVisibility() == View.GONE){
+            btn_add.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

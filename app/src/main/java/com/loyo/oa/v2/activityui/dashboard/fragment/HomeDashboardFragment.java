@@ -76,7 +76,6 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private int moneyCnType  = 5;  //数量金额 默认本月
     private int followUpPage = 0;  //0:客户 1:线索
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,11 +148,6 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 mcModel.getMoneyPercent(),
                 mcModel.getNumberDisplayTitle(),
                 mcModel.getMoneyDisplayTitle());
-
-        /*tv_target_count.setText(mcModel.getTargetAmount());
-        tv_order_count.setText(mcModel.getTotalAmount());
-        tv_target_money.setText(mcModel.getTargetMoney());
-        tv_order_money.setText(mcModel.getTotalMoney());*/
 
         tv_target_count.setText(mcModel.getTargetNumber());
         tv_order_count.setText(mcModel.getTotalNumber());
