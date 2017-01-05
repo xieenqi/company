@@ -339,7 +339,7 @@ public class TasksInfoActivity extends BaseActivity {
                 }
 
             } else {
-                tv_toUsers.setText("没有参与人");
+                tv_toUsers.setText("参与人：无");
             }
         }
         if (null != mTask.getProject()) {
