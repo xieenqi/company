@@ -8,15 +8,16 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.product.adapter.SelectProductAdapter;
 import com.loyo.oa.v2.activityui.product.api.ProductService;
 import com.loyo.oa.v2.activityui.product.event.SelectProductEvent;
 import com.loyo.oa.v2.activityui.product.model.ProductListModel;
-import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 
@@ -118,7 +119,7 @@ public class ProductSearchActivity extends BaseActivity {
         map.put("keyWords",words);
         map.put("pageIndex",1);
         map.put("pageSize",100);
-        ProductService.getProductList(map).subscribe(new DefaultLoyoSubscriber<ProductListModel>() {
+        ProductService.getProductList(map).subscribe(new DefaultLoyoSubscriber<ProductListModel>(ll_loading) {
             @Override
             public void onNext(ProductListModel productDynmModel) {
                 products = productDynmModel.records.products;
@@ -135,7 +136,9 @@ public class ProductSearchActivity extends BaseActivity {
 
             @Override
             public void onError(Throwable e) {
-                super.onError(e);
+                @LoyoErrorChecker.CheckType
+                        int type = products.size()>0?LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
             }
         });
     }

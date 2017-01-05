@@ -18,7 +18,7 @@ public class ProductDetails {
     public String category_path;
     public String name;
     public String unit;
-    public int unitPrice;
+    public float unitPrice;
     public String memo;
     public float stock;
     public ArrayList<ExtraData> extDatas = new ArrayList<>();

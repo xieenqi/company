@@ -4,6 +4,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.product.api.ProductService;
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
@@ -27,9 +28,11 @@ import java.util.HashMap;
 public class AddBuProductPersenterImpl implements AddBuProductPersenter {
 
     private AddBuProductView addBuProductView;
+    private LoadingLayout ll_loading;
 
-    public AddBuProductPersenterImpl(AddBuProductView addBuProductView){
+    public AddBuProductPersenterImpl(AddBuProductView addBuProductView,LoadingLayout ll_loading){
         this.addBuProductView = addBuProductView;
+        this.ll_loading = ll_loading;
     }
 
     /**
@@ -59,7 +62,7 @@ public class AddBuProductPersenterImpl implements AddBuProductPersenter {
     @Override
     public void getProductDetails(String id) {
         HashMap<String, Object> map = new HashMap<>();
-        ProductService.getProductDetails(id).subscribe(new DefaultLoyoSubscriber<ProductDetails>() {
+        ProductService.getProductDetails(id).subscribe(new DefaultLoyoSubscriber<ProductDetails>(ll_loading) {
             @Override
             public void onNext(ProductDetails details) {
                 addBuProductView.getDetailsSuccessEmbl(details);

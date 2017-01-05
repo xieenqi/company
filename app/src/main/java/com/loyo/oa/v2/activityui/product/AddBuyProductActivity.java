@@ -94,7 +94,6 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     }
 
     private void initView() {
-        mPersenter = new AddBuProductPersenterImpl(this);
         tv_title = (TextView) findViewById(R.id.tv_title);
         ivSubmit = (ImageView) findViewById(R.id.iv_submit);
         llMoreInfoBtn = (LinearLayout) findViewById(R.id.add_buy_product_ll_4);
@@ -127,9 +126,9 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         selectProduct.setOnClickListener(this);
         ll_back.setOnClickListener(this);
         ivSubmit.setOnClickListener(this);
-
         tv_unit= (TextView) findViewById(R.id.add_buy_product_tv_21);
 
+        mPersenter = new AddBuProductPersenterImpl(this,ll_loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
             public void onReload(View v) {

@@ -120,7 +120,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
      * 获取产品详情
      * */
     private void getProductDetails(){
-        ProductService.getProductDetails(id).subscribe(new DefaultLoyoSubscriber<ProductDetails>() {
+        ProductService.getProductDetails(id).subscribe(new DefaultLoyoSubscriber<ProductDetails>(ll_loading) {
             @Override
             public void onNext(ProductDetails details) {
                 detailsModel = details;
