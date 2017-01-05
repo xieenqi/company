@@ -8,6 +8,7 @@ import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,13 +51,13 @@ public interface IOrder {
      * 创建订单
      */
     @POST("/order")
-    Observable<OrderAdd> addOrder(@Body HashMap<String, Object> map);
+    Observable<BaseResponse<OrderAdd>> addOrder(@Body HashMap<String, Object> map);
 
     /**
      * 编辑订单
      * */
     @PUT("/order/{id}")
-    Observable<OrderAdd> editOrder(@Path("id") String id, @Body HashMap<String, Object> map);
+    Observable<BaseResponse<OrderAdd>> editOrder(@Path("id") String id, @Body HashMap<String, Object> map);
 
     /**
      * 创建回款计划
