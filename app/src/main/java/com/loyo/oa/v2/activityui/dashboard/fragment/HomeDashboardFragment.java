@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
@@ -35,6 +36,7 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
+
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -49,31 +51,31 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private RelativeLayout loading_view1, loading_view2, loading_view3;
     private LinearLayout loading_error1, loading_error2, loading_error3;
     private TextView tv_click_rest1, tv_click_rest2, tv_click_rest3;
-    private TextView tv_screen_title1,tv_screen_title2,tv_screen_title3;
+    private TextView tv_screen_title1, tv_screen_title2, tv_screen_title3;
     private ImageView loading_load1, loading_load2, loading_load3;
     private LinearLayout ll_case1, ll_case2, ll_case3;
     private CustomerListView lv_stocklist;
 
     private LinearLayout ll_dashboard_followup, ll_dashboard_signin,
             ll_dashboard_record, ll_dashboard_order_number,
-            ll_dashboard_order_money, ll_followup, ll_stock,ll_money;
+            ll_dashboard_order_money, ll_followup, ll_stock, ll_money;
 
     private TextView fw_totalsize, fw_count,
             visit_totalsize, visit_count,
             voice_totalsize, voice_count;
 
-    private TextView tv_target_count,tv_order_count,  /*  目标数量 订单数量  */
-                     tv_target_money,tv_order_money;  /*  目标金额 订单金额  */
+    private TextView tv_target_count, tv_order_count,  /*  目标数量 订单数量  */
+            tv_target_money, tv_order_money;  /*  目标金额 订单金额  */
 
     private StockListAdapter mAdapter;
     private HomeDashboardPresenter mPresenter;
-    private AnimationDrawable loadAnim1, loadAnim2,loadAnim3;
+    private AnimationDrawable loadAnim1, loadAnim2, loadAnim3;
 
     private FollowupStatistic csclueFowUp;
 
     private int followUpType = 1;  //跟进 默认今天
-    private int stockType    = 1;  //增量存量 默认今天
-    private int moneyCnType  = 5;  //数量金额 默认本月
+    private int stockType = 1;  //增量存量 默认今天
+    private int moneyCnType = 5;  //数量金额 默认本月
     private int followUpPage = 0;  //0:客户 1:线索
 
 
@@ -105,7 +107,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 Bundle bundle = new Bundle();
                 bundle.putInt("time", stockType);
                 bundle.putSerializable("type", DashboardType.COMMON);
-                bundle.putSerializable("tagItemId",model.get(position).tagItemId);
+                bundle.putSerializable("tagItemId", model.get(position).tagItemId);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
             }
         });
@@ -135,8 +137,8 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     /**
      * 绑定数量金额数据
-     * */
-    private void bindMoneyCountData(MoneyStatistic mcModel){
+     */
+    private void bindMoneyCountData(MoneyStatistic mcModel) {
         mPresenter.initWave(
                 (WaveLoadingView) mView.findViewById(R.id.waveLoadingView1),
                 (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2),
@@ -222,9 +224,20 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
         Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
                 ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, tv_click_rest1);
+        getPageData();
+    }
+
+    private void getPageData() {
         getFollowUpData(followUpType);
         getStockData(stockType);
         getMoneyCount(moneyCnType);
+    }
+
+    /**
+     * 选择此页面刷新全部数据
+     */
+    public void onInIt() {
+        getPageData();
     }
 
     /**
@@ -257,8 +270,8 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     /**
      * 获取数量金额
-     * */
-    private void getMoneyCount(int type){
+     */
+    private void getMoneyCount(int type) {
         mPresenter.setOnSucssView(
                 loadAnim3,
                 ll_money,
@@ -271,11 +284,12 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     /**
      * 数据调取
-     * @param  busType  请求业务类型(跟进 存量 金额..)
-     * @param  type     筛选数据类型(今天 昨天..)
-     * */
-    private void getData(int busType,int type,String value){
-        switch (busType){
+     *
+     * @param busType 请求业务类型(跟进 存量 金额..)
+     * @param type    筛选数据类型(今天 昨天..)
+     */
+    private void getData(int busType, int type, String value) {
+        switch (busType) {
             case 0:
                 followUpType = type;
                 tv_screen_title1.setText(value);
@@ -336,9 +350,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 }
                 Bundle bdFollowup = new Bundle();
                 bdFollowup.putInt("time", followUpType);
-                if(followUpPage == 0){
+                if (followUpPage == 0) {
                     bdFollowup.putSerializable("type", DashboardType.CUS_FOLLOWUP);
-                }else{
+                } else {
                     bdFollowup.putSerializable("type", DashboardType.SALE_FOLLOWUP);
                 }
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdFollowup);
@@ -389,7 +403,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 getFollowUpData(followUpType);
                 break;
 
-             /** 增量存量,点击重试 */
+            /** 增量存量,点击重试 */
             case R.id.tv_click_rest2:
                 getStockData(stockType);
                 break;
@@ -410,9 +424,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     }
 
     @Override
-    public void setScreenVal(ScreenType screenType,int type,String value) {
+    public void setScreenVal(ScreenType screenType, int type, String value) {
         //Toast(value+":"+type);
-        getData(screenType.type(),type,value);
+        getData(screenType.type(), type, value);
     }
 
     // 获取跟进成功
