@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.contact.presenter.impl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -127,7 +128,7 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
     public void pickDate(final Handler mHandler) {
         Calendar cal = Calendar.getInstance();
         Locale.setDefault(Locale.CHINA);//设置语言
-        final DatePickerDialog mDialog = new DatePickerDialog(mContext, null,
+        final DatePickerDialog mDialog = new DatePickerDialog(mContext, AlertDialog.THEME_HOLO_LIGHT, null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 
         //手动设置按钮

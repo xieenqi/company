@@ -250,12 +250,6 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
                     }
                 }, false, "取消");
 
-//                DatePickerDialog datePickerDialog = new DatePickerDialog(
-//                        textView.getContext(), dateListener,
-//                        DateTool.calendar.get(Calendar.YEAR),
-//                        DateTool.calendar.get(Calendar.MONTH),
-//                        DateTool.calendar.get(Calendar.DAY_OF_MONTH));
-//                datePickerDialog.show();
             }
         }
     }
