@@ -65,7 +65,8 @@ public class SaleDetailModelImpl implements SaleDetailContract.Model {
 //                    }
 //                });
 
-        SaleService.editSaleStage(map,selectId).subscribe(new DefaultLoyoSubscriber<SaleProductEdit>() {
+        SaleService.editSaleStage(map,selectId)
+                .subscribe(new DefaultLoyoSubscriber<SaleProductEdit>(mPersenter.getHud()) {
             @Override
             public void onNext(SaleProductEdit saleProductEdit) {
                 mPersenter.editSaleStageSuccess();

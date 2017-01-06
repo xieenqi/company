@@ -522,4 +522,9 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
     public LoadingLayout getLoadingUI() {
         return ll_loading;
     }
+
+    @Override
+    public LoyoProgressHUD getHud() {
+        return hud;
+    }
 }

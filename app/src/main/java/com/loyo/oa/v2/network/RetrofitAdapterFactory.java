@@ -7,6 +7,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.model.APIException;
 import com.loyo.oa.v2.network.model.BaseResponse;
+import com.loyo.oa.v2.network.model.CompatBaseResponse;
 import com.loyo.oa.v2.tool.GsonUtils;
 
 import java.lang.ref.SoftReference;
@@ -176,6 +177,14 @@ public class RetrofitAdapterFactory {
             public void call(Subscriber<? super T> subscriber) {
                 if (response != null) {
                     if (!subscriber.isUnsubscribed()) {
+                        if (response instanceof CompatBaseResponse
+                                && ((CompatBaseResponse) response).errcode != 0) {
+                            subscriber.onError(
+                                    new APIException(
+                                            ((CompatBaseResponse) response).errcode,
+                                            ((CompatBaseResponse) response).errmsg, response));
+                            return;
+                        }
                         subscriber.onNext(response);
                     }
                 } else {
@@ -200,6 +209,15 @@ public class RetrofitAdapterFactory {
             @Override
             public void call(Subscriber<? super T> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
+                    if (response != null) {
+                        if (response instanceof CompatBaseResponse
+                                && ((CompatBaseResponse) response).errcode != 0) {
+                            subscriber.onError(new APIException(((CompatBaseResponse) response).errcode,
+                                    ((CompatBaseResponse) response).errmsg,
+                                    response));
+                        }
+                        return;
+                    }
                     subscriber.onNext(response);
                 }
 
