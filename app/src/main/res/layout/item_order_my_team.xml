@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dimen_6"
-                android:src="@drawable/icon_follow_up_creator"/>
+                android:src="@drawable/icon_customer_responder"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dimen_6"
-                android:src="@drawable/icon_dollar"/>
+                android:src="@drawable/icon_sale_opportunity_cash"/>
 
             <TextView
                 android:layout_width="wrap_content"

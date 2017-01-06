@@ -1,12 +1,8 @@
 package com.loyo.oa.v2.activityui.home;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -14,7 +10,8 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
-import com.loyo.oa.common.utils.PermissionTool;
+import com.loyo.oa.common.type.Dfvndf;
+import com.loyo.oa.common.type.PushBizType;
 import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
@@ -47,16 +44,12 @@ import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.umeng.analytics.MobclickAgent;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 带侧滑的【主界面】
@@ -216,7 +209,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 //    }
 
 
-
     private void changeContent(Fragment fragment) {
         if (selectCurrentFragment != fragment) {
             FragmentTransaction transaction = getSupportFragmentManager()
@@ -278,7 +270,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 //        //兼容android6.0使用新的方式申请
 //        PermissionTool.requestPermission(this,new String[]{"android.permission.ACCESS_FINE_LOCATION"},"某些功能模块,比如考勤管理需要地位权限.",1);
 //    }
-
 
 
     /**
