@@ -183,9 +183,10 @@ public class RetrofitAdapterFactory {
                                     new APIException(
                                             ((CompatBaseResponse) response).errcode,
                                             ((CompatBaseResponse) response).errmsg, response));
-                            return;
                         }
-                        subscriber.onNext(response);
+                        else {
+                            subscriber.onNext(response);
+                        }
                     }
                 } else {
                     if (!subscriber.isUnsubscribed()) {
@@ -209,16 +210,15 @@ public class RetrofitAdapterFactory {
             @Override
             public void call(Subscriber<? super T> subscriber) {
                 if (!subscriber.isUnsubscribed()) {
-                    if (response != null) {
-                        if (response instanceof CompatBaseResponse
-                                && ((CompatBaseResponse) response).errcode != 0) {
-                            subscriber.onError(new APIException(((CompatBaseResponse) response).errcode,
-                                    ((CompatBaseResponse) response).errmsg,
-                                    response));
-                        }
-                        return;
+                    if (response instanceof CompatBaseResponse
+                            && ((CompatBaseResponse) response).errcode != 0) {
+                        subscriber.onError(new APIException(((CompatBaseResponse) response).errcode,
+                                ((CompatBaseResponse) response).errmsg,
+                                response));
                     }
-                    subscriber.onNext(response);
+                    else {
+                        subscriber.onNext(response);
+                    }
                 }
 
                 if (!subscriber.isUnsubscribed()) {

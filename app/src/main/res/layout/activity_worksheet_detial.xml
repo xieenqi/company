@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_bg"
+    android:background="@color/common_activity_bg"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
@@ -23,7 +23,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/common_activity_bg"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -54,6 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:background="@color/common_activity_con_bg"
                     android:orientation="horizontal"
                     android:paddingBottom="@dimen/dimen_8"
                     android:paddingLeft="@dimen/margin_other_view"
@@ -71,28 +72,39 @@
                             android:layout_marginBottom="@dimen/dimen_5"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/tv_title"
+                            <FrameLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/dimen_10"
-                                android:layout_weight="1"
-                                android:ellipsize="end"
-                                android:singleLine="false"
-                                android:text=""
-                                android:textColor="@color/text33"
-                                android:textSize="@dimen/text_sp16" />
+                                android:layout_height="wrap_content">
 
-                            <TextView
-                                android:id="@+id/tv_status"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:paddingLeft="@dimen/dimen_2"
-                                android:paddingRight="@dimen/dimen_2"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text_sp11" />
+                                <TextView
+                                    android:id="@+id/tv_title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginRight="65dp"
+                                    android:textColor="@color/text33"
+                                    android:textSize="16sp" />
+
+                                <FrameLayout
+                                    android:layout_width="60dp"
+                                    android:layout_gravity="right|top"
+                                    android:paddingTop="3dp"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:id="@+id/tv_status"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:layout_gravity="left"
+                                        android:paddingLeft="4dp"
+                                        android:paddingRight="4dp"
+                                        android:textColor="#fff"
+                                        android:textSize="12sp" />
+                                </FrameLayout>
+                            </FrameLayout>
+
+
                         </LinearLayout>
 
                         <TextView
@@ -151,6 +163,7 @@
 
                 <LinearLayout
                     android:id="@+id/ll_events"
+                    android:background="@color/common_activity_bg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />

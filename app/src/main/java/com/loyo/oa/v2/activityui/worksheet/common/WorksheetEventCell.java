@@ -114,16 +114,16 @@ public class WorksheetEventCell extends LinearLayout {
 
         }
 
-        tv_time.setText(data.startTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(data.startTime));
+        tv_time.setText(data.startTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getDateFriendly(data.startTime));
         LogUtil.dee("endTime:" + data.endTime);
         LogUtil.dee("status:" + data.status);
         if (data.endTime != 0 && data.status != WorksheetEventStatus.UNACTIVATED) {
             //事件 已处理 待处理 标红
             if (data.isOvertime) {
-                tv_time2.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(data.endTime) + "截止" + "(超时)");
+                tv_time2.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(data.endTime) + "截止" + "(超时)");
                 tv_time2.setTextColor(getResources().getColor(R.color.red1));
             } else {
-                tv_time2.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(data.endTime) + "截止");
+                tv_time2.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(data.endTime) + "截止");
                 tv_time2.setTextColor(getResources().getColor(R.color.text99));
             }
         } else if (data.endTime == 0 || data.status == WorksheetEventStatus.UNACTIVATED) {
