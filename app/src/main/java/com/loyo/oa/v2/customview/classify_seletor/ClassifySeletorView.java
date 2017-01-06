@@ -1,16 +1,21 @@
 package com.loyo.oa.v2.customview.classify_seletor;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 
 import java.util.ArrayList;
@@ -25,7 +30,7 @@ import java.util.List;
  * Created by jie on 16/12/29.
  */
 
-public class ClassifySeletorView extends LinearLayout {
+public class ClassifySeletorView extends FrameLayout {
     private String TAG = "ClassifySeletorView";
     private Context context;
     private RecyclerView rvTitle;
@@ -34,16 +39,21 @@ public class ClassifySeletorView extends LinearLayout {
     private TitleAdapter titleAdapter;
     private Button btnReset, btnOk;
     private ClassifySeletorItem firstHeadItem;
-
+    private View view;
     //设置是否是单选模式
-    private boolean isSingleSelete=false;
+    private boolean isSingleSelete = false;
     //自动管理数据
     private List<ClassifySeletorItem> listData;
     private SeletorListener seletorListener;
+    private LoadingLayout ll_layout;
+    private FrameLayout alpha;
+    private TranslateAnimation animationDown, animationUp;
+    private boolean isShow = false;
 
     public ClassifySeletorView(Context context) {
         super(context);
         this.context = context;
+
     }
 
     public ClassifySeletorView(Context context, AttributeSet attrs) {
@@ -51,12 +61,20 @@ public class ClassifySeletorView extends LinearLayout {
         this.context = context;
     }
 
+    @Override
+    protected void onFinishInflate() {
+        initView();
+    }
+
     /**
      * 自动管理数据
-     * @param data 数据
+     * 注意，setup2次会出错，有空了解决
+     *
+     * @param data     数据
      * @param listener 事件回调
      */
     public void setup(List<ClassifySeletorItem> data, SeletorListener listener) {
+        ll_layout.setStatus(LoadingLayout.Success);
         this.listData = data;
         this.seletorListener = listener;
         setClassifySeletorListener(new ClassifySeletorListener() {
@@ -96,7 +114,7 @@ public class ClassifySeletorView extends LinearLayout {
             @Override
             public void clickItem(boolean isSelected, ItemAdapter.ItemViewHolder holder, int position, ClassifySeletorItem item) {
                 seletorListener.clickItem(isSelected, holder, position, item);
-                Log.i(TAG, "clickItem: "+item.getName());
+                Log.i(TAG, "clickItem: " + item.getName());
 
             }
 
@@ -112,13 +130,83 @@ public class ClassifySeletorView extends LinearLayout {
         });
     }
 
+    public void autoDisPlay() {
+        if(isShow){
+            hide();
+        }else {
+            show();
+        }
+    }
+
+    private void show() {
+        isShow = true;
+        view.setVisibility(VISIBLE);
+        if (null == animationDown) {
+            animationDown = new TranslateAnimation(
+                    TranslateAnimation.RELATIVE_TO_SELF, 0, TranslateAnimation.RELATIVE_TO_SELF, 0,
+                    TranslateAnimation.RELATIVE_TO_SELF, -1, TranslateAnimation.RELATIVE_TO_SELF, 0);
+            animationDown.setDuration(300);
+        }
+        ll_layout.startAnimation(animationDown);
+
+    }
+
+    private void hide() {
+        isShow = false;
+        if (null == animationUp) {
+            animationUp = new TranslateAnimation(
+                    TranslateAnimation.RELATIVE_TO_SELF, 0, TranslateAnimation.RELATIVE_TO_SELF, 0,
+                    TranslateAnimation.RELATIVE_TO_SELF, 0, TranslateAnimation.RELATIVE_TO_SELF, -1);
+
+            animationUp.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    view.setVisibility(GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            animationUp.setDuration(300);
+        }
+        ll_layout.startAnimation(animationUp);
+    }
+
+    public void setStatus(int status) {
+        ll_layout.setStatus(status);
+    }
+
+    public LoadingLayout getLoadingLayout() {
+        return ll_layout;
+    }
+
+    private void initView() {
+        view = LayoutInflater.from(context).inflate(R.layout.customview_cs_main, null);
+        addView(view);
+        ll_layout = (LoadingLayout) view.findViewById(R.id.ll_layout);
+        ll_layout.setStatus(LoadingLayout.Loading);
+        alpha = (FrameLayout) view.findViewById(R.id.alpha);
+        alpha.setAlpha(0.5f);
+        alpha.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hide();
+            }
+        });
+        view.setVisibility(GONE);
+
+        rvTitle = (RecyclerView) view.findViewById(R.id.customview_cs_rv_title);
+        btnOk = (Button) view.findViewById(R.id.customview_cs_main_ok);
+        btnReset = (Button) view.findViewById(R.id.customview_cs_main_reset);
+    }
 
     //初始化布局
     private void init() {
-        LayoutInflater.from(context).inflate(R.layout.customview_cs_main, this, true);
-        rvTitle = (RecyclerView) findViewById(R.id.customview_cs_rv_title);
-        btnOk = (Button) findViewById(R.id.customview_cs_main_ok);
-        btnReset = (Button) findViewById(R.id.customview_cs_main_reset);
         btnOk.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,7 +217,7 @@ public class ClassifySeletorView extends LinearLayout {
         btnReset.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if( slideContainer.reset()){
+                if (slideContainer.reset()) {
                     titleAdapter.setPage(0);
                     slideContainer.setPage(0);
                     slideContainer.clearSelected();//要下班回家吃饭了，粗爆的设置
@@ -276,7 +364,7 @@ public class ClassifySeletorView extends LinearLayout {
     /**
      * 自动管理数据的回调
      */
-    public static abstract class SeletorListener {
+    public static class SeletorListener {
         /**
          * 条目被点击了
          *
