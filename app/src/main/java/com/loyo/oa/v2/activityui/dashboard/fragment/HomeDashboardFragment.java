@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
@@ -32,9 +33,9 @@ import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
+
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -149,7 +150,8 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 mcModel.getMoneyPercent(),
                 mcModel.getNumberDisplayTitle(),
                 mcModel.getMoneyDisplayTitle());
-
+        
+        /*mcModel.test();*/
         tv_target_count.setText(mcModel.getTargetNumber());
         tv_order_count.setText(mcModel.getTotalNumber());
         tv_target_money.setText(mcModel.getTargetAmount());
