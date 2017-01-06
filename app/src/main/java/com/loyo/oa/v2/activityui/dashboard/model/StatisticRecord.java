@@ -75,7 +75,7 @@ public class StatisticRecord {
     private String fomart(String numbre) {
         double ll = Double.valueOf(numbre);
         Double ll2;
-        if (ll > 1 * 10000) {
+        if (ll > 1000 * 10000) {
             ll2 = ll / 10000;
             return Utils.setValueDouble(ll2) + "万";
         }
