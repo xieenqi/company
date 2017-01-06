@@ -87,14 +87,14 @@ public class LoyoErrorChecker {
                     message = errorMessage;
 
                 } catch (Exception exception) {
-                    state = LoyoError.Error;
+                    state = LoyoError.No_Network;
                     message = "服务端数据异常";
                 }
             }
         }
         else if (e instanceof APIException) {
             message = e.getMessage();
-            state = LoyoError.Error;
+            state = LoyoError.No_Network;
         }
         else {
             state = LoyoError.No_Network;

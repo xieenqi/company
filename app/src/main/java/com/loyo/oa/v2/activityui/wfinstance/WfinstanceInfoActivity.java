@@ -223,11 +223,21 @@ public class WfinstanceInfoActivity extends BaseActivity {
 //            }
 //        });
 
-        WfinstanceService.getWfInstance(wfInstanceId).subscribe(new DefaultLoyoSubscriber<WfInstance>(LoyoErrorChecker.LOADING_LAYOUT) {
+        WfinstanceService.getWfInstance(wfInstanceId).subscribe(new DefaultLoyoSubscriber<WfInstance>(ll_loading) {
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
+
             @Override
             public void onNext(WfInstance wfInstance_current) {
+                if (wfInstance_current.errcode != 0) {
+                    ll_loading.setStatus(LoadingLayout.No_Network);
+                    ll_loading.setNoNetworkText(wfInstance_current.errmsg);
+                }
                 mWfInstance = wfInstance_current;
-                Log.i("MSG_ATTACHMENT","date"+mWfInstance.attachments);
+                Log.i("MSG_ATTACHMENT", "date" + mWfInstance.attachments);
                 if (null != wfInstance_current && null != wfInstance_current.workflowNodes) {
                     lstData_WfNodes.clear();
                     lstData_WfNodes.addAll(wfInstance_current.workflowNodes);
@@ -235,8 +245,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 /**
                  * 赢单审批
                  */
-                if (wfInstance_current==null || wfInstance_current.bizForm == null)
-                {
+                if (wfInstance_current == null || wfInstance_current.bizForm == null) {
                     return;
                 }
 
@@ -454,7 +463,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         try {
 //            tv_time_creator.setText(mWfInstance.creator.name + " " + app.df3.format(new Date(mWfInstance.createdAt * 1000)) + " 提交");
-            tv_time_creator.setText(mWfInstance.creator.name + " " +DateTool.getDateTimeFriendly(mWfInstance.createdAt) + " 提交");
+            tv_time_creator.setText(mWfInstance.creator.name + " " + DateTool.getDateTimeFriendly(mWfInstance.createdAt) + " 提交");
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -634,8 +643,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
         } else {
             //判断是时间,就转换成友好的格式现实
             Long stamp = DateTool.getMinuteStamp(obj + "");
-            if(0!=stamp){
-                return  DateTool.getDateTimeFriendly(stamp/1000);
+            if (0 != stamp) {
+                return DateTool.getDateTimeFriendly(stamp / 1000);
             }
             return obj + "";
         }
@@ -683,7 +692,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         map.put("comment", comment);
         map.put("type", type);
 
-        WfinstanceService.doWfInstance(mWfInstance.getId(),map).subscribe(new DefaultLoyoSubscriber<WfInstance>() {
+        WfinstanceService.doWfInstance(mWfInstance.getId(), map).subscribe(new DefaultLoyoSubscriber<WfInstance>() {
             @Override
             public void onNext(WfInstance wfInstance_current) {
                 if (null != wfInstance_current) {
@@ -716,7 +725,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 if (mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")) {
                     intent.putExtra("delete", true);
                 } else {
-                    if (mWfInstance.status == WfInstance.STATUS_NEW||mWfInstance.status == WfInstance.STATUS_ABORT) {
+                    if (mWfInstance.status == WfInstance.STATUS_NEW || mWfInstance.status == WfInstance.STATUS_ABORT) {
                         intent.putExtra("delete", true);
                     }
                     intent.putExtra("edit", true);
@@ -915,9 +924,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 if (data == null || data.getExtras() == null) {
                     return;
                 }
-                int fileNum=data.getIntExtra("attachFileNum",0);
+                int fileNum = data.getIntExtra("attachFileNum", 0);
                 //这里判断!0才设置,因为back按键返回,是没有的,也就不需要设置。
-                if(0!=fileNum){
+                if (0 != fileNum) {
                     tv_attachment_count.setText("附件" + "（" + fileNum + "）");
                     //更新存储的附件数量,避免跳转页面,携带过去,参数是错误的
                     mWfInstance.bizExtData.setAttachmentCount(fileNum);
