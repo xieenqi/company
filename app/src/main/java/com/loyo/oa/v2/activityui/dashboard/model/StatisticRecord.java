@@ -12,9 +12,9 @@ import java.util.ArrayList;
 
 public class StatisticRecord {
 
-    private final static long TEN_MILLION     = 10000000l;  // 千万
-    private final static long HUNDRED_MILLION = 100000000l; // 亿
-    private final static long TEN_THOUSAND    = 10000l;     // 万
+    private final static long TEN_MILLION     = 10000000L;  // 千万
+    private final static long HUNDRED_MILLION = 100000000L; // 亿
+    private final static long TEN_THOUSAND    = 10000L;     // 万
 
     //公共字段
     public Integer total;
