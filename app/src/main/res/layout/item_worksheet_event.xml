@@ -3,15 +3,16 @@
     xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/common_activity_bg"
     android:orientation="vertical">
 
     <LinearLayout
+        android:background="@color/common_activity_con_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_other_view"
-        android:layout_marginRight="@dimen/margin_other_view"
-        android:layout_marginTop="@dimen/dimen_3"
+        android:paddingLeft="@dimen/margin_other_view"
+        android:paddingRight="@dimen/margin_other_view"
+        android:paddingTop="@dimen/dimen_3"
         android:gravity="center_vertical"
         android:minHeight="@dimen/dimen_50"
         android:orientation="horizontal">
@@ -51,10 +52,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:background="@color/common_activity_con_bg"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_40"
-        android:layout_marginLeft="@dimen/margin_other_view"
-        android:layout_marginRight="@dimen/margin_other_view"
+        android:paddingLeft="@dimen/margin_other_view"
+        android:paddingRight="@dimen/margin_other_view"
         android:orientation="horizontal">
 
         <LinearLayout
