@@ -49,6 +49,9 @@
                 android:text="EAGame"
                 android:textSize="@dimen/text_sp13"
                 android:textColor="@color/text99"
+                android:maxEms="15"
+                android:ellipsize="end"
+                android:singleLine="true"
                 />
         </LinearLayout>
 
@@ -62,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dimen_6"
-                android:src="@drawable/icon_follow_up_creator" />
+                android:src="@drawable/icon_customer_responder" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -87,7 +90,7 @@
             android:id="@+id/ll_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_5"
+            android:layout_marginBottom="@dimen/dimen_10"
             android:orientation="horizontal">
 
             <ImageView

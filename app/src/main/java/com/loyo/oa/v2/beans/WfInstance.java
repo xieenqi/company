@@ -20,6 +20,8 @@ public class WfInstance extends BaseBeans implements Serializable {
     public static final int STATUS_APPROVED = 4;
     public static final int STATUS_FINISHED = 5;
 
+    public int errcode;
+    public String errmsg;
     public long createdAt;
     public int updatedAt;
     public int status;

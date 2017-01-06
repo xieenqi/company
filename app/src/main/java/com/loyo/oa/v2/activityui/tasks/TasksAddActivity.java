@@ -207,9 +207,9 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
         Resources res = mContext.getResources();
         Configuration config = res.getConfiguration();
         String locale = config.locale.getCountry();
-        LogUtil.dee("方法1:"+ locale);
-        LogUtil.dee("方法2:"+ Locale.getDefault().toString());
-        LogUtil.dee("方法3:"+ Locale.getDefault().getLanguage());
+        LogUtil.dee("方法1:" + locale);
+        LogUtil.dee("方法2:" + Locale.getDefault().toString());
+        LogUtil.dee("方法3:" + Locale.getDefault().getLanguage());
 
         controller = new UploadController(this, 9);
         controller.setObserver(this);
@@ -355,7 +355,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
                 .subscribe(new DefaultLoyoSubscriber<Task>(hud) {
                     @Override
                     public void onNext(final Task task) {
-                        new Handler().postDelayed(new Runnable(){
+                        new Handler().postDelayed(new Runnable() {
                             public void run() {
                                 //不需要保存
                                 isSave = false;
@@ -536,10 +536,10 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
-//                String str = year + "." + String.format("%02d", (month + 1)) + "." +
-//                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-//                tv_deadline.setText(str);
-//                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy.MM.dd HH:mm"));
+                /*String str = year + "." + String.format("%02d", (month + 1)) + "." +
+                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+                tv_deadline.setText(str);
+                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy.MM.dd HH:mm"));*/
 
                 mDeadline = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, min, 0);
                 tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mDeadline));
@@ -865,7 +865,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
     @Override
     public void onAddEvent(UploadController controller) {
         PhotoPicker.builder()
-                .setPhotoCount(9-controller.count())
+                .setPhotoCount(9 - controller.count())
                 .setShowCamera(true)
                 .setPreviewEnabled(false)
                 .start(this);
@@ -878,7 +878,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }

@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.sale.presenter;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.contract.SaleDetailContract;
 import com.loyo.oa.v2.activityui.sale.model.SaleDetailModelImpl;
@@ -55,5 +56,10 @@ public class SaleDetailPresenterImpl implements SaleDetailContract.Presenter {
     @Override
     public LoadingLayout getLoadingView() {
         return mView.getLoadingUI();
+    }
+
+    @Override
+    public LoyoProgressHUD getHud() {
+        return mView.getHud();
     }
 }

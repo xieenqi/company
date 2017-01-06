@@ -66,6 +66,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
      */
     @Override
     public void addWfinVeri(String deptId) {
+
         if (submitData.isEmpty()) {
             crolView.showMsg("请输入审批内容");
             return;

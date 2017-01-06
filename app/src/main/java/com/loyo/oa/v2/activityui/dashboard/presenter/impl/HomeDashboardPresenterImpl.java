@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,13 +43,16 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
     @Override
     public void initWave(WaveLoadingView wv1, WaveLoadingView wv2,int mvNumValues,int mvMonValues,String mvNumShow,String mvMonShow) {
 
+        LogUtil.dee("mvMonValues:"+mvMonValues);
+        LogUtil.dee("mvNumValues:"+mvNumValues);
+
         wv1.setShapeType(WaveLoadingView.ShapeType.CIRCLE);
         //wv1.setTopTitle("Top Title");
         wv1.setCenterTitleColor(Color.WHITE);   //中心标题颜色
         wv1.setTopTitleStrokeColor(Color.BLUE); //顶部标题颜色
         wv1.setBorderColor(Color.GRAY);         //边框颜色
         wv1.setBorderWidth(2);                  //边框宽度
-        wv1.setProgressValue(mvMonValues);               //涨幅范围
+        wv1.setProgressValue(mvMonValues);      //涨幅范围
         wv1.setWaveColor(mContext.getResources().getColor(R.color.dashborad)); //波浪颜色
         wv1.setWaveBgColor(mContext.getResources().getColor(R.color.dashbg));  //背景颜色
         wv1.setBottomTitleSize(18);
