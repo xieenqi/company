@@ -20,6 +20,9 @@ public interface AttendanceAddView extends BaseView{
     /*打卡成功*/
     void attendanceSuccess();
 
+    /*打卡失败*/
+    void attendanceError();
+
     /*打卡超时*/
     void showTimeOutDialog();
 }

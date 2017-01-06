@@ -225,6 +225,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
             /*提交*/
             case R.id.img_title_right:
+
                 if (!mPresenter.checkAttendanceData(et_reason.getText().toString(),
                         tv_address.getText().toString(),
                         outKind, mAttendanceRecord.getState())) {
@@ -243,6 +244,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                 } else {
                     commitAttendance();
                 }*/
+
+                img_title_right.setEnabled(false);
                 showCommitLoading();
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
@@ -361,6 +364,12 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                         AttendanceAddActivity.this.attachments = news;
                         commitAttendance();
                     }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        img_title_right.setEnabled(true);
+                    }
                 });
     }
 
@@ -377,9 +386,16 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      */
     @Override
     public void attendanceSuccess() {
-//        Toast("打卡成功!");
         AppBus.getInstance().post(new AttendanceAddEevent());
         onBackPressed();
+    }
+
+    /**
+     * 打卡失败
+     * */
+    @Override
+    public void attendanceError() {
+        img_title_right.setEnabled(true);
     }
 
     /**
@@ -472,6 +488,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
         int count = controller.failedTaskCount();
         if (count > 0) {
+            img_title_right.setEnabled(true);
             cancelCommitLoading();
             LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
             return;
