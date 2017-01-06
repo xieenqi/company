@@ -5,8 +5,6 @@ import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import static com.google.gson.jpush.internal.a.z.H;
-
 /**
  * 仪表盘 列表的模型
  * Created by jie on 16/12/28.
@@ -38,7 +36,7 @@ public class StatisticRecord {
     public String finish_rate;
 
 
-    public ArrayList<String> getDsiplayColumnForType(final DashboardType type) {
+    public ArrayList<String> getDisplayColumnForType(final DashboardType type) {
         if (DashboardType.CUS_FOLLOWUP == type || DashboardType.SALE_FOLLOWUP == type || DashboardType.CUS_SIGNIN == type) {
             //客户/线索 跟进/客户拜访
             return new ArrayList<String>() {{
