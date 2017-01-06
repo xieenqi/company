@@ -197,7 +197,8 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     //预览文件
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("data", attachment.getUrl());
-                    app.startActivity((Activity) mContext, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+                    app.startActivity((Activity) mContext, PreviewOfficeActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 } else {
                     Global.Toast("不支持的附件类型");
                 }
@@ -244,12 +245,6 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                             map.put("uuid", uuid);
                             AttachmentService.remove(attachment.getId(), map)
                                     .subscribe(new DefaultLoyoSubscriber<Object>() {
-
-                                        @Override
-                                        public void onError(Throwable e) {
-                                            super.onError(e);
-                                        }
-
                                         @Override
                                         public void onNext(Object object) {
                                             if (mAction != null) {
