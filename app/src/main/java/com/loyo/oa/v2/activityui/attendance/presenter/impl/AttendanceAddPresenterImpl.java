@@ -42,7 +42,7 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
     private boolean isRun;
     private Handler mHandler;
 
-    public AttendanceAddPresenterImpl(AttendanceRecord mAttendanceRecord, Context mContext, AttendanceAddView crolView, Activity mActivity){
+    public AttendanceAddPresenterImpl(AttendanceRecord mAttendanceRecord, Context mContext, AttendanceAddView crolView, Activity mActivity) {
         this.mContext = mContext;
         this.crolView = crolView;
         this.mActivity = mActivity;
@@ -50,9 +50,10 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
     }
 
     @Override
-    public Handler mHndler(final TextView tvtime,final TextView tvtime2,final String tvTimeName) {
-        mHandler = new Handler(){
+    public Handler mHndler(final TextView tvtime, final TextView tvtime2, final String tvTimeName) {
+        mHandler = new Handler() {
             int TEXT_LEN = 6;
+
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
@@ -81,8 +82,6 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         };
         return mHandler;
     }
-
-
 
 
     /**
@@ -127,7 +126,7 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
 
     /**
      * 刷新打卡位置
-     * */
+     */
     @Override
     public void refreshLocation(final double longitude, final double latitude, final String address) {
         String originalGPS = longitude + "," + latitude;
@@ -148,7 +147,7 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
 
     /**
      * 获取附件
-     * */
+     */
     @Override
     public void getAttachments(String uuid) {
         AttachmentService.getAttachments(uuid)
@@ -162,9 +161,9 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
 
     /**
      * 提交考勤信息
-     * */
+     */
     @Override
-    public void commitAttendance(ArrayList<Attachment> mAttachment,boolean isPopup, int outKind,int state,String uuid,String address,String reason,long extraWorkStartTime,long serverTime,int lateMin,int earlyMin) {
+    public void commitAttendance(ArrayList<Attachment> mAttachment, boolean isPopup, int outKind, int state, String uuid, String address, String reason, long extraWorkStartTime, long serverTime, int lateMin, int earlyMin) {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("inorout", mAttendanceRecord.getInorout());
@@ -203,18 +202,24 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         LoyoProgressHUD hud = crolView.showStatusProgress();
         AttendanceService.confirmAttendance(map)
                 .subscribe(new DefaultLoyoSubscriber<AttendanceRecord>(hud, "打卡成功") {
-            @Override
-            public void onNext(AttendanceRecord attendanceRecord) {
-                crolView.attendanceSuccess();
-            }
-        });
+                    @Override
+                    public void onNext(AttendanceRecord attendanceRecord) {
+                        crolView.attendanceSuccess();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        crolView.attendanceError();
+                    }
+                });
     }
 
     /**
      * 删除附件
-     * */
+     */
     @Override
-    public void deleteAttachments(String uuid,final Attachment delAttachment) {
+    public void deleteAttachments(String uuid, final Attachment delAttachment) {
         LoyoProgressHUD hud = crolView.showProgress("请稍后");
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("bizType", 0);
@@ -230,9 +235,9 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
 
     /**
      * 考勤数据验证
-     * */
+     */
     @Override
-    public boolean checkAttendanceData(String reason,String address,int outKind,int state) {
+    public boolean checkAttendanceData(String reason, String address, int outKind, int state) {
         if (TextUtils.isEmpty(reason)) {
             if (state == AttendanceRecord.STATE_OVERWORK) {
                 if (outKind == 2) {
