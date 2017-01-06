@@ -130,10 +130,6 @@
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp14" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_15"
-                    android:background="#F2F2F2" />
 
                 <LinearLayout
                     android:id="@+id/ll_handleInfoList"
