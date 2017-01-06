@@ -1,11 +1,11 @@
 package com.loyo.oa.v2.activityui.dashboard.model;
 
 import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.Utils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import static com.google.gson.jpush.internal.a.z.H;
 
 /**
  * 仪表盘 列表的模型
@@ -13,6 +13,11 @@ import java.util.ArrayList;
  */
 
 public class StatisticRecord {
+
+    private final static long TEN_MILLION     = 10000000l;  // 千万
+    private final static long HUNDRED_MILLION = 100000000l; // 亿
+    private final static long TEN_THOUSAND    = 10000l;     // 万
+
     //公共字段
     public Integer total;
     public Integer totalCustomer;
@@ -83,10 +88,10 @@ public class StatisticRecord {
         }
         String result;
         DecimalFormat df=new DecimalFormat("#.##");
-        if(number>100000000){
-            result=df.format(number/100000000)+"亿";
-        }else if(number>10000000){
-            result=df.format(number/10000)+"万";
+        if(number>HUNDRED_MILLION){
+            result=df.format(number/HUNDRED_MILLION)+"亿";
+        }else if(number>TEN_MILLION){
+            result=df.format(number/TEN_THOUSAND)+"万";
         }else{
             result=df.format(number);
         }

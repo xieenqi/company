@@ -9,8 +9,8 @@ import java.text.DecimalFormat;
 public class MoneyStatistic {
 
     private static DecimalFormat numberFormatter = new DecimalFormat("0.00");
-    private final static long TEN_MILLION     = 10000000l;  // 亿
-    private final static long HUNDRED_MILLION = 100000000l; // 千万
+    private final static long TEN_MILLION     = 10000000l;  // 千万
+    private final static long HUNDRED_MILLION = 100000000l; // 亿
     private final static long TEN_THOUSAND    = 10000l;     // 万
 
     public long totalAmount;
