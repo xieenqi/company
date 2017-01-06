@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.order;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -484,7 +485,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     public void estimateTime() {
         Calendar cal = Calendar.getInstance();
         Locale.setDefault(Locale.CHINA);//设置语言
-        final DatePickerDialog mDialog = new DatePickerDialog(this, null,
+        final DatePickerDialog mDialog = new DatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT,null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 
         //手动设置按钮
