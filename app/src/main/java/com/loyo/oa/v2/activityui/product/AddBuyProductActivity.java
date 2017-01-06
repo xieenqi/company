@@ -193,16 +193,16 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
             tv_title.setText("编辑意向产品");
             productId = intentProduct.id;
             tv_product.setText(intentProduct.name);
-            et_price.setText(Utils.setValueDouble(intentProduct.costPrice + ""));
+            tv_price.setText(Utils.setValueDouble(intentProduct.costPrice + ""));
             et_price.setText(Utils.setValueDouble(intentProduct.salePrice + ""));
             et_number.setText(Utils.setValueDouble(intentProduct.quantity + ""));
             tv_discount.setText(Utils.setValueDouble(intentProduct.discount) + "%");
             tv_total.setText(Utils.setValueDouble(intentProduct.totalMoney + ""));
             et_remake.setText(intentProduct.memo);
-            if (!TextUtils.isEmpty(intentProduct.unit)) {
+            /*if (!TextUtils.isEmpty(intentProduct.unit)) {
                 tv_price.setText("产品原价(" + intentProduct.unit + ")");
                 et_price.setText("销售价格(" + intentProduct.unit + ")");
-            }
+            }*/
             oldId = intentProduct.id;
             ll_loading.setStatus(LoadingLayout.Loading);
             mPersenter.getProductDetails(productId);
@@ -297,7 +297,6 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         map.put("proInfo", data);
         map.put("oldId", oldId);
         LogUtil.d("编辑产品:" + MainApp.gson.toJson(map));
-
         Intent intent = new Intent();
         intent.putExtra(ExtraAndResult.EXTRA_DATA, map);
         intent.putExtra(ExtraAndResult.STR_SHOW_TYPE, ActionCode.SALE_DETAILS_RUSH);
