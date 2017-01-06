@@ -49,6 +49,9 @@
                 android:text="EAGame"
                 android:textSize="@dimen/text_sp13"
                 android:textColor="@color/text99"
+                android:maxEms="15"
+                android:ellipsize="end"
+                android:singleLine="true"
                 />
         </LinearLayout>
 

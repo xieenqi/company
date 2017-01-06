@@ -10,10 +10,7 @@ import android.widget.TextView;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
-import com.loyo.oa.v2.application.MainApp;
-
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * 【团队线索】适配器
