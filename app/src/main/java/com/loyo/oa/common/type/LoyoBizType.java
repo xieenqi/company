@@ -1,10 +1,10 @@
-package com.loyo.oa.common.type
+package com.loyo.oa.common.type;
 
 /**
  * Created by xeq on 17/1/5.
  */
 
-enum class LoyoBizType constructor(var type: Int) {
+public enum LoyoBizType {
     /*工作汇报*/
     WorkReport(1),
     /*任务*/
@@ -64,7 +64,7 @@ enum class LoyoBizType constructor(var type: Int) {
     /*跟进评论*/
     ActivityCommentType(31),
     /*电话录音*/
-    IPVoice(32)
+    IPVoice(32);
 
     //    const (
     //    _                     BizType = iota //忽略掉 0, 从 1 开始
@@ -102,4 +102,9 @@ enum class LoyoBizType constructor(var type: Int) {
     //            IPVoice                              //电话录音            32
     //    )
     //
+
+    private int code;
+    LoyoBizType(int code) {
+        this.code = code;
+    }
 }
