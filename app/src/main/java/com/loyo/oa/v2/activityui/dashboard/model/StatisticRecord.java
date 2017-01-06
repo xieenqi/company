@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.dashboard.model;
 
 import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 
@@ -18,7 +20,6 @@ public class StatisticRecord {
     public String totalLength;
 
 
-
     public String id;
     public String name;
     //增量／存量
@@ -31,44 +32,54 @@ public class StatisticRecord {
     public String finish_rate;
 
 
-    public ArrayList<String> getDsiplayColumnForType(DashboardType type) {
-        if (DashboardType.CUS_FOLLOWUP == type || DashboardType.SALE_FOLLOWUP == type|| DashboardType.CUS_SIGNIN == type) {
+    public ArrayList<String> getDsiplayColumnForType(final DashboardType type) {
+        if (DashboardType.CUS_FOLLOWUP == type || DashboardType.SALE_FOLLOWUP == type || DashboardType.CUS_SIGNIN == type) {
             //客户/线索 跟进/客户拜访
-            return new ArrayList<String>(){{
+            return new ArrayList<String>() {{
                 add(userName);
                 add(String.valueOf(total));
                 add(String.valueOf(totalCustomer));
             }};
 
 
-        }else if (DashboardType.CUS_CELL_RECORD == type|| DashboardType.SALE_CELL_RECORD == type) {
+        } else if (DashboardType.CUS_CELL_RECORD == type || DashboardType.SALE_CELL_RECORD == type) {
             //客户电话录/线索电话录
-            return new ArrayList<String>(){{
+            return new ArrayList<String>() {{
                 add(userName);
                 add(String.valueOf(total));
                 add(String.valueOf(totalCustomer));
                 add(String.valueOf(totalLength));
             }};
 
-        }else if (DashboardType.COMMON == type) {
+        } else if (DashboardType.COMMON == type) {
             //增量/存量
-            return new ArrayList<String>(){{
+            return new ArrayList<String>() {{
                 add(name);
                 add(String.valueOf(addCount));
                 add(String.valueOf(count));
             }};
 
-        }else if (DashboardType.ORDER_MONEY == type|| DashboardType.ORDER_NUMBER == type) {
+        } else if (DashboardType.ORDER_MONEY == type || DashboardType.ORDER_NUMBER == type) {
             // 订单数量和金额
-            return new ArrayList<String>(){{
+            return new ArrayList<String>() {{
                 add(name);
-                add(targetNum);
-                add(orderNum);
+                add(DashboardType.ORDER_MONEY == type ? "￥" + fomart(targetNum) : targetNum);
+                add(DashboardType.ORDER_MONEY == type ? "￥" + fomart(orderNum) : orderNum);
                 add(finish_rate);
             }};
-        }
-        else {
+        } else {
             return new ArrayList<>();
         }
     }
+
+    private String fomart(String numbre) {
+        double ll = Double.valueOf(numbre);
+        Double ll2;
+        if (ll > 1 * 10000) {
+            ll2 = ll / 10000;
+            return Utils.setValueDouble(ll2) + "万";
+        }
+        return numbre;
+    }
+
 }
