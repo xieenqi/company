@@ -94,7 +94,7 @@ public interface IWfinstance {
      * 获取审批详情
      */
     @GET("/wfinstance/{id}")
-    Observable<BaseResponse<WfInstance>> getWfInstance(@Path("id") String id);
+    Observable<WfInstance> getWfInstance(@Path("id") String id);
 
     /**
      * 删除审批详情
