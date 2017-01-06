@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.project.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -11,37 +10,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attachment.AttachmentRightActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.HttpProject;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.Utils;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 /**
  * com.loyo.oa.v2.ui.fragment
@@ -49,7 +36,7 @@ import retrofit.mime.TypedString;
  * 作者 : ykb
  * 时间 : 15/9/8.
  */
-public class AttachmentFragment extends BaseFragment implements View.OnClickListener{
+public class AttachmentFragment extends BaseFragment implements View.OnClickListener, UploadControllerCallback {
 
     private View mView;
     private SwipeListView mListViewAttachment;
@@ -58,10 +45,10 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     private AttachmentSwipeAdapter adapter;
     private ViewGroup layout_upload;
     private int bizType = 5;
-    private int uploadSize;
-    private int uploadNum;
     private boolean isOver;
     private LoadingLayout ll_loading;
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
+    private UploadController controller;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +56,8 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         if (getArguments() != null && getArguments().containsKey("project")) {
             mProject = (HttpProject) getArguments().getSerializable("project");
         }
+        controller = new UploadController(this.getActivity(), 9);
+        controller.setObserver(this);
     }
 
     /**
@@ -141,10 +130,12 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_upload:
-                Intent intent = new Intent(getActivity(), SelectPicPopupWindow.class);
-                intent.putExtra("localpic", true);
-                intent.putExtra("addpg", false);
-                startActivityForResult(intent, MainApp.GET_IMG);
+                PhotoPicker.builder()
+                        .setPhotoCount(9)
+                        .setShowCamera(true)
+                        .setPreviewEnabled(false)
+                        .start(this.getActivity(), this);
+
                 break;
         }
     }
@@ -183,24 +174,12 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      * 获取数据
      */
     private void getData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).
-                getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
+        AttachmentService.getAttachments(mProject.attachmentUUId)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(ll_loading) {
                     @Override
-                    public void success(ArrayList<Attachment> attachments, Response response) {
-                        LogUtil.dll(" 项目的附件获取数据： " + MainApp.gson.toJson(attachments));
-                        if (null != attachments && !attachments.isEmpty()) {
-                            mAttachments = attachments;
-                            bindAttachment(mAttachments);
-                        }else {
-//                            ll_loading.setStatus(LoadingLayout.Success);
-                            ll_loading.setStatus(LoadingLayout.Empty);
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
-                        super.failure(error);
+                    public void onNext(ArrayList<Attachment> attachments) {
+                        mAttachments = attachments;
+                        bindAttachment(mAttachments);
                     }
                 });
     }
@@ -233,48 +212,25 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     }
 
 
-    /**
-     * 批量上传附件
-     */
-    private void newUploadAttachement(File file) {
-        if (uploadSize == 0) {
-            DialogHelp.showLoading(getActivity(), "正在上传", true);
-        }
-        uploadSize++;
-        TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedUuid = new TypedString(mProject.attachmentUUId);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachments, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        try {
-                            Attachment attachment = attachments;
-                            if (mAttachments != null) {
-                                mAttachments.add(0, attachment);
-                            } else {
-                                mAttachments = new ArrayList<>(Arrays.asList(attachment));
-                            }
-                            bindAttachment(mAttachments);
-                        } catch (Exception e) {
-                            Global.ProcException(e);
-                        }
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
-
-
-//    @Override
-//    public void onRightClick(Bundle b) {
-//        Intent intent = new Intent(mActivity, AttachmentRightActivity_.class);
-//        intent.putExtras(b);
-//        startActivityForResult(intent, AttachmentSwipeAdapter.REQUEST_ATTACHMENT);
+//    /**
+//     * 批量上传附件
+//     */
+//    private void newUploadAttachement(File file) {
+//        uploadSize++;
+//        TypedFile typedFile = new TypedFile("image/*", file);
+//        TypedString typedUuid = new TypedString(mProject.attachmentUUId);
+//        AttachmentService.newUpload(typedUuid, bizType, typedFile)
+//                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+//                    @Override
+//                    public void onNext(Attachment attachment) {
+//                        if (mAttachments != null) {
+//                            mAttachments.add(0, attachment);
+//                        } else {
+//                            mAttachments = new ArrayList<>(Arrays.asList(attachment));
+//                        }
+//                        bindAttachment(mAttachments);
+//                    }
+//                });
 //    }
 
     @Override
@@ -303,28 +259,85 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
             /**
              * 附件上传回调
              * */
-            case MainApp.GET_IMG:
-                try {
-                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
-                    if (pickPhots == null) {
-                        return;
+            case PhotoPicker.REQUEST_CODE:
+                if (data != null) {
+                    ArrayList<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    for (String path : mSelectPath) {
+                        controller.addUploadTask("file://" + path, null, mProject.attachmentUUId);
                     }
-                    uploadSize = 0;
-                    uploadNum = pickPhots.size();
-                    for (ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(getActivity(), uri);
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                newUploadAttachement(newFile);
-                            }
-                        }
+                    if (mSelectPath.size() > 0) {
+                        showCommitLoading();
+                        controller.startUpload();
                     }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
                 }
 
                 break;
+        }
+    }
+
+    private void buildAttachment() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = mProject.attachmentUUId;
+            attachmentBatch.bizType = bizType;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+    }
+
+    /**
+     * 上传附件信息
+     */
+    public void postAttaData() {
+        buildAttachment();
+        AttachmentService.setAttachementData2(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud) {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        controller.removeAllTask();
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Attachment> news) {
+                        if (mAttachments != null) {
+                            mAttachments.addAll(news);
+                        } else {
+                            mAttachments = new ArrayList<>(news);
+                        }
+                        bindAttachment(mAttachments);
+
+                        controller.removeAllTask();
+                    }
+                });
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+        // TODO: 上传失败提醒
+        if (taskList.size() >0) {
+            postAttaData();
         }
     }
 }

@@ -29,12 +29,6 @@
             android:headerDividersEnabled="true"
             android:smoothScrollbar="true" />
 
-        <!--<ViewStub-->
-        <!--android:id="@+id/vs_nodata"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout="@layout/item_layout_nodata"/>-->
-
     </com.library.module.widget.loading.LoadingLayout>
 
 

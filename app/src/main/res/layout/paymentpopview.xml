@@ -14,7 +14,6 @@
         android:orientation="vertical"
         >
 
-
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="fill_parent"
@@ -35,6 +34,7 @@
             android:layout_height="wrap_content"
             android:divider="@color/lineCC"
             android:dividerHeight="@dimen/dimen_0.5"
+            android:listSelector="@android:color/transparent"
             />
     </LinearLayout>
 </LinearLayout>

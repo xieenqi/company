@@ -23,7 +23,7 @@ public class WorkReport extends BaseBeans {
     public boolean isDelayed;
     public ArrayList<Reviewer> reviewers;
     public Members members = new Members();//抄送人
-    public NewUser user = new NewUser();
+    public OrganizationalMember user = new OrganizationalMember();
     public Reviewer reviewer = new Reviewer(user);//点评人
     public BizExtData bizExtData;
     public String attachmentUUId;//string, optional): ,
@@ -81,13 +81,13 @@ public class WorkReport extends BaseBeans {
         if (null != reviewer.user && myId.equals(reviewer.user.getId())) {
             return true;
         }
-        for (NewUser menber : members.users) {
+        for (OrganizationalMember menber : members.users) {
             if (null != menber && myId.equals(menber.getId())) {
                 return true;
             }
         }
         for (UserInfo ele : depts) {//多部门的情况
-            for (NewUser menber : members.depts) {
+            for (OrganizationalMember menber : members.depts) {
                 if (null != menber && ele != null && ele.getShortDept() != null && !TextUtils.isEmpty(menber.getXpath())
                         && ele.getShortDept().getXpath().startsWith(menber.getXpath())) {
                     return true;

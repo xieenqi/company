@@ -1,19 +1,17 @@
 package com.loyo.oa.v2.network;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.IntDef;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.model.APIException;
 import com.loyo.oa.v2.network.model.LoyoError;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.json.JSONObject;
@@ -36,54 +34,47 @@ public class LoyoErrorChecker {
     public final static int SILENCE        = 1<<0;
     public final static int TOAST          = 1<<1;
     public final static int LOADING_LAYOUT = 1<<2;
-    public final static int COMMIT_DIALOG  = 1<<3;
+    public final static int PROGRESS_HUD = 1<<3;
 
-    @IntDef({SILENCE, TOAST, LOADING_LAYOUT, COMMIT_DIALOG})
+    @IntDef({SILENCE, TOAST, LOADING_LAYOUT, PROGRESS_HUD})
     @Retention(RetentionPolicy.SOURCE)
     public @interface CheckType {}
 
-    private static Toast mCurrentToast;
-
-    protected LoyoErrorChecker() {
-        throw new UnsupportedOperationException(); // 防止子类调用
-    }
-
-    private static void Toast(String msg) {
-        if (null != mCurrentToast) {
-            mCurrentToast.cancel();
-        }
-        mCurrentToast = Toast.makeText(MainApp.getMainApp().getBaseContext(), msg, Toast.LENGTH_SHORT);
-        mCurrentToast.setGravity(Gravity.CENTER, 0, 0);
-        mCurrentToast.show();
+    private LoyoErrorChecker() {
     }
 
     public static LoyoError loyoError(Throwable e) {
+        if(!Config_project.isRelease)e.printStackTrace();
         String message = "";
         @LoyoError.State int state = LoyoError.Success;
 
         if (e instanceof RetrofitError) {
             RetrofitError error = (RetrofitError) e;
-            try {
-                if (406 == error.getResponse().getStatus()) {
-                    try {
-                        String msg = Utils.convertStreamToString(
-                                error.getResponse().getBody().in());
-                        JSONObject jsonObject = new JSONObject(msg);
+            if (error.getResponse() == null) {
+                state = LoyoError.No_Network;
+                message = "网络异常(网络超时或者无网络)";
+            }
+            else if (406 == error.getResponse().getStatus()) {
+                try {
+                    String msg = Utils.convertStreamToString(
+                            error.getResponse().getBody().in());
+                    JSONObject jsonObject = new JSONObject(msg);
 
-                        String errorMessage =  jsonObject.getString("error");
-                        if (TextUtils.isEmpty(errorMessage)) {
-                            errorMessage = "授权失败，请重新登录";
-                        }
-                        message = errorMessage;
+                    String errorMessage =  jsonObject.getString("error");
+                    if (TextUtils.isEmpty(errorMessage)) {
+                        errorMessage = "授权失败，请重新登录";
                     }
-                    catch (Exception exception) {
-                        message = "授权失败，请重新登录";
-                    }
-                    state = AuthFail;
-                } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    state = LoyoError.No_Network;
-                    message = "请检查您的网络连接";
-                } else {
+                    message = errorMessage;
+                }
+                catch (Exception exception) {
+                    message = "授权失败，请重新登录";
+                }
+                state = AuthFail;
+            } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                state = LoyoError.No_Network;
+                message = "请检查您的网络连接";
+            } else {
+                try {
                     String msg = Utils.convertStreamToString(
                             error.getResponse().getBody().in());
                     JSONObject jsonObject = new JSONObject(msg);
@@ -94,15 +85,20 @@ public class LoyoErrorChecker {
                     }
                     state = LoyoError.No_Network;
                     message = errorMessage;
+
+                } catch (Exception exception) {
+                    state = LoyoError.No_Network;
+                    message = "服务端数据异常";
                 }
-            } catch (Exception exception) {
-                state = LoyoError.No_Network;
-                message = error.getMessage();
             }
         }
         else if (e instanceof APIException) {
             message = e.getMessage();
-            state = LoyoError.Error;
+            state = LoyoError.No_Network;
+        }
+        else {
+            state = LoyoError.No_Network;
+            message = "网络异常";
         }
 
         return new LoyoError(message, state, e);
@@ -120,20 +116,20 @@ public class LoyoErrorChecker {
         checkLoyoError(e, type, null);
     }
 
-    public static void checkLoyoError(Throwable e, @CheckType int type, LoadingLayout layout) {
+    public static LoyoError checkLoyoError(Throwable e, @CheckType int type, LoadingLayout layout) {
         LoyoError error = LoyoErrorChecker.loyoError(e);
         if (type == LOADING_LAYOUT && layout == null) {
             type = TOAST;
         }
 
         if (error.loadingState == AuthFail) {
-            Toast(error.message);
+            // LoyoToast.info(MainApp.getMainApp().getApplicationContext(), error.message);
             //到侧边栏 退出系统到登录界面
             Intent in = new Intent();
             in.setAction(ExtraAndResult.ACTION_USER_VERSION);
             in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
             LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
-            return;
+            return null;
         }
         switch (type) {
             case SILENCE:
@@ -147,22 +143,21 @@ public class LoyoErrorChecker {
                 layout.setNoNetworkText(error.message);
             }
             break;
-            case COMMIT_DIALOG:
+            case PROGRESS_HUD:
             {
-                DialogHelp.errorStatusLoading(error.message);
-                new Handler().postDelayed(new Runnable(){
-                    public void run() {
-                        DialogHelp.cancelStatusLoading();
-                    }
-                }, 1500);
+                // onCompleted 处理提示
             }
             break;
             default:
             {
-                Toast(error.message);
+                LoyoToast.error(MainApp.getMainApp().getApplicationContext(), error.message);
+                if (layout != null) {
+                    layout.setStatus(LoadingLayout.Success);
+                }
             }
             break;
         }
+        return error;
 
     }
 }

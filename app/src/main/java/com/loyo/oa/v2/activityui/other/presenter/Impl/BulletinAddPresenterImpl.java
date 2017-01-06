@@ -1,29 +1,21 @@
 package com.loyo.oa.v2.activityui.other.presenter.Impl;
 
 import android.content.Context;
-import android.os.Handler;
 import android.text.TextUtils;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinAddView;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.announcement.api.AnnouncementService;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.INotice;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.beans.OrganizationalMember;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【发布通知】Presenter
@@ -66,13 +58,13 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
             joinUserId.reverse();
         } else {
             if (null != member.depts) {
-                for (NewUser newUser : member.depts) {
+                for (OrganizationalMember newUser : member.depts) {
                     joinName.append(newUser.getName() + ",");
                     joinUserId.append(newUser.getId() + ",");
                 }
             }
             if (null != member.users) {
-                for (NewUser newUser : member.users) {
+                for (OrganizationalMember newUser : member.users) {
                     joinName.append(newUser.getName() + ",");
                     joinUserId.append(newUser.getId() + ",");
                 }
@@ -123,7 +115,7 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
      * */
     @Override
     public void requestBulletinAdd(String title, String content, String uuid, ArrayList<AttachmentForNew> attachments) {
-        DialogHelp.showStatusLoading(false,mContext);
+        LoyoProgressHUD hud = mBulletinAddView.showStatusProgress();
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
@@ -132,85 +124,12 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
         if (attachments != null) {
             map.put("attachments", assembleAttachment(attachments));
         }
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
-            @Override
-            public void success(final Bulletin mBulletin, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建公告",response);
-                new Handler().postDelayed(new Runnable() {
+        AnnouncementService.publishNotice(map)
+                .subscribe(new DefaultLoyoSubscriber<Bulletin>(hud) {
                     @Override
-                    public void run() {
-                        DialogHelp.cancelStatusLoading();
-                        mBulletinAddView.onSuccess(mBulletin);
+                    public void onNext(final Bulletin bulletin) {
+                        mBulletinAddView.onSuccess(bulletin);
                     }
-                },1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-                super.failure(error);
-            }
-        });
+                });
     }
-
-    /**
-     * 上传附件
-     * */
-//    @Override
-//    public void uploadAttachement(SweetAlertDialogView sweetAlertDialogView,
-//                                  final ArrayList<ImageInfo> pickPhots, final String title,
-//                                  final String content, final String uuid) {
-//
-//        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-//            @Override
-//            public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                mBulletinAddView.dissweetAlert();
-//            }
-//        }, new SweetAlertDialog.OnSweetClickListener() {
-//            @Override
-//            public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                mBulletinAddView.dissweetAlert();
-//                mBulletinAddView.showLoading();
-//                try {
-//                    uploadSize = 0;
-//                    uploadNum = pickPhots.size();
-//                    LogUtil.dee("pickPhots:" + MainApp.gson.toJson(pickPhots));
-//                    for (ImageInfo item : pickPhots) {
-//                        Uri uri = Uri.parse(item.path);
-//                        File newFile = Global.scal(mContext, uri);
-//                        if (newFile != null && newFile.length() > 0) {
-//                            if (newFile.exists()) {
-//                                TypedFile typedFile = new TypedFile("image/*", newFile);
-//                                TypedString typedUuid = new TypedString(uuid);
-//                                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-//                                        new RCallback<Attachment>() {
-//                                            @Override
-//                                            public void success(final Attachment attachments, final Response response) {
-//                                                HttpErrorCheck.checkResponse("通知公告附件", response);
-//                                                if (attachments != null) {
-//                                                    mAttachment.add(attachments);
-//                                                }
-//                                                uploadSize++;
-//                                                if (uploadSize == uploadNum) {
-//                                                    requestBulletinAdd(title, content, uuid);
-//                                                }
-//                                            }
-//
-//                                            @Override
-//                                            public void failure(final RetrofitError error) {
-//                                                super.failure(error);
-//                                                HttpErrorCheck.checkError(error);
-//                                                mBulletinAddView.onError();
-//                                            }
-//                                        });
-//                            }
-//                        }
-//                    }
-//                } catch (Exception ex) {
-//                    Global.ProcException(ex);
-//                }
-//            }
-//        }, "提示", mContext.getString(R.string.app_bulletin_message));
-//    }
 }

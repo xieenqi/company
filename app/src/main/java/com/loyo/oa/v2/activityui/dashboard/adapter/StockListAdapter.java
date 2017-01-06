@@ -7,6 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.tool.LogUtil;
+
+import java.util.ArrayList;
 
 /**
  * Created by yyy on 16/12/13.
@@ -15,30 +20,32 @@ import com.loyo.oa.v2.R;
 public class StockListAdapter extends BaseAdapter{
 
     private Context mContext;
+    public ArrayList<StockStatistic> models;
 
-    public StockListAdapter(Context mContext){
+    public StockListAdapter(Context mContext,ArrayList<StockStatistic> stockListModel){
         this.mContext = mContext;
+        models = stockListModel;
     }
-
 
     @Override
     public int getCount() {
-        return 4;
+        return models.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public Object getItem(int position) {
+        return models.get(position);
     }
 
     @Override
-    public long getItemId(int i) {
+    public long getItemId(int position) {
         return 0;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         ViewHolder holder = null;
+        StockStatistic model = models.get(position);
         if(null == convertView){
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_dashstock, null);
@@ -49,6 +56,9 @@ public class StockListAdapter extends BaseAdapter{
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
+        holder.tv_title.setText(model.tagItemName);
+        holder.tv_zsize.setText(model.getIncement().equals("0") ? model.getIncement() : "+"+model.getIncement());
+        holder.tv_csize.setText(model.getStock());
         return convertView;
     }
 

@@ -11,31 +11,29 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.event.OrderAddWorkSheetFinish;
-import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
+import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.activityui.worksheet.OrderWorksheetListActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.OrderAddforExtraData;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.point.IOrder;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -44,10 +42,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【新建订单】
@@ -265,23 +259,17 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 获取新建订单动态字段
      */
     public void getAddDynamic() {
-        showLoading("", false);
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 104);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
-            @Override
-            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse("新建订单动态字段", response);
-                mCusList = cuslist;
-                bindExtraView(cuslist);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        CustomerService.getAddCustomerJur(map)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
+                    @Override
+                    public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
+                        mCusList = contactLeftExtrasArrayList;
+                        bindExtraView(contactLeftExtrasArrayList);
+                    }
+                });
     }
 
     /**
@@ -312,7 +300,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             }
         }
 
-        showStatusLoading(false);
+        showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             map.put("id", mOrderDetail.id);
@@ -346,23 +334,16 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 编辑订单
      */
     public void editOrderData(HashMap<String, Object> map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .editOrder(mOrderDetail.id, map, new Callback<OrderAdd>() {
+        OrderService.editOrder(mOrderDetail.id, map)
+                .subscribe(new DefaultLoyoSubscriber<OrderAdd>(hud) {
                     @Override
-                    public void success(OrderAdd orderAdd, Response response) {
-                        HttpErrorCheck.checkCommitSus("编辑订单",response);
+                    public void onNext(OrderAdd add) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                cancelStatusLoading();
                                 app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                             }
-                        },1000);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkCommitEro(error);
+                        },2000);
                     }
                 });
 
@@ -372,23 +353,23 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 新建订单
      */
     public void addOrderData(HashMap<String, Object> map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .addOrder(map, new Callback<OrderAdd>() {
+        OrderService.addOrder(map)
+                .subscribe(new DefaultLoyoSubscriber<OrderAdd>(hud) {
                     @Override
-                    public void success(OrderAdd orderAdd, Response response) {
-                        HttpErrorCheck.checkCommitSus("创建订单",response);
+                    public void onNext(OrderAdd add) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                cancelStatusLoading();
-                                app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                                app.finishActivity(OrderAddActivity.this,
+                                        MainApp.ENTER_TYPE_LEFT,
+                                        ExtraAndResult.REQUEST_CODE,
+                                        new Intent());
                             }
-                        },1000);
+                        },2000);
                     }
-
                     @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkCommitEro(error);
+                    public void onError(Throwable e) {
+                        super.onError(e);
                     }
                 });
     }

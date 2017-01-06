@@ -4,7 +4,7 @@ import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 
 /**
  * Created by EthanGong on 2016/10/20.
@@ -21,14 +21,14 @@ public class Compat {
         }
 
         StaffMemberCollection collection = new StaffMemberCollection();
-        for (NewUser dept:members.depts) {
+        for (OrganizationalMember dept:members.depts) {
             StaffMember staffMember = convertNewUserToStaffMember(dept);
             if (staffMember != null){
                 collection.depts.add(staffMember);
             }
         }
 
-        for (NewUser user:members.users) {
+        for (OrganizationalMember user:members.users) {
             StaffMember staffMember = convertNewUserToStaffMember(user);
             if (staffMember != null){
                 collection.users.add(staffMember);
@@ -47,14 +47,14 @@ public class Compat {
 
         Members members = new Members();
         for (StaffMember staffMember:collection.depts) {
-            NewUser dept = convertStaffMemberToNewUser(staffMember);
+            OrganizationalMember dept = convertStaffMemberToNewUser(staffMember);
             if (dept != null){
                 members.depts.add(dept);
             }
         }
 
         for (StaffMember staffMember:collection.users) {
-            NewUser user = convertStaffMemberToNewUser(staffMember);
+            OrganizationalMember user = convertStaffMemberToNewUser(staffMember);
             if (user != null){
                 members.users.add(user);
             }
@@ -74,7 +74,7 @@ public class Compat {
     }
 
     public static Member convertStaffCollectionToMember(StaffMemberCollection collection) {
-        NewUser user = convertStaffCollectionToNewUser(collection);
+        OrganizationalMember user = convertStaffCollectionToNewUser(collection);
         if (user == null) {
             return null;
         }
@@ -85,7 +85,7 @@ public class Compat {
 
 
     /** 单用户转化 */
-    public static StaffMemberCollection convertNewUserToStaffCollection(NewUser user) {
+    public static StaffMemberCollection convertNewUserToStaffCollection(OrganizationalMember user) {
 
         StaffMember staffMember = convertNewUserToStaffMember(user);
 
@@ -99,7 +99,7 @@ public class Compat {
         }
     }
 
-    public static  NewUser convertStaffCollectionToNewUser(StaffMemberCollection collection) {
+    public static OrganizationalMember convertStaffCollectionToNewUser(StaffMemberCollection collection) {
 
         if (collection == null) {
             return null;
@@ -113,7 +113,7 @@ public class Compat {
         return convertStaffMemberToNewUser(staffMember);
     }
 
-    public static StaffMember convertNewUserToStaffMember(NewUser user) {
+    public static StaffMember convertNewUserToStaffMember(OrganizationalMember user) {
         if (user == null) {
             return null;
         }
@@ -125,12 +125,12 @@ public class Compat {
         return staffMember;
     }
 
-    public static NewUser convertStaffMemberToNewUser(StaffMember staffMember) {
+    public static OrganizationalMember convertStaffMemberToNewUser(StaffMember staffMember) {
         if (staffMember == null){
             return null;
         }
 
-        NewUser user = new NewUser();
+        OrganizationalMember user = new OrganizationalMember();
         user.setAvatar(staffMember.avatar);
         user.setId(staffMember.id);
         user.setName(staffMember.name);

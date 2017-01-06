@@ -461,7 +461,6 @@
                             android:singleLine="false"
                             android:textColor="@color/text99"
                             android:textIsSelectable="true"
-                            android:selectAllOnFocus="true"
                             />
                     </LinearLayout>
 

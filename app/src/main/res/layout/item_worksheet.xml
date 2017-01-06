@@ -26,7 +26,11 @@
                 android:textColor="@color/text33"
                 android:textSize="@dimen/text_sp14"
                 android:layout_toLeftOf="@+id/tv_progress"
-                android:layout_alignParentLeft="true"/>
+                android:layout_alignParentLeft="true"
+                android:maxEms="18"
+                android:ellipsize="end"
+                android:singleLine="true"
+                />
 
             <TextView
                 android:id="@+id/tv_progress"

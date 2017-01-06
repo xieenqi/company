@@ -1,14 +1,31 @@
 package com.loyo.oa.v2.activityui.dashboard.presenter;
 
+import android.graphics.drawable.AnimationDrawable;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
+import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
- * Created by loyo_dev1 on 16/12/13.
+ * Created by yyy on 16/12/13.
  */
 
 public interface HomeDashboardPresenter {
 
-    void initUi(WaveLoadingView wv1,WaveLoadingView wv2);
+    void initWave(WaveLoadingView wv1, WaveLoadingView wv2,int countPert,int moneyPert,String countPertStr,String moneyPertStr);
 
-    void screenControlView(String[] list,String title);
+    void screenControlViews(ScreenType screenType);
+
+    void getFollowUpData(int type);
+
+    void getStockData(int type);
+
+    void getMoneyCountData(int type);
+
+    void setOnSucssView(AnimationDrawable anim,LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status);
+
+    String getNumFormat(long num);
+
 }

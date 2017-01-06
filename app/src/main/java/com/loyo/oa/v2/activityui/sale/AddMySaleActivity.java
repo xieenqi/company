@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.sale;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,10 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
+import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
+import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
@@ -28,19 +34,15 @@ import com.loyo.oa.v2.activityui.sale.contract.AddMySaleContract;
 import com.loyo.oa.v2.activityui.sale.presenter.AddMySalePresenterImpl;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
-import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customview.ContactAddforExtraData;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.ContactAddforExtraData;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -266,9 +268,9 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
     public void estimateTime() {
         Calendar cal = Calendar.getInstance();
         Locale.setDefault(Locale.CHINA);//设置语言
-        final DatePickerDialog mDialog = new DatePickerDialog(this, null,
-                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 
+        final DatePickerDialog mDialog = new DatePickerDialog(this,AlertDialog.THEME_HOLO_LIGHT, null,
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         //手动设置按钮
         mDialog.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
             @Override
@@ -372,7 +374,7 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
      * 创建销售机会 到服务器
      */
     private void addSaleOpportunitty() {
-        showStatusLoading(false);
+        showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
         if (isEdit) {
             map.put("id", chanceId);
@@ -495,19 +497,25 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
         return reasons.toString();
     }
 
-    @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD getHUD() {
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-        showLoading(message);
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
+
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override
@@ -548,10 +556,9 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                cancelStatusLoading();
                 app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE_STAGE, new Intent());
             }
-        },1000);
+        },2000);
     }
 
     @Override
@@ -559,11 +566,10 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                cancelStatusLoading();
                 Intent mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.RESULT_ID, ActionCode.SALE_DETAILS_EDIT);
                 app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
             }
-        },1000);
+        },2000);
     }
 }

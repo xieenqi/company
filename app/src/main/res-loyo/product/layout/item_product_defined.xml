@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <include layout="@layout/include_product_line_space" />
+    <LinearLayout
+        android:id="@+id/add_product_defined_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/product_common_line_height"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/order_common_padding_right">
+
+        <TextView
+            android:id="@+id/add_product_defined_tv_1"
+            style="@style/product_line_text_main"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="产品库存" />
+
+        <TextView
+            android:id="@+id/add_product_defined_tv_2"
+            style="@style/product_line_text_second"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="哈哈"
+            android:hint="加油"
+            android:gravity="right|center_vertical" />
+    </LinearLayout>
+</LinearLayout>

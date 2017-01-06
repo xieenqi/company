@@ -25,7 +25,6 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
@@ -57,11 +56,10 @@ import com.loyo.oa.v2.activityui.customer.model.TagItem;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.attachment.api.IAttachment;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.point.IAttachment;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -92,7 +90,6 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import rx.Observable;
@@ -497,26 +494,16 @@ public class Utils {
     }
 
     /**
-     * 附件上传
-     *
-     * @param uuid
-     * @param file
-     */
-    public static synchronized Observable<Attachment> uploadAttachment(String uuid, int bizType, File file) {
-        TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedUuid = new TypedString(uuid);
-        return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedUuid, bizType, typedFile);
-    }
-
-    /**
      * 获取附件
      *
      * @param uuid
      * @param attachments
      */
-    public static synchronized void getAttachments(String uuid, RCallback<ArrayList<Attachment>> attachments) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, attachments);
-    }
+//    public static synchronized void getAttachments(String uuid, RCallback<ArrayList<Attachment>> attachments) {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT())
+//                .create(IAttachment.class)
+//                .getAttachments(uuid, attachments);
+//    }
 
     /**
      * 获取参与人
@@ -530,7 +517,7 @@ public class Utils {
         }
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < members.size(); i++) {
-            NewUser user = members.get(i).getUser();
+            OrganizationalMember user = members.get(i).getUser();
             if (null == user) {
                 continue;
             }
@@ -584,7 +571,7 @@ public class Utils {
         String ids[] = userIds.split(",");
         String names[] = userNames.split(",");
         for (int i = 0; i < ids.length; i++) {
-            NewUser user = new NewUser();
+            OrganizationalMember user = new OrganizationalMember();
             user.setName(names[i]);
             user.setId(ids[i]);
 

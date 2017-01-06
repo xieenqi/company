@@ -11,11 +11,13 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
+import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItemType;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -119,17 +121,23 @@ public class AdapterSystemMessage extends BaseAdapter {
                 intent.putExtra(item.bizzType.getExtraName(), item.bizzId);
             }
             context.startActivity(intent);
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
-                    readSystemMessageOne(item.id, new Callback<Object>() {
-                        @Override
-                        public void success(Object o, Response response) {
-                            HttpErrorCheck.checkResponse("读取一条系统消息", response);
-                        }
+//            RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
+//                    readSystemMessageOne(item.id, new Callback<Object>() {
+//                        @Override
+//                        public void success(Object o, Response response) {
+//                            HttpErrorCheck.checkResponse("读取一条系统消息", response);
+//                        }
+//
+//                        @Override
+//                        public void failure(RetrofitError error) {
+//                        }
+//                    });
+            HomeService.readSystemMessageOne(item.id).subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.SILENCE) {
+                @Override
+                public void onNext(Object o) {
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                        }
-                    });
+                }
+            });
         }
     }
 }

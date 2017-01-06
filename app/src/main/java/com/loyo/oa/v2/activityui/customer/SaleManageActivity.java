@@ -16,14 +16,15 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
+import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
@@ -114,28 +115,48 @@ public class SaleManageActivity extends BaseLoadingActivity implements View.OnCl
         map.put("pageIndex", page);
         map.put("pageSize", 20);
         map.put("customerId", customerId);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).
-                getCustomerSale(map, new RCallback<PaginationX<SaleRecord>>() {
-                    @Override
-                    public void success(PaginationX<SaleRecord> resultData, Response response) {
-                        HttpErrorCheck.checkResponse(" 客户销售机会列表：", response);
-                        listView_demands.onRefreshComplete();
-                        if (null != resultData && !(resultData.getRecords().size() < 0)) {
-                            if (isTopAdd) {
-                                listData.clear();
-                            }
-                            listData.addAll(resultData.getRecords());
-                            bindData();
-                        }
-                    }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).
+//                getCustomerSale(map, new RCallback<PaginationX<SaleRecord>>() {
+//                    @Override
+//                    public void success(PaginationX<SaleRecord> resultData, Response response) {
+//                        HttpErrorCheck.checkResponse(" 客户销售机会列表：", response);
+//                        listView_demands.onRefreshComplete();
+//                        if (null != resultData && !(resultData.getRecords().size() < 0)) {
+//                            if (isTopAdd) {
+//                                listData.clear();
+//                            }
+//                            listData.addAll(resultData.getRecords());
+//                            bindData();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error, ll_loading);
+//                        listView_demands.onRefreshComplete();
+//                        super.failure(error);
+//                    }
+//                });
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error, ll_loading);
-                        listView_demands.onRefreshComplete();
-                        super.failure(error);
+        SaleService.getCustomerSale(map).subscribe(new DefaultLoyoSubscriber<PaginationX<SaleRecord>>(ll_loading) {
+            @Override
+            public void onNext(PaginationX<SaleRecord> resultData) {
+                listView_demands.onRefreshComplete();
+                if (null != resultData && !(resultData.getRecords().size() < 0)) {
+                    if (isTopAdd) {
+                        listData.clear();
                     }
-                });
+                    listData.addAll(resultData.getRecords());
+                    bindData();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                listView_demands.onRefreshComplete();
+            }
+        });
     }
 
     /**

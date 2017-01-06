@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--主要文字，一般是一行中的标题-->
+    <style name="common_text_line_main">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColorHint">#666666</item>
+        <item name="android:textColor">#333333</item>
+    </style>
+    <!--次要文字，一般是一行中的右边的内容-->
+    <style name="common_text_line_second">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">right|center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:textColorHint">#999999</item>
+    </style>
+    <!--一般是详细页面最下面的那个文字-->
+    <style name="common_text_line_third">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textColor">#999999</item>
+    </style>
+
+    <!--一般用来显示企业名字，客户名字等的蓝色的文字-->
+    <style name="common_text_line_blue">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textColor">#2C9DFC</item>
+    </style>
+
+    <!--用来显示 阶段、状态的文字-->
+    <style name="common_text_label">
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+</resources>

@@ -3,32 +3,30 @@ package com.loyo.oa.v2.activityui.commonview;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.commonview.api.FeedBackService;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.FeedBackCommit;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.IFeedback;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -37,28 +35,25 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 意见反馈
  */
 
 @EActivity(R.layout.activity_feedback)
-public class FeedbackActivity extends BaseActivity {
+public class FeedbackActivity extends BaseActivity implements UploadControllerCallback {
 
     @ViewById
     EditText et_content;
-    @ViewById
-    GridView gridView_photo;
+    @ViewById(R.id.image_upload_grid_view)
+    ImageUploadGridView gridView;
     @ViewById
     ViewGroup layout_back;
     @ViewById
@@ -66,9 +61,10 @@ public class FeedbackActivity extends BaseActivity {
     @ViewById
     TextView tv_title;
 
+    UploadController controller;
+
     private String uuid = StringUtil.getUUID();
     private ArrayList<Attachment> attachments = new ArrayList<>();
-    private SignInGridViewAdapter signInGridViewAdapter;
     Handler han = new Handler();
     private boolean isClick = false;//反馈成功过后是否点击确定了
 
@@ -78,36 +74,9 @@ public class FeedbackActivity extends BaseActivity {
         tv_title.setText("意见反馈");
         Global.SetTouchView(layout_back, iv_submit);
         iv_submit.setVisibility(View.VISIBLE);
-        init_gridView_photo();
-    }
-
-    /**
-     * 获取附件
-     */
-    private void getAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> _attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                attachments = _attachments;
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                Toast("获取附件失败");
-            }
-        });
-    }
-
-    /**
-     * 显示附件
-     */
-    private void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, attachments, true, true, true, 0);
-        SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
+        controller.loadView(gridView);
     }
 
     @Click(R.id.layout_back)
@@ -116,6 +85,17 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     @Click(R.id.iv_submit)
+    void commit() {
+        showCommitLoading();
+        if (controller.count() > 0) {
+            controller.startUpload();
+            controller.notifyCompletionIfNeeded();
+        }
+        else {
+            sendFeedback();
+        }
+    }
+
     void sendFeedback() {
         String comment = et_content.getText().toString();
         if (StringUtil.isEmpty(comment)) {
@@ -133,19 +113,10 @@ public class FeedbackActivity extends BaseActivity {
             map.put("content", comment);
             map.put("operationSystem", androidInfo);
             map.put("userAgent", android.os.Build.MODEL);
-
-            RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
+            FeedBackService.create(map).subscribe(new DefaultLoyoSubscriber<FeedBackCommit>(hud) {
                 @Override
-                public void success(final FeedBackCommit feedBackCommit, final Response response) {
-                    HttpErrorCheck.checkResponse("意见反馈：", response);
+                public void onNext(FeedBackCommit feedBackCommit) {
                     showSuccessDialog();
-                }
-
-                @Override
-                public void failure(final RetrofitError error) {
-                    HttpErrorCheck.checkError(error);
-                    Toast("提交失败");
-                    super.failure(error);
                 }
             });
         } catch (PackageManager.NameNotFoundException e) {
@@ -193,56 +164,106 @@ public class FeedbackActivity extends BaseActivity {
             return;
         }
         switch (requestCode) {
-            case MainApp.GET_IMG://上传附件
-                try {
-                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
-                    for (ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(this, uri);
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
-                                    @Override
-                                    public void onNext(final Serializable serializable) {
-                                        getAttachments();
-                                    }
-                                });
-                            }
-                        }
+            /*相册选择 回调*/
+            case PhotoPicker.REQUEST_CODE:
+                /*相册选择 回调*/
+                if (data != null) {
+                    List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    for (String path : mSelectPath) {
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
+                    controller.reloadGridView();
                 }
                 break;
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT://删除附件
-                try {
-                    final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    HashMap<String, Object> map = new HashMap<String, Object>();
-                    map.put("bizType", 0);
-                    map.put("uuid", uuid);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).
-                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                        @Override
-                        public void success(final Attachment attachment, final Response response) {
-                            Toast("删除附件成功!");
-                            attachments.remove(delAttachment);
-                            signInGridViewAdapter.notifyDataSetChanged();
-                        }
 
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
-                            Toast("删除附件失败!");
-                            super.failure(error);
-                        }
-                    });
-                } catch (Exception e) {
-                    Global.ProcException(e);
+            /*附件删除回调*/
+            case PhotoPreview.REQUEST_CODE:
+                if (data != null) {
+                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0) {
+                        controller.removeTaskAt(index);
+                        controller.reloadGridView();
+                    }
                 }
                 break;
             default:
 
                 break;
+        }
+    }
+
+    /**
+     * 上传附件信息
+     */
+    public void postAttaData() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = 0;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+        AttachmentService.setAttachementData2(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
+                    @Override
+                    public void onNext(ArrayList<Attachment> news) {
+                        sendFeedback();
+                    }
+                });
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+        PhotoPicker.builder()
+                .setPhotoCount(9-controller.count())
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(this);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<String> selectedPhotos = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
+        }
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
+            return;
+        }
+        if (taskList.size() > 0) {
+            postAttaData();
+        } else {
+            sendFeedback();
         }
     }
 }

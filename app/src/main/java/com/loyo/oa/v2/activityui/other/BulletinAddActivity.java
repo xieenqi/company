@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.other;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,6 +10,8 @@ import android.widget.TextView;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -21,18 +22,16 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
 import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinAddView;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -45,10 +44,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【发布通知】
@@ -206,7 +201,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      * */
     @Override
     public void verifySuccess(String title,String content) {
-        showStatusLoading(false);
+        showCommitLoading();
         controller.startUpload();
         controller.notifyCompletionIfNeeded();
     }
@@ -235,7 +230,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      * */
     @Override
     public void showLoading() {
-        showLoading("正在提交");
+        showLoading2("正在提交");
     }
 
     /**
@@ -270,31 +265,13 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     }
 
     private void commitAttachment() {
-        showStatusLoading(false);
         buildAttachment();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
-                .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
+        AttachmentService.setAttachementData(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true) {
                     @Override
-                    public void success(final ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        if (attachmentForNew != null) {
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    cancelStatusLoading();
-                                    BulletinAddActivity.this.attachmentForNew = attachmentForNew;
-                                    commitAnnouncement();
-                                }
-                            },1000);
-                        }
-                        else {
-                            cancelStatusLoading();
-                            Toast("提交失败");
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkCommitEro(error);
+                    public void onNext(final ArrayList<AttachmentForNew> news) {
+                        BulletinAddActivity.this.attachmentForNew = news;
+                        commitAnnouncement();
                     }
                 });
     }
@@ -343,10 +320,10 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelStatusLoading();
         int count = controller.failedTaskCount();
         if (count > 0) {
-            Toast(count + "个附件上传失败，请重试或者删除");
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
             return;
         }
         if (taskList.size() > 0) {
@@ -354,5 +331,27 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         } else {
             commitAnnouncement();
         }
+    }
+
+    @Override
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
+
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelLoading2();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        LoyoToast.info(this, message);
     }
 }

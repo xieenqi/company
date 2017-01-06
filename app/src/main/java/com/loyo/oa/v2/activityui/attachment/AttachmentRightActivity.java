@@ -11,16 +11,13 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.OrganizationalMember;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -30,9 +27,6 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
 /**
  * 附件权限设置
  */
@@ -41,7 +35,7 @@ import retrofit.client.Response;
 public class AttachmentRightActivity extends BaseActivity {
 
     @Extra("users")
-    ArrayList<NewUser> users;
+    ArrayList<OrganizationalMember> users;
     @Extra("data")
     Attachment mAttachment;
     @ViewById
@@ -74,22 +68,16 @@ public class AttachmentRightActivity extends BaseActivity {
                             cb.setChecked(false);
                         }
                     }
+                    AttachmentService.pub(mAttachment.getId(), 1)
+                            .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                                @Override
+                                public void onNext(Attachment attachment) {
+                                    Toast("设置成功");
+                                    mAttachment.SetIsPublic(true);
+                                    mAttachment.getViewers().clear();
+                                }
+                            });
 
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).pub(mAttachment.getId(), 1, new RCallback<Attachment>() {
-                        @Override
-                        public void success(final Attachment o, final Response response) {
-                            Toast("设置成功");
-                            mAttachment.SetIsPublic(true);
-                            mAttachment.getViewers().clear();
-                        }
-
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            super.failure(error);
-                            HttpErrorCheck.checkError(error);
-                        }
-
-                    });
                 } else {
                     layout_type1.setEnabled(true);
                 }
@@ -151,14 +139,14 @@ public class AttachmentRightActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(final UserViewHolder holder, final int position) {
-            final NewUser user = users.get(position);
+            final OrganizationalMember user = users.get(position);
 
             if (user != null) {
                 holder.tv_title.setText(user.getRealname());
 
                 if (!mAttachment.isPublic() && mAttachment.getViewers() != null) {
                     //回显
-                    for (NewUser u : mAttachment.getViewers()) {
+                    for (OrganizationalMember u : mAttachment.getViewers()) {
                         if (u.equals(user)) {
                             holder.cb.setChecked(true);
                             break;
@@ -180,7 +168,7 @@ public class AttachmentRightActivity extends BaseActivity {
                 LogUtil.dll("SIZE:" + mAttachment.getViewers().size());
 
                 /*勾选状态设置*/
-/*                for(NewUser newUser : mAttachment.getViewers()){
+/*                for(OrganizationalMember newUser : mAttachment.getViewers()){
                     LogUtil.dll("可以看的ID:"+newUser.getUsers().get(0).getId());
                     if(user.getId().equals(newUser.getUsers().get(0).getId())){
                         holder.cb.setChecked(true);
@@ -192,59 +180,43 @@ public class AttachmentRightActivity extends BaseActivity {
                     @Override
                     public void onCheckedChanged(final CompoundButton compoundButton, final boolean b) {
                         if (b) {
-                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).addViewer(mAttachment.getId(), user.getId(), new RCallback<Attachment>() {
-                                @Override
-                                public void success(final Attachment o, final Response response) {
-                                    LogUtil.dll("设置" + user.getRealname() + "附件权限成功!");
-                                    mAttachment.SetIsPublic(false);
+                            AttachmentService.addViewer(mAttachment.getId(), user.getId())
+                                    .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                                        @Override
+                                        public void onNext(Attachment attachment) {
+                                            mAttachment.SetIsPublic(false);
 
-                                    if (mAttachment.getViewers() == null) {
-                                        mAttachment.setViewers(new ArrayList<NewUser>());
-                                    }
+                                            if (mAttachment.getViewers() == null) {
+                                                mAttachment.setViewers(new ArrayList<OrganizationalMember>());
+                                            }
 
-                                    mAttachment.getViewers().add(user);
-                                }
-
-                                @Override
-                                public void failure(final RetrofitError error) {
-                                    super.failure(error);
-                                    HttpErrorCheck.checkError(error);
-                                }
-                            });
+                                            mAttachment.getViewers().add(user);
+                                        }
+                                    });
                         } else {
-                            RestAdapterFactory
-                                    .getInstance()
-                                    .build(Config_project.API_URL_ATTACHMENT())
-                                    .create(IAttachment.class)
-                                    .removeViewer(mAttachment.getId(), user.getId(), new RCallback<Attachment>() {
-                                @Override
-                                public void success(final Attachment o, final Response response) {
-                                    LogUtil.dll("删除" + user.getRealname() + "附件权限成功!");
-                                    mAttachment.SetIsPublic(false);
+                            AttachmentService.removeViewer(mAttachment.getId(), user.getId())
+                                    .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+                                        @Override
+                                        public void onNext(Attachment attachment) {
+                                            mAttachment.SetIsPublic(false);
 
-                                    if (mAttachment.getViewers() != null) {
-                                        for (int i = 0; i < mAttachment.getViewers().size(); i++) {
-                                            if (mAttachment.getViewers().get(i).equals(user)) {
-                                                mAttachment.getViewers().remove(i);
+                                            if (mAttachment.getViewers() != null) {
+                                                for (int i = 0; i < mAttachment.getViewers().size(); i++) {
+                                                    if (mAttachment.getViewers().get(i).equals(user)) {
+                                                        mAttachment.getViewers().remove(i);
+                                                    }
+                                                }
+                                            }
+                                            if (!cb1.isChecked()) {
+                                                if (mAttachment.getViewers().isEmpty()) {
+                                                    layout_type1.setEnabled(false);
+                                                    cb1.setChecked(true);
+                                                } else {
+                                                    layout_type1.setEnabled(true);
+                                                }
                                             }
                                         }
-                                    }
-                                    if (!cb1.isChecked()) {
-                                        if (mAttachment.getViewers().isEmpty()) {
-                                            layout_type1.setEnabled(false);
-                                            cb1.setChecked(true);
-                                        } else {
-                                            layout_type1.setEnabled(true);
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void failure(final RetrofitError error) {
-                                    super.failure(error);
-                                    HttpErrorCheck.checkError(error);
-                                }
-                            });
+                                    });
                         }
                     }
                 });

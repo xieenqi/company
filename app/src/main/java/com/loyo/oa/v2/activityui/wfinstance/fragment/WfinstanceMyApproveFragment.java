@@ -7,11 +7,15 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.dropdownmenu.DropDownMenu;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
@@ -24,11 +28,7 @@ import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinMyApprovePresente
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMyApproveView;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.dropdownmenu.DropDownMenu;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.nostra13.universalimageloader.utils.L;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -147,23 +147,25 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String msg) {
-        showLoading(msg);
+    public LoyoProgressHUD showProgress(String msg) {
+        showLoading2(msg);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(getActivity(), message);
     }
 
     /**

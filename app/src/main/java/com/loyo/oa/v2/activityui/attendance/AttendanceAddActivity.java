@@ -9,10 +9,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.photo.PhotoCapture;
+import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.event.AttendanceAddEevent;
@@ -20,14 +28,12 @@ import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceAddPresenterImpl;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
@@ -41,15 +47,18 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.loyo.oa.v2.R.id.image_upload_grid_view;
 
 /**
  * 【新增考勤】
  * Restruture by yyy on 16/10/11
  */
 @EActivity(R.layout.activity_attendance_add)
-public class AttendanceAddActivity extends BaseActivity implements LocationUtilGD.AfterLocation, AttendanceAddView {
+public class AttendanceAddActivity extends BaseActivity implements LocationUtilGD.AfterLocation, AttendanceAddView, UploadControllerCallback {
 
     @ViewById
     ViewGroup img_title_left;
@@ -75,8 +84,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     EditText et_reason;
     @ViewById
     ViewGroup layout_reason;
-    @ViewById
-    GridView gridView_photo;
+    @ViewById(image_upload_grid_view)
+    ImageUploadGridView gridView;
     @Extra
     AttendanceRecord mAttendanceRecord;
     @Extra("isPopup")
@@ -96,12 +105,13 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
 
     private AttendanceAddPresenter mPresenter;
-    private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private static String tvTimeName;
     private int state;
     private Animation animation;
+
+    UploadController controller;
 
     public static final int CLOCKIN_STATE_NO = 1; //上班打卡状态
     public static final int CLOCKIN_STATE_OFF = 1; //下班打卡状态
@@ -155,6 +165,10 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         mPresenter = new AttendanceAddPresenterImpl(mAttendanceRecord, mContext, this, AttendanceAddActivity.this);
         mPresenter.mHndler(tv_count_time, tv_count_time2, tvTimeName);
         initLogicData();
+
+        controller = new UploadController(this, 3);
+        controller.setObserver(this);
+        controller.loadView(gridView);
     }
 
     /**
@@ -196,20 +210,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                 }
             }
         }
-        init_gridView_photo();
+        //init_gridView_photo();
         mPresenter.countDown();
-    }
-
-    /**
-     * 初始化附件列表
-     */
-    private void init_gridView_photo() {
-        if (null == adapter) {
-            adapter = new SignInGridViewAdapter(this, attachments, true, true, ExtraAndResult.FROMPAGE_ATTENDANCE);
-        } else {
-            adapter.setDataSource(attachments);
-        }
-        SignInGridViewAdapter.setAdapter(gridView_photo, adapter);
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.iv_refresh_address})
@@ -229,7 +231,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                     return;
                 }
 
-                if (NeedPhoto && attachments.size() == 0) {
+                if (NeedPhoto && controller.count() == 0) {
                     Toast("需要考勤照片，请拍照");
                     return;
                 }
@@ -241,7 +243,9 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                 } else {
                     commitAttendance();
                 }*/
-                commitAttendance();
+                showCommitLoading();
+                controller.startUpload();
+                controller.notifyCompletionIfNeeded();
                 break;
 
             /*刷新地址*/
@@ -268,7 +272,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 dismissSweetAlert();
-                commitAttendance();
+                showCommitLoading();
+                controller.startUpload();
             }
         }, "提示", getString(R.string.app_attendance_out_message));
     }
@@ -286,23 +291,33 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     /**
      * 附件删除回调
      */
-    @OnActivityResult(FinalVariables.REQUEST_DEAL_ATTACHMENT)
+    @OnActivityResult(PhotoPreview.REQUEST_CODE)
     void onDealImageResult(final Intent data) {
-        if (null == data) {
-            return;
+        if (data != null) {
+            int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+            if (index >= 0) {
+                controller.removeTaskAt(index);
+                controller.reloadGridView();
+            }
         }
-        mPresenter.deleteAttachments(uuid, (Attachment) data.getSerializableExtra("delAtm"));
     }
 
     /**
      * 选择附件回调
      */
-    @OnActivityResult(MainApp.GET_IMG)
+    //@OnActivityResult(MainApp.GET_IMG)
+    @OnActivityResult(PhotoCapture.REQUEST_CODE)
     void onGetImageResult(final Intent data) {
         if (null == data) {
             return;
         }
-        mPresenter.uploadAttachments(uuid, (ArrayList<ImageInfo>) data.getSerializableExtra("data"));
+        List<String> photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+        for (String path : photos) {
+            controller.addUploadTask("file://" + path, null, uuid);
+        }
+        controller.reloadGridView();
+        //TODO:
+        // mPresenter.uploadAttachments(uuid, (ArrayList<ImageInfo>) data.getSerializableExtra("data"));
     }
 
     /**
@@ -310,8 +325,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      */
     @Override
     public void setAttachmentEmbl(ArrayList<Attachment> mAttachment) {
-        attachments = mAttachment;
-        init_gridView_photo();
+        //attachments = mAttachment;
+        //init_gridView_photo();
     }
 
     /**
@@ -319,8 +334,34 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      */
     @Override
     public void deleteAttaSuccessEmbl(Attachment mDelAttachment) {
-        attachments.remove(mDelAttachment);
-        init_gridView_photo();
+        //attachments.remove(mDelAttachment);
+        //init_gridView_photo();
+    }
+
+    /**
+     * 上传附件信息
+     */
+    public void postAttaData() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = 0/*考勤*/;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+        AttachmentService.setAttachementData2(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
+                    @Override
+                    public void onNext(ArrayList<Attachment> news) {
+                        AttendanceAddActivity.this.attachments = news;
+                        commitAttendance();
+                    }
+                });
     }
 
     /**
@@ -328,7 +369,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      */
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(this, message);
     }
 
     /**
@@ -336,7 +377,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      */
     @Override
     public void attendanceSuccess() {
-        Toast("打卡成功!");
+//        Toast("打卡成功!");
         AppBus.getInstance().post(new AttendanceAddEevent());
         onBackPressed();
     }
@@ -380,18 +421,65 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String msg) {
-
+    public LoyoProgressHUD showProgress(String msg) {
+        showLoading2(msg);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-
+        cancelCommitLoading();
     }
 
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+        PhotoCapture.builder()
+                .start(this);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<String> selectedPhotos = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
+        }
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
+            return;
+        }
+        if (taskList.size() > 0) {
+            postAttaData();
+        } else {
+            commitAttendance();
+        }
+    }
 }

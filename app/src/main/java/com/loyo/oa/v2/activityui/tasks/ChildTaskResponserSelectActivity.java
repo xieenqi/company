@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 
@@ -37,7 +37,7 @@ import java.util.HashMap;
 @EActivity(R.layout.layout_customer_select)
 public class ChildTaskResponserSelectActivity extends BaseActivity {
     @Extra("users")
-    ArrayList<NewUser> mUsers;
+    ArrayList<OrganizationalMember> mUsers;
     private UserListAdapter adapter;
     @ViewById
     ListView usersListeView;
@@ -54,7 +54,7 @@ public class ChildTaskResponserSelectActivity extends BaseActivity {
         img_title_left.setOnTouchListener(Global.GetTouch());
         ((TextView) findViewById(R.id.tv_title_1)).setText("选择");
         if (null == mUsers) {
-            mUsers = new ArrayList<NewUser>();
+            mUsers = new ArrayList<OrganizationalMember>();
         }
         userDuplicateRemoval();
         adapter = new UserListAdapter();
@@ -66,7 +66,7 @@ public class ChildTaskResponserSelectActivity extends BaseActivity {
                 //在每次获取点击的item时将对于的checkbox状态改变，同时修改map的值。
                 item_info.cBox.toggle();
                 Intent data = new Intent();
-                data.putExtra("user", (NewUser) adapter.getItem(i));
+                data.putExtra("user", (OrganizationalMember) adapter.getItem(i));
                 app.finishActivity(ChildTaskResponserSelectActivity.this, MainApp.ENTER_TYPE_LEFT, Activity.RESULT_OK, data);
             }
         });
@@ -131,7 +131,7 @@ public class ChildTaskResponserSelectActivity extends BaseActivity {
                 item_info = (Item_info) convertView.getTag();
             }
 
-            NewUser user = mUsers.get(position);
+            OrganizationalMember user = mUsers.get(position);
             item_info.tv_title.setText(user.getRealname());
 //            item_info.tv_content.setText(user.getDepartmentsName());
             item_info.cBox.setChecked(isSelected.get(position));

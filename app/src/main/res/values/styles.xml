@@ -1,6 +1,8 @@
 <resources>
-    <!-- 防止黑屏的主题-->
-    <style name="AppStartLoadTranslucent" parent="android:Theme.Holo.Light.NoActionBar">
+    <!-- 防止黑屏的主题
+    @style/Theme.AppCompat.Light.NoActionBar  design 包下要用到主题  继承AppCompatActivity
+    -->
+    <style name="AppStartLoadTranslucent" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
@@ -9,6 +11,12 @@
     <style name="noTitle" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <!--<item name="android:windowFullscreen">true</item>-->
+    </style>
+
+    <style name="SelectProductViewAnim">
+        <!-- PopupWindow左右弹出的效果 -->
+        <item name="android:windowEnterAnimation">@anim/enter_in_selectproduct</item>
+        <item name="android:windowExitAnimation">@anim/enter_out_selectproduct</item>
     </style>
 
     <!--FragmentActivity的样式，目前主要是用到ActionBar的地方-->

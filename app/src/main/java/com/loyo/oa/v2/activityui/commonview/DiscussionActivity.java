@@ -4,33 +4,30 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.discuss.adapter.DiscussionAdapter;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
-import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IDiscuss;
-import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.HaitHelper;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.StringUtil;
+
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
+import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.discuss.adapter.DiscussionAdapter;
+import com.loyo.oa.v2.activityui.discuss.api.DiscussService;
+import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.HaitHelper;
+import com.loyo.oa.v2.tool.StringUtil;
+
 import org.androidannotations.annotations.AfterExtras;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【讨论 界面】
@@ -93,15 +90,19 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
             layout_comment.setVisibility(View.GONE);
         }
 
-        final IDiscuss t = RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class);
         HashMap<String, Object> body = new HashMap<>();
         body.put("pageIndex", mPageDiscussion.getPageIndex());
         body.put("pageSize", mPageDiscussion.getPageSize());
         body.put("attachmentUUId", attachmentUUId);
-        t.getDiscussions(body, new RCallback<PaginationX<Discussion>>() {
+        DiscussService.getDiscussions(body)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Discussion>>() {
             @Override
-            public void success(final PaginationX<Discussion> d, final Response response) {
-                HttpErrorCheck.checkResponse(response);
+            public void onError(Throwable e) {
+                listView_discussion.onRefreshComplete();
+            }
+
+            @Override
+            public void onNext(PaginationX<Discussion> d) {
                 listView_discussion.onRefreshComplete();
                 if (isPullUp) {
                     mPageDiscussion.getRecords().addAll(d.getRecords());
@@ -109,13 +110,6 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
                     mPageDiscussion = d;
                 }
                 bindDiscussion();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                listView_discussion.onRefreshComplete();
-                super.failure(error);
             }
         });
     }
@@ -152,33 +146,25 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
 
     @Click(R.id.tv_send)
     void sendDiscussion() {
+
+        showCommitLoading();
+
         String comment = et_comment.getText().toString().trim();
         et_comment.setText("");
         if (StringUtil.isEmpty(comment)) {
             return;
         }
 
-        final IDiscuss t = RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class);
         HashMap<String, Object> body = new HashMap<>();
         body.put("attachmentUUId", attachmentUUId);
         body.put("content", comment);
         body.put("bizType", bizType);
-
         body.put("mentionedUserIds", mHaitHelper.getSelectUser(comment));
         mHaitHelper.clear();
-
-        LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
-        t.createDiscussion(body, new RCallback<Discussion>() {
+        DiscussService.createDiscussion(body).subscribe(new DefaultLoyoSubscriber<Discussion>(hud) {
             @Override
-            public void success(final Discussion d, final Response response) {
-                HttpErrorCheck.checkResponse(response);
+            public void onNext(Discussion discussion) {
                 onPullDownToRefresh(listView_discussion);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
             }
         });
     }

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.AdapterView;
 
 import com.library.module.widget.loading.LoadingLayout;
@@ -25,27 +24,22 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.TeamOrderAdapter;
-import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【团队订单】
@@ -192,29 +186,33 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         map.put("filed", field);
         map.put("xpath", xPath);
         map.put("userId", userId);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IOrder.class).getOrderTeamList(map, new Callback<OrderList>() {
-            @Override
-            public void success(OrderList orderlist, Response response) {
-                HttpErrorCheck.checkResponse("团队订单列表：", response);
-                ll_loading.setStatus(LoadingLayout.Success);
-                lv_list.onRefreshComplete();
-                if (!isPullDown) {
-                    listData.addAll(orderlist.records);
-                } else {
-                    listData = orderlist.records;
-                    if (listData.size() == 0)
-                        ll_loading.setStatus(LoadingLayout.Empty);
-                }
-                adapter.setData(listData);
-            }
+        OrderService.getOrderTeamList(map)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<OrderListItem>>() {
 
-            @Override
-            public void failure(RetrofitError error) {
-                lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading);
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        @LoyoErrorChecker.CheckType int type = listData.size()>0?
+                                LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                        lv_list.onRefreshComplete();
+                    }
+
+                    @Override
+                    public void onNext(PaginationX<OrderListItem> orderListItemPaginationX) {
+                        lv_list.onRefreshComplete();
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        if (!isPullDown) {
+                            listData.addAll(orderListItemPaginationX.records);
+                        } else {
+                            listData = orderListItemPaginationX.records;
+                            if (listData.size() == 0)
+                                ll_loading.setStatus(LoadingLayout.Empty);
+                        }
+                        adapter.setData(listData);
+                    }
+                });
+
     }
 
     @Override

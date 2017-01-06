@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.clue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -11,6 +12,10 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpGroupAdapter;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
@@ -18,9 +23,8 @@ import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.clue.presenter.impl.ClueFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
-import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
-import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
@@ -31,8 +35,6 @@ import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -80,6 +82,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
 
     private ArrayList<ClueFollowGroupModel> listModel = new ArrayList<>();
     private PaginationX<ClueFollowGroupModel> mPagination = new PaginationX<>(20);
+
+    private boolean needToRefresh=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,9 +185,6 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
      * 获取列表数据
      */
     private void getData(boolean isPullOrDown) {
-        if (!isPullOrDown) {
-            showLoading("");
-        }
         HashMap<String, Object> map = new HashMap<>();
         map.put("salesId", clueId);
         map.put("typeId", "");
@@ -270,6 +271,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
+        mPagination.setPageIndex(1);
+        needToRefresh=true;//如果是增加，或者是修改了，要重新刷新，避免存在老数据
         getData(false);
     }
 
@@ -345,8 +348,9 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     @Override
     public void getListDataSuccesseEmbl(PaginationX<ClueFollowGroupModel> paginationX) {
         listView.onRefreshComplete();
-        if (isPullOrDown) {
+        if (isPullOrDown||needToRefresh) {//增加了的，就要清除老数据
             listModel.clear();
+            needToRefresh = false;
         }
         mPagination = paginationX;
         listModel.addAll(paginationX.getRecords());
@@ -360,6 +364,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
             dateIndex = model.date;
         }
         bindData();
+        Log.i("httpjie", "getListDataSuccesseEmbl: ");
         ll_loading.setStatus(LoadingLayout.Success);
         if (listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
@@ -428,4 +433,25 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         playVoiceSize++;
     }
 
+    @Override
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
+
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showProgress(message);
+        return hud;
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelLoading2();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        LoyoToast.info(this, message);
+    }
 }

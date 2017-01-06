@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--activity背景颜色-->
+    <color name="common_activity_bg">#f4f4f4</color>
+    <!--activity内容部分背景颜色-->
+    <color name="common_activity_con_bg">#ffffff</color>
+    <!--行之间，图标之间，比较深色的分割线颜色-->
+    <color name="common_space_line">#e6e6e6</color>
+</resources>

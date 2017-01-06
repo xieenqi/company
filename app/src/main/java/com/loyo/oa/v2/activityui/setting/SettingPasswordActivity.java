@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activityui.setting;
 
 import android.text.TextUtils;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,13 +8,10 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.user.api.UserService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -25,8 +21,6 @@ import org.androidannotations.annotations.ViewById;
 import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 @EActivity(R.layout.activity_setting_setpassword)
 public class SettingPasswordActivity extends BaseActivity {
@@ -74,23 +68,17 @@ public class SettingPasswordActivity extends BaseActivity {
             Toast("两次输入的新密码不一致");
             return;
         }
-        showLoading("");
+        showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
         map.put("oldpasswd", oldPassword);
         map.put("newpasswd", confirmNewPassword);
-        RestAdapterFactory.getInstance().build(FinalVariables.URL_UPDATE_PASSWORD).create(IUser.class).updatePassword(map, new RCallback<Object>() {
-            @Override
-            public void success(final Object o, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                showChangPwdSuccess();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
+        UserService.updatePassword(map)
+                .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
+                    @Override
+                    public void onNext(Object o) {
+                        showChangPwdSuccess();
+                    }
+                });
     }
 
     /**

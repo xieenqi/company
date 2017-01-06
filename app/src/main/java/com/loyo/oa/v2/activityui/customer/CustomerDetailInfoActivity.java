@@ -11,11 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateTool;
-
 import com.library.module.widget.loading.LoadingLayout;
-
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.common.utils.PermissionTool;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -32,22 +32,18 @@ import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -60,8 +56,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.activity
@@ -377,28 +371,17 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
             /*挑入*/
             case R.id.img_public:
-
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<BaseBean>() {
-                    @Override
-                    public void success(final BaseBean newCustomer, final Response response) {
-                        if (newCustomer.errcode == 0) {
-                            mPresenter.getData(id);
-                            /*跳转到列表,并刷新列表
-                             AppBus.getInstance().post(new MyCustomerListRushEvent());
-                             finish();
-                             */
-                        } else {
-                            Toast(newCustomer.errmsg);
-                        }
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        finish();
-                    }
-                });
-
+                CustomerService.pickInCustomer(id)
+                        .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                            @Override
+                            public void onNext(Customer customer) {
+                                mPresenter.getData(id);
+                                /*跳转到列表,并刷新列表
+                                  AppBus.getInstance().post(new MyCustomerListRushEvent());
+                                  finish();
+                                 */
+                            }
+                        });
                 break;
             /*联系人*/
             case R.id.layout_contact:
@@ -716,22 +699,29 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD getHUD() {
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-        showLoading(message);
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
+
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(this, message);
     }
 }

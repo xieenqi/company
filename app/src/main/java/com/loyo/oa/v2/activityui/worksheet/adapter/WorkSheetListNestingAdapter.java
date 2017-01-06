@@ -81,7 +81,7 @@ public class WorkSheetListNestingAdapter extends BaseAdapter {
         }
         holder.iv_image.setImageResource(R.drawable.img_file_null);
         holder.tv_image_name.setText(attachment.getOriginalName());
-        holder.tv_image_size.setText("大小:" + Utils.FormetFileSize(Long.valueOf(attachment.getSize())));
+        holder.tv_image_size.setText("大小：" + Utils.FormetFileSize(Long.valueOf(attachment.getSize())));
         holder.setContentView(attachment, isImage);
         return convertView;
     }

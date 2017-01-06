@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.signin;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -12,16 +11,22 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.model.LatLng;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.photo.PhotoCapture;
+import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
@@ -31,13 +36,14 @@ import com.loyo.oa.v2.activityui.commonview.RecordUtils;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.activityui.signin.presenter.SigninPresenterImpl;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.CommonIdName;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
@@ -46,21 +52,17 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.CountTextWatcher;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
-import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,17 +73,16 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * 【 拜访签到 】 页面
  */
-public class SignInActivity extends BaseActivity implements View.OnClickListener, SigninContract.View {
+public class SignInActivity extends BaseActivity
+        implements View.OnClickListener, SigninContract.View, UploadControllerCallback {
 
     private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address,
             tv_at_text, tv_distance_deviation, tv_contact_name;
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at, ll_contact;
-    private GridView gridView_photo;
     private ImageView iv_at_delete;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID(), customerId = "", customerName, customerAddress;
-    private SignInGridViewAdapter signInGridViewAdapter;
     private double laPosition, loPosition;
     boolean mLocationFlag = false;  //是否定位完成的标记
     private Customer mCustomer;
@@ -95,6 +96,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private List<CommonIdName> atDepts = new ArrayList<>();//@的部门
     private List<String> atUserIds = new ArrayList<>();//@的人员
     private SigninContract.Presenter presenter;
+    UploadController controller;
+    ImageUploadGridView gridView;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -139,11 +142,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
         ll_contact.setOnClickListener(this);
         tv_address = (TextView) findViewById(R.id.tv_address);
-        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
+        gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
         iv_at_delete.setOnClickListener(this);
-        init_gridView_photo();
         startLocation();
         initMultiFunctionModule();
         if (null == mCustomer) {
@@ -161,18 +163,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             tv_contact_name.setText(presenter.getDefaultContact(mCustomer.contacts));
             contactList = mCustomer.contacts;
         }
-    }
-
-    /**
-     * 图片适配器绑定
-     */
-    void init_gridView_photo() {
-        if (signInGridViewAdapter != null) {
-            signInGridViewAdapter = null;
-            System.gc();
-        }
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, 0);
-        SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
+        controller.loadView(gridView);
     }
 
     void startLocation() {
@@ -278,14 +271,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mfmodule.setPictureClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (signInGridViewAdapter.getCount() >= 9) {
+                if (controller.count() >= 9) {
                     Toast("最多只能加9张图片");
                 } else {
-                    Intent intent = new Intent(SignInActivity.this, SelectPicPopupWindow.class);
-                    intent.putExtra("localpic", false);//是否可以选择相册
-                    intent.putExtra("imgsize", 9 - pcitureNumber);//还可以选多少张图片
-                    intent.putExtra("addpg", true);
-                    startActivityForResult(intent, MainApp.GET_IMG);
+//                    PhotoPicker.builder()
+//                            .setPhotoCount(9-controller.count())
+//                            .setShowCamera(true)
+//                            .setPreviewEnabled(false)
+//                            .start(SignInActivity.this);
+                    PhotoCapture.builder()
+                            .start(SignInActivity.this);
                 }
             }
         });
@@ -336,7 +331,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         }
                     }, "提示", "该客户无定位信息,是否需要\n将签到地址设置为客户定位?", "不需要", "设为定位");
                 } else {
-                    addSignIn();
+                    showCommitLoading();
+                    if (controller.count() == 0) {
+                        addSignIn();
+                    }
+                    else {
+                        controller.startUpload();
+                        controller.notifyCompletionIfNeeded();
+                    }
                 }
                 break;
 
@@ -388,7 +390,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             Global.ToastLong("请填写拜访说明");
             return false;
         }
-        if (isPicture && !(lstData_Attachment.size() > 0)) {
+        if (isPicture && controller.count() <= 0) {
             Global.ToastLong("需要上传照片，请拍照");
             return false;
         }
@@ -403,7 +405,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 新增签到
      */
     private void addSignIn() {
-        showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         map.put("gpsInfo", loPosition + "," + laPosition);//当前定位信息
 //      map.put("address", mAddress.trim());//客户地址
@@ -483,36 +484,26 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
 
-            case MainApp.GET_IMG:
-                try {
-                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
-                    for (ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = null;
-                        newFile = Global.scal(this, uri);
-
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                /**上传附件*/
-                                presenter.uploadAttachment(uuid, newFile, this);
-                            }
-                        }
+            /*相册选择 回调*/
+            case PhotoCapture.REQUEST_CODE:
+                /*相册选择 回调*/
+                if (data != null) {
+                    List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    for (String path : mSelectPath) {
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
-                } catch (IOException e) {
-                    LogUtil.dll("IO异常");
-                    e.printStackTrace();
+                    controller.reloadGridView();
                 }
-
                 break;
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                try {
-                    final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    HashMap<String, Object> map = new HashMap<String, Object>();
-                    map.put("bizType", 0);
-                    map.put("uuid", uuid);
-                    presenter.deleteAttachment(map, delAttachment);
-                } catch (Exception e) {
-                    Global.ProcException(e);
+
+            /*附件删除回调*/
+            case PhotoPreview.REQUEST_CODE:
+                if (data != null) {
+                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0) {
+                        controller.removeTaskAt(index);
+                        controller.reloadGridView();
+                    }
                 }
                 break;
             /*选择客户回调*/
@@ -559,22 +550,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-//    private String getDeviationDistance(double la, double lo) {
-//        LatLng ll = new LatLng(laPosition, loPosition);
-//        LatLng llCustomer = new LatLng(lo, la);// 地点的纬度，在-90 与90 之间的double 型数值。、地点的经度，在-180 与180 之间的double 型数值。
-//        LogUtil.d("偏差距离:" + AMapUtils.calculateLineDistance(ll, llCustomer));
-//        Double distance = Double.valueOf(Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer)));
-//        DecimalFormat df = new DecimalFormat("0.00");
-//        String distanceText;
-//        if (distance <= 1000) {
-//            distanceText = Utils.setValueDouble2(distance) + "m";
-//        } else {
-//            distanceText = df.format(distance / 1000) + "km";
-//        }
-//
-//        return distanceText;
-//    }//  104.073255,30.689493
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -600,24 +575,34 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD getHUD() {
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
 
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(this, message);
+    }
+
+    public SignInActivity() {
+
     }
 
     @Override
@@ -630,13 +615,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                cancelStatusLoading();
                 if (!TextUtils.isEmpty(legWork.getId())) {
                     AppBus.getInstance().post(new SigninRushEvent());
                     onBackPressed();
                 }
             }
-        }, 1000);
+        }, 2000);
     }
 
     @Override
@@ -648,14 +632,90 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void getAttachmentSuccessUI(ArrayList<Attachment> attachments) {
         lstData_Attachment = attachments;
-        init_gridView_photo();
     }
 
     @Override
     public void deleteAttachmentSuccessUI(Attachment delAttachment) {
         Toast("删除附件成功!");
         lstData_Attachment.remove(delAttachment);
-        init_gridView_photo();
         pcitureNumber--;
+    }
+
+    /**
+     * 上传附件信息
+     */
+    public void postAttaData() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = 0/* */;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+        AttachmentService.setAttachementData2(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
+                    @Override
+                    public void onNext(ArrayList<Attachment> news) {
+                        addSignIn();
+                    }
+                });
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+//        PhotoPicker.builder()
+//                .setPhotoCount(9-controller.count())
+//                .setShowCamera(true)
+//                .setPreviewEnabled(false)
+//                .start(this);
+
+        PhotoCapture.builder()
+                .start(this);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<String> selectedPhotos = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
+        }
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
+            return;
+        }
+        if (taskList.size() > 0) {
+            postAttaData();
+        } else {
+            addSignIn();
+        }
     }
 }

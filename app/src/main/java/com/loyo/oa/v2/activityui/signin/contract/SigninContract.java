@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activityui.signin.contract;
 
-import android.app.Activity;
-
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
@@ -9,7 +8,6 @@ import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.common.BaseView;
 import com.loyo.oa.v2.common.base.BasePersenter;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,6 +17,9 @@ import java.util.HashMap;
 
 public interface SigninContract {
     interface View extends BaseView {
+
+        LoyoProgressHUD getHUD();
+
         void setIsPhoto(boolean isPicture);
 
         void creatSuccessUI(LegWork legWork);
@@ -31,6 +32,9 @@ public interface SigninContract {
     }
 
     interface Presenter extends BasePersenter {
+
+        LoyoProgressHUD getHUD();
+
         void getIsPhoto();
 
         void isPhoto(SigninPictures result);
@@ -38,8 +42,6 @@ public interface SigninContract {
         void creatSignin(HashMap<String, Object> map);
 
         void creatSuccess(LegWork legWork);
-
-        void uploadAttachment(String uuid, File file, Activity activity);
 
         void uploadAttachmentSuccess();
 
@@ -61,8 +63,6 @@ public interface SigninContract {
         void isPhotoSend();
 
         void creatSigninSend(HashMap<String, Object> map);
-
-        void uploadAttachmentSend(String uuid, File file, Activity activity);
 
         void getAttachmentSend(String uuid);
 

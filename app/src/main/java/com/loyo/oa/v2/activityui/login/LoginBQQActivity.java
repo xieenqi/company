@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.webkit.WebView;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.activityui.login.presenter.LoginBqqPresenter;
@@ -80,23 +82,25 @@ public class LoginBQQActivity extends BaseActivity implements LoginBqqView{
 
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String msg) {
-        showLoading(msg);
+    public LoyoProgressHUD showProgress(String msg) {
+        showLoading2(msg);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-
+        LoyoToast.info(this, message);
     }
 
 

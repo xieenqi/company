@@ -12,11 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
-import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
@@ -27,6 +26,7 @@ import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
+import com.loyo.oa.v2.activityui.followup.api.FollowUpService;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
@@ -39,29 +39,20 @@ import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.HashMap;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
@@ -433,17 +424,24 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
      * 评论删除
      */
     private void deleteComment(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
-            @Override
-            public void success(Object object, Response response) {
-                HttpErrorCheck.checkResponse("评论", response);
-                requestDetails();
-            }
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
+//            @Override
+//            public void success(Object object, Response response) {
+//                HttpErrorCheck.checkResponse("评论", response);
+//                requestDetails();
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
 
+        FollowUpService.deleteComment(id).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
+            public void onNext(Object o) {
+                requestDetails();
             }
         });
     }
@@ -452,28 +450,31 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
      * 获取详情数据
      */
     private void requestDetails() {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", id);
         map.put("split", true);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).getFollowUpDetails(map, new RCallback<BaseBeanT<FollowUpListModel>>() {
-            @Override
-            public void success(BaseBeanT<FollowUpListModel> followuplistmodel, Response response) {
-                HttpErrorCheck.checkResponse("跟进详情", response,ll_loading);
-                if (followuplistmodel.errcode != 0) {
-                    Toast("获取拜访详情出错!");
-                    finish();
-                } else {
-                    mFollowUpDelModel = followuplistmodel.data;
-                    bindData();
-                }
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error,ll_loading);
-                super.failure(error);
-            }
+        FollowUpService.getFollowUpDetails(map)
+                .subscribe(new DefaultLoyoSubscriber<BaseBeanT<FollowUpListModel>>(ll_loading) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading2();
+                    }
+
+                    @Override
+                    public void onNext(BaseBeanT<FollowUpListModel> followuplistmodel) {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        cancelLoading2();
+                        if (followuplistmodel.errcode != 0) {
+                            Toast("获取拜访详情出错!");
+                            finish();
+                        } else {
+                            mFollowUpDelModel = followuplistmodel.data;
+                            bindData();
+                        }
+                    }
         });
     }
 
@@ -488,19 +489,26 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
 //        map.put("audioInfo", "");//语音信息
-        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
+//        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
+//            @Override
+//            public void success(BaseBeanT<CommentModel> object, Response response) {
+//                HttpErrorCheck.checkResponse("评论", response);
+//                msgAudiomMenu.closeMenu();
+//                requestDetails();
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
+        FollowUpService.requestComment(map).subscribe(new DefaultLoyoSubscriber<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(BaseBeanT<CommentModel> object, Response response) {
-                HttpErrorCheck.checkResponse("评论", response);
+            public void onNext(BaseBeanT<CommentModel> commentModelBaseBeanT) {
                 msgAudiomMenu.closeMenu();
                 requestDetails();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
             }
         });
     }
@@ -514,19 +522,27 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
-        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
+//        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<BaseBeanT<CommentModel>>() {
+//            @Override
+//            public void success(BaseBeanT<CommentModel> object, Response response) {
+//                HttpErrorCheck.checkResponse("评论", response);
+//                msgAudiomMenu.closeMenu();
+//                requestDetails();
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                super.failure(error);
+//            }
+//        });
+
+        FollowUpService.requestComment(map).subscribe(new DefaultLoyoSubscriber<BaseBeanT<CommentModel>>() {
             @Override
-            public void success(BaseBeanT<CommentModel> object, Response response) {
-                HttpErrorCheck.checkResponse("评论", response);
+            public void onNext(BaseBeanT<CommentModel> commentModelBaseBeanT) {
                 msgAudiomMenu.closeMenu();
                 requestDetails();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
             }
         });
     }

@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -24,29 +26,20 @@ import com.loyo.oa.v2.activityui.worksheet.common.WorksheetPermisssion;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.BaseBeanT;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IWorksheet;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.worksheet.api.WorksheetService;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【事件详情】页面
@@ -197,32 +190,27 @@ public class EventDetailActivity extends BaseLoadingActivity implements View.OnC
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("wsId", worksheetId);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                getEventDetail(eventId, map, new Callback<BaseBeanT<EventDetail>>() {
+        WorksheetService.getEventDetail(eventId, map)
+                .subscribe(new DefaultLoyoSubscriber<EventDetail>(ll_loading) {
                     @Override
-                    public void success(BaseBeanT<EventDetail> o, Response response) {
-                        HttpErrorCheck.checkResponse("事件详细：", response,ll_loading);
-                        mData = o.data;
+                    public void onNext(EventDetail detail) {
+                        mData = detail;
                         actions = actionsForRole(mData, getRoleForEvent(mData));
                         bindData();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error,ll_loading);
                     }
                 });
 
     }
 
     private void bindData() {
+        ll_loading.setStatus(LoadingLayout.Success);
         tv_content.setText(mData.content);
         tv_responsor.setText("负责人：" + (null == mData.responsorName ? "未分派" : mData.responsorName));
         tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "自动流转" : "定时触发"));
         tv_worksheet.setText("所属工单：" + mData.title);
         tv_day.setText("限时：" + (mData.daysDeadline == 0 ? "不限时" : mData.daysDeadline + "天"));
-        String endTimeText = (mData.endTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(mData.endTime + "")) + "截止");
-        tv_startTime.setText((mData.startTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(mData.startTime + ""))) + " | ");
+        String endTimeText = (mData.endTime == 0 ? "--" : DateTool.getDateTimeFriendly(Long.valueOf(mData.endTime + "")) + "截止");
+        tv_startTime.setText((mData.startTime == 0 ? "--" : DateTool.getDateTimeFriendly(Long.valueOf(mData.startTime + ""))) + " | ");
         if (mData.isOvertime) {
             tv_endTime.setTextColor(getResources().getColor(R.color.red1));
             tv_endTime.setText(endTimeText + "(超时)");
@@ -305,11 +293,11 @@ public class EventDetailActivity extends BaseLoadingActivity implements View.OnC
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("responsorId", userId);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                setEventPerson(eventId, map, new Callback<Object>() {
+        WorksheetService.setEventPerson(eventId, map)
+                .subscribe(new DefaultLoyoSubscriber<Object>() {
+
                     @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("设置事件负责人：", response);
+                    public void onNext(Object o) {
                         for (int i = 0; i < actions.size(); i++) {
                             if (actions.get(i) == WorksheetEventAction.Dispatch) {
                                 actions.remove(i);
@@ -324,12 +312,6 @@ public class EventDetailActivity extends BaseLoadingActivity implements View.OnC
                         getData();
                         AppBus.getInstance().post(new WorksheetEventChangeEvent());
                     }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-
-                    }
                 });
 
     }
@@ -342,7 +324,7 @@ public class EventDetailActivity extends BaseLoadingActivity implements View.OnC
         switch (requestCode) {
              /*用户单选, 负责人*/
             case FinalVariables.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
+                OrganizationalMember u = (OrganizationalMember) data.getSerializableExtra("data");
                 setEventPersonal(u.getId());
                 break;
         }
@@ -358,7 +340,7 @@ public class EventDetailActivity extends BaseLoadingActivity implements View.OnC
                 &&
                 EventDetailActivity.PICK_USER_SESSION.equals(event.session)) {
             StaffMemberCollection collection = event.data;
-            NewUser newUser = Compat.convertStaffCollectionToNewUser(collection);
+            OrganizationalMember newUser = Compat.convertStaffCollectionToNewUser(collection);
             if (newUser != null) {
                 setEventPersonal(newUser.getId());
             }

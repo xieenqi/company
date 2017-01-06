@@ -21,7 +21,7 @@ public class TaskCheckPoint extends BaseBeans implements Serializable{
     User creator;
     String deadline;
     String id;
-    NewUser responsiblePerson;
+    OrganizationalMember responsiblePerson;
     long sequenceNumber;
     String taskId;
     String title;
@@ -78,11 +78,11 @@ public class TaskCheckPoint extends BaseBeans implements Serializable{
         this.deadline = deadline;
     }
 
-    public NewUser getResponsiblePerson() {
+    public OrganizationalMember getResponsiblePerson() {
         return responsiblePerson;
     }
 
-    public void setResponsiblePerson(NewUser responsiblePerson) {
+    public void setResponsiblePerson(OrganizationalMember responsiblePerson) {
         this.responsiblePerson = responsiblePerson;
     }
 

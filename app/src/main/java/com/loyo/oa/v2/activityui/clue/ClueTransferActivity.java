@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.clue;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,14 +9,18 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.clue.model.ClueSales;
@@ -27,42 +30,35 @@ import com.loyo.oa.v2.activityui.customer.CustomerLabelActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerRepeat;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.HttpAddCustomer;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
+import com.loyo.oa.v2.tool.Utils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 /**
  * 【线索转移客户】
  * Created by yyy on 16/8/22.
  */
-public class ClueTransferActivity extends BaseActivity implements View.OnClickListener{
+public class ClueTransferActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback{
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
@@ -81,7 +77,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
     private RelativeLayout img_title_left;
     private RelativeLayout img_title_right;
     private ImageView img_refresh_address;
-    private GridView gridView_photo;
+    ImageUploadGridView gridView;
 
     private String uuid = StringUtil.getUUID();
     private Bundle mBundle;
@@ -104,6 +100,8 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
     private ArrayList<ContactLeftExtras> mCusList;
     private List<String> mSelectPath;
     private ArrayList<ImageInfo> pickPhotsResult;
+
+    UploadController controller;
 
     private int bizType = 0x01;
     private int uploadSize;
@@ -163,7 +161,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         layout_customer_label = (LinearLayout) findViewById(R.id.layout_customer_label);
         layout_newContract = (LinearLayout) findViewById(R.id.layout_newContract);
         img_refresh_address = (ImageView) findViewById(R.id.img_refresh_address);
-        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
+        gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
 
         img_refresh_address.setOnClickListener(this);
         tv_search.setOnClickListener(this);
@@ -174,7 +172,6 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
 
-        init_gridView_photo();
         getTempCustomer();
         startLocation();
         requestJurisdiction();
@@ -189,11 +186,10 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         edt_contract_tel.setText(mCluesales.cellphone);   //手机号
         edt_contract_telnum.setText(mCluesales.tel);      //座机号
 
-    }
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
+        controller.loadView(gridView);
 
-    void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
-        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
 
@@ -201,34 +197,27 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
      * 获取新建客户权限
      * */
     public void requestJurisdiction(){
-        showLoading("");
+        showLoading2("");
         HashMap<String,Object> map = new HashMap<>();
         map.put("bizType",100);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
-            @Override
-            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                mCusList = cuslist;
-                for (ContactLeftExtras customerJur : cuslist) {
-                    if (customerJur.label.contains("联系人") && customerJur.required) {
-                        cusGuys = true;
-                        edt_contract.setHint("请输入联系人姓名(必填)");
-                    } else if (customerJur.label.contains("手机") && customerJur.required) {
-                        cusPhone = true;
-                        edt_contract_tel.setHint("请输入联系人手机号(必填)");
-                    } else if (customerJur.label.contains("座机") && customerJur.required) {
-                        cusMobile = true;
-                        edt_contract_telnum.setHint("请输入联系人座机(必填)");
+        CustomerService.getAddCustomerJur(map)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
+                    public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
+                        mCusList = contactLeftExtrasArrayList;
+                        for (ContactLeftExtras customerJur : contactLeftExtrasArrayList) {
+                            if (customerJur.label.contains("联系人") && customerJur.required) {
+                                cusGuys = true;
+                                edt_contract.setHint("请输入联系人姓名(必填)");
+                            } else if (customerJur.label.contains("手机") && customerJur.required) {
+                                cusPhone = true;
+                                edt_contract_tel.setHint("请输入联系人手机号(必填)");
+                            } else if (customerJur.label.contains("座机") && customerJur.required) {
+                                cusMobile = true;
+                                edt_contract_telnum.setHint("请输入联系人座机(必填)");
+                            }
+                        }
                     }
-                }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                });
     }
 
 
@@ -285,46 +274,6 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         layout_newContract.addView(view);
     }
 
-
-    /**
-     * 批量上传附件
-     */
-    private void newUploadAttachement() {
-        showLoading("正在提交");
-        try {
-            uploadSize = 0;
-            uploadNum = pickPhots.size();
-            for (ImageInfo item : pickPhots) {
-                Uri uri = Uri.parse(item.path);
-                File newFile = Global.scal(this, uri);
-                if (newFile != null && newFile.length() > 0) {
-                    if (newFile.exists()) {
-                        TypedFile typedFile = new TypedFile("image/*", newFile);
-                        TypedString typedUuid = new TypedString(uuid);
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                                new RCallback<Attachment>() {
-                                    @Override
-                                    public void success(final Attachment attachments, final Response response) {
-                                        uploadSize++;
-                                        if (uploadSize == uploadNum) {
-                                            requestCommitTask();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void failure(final RetrofitError error) {
-                                        super.failure(error);
-                                        HttpErrorCheck.checkError(error);
-                                    }
-                                });
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Global.ProcException(ex);
-        }
-    }
-
     /**
      * 新建客户请求
      * */
@@ -347,8 +296,8 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         locData.loc.addr = cusotmerDetalisAddress;
 
         HashMap<String, Object> map = new HashMap<>();
-        if (pickPhots.size() > 0) {
-            map.put("attachmentCount", pickPhots.size());
+        if (controller.count() > 0) {
+            map.put("attachmentCount", controller.count());
             map.put("uuid", uuid);
         }
 
@@ -361,29 +310,23 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         map.put("tags", positionData.tags);
         map.put("salesleadId", mCluesales.id);
         LogUtil.dee("转移客户发送数据:"+MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                try {
-                    Customer retCustomer = customer;
-                    Toast("转移成功");
-                    isSave = false;
-                    Intent intent = new Intent();
-                    intent.putExtra(Customer.class.getName(), retCustomer);
-                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT,RESULT_OK, intent);
+        CustomerService.addNewCustomer(map)
+                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
+                    @Override
+                    public void onNext(Customer customer) {
+                        try {
+                            Customer retCustomer = customer;
+                            Toast("转移成功");
+                            isSave = false;
+                            Intent intent = new Intent();
+                            intent.putExtra(Customer.class.getName(), retCustomer);
+                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT,RESULT_OK, intent);
 
-                } catch (Exception e) {
-                    Global.ProcException(e);
-                }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                        } catch (Exception e) {
+                            Global.ProcException(e);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -448,26 +391,12 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                     return;
                 }
 
-/*                if(!customerContractTel.isEmpty()){
-                    if(!RegularCheck.isMobilePhone(customerContractTel)){
-                        Toast("手机号码格式不正确");
-                        return;
-                    }
-                }
-
-                if(!customerWrietele.isEmpty()){
-                    if(!RegularCheck.isPhone(customerWrietele)){
-                        Toast("座机号码格式不正确");
-                        return;
-                    }
-                }*/
-
-                //没有附件
-                if (pickPhots.size() == 0) {
-                    showLoading("");
+                showCommitLoading();
+                if (controller.count() == 0) {
                     requestCommitTask();
                 } else {
-                    newUploadAttachement();
+                    controller.startUpload();
+                    controller.notifyCompletionIfNeeded();
                 }
                 break;
 
@@ -555,30 +484,107 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                 break;
 
 
-            /*上传附件回调*/
+            /*相册选择 回调*/
             case PhotoPicker.REQUEST_CODE:
+                /*相册选择 回调*/
                 if (data != null) {
-                    pickPhotsResult = new ArrayList<>();
-                    mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        pickPhotsResult.add(new ImageInfo("file://" + path));
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
-                    pickPhots.addAll(pickPhotsResult);
-                    init_gridView_photo();
+                    controller.reloadGridView();
                 }
                 break;
 
-            /*删除附件回调*/
+            /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
-                int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
-                if (index >= 0) {
-                    pickPhots.remove(index);
-                    init_gridView_photo();
+                if (data != null) {
+                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0) {
+                        controller.removeTaskAt(index);
+                        controller.reloadGridView();
+                    }
                 }
                 break;
 
             default:
                 break;
+        }
+    }
+
+
+    /**
+     * 上传附件信息
+     */
+    public void postAttaData() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = bizType;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+        AttachmentService.setAttachementData2(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
+                    @Override
+                    public void onNext(ArrayList<Attachment> news) {
+                        requestCommitTask();
+                    }
+                });
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+        PhotoPicker.builder()
+                .setPhotoCount(9-controller.count())
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(this);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<String> selectedPhotos = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
+        }
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
+            return;
+        }
+        if (taskList.size() > 0) {
+            postAttaData();
+        } else {
+            requestCommitTask();
         }
     }
 

@@ -82,10 +82,10 @@ public class CropImageActivity extends BaseActivity {
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
             case R.id.tv_edit:
-                showLoading("裁剪中");
+                showLoading2("裁剪中");
                 Bitmap bitmap = clipSquareIV.clip();
                 if (null == bitmap) {
-                    cancelLoading();
+                    cancelLoading2();
                     return;
                 }
                 int index = imgPath.lastIndexOf("/");
@@ -94,7 +94,7 @@ public class CropImageActivity extends BaseActivity {
                 Utils.writeImage(bitmap, imgPath, 50); //不压缩就填100 压缩率是(100-参数)%
                 Intent intent = new Intent();
                 intent.putExtra("imgPath", imgPath);
-                cancelLoading();
+                cancelLoading2();
                 this.setResult(RESULT_OK, intent);
                 finish();
                 break;

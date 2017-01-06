@@ -99,7 +99,7 @@ public class SigninManagerActivity extends BaseFragmentActivity implements View.
 //     */
 //    public void getStageData() {
 //        showLoading("");
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(I2Customer.class).
 //                GetTags(new RCallback<ArrayList<Tag>>() {
 //                    @Override
 //                    public void success(ArrayList<Tag> tags, Response response) {

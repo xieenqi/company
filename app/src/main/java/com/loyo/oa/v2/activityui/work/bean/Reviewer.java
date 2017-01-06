@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.work.bean;
 
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 public class Reviewer implements Serializable {
 
-    public NewUser user = new NewUser();
+    public OrganizationalMember user = new OrganizationalMember();
     public boolean viewed;//k看过吗
     public boolean reviewed;//点评过吗
     public long reviewedAt;//点评时间
@@ -29,7 +29,7 @@ public class Reviewer implements Serializable {
 
     }
 
-    public Reviewer(NewUser user) {
+    public Reviewer(OrganizationalMember user) {
         this.user = user;
     }
 }

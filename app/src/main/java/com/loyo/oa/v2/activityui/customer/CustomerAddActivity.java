@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.customer;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,8 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
@@ -26,6 +30,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
@@ -34,25 +39,22 @@ import com.loyo.oa.v2.activityui.customer.model.Locate;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.CusGridView;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
@@ -64,21 +66,15 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 /**
  * 【新建 客户】 页面
  */
 @EActivity(R.layout.activity_customer_add)
-public class CustomerAddActivity extends BaseActivity implements View.OnClickListener {
+public class CustomerAddActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
@@ -102,8 +98,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     LinearLayout layout_address;
     @ViewById
     Button btn_add_new_contract;
-    @ViewById
-    CusGridView gridView_photo;
+    @ViewById(R.id.image_upload_grid_view)
+    ImageUploadGridView gridView;
     @ViewById
     TextView tv_gscx;
     //新建拜访 过来新建客户成功过后需要把数据回传到新建拜访页面
@@ -194,6 +190,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<ContactLeftExtras> mCustomerExtraDatas;
     private PositionResultItem positionResultItem;
 
+    UploadController controller;
+
     private Handler mHandler = new Handler() {
         @Override
         public void dispatchMessage(final Message msg) {
@@ -252,7 +250,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
         edit_address_details = (EditText) findViewById(R.id.edit_address_details);
         super.setTitle("新建客户");
-        init_gridView_photo();
         getTempCustomer();
         startLocation();
         requestJurisdiction();
@@ -270,6 +267,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             edt_contract_tel1.setText(contactPhone.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", ""));
         }
         LocationUtilGD.permissionLocation(this);
+
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
+        controller.loadView(gridView);
     }
 
     LocationUtilGD locationGd;
@@ -357,52 +358,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 }
             }
         }
-    }
-
-    /**
-     * 批量上传附件
-     */
-    private void newUploadAttachement(final Customer customer) {
-        showLoading("正在提交附件");
-        try {
-            uploadSize = 0;
-            uploadNum = pickPhots.size();
-            for (ImageInfo item : pickPhots) {
-                Uri uri = Uri.parse(item.path);
-                File newFile = Global.scal(this, uri);
-                if (newFile != null && newFile.length() > 0) {
-                    if (newFile.exists()) {
-                        TypedFile typedFile = new TypedFile("image/*", newFile);
-                        TypedString typedUuid = new TypedString(uuid);
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                                new RCallback<Attachment>() {
-                                    @Override
-                                    public void success(final Attachment attachments, final Response response) {
-                                        uploadSize++;
-                                        if (uploadSize == uploadNum) {
-                                            cancelLoading();
-                                            customerSendSucess(customer);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void failure(final RetrofitError error) {
-                                        super.failure(error);
-                                        HttpErrorCheck.checkError(error);
-                                    }
-                                });
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Global.ProcException(ex);
-        }
-    }
-
-
-    void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
-        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
@@ -535,22 +490,16 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     return;
                 }
 
-/*              if(!customerContractTel.isEmpty()){
-                    if(!RegularCheck.isMobilePhone(customerContractTel)){
-                        Toast("手机号码格式不正确");
-                        return;
-                    }
+                showCommitLoading();
+                if (controller.count() <= 0) {
+                    requestCommitTask();
+                }
+                else {
+                    controller.startUpload();
+                    controller.notifyCompletionIfNeeded();
                 }
 
-                if(!customerWrietele.isEmpty()){
-                    if(!RegularCheck.isPhone(customerWrietele)){
-                        Toast("座机号码格式不正确");
-                        return;
-                    }
-                }*/
 
-                showStatusLoading(false);
-                requestCommitTask();
                 break;
 
             /*选择标签*/
@@ -607,43 +556,45 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 获取新建客户权限
      */
     public void requestJurisdiction() {
-        showLoading("");
+        showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
-            @Override
-            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse("获取新建客户权限", response);
-                mCustomerExtraDatas = cuslist;
-                for (ContactLeftExtras customerJur : cuslist) {
-                    if (customerJur.label.contains("联系人") && customerJur.required) {
-                        cusGuys = true;
-                        edt_contract.setHint("请输入联系人姓名(必填)");
-                    } else if (customerJur.label.contains("手机") && customerJur.required) {
-                        cusPhone = true;
-                        edt_contract_tel1.setHint("限数字,如13912345678(必填)");
-                    } else if (customerJur.label.contains("座机") && customerJur.required) {
-                        cusMobile = true;
-                        edt_contract_telnum1.setHint("限数字,如02812345678(必填)");
-                    } else if (customerJur.label.contains("定位") && customerJur.required) {
-                        cusLocation = true;//定位必填
-                    } else if (customerJur.label.contains("客户地址") && customerJur.required) {
-                        cusDetialAdress = true;//详细地址必填
-                        edit_address_details.setHint("请输入客户详细地址(必填)");
-                    } else if (customerJur.label.contains("简介") && customerJur.required) {
-                        cusMemo = true;
-                        edt_content.setHint("客户简介(必填)");
-                    }
-                }
-                initExtra(true);
-            }
+        CustomerService.getAddCustomerJur(map)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        LoyoToast.error(CustomerAddActivity.this, "获取数据失败，请重试");
+                        finish();
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
+                        mCustomerExtraDatas = contactLeftExtrasArrayList;
+                        for (ContactLeftExtras customerJur : contactLeftExtrasArrayList) {
+                            if (customerJur.label.contains("联系人") && customerJur.required) {
+                                cusGuys = true;
+                                edt_contract.setHint("请输入联系人姓名(必填)");
+                            } else if (customerJur.label.contains("手机") && customerJur.required) {
+                                cusPhone = true;
+                                edt_contract_tel1.setHint("限数字,如13912345678(必填)");
+                            } else if (customerJur.label.contains("座机") && customerJur.required) {
+                                cusMobile = true;
+                                edt_contract_telnum1.setHint("限数字,如02812345678(必填)");
+                            } else if (customerJur.label.contains("定位") && customerJur.required) {
+                                cusLocation = true;//定位必填
+                            } else if (customerJur.label.contains("客户地址") && customerJur.required) {
+                                cusDetialAdress = true;//详细地址必填
+                                edit_address_details.setHint("请输入客户详细地址(必填)");
+                            } else if (customerJur.label.contains("简介") && customerJur.required){
+                                cusMemo = true;
+                                edt_content.setHint("客户简介(必填)");
+                            }
+                        }
+                        initExtra(true);
+                    }
+                });
     }
 
     public void getTelNum(EditText editText, ArrayList<String> arrayList) {
@@ -685,6 +636,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 新建客户请求
      */
     public void requestCommitTask() {
+
         HttpAddCustomer positionData = new HttpAddCustomer();
         positionData.loc.addr = customerAddress;
         positionData.loc.loc.add(loPosition);
@@ -713,8 +665,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         getTelNum(edt_contract_telnum3, wiretelGroup);
 
         HashMap<String, Object> map = new HashMap<>();
-        if (pickPhots.size() > 0) {
-            map.put("attachmentCount", pickPhots.size());
+        if (controller.count() > 0) {
+            map.put("attachmentCount", controller.count());
             map.put("uuid", uuid);
         }
 
@@ -730,33 +682,23 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("regional", regional);
 
         LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建客户", response);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        cancelStatusLoading();
-                        //没有附件
-                        if (customer == null || customer.id == null) {
-                            return;
-                        }
-                        if (pickPhots.size() == 0) {
-                            customerSendSucess(customer);
-                        } else {
-                            newUploadAttachement(customer);
-                        }
-                    }
-                }, 1000);
-            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+        CustomerService.addNewCustomer(map)
+                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
+                    @Override
+                    public void onNext(final Customer customer) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //没有附件
+                                if (customer == null || customer.id == null) {
+                                    return;
+                                }
+                                customerSendSucess(customer);
+                            }
+                        },1000);
+                    }
+                });
     }
 
     /**
@@ -888,28 +830,104 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*相册选择 回调*/
             case PhotoPicker.REQUEST_CODE:
+                /*相册选择 回调*/
                 if (data != null) {
-                    pickPhotsResult = new ArrayList<>();
-                    mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        pickPhotsResult.add(new ImageInfo("file://" + path));
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
-                    pickPhots.addAll(pickPhotsResult);
-                    init_gridView_photo();
+                    controller.reloadGridView();
                 }
                 break;
 
             /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
-                int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
-                if (index >= 0) {
-                    pickPhots.remove(index);
-                    init_gridView_photo();
+                if (data != null) {
+                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0) {
+                        controller.removeTaskAt(index);
+                        controller.reloadGridView();
+                    }
                 }
                 break;
 
             default:
                 break;
+        }
+    }
+
+    /**
+     * 上传附件信息
+     */
+    public void postAttaData() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = bizType;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+        AttachmentService.setAttachementData2(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
+                    @Override
+                    public void onNext(ArrayList<Attachment> news) {
+                        requestCommitTask();
+                    }
+                });
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+        PhotoPicker.builder()
+                .setPhotoCount(9-controller.count())
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(this);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<String> selectedPhotos = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
+        }
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
+            return;
+        }
+        if (taskList.size() > 0) {
+            postAttaData();
+        } else {
+            requestCommitTask();
         }
     }
 }

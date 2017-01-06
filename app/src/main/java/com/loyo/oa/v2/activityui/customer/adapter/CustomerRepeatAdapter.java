@@ -10,22 +10,22 @@ import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
 import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.customermanagement.api.ICustomer;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
-import java.util.Date;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.http.HEAD;
 
 /**
  * 【客户查重】适配器
@@ -111,23 +111,12 @@ public class CustomerRepeatAdapter extends BaseAdapter {
         holder.img_public.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//挑入公海客户
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                        create(ICustomer.class).pickedIn(id, new RCallback<BaseBean>() {
-                    @Override
-                    public void success(BaseBean customer, Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        if (customer.errcode == 0) {
-                            pickInOnCallBack.pickEmbl(id);
-                        } else {
-                            Global.Toast(customer.errmsg);
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                CustomerService.pickInCustomer(customerRepeatList.getId())
+                        .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                            public void onNext(Customer customer) {
+                                pickInOnCallBack.pickEmbl(id);
+                            }
+                        });
             }
         });
 

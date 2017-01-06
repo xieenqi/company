@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
@@ -39,23 +37,21 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.GlideManager;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.voip.VoIPManager;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -68,19 +64,11 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.jpush.android.api.JPushInterface;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.client.Response;
-
-import static com.loyo.oa.v2.R.id.tv_content;
 
 
 public class MainApp extends Application {
@@ -105,41 +93,6 @@ public class MainApp extends Application {
 
     public DisplayImageOptions options_rounded;
     private AnimationDrawable animationDrawable;
-
-//    public SimpleDateFormat df1;//设置日期格式
-//    public SimpleDateFormat df2;//设置日期格式        df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df3;//设置日期格式        df3 = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df4;//设置日期格式        df4 = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df5;//设置日期格式        df5 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df6;//设置日期格式        df6 = new SimpleDateFormat("HH:mm", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df7;//设置日期格式 df7 = new SimpleDateFormat("MM.dd", Locale.getDefault());//设置日期格式
-////    public SimpleDateFormat df8;//设置日期格式        df8 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df9;//设置日期格式        df9 = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df10;//设置日期格式        df10 = new SimpleDateFormat("yyyy年M月dd日 HH:mm", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df11;//设置日期格式        df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df12;//设置日期格式        df12 = new SimpleDateFormat("yyyy年M月dd日", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df13;//设置日期格式        df13 = new SimpleDateFormat("yyyy年M月", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df14;//设置日期格式        df14 = new SimpleDateFormat("yyyy年M月dd日 HH:mm:ss", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df15;//设置日期格式        df15 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df_api;//服务器返回的时间格式        df_api = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());//设置日期格式
-//
-//    public SimpleDateFormat df_api_get;//        df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
-//
-////    public SimpleDateFormat df_api_get2;//        df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00
-
     public LogUtil logUtil;
 
     MainApplicationHandler handler;
@@ -192,12 +145,12 @@ public class MainApp extends Application {
 
     void loadIndustryCodeTable() {
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getIndustry(new RCallback<ArrayList<Industry>>() {
-            @Override
-            public void success(ArrayList<Industry> industries, Response response) {
-                mIndustries = industries;
-            }
-        });
+        CustomerService.getIndustry()
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Industry>>(LoyoErrorChecker.SILENCE) {
+                    public void onNext(ArrayList<Industry> industryArrayList) {
+                        mIndustries = industryArrayList;
+                    }
+                });
 
     }
     //-------这些数据需要保存在本地-------------
@@ -212,7 +165,6 @@ public class MainApp extends Application {
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
         GlideManager.getInstance().initWithContext(getApplicationContext());
-        VoIPManager.getInstance().init(this);
         initLoadingConfig();
         menuIds.add(R.id.copy);
         menuIds.add(R.id.paste);
@@ -317,21 +269,19 @@ public class MainApp extends Application {
             animationDrawable.stop();
         }
         animationDrawable.selectDrawable(0);
-        //imageView.setImageResource(R.drawable.icon_dynamic_phone01);
     }
 
-//    /**
-//     * 设置APP语言，地区等
-//     * */
-//    public void switchLanguage() {
-//        Locale.setDefault(Locale.CHINA);
-//        Resources resources = getResources();// 获得res资源对象
-//        Configuration config = resources.getConfiguration();// 获得设置对象
-//        DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
-//        config.locale = Locale.SIMPLIFIED_CHINESE; // 简体中文
-//        resources.updateConfiguration(config, dm);
-//    }
-
+    /**
+     * 设置APP语言，地区等
+     * */
+    public void switchLanguage() {
+        Locale.setDefault(Locale.CHINA);
+        Resources resources = getResources();// 获得res资源对象
+        Configuration config = resources.getConfiguration();// 获得设置对象
+        DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
+        config.locale = Locale.SIMPLIFIED_CHINESE; // 简体中文
+        resources.updateConfiguration(config, dm);
+    }
 
     void init() {
 
@@ -349,7 +299,7 @@ public class MainApp extends Application {
         ServerAPI.init();
         initImageLoader(getApplicationContext());
         init_DisplayImageOptions();
-
+        switchLanguage();
 
         cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
@@ -375,22 +325,6 @@ public class MainApp extends Application {
         Utils.openGPS(this);
         DBManager.init(this);
         OrganizationManager.init(this);
-
-//        try {
-////            user = DBManager.Instance().getUser();
-////             subUsers = DBManager.Instance().getSubordinates();
-//        } catch (Exception ex) {
-//            Global.ProcDebugException(ex);
-//            ex.printStackTrace();
-//        }
-//        Timer timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                //setOriginData();
-//            }
-//        }, 100);
-
     }
 
 
@@ -398,9 +332,6 @@ public class MainApp extends Application {
     /**
      * 设置缓存的组织架构数据
      */
-//    void setOriginData() {
-//        lstDepartment = DBManager.Instance().getOrganization();
-//    }
 
     void init_DisplayImageOptions() {
         options_rounded = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).

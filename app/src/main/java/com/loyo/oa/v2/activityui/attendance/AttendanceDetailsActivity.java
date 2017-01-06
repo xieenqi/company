@@ -1,15 +1,21 @@
 package com.loyo.oa.v2.activityui.attendance;
 
+import android.app.Activity;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridView;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
@@ -17,7 +23,6 @@ import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceDetial;
 import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceDetailsPresenterImpl;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceDetailsView;
 import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -65,7 +70,7 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
     @ViewById
     TextView tv_reason;
     @ViewById
-    GridView gridView_photo;
+    GridLayout grid;
     @ViewById
     Button btn_confirm;
     @ViewById
@@ -91,7 +96,6 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
     String attendanceId;
 
     private TextView tv_tag;
-    private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private String strMessage;
     private int type;
@@ -155,12 +159,38 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
     @Override
     public void initGridView(ArrayList<Attachment> mAttachments) {
         attachments = mAttachments;
-        if (null == adapter) {
-            adapter = new SignInGridViewAdapter(this, attachments, false, false, 0);
-        } else {
-            adapter.setDataSource(attachments);
+        for (int i = 0, c = 0, r = 0; i < attachments.size(); i++, c++) {
+            ViewGroup oImageView = (ViewGroup)LayoutInflater.from(this).inflate(R.layout.item_grid_image, null);
+            ImageView imageView = (ImageView) oImageView.findViewById(R.id.imageView);
+            if (c == 3) {
+                c = 0;
+                r++;
+            }
+            GridLayout.Spec row = GridLayout.spec(r, 1);
+            GridLayout.Spec colspan = GridLayout.spec(c, 1);
+            GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, colspan);
+            grid.addView(oImageView, gridLayoutParam);
+
+            final Attachment attachment = attachments.get(i);
+
+            Glide.with(MainApp.getMainApp()).load(attachment.getUrl())
+                    .placeholder(R.drawable.default_image)
+                    .override(200, 200)
+                    .into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    ArrayList<String> paths = new ArrayList<String>(){{
+                        add(attachment.getUrl());
+                    }};
+                    PhotoPreview.builder()
+                            .setPhotos(paths)
+                            .setCurrentItem(0)
+                            .setShowDeleteButton(false)
+                            .start((Activity) mContext);
+                }
+            });
         }
-        SignInGridViewAdapter.setAdapter(gridView_photo, adapter);
     }
 
     /**
@@ -324,5 +354,27 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
             tv_confirmTime.setText(comfirmTime);
         }
         ll_loading.setStatus(LoadingLayout.Success);
+    }
+
+    @Override
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
+    }
+
+    @Override
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelCommitLoading();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        LoyoToast.info(this, message);
     }
 }

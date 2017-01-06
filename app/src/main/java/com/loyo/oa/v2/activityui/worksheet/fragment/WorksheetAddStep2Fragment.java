@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -20,29 +21,21 @@ import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetWrapper;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.IWorksheet;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.worksheet.api.WorksheetService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnClickListener, UploadControllerCallback {
@@ -133,7 +126,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
                 break;
             case R.id.img_title_right:
                 uuid = StringUtil.getUUID();
-                showStatusLoading(false);
+                showCommitLoading();
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
                 break;
@@ -170,8 +163,6 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         String orderId = mActivity.selectedOrder.id;
         String orderName = mActivity.selectedOrder.title;
         String templateId = mActivity.selectedType.id;
-
-        showStatusLoading(false);
         final HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("title", title);
         map.put("orderId", orderId);
@@ -184,37 +175,25 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
             map.put("uuid", uuid);
         }
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IWorksheet.class).addWorksheet(map, new Callback<WorksheetWrapper>() {
-            @Override
-            public void success(final WorksheetWrapper wrapper, Response response) {
-                HttpErrorCheck.checkCommitSus("新建工单",response);
-                if (wrapper.errcode == 0) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            cancelStatusLoading();
-                            Intent intent = new Intent();
-                            intent.putExtra(ExtraAndResult.EXTRA_BOOLEAN, true);
-                            Worksheet ws = wrapper.data;
-                            if (ws == null) {
-                                ws = new Worksheet();
+        WorksheetService.addWorksheet(map)
+                .subscribe(new DefaultLoyoSubscriber<Worksheet>(hud) {
+                    @Override
+                    public void onNext(final Worksheet worksheet) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent();
+                                intent.putExtra(ExtraAndResult.EXTRA_BOOLEAN, true);
+                                Worksheet ws = worksheet;
+                                if (ws == null) {
+                                    ws = new Worksheet();
+                                }
+                                AppBus.getInstance().post(ws);
+                                app.finishActivity(getActivity(), MainApp.ENTER_TYPE_LEFT, 0, intent);
                             }
-                            AppBus.getInstance().post(ws);
-                            app.finishActivity(getActivity(), MainApp.ENTER_TYPE_LEFT, 0, intent);
-                        }
-                    },1000);
-                } else {
-                    cancelStatusLoading();
-                    Toast("" + wrapper.errmsg);
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+                        },1000);
+                    }
+                });
     }
 
     private void buildAttachment() {
@@ -236,22 +215,14 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
      * 上传附件信息
      */
     public void postAttaData() {
-        showStatusLoading(false);
         buildAttachment();
-        IAttachment service = RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class);
-        service.setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
-            @Override
-            public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                HttpErrorCheck.checkCommitSus("上传附件信息",response);
-                cancelStatusLoading();
-                commitWorksheet();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+        AttachmentService.setAttachementData(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true/*dismissOnlyWhenError*/) {
+                    @Override
+                    public void onNext(ArrayList<AttachmentForNew> news) {
+                        commitWorksheet();
+                    }
+                });
     }
 
     @Override
@@ -291,10 +262,10 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelStatusLoading();
         int count = controller.failedTaskCount();
         if (count > 0) {
-            Toast(count + "个附件上传失败，请重试或者删除");
+            cancelCommitLoading();
+            LoyoToast.info(mActivity, count + "个附件上传失败，请重试或者删除");
             return;
         }
         if (taskList.size() > 0) {

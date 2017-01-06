@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.loyo.oa.v2.activityui.commonview.bean.PermissionGroup;
 import com.loyo.oa.v2.activityui.customer.model.Department;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.beans.Position;
 import com.loyo.oa.v2.activityui.customer.model.Role;
 import com.loyo.oa.v2.beans.UserInfo;
@@ -159,8 +159,8 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
             return true;
         }
 
-        if (o instanceof NewUser) {
-            return id.equals(((NewUser) o).getId());
+        if (o instanceof OrganizationalMember) {
+            return id.equals(((OrganizationalMember) o).getId());
         }
 
         if (!(o instanceof User)) {
@@ -179,8 +179,8 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
         return equals(MainApp.user);
     }
 
-    public NewUser toShortUser() {
-        NewUser user = new NewUser();
+    public OrganizationalMember toShortUser() {
+        OrganizationalMember user = new OrganizationalMember();
         user.setId(this.id);
         user.setName(this.getRealname());
         user.setAvatar(this.avatar);

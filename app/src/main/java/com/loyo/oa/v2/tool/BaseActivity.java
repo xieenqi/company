@@ -2,22 +2,13 @@ package com.loyo.oa.v2.tool;
 
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
-import android.view.GestureDetector;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -25,20 +16,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.library.module.common.SystemBarTintManager;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
+
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -46,7 +36,7 @@ import java.util.TimerTask;
  * activity 基类
  */
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
     protected MainApp app;
     protected boolean isNeedLogin = true;
@@ -55,6 +45,7 @@ public class BaseActivity extends Activity {
     //    public Intent rushTokenIntent;
 //    private int mTouchViewGroupId;
     public SweetAlertDialogView sweetAlertDialogView;
+    public LoyoProgressHUD hud;
 
     /**
      * 搜索跳转分类
@@ -105,6 +96,8 @@ public class BaseActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        cancelCommitLoading();
+
         com.loyo.oa.v2.common.event.AppBus.getInstance().unregister(this);
         unRegisterBaseReceiver();
         //关闭键盘
@@ -398,34 +391,58 @@ public class BaseActivity extends Activity {
     /**
      * 展示带成功失败动画加载框
      */
-    public void showStatusLoading(boolean outTouch) {
-        DialogHelp.showStatusLoading(outTouch, this);
+    public void showCommitLoading() {
+        if (hud != null ) {
+            if (hud.isShowing()) {
+                hud.dismiss();
+            }
+            hud = null;
+        }
+        hud = LoyoProgressHUD.commitHUD(this).show();
     }
 
     /**
      * 关闭带成功失败动画加载框
      */
-    public void cancelStatusLoading() {
-        DialogHelp.cancelStatusLoading();
+    public void cancelCommitLoading() {
+        if (hud != null ) {
+            if (hud.isShowing()) {
+                hud.dismiss();
+            }
+            hud = null;
+        }
     }
 
     /**
      * 加载loading的方法
      */
-    public void showLoading(String msg) {
-        try {
-            DialogHelp.showLoading(this, msg, true);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void showLoading2(String msg) {
+        if (hud != null ) {
+            if (hud.isShowing()) {
+                hud.dismiss();
+            }
+            hud = null;
         }
+        hud = LoyoProgressHUD.spinHUD(this).show();
     }
 
-    public void showLoading(String msg, boolean Cancelable) {
-        DialogHelp.showLoading(this, msg, Cancelable);
+    public void showLoading2(String msg, boolean cancelable) {
+        if (hud != null ) {
+            if (hud.isShowing()) {
+                hud.dismiss();
+            }
+            hud = null;
+        }
+        hud = LoyoProgressHUD.spinHUD(this).setCancellable(cancelable).show();
     }
 
-    public static void cancelLoading() {
-        DialogHelp.cancelLoading();
+    public void cancelLoading2() {
+        if (hud != null ) {
+            if (hud.isShowing()) {
+                hud.dismiss();
+            }
+            hud = null;
+        }
     }
 
     /**

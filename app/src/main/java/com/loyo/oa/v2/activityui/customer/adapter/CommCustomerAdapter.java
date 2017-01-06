@@ -15,25 +15,17 @@ import android.widget.TextView;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 
 import java.util.ArrayList;
-import java.util.Date;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【公海客户】适配器
@@ -121,29 +113,13 @@ public class CommCustomerAdapter extends BaseAdapter {
         img_public.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//挑入公海客户
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                        create(ICustomer.class).pickedIn(id, new RCallback<BaseBean>() {
-                    @Override
-                    public void success(BaseBean customer, Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        if (customer.errcode == 0) {
-                            Message msg = new Message();
-                            Bundle mBundle = new Bundle();
-                            msg.what = CustomerManagerActivity.CUSTOMER_COMM_RUSH;
-                            mBundle.putString("id",id);
-                            msg.setData(mBundle);
-                            //mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
-                            mHandler.sendMessage(msg);
-                        } else {
-                            Global.Toast(customer.errmsg);
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                CustomerService.pickInCustomer(customer.getId())
+                        .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                            @Override
+                            public void onNext(Customer customer) {
+                                mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
+                            }
+                        });
             }
         });
 

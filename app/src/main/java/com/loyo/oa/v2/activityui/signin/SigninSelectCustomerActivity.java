@@ -7,6 +7,10 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
@@ -14,12 +18,7 @@ import com.loyo.oa.v2.activityui.signin.adapter.SigninSelectCustomerAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.signin.persenter.SigninSelectCustomerPControl;
 import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninSelectCustomerVControl;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.LocationUtilGD;
-import com.loyo.oa.v2.tool.UMengTools;
 
 import java.util.ArrayList;
 
@@ -149,23 +148,25 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-        showLoading("");
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2("");
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(this, message);
     }
 
     @Override

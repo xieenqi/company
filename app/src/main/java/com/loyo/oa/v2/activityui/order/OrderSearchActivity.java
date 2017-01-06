@@ -8,7 +8,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -19,34 +18,27 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
-import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.order.bean.OrderList;
-import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
-import com.loyo.oa.v2.activityui.order.common.OrderCommon;
-import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.IOrder;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
 /**
  * 【订单搜索】
  */
 
-public class OrderSearchActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, Callback<OrderList> {
+public class OrderSearchActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2 {
 
     public static final int TEAM_SALE_SEARCH = 20;//团队搜索
     public static final int MY_SALE_SEARCH = 30;//我的搜索
@@ -169,40 +161,48 @@ public class OrderSearchActivity extends BaseLoadingActivity implements PullToRe
         map.put("pageIndex", page);
         map.put("pageSize", 15);
         map.put("keyWords", strSearch);
+
+        DefaultLoyoSubscriber<PaginationX<OrderListItem>> subscriber =
+                new DefaultLoyoSubscriber<PaginationX<OrderListItem>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        @LoyoErrorChecker.CheckType int type = listData.size()>0?
+                                LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                        expandableListView_search.onRefreshComplete();
+                    }
+
+                    @Override
+                    public void onNext(PaginationX<OrderListItem> orderListItemPaginationX) {
+                        expandableListView_search.onRefreshComplete();
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        try {
+                            if (!isPullDown) {
+                                if (orderListItemPaginationX.records != null
+                                        && orderListItemPaginationX.records.size() == 0)
+                                    Toast("没有更多信息");
+                                listData.addAll(orderListItemPaginationX.records);
+                            } else {
+                                listData = orderListItemPaginationX.records;
+                            }
+                            adapter.setAdapter();
+                            if (listData.size() == 0)
+                                ll_loading.setStatus(LoadingLayout.Empty);
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
         if (fromPage == MY_SALE_SEARCH) {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(IOrder.class).getOrderMyList(map, this);
+            OrderService.getOrderMyList(map)
+                    .subscribe(subscriber);
+
         } else if (fromPage == TEAM_SALE_SEARCH) {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(IOrder.class).getOrderTeamList(map, this);
+            OrderService.getOrderTeamList(map)
+                    .subscribe(subscriber);
         }
-    }
-
-    @Override
-    public void success(OrderList orderList, Response response) {
-        expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkResponse("订单搜索列表：", response, ll_loading);
-        ll_loading.setStatus(LoadingLayout.Success);
-        try {
-            if (!isPullDown) {
-                if (orderList.records != null && orderList.records.size() == 0)
-                    Toast("没有更多信息");
-                listData.addAll(orderList.records);
-            } else {
-                listData = orderList.records;
-            }
-            adapter.setAdapter();
-            if (listData.size() == 0)
-                ll_loading.setStatus(LoadingLayout.Empty);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void failure(RetrofitError error) {
-        expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkError(error, ll_loading);
     }
 
 

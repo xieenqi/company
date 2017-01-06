@@ -4,15 +4,14 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
+import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IWorkReport;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -27,9 +26,6 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.activity
@@ -80,19 +76,14 @@ public class WorkReportReviewActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("newScore", TextUtils.isEmpty(sorce) ? "-1" : sorce);
         map.put("comment", content);
-        showStatusLoading(false);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).reviewWorkReport(mWorkReportId, map, new RCallback<WorkReport>() {
+        showLoading2("");
+
+        WorkReportService.reviewWorkReport(mWorkReportId,map)
+                .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud) {
             @Override
-            public void success(final WorkReport workReport, final Response response) {
-                HttpErrorCheck.checkCommitSus("报告评分:", response);
+            public void onNext(WorkReport workReport) {
                 setResult(RESULT_OK);
                 back();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-                super.failure(error);
             }
         });
     }

@@ -10,6 +10,8 @@
     <color name="title_bg1">#2c9dfc</color>
     <color name="activity_bg">#f4f4f4</color>
     <color name="red1">#f5625a</color>
+    <color name="dashborad">#51ADFB</color>
+    <color name="dashbg">#E2E4E8</color>
     <color name="graypy">#EFEFEF</color>
     <color name="green51">#51c055</color>
     <color name="lightgray">#D3D3D3</color>

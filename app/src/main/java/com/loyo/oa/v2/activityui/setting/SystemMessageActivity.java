@@ -2,29 +2,25 @@ package com.loyo.oa.v2.activityui.setting;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.activityui.setting.adapter.AdapterSystemMessage;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
 import com.loyo.oa.v2.activityui.setting.persenter.SystemMessagePControl;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SystemMessageVControl;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.IMain;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【系统消息】
@@ -85,18 +81,30 @@ public class SystemMessageActivity extends BaseLoadingActivity implements PullTo
                     onBackPressed();
                     break;
                 case R.id.tv_add:
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
-                            readSystemMessageAll(new Callback<Object>() {
-                                @Override
-                                public void success(Object o, Response response) {
-                                    pControl.getPageData(1);
-                                }
+//                    RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
+//                            readSystemMessageAll(new Callback<Object>() {
+//                                @Override
+//                                public void success(Object o, Response response) {
+//                                    pControl.getPageData(1);
+//                                }
+//
+//                                @Override
+//                                public void failure(RetrofitError error) {
+//                                    Toast("设置不成功");
+//                                }
+//                            });
 
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    Toast("设置不成功");
-                                }
-                            });
+                    HomeService.readSystemMessageAll().subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.SILENCE) {
+                        @Override
+                        public void onNext(Object o) {
+                            pControl.getPageData(1);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Toast("设置不成功");
+                        }
+                    });
                     break;
             }
         }
@@ -113,23 +121,25 @@ public class SystemMessageActivity extends BaseLoadingActivity implements PullTo
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-        showLoading("");
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2("");
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(this, message);
     }
 
     @Override

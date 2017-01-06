@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.wfinstance.viewcontrol;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.BaseView;
 import com.loyo.oa.v2.tool.ImageInfo;
@@ -24,6 +25,8 @@ public interface WfinAddView extends BaseView{
 
     /*上传附件成功处理*/
     void uploadSuccessEmbl(ArrayList<ImageInfo> pickPhots);
+
+    LoyoProgressHUD getHUD();
 
 
 }

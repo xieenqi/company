@@ -10,9 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.contact.presenter.ContactInfoEditPresenter;
 import com.loyo.oa.v2.activityui.contact.presenter.impl.ContactInfoEditPresenterImpl;
 import com.loyo.oa.v2.activityui.contact.viewcontrol.ContactInfoView;
 import com.loyo.oa.v2.application.MainApp;
@@ -302,23 +303,25 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String msg) {
-
+    public LoyoProgressHUD showProgress(String msg) {
+        showLoading2(msg);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-
+        LoyoToast.info(this, message);
     }
 
     /**

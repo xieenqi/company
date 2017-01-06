@@ -3,11 +3,10 @@ package com.loyo.oa.v2.activityui.attachment.bean;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.tool.DateTool;
 
 import java.io.File;
 import java.io.Serializable;
@@ -48,7 +47,7 @@ public class Attachment implements Serializable {
     public String updatedAt;
     public File file;
     public Boolean isPublic;
-    public ArrayList<NewUser> viewers = new ArrayList<>();
+    public ArrayList<OrganizationalMember> viewers = new ArrayList<>();
 
     public String getLocalPath() {
         return localPath;
@@ -66,13 +65,13 @@ public class Attachment implements Serializable {
         isPublic = b;
     }
 
-    public ArrayList<NewUser> getViewers() {
+    public ArrayList<OrganizationalMember> getViewers() {
         if (null == viewers)
-            setViewers(new ArrayList<NewUser>());
+            setViewers(new ArrayList<OrganizationalMember>());
         return viewers;
     }
 
-    public void setViewers(ArrayList<NewUser> users) {
+    public void setViewers(ArrayList<OrganizationalMember> users) {
         viewers = users;
     }
 

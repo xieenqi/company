@@ -20,22 +20,15 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerRepeatAdapter;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 客户管理，查重
@@ -154,20 +147,19 @@ public class CustomerRepeat extends BaseActivity implements CustomerRepeatAdapte
         map.put("pageIndex", 1);
         map.put("pageSize", 20);
         map.put("keyWords", name);
+        CustomerService.getCustomerDuplicates(map)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<CustomerRepeatList>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        finish();
+                    }
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSerachRepeat(map, new RCallback<PaginationX<CustomerRepeatList>>() {
-            @Override
-            public void success(final PaginationX<CustomerRepeatList> customerRepeatList, final Response response) {
-                HttpErrorCheck.checkResponse("查重客户：", response);
-                setViewdata(customerRepeatList);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                finish();
-            }
-        });
+                    @Override
+                    public void onNext(PaginationX<CustomerRepeatList> customerRepeatListPaginationX) {
+                        setViewdata(customerRepeatListPaginationX);
+                    }
+                });
     }
 
     /**

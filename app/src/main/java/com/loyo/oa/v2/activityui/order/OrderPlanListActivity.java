@@ -5,15 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
@@ -21,21 +20,12 @@ import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IOrder;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【回款计划】 列表页面
@@ -121,18 +111,12 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
      * 删除回款计划
      */
     public void deletePlanList(String id) {
-        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .deletePlanEsstimateList(id, new Callback<EstimatePlanAdd>() {
+        showLoading2("");
+        OrderService.deletePlanEsstimateList(id)
+                .subscribe(new DefaultLoyoSubscriber<EstimatePlanAdd>(hud) {
                     @Override
-                    public void success(EstimatePlanAdd estimatePlanAdd, Response response) {
-                        HttpErrorCheck.checkResponse("删除回款计划", response);
+                    public void onNext(EstimatePlanAdd add) {
                         getPlanList();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
                     }
                 });
     }
@@ -141,15 +125,13 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
      * 获取回款计划列表
      */
     public void getPlanList() {
-        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("orderId", orderId);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .getPlanEstimateList(map, new Callback<ArrayList<PlanEstimateList>>() {
+        OrderService.getPlanEstimateList(map)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<PlanEstimateList>>(ll_loading) {
                     @Override
-                    public void success(ArrayList<PlanEstimateList> planEstimateList, Response response) {
+                    public void onNext(ArrayList<PlanEstimateList> planEstimateList) {
                         ll_loading.setStatus(LoadingLayout.Success);
-                        HttpErrorCheck.checkResponse("计划回款列表", response);
                         mPlanEstimateList.clear();
                         mPlanEstimateList.addAll(planEstimateList);
                         if (status == 1 || status == 2) {
@@ -161,11 +143,6 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
                             ll_loading.setStatus(LoadingLayout.Empty);
 
                         rushAdapter();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error,ll_loading);
                     }
                 });
     }

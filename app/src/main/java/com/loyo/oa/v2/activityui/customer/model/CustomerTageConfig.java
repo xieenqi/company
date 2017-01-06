@@ -5,34 +5,23 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.SharedUtil;
-
 import java.util.ArrayList;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class CustomerTageConfig {
 
     /* 从网络获取 */
     public static void getTage() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                GetTags(new RCallback<ArrayList<Tag>>() {
+        CustomerService.getCustomerTags()
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<Tag>>(LoyoErrorChecker.SILENCE) {
                     @Override
-                    public void success(ArrayList<Tag> result, Response response) {
-                        HttpErrorCheck.checkResponse("客户 config标签:", response);
-                        String json = MainApp.gson.toJson(result);
+                    public void onNext(ArrayList<Tag> tagArrayList) {
+                        String json = MainApp.gson.toJson(tagArrayList);
                         SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.CUSTOMER_TAGE);
                         SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.CUSTOMER_TAGE, json);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
                     }
                 });
     }

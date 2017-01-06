@@ -17,50 +17,38 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.os.Handler;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.FeedbackActivity_;
-import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.setting.SettingActivity;
-import com.loyo.oa.v2.activityui.setting.SettingPasswordActivity_;
 import com.loyo.oa.v2.activityui.setting.SystemMessageActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
-import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
-import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ExitActivity;
-import com.loyo.oa.v2.tool.FileTool;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.user.api.UserService;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.utils.StorageUtils;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【侧边栏】fragment
@@ -271,26 +259,20 @@ public class MenuFragment extends BaseFragment {
      * 获取个人资料
      */
     void updateUserinfo() {
-        showLoading("");
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<NewUser>() {
-            @Override
-            public void success(final NewUser user, final Response response) {
-                HttpErrorCheck.checkResponse("获取个人资料修改", response);
-                String json = MainApp.gson.toJson(user.data);
-                MainApp.user = user.data;
-                DBManager.Instance().putUser(json);
-                Bundle b = new Bundle();
-                String userId = MainApp.user.id;
-                b.putSerializable("userId", userId != null ? userId : "");
-                app.startActivity(getActivity(), ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        showLoading2("");
+        UserService.getProfile()
+                .subscribe(new DefaultLoyoSubscriber<User>(hud) {
+                    @Override
+                    public void onNext(User user) {
+                        String json = MainApp.gson.toJson(user);
+                        MainApp.user = user;
+                        DBManager.Instance().putUser(json);
+                        Bundle b = new Bundle();
+                        String userId = MainApp.user.id;
+                        b.putSerializable("userId", userId != null ? userId : "");
+                        app.startActivity(getActivity(), ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                    }
+                });
     }
 
 
@@ -354,6 +336,8 @@ public class MenuFragment extends BaseFragment {
         /* 清空组织架构 */
         OrganizationManager.clearOrganizationData();
         SharedUtil.clearInfo(app);//清楚本地登录状态 即缓存信息
+        /* 欢迎提示不清除 */
+        SharedUtil.putBoolean(mActivity, ExtraAndResult.WELCOM_KEY, true);
         ExitActivity.getInstance().finishAllActivity();
         app.startActivity(mActivity, LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
     }

@@ -2,12 +2,12 @@ package com.loyo.oa.v2.activityui.wfinstance.presenter.impl;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfInstanceAdd;
@@ -16,32 +16,16 @@ import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinAddView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.IWfInstance;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.ImageInfo;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 /**
  * 【新建审批】Presenter
@@ -67,6 +51,8 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
     private PostBizExtData bizExtData;
     private List<WfinAddViewGroup> WfinObj = new ArrayList<WfinAddViewGroup>();
 
+    private LoyoProgressHUD hud;
+
 
     public WfinAddPresenterImpl(Activity mActivity, Context mContext, WfinAddView crolView, BizForm mBizForm) {
         this.mContext = mContext;
@@ -79,7 +65,8 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
      * 新建审批验证
      */
     @Override
-    public void addWfinVeri(String deptId, ArrayList<ImageInfo> pickPhots) {
+    public void addWfinVeri(String deptId) {
+
         if (submitData.isEmpty()) {
             crolView.showMsg("请输入审批内容");
             return;
@@ -143,11 +130,9 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                         endTimeDate = (String) map.get(endTimeArr.get(i));
                     }
                 }
-//                startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
-//                endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
 
-                startTimelong= com.loyo.oa.common.utils.DateTool.getMinuteStamp(startTimeDate);
-                endTimelong= com.loyo.oa.common.utils.DateTool.getMinuteStamp(endTimeDate);
+                startTimelong= DateTool.getMinuteStamp(startTimeDate);
+                endTimelong= DateTool.getMinuteStamp(endTimeDate);
 
 
                 if (startTimelong >= endTimelong) {
@@ -156,8 +141,6 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                 }
             }
         }
-
-        crolView.showStatusProgress();
         crolView.requestAddWfinVeriSuccess(workflowValues);
     }
 
@@ -165,7 +148,11 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
      * 新建审批请求
      */
     @Override
-    public void requestAddWfin(String title, String deptId, ArrayList<HashMap<String, Object>> workflowValues, String mTemplateId, String projectId, String uuid, String memo, ArrayList<ImageInfo> pickPhots) {
+    public void requestAddWfin(String title, String deptId,
+                               ArrayList<HashMap<String, Object>> workflowValues,
+                               String mTemplateId, String projectId,
+                               String uuid, String memo,
+                               int attachmentCount) {
         bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizformId", mBizForm.getId());              //表单Id
@@ -175,30 +162,20 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         map.put("wftemplateId", mTemplateId);                //流程模板Id
         map.put("projectId", projectId);                     //项目Id
         map.put("bizCode", mBizForm.getBizCode());           //流程类型
-        if (uuid != null && pickPhots.size() > 0) {
-            bizExtData.setAttachmentCount(pickPhots.size());
+        if (uuid != null && attachmentCount > 0) {
+            bizExtData.setAttachmentCount(attachmentCount);
             map.put("attachmentUUId", uuid);
             map.put("bizExtData", bizExtData);
         }
         map.put("memo", memo); //备注
         LogUtil.d("创建审批传参：" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
-            @Override
-            public void success(final WfInstance wfInstance, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建审批",response);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        DialogHelp.cancelStatusLoading();
-                        crolView.requestAddWfinSuccessEmbl(wfInstance);
-                    }
-                }, 1000);
-            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkCommitEro(error);
-                super.failure(error);
+        WfinstanceService.addWfInstance(map)
+                .subscribe(new DefaultLoyoSubscriber<WfInstance>(crolView.getHUD(), "新建审批成功") {
+
+                    @Override
+            public void onNext(final WfInstance wfInstance) {
+                crolView.requestAddWfinSuccessEmbl(wfInstance);
             }
         });
     }
@@ -243,47 +220,6 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         WfinObj.add(viewGroup);//新增一个内容 就存起来
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             isRequiredList.add(mBizForm.getFields().get(i).isRequired());
-        }
-    }
-
-    /**
-     * 上传附件
-     */
-    @Override
-    public void newUploadAttachement(String uuid, int bizType, final ArrayList<ImageInfo> pickPhots) {
-        crolView.showStatusProgress();
-        try {
-            uploadSize = 0;
-            uploadNum = pickPhots.size();
-            for (ImageInfo item : pickPhots) {
-                Uri uri = Uri.parse(item.path);
-                File newFile = Global.scal(mActivity, uri);
-                if (newFile != null && newFile.length() > 0) {
-                    if (newFile.exists()) {
-                        TypedFile typedFile = new TypedFile("image/*", newFile);
-                        TypedString typedUuid = new TypedString(uuid);
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                                new RCallback<Attachment>() {
-                                    @Override
-                                    public void success(final Attachment attachments, final Response response) {
-                                        uploadSize++;
-                                        if (uploadSize == uploadNum) {
-                                            DialogHelp.cancelStatusLoading();
-                                            crolView.uploadSuccessEmbl(pickPhots);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void failure(final RetrofitError error) {
-                                        super.failure(error);
-                                        HttpErrorCheck.checkCommitEro(error);
-                                    }
-                                });
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Global.ProcException(ex);
         }
     }
 }

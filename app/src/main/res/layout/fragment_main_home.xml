@@ -17,44 +17,58 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp" />
 
-        <RadioGroup
-            android:id="@+id/tab_menu"
-            android:layout_width="fill_parent"
+        <!--<RadioGroup-->
+        <!--android:id="@+id/tab_menu"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="center|bottom"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<RadioButton-->
+        <!--android:id="@+id/title1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginRight="@dimen/dimen_5"-->
+        <!--android:button="@null"-->
+        <!--android:checked="true"-->
+        <!--android:drawableBottom="@drawable/rb_home"-->
+        <!--android:drawablePadding="@dimen/dimen_8"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="应用"-->
+        <!--android:textColor="@drawable/color_text_table"-->
+        <!--android:textSize="@dimen/text_sp18" />-->
+
+        <!--<RadioButton-->
+        <!--android:id="@+id/title2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/dimen_5"-->
+        <!--android:button="@null"-->
+        <!--android:drawableBottom="@drawable/rb_home"-->
+        <!--android:drawablePadding="@dimen/dimen_8"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="统计"-->
+        <!--android:textColor="@drawable/color_text_table"-->
+        <!--android:textSize="@dimen/text_sp18" />-->
+        <!--</RadioGroup>-->
+
+        <com.loyo.oa.v2.customview.PagerSlidingTabStrip
+            android:id="@+id/title_tabs"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
             android:layout_weight="1"
-            android:gravity="center|bottom"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/title1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dimen_5"
-                android:button="@null"
-                android:checked="true"
-                android:drawableBottom="@drawable/rb_home"
-                android:drawablePadding="@dimen/dimen_8"
-                android:gravity="center_horizontal"
-                android:text="应用"
-                android:textColor="@drawable/color_text_table"
-                android:textSize="@dimen/text_sp18" />
-
-            <RadioButton
-                android:id="@+id/title2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_5"
-                android:button="@null"
-                android:drawableBottom="@drawable/rb_home"
-                android:drawablePadding="@dimen/dimen_8"
-                android:gravity="center_horizontal"
-                android:text="统计"
-                android:textColor="@drawable/color_text_table"
-                android:textSize="@dimen/text_sp18" />
-
-        </RadioGroup>
-
-        <!--<android.support.design.widget.TabLayout-->
+            android:background="@color/title_bg1"
+            app:pstsDividerColor="@color/title_bg1"
+            app:pstsIndicatorColor="@color/white"
+            app:pstsIndicatorHeight="1dp"
+            app:pstsShouldExpand="true"
+            app:pstsTabPaddingLeftRight="1dp"
+            app:pstsTextAllCaps="true"
+            app:pstsUnderlineHeight="1dp" />
+        <!--<android.support.design.widget.TabLayout   app:pstsUnderlineColor="#aadaff"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="match_parent"-->
         <!--app:tabIndicatorColor="@color/white"-->

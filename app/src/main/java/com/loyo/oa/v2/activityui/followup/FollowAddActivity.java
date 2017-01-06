@@ -17,6 +17,7 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -25,7 +26,7 @@ import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
-import com.loyo.oa.v2.activityui.clue.ClueTypeEnum;
+import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
@@ -35,14 +36,15 @@ import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.CommonIdName;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.beans.SaleActivity;
@@ -50,17 +52,13 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -69,10 +67,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【新建跟进】客户管理
@@ -387,8 +381,6 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
      * contact_name (联系人)
      */
     public void commitDynamic() {
-        cancelLoading();
-        showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         if (isCustom) {
             map.put("customerId", mCustomer.getId());
@@ -413,47 +405,32 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
         map.put("atUserIds", atUserIds);
 
         LogUtil.dee("新建跟进:" + MainApp.gson.toJson(map));
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
-            @Override
-            public void success(final SaleActivity saleActivity, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建跟进动态", response);
-                new Handler().postDelayed(new Runnable() {
+        CustomerService.addSaleactivity(map)
+                .subscribe(new DefaultLoyoSubscriber<SaleActivity>(hud) {
                     @Override
-                    public void run() {
-                        cancelStatusLoading();
-                        AppBus.getInstance().post(new FollowUpRushEvent());
-                        app.finishActivity(FollowAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
-                    }
-                }, 1000);
-            }
+                    public void onNext(SaleActivity saleActivity) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                AppBus.getInstance().post(new FollowUpRushEvent());
+                                app.finishActivity(FollowAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                            }
+                        },2000);
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+                    }
+                });
     }
 
     /**
      * 上传附件信息
      */
     public void postAttaData() {
-        showStatusLoading(false);
         buildAttachment();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
-                .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
+        AttachmentService.setAttachementData(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true) {
                     @Override
-                    public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        HttpErrorCheck.checkCommitSus("上传附件信息", response);
-                        cancelStatusLoading();
+                    public void onNext(ArrayList<AttachmentForNew> news) {
                         commitDynamic();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
     }
@@ -548,7 +525,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
                     return;
                 }
 
-                showStatusLoading(false);
+                showCommitLoading();
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
 
@@ -592,7 +569,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
             /*线索写跟进选择线索*/
             case R.id.ll_clue_company:
                 Bundle bCule = new Bundle();
-                bCule.putInt(ExtraAndResult.EXTRA_TYPE, ClueTypeEnum.myCule.getType());
+                bCule.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, ClueType.MY_CLUE);
                 bCule.putBoolean("isSelect", true);
                 bCule.putBoolean("isResult", true);
                 app.startActivityForResult(FollowAddActivity.this, ClueSearchActivity.class,
@@ -791,10 +768,10 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelStatusLoading();
         int count = controller.failedTaskCount();
         if (count > 0) {
-            Toast(count + "个附件上传失败，请重试或者删除");
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
             return;
         }
         if (taskList.size() > 0) {

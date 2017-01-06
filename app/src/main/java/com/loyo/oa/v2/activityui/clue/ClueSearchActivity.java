@@ -17,25 +17,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.api.ClueService;
+import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.IClue;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【线索搜索】
@@ -43,8 +40,9 @@ import retrofit.client.Response;
  * Create by yyy on 16/08/23
  */
 
-public class ClueSearchActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, Callback<ClueList> {
+public class ClueSearchActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2 {
 
+    public final static String KEY_SEARCH_TYPE = "com.loyo.clue.SEARCH_TYPE";
 
     private String strSearch;
     private EditText edt_search;
@@ -55,7 +53,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
     private Bundle mBundle;
     private LayoutInflater mInflater;
 
-    private int fromPage;
+    private ClueType type;
     private int page = 1;
     private boolean isPullDown = true, isSelect, isResult;//是否加载第一页数据供选择  isResult是否设置返回值
     private Intent mIntent;
@@ -86,7 +84,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
      */
     void initView() {
         mBundle = getIntent().getExtras();
-        fromPage = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
+        type = (ClueType) mBundle.getSerializable(ClueSearchActivity.KEY_SEARCH_TYPE);
         isSelect = mBundle.getBoolean("isSelect", false);
         isResult = mBundle.getBoolean("isResult", false);
         mInflater = LayoutInflater.from(this);
@@ -185,41 +183,80 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
         map.put("pageIndex", page);
         map.put("pageSize", 15);
         map.put("keyword", strSearch);
-        if (fromPage == 1) {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(IClue.class).getMyCluelist(map, this);
-        } else if (fromPage == 2) {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(IClue.class).getTeamCluelist(map, this);
+
+        //新的网络模块
+        if (type == ClueType.MY_CLUE) {
+            ClueService.getMyClueList(map).subscribe(getDefaultLoyoSubscriber());
+        } else if (type == ClueType.TEAM_CLUE) {
+            ClueService.getTeamClueList(map).subscribe(getDefaultLoyoSubscriber());
         }
     }
 
-    @Override
-    public void success(ClueList clueList, Response response) {
-        expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
-        try {
-            if (!isPullDown) {
-                if (clueList.data.records == null)
-                    Toast("没有更多的数据了");
-                listData.addAll(clueList.data.records);
-            } else {
-                if (clueList.data.records == null)
-                    ll_loading.setStatus(LoadingLayout.Empty);
-                listData = clueList.data.records;
+    //订阅者，处理网络请求事件
+    private DefaultLoyoSubscriber<ClueList> getDefaultLoyoSubscriber(){
+        return new DefaultLoyoSubscriber<ClueList>() {
+            @Override
+            public void onError(Throwable e) {
+             /* 重写父类方法，不调用super */
+                @LoyoErrorChecker.CheckType
+                int type = page != 1  ?
+                        LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                expandableListView_search.onRefreshComplete();
             }
-            adapter.setAdapter();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
 
-        }
+            @Override
+            public void onNext(ClueList clueList) {
+                expandableListView_search.onRefreshComplete();
+                ll_loading.setStatus(LoadingLayout.Success);
+                try {
+                    if (!isPullDown) {
+                        if (clueList.data.records == null)
+                            Toast("没有更多的数据了");
+                        else
+                            listData.addAll(clueList.data.records);
+                    } else {
+                        if (clueList.data.records == null)
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        else
+                            listData = clueList.data.records;
+                    }
+                    adapter.setAdapter();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        };
     }
 
-    @Override
-    public void failure(RetrofitError error) {
-        expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkError(error, ll_loading);
-    }
+
+//    @Override
+//    public void success(ClueList clueList, Response response) {
+//        expandableListView_search.onRefreshComplete();
+//        HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
+//        try {
+//            if (!isPullDown) {
+//                if (clueList.data.records == null)
+//                    Toast("没有更多的数据了");
+//                listData.addAll(clueList.data.records);
+//            } else {
+//                if (clueList.data.records == null)
+//                    ll_loading.setStatus(LoadingLayout.Empty);
+//                listData = clueList.data.records;
+//            }
+//            adapter.setAdapter();
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//
+//        }
+//    }
+//
+//    @Override
+//    public void failure(RetrofitError error) {
+//        expandableListView_search.onRefreshComplete();
+//        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
+//    }
 
 
     @Override

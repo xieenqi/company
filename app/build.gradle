@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'kotlin-android'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 
@@ -33,13 +34,25 @@ android {
             res.srcDirs = ['src/main/res',
                            'src/main/res-photo-picker',
                            'src/main/res-smooth-checkbox',
-                           'src/main/res_loyo/customer',
-                           'src/main/res_loyo/saleopportunity',
-                           'src/main/res_loyo/setting',
-                           'src/main/res_loyo/worksheet',
-                           'src/main/res_loyo/order',
-                           'src/main/res_loyo/wfinstance']
+                           'src/main/res_customview',
+                           'src/main/res-loyo/customer',
+                           'src/main/res-loyo/saleopportunity',
+                           'src/main/res-loyo/setting',
+                           'src/main/res-loyo/worksheet',
+                           'src/main/res-loyo/order',
+                           'src/main/res-loyo/wfinstance',
+                           'src/main/res_loyo/product',
+                           'src/main/res-loyo/clue',
+                           'src/main/res-loyo/common',
+                           'src/main/res-loyo/followup',
+                           'src/main/res-loyo/project',
+                           'src/main/res-loyo/product',
+                           'src/main/res-loyo/sale',
+                           'src/main/res-loyo/tasks',
+                           'src/main/res-loyo/workreports',
+                           'src/main/res-hud']
         }
+//        main.java.srcDirs += 'src/main/kotlin'
     }
     signingConfigs {
         debug {
@@ -61,7 +74,7 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 2016122301
+        versionCode 2017010401
         versionName '1.4.8t'
     }
 
@@ -142,7 +155,7 @@ android {
         compile 'com.github.instacart.truetime-android:library:1.5'
         compile 'org.jsoup:jsoup:1.10.1'//解析HTML
         compile "com.andkulikov:transitionseverywhere:1.7.0"
-        compile 'me.itangqi.waveloadingview:library:0.3.1'
+        compile 'me.itangqi.waveloadingview:library:0.3.2'
 
         //compile 'cn.fanrunqi:waveprogress:1.0.0'
         //compile 'com.lai.weavey:loadinglayout:1.2'//loading加载库
@@ -173,6 +186,7 @@ android {
     }
 
     lintOptions {
+        checkReleaseBuilds false
         abortOnError false
     }
 }
@@ -189,6 +203,7 @@ dependencies {
     compile project(path: ':LibraryModule')
     compile project(':library:circularprogressbutton')
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
+//    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 apt {

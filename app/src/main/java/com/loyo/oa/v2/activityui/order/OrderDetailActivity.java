@@ -5,43 +5,37 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.common.ViewOrderDetailsExtra;
-import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
+import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【订单详情】页面
@@ -268,25 +262,18 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
     }
 
     private void getData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .getSaleDetails(orderId, new Callback<OrderDetail>() {
+        OrderService.getSaleDetails(orderId)
+                .subscribe(new DefaultLoyoSubscriber<OrderDetail>(ll_loading) {
                     @Override
-                    public void success(OrderDetail orderdetail, Response response) {
-                        HttpErrorCheck.checkResponse("订单详情", response);
+                    public void onNext(OrderDetail detail) {
                         ll_loading.setStatus(LoadingLayout.Success);
-                        if (null == orderdetail) {
+                        if (null == detail) {
                             ll_loading.setStatus(LoadingLayout.No_Network);
                             ll_loading.setNoNetworkText("没有获取到数据");
                             return;
                         }
-                        mData = orderdetail;
+                        mData = detail;
                         bindData();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error,ll_loading);
-//                        onBackPressed();
                     }
                 });
     }
@@ -423,34 +410,26 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
     }
 
     private void deleteOrder() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class).
-                deleteOrder(mData.id, new Callback<Object>() {
+        OrderService.deleteOrder(mData.id)
+                .subscribe(new DefaultLoyoSubscriber<Object>() {
                     @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("删除订单：", response);
-                        app.finishActivity(OrderDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-                    }
+                    public void onNext(Object o) {
+                        app.finishActivity(OrderDetailActivity.this,
+                                MainApp.ENTER_TYPE_LEFT,
+                                ExtraAndResult.REQUEST_CODE,
+                                new Intent());
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
                     }
                 });
     }
 
     private void terminationOrder() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class).
-                terminationOrder(mData.id, new Callback<Object>() {
+        OrderService.terminationOrder(mData.id)
+                .subscribe(new DefaultLoyoSubscriber<Object>() {
                     @Override
-                    public void success(Object estimatePlanAdd, Response response) {
-                        HttpErrorCheck.checkResponse("意外终止订单：", response);
+                    public void onNext(Object o) {
                         Toast("订单终止成功");
                         getData();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
                     }
                 });
     }

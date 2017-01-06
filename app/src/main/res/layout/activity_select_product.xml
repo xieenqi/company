@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_title" />
+<com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorView
+    android:id="@+id/classify"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:isFirstVisible="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_search"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#d9d9d9"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/dimen_6"
+                android:paddingLeft="@dimen/margin_other_view"
+                android:paddingRight="@dimen/margin_other_view"
+                android:paddingTop="@dimen/dimen_6">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/icon_search_one" />
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/lv_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:scrollbars="none" />
+        </LinearLayout>
+
+    </com.library.module.widget.loading.LoadingLayout>
+
+</com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorView>
+</LinearLayout>

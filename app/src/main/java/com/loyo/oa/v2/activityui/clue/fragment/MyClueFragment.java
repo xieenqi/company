@@ -4,6 +4,7 @@ package com.loyo.oa.v2.activityui.clue.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueAddActivity;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
+import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.application.MainApp;
@@ -32,7 +34,8 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.IClue;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -176,16 +179,51 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         map.put("field", field);
         map.put("order", order);
         map.put("status", statusKey);
-        LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+//                create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
+//            @Override
+//            public void success(ClueList clueList, Response response) {
+//                lv_list.onRefreshComplete();
+//                HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
+//                try {
+//                    if (!isPullDown) {
+//                        listData.addAll(clueList.data.records);
+//                    } else {
+//                        if (clueList.data.records == null)
+//                            ll_loading.setStatus(LoadingLayout.Empty);
+//                        listData = clueList.data.records;
+//                    }
+//                    adapter.setData(listData);
+//                } catch (NullPointerException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                lv_list.onRefreshComplete();
+//                HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
+//            }
+//        });
+
+        //新网络模块
+        ClueService.getMyClueList(map).subscribe(new DefaultLoyoSubscriber<ClueList>() {
             @Override
-            public void success(ClueList clueList, Response response) {
+            public void onError(Throwable e) {
+                /* 重写父类方法，不调用super */
+                @LoyoErrorChecker.CheckType
+                int type =page != 1 ?LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
+            }
+
+            @Override
+            public void onNext(ClueList clueList) {
+                ll_loading.setStatus(LoadingLayout.Success);
+                lv_list.onRefreshComplete();
                 try {
                     if (!isPullDown) {
-                        listData.addAll(clueList.data.records);
+                        if(null!=clueList.data.records)listData.addAll(clueList.data.records);
                     } else {
                         if (clueList.data.records == null)
                             ll_loading.setStatus(LoadingLayout.Empty);
@@ -195,12 +233,6 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
     }

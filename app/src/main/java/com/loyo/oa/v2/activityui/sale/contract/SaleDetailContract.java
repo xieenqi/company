@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.sale.contract;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.common.BaseView;
 import com.loyo.oa.v2.common.base.BasePersenter;
@@ -21,6 +22,7 @@ public interface SaleDetailContract {
         void editSaleStageSuccessUI();
 
         LoadingLayout getLoadingUI();
+        LoyoProgressHUD getHud();
     }
 
     interface Presenter extends BasePersenter {
@@ -32,6 +34,7 @@ public interface SaleDetailContract {
         void editSaleStageSuccess();
 
         LoadingLayout getLoadingView();
+        LoyoProgressHUD getHud();
     }
 
     interface Model {

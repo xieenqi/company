@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.common.Global;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,14 +27,14 @@ public class PaymentPopView extends Dialog {
     private TextView tv_title;
     private ListView lv_list;
     private List<String> data;
-    private Context context;
+    private Context mContext;
     private LayoutInflater inflater;
     private VaiueCallback callback;
     private String title;
 
     public PaymentPopView(Context context, String[] data, String title) {
-        super(context);
-        this.context = context;
+        super(context,cn.pedant.SweetAlert.R.style.alert_dialog);
+        this.mContext = context;
         inflater = LayoutInflater.from(context);
         this.data = Arrays.asList(data);
         this.title = title;
@@ -45,7 +47,7 @@ public class PaymentPopView extends Dialog {
         setContentView(R.layout.paymentpopview);
         tv_title = (TextView) findViewById(R.id.tv_title);
         lv_list = (ListView) findViewById(R.id.lv_list);
-        CurrentAdapter adapter = new CurrentAdapter();
+        final CurrentAdapter adapter = new CurrentAdapter();
         lv_list.setAdapter(adapter);
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -67,6 +69,8 @@ public class PaymentPopView extends Dialog {
 
     class CurrentAdapter extends BaseAdapter {
 
+        TextView textView;
+
         @Override
         public int getCount() {
             return null == data ? 0 : data.size();
@@ -84,10 +88,9 @@ public class PaymentPopView extends Dialog {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (null == convertView) {
-                convertView = inflater.inflate(R.layout.item_dialog_payment, null);
-            }
-            ((TextView) convertView.findViewById(R.id.tv_value)).setText(data.get(position));
+            convertView = inflater.inflate(R.layout.item_dialog_payment, null);
+            textView = ((TextView) convertView.findViewById(R.id.tv_value));
+            textView.setText(data.get(position));
             return convertView;
         }
     }

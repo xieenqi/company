@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.contact.presenter.impl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,18 +22,15 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.bean.DBUser;
-import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.user.api.UserService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.apache.http.Header;
@@ -43,9 +41,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import static com.loyo.oa.v2.common.Global.Toast;
 
@@ -79,19 +74,13 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
         map.put("weixinId", weixinId);
         map.put("avatar", path);
         LogUtil.d("修改个人信息发送:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(id, map, new RCallback<User>() {
-            @Override
-            public void success(final User user, final Response response) {
-                HttpErrorCheck.checkResponse("修改个人信息", response);
-                crolView.updateProfileEmbl();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        UserService.updateProfile(id, map)
+                .subscribe(new DefaultLoyoSubscriber<User>() {
+                    @Override
+                    public void onNext(User user) {
+                        crolView.updateProfileEmbl();
+                    }
+                });
     }
 
     /**
@@ -139,7 +128,7 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
     public void pickDate(final Handler mHandler) {
         Calendar cal = Calendar.getInstance();
         Locale.setDefault(Locale.CHINA);//设置语言
-        final DatePickerDialog mDialog = new DatePickerDialog(mContext, null,
+        final DatePickerDialog mDialog = new DatePickerDialog(mContext, AlertDialog.THEME_HOLO_LIGHT, null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 
         //手动设置按钮

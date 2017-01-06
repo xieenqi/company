@@ -69,6 +69,7 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
   int column;
   private boolean singleMode  = false;
   private boolean cropEnabled = false;
+  private boolean cameraCaptureEnabled = false;
   private View contentView;
   private RecyclerView mRecyclerView;
   private boolean isPushed;
@@ -82,6 +83,7 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
   private final static String EXTRA_ORIGIN = "origin";
   private final static String EXTRA_SINGLE = "single";
   private final static String EXTRA_CROP = "crop";
+  private final static String CAMERA_CAPTURE = "capture";
   private ListPopupWindow listPopupWindow;
   private RequestManager mGlideRequestManager;
 
@@ -96,7 +98,24 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
     args.putBoolean(EXTRA_CROP, cropEnabled);
     args.putInt(EXTRA_COLUMN, column);
     args.putInt(EXTRA_COUNT, maxCount);
+    args.putBoolean(CAMERA_CAPTURE, false);
     args.putStringArrayList(EXTRA_ORIGIN, originalPhotos);
+    PhotoPickerFragment fragment = new PhotoPickerFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
+  public static PhotoPickerFragment newInstance(boolean cameraCapture) {
+    Bundle args = new Bundle();
+    args.putBoolean(EXTRA_CAMERA, true);
+    args.putBoolean(EXTRA_GIF, false);
+    args.putBoolean(EXTRA_PREVIEW_ENABLED, false);
+    args.putBoolean(EXTRA_SINGLE, true);
+    args.putBoolean(EXTRA_CROP, false);
+    args.putInt(EXTRA_COLUMN, 3);
+    args.putInt(EXTRA_COUNT, 1);
+    args.putBoolean(CAMERA_CAPTURE, true);
+    args.putStringArrayList(EXTRA_ORIGIN, null);
     PhotoPickerFragment fragment = new PhotoPickerFragment();
     fragment.setArguments(args);
     return fragment;
@@ -117,6 +136,7 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
     boolean previewEnable = getArguments().getBoolean(EXTRA_PREVIEW_ENABLED, true);
     singleMode = getArguments().getBoolean(EXTRA_SINGLE, false);
     cropEnabled = getArguments().getBoolean(EXTRA_CROP, false);
+    cameraCaptureEnabled = getArguments().getBoolean(CAMERA_CAPTURE, false);
 
     photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, directories, originalPhotos, column);
     photoGridAdapter.setShowCamera(showCamera);
@@ -219,6 +239,13 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
     });
 
     contentView = rootView;
+
+    if (cameraCaptureEnabled) {
+      if (PermissionsUtils.checkCameraPermission(PhotoPickerFragment.this) &&
+      PermissionsUtils.checkWriteStoragePermission(PhotoPickerFragment.this)) {
+        openCamera();
+      }
+    }
 
     return rootView;
   }

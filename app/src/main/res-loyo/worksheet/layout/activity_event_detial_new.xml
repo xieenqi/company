@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_title" />
+
+    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:isFirstVisible="true">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/layout_bottom"
+            android:layout_below="@+id/layout_head"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/common_activity_con_bg"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/common_layout_padding"
+                    android:paddingLeft="@dimen/common_layout_padding"
+                    android:paddingTop="@dimen/common_layout_padding">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_content"
+                            style="@style/common_text_line_main"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="270dp"
+                            android:singleLine="false" />
+
+                        <TextView
+                            android:id="@+id/tv_status"
+                            android:layout_gravity="top"
+                            style="@style/common_text_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_startTime"
+                            style="@style/common_text_line_third"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent" />
+
+                        <TextView
+                            android:id="@+id/tv_endTime"
+                            style="@style/common_text_line_third"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent" />
+
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <include layout="@layout/common_include_line_in_space" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/common_layout_padding">
+
+                    <TextView
+                        android:id="@+id/tv_responsor"
+                        style="@style/common_text_line_second"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left|center_vertical"
+                        android:text="负责人：" />
+
+                    <TextView
+                        android:id="@+id/tv_day"
+                        style="@style/common_text_line_second"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:gravity="left|center_vertical"
+                        android:text="限时：" />
+
+                    <TextView
+                        android:id="@+id/tv_type"
+                        style="@style/common_text_line_second"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:gravity="left|center_vertical"
+                        android:text="触发方式：" />
+
+                    <TextView
+                        android:id="@+id/tv_worksheet"
+                        style="@style/common_text_line_second"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:gravity="left|center_vertical"
+                        android:text="所属工单：" />
+                </LinearLayout>
+
+                <include layout="@layout/common_include_line_in_space" />
+
+                <LinearLayout
+                    android:id="@+id/ll_handleInfoList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btn_complete1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/common_layout_padding"
+                        android:background="@drawable/common_lable_blue"
+                        android:textColor="@color/white"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btn_complete2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/common_layout_padding"
+                        android:background="@drawable/common_lable_blue"
+                        android:textColor="@color/white"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </com.library.module.widget.loading.LoadingLayout>
+
+</LinearLayout>

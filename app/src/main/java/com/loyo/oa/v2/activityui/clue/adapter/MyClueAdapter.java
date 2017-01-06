@@ -74,7 +74,6 @@ public class MyClueAdapter extends BaseAdapter {
     }
 
     class Holder {
-
         TextView tv_company_name; //公司名
         TextView tv_time;         //跟进时间
         TextView tv_name;         //客户名
@@ -90,5 +89,4 @@ public class MyClueAdapter extends BaseAdapter {
             }
         }
     }
-
 }

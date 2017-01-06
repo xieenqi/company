@@ -101,7 +101,7 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
 //    public void getStageData() {
 //        showLoading("");
 //        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).
-//                getFollupFilters(new RCallback<ArrayList<FollowFilter>>() {
+//                getFollowUpFilters(new RCallback<ArrayList<FollowFilter>>() {
 //                    @Override
 //                    public void success(ArrayList<FollowFilter> tags, Response response) {
 //                        HttpErrorCheck.checkResponse("跟进 赛选 ：", response);

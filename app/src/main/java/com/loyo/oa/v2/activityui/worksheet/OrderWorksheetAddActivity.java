@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -162,7 +164,7 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
                 }
 
                 mOrderWorksheet.title = et_title.getText().toString();
-                showLoading("");
+                showCommitLoading();
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
 
@@ -253,7 +255,7 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelLoading();
+        cancelLoading2();
         int count = controller.failedTaskCount();
         if (count > 0) {
             Toast(count + "个附件上传失败，请重试或者删除");
@@ -298,22 +300,24 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
     }
 
     @Override
-    public void showStatusProgress() {
-
+    public LoyoProgressHUD showStatusProgress() {
+        showCommitLoading();
+        return hud;
     }
 
     @Override
-    public void showProgress(String message) {
-        showLoading(message);
+    public LoyoProgressHUD showProgress(String message) {
+        showLoading2(message);
+        return hud;
     }
 
     @Override
     public void hideProgress() {
-        cancelLoading();
+        cancelLoading2();
     }
 
     @Override
     public void showMsg(String message) {
-        Toast(message);
+        LoyoToast.info(this, message);
     }
 }

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -18,24 +19,15 @@ import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.network.model.BaseResponse;
-import com.loyo.oa.v2.point.IClue;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.voip.VoIPCallActivity;
 
 import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import static com.loyo.oa.v2.common.Global.Toast;
 
@@ -64,17 +56,13 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void toPublic(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).toPublic(id, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer newCustomer, final Response response) {
-                crolView.toPublicEmbl();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        CustomerService.dumpCustomer(id)
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                    @Override
+                    public void onNext(Customer customer) {
+                        crolView.toPublicEmbl();
+                    }
+                });
     }
 
     /**
@@ -82,18 +70,19 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void delete(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).delete(id, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer newCustomer, final Response response) {
-                crolView.deleteEmbl();
-            }
+        CustomerService.deleteCustomer(id)
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        crolView.showMsg("删除客户失败");
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                crolView.showMsg("删除客户失败");
-            }
-        });
+                    @Override
+                    public void onNext(Customer customer) {
+                        crolView.deleteEmbl();
+                    }
+                });
     }
 
     /**
@@ -101,18 +90,11 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void getMembersRoot() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getMembersRoot(new RCallback<MembersRoot>() {
+        CustomerService.getMembersRoot()
+                .subscribe(new DefaultLoyoSubscriber<MembersRoot>(crolView.getLoadigLayout()) {
                     @Override
-                    public void success(MembersRoot membersRoot, Response response) {
-                        HttpErrorCheck.checkResponse("参与人权限", response);
+                    public void onNext(MembersRoot membersRoot) {
                         crolView.getMembersRootEmbl(membersRoot);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error,crolView.getLoadigLayout());
                     }
                 });
     }
@@ -122,24 +104,19 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void getData(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<BaseResponse<Customer>>() {
-            @Override
-            public void success(final BaseResponse<Customer> customerResp, final Response response) {
-                HttpErrorCheck.checkResponse("客户详情-->", response);
-                if (customerResp == null || customerResp.data == null) {
-//                    crolView.showMsg("获取数据失败");
-                    crolView.getDataErrorEmle();
-                    return;
-                }
-                crolView.getDataSuccessEmbl(customerResp.data);
-            }
+        CustomerService.getCustomerDetailById(id)
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        crolView.getDataErrorEmle();
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                crolView.getDataErrorEmle();
-            }
-        });
+                    @Override
+                    public void onNext(Customer customer) {
+                        crolView.getDataSuccessEmbl(customer);
+                    }
+                });
     }
 
     /**
@@ -206,20 +183,6 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
                 callPhonePopView.dismiss();
             }
         });
-//         /*商务电话-直拨*/
-//        callPhonePopView.directPhone(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Bundle mBundle = new Bundle();
-//                mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone);
-//                mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name);
-//                mBundle.putString(VoIPCallActivity.CALLEE_USER_KEY, contactId);
-//                mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, customerId);
-//                mBundle.putInt(VoIPCallActivity.CALLEE_USER_TYPE, callType);
-//                MainApp.getMainApp().startActivity(mActivity, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-//                callPhonePopView.dismiss();
-//            }
-//        });
         /*普通电话*/
         callPhonePopView.commonlyPhone(new View.OnClickListener() {
             @Override
@@ -280,45 +243,35 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
         map.put("contactId", contactId);
         map.put("type", callType);
         map.put("mobile", phone);
-        LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getCallReturnInfo(map,
-                new RCallback<CallBackCallid>() {
-                    @Override
-                    public void success(final CallBackCallid callBackCallid, final Response response) {
-                        HttpErrorCheck.checkResponse("线索请求回拨", response);
-                        try {
-                            switch (callBackCallid.errcode) {
-                                case 0:
-                                    Bundle mBundle = new Bundle();
-                                    mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
-                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
-                                    MainApp.getMainApp().startActivity((Activity) mContext, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-                                    break;
+        ClueService.getCallReturnInfo(map).subscribe(new DefaultLoyoSubscriber<CallBackCallid>(crolView.getHUD()) {
+            @Override
+            public void onNext(CallBackCallid callBackCallid) {
+                try {
+                    switch (callBackCallid.errcode) {
+                        case 0:
+                            Bundle mBundle = new Bundle();
+                            mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
+                            mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
+                            MainApp.getMainApp().startActivity((Activity) mContext, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                            break;
 
-                                case 50000:
-                                    Toast("主叫与被叫号码不能相同!");
-                                    break;
+                        case 50000:
+                            Toast("主叫与被叫号码不能相同!");
+                            break;
 
-                                case 50001:
-                                    Toast("余额不足!");
-                                    break;
+                        case 50001:
+                            Toast("余额不足!");
+                            break;
 
-                                case 50002:
-                                    Toast("号码格式错误!");
-                                    break;
-                            }
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                            Toast(e.getMessage());
-//                            finish();
-                        }
+                        case 50002:
+                            Toast("号码格式错误!");
+                            break;
                     }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    Toast(e.getMessage());
+                }
+            }
+        });
     }
 }

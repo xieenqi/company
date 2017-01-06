@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -25,30 +26,23 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.IWorksheet;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.worksheet.api.WorksheetService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【提交完成/打回重做】工单
@@ -168,17 +162,11 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
      */
     void postAttaData() {
         buildAttachment();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
-                .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
+        AttachmentService.setAttachementData(attachment)
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true/*dismissOnlyWhenError*/) {
                     @Override
-                    public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        //HttpErrorCheck.checkCommitSus("上传附件信息", response);
+                    public void onNext(ArrayList<AttachmentForNew> news) {
                         commitDynamic();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
     }
@@ -187,41 +175,35 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
      * 提交事件处理数据
      */
     void commitDynamic() {
-
         HashMap<String, Object> map = new HashMap<>();
         map.put("type", type);
         map.put("content", view_edit.getText().toString());
         map.put("uuid", uuid);
         map.put("address", httpLoc);
         LogUtil.dee("提交事件信息：" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).setEventSubmit(id, map, new RCallback<Object>() {
-            @Override
-            public void success(final Object o, final Response response) {
-                HttpErrorCheck.checkCommitSus("提交事情处理信息", response);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        cancelStatusLoading();
-                        if (type == 1) {
-                            AppBus.getInstance().post(new WorksheetDetail());
-                            WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
-                            event.bundle = new Bundle();
-                            event.bundle.putString(ExtraAndResult.EXTRA_ID, id);
-                            AppBus.getInstance().post(event);
-                        } else {
-                            AppBus.getInstance().post(new WorksheetInfo());
-                        }
-                        app.finishActivity(WorksheetSubmitActivity.this, MainApp.ENTER_TYPE_LEFT, 0, new Intent());
-                    }
-                }, 1000);
-            }
+        WorksheetService.setEventSubmit(id, map)
+                .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+                    @Override
+                    public void onNext(Object o) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (type == 1) {
+                                    AppBus.getInstance().post(new WorksheetDetail());
+                                    WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
+                                    event.bundle = new Bundle();
+                                    event.bundle.putString(ExtraAndResult.EXTRA_ID, id);
+                                    AppBus.getInstance().post(event);
+                                } else {
+                                    AppBus.getInstance().post(new WorksheetInfo());
+                                }
+                                app.finishActivity(WorksheetSubmitActivity.this, MainApp.ENTER_TYPE_LEFT, 0, new Intent());
+                            }
+                        },1000);
+
+                    }
+                });
     }
 
 
@@ -239,7 +221,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                     }
                 }
 
-                showStatusLoading(false);
+                showCommitLoading();
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
 
@@ -375,8 +357,8 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
         int count = controller.failedTaskCount();
         if (count > 0) {
-            Toast(count + "个附件上传失败，请重试或者删除");
-            cancelStatusLoading();
+            cancelCommitLoading();
+            LoyoToast.info(this, count + "个附件上传失败，请重试或者删除");
             return;
         }
         if (taskList.size() > 0) {

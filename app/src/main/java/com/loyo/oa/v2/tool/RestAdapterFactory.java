@@ -73,15 +73,13 @@ public class RestAdapterFactory {
             RequestInterceptor requestInterceptor = new RequestInterceptor() {
                 @Override
                 public void intercept(RequestFacade request) {
-
                     request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
                     request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
                     request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
                     request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
                     request.addHeader("LoyoVersionName", Global.getVersionName());
-//                    request.addHeader("LoyoVersionCode", "2016120501");//此处不能写死 兼容版本 我们传本号大于传给服务端的就ok
+                    //此处不能写死 兼容版本 我们传本号大于服务端的就ok
                     request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-
                 }
             };
             adapter = new RestAdapter.Builder()

@@ -8,14 +8,12 @@ import android.text.TextUtils;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
-import com.loyo.oa.common.utils.*;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 
-import java.util.Date;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit.http.HEAD;
 
 /**
  * Created by pj on 16/1/29.
@@ -63,7 +61,7 @@ public class LocationUtilGD {
             locationClient.startAssistantLocation();
         } else {
 //            Global.Toast("你没有配置定位权限");
-            DialogHelp.cancelLoading();
+            //DialogHelp.cancelLoading();
         }
     }
 
