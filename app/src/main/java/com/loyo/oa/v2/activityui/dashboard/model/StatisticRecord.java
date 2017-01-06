@@ -4,6 +4,7 @@ import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -27,8 +28,8 @@ public class StatisticRecord {
     public Integer addCount;
 
     //订单数量和金额
-    public String orderNum;
-    public String targetNum;
+    public Double orderNum;
+    public Double targetNum;
     public String finish_rate;
 
 
@@ -63,8 +64,8 @@ public class StatisticRecord {
             // 订单数量和金额
             return new ArrayList<String>() {{
                 add(name);
-                add(DashboardType.ORDER_MONEY == type ? "￥" + fomart(targetNum) : targetNum);
-                add(DashboardType.ORDER_MONEY == type ? "￥" + fomart(orderNum) : orderNum);
+                add(format(targetNum,type));
+                add(format(orderNum,type));
                 add(finish_rate);
             }};
         } else {
@@ -72,14 +73,27 @@ public class StatisticRecord {
         }
     }
 
-    private String fomart(String numbre) {
-        double ll = Double.valueOf(numbre);
-        Double ll2;
-        if (ll > 1000 * 10000) {
-            ll2 = ll / 10000;
-            return Utils.setValueDouble(ll2) + "万";
+    /**
+     * 数据超过千万时，4舍5入的方式处理略写成万为单位的数值（保留2位小数）：
+     * 数据超过亿时，4舍5入的方式处理略写成亿为单位的数值（保留2位小数）
+     */
+    private String format(Double number,DashboardType type) {
+        if(null==number){
+            return "--";
         }
-        return numbre;
+        String result;
+        DecimalFormat df=new DecimalFormat("#.##");
+        if(number>100000000){
+            result=df.format(number/100000000)+"亿";
+        }else if(number>10000000){
+            result=df.format(number/10000)+"万";
+        }else{
+            result=df.format(number);
+        }
+        if(DashboardType.ORDER_MONEY==type){
+            result= "¥"+result;
+        }
+        return result;
     }
 
 }
