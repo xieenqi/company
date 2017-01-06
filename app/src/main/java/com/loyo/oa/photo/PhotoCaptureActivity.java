@@ -22,6 +22,7 @@ public class PhotoCaptureActivity extends AppCompatActivity {
     private ImageCaptureManager captureManager;
 
     private static int PERMISSIN_CODE = 100;
+    private static int PERMISSIN_CODE2 = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +31,17 @@ public class PhotoCaptureActivity extends AppCompatActivity {
         setContentView(R.layout.__picker_activity_photo_capture);
         if (PermissionTool.requestPermission(this,
                 new String[]{
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.CAMERA }
                 , "需要使用储存权限、相机权限", PERMISSIN_CODE))
         {
-            openCamera();
+            if (PermissionTool.requestPermission(this,
+                    new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,}
+                    , "需要相册读写权限", PERMISSIN_CODE2))
+            {
+                openCamera();
+            }
         }
 
     }
@@ -75,13 +81,25 @@ public class PhotoCaptureActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+    public void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         PermissionTool.requestPermissionsResult(permissions, grantResults,
                 new PermissionTool.PermissionsResultCallBack() {
             @Override
             public void success() {
-                openCamera();
+                if (requestCode == PERMISSIN_CODE2) {
+                    openCamera();
+                }
+                else {
+                    if (PermissionTool.requestPermission(PhotoCaptureActivity.this,
+                            new String[]{
+                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,}
+                            , "需要相册读写权限", PERMISSIN_CODE2))
+                    {
+                        openCamera();
+                    }
+                }
             }
 
             @Override

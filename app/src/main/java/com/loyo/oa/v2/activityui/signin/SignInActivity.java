@@ -20,6 +20,7 @@ import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
+import com.loyo.oa.photo.PhotoCapture;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
@@ -482,7 +483,7 @@ public class SignInActivity extends BaseActivity
                 break;
 
             /*相册选择 回调*/
-            case PhotoPicker.REQUEST_CODE:
+            case PhotoCapture.REQUEST_CODE:
                 /*相册选择 回调*/
                 if (data != null) {
                     List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
@@ -670,10 +671,13 @@ public class SignInActivity extends BaseActivity
 
     @Override
     public void onAddEvent(UploadController controller) {
-        PhotoPicker.builder()
-                .setPhotoCount(9-controller.count())
-                .setShowCamera(true)
-                .setPreviewEnabled(false)
+//        PhotoPicker.builder()
+//                .setPhotoCount(9-controller.count())
+//                .setShowCamera(true)
+//                .setPreviewEnabled(false)
+//                .start(this);
+
+        PhotoCapture.builder()
                 .start(this);
     }
 

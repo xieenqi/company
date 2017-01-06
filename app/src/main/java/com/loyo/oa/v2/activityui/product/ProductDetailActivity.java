@@ -81,7 +81,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         });
 
         ll_back.setOnClickListener(this);
-        tvTitle.setText("产品详细");
+        tvTitle.setText("产品详情");
         layout_stock.setVisibility(isStockEnable ? View.VISIBLE : View.GONE);
         getProductDetails();
     }
