@@ -18,7 +18,11 @@
             android:layout_height="wrap_content"
             android:text="成都东软收购机会"
             android:textColor="@color/text33"
-            android:textSize="@dimen/text_sp14" />
+            android:textSize="@dimen/text_sp14"
+            android:maxEms="15"
+            android:ellipsize="end"
+            android:singleLine="true"
+            />
 
         <TextView
             android:id="@+id/sale_teamlist_state"

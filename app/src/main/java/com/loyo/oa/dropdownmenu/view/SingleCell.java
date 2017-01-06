@@ -1,5 +1,6 @@
 package com.loyo.oa.dropdownmenu.view;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,10 +54,13 @@ public class SingleCell extends RecyclerView.ViewHolder {
         return new SingleCell(itemView);
     }
 
+    /*线条颜色字体颜色设置*/
     public void setSelected(boolean selected) {
         if (selected) {
-            line.setBackgroundColor(0xFF008DF2);
-            valueView.setTextColor(0xFF008DF2);
+            line.setBackgroundColor(Color.parseColor("#2C9DFC"));
+            valueView.setTextColor(Color.parseColor("#2C9DFC"));
+            //line.setBackgroundColor(0xFF008DF2);
+            //valueView.setTextColor(0xFF008DF2);
         }
         else {
             line.setBackgroundColor(0xffe6e6e6);

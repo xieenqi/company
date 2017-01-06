@@ -41,6 +41,7 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ImageInfo;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -329,12 +330,14 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
 
     @Override
     public LoyoProgressHUD showStatusProgress() {
+        LogUtil.dee("LoyoProgressHUD:");
         showCommitLoading();
         return hud;
     }
 
     @Override
     public LoyoProgressHUD showProgress(String msg) {
+        LogUtil.dee("showProgress:");
         showLoading2(msg);
         return hud;
     }
@@ -346,6 +349,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
 
     @Override
     public void showMsg(String message) {
+        cancelCommitLoading();
         Toast(message);
     }
 
@@ -365,10 +369,10 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
      */
     @Override
     public void requestAddWfinVeriSuccess(ArrayList<HashMap<String, Object>> workflowValues) {
+        LogUtil.dee("requestAddWfinVeriSuccess");
         mPresenter.requestAddWfin(tv_title.getText().toString(), deptId, workflowValues,
                 mTemplateId, projectId, uuid, edt_memo.getText().toString().trim(),
                 controller.count());
-
     }
 
     /**
