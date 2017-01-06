@@ -7,6 +7,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
 import android.text.Editable;
+import android.util.DisplayMetrics;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,6 +66,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -267,17 +271,17 @@ public class MainApp extends Application {
         animationDrawable.selectDrawable(0);
     }
 
-//    /**
-//     * 设置APP语言，地区等
-//     * */
-//    public void switchLanguage() {
-//        Locale.setDefault(Locale.CHINA);
-//        Resources resources = getResources();// 获得res资源对象
-//        Configuration config = resources.getConfiguration();// 获得设置对象
-//        DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
-//        config.locale = Locale.SIMPLIFIED_CHINESE; // 简体中文
-//        resources.updateConfiguration(config, dm);
-//    }
+    /**
+     * 设置APP语言，地区等
+     * */
+    public void switchLanguage() {
+        Locale.setDefault(Locale.CHINA);
+        Resources resources = getResources();// 获得res资源对象
+        Configuration config = resources.getConfiguration();// 获得设置对象
+        DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
+        config.locale = Locale.SIMPLIFIED_CHINESE; // 简体中文
+        resources.updateConfiguration(config, dm);
+    }
 
     void init() {
 
@@ -295,7 +299,7 @@ public class MainApp extends Application {
         ServerAPI.init();
         initImageLoader(getApplicationContext());
         init_DisplayImageOptions();
-
+        switchLanguage();
 
         cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 

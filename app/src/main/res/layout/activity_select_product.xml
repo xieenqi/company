@@ -6,6 +6,10 @@
     android:orientation="vertical">
 
     <include layout="@layout/include_title" />
+<com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorView
+    android:id="@+id/classify"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ll_loading"
@@ -47,4 +51,5 @@
 
     </com.library.module.widget.loading.LoadingLayout>
 
+</com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorView>
 </LinearLayout>

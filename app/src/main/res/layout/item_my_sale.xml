@@ -26,6 +26,9 @@
                 android:layout_weight="1"
                 android:textColor="@color/text33"
                 android:textSize="@dimen/text_sp14"
+                android:maxEms="15"
+                android:ellipsize="end"
+                android:singleLine="true"
                 />
 
             <TextView

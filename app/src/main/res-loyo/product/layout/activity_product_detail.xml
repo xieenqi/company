@@ -163,29 +163,6 @@
                 </LinearLayout>
 
 
-                <LinearLayout
-                    android:id="@+id/product_detail_more_ll_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/product_common_line_height"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="@dimen/order_common_padding_right">
-
-                    <TextView
-                        android:id="@+id/product_detail_more_tv_3"
-                        style="@style/product_line_text_main"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="单位" />
-
-                    <TextView
-                        android:id="@+id/product_detail_more_tv_4"
-                        style="@style/product_line_text_second"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical" />
-                </LinearLayout>
 
                 <!--自定义字段，可能有很多，所以，做一个linearlayout-->
                 <LinearLayout

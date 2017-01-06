@@ -9,26 +9,44 @@ import java.text.DecimalFormat;
 public class MoneyStatistic {
 
     private static DecimalFormat numberFormatter = new DecimalFormat("0.00");
+    private final static long TEN_MILLION     = 10000000l;  // 亿
+    private final static long HUNDRED_MILLION = 100000000l; // 千万
+    private final static long TEN_THOUSAND    = 10000l;     // 万
 
     public long totalAmount;
     public long totalNumber;
     public long targetAmount;
     public long targetNumber;
 
+    private String getFormatString(long number) {
+
+        if (number > HUNDRED_MILLION) {
+            double num = number*1.0 /HUNDRED_MILLION;
+            return String.format("%.2f", num) + "亿";
+        }
+        else if (number > TEN_MILLION) {
+            double num = number*1.0 /TEN_THOUSAND;
+            return String.format("%.2f", num) + "万";
+        }
+        else {
+            return String.valueOf(number);
+        }
+    }
+
     public String getTotalAmount() {
-        return "¥ " + String.valueOf(totalAmount);
+        return "¥ " + getFormatString(totalAmount);
     }
 
     public String getTotalNumber() {
-        return String.valueOf(totalNumber);
+        return getFormatString(totalNumber);
     }
 
     public String getTargetAmount() {
-        return "¥ " + String.valueOf(targetAmount);
+        return "¥ " + getFormatString(targetAmount);
     }
 
     public String getTargetNumber() {
-        return String.valueOf(targetNumber);
+        return getFormatString(targetNumber);
     }
 
     public int getNumberPercent(){
@@ -79,5 +97,12 @@ public class MoneyStatistic {
             mvMonShow = numberFormatter.format(percent * 100)+"%";
         }
         return mvMonShow;
+    }
+
+    public void test() {
+        totalAmount = 12345678;
+        totalNumber = 123456789;
+        targetAmount = 12345678;
+        targetNumber = 123456789;
     }
 }

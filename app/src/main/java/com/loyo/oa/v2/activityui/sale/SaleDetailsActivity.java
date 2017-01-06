@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
@@ -37,7 +36,6 @@ import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -523,5 +521,10 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
     @Override
     public LoadingLayout getLoadingUI() {
         return ll_loading;
+    }
+
+    @Override
+    public LoyoProgressHUD getHud() {
+        return hud;
     }
 }
