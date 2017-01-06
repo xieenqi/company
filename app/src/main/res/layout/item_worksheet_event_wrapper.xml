@@ -95,7 +95,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp13" />
+                        android:textSize="@dimen/text_sp13" />-
 
                     <TextView
                         android:id="@+id/tv_endtime_tag"
@@ -104,7 +104,11 @@
                         android:gravity="center_vertical"
                         android:text=" (超时)"
                         android:textColor="@color/red1"
-                        android:textSize="@dimen/text_sp13" />
+                        android:textSize="@dimen/text_sp13"
+                        android:maxEms="15"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        />
                 </LinearLayout>
 
             </LinearLayout>
