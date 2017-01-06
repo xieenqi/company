@@ -47,7 +47,7 @@ import java.util.ArrayList;
  * 作者 : ykb
  * 时间 : 15/9/8.
  */
-@EActivity(R.layout.activity_project_info)
+@EActivity(R.layout.activity_project_info_new)
 public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadSuccessCallback {
     private String[] TITLES = {"任务", "报告", "审批", "文件", "讨论"};
 

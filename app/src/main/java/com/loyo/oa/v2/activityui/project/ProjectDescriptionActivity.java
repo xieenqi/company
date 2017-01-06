@@ -26,7 +26,7 @@ import java.util.Date;
  * 作者 : ykb
  * 时间 : 15/9/9.
  */
-@EActivity(R.layout.activity_project_description)
+@EActivity(R.layout.activity_project_description_new)
 public class ProjectDescriptionActivity extends BaseActivity {
 
     @ViewById
