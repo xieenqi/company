@@ -691,9 +691,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             @Override
                             public void run() {
                                 //没有附件
-                                if (customer == null || customer.id == null) {
-                                    return;
-                                }
+//                                if (customer == null || customer.id == null) {
+//                                    return;
+//                                }
                                 customerSendSucess(customer);
                             }
                         },1000);

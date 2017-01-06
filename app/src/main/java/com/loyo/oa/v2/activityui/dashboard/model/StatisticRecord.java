@@ -1,8 +1,6 @@
 package com.loyo.oa.v2.activityui.dashboard.model;
 
 import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.Utils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -13,6 +11,11 @@ import java.util.ArrayList;
  */
 
 public class StatisticRecord {
+
+    private final static long TEN_MILLION     = 10000000L;  // 千万
+    private final static long HUNDRED_MILLION = 100000000L; // 亿
+    private final static long TEN_THOUSAND    = 10000L;     // 万
+
     //公共字段
     public Integer total;
     public Integer totalCustomer;
@@ -33,7 +36,7 @@ public class StatisticRecord {
     public String finish_rate;
 
 
-    public ArrayList<String> getDsiplayColumnForType(final DashboardType type) {
+    public ArrayList<String> getDisplayColumnForType(final DashboardType type) {
         if (DashboardType.CUS_FOLLOWUP == type || DashboardType.SALE_FOLLOWUP == type || DashboardType.CUS_SIGNIN == type) {
             //客户/线索 跟进/客户拜访
             return new ArrayList<String>() {{
@@ -83,10 +86,10 @@ public class StatisticRecord {
         }
         String result;
         DecimalFormat df=new DecimalFormat("#.##");
-        if(number>100000000){
-            result=df.format(number/100000000)+"亿";
-        }else if(number>10000000){
-            result=df.format(number/10000)+"万";
+        if(number>HUNDRED_MILLION){
+            result=df.format(number/HUNDRED_MILLION)+"亿";
+        }else if(number>TEN_MILLION){
+            result=df.format(number/TEN_THOUSAND)+"万";
         }else{
             result=df.format(number);
         }

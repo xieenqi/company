@@ -153,10 +153,10 @@ public class DashboardDetailAdapter extends BaseAdapter {
         private void bindData(int position) {
             ArrayList<String> displayColumns = null;
             if (0 == position) {
-                displayColumns = records.get(0).getDsiplayColumnForType(type);
+                displayColumns = records.get(0).getDisplayColumnForType(type);
             }
             else {
-                displayColumns = records.get(position-1).getDsiplayColumnForType(type);
+                displayColumns = records.get(position-1).getDisplayColumnForType(type);
             }
 
             for (int i = 0; i < 4 && i < displayColumns.size(); i++) {
