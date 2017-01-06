@@ -45,7 +45,6 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:maxLines="1"
-                android:paddingRight="15dp"
                 android:text="12"
                 android:textSize="15sp" />
         </FrameLayout>
@@ -62,7 +61,6 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:maxLines="1"
-                android:paddingRight="15dp"
                 android:text="32"
                 android:textSize="15sp" />
         </FrameLayout>
