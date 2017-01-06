@@ -122,7 +122,7 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter {
 //                    }
 //                });
 
-        WfinstanceService.getSubmitWfInstancesList(map).subscribe(new DefaultLoyoSubscriber<MySubmitWflnstance>() {
+        WfinstanceService.getSubmitWfInstancesList(map).subscribe(new DefaultLoyoSubscriber<MySubmitWflnstance>(crolView.getLoading()) {
             @Override
             public void onError(Throwable e) {
                /* 重写父类方法，不调用super, 当有数据时，使用Toast，无数据时才使用整屏错误页面 */
