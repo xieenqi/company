@@ -274,10 +274,12 @@ public class SignInActivity extends BaseActivity
                 if (controller.count() >= 9) {
                     Toast("最多只能加9张图片");
                 } else {
-                    PhotoPicker.builder()
-                            .setPhotoCount(9-controller.count())
-                            .setShowCamera(true)
-                            .setPreviewEnabled(false)
+//                    PhotoPicker.builder()
+//                            .setPhotoCount(9-controller.count())
+//                            .setShowCamera(true)
+//                            .setPreviewEnabled(false)
+//                            .start(SignInActivity.this);
+                    PhotoCapture.builder()
                             .start(SignInActivity.this);
                 }
             }
