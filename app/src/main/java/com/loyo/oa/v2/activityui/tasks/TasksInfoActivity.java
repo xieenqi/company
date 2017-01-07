@@ -68,7 +68,7 @@ import java.util.List;
  * 【任务详情】
  * 仅显示信息或提交，修改操作在TaskEditActivity
  */
-@EActivity(R.layout.activity_tasks_info)
+@EActivity(R.layout.activity_tasks_info_new)
 public class TasksInfoActivity extends BaseActivity {
 
     public static final int REQUEST_SCORE = 200;
@@ -101,7 +101,7 @@ public class TasksInfoActivity extends BaseActivity {
 
     View v_split;
     @ViewById
-    RelativeLayout layout_attachment;
+    LinearLayout layout_attachment;
 
     @ViewById
     TextView tv_repeatTask;
@@ -158,7 +158,7 @@ public class TasksInfoActivity extends BaseActivity {
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
     public LinearLayout item_tasks_sorece;
-    public ImageView iv_task_status;
+    public TextView tv_status;
     public RatingBar ratingBar_Task;
     public TextView tv_reviewtime;
     public TextView tv_task_content;
@@ -206,7 +206,7 @@ public class TasksInfoActivity extends BaseActivity {
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
         layout_test_Add_area = (LinearLayout) findViewById(R.id.layout_test_Add_area);
         layout_task_testfather = (LinearLayout) findViewById(R.id.layout_task_testfather);
-        iv_task_status = (ImageView) findViewById(R.id.iv_task_status);
+        tv_status= (TextView) findViewById(R.id.tv_status);
         v_split = findViewById(R.id.v_splite);
 
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -440,15 +440,18 @@ public class TasksInfoActivity extends BaseActivity {
 
         switch (mTask.getStatus()) {
             case 1:
-                iv_task_status.setImageResource(R.drawable.icon_project_processing);
+                tv_status.setBackgroundResource(R.drawable.common_lable_purple);
+                tv_status.setText("未完成");
                 break;
 
             case 2:
-                iv_task_status.setImageResource(R.drawable.img_task_wite);
+                tv_status.setBackgroundResource(R.drawable.common_lable_blue);
+                tv_status.setText("待审核");
                 break;
 
             case 3:
-                iv_task_status.setImageResource(R.drawable.img_task_status_finish);
+                tv_status.setBackgroundResource(R.drawable.common_lable_green);
+                tv_status.setText("已完成");
                 break;
 
             default:
@@ -587,7 +590,7 @@ public class TasksInfoActivity extends BaseActivity {
         for (int i = 0; i < mTask.getchecklists().size(); i++) {
 
             final TaskCheckPoint subTask = mTask.getchecklists().get(i);
-            final View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
+            final View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout_new, null, false);
             RelativeLayout childView = (RelativeLayout) view.findViewById(R.id.item_childtask_info);
 
             //子任务标题

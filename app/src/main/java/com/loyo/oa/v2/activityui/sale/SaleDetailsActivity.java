@@ -91,7 +91,7 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
 
     @Override
     public void setLayoutView() {
-        setContentView(R.layout.activity_saledetails);
+        setContentView(R.layout.activity_saledetails_new);
     }
 
     @Override

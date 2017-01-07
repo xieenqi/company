@@ -111,7 +111,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
 
     @Override
     public void setLayoutView() {
-        setContentView(R.layout.activity_clue_detail);
+        setContentView(R.layout.activity_clue_detail_new);
     }
 
     @Override

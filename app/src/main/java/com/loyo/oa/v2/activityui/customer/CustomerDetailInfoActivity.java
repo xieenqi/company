@@ -63,7 +63,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * 作者 : ykb
  * 时间 : 15/9/24.
  */
-@EActivity(R.layout.activity_customer_detail_info)
+@EActivity(R.layout.activity_customer_detail_info_new)
 public class CustomerDetailInfoActivity extends BaseActivity implements CustomerDetailinfoView {
 
     @ViewById
@@ -247,18 +247,18 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         mTagItems.clear();
         mTagItems.addAll(mCustomer.tags);
 
-        tv_visit_times.setText("(" + mCustomer.counter.getVisit() + ")");
-        tv_sale_count.setText("(" + mCustomer.counter.getDemand() + ")");
-        tv_order_count.setText("(" + mCustomer.counter.order + ")");
-        tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
-        tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
+        tv_visit_times.setText("（" + mCustomer.counter.getVisit() + "）");
+        tv_sale_count.setText("（" + mCustomer.counter.getDemand() + "）");
+        tv_order_count.setText("（" + mCustomer.counter.order + "）");
+        tv_task_count.setText("（" + mCustomer.counter.getTask() + "）");
+        tv_attachment_count.setText("（" + mCustomer.counter.getFile() + "）");
 
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
 
         //突出显示跟进动态
-        tv_sale_number.setText("(" + mCustomer.saleActivityNum + ")");
+        tv_sale_number.setText("（" + mCustomer.saleActivityNum + "）");
         if (null != mCustomer.saleActivityInfo) {
             tv_follow_content.setVisibility(View.VISIBLE);
             tv_follow_crecter_type.setVisibility(View.VISIBLE);
@@ -270,7 +270,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             tv_follow_content.setVisibility(View.GONE);
             tv_follow_crecter_type.setVisibility(View.GONE);
         }
-        tv_contact_Number.setText("(" + mCustomer.contacts.size() + ")");
+        tv_contact_Number.setText("（" + mCustomer.contacts.size() + "）");
 
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
