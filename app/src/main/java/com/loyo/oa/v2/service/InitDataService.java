@@ -62,8 +62,8 @@ public class InitDataService extends IntentService {
                             MainApp.user = user;
                             DBManager.Instance().putUser(json);//保存用户信息
                             sendDataChangeBroad(user);
-                            SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.UID,user.getId());
-                            SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.CID,user.companyId);
+                            SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.UID, user.name + "（" + user.getId() + "）");
+                            SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.CID, user.companyName + "（" + user.companyId + "）");
                         } catch (Exception E) {
                             E.printStackTrace();
                         }
