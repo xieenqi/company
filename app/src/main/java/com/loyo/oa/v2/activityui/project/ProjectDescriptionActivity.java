@@ -97,7 +97,7 @@ public class ProjectDescriptionActivity extends BaseActivity {
 
     @Click(R.id.img_title_left)
     void onClick(final View v) {
-        app.finishActivity(this, MainApp.ENTER_TYPE_TOP, 0, null);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
 }

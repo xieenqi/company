@@ -68,7 +68,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @ViewById
     TextView tv_project_extra;
     @ViewById
-    ImageView img_project_status;
+    TextView tv_status;
     @ViewById
     LoadingLayout ll_loading;
 
@@ -172,7 +172,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             case R.id.layout_project_des:
                 Bundle b = new Bundle();
                 b.putSerializable("project", project);
-                app.startActivity(this, ProjectDescriptionActivity_.class, MainApp.ENTER_TYPE_BUTTOM, false, b);
+                app.startActivity(this, ProjectDescriptionActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
             default:
                 break;
@@ -302,9 +302,12 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         tv_project_extra.setText("负责人：" + managersPersion(project.managers));
 
         if (project.status == 1) {
-            img_project_status.setImageResource(R.drawable.icon_project_run);
+            tv_status.setBackgroundResource(R.drawable.common_lable_purple);
+            tv_status.setText("进行中");
         } else {
-            img_project_status.setImageResource(R.drawable.icon_project_completed);
+            tv_status.setBackgroundResource(R.drawable.common_lable_green);
+            tv_status.setText("已结束");
+
         }
         //是否显示三个点的功能键
         if (!project.isCreator() && !project.isManager()) {
