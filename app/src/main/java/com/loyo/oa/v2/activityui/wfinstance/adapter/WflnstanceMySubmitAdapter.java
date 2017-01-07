@@ -86,10 +86,10 @@ public class WflnstanceMySubmitAdapter extends BaseExpandableListAdapter {
 
         /*列表状态条 颜色设置*/
         if (data != null && data.orderStr != null) {
-            if (data.orderStr.contains("待审批") || data.orderStr.contains("待我审批的")) {
+            if (data.orderStr.contains("待审批") || data.orderStr.contains("未到我审批的")) {
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.isteston));
                 img_status.setImageResource(R.drawable.bg_view_purple_circle);
-            } else if (data.orderStr.contains("审批中")||data.orderStr.contains("未到我审批的")) {
+            } else if (data.orderStr.contains("审批中")||data.orderStr.contains("待我审批的")) {
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.title_bg1));
                 img_status.setImageResource(R.drawable.bg_view_blue_circle);
             } else if (data.orderStr.contains("未通过") || data.orderStr.contains("我驳回的")) {
