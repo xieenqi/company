@@ -483,6 +483,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
             Intent intent = new Intent();
             intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
             intent.putExtra(ExtraAndResult.STR_SHOW_TYPE, ActionCode.SALE_DETAILS_RUSH);
+
             app.finishActivity(AddBuyProductActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
         }
     }
