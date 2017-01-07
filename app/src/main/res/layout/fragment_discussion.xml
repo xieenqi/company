@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/common_activity_bg">
 
         <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/ll_loading"
@@ -20,7 +20,7 @@
                 android:id="@+id/lv_discussion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/activity_bg"
+                android:background="@color/common_activity_bg"
                 android:divider="@null"
                 android:paddingBottom="@dimen/dimen_8"
                 android:scrollbars="none" />
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/activity_bg"
+            android:background="@color/common_activity_con_bg"
             android:minHeight="@dimen/dimen_40">
 
             <EditText
