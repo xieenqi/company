@@ -51,7 +51,7 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getStatusBackground() {
-            return R.drawable.retange_gray;
+            return R.drawable.common_lable_gray;
         }
     },
 
@@ -79,7 +79,7 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getStatusBackground() {
-            return R.drawable.retange_purple;
+            return R.drawable.common_lable_purple;
         }
     },
 
@@ -108,7 +108,7 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getStatusBackground() {
-            return R.drawable.retange_gray;
+            return R.drawable.common_lable_gray;
         }
     },
 
@@ -136,7 +136,7 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getStatusBackground() {
-            return R.drawable.retange_green;
+            return R.drawable.common_lable_green;
         }
     },
 
@@ -164,7 +164,7 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getStatusBackground() {
-            return R.drawable.retange_gray;
+            return R.drawable.common_lable_gray;
         }
     },
 
@@ -192,7 +192,7 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getStatusBackground() {
-            return R.drawable.retange_gray;
+            return R.drawable.common_lable_gray;
         }
 
     };

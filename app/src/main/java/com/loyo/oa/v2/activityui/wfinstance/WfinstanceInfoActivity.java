@@ -497,23 +497,23 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
             case WfInstance.STATUS_NEW:
                 tv_status.setText("待审批");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_blue);
+                tv_status.setBackgroundResource(R.drawable.common_lable_blue);
                 break;
             case WfInstance.STATUS_PROCESSING:
                 tv_status.setText("审批中");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_purple);
+                tv_status.setBackgroundResource(R.drawable.common_lable_purple);
                 break;
             case WfInstance.STATUS_ABORT:
                 tv_status.setText("未通过");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_red);
+                tv_status.setBackgroundResource(R.drawable.common_lable_red);
                 break;
             case WfInstance.STATUS_APPROVED:
                 tv_status.setText("已通过");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_green);
+                tv_status.setBackgroundResource(R.drawable.common_lable_green);
                 break;
             case WfInstance.STATUS_FINISHED:
                 tv_status.setText("已通过");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_green); //状态4，5都归类为 已通过
+                tv_status.setBackgroundResource(R.drawable.common_lable_green); //状态4，5都归类为 已通过
                 break;
             default:
                 break;
