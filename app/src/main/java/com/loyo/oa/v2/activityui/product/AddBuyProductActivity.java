@@ -32,6 +32,7 @@ import com.loyo.oa.v2.activityui.product.view.AddProductExtraData;
 import com.loyo.oa.v2.activityui.product.viewcontrol.AddBuProductView;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -84,6 +85,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     private String oldId = "";
     private int fromPage = 0;
     private boolean stockEnabled = true;
+    private boolean isHttpEdit = false;
     private ArrayList<SaleIntentionalProduct> productListData;
 
     @Override
@@ -128,7 +130,7 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         ivSubmit.setOnClickListener(this);
         tv_unit= (TextView) findViewById(R.id.add_buy_product_tv_21);
 
-        mPersenter = new AddBuProductPersenterImpl(this,ll_loading);
+        mPersenter = new AddBuProductPersenterImpl(this,this,ll_loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
             public void onReload(View v) {
@@ -235,34 +237,6 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         }
     };
 
-    /**
-     * 销售数量
-     */
-/*    private TextWatcher watcherNumber = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (!s.toString().contains(".") && s.toString().length() > 7) {
-                s.delete(7, s.toString().length());
-            }
-            if (!TextUtils.isEmpty(et_price.getText().toString())) {
-                tv_total.setText(Utils.setValueDouble((transformationNumber(s.toString())
-                        * transformationNumber(et_price.getText().toString()))) + "");
-            } else {
-                tv_total.setText("");
-            }
-        }
-    };*/
-
     private double transformationNumber(String text) {
         if (!TextUtils.isEmpty(text)) {
             try {
@@ -291,16 +265,13 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
      * 编辑意向产品
      */
     public void editProduct() {
+        showCommitLoading();
         final SaleIntentionalProduct data = assembleData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("cId", saleId);
         map.put("proInfo", data);
         map.put("oldId", oldId);
-        LogUtil.d("编辑产品:" + MainApp.gson.toJson(map));
-        Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_DATA, map);
-        intent.putExtra(ExtraAndResult.STR_SHOW_TYPE, ActionCode.SALE_DETAILS_RUSH);
-        app.finishActivity(AddBuyProductActivity.this, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
+        mPersenter.editProduct(map, data, saleId,hud);
     }
 
     /**
@@ -504,6 +475,19 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
     }
 
     /**
+     * 编辑产品成功处理
+     * */
+    @Override
+    public void editProductSuccess(SaleIntentionalProduct data) {
+        if (null != data) {
+            Intent intent = new Intent();
+            intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
+            intent.putExtra(ExtraAndResult.STR_SHOW_TYPE, ActionCode.SALE_DETAILS_RUSH);
+            app.finishActivity(AddBuyProductActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        }
+    }
+
+    /**
      * 选择的产品 回调查询详情
      * */
     @Subscribe
@@ -513,7 +497,6 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
         stockEnabled = mBundle.getBoolean("enable");
         ll_loading.setStatus(LoadingLayout.Loading);
         mPersenter.getProductDetails(productId);
-        LogUtil.dee("新增stockEnabled:"+stockEnabled);
     }
 
     @Override
@@ -536,9 +519,13 @@ public class AddBuyProductActivity extends BaseActivity implements AddBuProductV
             case R.id.iv_submit:
                 if (fromPage == ActionCode.SALE_FROM_DETAILS && !TextUtils.isEmpty(saleId)) {
                     addProduct();
-                } else if (fromPage == ActionCode.SALE_PRO_EDIT && !TextUtils.isEmpty(saleId)) {
+                }
+                /*详情编辑,需要网络请求*/
+                else if (fromPage == ActionCode.SALE_PRO_EDIT && !TextUtils.isEmpty(saleId)) {
                     editProduct();
-                } else {
+                }
+                /*新建编辑*/
+                else {
                     if (productListData != null && productListData.size() > 0) {
                         for (SaleIntentionalProduct ele : productListData) {
                             if (productId.equals(ele.id)) {
