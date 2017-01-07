@@ -40,7 +40,7 @@ public class WorksheetEventCell extends LinearLayout {
 
     public WorksheetEventCell(Context context, Handler handler) {
         super(context);
-        content = LayoutInflater.from(context).inflate(R.layout.item_worksheet_event, null, false);
+        content = LayoutInflater.from(context).inflate(R.layout.item_worksheet_event_new, null, false);
         iv_avatar = (RoundImageView) content.findViewById(R.id.iv_avatar);
         iv_status = (ImageView) content.findViewById(R.id.iv_status);
         iv_action = (ImageView) content.findViewById(R.id.iv_action);
@@ -135,7 +135,7 @@ public class WorksheetEventCell extends LinearLayout {
         iv_status.setImageResource(data.status.getStatusIcon(iv_avatar));
 
         /* 操作按钮 */
-        iv_action.setVisibility(action.visible() ? View.VISIBLE : View.INVISIBLE);
+        iv_action.setVisibility(action.visible() ? View.VISIBLE : View.GONE);
         iv_action.setImageResource(action.getIcon());
 
         /* 事件 */

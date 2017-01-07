@@ -41,7 +41,7 @@ public enum WorksheetEventAction implements Serializable {
     Finish {
         public int getIcon() { return R.drawable.icon_worksheet_compile; }
         public boolean visible() {return true; }
-        public String getBtnTitle(){return "提交完成";}
+        public String getBtnTitle(){return "完成";}
     };
 
     private WorksheetEventAction() {

@@ -76,7 +76,7 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
     private TextView product;
     private TextView text_stagename;
     private TextView director;
-    private ImageView iv_wfstatus;
+    private TextView tvStatus;
     private double totalMoney;//意向产品总金额
     private boolean isTeam;//是否是团队的详情
     private SaleDetailContract.Presenter mPersenter;
@@ -122,13 +122,13 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
         ll_product = (LinearLayout) findViewById(R.id.ll_product);
         ll_stage = (LinearLayout) findViewById(R.id.ll_stage);
         ll_extra = (LinearLayout) findViewById(R.id.ll_extra);
-        iv_wfstatus = (ImageView) findViewById(R.id.iv_wfstatus);
+        tvStatus=(TextView) findViewById(R.id.tv_status);
         img_title_left.setOnClickListener(this);
         img_title_right.setOnClickListener(this);
         ll_product.setOnClickListener(this);
         ll_stage.setOnClickListener(this);
-        Global.SetTouchView(ll_stage, ll_product, img_title_right, img_title_left, iv_wfstatus);
-        iv_wfstatus.setOnClickListener(this);
+        Global.SetTouchView(ll_stage, ll_product, img_title_right, img_title_left, tvStatus);
+        tvStatus.setOnClickListener(this);
         getIntenData();
         getPageData();
     }
@@ -176,7 +176,7 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
 
         //已通过的审批 任何人都不能删除
         if (mSaleDetails.wfState == 0 && mSaleDetails.prob == 100) {
-            iv_wfstatus.setEnabled(false);
+            tvStatus.setEnabled(false);
         }
 
         title.setText(mSaleDetails.getName());
@@ -226,16 +226,19 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
             layout_losereson.setVisibility(View.GONE);
         }
         if (100 == mSaleDetails.prob) {//销售阶段是赢单的时候
-            iv_wfstatus.setVisibility(View.VISIBLE);
+            tvStatus.setVisibility(View.VISIBLE);
             switch (mSaleDetails.wfState) {
                 case 1:
-                    iv_wfstatus.setImageResource(R.drawable.img_task_wite);
+                    tvStatus.setBackgroundResource(R.drawable.common_lable_blue);
+                    tvStatus.setText("待审核");
                     break;
                 case 2:
-                    iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status2);
+                    tvStatus.setBackgroundResource(R.drawable.common_lable_purple);
+                    tvStatus.setText("审核中");
                     break;
                 case 3:
-                    iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status3);
+                    tvStatus.setBackgroundResource(R.drawable.common_lable_red);
+                    tvStatus.setText("未通过");
                     if (!isTeam || MainApp.user.isSuperUser) {//非团队才有权限
                         img_title_right.setVisibility(View.VISIBLE);
 //                        ll_product.setEnabled(true);//屏蔽快捷编辑赢单审批
@@ -243,12 +246,14 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
                     }
                     break;
                 case 4:
-                    iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status4);
+                    tvStatus.setBackgroundResource(R.drawable.common_lable_green);
+                    tvStatus.setText("已通过");
                     winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mSaleDetails.getWinTime()));
                     sale_wintime.setVisibility(View.VISIBLE);
                     break;
                 case 5:
-                    iv_wfstatus.setImageResource(R.drawable.img_task_status_finish);
+                    tvStatus.setBackgroundResource(R.drawable.common_lable_green);
+                    tvStatus.setText("已完成");
                     winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mSaleDetails.getWinTime()));
                     sale_wintime.setVisibility(View.VISIBLE);
                     break;

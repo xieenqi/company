@@ -312,7 +312,7 @@ public class TasksInfoActivity extends BaseActivity {
 
         if (mTask.getResponsiblePerson() != null) {
             realName = mTask.getResponsiblePerson().getName();
-            tv_responsiblePerson.setText("负责人: " + realName);
+            tv_responsiblePerson.setText("负责人：" + realName);
             childTastUsers.add(mTask.getResponsiblePerson());
             childTastUsers.add(mTask.getCreator());
         }
@@ -323,7 +323,7 @@ public class TasksInfoActivity extends BaseActivity {
                 for (OrganizationalMember element : mTask.members.getAllData()) {
                     userNames.append(element.getName() + " ");
                 }
-                tv_toUsers.setText("参与人: " + userNames.toString());
+                tv_toUsers.setText("参与人：" + userNames.toString());
                 childTastUsers.addAll(mTask.members.users);
 
                 // 获取部门（包括子部门）的用户
@@ -336,22 +336,24 @@ public class TasksInfoActivity extends BaseActivity {
 
                 for (DBUser user : deptsUsers) {
                     childTastUsers.add(user.toShortUser());
+
                 }
 
             } else {
                 tv_toUsers.setText("参与人：无");
+
             }
         }
         if (null != mTask.getProject()) {
             beProjects = mTask.getProject().title;
-            tv_task_project.setText("所属项目: " + beProjects);
+            tv_task_project.setText("所属项目：" + beProjects);
         } else {
             tv_task_project.setText("所属项目：无");
         }
         if (null != mTask.getCustomerName()) {
-            tv_task_aboutuser.setText("关联客户: " + mTask.getCustomerName());
+            tv_task_aboutuser.setText("关联客户：" + mTask.getCustomerName());
         } else {
-            tv_task_aboutuser.setText("关联客户: 无");
+            tv_task_aboutuser.setText("关联客户：无");
         }
 
         /**重复任务赋值*/
@@ -391,7 +393,7 @@ public class TasksInfoActivity extends BaseActivity {
 
             //每天
             if (mTask.getCornBody().getType() == 1) {
-                tv_repeatTask.setText("重复: " + caseName + " " + hourMins + "重复");
+                tv_repeatTask.setText("重复：" + caseName + " " + hourMins + "重复");
                 //每周
             } else if (mTask.getCornBody().getType() == 2) {
                 switch (mTask.getCornBody().getWeekDay()) {
@@ -426,11 +428,11 @@ public class TasksInfoActivity extends BaseActivity {
                     default:
                         break;
                 }
-                tv_repeatTask.setText("重复: " + caseName + weekName + " " + hourMins + "重复");
+                tv_repeatTask.setText("重复：" + caseName + weekName + " " + hourMins + "重复");
                 //每月
             } else if (mTask.getCornBody().getType() == 3) {
                 dayName = mTask.getCornBody().getDay() + "号";
-                tv_repeatTask.setText("重复: " + caseName + " " + dayName + " " + hourMins + "重复");
+                tv_repeatTask.setText("重复：" + caseName + " " + dayName + " " + hourMins + "重复");
             }
             tv_task_audit.setVisibility(View.GONE);
         } else {
@@ -542,7 +544,7 @@ public class TasksInfoActivity extends BaseActivity {
         tv_task_title.setText(mTask.getTitle());
         tv_content.setText(mTask.getContent());
         isTest = mTask.isReviewFlag() ? "是" : "否";
-        tv_task_audit.setText("是否审核:" + isTest);
+        tv_task_audit.setText("是否审核：" + isTest);
 
         vTitle = mTask.getTitle();
         vContent = mTask.getContent();
@@ -681,7 +683,7 @@ public class TasksInfoActivity extends BaseActivity {
                             intent.putExtra("isReponser", false);
                         }
                         TasksInfoActivity.this.startActivityForResult(intent, REQUEST_EDIT_TASK);
-                        TasksInfoActivity.this.overridePendingTransition(R.anim.enter_lefttoright, R.anim.exit_lefttoright);
+                        TasksInfoActivity.this.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_lefttoright);
 
                     }
                 });
@@ -689,7 +691,7 @@ public class TasksInfoActivity extends BaseActivity {
             layout_child_Add_area.addView(view);
         }
         //子任务完成度(3/5)设置
-        tv_children_info.setText(String.format("(%d/%d)", statusSize, mTask.getchecklists().size()));
+        tv_children_info.setText(String.format("（%d/%d）", statusSize, mTask.getchecklists().size()));
     }
 
     /**
@@ -1072,7 +1074,7 @@ public class TasksInfoActivity extends BaseActivity {
             StaffMemberCollection collection = event.data;
             member = Compat.convertStaffCollectionToMembers(collection);
             if (null == member || (member.users.size() == 0 && member.depts.size() == 0)) {
-                tv_toUsers.setText("无参与人");
+                tv_toUsers.setText("参与人：无");
             } else {
                 joinName = new StringBuffer();
                 joinUserId = new StringBuffer();
