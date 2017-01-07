@@ -198,7 +198,7 @@ public class IntentionProductActivity extends BaseActivity {
                     break;
                 //编辑产品
                 case ExtraAndResult.REQUEST_EDIT:
-
+                    // TODO: 紧急处理 需要优化
                     try {
                         HashMap<String, Object> map = (HashMap<String, Object>) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                         resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE, 0);
