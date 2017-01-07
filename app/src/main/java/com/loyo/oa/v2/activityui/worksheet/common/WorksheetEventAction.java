@@ -18,30 +18,30 @@ import java.lang.reflect.Type;
 public enum WorksheetEventAction implements Serializable {
 
     None{
-        public int getIcon() {return R.drawable.icon_worksheet_setting;}
+        public int getIcon() {return R.style.worksheet_btn_trans;}
         public boolean visible() { return false;}
         public String getBtnTitle(){return "无";}
     },
 
     Transfer {
-        public int getIcon() { return R.drawable.icon_worksheet_setting; }
+        public int getIcon() { return R.style.worksheet_btn_trans; }
         public boolean visible() { return true;}
         public String getBtnTitle(){ return "转移"; }
     },
     Dispatch {
-        public int getIcon() {return R.drawable.icon_worksheet_assignment;}
+        public int getIcon() {return R.style.worksheet_btn_assignment;}
         public boolean visible() { return true; }
         public String getBtnTitle(){ return "分派";}
     },
     Redo {
-        public int getIcon() { return R.drawable.icon_worksheet_redo;}
+        public int getIcon() { return R.style.worksheet_btn_redo;}
         public boolean visible() { return true;}
         public String getBtnTitle(){ return "重做";}
     },
     Finish {
-        public int getIcon() { return R.drawable.icon_worksheet_compile; }
+        public int getIcon() { return R.style.worksheet_btn_complete; }
         public boolean visible() {return true; }
-        public String getBtnTitle(){return "提交完成";}
+        public String getBtnTitle(){return "完成";}
     };
 
     private WorksheetEventAction() {

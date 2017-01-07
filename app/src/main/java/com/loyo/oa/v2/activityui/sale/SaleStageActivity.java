@@ -196,6 +196,7 @@ public class SaleStageActivity extends BaseActivity {
                                 intent.putExtra(ExtraAndResult.EXTRA_DATA, data.get(position));
                                 setResult(RESULT_OK, intent);
                                 dismissSweetAlert();
+                                finish();
                             }
                         },"提示", Utils.modifyTextColor(tt, getResources().getColor(R.color.red1), 0, 10).toString());
 
