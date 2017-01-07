@@ -344,7 +344,7 @@ public class TasksInfoActivity extends BaseActivity {
 
             }
         }
-        if (null != mTask.getProject()) {
+        if (null != mTask.getProject()&&!TextUtils.isEmpty(mTask.getProject().title)) {
             beProjects = mTask.getProject().title;
             tv_task_project.setText("所属项目：" + beProjects);
         } else {
