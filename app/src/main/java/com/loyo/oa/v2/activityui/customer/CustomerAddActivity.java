@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
@@ -436,8 +437,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     bundle1.putString("Keyword", edt_name.getText().toString());
                     app.startActivityForResult((Activity) mContext, BusinessInquiryActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
                     //统计工商查询次数(正式环境)
-                    if (Config_project.isRelease)
-                        MobclickAgent.onEvent(mContext, "BusinessQuery");
+                    UmengAnalytics.umengSend(mContext, UmengAnalytics.businessQuery);
                 } else {
                     Toast("客户名称不能为空");
                 }
@@ -493,8 +493,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 showCommitLoading();
                 if (controller.count() <= 0) {
                     requestCommitTask();
-                }
-                else {
+                } else {
                     controller.startUpload();
                     controller.notifyCompletionIfNeeded();
                 }
@@ -587,7 +586,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             } else if (customerJur.label.contains("客户地址") && customerJur.required) {
                                 cusDetialAdress = true;//详细地址必填
                                 edit_address_details.setHint("请输入客户详细地址(必填)");
-                            } else if (customerJur.label.contains("简介") && customerJur.required){
+                            } else if (customerJur.label.contains("简介") && customerJur.required) {
                                 cusMemo = true;
                                 edt_content.setHint("客户简介(必填)");
                             }
@@ -696,7 +695,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 //                                }
                                 customerSendSucess(customer);
                             }
-                        },1000);
+                        }, 1000);
                     }
                 });
     }
@@ -889,7 +888,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onAddEvent(UploadController controller) {
         PhotoPicker.builder()
-                .setPhotoCount(9-controller.count())
+                .setPhotoCount(9 - controller.count())
                 .setShowCamera(true)
                 .setPreviewEnabled(false)
                 .start(this);
@@ -902,7 +901,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }
