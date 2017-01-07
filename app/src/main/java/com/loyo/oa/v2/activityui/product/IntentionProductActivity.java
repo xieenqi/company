@@ -198,46 +198,21 @@ public class IntentionProductActivity extends BaseActivity {
                     break;
                 //编辑产品
                 case ExtraAndResult.REQUEST_EDIT:
-
+                    /*SaleIntentionalProduct productEdit;
                     try {
                         HashMap<String, Object> map = (HashMap<String, Object>) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-                        resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE, 0);
-                        SaleIntentionalProduct productEdit = (SaleIntentionalProduct) map.get("proInfo");
-                        listData.remove(editItemIndex);
-                        listData.add(editItemIndex, productEdit);
-                        saleProductAdapter.notifyDataSetChanged();
-                        LogUtil.dee("map:" + MainApp.gson.toJson(map));
-                        LogUtil.dee("productEdit:" + MainApp.gson.toJson(productEdit));
+                        productEdit = (SaleIntentionalProduct) map.get("proInfo");
                     } catch (ClassCastException e) {
                         e.printStackTrace();
-                        resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE, 0);
-                        SaleIntentionalProduct productEdit = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-                        listData.remove(editItemIndex);
-                        listData.add(editItemIndex, productEdit);
-                        saleProductAdapter.notifyDataSetChanged();
-                    }
-
-                    try {
-                        resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE, 0);
-                        SaleIntentionalProduct productEdit = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-                        listData.remove(editItemIndex);
-                        listData.add(editItemIndex, productEdit);
-                        saleProductAdapter.notifyDataSetChanged();
-                    } catch (ClassCastException e) {
-                        e.printStackTrace();
-                        HashMap<String, Object> map = (HashMap<String, Object>) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-                        resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE, 0);
-                        SaleIntentionalProduct productEdit = (SaleIntentionalProduct) map.get("proInfo");
-                        listData.remove(editItemIndex);
-                        listData.add(editItemIndex, productEdit);
-                        saleProductAdapter.notifyDataSetChanged();
-                        LogUtil.dee("map:" + MainApp.gson.toJson(map));
-                        LogUtil.dee("productEdit:" + MainApp.gson.toJson(productEdit));
-                    }
-
+                        productEdit = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                    }*/
+                    SaleIntentionalProduct productEdit = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                    resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE, 0);
+                    listData.remove(editItemIndex);
+                    listData.add(editItemIndex, productEdit);
+                    saleProductAdapter.notifyDataSetChanged();
                     break;
             }
-
         }
     }
 

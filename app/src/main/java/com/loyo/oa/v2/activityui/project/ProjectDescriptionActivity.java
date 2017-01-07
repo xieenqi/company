@@ -26,7 +26,7 @@ import java.util.Date;
  * 作者 : ykb
  * 时间 : 15/9/9.
  */
-@EActivity(R.layout.activity_project_description)
+@EActivity(R.layout.activity_project_description_new)
 public class ProjectDescriptionActivity extends BaseActivity {
 
     @ViewById
@@ -97,7 +97,7 @@ public class ProjectDescriptionActivity extends BaseActivity {
 
     @Click(R.id.img_title_left)
     void onClick(final View v) {
-        app.finishActivity(this, MainApp.ENTER_TYPE_TOP, 0, null);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
 }

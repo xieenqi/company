@@ -42,22 +42,38 @@
                     android:orientation="horizontal">
 
 
-                    <TextView
-                        android:id="@+id/tv_project_title"
-                        style="@style/common_text_line_main"
+                    <FrameLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:singleLine="false"
-                        android:maxWidth="250dp"
-                        android:textSize="16sp" />
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/tv_status"
-                        style="@style/common_text_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="top" />
+                        <TextView
+                            android:id="@+id/tv_project_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="65dp"
+                            android:textColor="@color/text33"
+                            android:textSize="16sp" />
+
+                        <FrameLayout
+                            android:layout_width="60dp"
+                            android:layout_gravity="right|top"
+                            android:paddingTop="3dp"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/tv_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_gravity="left"
+                                android:paddingLeft="4dp"
+                                android:paddingRight="4dp"
+                                android:textColor="#fff"
+                                android:textSize="12sp" />
+                        </FrameLayout>
+                    </FrameLayout>
+
 
                 </LinearLayout>
 
