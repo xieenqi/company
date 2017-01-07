@@ -118,14 +118,6 @@ android {
         }
     }*/
 
-//  productFlavors {
-//        ukuaiqi {}
-//        应用宝 {}
-//        productFlavors.all { flavor ->
-//            flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
-//        }
-//    }
-
     ext {
         supportLibVersion = "24.2.1"
     }
@@ -156,6 +148,7 @@ android {
         compile 'org.jsoup:jsoup:1.10.1'//解析HTML
         compile "com.andkulikov:transitionseverywhere:1.7.0"
         compile 'me.itangqi.waveloadingview:library:0.3.2'
+        compile 'com.umeng.analytics:analytics:latest.integration'
 
         //compile 'cn.fanrunqi:waveprogress:1.0.0'
         //compile 'com.lai.weavey:loadinglayout:1.2'//loading加载库
