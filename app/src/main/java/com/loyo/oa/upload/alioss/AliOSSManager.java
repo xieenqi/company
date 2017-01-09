@@ -8,6 +8,7 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -24,47 +25,40 @@ public class AliOSSManager {
 
     private static AliOSSManager instance = null;
 
-    private static OSS oss;
+    private  OSS oss;
 
-    public AliOSSManager() {
-    }
-
-    public static AliOSSManager getInstance() {
-        if (instance == null) {
-            instance = new AliOSSManager();
-        }
-        return instance;
-    }
-
-    public void initWithContext(Context context) {
-
+    private AliOSSManager() {
         OSSCredentialProvider credentialProvider = new OSSFederationCredentialProvider() {
             @Override
             public OSSFederationToken getFederationToken() {
-
                 OssToken ossToken = AttachmentService.syncGetServerToken();
-
                 if (ossToken != null && ossToken.Credentials != null) {
                     String ak = ossToken.Credentials.AccessKeyId;
                     String sk = ossToken.Credentials.AccessKeySecret;
                     String token = ossToken.Credentials.SecurityToken;
                     String expiration = ossToken.Credentials.Expiration;
-
                     return new OSSFederationToken(ak, sk, token, expiration);
-
                 } else {
                     return null;
                 }
             }
         };
-
         ClientConfiguration conf = new ClientConfiguration();
         conf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
         conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
         conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
         conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-
-        oss = new OSSClient(context, Config_project.endpoint, credentialProvider, conf);
+        oss = new OSSClient(MainApp.getMainApp(), Config_project.endpoint, credentialProvider, conf);
+    }
+    public static AliOSSManager getInstance() {
+        if (null==instance) {
+            synchronized (AliOSSManager.class){
+                if(null==instance){
+                    instance = new AliOSSManager();
+                }
+            }
+        }
+        return instance;
     }
 
 
