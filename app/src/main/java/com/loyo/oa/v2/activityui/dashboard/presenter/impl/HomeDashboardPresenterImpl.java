@@ -173,7 +173,14 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
             }
         });
     }
+    /*获取回款统计*/
+    @Override
+    public void getPayment(int type) {
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("qType",type);
+        //这里需要新的接口
 
+    }
 
     /**
      * 设置Loading状态

@@ -208,7 +208,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     private void loadFilterOptions() {
         List<DBDepartment> depts = new ArrayList<>();
         String title = "部门";
-        //TODO 数据权限具体调整
         //为超管或权限为全公司 展示全公司成员
         if (PermissionManager.getInstance().dataRange(type.getaPermission())
                 == Permission.COMPANY) {
@@ -278,7 +277,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        Log.i(TAG, "onPullDownToRefresh: ");
         pageIndex = 1;
         getPageData();
 
@@ -286,7 +284,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        Log.i(TAG, "onPullUpToRefresh: "+pageIndex);
         pageIndex++;
         getPageData();
     }

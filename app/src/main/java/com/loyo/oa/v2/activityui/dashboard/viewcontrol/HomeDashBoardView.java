@@ -27,4 +27,9 @@ public interface HomeDashBoardView extends BaseView{
     void moneyConSuccessEmbl(MoneyStatistic moneyCountModel);
 
     void moneyConErrorEmbl();
+
+
+    void paymentConSuccessEmbl(Object paymentModel);
+
+    void paymentConErrorEmbl();
 }

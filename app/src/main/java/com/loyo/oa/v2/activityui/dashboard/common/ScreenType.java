@@ -38,8 +38,18 @@ public enum ScreenType {
         public int type() {
             return 2;
         }
+    },
+    PAYMENT{
+        @Override
+        public String[] screenTitle() {
+            return new String[]{"本月", "上月", "本季度", "上季度", "本年", "去年", "取消"};
+        }
 
-    };
+        @Override
+        public int type() {
+            return 3;
+        }
+    };;
 
     public abstract String[] screenTitle();
     public abstract int type();
