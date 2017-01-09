@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.adapter.WinstanceCategoryAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.common.ApprovalAddBuilder;
 import com.loyo.oa.v2.activityui.wfinstance.fragment.WfinstanceMyApproveFragment;
 import com.loyo.oa.v2.activityui.wfinstance.fragment.WfinstanceMySubmitFragment;
 import com.loyo.oa.v2.application.MainApp;
@@ -200,6 +201,7 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
      * 到 审批流程 add 添加页面
      */
     public void addNewItem() {
+        ApprovalAddBuilder.startCreate();
         Intent intent = new Intent();
         intent.setClass(this, WfInTypeSelectActivity.class);
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
