@@ -70,10 +70,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @ViewById
     ViewGroup img_title_left, img_title_right, layout_customer_info, layout_contact, layout_send_sms,
             layout_call, layout_wiretel_call, layout_sale_activity, layout_visit, layout_task, layout_attachment,
+            layout_approval,
             ll_sale, ll_order, layout_4;
     @ViewById
     TextView tv_title_1, tv_customer_name, tv_address, tv_tags, tv_contact_name,
             tv_contact_tel, customer_detail_wiretel, tv_sale_number, tv_visit_times, tv_task_count, tv_attachment_count,
+            tv_approval_count,
             tv_follow_content, tv_follow_crecter_type, tv_contact_Number, tv_sale_count, tv_order_count,
             tv_content41, tv_content42;
     @ViewById
@@ -236,6 +238,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_visit.setOnTouchListener(Global.GetTouch());
         layout_task.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
+        layout_approval.setOnTouchListener(Global.GetTouch());
         if (mCustomer.state != Customer.DumpedCustomer)
             CommonMethod.commonCustomerRecycleTime(mCustomer, layout_4, tv_content41, tv_content42);
 
@@ -253,6 +256,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         tv_order_count.setText("（" + mCustomer.counter.order + "）");
         tv_task_count.setText("（" + mCustomer.counter.getTask() + "）");
         tv_attachment_count.setText("（" + mCustomer.counter.getFile() + "）");
+        tv_approval_count.setText("（" + "//TODO:" + "）");
 
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
@@ -305,7 +309,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
-            R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call,
+            R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_approval,
+            R.id.layout_wiretel_call,
             R.id.ll_sale, R.id.ll_order, R.id.layout_gj, R.id.layout_sign, R.id.iv_select_tag})
     void onClick(final View view) {
 
@@ -500,6 +505,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*订单管理*/
             case R.id.ll_order:
+            {
                 boolean canAddOrder = mCustomer != null &&
                         PermissionManager.getInstance().hasCustomerAuthority(
                                 mCustomer.relationState,
@@ -511,6 +517,23 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = CustomerOrderList.class;
                 requestCode = ExtraAndResult.REQUEST_CODE;
+            }
+                break;
+            /*审批流程*/
+            case R.id.layout_approval:
+            {
+                boolean canAddApproval = mCustomer != null &&
+                        PermissionManager.getInstance().hasCustomerAuthority(
+                                mCustomer.relationState,
+                                mCustomer.state,
+                                CustomerAction.APPROVAL_ADD
+                        );
+                bundle.putBoolean("canAdd", canAddApproval);
+                bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
+                bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
+                _class = CustomerRelatedApprovalList.class;
+                requestCode = ExtraAndResult.REQUEST_CODE;
+            }
                 break;
         }
         if (null != _class && requestCode != -1) {

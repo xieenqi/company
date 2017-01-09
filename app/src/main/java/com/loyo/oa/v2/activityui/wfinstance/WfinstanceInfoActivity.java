@@ -44,7 +44,6 @@ import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.ListView_inScrollView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -76,7 +75,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById
     TextView tv_memo;
     @ViewById
-    TextView tv_projectName;
+    TextView tv_projectName, tv_customerName;
     @ViewById
     TextView tv_time_creator;
     @ViewById
@@ -95,6 +94,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     ViewGroup layout_AttachFile;
     @ViewById
     LinearLayout ll_project;
+    @ViewById
+    LinearLayout ll_customer;
     @ViewById
     ViewGroup layout_lastwork;
     @ViewById
@@ -488,6 +489,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + "）");
         tv_projectName.setText(null == mWfInstance.ProjectInfo || TextUtils.isEmpty(mWfInstance.ProjectInfo.title) ? "无" : mWfInstance.ProjectInfo.title);
+        tv_customerName.setText("/*todo:*/"/*todo:*/);
         if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode
                 || 500 == mWfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件  订单审批  回款审批
             layout_AttachFile.setVisibility(300 == mWfInstance.bizForm.bizCode ? View.GONE : View.VISIBLE);
