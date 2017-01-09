@@ -24,7 +24,7 @@ public enum CustomerAction {
     DUMP(BusinessOperation.CUSTOMER_DUMPING),              /* 投公海 */
     IMPORT(BusinessOperation.CUSTOMER_MANAGEMENT),         /* 导入, 移动端无，默认实现开启 */
     EXPORT(BusinessOperation.CUSTOMER_MANAGEMENT),         /* 导出, 移动端无，默认实现开启 */
-    RESPONSIBLE_PERSON_CHANGE(BusinessOperation.RESPONSIBLE_PERSON_CHANGING),
+    RESPONSIBLE_PERSON_CHANGE(BusinessOperation.CUSTOMER_RESPONSIBLE_PERSON_CHANGING),
                                                            /* 修改负责人 */
     DELETE(BusinessOperation.CUSTOMER_DELETING);           /* 删除 */
 
