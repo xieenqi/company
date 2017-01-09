@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -152,12 +153,11 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
 
             //新建
             case R.id.btn_add:
-
                 mBundle = new Bundle();
                 mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
                 startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.createOrder);
                 break;
         }
     }
@@ -172,8 +172,8 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<OrderListItem>>() {
                     @Override
                     public void onError(Throwable e) {
-                        @LoyoErrorChecker.CheckType int type = listData.size()>0?
-                                LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                        @LoyoErrorChecker.CheckType int type = listData.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
 
                         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         lv_list.onRefreshComplete();

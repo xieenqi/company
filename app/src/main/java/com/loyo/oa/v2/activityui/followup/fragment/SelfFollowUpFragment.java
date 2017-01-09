@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -268,7 +269,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 获取Self列表数据
      */
     private void getData(boolean isPullOrDown) {
-        if(null == MainApp.user || null == MainApp.user.id){
+        if (null == MainApp.user || null == MainApp.user.id) {
             Toast("正在拉去数据,请稍后..");
             getActivity().finish();
             return;
@@ -407,6 +408,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
             case R.id.btn_add:
                 startActivityForResult(new Intent(getActivity(), FollowSelectActivity.class), Activity.RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.addFollow);
                 break;
         }
     }

@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -346,6 +347,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                     bundle.putSerializable("nearCount", nearCount);
                     bundle.putInt("type", CustomerManagerActivity.NEARCUS_TEAM);//团队2 个人1
                     app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_ZOOM_IN, false, bundle);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.customerNearby);
                     break;
             }
         }

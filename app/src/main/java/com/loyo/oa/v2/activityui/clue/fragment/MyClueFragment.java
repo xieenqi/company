@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -157,12 +158,11 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
 
             //新建
             case R.id.btn_add:
-
                 mIntent = new Intent();
                 mIntent.setClass(mActivity, ClueAddActivity.class);
                 startActivityForResult(mIntent, mActivity.RESULT_FIRST_USER);
                 mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.createCluesMy);
                 break;
             default:
                 break;
@@ -212,7 +212,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             public void onError(Throwable e) {
                 /* 重写父类方法，不调用super */
                 @LoyoErrorChecker.CheckType
-                int type =page != 1 ?LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                int type = page != 1 ? LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
                 LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                 lv_list.onRefreshComplete();
             }
@@ -223,7 +223,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                 lv_list.onRefreshComplete();
                 try {
                     if (!isPullDown) {
-                        if(null!=clueList.data.records)listData.addAll(clueList.data.records);
+                        if (null != clueList.data.records) listData.addAll(clueList.data.records);
                     } else {
                         if (clueList.data.records == null)
                             ll_loading.setStatus(LoadingLayout.Empty);
