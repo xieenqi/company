@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -181,6 +182,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                         departmentId = "";
                         userId = model.getKey();
                     }
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.departmentCustomerTeam);
                 } else if (menuIndex == 1) { // TimeFilterModel
                     MenuModel model = selectedModels.get(0);
                     String key = model.getKey();
@@ -189,8 +191,10 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomerTeam);
                 } else if (menuIndex == 2) { // TagFilter
                     tagsParams = userInfo.toString();
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomerTeam);
                 }
                 getRefershData();
             }
@@ -346,6 +350,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                     bundle.putSerializable("nearCount", nearCount);
                     bundle.putInt("type", CustomerManagerActivity.NEARCUS_TEAM);//团队2 个人1
                     app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_ZOOM_IN, false, bundle);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.customerNearby);
                     break;
             }
         }

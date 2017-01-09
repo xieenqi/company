@@ -16,6 +16,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -98,9 +99,9 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
         super.onAttach(activity);
         try {
             memberCallback = (MemberCallback) activity;
-        }catch (ClassCastException e) {
+        } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().getClass().getName()
-                    +" must implements interface MyListener");
+                    + " must implements interface MyListener");
         }
     }
 
@@ -182,9 +183,10 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
-                }
-                else if (menuIndex == 1) { // TagFilter
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomerJoin);
+                } else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomerJoin);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
                 isPullUp = false;
@@ -207,8 +209,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
         }
         if (!isPullUp && mCustomers.size() == 0) {
             ll_loading.setStatus(LoadingLayout.Empty);
-        }
-        else {
+        } else {
             ll_loading.setStatus(LoadingLayout.Success);
         }
         /**
@@ -340,6 +341,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
                     bundle.putSerializable("nearCount", nearCount);
                     bundle.putInt("type", CustomerManagerActivity.NEARCUS_SELF);//团队2 个人1
                     app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.customerNearby);
                     break;
             }
         }
@@ -347,18 +349,18 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
 
     /**
      * 新建回调 重启Manager
-     * */
+     */
     @Subscribe
-    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event){
+    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
         memberCallback.comeBackHeadPage();
     }
 
     /**
      * 编辑回调 刷新列表
-     * */
+     */
     @Subscribe
-    public void onEditCustomerRushEvent(EditCustomerRushEvent event){
-       getData();
+    public void onEditCustomerRushEvent(EditCustomerRushEvent event) {
+        getData();
     }
 
     /**
@@ -369,8 +371,8 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
         popupWindow.dismiss();
         Intent mIntent = new Intent();
         mIntent.setClass(getActivity(), MyContactMailList.class);
-        mIntent.putExtra(ExtraAndResult.EXTRA_NAME,2);
-        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ,false);
+        mIntent.putExtra(ExtraAndResult.EXTRA_NAME, 2);
+        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, false);
         startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
     }
 

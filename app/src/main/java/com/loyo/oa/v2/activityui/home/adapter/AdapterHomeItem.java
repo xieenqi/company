@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactsActivity;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
@@ -159,7 +160,7 @@ public class AdapterHomeItem extends BaseAdapter {
         ImageView view_number;
         TextView tv_title;
 
-        public void setContentView(HomeItem item, final int position) {
+        public void setContentView(final HomeItem item, final int position) {
 
             tv_extra.setText(item.extra);
             view_number.setVisibility(item.viewed ? View.GONE : View.VISIBLE);
@@ -225,6 +226,7 @@ public class AdapterHomeItem extends BaseAdapter {
                             e.printStackTrace();
                         }
                     }
+                    UmengAnalytics.umengSend(activity, item.umengAnalyticsId);
                 }
             });
 

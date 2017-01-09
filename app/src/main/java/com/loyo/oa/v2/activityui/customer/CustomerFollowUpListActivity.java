@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -222,6 +223,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
                 bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 bundle.putBoolean("isDetail", true);
                 app.startActivityForResult(this, FollowAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                UmengAnalytics.umengSend(CustomerFollowUpListActivity.this, UmengAnalytics.customerCheckFollowAddFollow);
                 break;
         }
     }

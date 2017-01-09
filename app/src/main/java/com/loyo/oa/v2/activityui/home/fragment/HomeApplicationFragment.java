@@ -17,6 +17,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -143,42 +144,50 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 case BaseActivity.TASKS_ADD:
                     startActivityForResult(new Intent(getActivity(), TasksAddActivity_.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartTask);
                     break;
                 //申请审批
                 case BaseActivity.WFIN_ADD:
                     startActivityForResult(new Intent(getActivity(), WfInTypeSelectActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartApprove);
                     break;
                 //提交报告
                 case BaseActivity.WORK_ADD:
                     startActivityForResult(new Intent(getActivity(), WorkReportAddActivity_.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartReport);
                     break;
                 //新建客户
                 case BaseActivity.TASKS_ADD_CUSTOMER:
                     startActivityForResult(new Intent(getActivity(), CustomerAddActivity_.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartCustomer);
                     break;
                 //考勤打卡
                 case BaseActivity.ATTENT_ADD:
-                    if(LocationUtilGD.permissionLocation(mActivity))
-                    getValidateInfo();
+                    if (LocationUtilGD.permissionLocation(mActivity))
+                        getValidateInfo();
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartLegworks);
                     break;
                 //拜访签到
                 case BaseActivity.SIGNIN_ADD:
-                    if(LocationUtilGD.permissionLocation(mActivity))
-                    startActivityForResult(new Intent(getActivity(), SignInActivity.class), Activity.RESULT_FIRST_USER);
+                    if (LocationUtilGD.permissionLocation(mActivity))
+                        startActivityForResult(new Intent(getActivity(), SignInActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartVisit);
                     break;
                 //新建机会
                 case BaseActivity.SALE_ADD:
                     startActivityForResult(new Intent(getActivity(), AddMySaleActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartChance);
                     break;
                 //写跟进
                 case BaseActivity.FOLLOW_ADD://   FollowSelectActivity  FollowAddActivity
                     startActivityForResult(new Intent(getActivity(), FollowSelectActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartFollow);
                     break;
                 //新建订单
                 case BaseActivity.ORDER_ADD:
@@ -186,6 +195,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
                     startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartOrder);
                     break;
             }
         }
@@ -252,6 +262,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             @Override
             public void onClick(View v) {
                 showMoreWindow(v);
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstart);
             }
         });
         items = DBManager.Instance().getHomeItem();
@@ -306,61 +317,61 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         items = new ArrayList<>(Arrays.asList(
                 new HomeItem(R.drawable.newmain_toast,
                         "公告通知", "com.loyo.oa.v2.activityui.other.BulletinManagerActivity_",
-                        BusinessOperation.ANNOUNCEMENT, 0),
+                        BusinessOperation.ANNOUNCEMENT, 0, UmengAnalytics.homepageNotice),
                 new HomeItem(R.drawable.newmain_discuss,
                         "我的讨论", "com.loyo.oa.v2.activityui.discuss.MyDiscussActivity",
-                        BusinessOperation.DEFAULT, 0),
+                        BusinessOperation.DEFAULT, 0, UmengAnalytics.homepageDiscussion),
                 new HomeItem(R.drawable.newmain_list,
                         "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity",
-                        BusinessOperation.ORGANIZATION_CONTACTS, 0),
+                        BusinessOperation.ORGANIZATION_CONTACTS, 0, UmengAnalytics.homepageContact),
                 new HomeItem(R.drawable.newmain_clue,
                         "销售线索", "com.loyo.oa.v2.activityui.clue.ClueManagerActivity",
-                        BusinessOperation.CLUE_MANAGEMENT, 1),
+                        BusinessOperation.CLUE_MANAGEMENT, 1, UmengAnalytics.homepageClues),
                 new HomeItem(R.drawable.newmain_customer,
                         "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity",
-                        BusinessOperation.CUSTOMER_MANAGEMENT, 1),
+                        BusinessOperation.CUSTOMER_MANAGEMENT, 1, UmengAnalytics.homepageCustomer),
                 new HomeItem(R.drawable.newmain_followup,
                         "跟进动态", "com.loyo.oa.v2.activityui.followup.FollowUpManagerActivity",
-                        BusinessOperation.VISIT_TIMELINE, 0),
+                        BusinessOperation.VISIT_TIMELINE, 0, UmengAnalytics.homepageCustomerFollow),
                 new HomeItem(R.drawable.newmain_sagin,
                         "客户拜访", "com.loyo.oa.v2.activityui.signin.SigninManagerActivity",
-                        BusinessOperation.CUSTOMER_VISIT, 1),
+                        BusinessOperation.CUSTOMER_VISIT, 1, UmengAnalytics.homepageCustomerVisit),
                 new HomeItem(R.drawable.newmain_sale,
                         "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity",
-                        BusinessOperation.SALE_OPPORTUNITY, 1),
+                        BusinessOperation.SALE_OPPORTUNITY, 1, UmengAnalytics.homepageSaleChance),
                 new HomeItem(R.drawable.newmain_order,
                         "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity",
-                        BusinessOperation.ORDER_MANAGEMENT, 1),//新加订单
+                        BusinessOperation.ORDER_MANAGEMENT, 1, UmengAnalytics.homepageOrder),//新加订单
                 new HomeItem(R.drawable.newmain_worksheet,
                         "工单管理", "com.loyo.oa.v2.activityui.worksheet.WorksheetManageActivity",
-                        BusinessOperation.WORKSHEET_MANAGEMENT, 1),//新加工单
+                        BusinessOperation.WORKSHEET_MANAGEMENT, 1, UmengAnalytics.homepageWorkOrder),//新加工单
                 new HomeItem(R.drawable.newmain_project,
                         "项目管理", "com.loyo.oa.v2.activityui.project.ProjectManageActivity_",
-                        BusinessOperation.PROJECT_MANAGEMENT, 2),
+                        BusinessOperation.PROJECT_MANAGEMENT, 2, UmengAnalytics.homepage_projects),
                 new HomeItem(R.drawable.newmain_task,
                         "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_",
-                        BusinessOperation.TASK, 2),
+                        BusinessOperation.TASK, 2, UmengAnalytics.homepageTasks),
                 new HomeItem(R.drawable.newmain_report,
                         "工作报告", "com.loyo.oa.v2.activityui.work.WorkReportsManageActivity",
-                        BusinessOperation.WORK_REPORT, 2),
+                        BusinessOperation.WORK_REPORT, 2, UmengAnalytics.homepageReport),
                 new HomeItem(R.drawable.newmain_wfin,
                         "审批流程", "com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity",
-                        BusinessOperation.APPROVAL_PROCESS, 2),
+                        BusinessOperation.APPROVAL_PROCESS, 2, UmengAnalytics.homepageApprovals),
                 new HomeItem(R.drawable.newmain_attent,
                         "考勤管理", "com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_",
-                        BusinessOperation.ATTENDANCE_MANAGEMENT, 2)));
+                        BusinessOperation.ATTENDANCE_MANAGEMENT, 2, UmengAnalytics.homepageLegworks)));
 
 
         caseItems = new ArrayList<>(Arrays.asList(
-                new MoreWindowItem("新建任务", BusinessOperation.TASK,                R.drawable.newmain_post_task),
-                new MoreWindowItem("申请审批", BusinessOperation.APPROVAL_PROCESS,    R.drawable.newmain_post_wif),
-                new MoreWindowItem("提交报告", BusinessOperation.WORK_REPORT,         R.drawable.newmain_post_report),
+                new MoreWindowItem("新建任务", BusinessOperation.TASK, R.drawable.newmain_post_task),
+                new MoreWindowItem("申请审批", BusinessOperation.APPROVAL_PROCESS, R.drawable.newmain_post_wif),
+                new MoreWindowItem("提交报告", BusinessOperation.WORK_REPORT, R.drawable.newmain_post_report),
                 new MoreWindowItem("新建客户", BusinessOperation.CUSTOMER_MANAGEMENT, R.drawable.newmain_post_customer),
-                new MoreWindowItem("新建机会", BusinessOperation.SALE_OPPORTUNITY,    R.drawable.newmain_post_sale),
-                new MoreWindowItem("新建订单", BusinessOperation.ORDER_MANAGEMENT,    R.drawable.newmain_post_order),
-                new MoreWindowItem("客户拜访", BusinessOperation.CUSTOMER_VISIT,      R.drawable.newmain_post_sign),
+                new MoreWindowItem("新建机会", BusinessOperation.SALE_OPPORTUNITY, R.drawable.newmain_post_sale),
+                new MoreWindowItem("新建订单", BusinessOperation.ORDER_MANAGEMENT, R.drawable.newmain_post_order),
+                new MoreWindowItem("客户拜访", BusinessOperation.CUSTOMER_VISIT, R.drawable.newmain_post_sign),
                 new MoreWindowItem("考勤打卡", BusinessOperation.ATTENDANCE_MANAGEMENT, R.drawable.newmain_post_att),
-                new MoreWindowItem("写跟进"  , BusinessOperation.VISIT_TIMELINE,      R.drawable.newmain_post_follow)));
+                new MoreWindowItem("写跟进", BusinessOperation.VISIT_TIMELINE, R.drawable.newmain_post_follow)));
     }
 
     /**
@@ -416,33 +427,33 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         AttendanceService.validateAttendance()
                 .subscribe(new DefaultLoyoSubscriber<ValidateInfo>(hud) {
 
-            @Override
-            public void onNext(ValidateInfo _validateInfo) {
-                if (null == _validateInfo) {
-                    Toast.makeText(getActivity(), "获取考勤信息失败", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                validateInfo = _validateInfo;
-                for (ValidateItem validateItem : validateInfo.getValids()) {
-                    if (validateItem.getType() == 1) {
-                        inEnable = validateItem.isEnable();
-                    } else if (validateItem.getType() == 2) {
-                        outEnable = validateItem.isEnable();
-                    }
-                }
+                    @Override
+                    public void onNext(ValidateInfo _validateInfo) {
+                        if (null == _validateInfo) {
+                            Toast.makeText(getActivity(), "获取考勤信息失败", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        validateInfo = _validateInfo;
+                        for (ValidateItem validateItem : validateInfo.getValids()) {
+                            if (validateItem.getType() == 1) {
+                                inEnable = validateItem.isEnable();
+                            } else if (validateItem.getType() == 2) {
+                                outEnable = validateItem.isEnable();
+                            }
+                        }
 
-                if (inEnable || outEnable) {
-                    setAttendance();
-                }
-                //已打卡完毕 跳转考勤列表
-                else {
-                    Toast.makeText(getActivity(), "您今天已经打卡完毕", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getActivity(), AttendanceManagerActivity_.class);
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                }
-            }
-        });
+                        if (inEnable || outEnable) {
+                            setAttendance();
+                        }
+                        //已打卡完毕 跳转考勤列表
+                        else {
+                            Toast.makeText(getActivity(), "您今天已经打卡完毕", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), AttendanceManagerActivity_.class);
+                            startActivity(intent);
+                            getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                        }
+                    }
+                });
     }
 
 
@@ -766,17 +777,17 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         showLoading2("");
         AttendanceService.checkAttendance(map)
                 .subscribe(new DefaultLoyoSubscriber<AttendanceRecord>(hud) {
-            @Override
-            public void onNext(AttendanceRecord attendanceRecord) {
-                attendanceRecords = attendanceRecord;
-                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "获取位置失败，请检查网络或GPS是否正常" : address);
-                if (attendanceRecord.getState() == 3) {
-                    attanceWorry();
-                } else {
-                    intentValue();
-                }
-            }
-        });
+                    @Override
+                    public void onNext(AttendanceRecord attendanceRecord) {
+                        attendanceRecords = attendanceRecord;
+                        attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "获取位置失败，请检查网络或GPS是否正常" : address);
+                        if (attendanceRecord.getState() == 3) {
+                            attanceWorry();
+                        } else {
+                            intentValue();
+                        }
+                    }
+                });
 
         UMengTools.sendLocationInfo(address, longitude, latitude);
         LocationUtilGD.sotpLocation();

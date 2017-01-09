@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -132,9 +133,9 @@ public class FollowUpListAdapter extends BaseAdapter {
         holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createAt));
 
         String contact = TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName;
-        if(null != model.contactPhone && !TextUtils.isEmpty(model.contactPhone) && !contact.equals("无联系人信息")){
-            holder.tv_contact.setText(contact+"("+model.contactPhone+")");
-        }else{
+        if (null != model.contactPhone && !TextUtils.isEmpty(model.contactPhone) && !contact.equals("无联系人信息")) {
+            holder.tv_contact.setText(contact + "(" + model.contactPhone + ")");
+        } else {
             holder.tv_contact.setText(contact);
         }
 

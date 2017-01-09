@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.common.utils.PermissionTool;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
@@ -148,8 +149,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     /**
      * 默认联系人设置
-     * */
-    private void initContact(){
+     */
+    private void initContact() {
         mContact = Utils.findDeault(mCustomer);
         if (null != mContact) {
             mPresenter.setDefaultContact(mContact.getId(), mCustomer.id);
@@ -329,6 +330,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     mIntent.putExtra("customerId", mCustomer.getId());
                 }
                 startActivity(mIntent);
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerEditTag);
                 break;
 
             /*快捷拜访*/
@@ -336,6 +338,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mIntent = new Intent(CustomerDetailInfoActivity.this, SignInActivity.class);
                 mIntent.putExtra("data", mCustomer);
                 startActivity(mIntent);
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerVisit);
                 break;
 
             /*快捷跟进*/
@@ -345,6 +348,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mIntent.putExtra("isDetail", true);
                 mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 startActivity(mIntent);
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerAddFollow);
                 break;
 
             /*返回*/
@@ -382,6 +386,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                                  */
                             }
                         });
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.frompublicPublicDetail);
                 break;
             /*联系人*/
             case R.id.layout_contact:
@@ -441,6 +446,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = CustomerFollowUpListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerCheckFollow);
                 break;
             /*拜访签到*/
             case R.id.layout_visit:
@@ -559,6 +565,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 @Override
                 public void onClick(int which) {
                     setPopViewEmbl(true, "你确定要删除客户?");
+                    UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerDelete);
                 }
             });
         if (canDump)
@@ -566,6 +573,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 @Override
                 public void onClick(int which) {
                     setPopViewEmbl(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
+                    UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerTopublic);
                 }
             });
         dialog.show();

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMember;
@@ -231,6 +232,7 @@ public class SignInActivity extends BaseActivity
                         mfmodule.setIsRecording(true);
                         v.setTag(true);
                     }
+                    UmengAnalytics.umengSend(SignInActivity.this, UmengAnalytics.addVisitRecord);
                 } else {
                     Toast("你没有配置录音或者储存权限");
                 }
@@ -281,6 +283,7 @@ public class SignInActivity extends BaseActivity
 //                            .start(SignInActivity.this);
                     PhotoCapture.builder()
                             .start(SignInActivity.this);
+                    UmengAnalytics.umengSend(SignInActivity.this, UmengAnalytics.addVisitPhoto);
                 }
             }
         });
@@ -298,6 +301,7 @@ public class SignInActivity extends BaseActivity
                 intent.setClass(SignInActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
+                UmengAnalytics.umengSend(SignInActivity.this, UmengAnalytics.addVisitAt);
             }
         });
         mfmodule.setPictureIcon(R.drawable.icon_picture_photo);
@@ -334,8 +338,7 @@ public class SignInActivity extends BaseActivity
                     showCommitLoading();
                     if (controller.count() == 0) {
                         addSignIn();
-                    }
-                    else {
+                    } else {
                         controller.startUpload();
                         controller.notifyCompletionIfNeeded();
                     }
@@ -690,7 +693,7 @@ public class SignInActivity extends BaseActivity
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }

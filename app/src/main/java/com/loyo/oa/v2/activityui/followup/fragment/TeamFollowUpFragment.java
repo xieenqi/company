@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -213,6 +214,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
                     }
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeFollowTeam);
                     break;
 
                     /*筛选*/
@@ -228,6 +230,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                             method = "";
                             typeId = "";
                         }
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.filterFollowTeam);
                         break;
 
                     /*人员*/
@@ -244,6 +247,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                         }
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
                     }
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.roleFollowTeam);
                     break;
                 }
                 initPageData();
@@ -311,7 +315,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map,mPagination.getPageIndex());
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     /**
@@ -322,6 +326,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         commentPosition = position;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         msgAudiomMenu.commentEmbl();
+        UmengAnalytics.umengSend(mActivity, UmengAnalytics.replyFollowTeam);
     }
 
     /**

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.FeedbackActivity_;
 import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity_;
@@ -215,14 +216,17 @@ public class MenuFragment extends BaseFragment {
             //个人资料
             case R.id.ll_head:
                 updateUserinfo();
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.LeftNavBarInformationButton);
                 break;
             //系统消息
             case R.id.ll_system:
                 app.startActivity(getActivity(), SystemMessageActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.LeftNavBar_notice_button);
                 break;
             //意见反馈
             case R.id.ll_feed_back:
                 app.startActivity(getActivity(), FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.LeftNavBarFeedbackButton);
                 break;
             //检查更新
             case R.id.ll_version:
@@ -250,6 +254,7 @@ public class MenuFragment extends BaseFragment {
             //设置
             case R.id.ll_setting:
                 app.startActivity(mActivity, SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.LeftNavBar_option_button);
                 break;
         }
 

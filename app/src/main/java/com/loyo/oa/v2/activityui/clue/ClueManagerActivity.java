@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.clue.common.ClueType;
@@ -130,8 +131,10 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
                 ClueType type;
                 if (mIndex == 0) {
                     type = ClueType.MY_CLUE;
+                    UmengAnalytics.umengSend(this, UmengAnalytics.searchCluesMy);
                 } else {
                     type = ClueType.TEAM_CLUE;
+                    UmengAnalytics.umengSend(this, UmengAnalytics.searchCluesTeam);
                 }
                 LogUtil.dee("type:" + type);
                 Bundle b = new Bundle();
@@ -188,6 +191,8 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             }
+            if (index == 1)
+                UmengAnalytics.umengSend(ClueManagerActivity.this, UmengAnalytics.cluesTeam);
         }
     }
 }
