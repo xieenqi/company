@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
+import com.loyo.oa.v2.activityui.wfinstance.common.ApprovalAddBuilder;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinAddPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinAddView;
@@ -63,6 +64,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
 
     private String projectId;
     private String customerId;
+    private String customerName;
     private String deptId;
     private String mTemplateId;
     private String uuid = StringUtil.getUUID();
@@ -111,6 +113,9 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
         projectId = bundle.getString("projectId");
         projectTitle = bundle.getString("projectTitle");
         Process = bundle.getString("Process");//。流程说明
+        customerId = ApprovalAddBuilder.getCustomerId();
+        customerName = ApprovalAddBuilder.getCustomerName();
+        ApprovalAddBuilder.endCreate();
 
 
         cusTitle = MainApp.user.getRealname() + "" + mBizForm.getName() + "" + processTitle;
@@ -157,6 +162,11 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
         mPresenter.setStartendTime();
         projectAddWfinstance();
         setDefaultDept();
+
+        if (!TextUtils.isEmpty(customerId)) {
+            tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+            ll_customer.setEnabled(false);
+        }
 
         controller = new UploadController(this, 9);
         controller.setObserver(this);

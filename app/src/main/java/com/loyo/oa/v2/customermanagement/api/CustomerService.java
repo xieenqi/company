@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
+import com.loyo.oa.v2.activityui.wfinstance.bean.ApprovalItemModel;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
@@ -317,6 +318,17 @@ public class CustomerService {
                         .create(ICustomer.class)
                         .getCutomerOrder(id, map)
                         .compose(RetrofitAdapterFactory.<PaginationX<OrderListItem>>compatApplySchedulers());
+    }
+
+    /**
+     * 获取客户关联的审批列表
+     */
+    public static Observable<PaginationX<ApprovalItemModel>> getRelatedApprovalList(HashMap<String, Object> map) {
+        return RetrofitAdapterFactory.getInstance()
+                .build(/*TODO:*/Config_project.API_URL()+ FinalVariables.wfinstance)
+                .create(ICustomer.class)
+                .getRelatedApprovalList(map)
+                .compose(RetrofitAdapterFactory.<PaginationX<ApprovalItemModel>>compatApplySchedulers());
     }
 
     public static Observable<SigninPictures> getSigninUploadPhotoConfig(@QueryMap Map<String, Object> map) {
