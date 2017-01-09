@@ -296,7 +296,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 if (isKind) {
                     mPresenter.delete(mCustomer.getId());
                 } else {
-                    mPresenter.toPublic(mCustomer.getId());
+                    /*此处投入公海操作*/
+//                    mPresenter.toPublic(mCustomer.getId());
+                    startActivity(new Intent(CustomerDetailInfoActivity.this, LoseCommonCustomerReasonActivity.class));
                 }
             }
         }, "提示", message);
