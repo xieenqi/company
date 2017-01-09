@@ -8,6 +8,7 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -27,6 +28,7 @@ public class AliOSSManager {
     private static OSS oss;
 
     public AliOSSManager() {
+        if (null == oss)initWithContext(MainApp.getMainApp());
     }
 
     public static AliOSSManager getInstance() {
