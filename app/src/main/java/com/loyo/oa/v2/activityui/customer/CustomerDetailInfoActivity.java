@@ -516,16 +516,16 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*审批流程*/
             case R.id.layout_approval:
             {
-                boolean canAddOrder = mCustomer != null &&
+                boolean canAddApproval = mCustomer != null &&
                         PermissionManager.getInstance().hasCustomerAuthority(
                                 mCustomer.relationState,
                                 mCustomer.state,
-                                CustomerAction.ORDER_ADD
+                                CustomerAction.APPROVAL_ADD
                         );
-                bundle.putBoolean("canAdd", canAddOrder);
+                bundle.putBoolean("canAdd", canAddApproval);
                 bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
-                _class = CustomerOrderList.class;
+                _class = CustomerRelatedApprovalList.class;
                 requestCode = ExtraAndResult.REQUEST_CODE;
             }
                 break;

@@ -12,6 +12,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 
 import static com.loyo.oa.v2.application.MainApp.user;
+import static com.loyo.oa.v2.permission.CustomerAction.APPROVAL_ADD;
 import static com.loyo.oa.v2.permission.CustomerAction.ATTACHMENT_ADD;
 import static com.loyo.oa.v2.permission.CustomerAction.CONTACT_ADD;
 import static com.loyo.oa.v2.permission.CustomerAction.DELETE;
@@ -167,7 +168,8 @@ public class PermissionManager {
                                 ORDER_ADD,    TASK_ADD,     ATTACHMENT_ADD,
                                 REMINDER_ADD, VISIT,        PICK_IN,
                                 DUMP,         IMPORT,       EXPORT,
-                                RESPONSIBLE_PERSON_CHANGE,  DELETE),
+                                RESPONSIBLE_PERSON_CHANGE,  DELETE,
+                                APPROVAL_ADD),
                         /* 超级管理员, 公海客户 */
                         EnumSet.of(PREVIEW,      PICK_IN,      DELETE),
                         /* 超级管理员, 回收客户 */
@@ -180,7 +182,8 @@ public class PermissionManager {
                                    ORDER_ADD,    TASK_ADD,     ATTACHMENT_ADD,
                                    REMINDER_ADD, VISIT,        PICK_IN,
                                    DUMP,         IMPORT,       EXPORT,
-                                   RESPONSIBLE_PERSON_CHANGE,  DELETE),
+                                   RESPONSIBLE_PERSON_CHANGE,  DELETE,
+                                APPROVAL_ADD),
                         /* 负责人level, 公海客户 */
                         EnumSet.of(PREVIEW,      PICK_IN,      DELETE),
                         /* 负责人level, 回收客户 */
@@ -191,7 +194,8 @@ public class PermissionManager {
                         EnumSet.of(PREVIEW,
                                    CONTACT_ADD,  FOLLOWUP_ADD, SALE_OPPORTUNITY_ADD,
                                    ORDER_ADD,    TASK_ADD,     ATTACHMENT_ADD,
-                                   REMINDER_ADD, VISIT,        EDIT),
+                                   REMINDER_ADD, VISIT,        EDIT,
+                                APPROVAL_ADD),
                         /* 参与人level, 公海客户 */
                         EnumSet.of(PREVIEW,      PICK_IN,      DELETE),
                         /* 参与人level, 回收客户 */
