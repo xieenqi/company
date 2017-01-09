@@ -20,9 +20,10 @@ import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Department;
-import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
+import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinAddPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinAddPresenterImpl;
@@ -61,6 +62,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
     public static final int RESULT_DEPT_CHOOSE = 5;
 
     private String projectId;
+    private String customerId;
     private String deptId;
     private String mTemplateId;
     private String uuid = StringUtil.getUUID();
@@ -75,22 +77,20 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
     private ViewGroup layout_wfinstance_data;
     private ViewGroup ll_dept;
     private ViewGroup ll_project;
+    private ViewGroup ll_customer;
     private LinearLayout wfinstance_data_container;
     private TextView wordcount, tv_process;
     private TextView tv_dept;
     private TextView tv_project;
+    private TextView tv_customer;
     private Button btn_add;
     private EditText edt_memo;
     private EditText tv_title;
-    private ImageGridViewAdapter imageGridViewAdapter;
     private WfinAddPresenter mPresenter;
 
     private LinearLayout ll_attach_file;
     private BizForm mBizForm;
-    private List<String> mSelectPath;
-    private ArrayList<ImageInfo> pickPhotsResult;
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
-    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
 
     UploadController controller;
     ImageUploadGridView gridView;
@@ -120,9 +120,11 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
         layout_wfinstance_data = (ViewGroup) findViewById(R.id.layout_wfinstance_data);
         ll_dept = (ViewGroup) findViewById(R.id.ll_dept);
         ll_project = (ViewGroup) findViewById(R.id.ll_project);
+        ll_customer = (ViewGroup) findViewById(R.id.ll_customer);
         wordcount = (TextView) findViewById(R.id.wordcount);
         tv_dept = (TextView) findViewById(R.id.tv_dept);
         tv_project = (TextView) findViewById(R.id.tv_project);
+        tv_customer = (TextView) findViewById(R.id.tv_customer);
         tv_process = (TextView) findViewById(R.id.tv_process);
         btn_add = (Button) findViewById(R.id.btn_add);
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
@@ -138,9 +140,11 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_add.setOnTouchListener(Global.GetTouch());
         ll_project.setOnTouchListener(Global.GetTouch());
+        ll_customer.setOnTouchListener(Global.GetTouch());
         ll_dept.setOnTouchListener(Global.GetTouch());
 
         ll_project.setOnClickListener(onClick);
+        ll_customer.setOnClickListener(onClick);
         btn_add.setOnClickListener(onClick);
         img_title_left.setOnClickListener(onClick);
         img_title_right.setOnClickListener(onClick);
@@ -220,6 +224,11 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);
                     break;
+                //所属客户选择
+                case R.id.ll_customer:
+                    app.startActivityForResult(WfInAddActivity.this, SigninSelectCustomerSearch.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+                    break;
 
                 //提交审批
                 case R.id.img_title_right:
@@ -251,6 +260,20 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
             return;
         }
         switch (requestCode) {
+
+            //选择客户
+            case ExtraAndResult.REQUEST_CODE_CUSTOMER:
+                Customer customer = (Customer) data.getSerializableExtra("data");
+                if (null != customer) {
+                    customerId = customer.getId();
+                    String customerName = customer.name;
+                    tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+                }
+                else {
+                    customerId = "";
+                    tv_customer.setText("无");
+                }
+                break;
 
             /*相册选择 回调*/
             case PhotoPicker.REQUEST_CODE:
