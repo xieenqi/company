@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -165,12 +166,15 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                         xPath = "";
                         userId = model.getKey();
                     }
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.departmentCluesTeam);
                 } else if (menuIndex == 1) { // TimeFilterModel
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCluesTeam);
                 } else if (menuIndex == 2) { // ClueStatusFilterModel
                     statusKey = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.stateCluesTeam);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
                 isPullDown = true;

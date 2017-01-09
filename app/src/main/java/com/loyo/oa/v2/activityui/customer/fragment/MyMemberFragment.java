@@ -183,8 +183,10 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomerJoin);
                 } else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomerJoin);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
                 isPullUp = false;

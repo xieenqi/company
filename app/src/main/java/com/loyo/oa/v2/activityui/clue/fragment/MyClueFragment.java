@@ -105,8 +105,10 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCluesMy);
                 } else if (menuIndex == 1) { // ClueStatusFilterModel
                     statusKey = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.stateCluesMy);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
                 isPullDown = true;

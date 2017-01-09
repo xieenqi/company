@@ -176,8 +176,10 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
                 if (menuIndex == 0) {
                     statusParam = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.stateWorkOrder);
                 } else if (menuIndex == 1) {
                     typeParam = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.typeWorkOrder);
                 }
                 refresh();
             }

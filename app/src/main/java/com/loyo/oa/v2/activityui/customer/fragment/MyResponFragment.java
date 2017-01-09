@@ -173,8 +173,10 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomer);
                 } else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomer);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
                 isPullUp = false;

@@ -326,6 +326,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         commentPosition = position;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         msgAudiomMenu.commentEmbl();
+        UmengAnalytics.umengSend(mActivity, UmengAnalytics.replyFollowTeam);
     }
 
     /**

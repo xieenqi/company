@@ -131,8 +131,10 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
                 ClueType type;
                 if (mIndex == 0) {
                     type = ClueType.MY_CLUE;
+                    UmengAnalytics.umengSend(this, UmengAnalytics.searchCluesMy);
                 } else {
                     type = ClueType.TEAM_CLUE;
+                    UmengAnalytics.umengSend(this, UmengAnalytics.searchCluesTeam);
                 }
                 LogUtil.dee("type:" + type);
                 Bundle b = new Bundle();

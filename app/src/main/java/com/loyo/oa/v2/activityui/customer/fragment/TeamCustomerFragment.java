@@ -182,6 +182,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                         departmentId = "";
                         userId = model.getKey();
                     }
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.departmentCustomerTeam);
                 } else if (menuIndex == 1) { // TimeFilterModel
                     MenuModel model = selectedModels.get(0);
                     String key = model.getKey();
@@ -190,8 +191,10 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomerTeam);
                 } else if (menuIndex == 2) { // TagFilter
                     tagsParams = userInfo.toString();
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomerTeam);
                 }
                 getRefershData();
             }

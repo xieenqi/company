@@ -294,6 +294,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
         layout_bottom_menu.setVisibility(View.VISIBLE);
         btn_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        UmengAnalytics.umengSend(mActivity, UmengAnalytics.replyVisit);
     }
 
 

@@ -18,7 +18,6 @@ import java.util.HashMap;
 
 public class UmengAnalytics {
     public static String businessQuery = "BusinessQuery";           //工商查询
-
     public static String addFollow = "add_follow";                  //新建跟进
     public static String addVisit = "add_visit";                    //新建拜访
     public static String addVisitAt = " add_visit_at";              //新建拜访-@
@@ -44,6 +43,8 @@ public class UmengAnalytics {
     public static String departmentOrderTeam = "department_order_team";     //筛选-部门-团队订单
     public static String departmentVisitTeam = "department_visit_team";     //筛选-部门-团队拜访
     public static String departmentWorkSheetTeam = "department_work_order_team";   //筛选-部门-团队工单
+    public static String departmentCluesTeam = "department_clues_team";            //筛选部门-团队线索
+    public static String departmentCustomerTeam = "department_customer_team";     //部门筛选-团队客户
     public static String edit_clues_my = "edit_clues_my";                   //线索详情页-编辑-我的线索
     public static String filterFollow = "filter_follow";                    //筛选跟进-我的跟进
     public static String filterFollowTeam = "filter_follow_team";           //筛选跟进-团队跟进
@@ -85,8 +86,8 @@ public class UmengAnalytics {
     public static String rankOrderTeam = "rank_order_team";                         //排序-团队订单
     public static String rankVisit = "rank_visit";                                  //排序-我的拜访
     public static String rankVisitTeam = "rank_visit_team";                         //排序-团队拜访
-    public static String reply_follow = " reply_follow";                            //写评论-我的跟进
-    public static String reply_follow_team = "reply_follow_team";                   //写评论-团队跟进
+    public static String replyFollow = "reply_follow";                              //写评论-我的跟进
+    public static String replyFollowTeam = "reply_follow_team";                     //写评论-团队跟进
     public static String replyVisit = "reply_visit";                                //评论-我的拜访
     public static String replyVisitTeam = "reply_visit_team";                       //评论-团队拜访
     public static String roleFollowTeam = "role_follow_team";                       //人员过滤-团队跟进中
@@ -115,6 +116,8 @@ public class UmengAnalytics {
     public static String statisticsButton = "statistics_button";                    //上方导航_统计（仪表盘）
     public static String tagCustomer = "tag_customer";                              //点击标签过滤-我负责的客户中
     public static String tagPublic = "tag_public";                                  //点击标签过滤-公海客户中
+    public static String tagCustomerTeam = "tag_customer_team";                     //标签过滤-团队客户
+    public static String tagCustomerJoin = "tag_customer_join";                     //标签过滤-我参与的
     public static String timeCluesMy = "time_clues_my";                             //点击时间排序-我的线索中
     public static String timeCluesTeam = "time_clues_team";                         //点击时间排序-团队线索中
     public static String timeCustomer = "time_customer";                            //点击时间排序-我负责客户中
@@ -123,6 +126,8 @@ public class UmengAnalytics {
     public static String timePublic = "time_public";                                //点击时间排序-公海客户中
     public static String timeVisit = "time_visit";                                  //筛选-时间-我的拜访中
     public static String timeVisitTeam = "time_visit_team";                         //筛选-时间-团队拜访中
+    public static String timeCustomerJoin = "time_customer_join";                   //时间筛选-我参与的
+    public static String timeCustomerTeam = "time_customer_team";                   //时间过滤-团队客户
     public static String toCustomerCluesMy = "to-customer_clues_my";                //线索详情页-转为客户
     public static String transferCluesMy = "transfer_clues_my";                     //线索详情页-转移给他人
     public static String typeVisit = "type_visit";                                  //筛选-类型-我的拜访中

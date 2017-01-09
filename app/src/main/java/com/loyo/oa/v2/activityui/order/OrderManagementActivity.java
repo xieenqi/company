@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.fragment.MyOrderFragment;
 import com.loyo.oa.v2.activityui.order.fragment.TeamOrderFragment;
@@ -119,8 +120,10 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
                 int type;
                 if (mIndex == 0) {
                     type = OrderSearchActivity.MY_SALE_SEARCH;
+                    UmengAnalytics.umengSend(this, UmengAnalytics.searchOrder);
                 } else {
                     type = OrderSearchActivity.TEAM_SALE_SEARCH;
+                    UmengAnalytics.umengSend(this, UmengAnalytics.searchOrderTeam);
                 }
                 Bundle b = new Bundle();
                 b.putInt(ExtraAndResult.EXTRA_TYPE, type);
