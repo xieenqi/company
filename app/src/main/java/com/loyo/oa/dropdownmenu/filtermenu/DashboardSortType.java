@@ -29,7 +29,13 @@ public enum DashboardSortType {
     ORDER_MONEY_RISE("订单金额由小到大", "2"),
 
     COMPILE_DROP("完成率由大到小","3"),
-    COMPILE_RISE("完成率由小到大","4");
+    COMPILE_RISE("完成率由小到大","4"),
+
+    //回款统计排序
+    PAYMENT_GET_DROP("回款金额由大到小","1"),
+    PAYMENT_GET_RISE("回款金额由小到大","2"),
+    PAYMENT_SHOULD_GET_DROP("应收款由大到小","3"),
+    PAYMENT_SHOULD_GET_RISE("应收款由小到大","4");
 
     public String key;
     public String value;

@@ -84,6 +84,13 @@ public class DashBoardService {
                 //订单数量
                 observable = dashBoard.getDashBoardSaleListData(params);
                 break;
+            case PAYMENT:
+                //回款统 计
+
+
+                break;
+            default:
+                throw new UnsupportedOperationException("获取数据类型错误！");
         }
        return observable.compose(RetrofitAdapterFactory.<PaginationX<StatisticRecord>>applySchedulers());
 

@@ -28,6 +28,22 @@ public class DashboardSortTypeMenuModel implements MenuModel {
     }
 
     /**
+     * 仪表盘列表 回款统计排序
+     * @return
+     */
+    public static FilterModel getPaymentFilterModel() {
+
+        List<MenuModel> list = new ArrayList<>();
+        list.add(new DashboardSortTypeMenuModel(DashboardSortType.PAYMENT_GET_DROP));
+        list.add(new DashboardSortTypeMenuModel(DashboardSortType.PAYMENT_GET_RISE));
+        list.add(new DashboardSortTypeMenuModel(DashboardSortType.PAYMENT_SHOULD_GET_DROP));
+        list.add(new DashboardSortTypeMenuModel(DashboardSortType.PAYMENT_SHOULD_GET_RISE));
+
+        FilterModel model = new FilterModel(list, "排序", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        return model;
+    }
+
+    /**
      * 【客户】【跟进】排序
      * @return
      */

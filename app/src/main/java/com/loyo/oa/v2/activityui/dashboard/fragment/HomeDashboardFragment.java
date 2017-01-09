@@ -459,12 +459,12 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 break;
             /** 回款统计 */
             case R.id.ll_pay:
-                if (!checkPermission(DashboardType.ORDER_MONEY)) {
+                if (!checkPermission(DashboardType.PAYMENT)) {
                     return;
                 }
                 Bundle paymentBundle = new Bundle();
                 paymentBundle.putInt("time", paymentType);
-                paymentBundle.putSerializable("type", DashboardType.ORDER_MONEY);
+                paymentBundle.putSerializable("type", DashboardType.PAYMENT);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, paymentBundle);
                 break;
             /** 跟进,点击重试 */

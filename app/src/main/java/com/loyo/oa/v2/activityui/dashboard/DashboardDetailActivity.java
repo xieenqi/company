@@ -39,6 +39,7 @@ import java.util.List;
 import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.COMMON;
 import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.ORDER_MONEY;
 import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.ORDER_NUMBER;
+import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.PAYMENT;
 
 /**
  * 【仪表盘】详情页面
@@ -105,6 +106,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         }else if( DashboardType.ORDER_MONEY == type) {
             //订单金额
             map.put("sType", "2");
+        }else if(DashboardType.PAYMENT==type){
+            //回款统计
         }
 
         if (adapter.isEmpty()) {
