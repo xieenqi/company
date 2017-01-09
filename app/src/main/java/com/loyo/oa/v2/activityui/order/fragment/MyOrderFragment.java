@@ -131,6 +131,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
 
                 if (menuIndex == 0) { //
                     statusType = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.stageOrder);
                 } else if (menuIndex == 1) { //
                     CommonSortType type = ((CommonSortTypeMenuModel) model).type;
                     if (type == CommonSortType.AMOUNT) {
@@ -138,6 +139,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                     } else if (type == CommonSortType.CREATE) {
                         field = "createdAt";
                     }
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankOrder);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
                 isPullDown = true;

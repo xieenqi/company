@@ -515,6 +515,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data);
                 app.startActivityForResult(ClueDetailActivity.this, ClueAddActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+                UmengAnalytics.umengSend(ClueDetailActivity.this, UmengAnalytics.edit_clues_my);
             }
         });
 

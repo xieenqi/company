@@ -386,6 +386,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                                  */
                             }
                         });
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.frompublicPublicDetail);
                 break;
             /*联系人*/
             case R.id.layout_contact:

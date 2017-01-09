@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -208,14 +209,14 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
                     case 0:
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeVisitTeam);
                         break;
-
                     /*排序*/
                     case 1:
                         menuSortkey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankVisitTeam);
                         break;
-
                     /*人员*/
                     case 2:
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
@@ -226,6 +227,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
                             departmentId = "";
                             userId = model.getKey();
                         }
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.departmentVisitTeam);
                         break;
                 }
                 initPageData();
@@ -297,7 +299,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("团队拜访,发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map,mPagination.getPageIndex());
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     /**

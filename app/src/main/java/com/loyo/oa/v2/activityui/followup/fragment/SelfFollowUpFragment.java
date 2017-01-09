@@ -189,6 +189,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                         MenuModel model = selectedModels.get(0);
                         menuTimeKey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeFollow);
                         break;
 
                     /*筛选*/
@@ -207,6 +208,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                             typeId = "";
                             activityType = "";
                         }
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.filterFollow);
                         break;
                 }
                 initPageData();

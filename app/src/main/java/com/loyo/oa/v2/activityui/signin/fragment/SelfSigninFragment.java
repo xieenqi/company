@@ -245,18 +245,21 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
                     case 0:
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeVisit);
                         break;
 
                     /*类型*/
                     case 1:
                         menuKindkey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.typeVisit);
                         break;
 
                     /*排序*/
                     case 2:
                         menuSortkey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankVisit);
                         break;
                 }
                 initPageData();

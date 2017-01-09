@@ -116,8 +116,10 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
                 String stageId = "", sortType = "";
                 if (menuIndex == 0) { // SaleStage
                     stageId = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.stageChanceMy);
                 } else if (menuIndex == 1) { // 排序
                     sortType = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankChanceMy);
                 }
                 mPersenter.getScreenData(stageId, sortType);
             }
