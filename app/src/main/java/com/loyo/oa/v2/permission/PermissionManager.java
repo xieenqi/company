@@ -251,7 +251,7 @@ public class PermissionManager {
             return false;
         }
 
-        CustomerAuthority authorityLevel = getAuthorityLevel(relationState);
+        CustomerAuthority authorityLevel = getCustomerAuthorityLevel(relationState);
         EnumSet<CustomerAction> set = TABLE[authorityLevel.ordinal()][state-1];
         if (set.contains(action)) {
 
@@ -266,7 +266,7 @@ public class PermissionManager {
         return false;
     }
 
-    public CustomerAuthority getAuthorityLevel(@Customer.RelationState int relationState) {
+    public CustomerAuthority getCustomerAuthorityLevel(@Customer.RelationState int relationState) {
 
         CustomerAuthority level;
         switch(relationState) {
