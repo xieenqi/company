@@ -42,11 +42,13 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
+        <include layout="@layout/common_include_full_line_space" />
+
         <LinearLayout
             android:id="@+id/layout_add"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_48"
-            android:background="@color/activity_bg"
+            android:background="@color/common_activity_con_bg"
             android:gravity="center"
             android:orientation="horizontal">
 
