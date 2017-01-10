@@ -20,6 +20,7 @@ import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
@@ -180,16 +181,15 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
         HashMap<String,Object> map = new HashMap<>();
         map.put("qType",type);
         //这里需要新的接口
-        DashBoardService.getDashBoardHomePayment().subscribe(new DefaultLoyoSubscriber<HomePaymentModel>() {
+        DashBoardService.getDashBoardHomePayment().subscribe(new DefaultLoyoSubscriber<HomePaymentModel>(LoyoErrorChecker.SILENCE) {
             @Override
             public void onNext(HomePaymentModel homePaymentModel) {
                 crolView.paymentConSuccessEmbl(homePaymentModel);
             }
-
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                crolView.moneyConErrorEmbl();
+                crolView.paymentConErrorEmbl();
             }
         });
     }

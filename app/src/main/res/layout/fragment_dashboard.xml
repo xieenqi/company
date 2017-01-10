@@ -833,7 +833,7 @@
                         android:id="@+id/tv_screen_title4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="今天"
+                        android:text="本月"
                         android:textSize="@dimen/text_sp13" />
 
                     <ImageView
@@ -846,7 +846,7 @@
 
             <include layout="@layout/include_solid_line_left" />
 
-            <RelativeLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -1047,7 +1047,7 @@
                         </LinearLayout>
                     </FrameLayout>
                 </LinearLayout>
-            </RelativeLayout>
+            </FrameLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

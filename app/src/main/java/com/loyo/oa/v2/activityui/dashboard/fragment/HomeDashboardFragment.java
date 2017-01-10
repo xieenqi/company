@@ -283,7 +283,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         ll_dashboard_order_money.setOnClickListener(this);
 
         Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
-                ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, ll_case4, tv_click_rest1, tv_click_rest2, tv_click_rest3, tv_click_rest4);
+                ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, ll_case4, tv_click_rest1, tv_click_rest2, tv_click_rest3, tv_click_rest4,ll_pay);
         isLoading = true;
         getPageData();
     }
