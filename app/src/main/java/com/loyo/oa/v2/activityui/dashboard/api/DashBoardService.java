@@ -97,6 +97,7 @@ public class DashBoardService {
                 break;
             case PAYMENT:
                 //回款统计
+                observable = dashBoard.getDashBoardHomePaymentListData(params);
                 break;
             default:
                 throw new UnsupportedOperationException("获取数据类型错误！");

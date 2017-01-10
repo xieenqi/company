@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.dashboard.api;
 import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
 import com.loyo.oa.v2.activityui.dashboard.model.HomePaymentModel;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
-import com.loyo.oa.v2.activityui.dashboard.model.PaymentListItemModel;
 import com.loyo.oa.v2.activityui.dashboard.model.StatisticRecord;
 import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -85,6 +84,6 @@ public interface IDashBoard {
      * 仪表盘 回款统计 列表数据
      */
     @GET("/statistics/mobile/back_money/list")
-    Observable<BaseResponse<PaginationX<PaymentListItemModel>>>
+    Observable<BaseResponse<PaginationX<StatisticRecord>>>
     getDashBoardHomePaymentListData(@QueryMap HashMap<String, Object> map);
 }
