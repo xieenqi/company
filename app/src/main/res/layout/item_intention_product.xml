@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/common_activity_con_bg"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,8 +11,7 @@
         android:background="@color/activity_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/margin_other_view"
-        >
+        android:paddingLeft="@dimen/margin_other_view">
 
         <TextView
             android:id="@+id/tv_index"
@@ -21,8 +20,7 @@
             android:layout_weight="1"
             android:text="新增产品"
             android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp15"
-            />
+            android:textSize="@dimen/text_sp15" />
 
         <LinearLayout
             android:id="@+id/ll_delete"
@@ -30,14 +28,12 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/margin_other_view"
-            android:paddingRight="@dimen/dimen_5"
-            >
+            android:paddingRight="@dimen/dimen_5">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/img_delete"
-                />
+                android:src="@drawable/img_delete" />
         </LinearLayout>
 
         <LinearLayout
@@ -51,8 +47,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/img_edit"
-                />
+                android:src="@drawable/img_edit" />
         </LinearLayout>
     </LinearLayout>
 
@@ -69,7 +64,7 @@
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:minWidth="@dimen/dimen_60"
             android:text="产        品"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_product"
@@ -80,11 +75,11 @@
             android:gravity="right|center_vertical"
             android:textColor="@color/title_bg1"
             android:textColorHint="@color/text99"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line_left"/>
+    <include layout="@layout/include_solid_line_left" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -100,7 +95,7 @@
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:minWidth="@dimen/dimen_60"
             android:text="产品原价"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_toal_price"
@@ -111,11 +106,11 @@
             android:gravity="right|center_vertical"
             android:textColor="@color/title_bg1"
             android:textColorHint="@color/text99"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line_left"/>
+    <include layout="@layout/include_solid_line_left" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -131,7 +126,7 @@
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:minWidth="@dimen/dimen_60"
             android:text="销售价格"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_sale_price"
@@ -142,11 +137,11 @@
             android:gravity="right|center_vertical"
             android:textColor="@color/title_bg1"
             android:textColorHint="@color/text99"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line_left"/>
+    <include layout="@layout/include_solid_line_left" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -161,7 +156,7 @@
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:minWidth="@dimen/dimen_60"
             android:text="数        量"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_number"
@@ -172,11 +167,11 @@
             android:gravity="right|center_vertical"
             android:textColor="@color/title_bg1"
             android:textColorHint="@color/text99"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line_left"/>
+    <include layout="@layout/include_solid_line_left" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -191,7 +186,7 @@
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:minWidth="@dimen/dimen_60"
             android:text="折        扣"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_discount"
@@ -202,11 +197,11 @@
             android:gravity="right|center_vertical"
             android:textColor="@color/title_bg1"
             android:textColorHint="@color/text99"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line_left"/>
+    <include layout="@layout/include_solid_line_left" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -221,7 +216,7 @@
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:minWidth="@dimen/dimen_60"
             android:text="总  金  额"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_total_money"
@@ -232,11 +227,11 @@
             android:gravity="right|center_vertical"
             android:textColor="@color/title_bg1"
             android:textColorHint="@color/text99"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line_left"/>
+    <include layout="@layout/include_solid_line_left" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -245,8 +240,7 @@
         android:minHeight="@dimen/view_h_title"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/dimen_8"
-        android:paddingTop="@dimen/dimen_8"
-        >
+        android:paddingTop="@dimen/dimen_8">
 
         <TextView
             style="@style/text_item1"
@@ -255,7 +249,7 @@
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:minWidth="@dimen/dimen_60"
             android:text="备        注"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_memo"
@@ -263,8 +257,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp15"
-            />
+            android:textSize="@dimen/text_sp15" />
     </LinearLayout>
 
 

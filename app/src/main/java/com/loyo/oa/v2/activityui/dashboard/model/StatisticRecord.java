@@ -1,8 +1,8 @@
 package com.loyo.oa.v2.activityui.dashboard.model;
 
+import com.loyo.oa.common.utils.BigNumberFormatTool;
 import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -12,11 +12,9 @@ import java.util.ArrayList;
 
 public class StatisticRecord {
 
-    private final static long TEN_MILLION     = 10000000L;  // 千万
-    private final static long HUNDRED_MILLION = 100000000L; // 亿
-    private final static long TEN_THOUSAND    = 10000L;     // 万
 
     //公共字段
+    public String id;
     public Integer total;
     public Integer totalCustomer;
     public String userName;
@@ -24,7 +22,6 @@ public class StatisticRecord {
     public String totalLength;
 
 
-    public String id;
     public String name;
     //增量／存量
     public Integer count;
@@ -35,6 +32,16 @@ public class StatisticRecord {
     public Double targetNum;
     public String finish_rate;
 
+    //回款统计
+    public Double notBackMoney;
+    public Double backMoney;
+    public Double backMoneyTarget;
+    public Person director;
+
+    public class Person {
+        public String id;
+        public String name;
+    }
 
     public ArrayList<String> getDisplayColumnForType(final DashboardType type) {
         if (DashboardType.CUS_FOLLOWUP == type || DashboardType.SALE_FOLLOWUP == type || DashboardType.CUS_SIGNIN == type) {
@@ -67,11 +74,19 @@ public class StatisticRecord {
             // 订单数量和金额
             return new ArrayList<String>() {{
                 add(name);
-                add(format(targetNum,type));
-                add(format(orderNum,type));
+                add(format(targetNum, type));
+                add(format(orderNum, type));
                 add(finish_rate);
             }};
-        } else {
+        } else if (DashboardType.PAYMENT == type) {
+            // 回款统计
+            return new ArrayList<String>() {{
+                add(director.name);
+                add(format(notBackMoney, type));
+                add(format(backMoney, type));
+                add(format(backMoneyTarget, type));
+            }};
+        } else{
             return new ArrayList<>();
         }
     }
@@ -80,21 +95,10 @@ public class StatisticRecord {
      * 数据超过千万时，4舍5入的方式处理略写成万为单位的数值（保留2位小数）：
      * 数据超过亿时，4舍5入的方式处理略写成亿为单位的数值（保留2位小数）
      */
-    private String format(Double number,DashboardType type) {
-        if(null==number){
-            return "--";
-        }
-        String result;
-        DecimalFormat df=new DecimalFormat("#.##");
-        if(number>HUNDRED_MILLION){
-            result=df.format(number/HUNDRED_MILLION)+"亿";
-        }else if(number>TEN_MILLION){
-            result=df.format(number/TEN_THOUSAND)+"万";
-        }else{
-            result=df.format(number);
-        }
-        if(DashboardType.ORDER_MONEY==type){
-            result= "¥"+result;
+    private String format(Double number, DashboardType type) {
+        String result = BigNumberFormatTool.format(number);
+        if (null != result && (DashboardType.ORDER_MONEY == type)||DashboardType.PAYMENT == type) {
+            result = "¥" + result;
         }
         return result;
     }

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/common_activity_bg"
     android:clipToPadding="true"
     android:fitsSystemWindows="true">
 
@@ -16,6 +16,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_bottom"
         android:layout_below="@+id/layout_top"
+        android:background="@color/common_activity_bg"
         app:isFirstVisible="true">
 
         <com.loyo.oa.pulltorefresh.PullToRefreshListView
@@ -24,7 +25,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_bottom"
             android:layout_below="@+id/layout_top"
-            android:background="@color/white"
+            android:background="@color/common_activity_bg"
             android:cacheColorHint="#00000000"
             android:divider="@null"
             android:drawSelectorOnTop="true"
@@ -42,12 +43,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
-
+        <include layout="@layout/common_include_full_line_space"/>
         <LinearLayout
             android:id="@+id/layout_add"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_48"
-            android:background="@color/activity_bg"
+            android:background="@color/common_activity_con_bg"
             android:gravity="center"
             android:orientation="horizontal">
 

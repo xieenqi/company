@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.dashboard.fragment;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,8 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.maps.model.Text;
+import com.loyo.oa.common.utils.BigNumberFormatTool;
+import com.loyo.oa.common.utils.DensityUtil;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
@@ -23,6 +25,7 @@ import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
 import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
 import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.HomePaymentModel;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
 import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
@@ -63,7 +66,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private TextView fw_totalsize, fw_count,
             visit_totalsize, visit_count,
             voice_totalsize, voice_count,
-            tv_nums1,tv_nums2,tv_nums3,payment_tv_all_num;
+            tv_nums1,tv_nums2,tv_nums3, payment_tv_all;
 
     private TextView tv_target_count, tv_order_count,  /*  目标数量 订单数量  */
             tv_target_money, tv_order_money;  /*  目标金额 订单金额  */
@@ -166,8 +169,26 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     /**
      * 绑定回款统计数据
      */
-    private void bindPaymentData(){
-
+    private void bindPaymentData(HomePaymentModel paymentModel){
+        Log.i("tttt", "bindPaymentData: 数据绑定");
+        int maxViewHeight=130;//view的柱状图的最大高度
+        Double sum=paymentModel.backMoney+paymentModel.backMoneyTarget+paymentModel.planMoney;
+        int payment=DensityUtil.dp2px(getActivity(), (float) (maxViewHeight*(paymentModel.backMoney/sum)));
+        int planPayment=DensityUtil.dp2px(getActivity(), (float) (maxViewHeight*(paymentModel.planMoney/sum)));
+        int targetPayment=DensityUtil.dp2px(getActivity(), (float) (maxViewHeight*(paymentModel.backMoneyTarget/sum)));
+        payment_tv_all.setText("¥"+BigNumberFormatTool.format(paymentModel.notBackMoney));
+        tv_payment_1.setText("¥"+BigNumberFormatTool.format(paymentModel.backMoney));
+        tv_payment_2.setText("¥"+BigNumberFormatTool.format(paymentModel.planMoney));
+        tv_payment_3.setText("¥"+BigNumberFormatTool.format(paymentModel.backMoneyTarget));
+        ViewGroup.LayoutParams layoutParams1 = view_payment_1.getLayoutParams();
+        layoutParams1.height=payment;
+        view_payment_1.setLayoutParams(layoutParams1);
+        ViewGroup.LayoutParams layoutParams2 = view_payment_2.getLayoutParams();
+        layoutParams2.height=planPayment;
+        view_payment_2.setLayoutParams(layoutParams2);
+        ViewGroup.LayoutParams layoutParams3 = view_payment_3.getLayoutParams();
+        layoutParams3.height=targetPayment;
+        view_payment_3.setLayoutParams(layoutParams3);
     }
     private void initUI() {
 
@@ -235,6 +256,15 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         visit_count = (TextView) mView.findViewById(R.id.visit_count);
         fw_count = (TextView) mView.findViewById(R.id.fw_count);
 
+        //回款统计
+        tv_payment_1= (TextView) mView.findViewById(R.id.payment_tv_1);
+        tv_payment_2= (TextView) mView.findViewById(R.id.payment_tv_2);
+        tv_payment_3= (TextView) mView.findViewById(R.id.payment_tv_3);
+        payment_tv_all= (TextView) mView.findViewById(R.id.payment_tv_all);
+        view_payment_1=mView.findViewById(R.id.payment_view_1);
+        view_payment_2=mView.findViewById(R.id.payment_view_2);
+        view_payment_3=mView.findViewById(R.id.payment_view_3);
+
         rb_customer.setOnClickListener(this);
         ll_pay.setOnClickListener(this);
         rb_clue.setOnClickListener(this);
@@ -253,7 +283,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         ll_dashboard_order_money.setOnClickListener(this);
 
         Global.SetTouchView(ll_dashboard_followup, ll_dashboard_signin, ll_dashboard_record, ll_dashboard_order_number,
-                ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, ll_case4, tv_click_rest1, tv_click_rest2, tv_click_rest3, tv_click_rest4);
+                ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, ll_case4, tv_click_rest1, tv_click_rest2, tv_click_rest3, tv_click_rest4,ll_pay);
         isLoading = true;
         getPageData();
     }
@@ -585,7 +615,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     //获取回款统计成功
     @Override
-    public void paymentConSuccessEmbl(Object paymentModel) {
+    public void paymentConSuccessEmbl(HomePaymentModel paymentModel) {
         mPresenter.setOnSucssView(
                 loadAnim4,
                 ll_pay,
@@ -593,8 +623,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 loading_error4,
                 loading_view4,
                 LoadStatus.SUCCESS);
-        bindPaymentData();
-        //TODO 这里要绑定数据
+        bindPaymentData(paymentModel);
     }
 
     //获取回款统计失败

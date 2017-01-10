@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.home.api;
 
 import com.loyo.oa.v2.activityui.clue.api.IClue;
+import com.loyo.oa.v2.activityui.dashboard.api.IDashBoard;
+import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
 import com.loyo.oa.v2.beans.BaseBean;
@@ -32,6 +34,8 @@ public class HomeService {
                         .getNumber()
                         .compose(RetrofitAdapterFactory.<ArrayList<HttpMainRedDot>>compatApplySchedulers());
     }
+
+
 
     public static Observable<CheckUpdateService.UpdateInfo> checkUpdate() {
         return

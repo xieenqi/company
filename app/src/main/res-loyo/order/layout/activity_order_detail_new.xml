@@ -14,7 +14,6 @@
         android:id="@+id/ll_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         app:isFirstVisible="true">
 
 
@@ -346,6 +345,50 @@
 
                         <TextView
                             android:id="@+id/tv_order_number"
+                            style="@style/common_text_line_second"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:gravity="left|center_vertical" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/common_text_line_second"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:text="开始时间：" />
+
+                        <TextView
+                            android:id="@+id/tv_start_time"
+                            style="@style/common_text_line_second"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:gravity="left|center_vertical" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/common_text_line_second"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:text="结束时间：" />
+
+                        <TextView
+                            android:id="@+id/tv_end_time"
                             style="@style/common_text_line_second"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

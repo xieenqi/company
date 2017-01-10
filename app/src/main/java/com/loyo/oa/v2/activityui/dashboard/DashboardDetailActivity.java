@@ -228,7 +228,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         }
         //添加3个筛选字段
         List<FilterModel> options = new ArrayList<>();
-        options.add(ORDER_MONEY==type||ORDER_NUMBER==type ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel(defaultTime) : DashboardFilterTimeModel.getFilterModel(defaultTime));
+        options.add(ORDER_MONEY==type||ORDER_NUMBER==type||PAYMENT==type ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel(defaultTime) : DashboardFilterTimeModel.getFilterModel(defaultTime));
         options.add(type.getSort());
         options.add(new OrganizationFilterModel(depts, title));
 
