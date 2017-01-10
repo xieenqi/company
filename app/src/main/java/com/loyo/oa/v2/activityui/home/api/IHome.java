@@ -5,6 +5,7 @@ import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
 import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.ServerTime;
+import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.service.CheckUpdateService;
 
 import java.util.ArrayList;
@@ -29,6 +30,10 @@ public interface IHome {
 
     @GET("/feed")
     Observable<ArrayList<HttpMainRedDot>> getNumber();
+
+    //首页订单待处理数量过获取
+    @GET("/worksheets/self/count")
+    Observable<BaseResponse<Integer>> getWorksheetNumber();
 
     @GET("/checkupdate/android")
     Observable<CheckUpdateService.UpdateInfo> checkUpdate();

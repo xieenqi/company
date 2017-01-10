@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.home.api;
 
 import com.loyo.oa.v2.activityui.clue.api.IClue;
+import com.loyo.oa.v2.activityui.dashboard.api.IDashBoard;
+import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
 import com.loyo.oa.v2.beans.BaseBean;
@@ -32,6 +34,18 @@ public class HomeService {
                         .getNumber()
                         .compose(RetrofitAdapterFactory.<ArrayList<HttpMainRedDot>>compatApplySchedulers());
     }
+
+    /**
+     * 获取首页工单的待处理数量
+     */
+    public static Observable<Integer> getWorksheetNumber() {
+            return
+                    RetrofitAdapterFactory.getInstance()
+                            .build(/*TODO:*/"http://staging.ukuaiqi.com:8070/api/v2/")
+                            .create(IHome.class)
+                            .getWorksheetNumber()
+                            .compose(RetrofitAdapterFactory.<Integer>applySchedulers());
+        }
 
     public static Observable<CheckUpdateService.UpdateInfo> checkUpdate() {
         return
