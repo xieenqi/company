@@ -48,42 +48,49 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical">
-                            <TextView
-                                android:id="@+id/tv_title_creator"
+                            <FrameLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:ellipsize="end"
-                                android:gravity="center_vertical"
-                                android:maxEms="50"
-                                android:singleLine="true"
-                                android:text="测试"
-                                android:textSize="16sp"
-                                style="@style/wfinstance_line_text_main"/>
-                            <!--这个控件不知道显示什么的,保留,避免出错-->
-                            <TextView
-                                android:id="@+id/tv_title_role"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginLeft="10dp"
-                                android:gravity="center_vertical"
-                                style="@style/wfinstance_line_text_main"
-                                android:visibility="gone" />
+                                android:layout_height="wrap_content">
 
-                            <TextView
-                                android:id="@+id/tv_status"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:gravity="center"
-                                android:layout_gravity="center_vertical"
-                                android:paddingLeft="4dp"
-                                android:paddingRight="4dp"
-                                android:textColor="#fff"
-                                android:text="待审批"
-                                android:background="@drawable/common_lable_blue"
-                                android:textSize="12sp" />
+                                <TextView
+                                    android:id="@+id/tv_task_title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:ellipsize="end"
+                                    android:gravity="center_vertical"
+                                    android:maxEms="50"
+                                    android:singleLine="true"
+                                    android:text="测试"
+                                    android:textSize="16sp"
+                                    android:layout_marginRight="65dp"
+                                    style="@style/wfinstance_line_text_main"/>
+
+
+
+                                <FrameLayout
+                                    android:layout_width="60dp"
+                                    android:layout_gravity="right|top"
+                                    android:paddingTop="3dp"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:id="@+id/tv_status"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:gravity="center"
+                                        android:layout_gravity="center_vertical"
+                                        android:paddingLeft="4dp"
+                                        android:paddingRight="4dp"
+                                        android:textColor="#fff"
+                                        android:text="待审批"
+                                        android:background="@drawable/common_lable_blue"
+                                        android:textSize="12sp" />
+                                </FrameLayout>
+                            </FrameLayout>
+
+
                         </LinearLayout>
 
                         <TextView

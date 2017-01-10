@@ -155,13 +155,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         if (null != mContact) {
             mPresenter.setDefaultContact(mContact.getId(), mCustomer.id);
             if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
-                tv_contact_tel.setText("无");
+                tv_contact_tel.setText("--");
             } else {
                 tv_contact_tel.setText(mContact.getTel());
             }
 
             if (null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())) {
-                customer_detail_wiretel.setText("无");
+                customer_detail_wiretel.setText("--");
             } else {
                 customer_detail_wiretel.setText(mContact.getWiretel());
             }

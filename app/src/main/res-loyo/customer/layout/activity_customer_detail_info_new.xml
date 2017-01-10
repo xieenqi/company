@@ -222,7 +222,7 @@
                             android:paddingBottom="@dimen/common_text_in_space"
                             android:text=""
                             android:gravity="left"
-                            style="@style/common_text_line_second"/>
+                            style="@style/common_text_line_third"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
