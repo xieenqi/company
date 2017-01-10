@@ -106,6 +106,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
 
     @Override
     public void getPageData() {
+        ll_loading.setStatus(LoadingLayout.Success);
         getData();
     }
 
@@ -179,7 +180,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-                functionBuuton();
+                actionMenu();
                 break;
             case R.id.tv_customer://跳转到相关客户
                 if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT)) {
@@ -355,7 +356,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
     /**
      * 右上角菜单
      */
-    private void functionBuuton() {
+    private void actionMenu() {
         ActionSheetDialog dialog = new ActionSheetDialog(OrderDetailActivity.this).builder();
         if (isEdit)
             dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
@@ -364,9 +365,37 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                     mBundle = new Bundle();
                     mBundle.putInt("fromPage", ORDER_EDIT);
                     mBundle.putSerializable("data", mData);
-                    app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+                    app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                 }
             });
+
+        if (true/*canCopy*/)
+            dialog.addSheetItem("复制订单", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+
+
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                            mBundle = new Bundle();
+                            mBundle.putInt("fromPage", ORDER_EDIT);
+                            mBundle.putSerializable("data", mData);
+                            app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class,
+                                    MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+                        }
+                    }, "提示", "  复制订单将自动获取最新的产品信息，如产品名称、单价、单位等信息，你确定要复制吗？");
+
+                }
+            });
+
         if (isStop)
             dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
@@ -383,7 +412,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                             dismissSweetAlert();
                             terminationOrder();
                         }
-                    }, "提示", "此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
+                    }, "提示", "  意外终止后，此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
                             "意外终止后不可恢复，你确定要终止吗？");
                 }
             });
@@ -424,14 +453,22 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
     }
 
     private void terminationOrder() {
-        OrderService.terminationOrder(mData.id)
-                .subscribe(new DefaultLoyoSubscriber<Object>() {
-                    @Override
-                    public void onNext(Object o) {
-                        Toast("订单终止成功");
-                        getData();
-                    }
-                });
+
+        if (true/* TODO: config */) {
+            Bundle mBundle = new Bundle();
+            app.startActivityForResult(OrderDetailActivity.this, TerminateOrderCommitActivity.class,
+                    MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+        }
+        else {
+            OrderService.terminationOrder(mData.id)
+                    .subscribe(new DefaultLoyoSubscriber<Object>() {
+                        @Override
+                        public void onNext(Object o) {
+                            Toast("订单终止成功");
+                            getData();
+                        }
+                    });
+        }
     }
 
     @Override
