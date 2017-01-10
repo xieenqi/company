@@ -45,7 +45,7 @@ public interface IDashBoard {
      */
     @GET("/statistics/mobile/back_money/total")
     Observable<BaseResponse<HomePaymentModel>>
-    getDashBoardHomePaymentData();
+    getDashBoardHomePaymentData(@QueryMap HashMap<String, Object> map);
 
     /**
      *仪表盘 客户/线索跟进 列表数据接口

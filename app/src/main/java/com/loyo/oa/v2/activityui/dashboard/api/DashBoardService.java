@@ -53,12 +53,12 @@ public class DashBoardService {
     }
 
     //获取仪表盘首页，回款柱状图数据
-    public static Observable<HomePaymentModel> getDashBoardHomePayment() {
+    public static Observable<HomePaymentModel> getDashBoardHomePayment(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IDashBoard.class)
-                        .getDashBoardHomePaymentData()
+                        .getDashBoardHomePaymentData(params)
                         .compose(RetrofitAdapterFactory.<HomePaymentModel>applySchedulers());
     }
 
