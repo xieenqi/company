@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_bg"
+    android:background="@color/common_activity_bg"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
@@ -24,7 +24,7 @@
                 android:id="@+id/listView_demands"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/common_activity_bg"
                 android:cacheColorHint="#00000000"
                 android:clickable="false"
                 android:divider="@null"
@@ -37,8 +37,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_45"
             android:layout_alignParentBottom="true"
-            android:background="@color/activity_bg">
+            android:background="@color/common_activity_con_bg">
 
+            <include layout="@layout/common_include_full_line_space"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
