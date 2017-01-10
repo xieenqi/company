@@ -222,7 +222,7 @@
                             android:paddingBottom="@dimen/common_text_in_space"
                             android:text=""
                             android:gravity="left"
-                            style="@style/common_text_line_second"/>
+                            style="@style/common_text_line_third"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -625,6 +625,40 @@
                                 android:layout_alignParentRight="true"
                                 android:src="@drawable/common_right_arrow" />
                         </RelativeLayout>
+
+                        <include layout="@layout/common_include_line_in_space" />
+
+                        <RelativeLayout
+                            android:id="@+id/layout_approval"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/common_line_height"
+                            android:layout_marginLeft="@dimen/common_layout_padding">
+
+                            <TextView
+                                android:id="@+id/tv_approval_title"
+                                style="@style/common_text_line_main"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="审批流程" />
+
+                            <TextView
+                                android:id="@+id/tv_approval_count"
+                                style="@style/common_text_line_main"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_toRightOf="@+id/tv_approval_title"
+                                android:gravity="center"
+                                android:text="（0）" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="@dimen/common_layout_padding"
+                                android:scaleType="center"
+                                android:layout_alignParentRight="true"
+                                android:src="@drawable/common_right_arrow" />
+                        </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>
@@ -638,10 +672,6 @@
                 android:elevation="5dip"
                 android:orientation="vertical">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1.5dp"
-                    android:background="@color/common_space_line" />
 
                 <LinearLayout
                     android:id="@+id/layout_menu"

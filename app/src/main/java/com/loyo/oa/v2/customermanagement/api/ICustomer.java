@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
+import com.loyo.oa.v2.activityui.wfinstance.bean.ApprovalItemModel;
 import com.loyo.oa.v2.beans.CustomerFollowUpModel;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -259,6 +260,13 @@ public interface ICustomer {
      */
     @GET("/order/cus/{id}")
     Observable<PaginationX<OrderListItem>> getCutomerOrder(@Path("id") String id, @QueryMap HashMap<String, Object> map);
+
+    /**
+     * 获取客户关联的审批列表
+     */
+    @GET("/new/simplify")
+    Observable<PaginationX<ApprovalItemModel>> getRelatedApprovalList(@QueryMap HashMap<String, Object> map);
+
     /**
      * 通知服务器请求回拨
      */

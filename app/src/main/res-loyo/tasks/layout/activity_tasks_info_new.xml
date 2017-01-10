@@ -27,54 +27,80 @@
                 android:id="@+id/layout_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/common_activity_con_bg"
+                android:background="@color/common_activity_bg"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/common_layout_padding"
-                    android:layout_marginTop="@dimen/common_layout_padding"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/common_layout_padding">
-
-                    <TextView
-                        android:id="@+id/tv_task_title"
-                        style="@style/common_text_line_main"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxWidth="270dp"
-                        android:singleLine="false"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/tv_status"
-                        style="@style/common_text_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="top" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tv_sub_title"
-                    style="@style/common_text_line_third"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/common_layout_padding"
-                    android:layout_marginTop="15dp"
-                    android:paddingLeft="@dimen/common_layout_padding" />
-
-                <include layout="@layout/common_include_line_in_space" />
-
-                <TextView
-                    android:id="@+id/tv_content"
-                    style="@style/common_text_line_main"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/common_layout_padding"
-                    android:gravity="left|top"
-                    android:singleLine="false"
-                    android:textIsSelectable="true" />
+                    android:background="@color/common_activity_con_bg"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/common_layout_padding"
+                        android:layout_marginTop="@dimen/common_layout_padding"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/common_layout_padding">
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/tv_task_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="65dp"
+                                android:textColor="@color/text33"
+                                android:singleLine="false"
+                                android:textSize="16sp" />
+
+                            <FrameLayout
+                                android:layout_width="60dp"
+                                android:layout_gravity="right|top"
+                                android:paddingTop="3dp"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/tv_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:layout_gravity="left"
+                                    android:paddingLeft="4dp"
+                                    android:paddingRight="4dp"
+                                    android:textColor="#fff"
+                                    android:textSize="12sp" />
+                            </FrameLayout>
+                        </FrameLayout>
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_sub_title"
+                        style="@style/common_text_line_third"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/common_layout_padding"
+                        android:layout_marginTop="15dp"
+                        android:paddingLeft="@dimen/common_layout_padding" />
+
+                    <include layout="@layout/common_include_line_in_space" />
+
+                    <TextView
+                        android:id="@+id/tv_content"
+                        style="@style/common_text_line_main"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/common_layout_padding"
+                        android:gravity="left|top"
+                        android:singleLine="false"
+                        android:textIsSelectable="true" />
+                </LinearLayout>
 
                 <include layout="@layout/common_include_line_in_space" />
 
@@ -312,7 +338,6 @@
                     android:background="@drawable/common_lable_blue"
                     android:textColor="@color/white"
                     android:visibility="gone" />
-
             </LinearLayout>
         </ScrollView>
     </com.library.module.widget.loading.LoadingLayout>

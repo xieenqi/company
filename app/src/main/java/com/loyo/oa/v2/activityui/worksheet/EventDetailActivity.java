@@ -127,7 +127,7 @@ public class EventDetailActivity extends BaseLoadingActivity implements View.OnC
 
     @Override
     public void setLayoutView() {
-        setContentView(R.layout.activity_event_detial);
+        setContentView(R.layout.activity_event_detial_new);
     }
 
     @Override

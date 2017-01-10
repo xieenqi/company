@@ -9,7 +9,7 @@
         android:layout_height="@dimen/product_common_line_height"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingRight="@dimen/order_common_padding_right">
+        android:paddingRight="@dimen/common_layout_padding">
 
         <TextView
             android:id="@+id/add_product_defined_tv_1"
