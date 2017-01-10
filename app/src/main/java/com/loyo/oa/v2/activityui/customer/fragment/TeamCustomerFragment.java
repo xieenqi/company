@@ -74,7 +74,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private ArrayList<Customer> mCustomers = new ArrayList<>();
     private String field = "lastActAt";
-    private String order = "desc";
+    private String order = "asc";
     private String userId = "";
     private String tagsParams = "";
     private String departmentId = "";

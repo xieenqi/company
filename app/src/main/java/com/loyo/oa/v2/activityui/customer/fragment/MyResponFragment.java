@@ -77,7 +77,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
     private DropDownMenu filterMenu;
 
     private String field = "lastActAt";
-    private String order = "desc";
+    private String order = "asc";
     private String tagsParams = "";
     private String position;
     private int page = 1;

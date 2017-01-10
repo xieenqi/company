@@ -396,6 +396,36 @@
                             android:maxLength="20"
                             android:singleLine="true"/>
                     </LinearLayout>
+                    <include layout="@layout/include_solid_line_left" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_customer"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/wfinstance_line_height"
+                        android:paddingLeft="@dimen/wfinstance_layout_padding"
+                        android:paddingRight="@dimen/wfinstance_layout_padding"
+                        android:background="@color/wfinstance_activity_con_bg"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="left|center_vertical"
+                            android:text="所属客户"
+                            style="@style/wfinstance_line_text_main"
+                            />
+
+                        <TextView
+                            android:id="@+id/tv_customerName"
+                            style="@style/wfinstance_line_text_other_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:gravity="right|center_vertical"
+                            android:maxLength="20"
+                            android:singleLine="true"/>
+                    </LinearLayout>
                 </LinearLayout>
                 <include layout="@layout/include_wfinstance_line_outspace"/>
                 <LinearLayout
