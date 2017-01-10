@@ -7,6 +7,7 @@ import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
+import com.loyo.oa.v2.activityui.order.bean.ProcessItem;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.network.model.BaseResponse;
 
@@ -90,6 +91,12 @@ public interface IOrder {
     Observable<Object> terminationOrder(@Path("id") String id);
 
     /**
+     * 意外终止订单
+     */
+    @PUT("/order/unexpecte/{id}")
+    Observable<Object> terminationOrderWithProcess(@Path("id") String id, @Body HashMap<String, Object> map);
+
+    /**
      * 删除订单
      */
     @DELETE("/order/{id}")
@@ -118,5 +125,17 @@ public interface IOrder {
      * */
     @PUT("/order/pay/{id}")
     Observable<EstimateAdd> editPayEstimate(@Path("id") String id, @Body HashMap<String, Object> map);
+
+    /**
+     * 获取 终止是否需要审批流程
+     * */
+    @GET("/order/TODO:") //TODO:
+    Observable<BaseResponse<Boolean>> getTerminateProcessConfig();
+
+    /**
+     * 获取 终止审批流程列表
+     * */
+    @GET("/order/TODO:") // TODO:
+    Observable<BaseResponse<ArrayList<ProcessItem>>> getTerminateProcessList();
 
 }
