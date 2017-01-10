@@ -20,13 +20,13 @@ public class UmengAnalytics {
     public static String businessQuery = "BusinessQuery";           //工商查询
     public static String addFollow = "add_follow";                  //新建跟进
     public static String addVisit = "add_visit";                    //新建拜访
-    public static String addVisitAt = " add_visit_at";              //新建拜访-@
+    public static String addVisitAt = "add_visit_at";              //新建拜访-@
     public static String addVisitPhoto = "add_visit_photo";         //新建拜访-拍照
     public static String addVisitRecord = "add_visit_record";       //新建拜访-录音
     public static String cluesTeam = "clues_team";                  //切换至团队线索
     public static String createChanceMy = "create_chance_my";       //新建机会
     public static String createCluesMy = "create_clues_my";         //新建线索
-    public static String createOrder = " create_order";             //新建订单
+    public static String createOrder = "create_order";             //新建订单
     public static String createWorkSheet = "create_work_order";     //新建工单
     public static String customerAdd = "customer_add";              //新建客户-手动创建
     public static String customerAddFollow = "customer_add_follow"; //客户详情页面-写跟进(快捷)
@@ -35,7 +35,7 @@ public class UmengAnalytics {
     public static String customerCheckFollowAddFollow = "customer_check_follow_add_follow";  //客户详情页面点击-跟进动态-写跟进
     public static String customerDelete = "customer_delete";        //客户详情页面-删除
     public static String customerEditTag = "customer_edit_tag";     //客户详情页面-修改标签
-    public static String customerNearby = " customer_nearby";       //点击“附近的客户”
+    public static String customerNearby = "customer_nearby";       //点击“附近的客户”
     public static String customerTopublic = "customer_topublic";    //客户详情页面-投入公海
     public static String customerVisit = "customer_visit";          //客户详情页-快捷拜访
     public static String deleteCluesMy = "delete_clues_my";         //我的-线索详情-删除

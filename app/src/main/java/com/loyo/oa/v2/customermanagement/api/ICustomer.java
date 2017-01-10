@@ -39,17 +39,21 @@ import rx.Observable;
 
 /**
  * Created by pj on 15/5/28.
- *
+ * <p>
  * Updated by EthanGong on 2016/12/15.
  */
 
 public interface ICustomer {
 
-    /** 我负责的客户 */
+    /**
+     * 我负责的客户
+     */
     @GET("/")
     Observable<PaginationX<Customer>> getCustomers(@QueryMap Map<String, Object> params);
 
-    /** 我负责的客户 附近数目 */
+    /**
+     * 我负责的客户 附近数目
+     */
     @GET("/")
     Observable<NearCount> getNearbySelfCustomerCount(@Query("position") String position);
 
@@ -85,12 +89,10 @@ public interface ICustomer {
      * 获取客户详情
      * /customer/{id}  改之前的接口 20160613
      *
-     * @param id       customer/mobile/574eb3ef526f155720edde30?_=1465786248655
-     *
-     * Updated by Ethan 2016-11-30
-     *
-     * @param id       customer/new/574eb3ef526f155720edde30?_=1465786248655
-     *
+     * @param id customer/mobile/574eb3ef526f155720edde30?_=1465786248655
+     *           <p>
+     *           Updated by Ethan 2016-11-30
+     * @param id customer/new/574eb3ef526f155720edde30?_=1465786248655
      */
     @GET("/customer/new/{id}")
     Observable<BaseResponse<Customer>> getCustomerById(@Path("id") String id);
@@ -111,6 +113,14 @@ public interface ICustomer {
      */
     @PUT("/customer/{id}/sea")
     Observable<Customer> toPublic(@Path("id") String id);
+
+    /**
+     * 丢入公海
+     *
+     * @param id
+     */
+    @PUT("/customer/{id}/sea")
+    Observable<BaseResponse<Object>> toPublic(@Path("id") String id, @Body HashMap<String, Object> map);
 
     /**
      * 从公海挑入
@@ -217,6 +227,10 @@ public interface ICustomer {
     @GET("/customer/industry")
     Observable<ArrayList<Industry>> getIndustry();
 
+
+    @GET("/customer/reason")
+    Observable<BaseResponse<ArrayList<SaleStage>>> getCoomonReason();
+
     /**
      * 新建客户，查重
      */
@@ -225,7 +239,6 @@ public interface ICustomer {
 
     /**
      * 获取客户新建联系人的动态字段
-     *
      */
     @GET("/contact/fields")
     Observable<ArrayList<ContactLeftExtras>> getContactsField();
@@ -256,7 +269,6 @@ public interface ICustomer {
 
     /**
      * 获取 客户 的订单
-     *
      */
     @GET("/order/cus/{id}")
     Observable<PaginationX<OrderListItem>> getCutomerOrder(@Path("id") String id, @QueryMap HashMap<String, Object> map);
