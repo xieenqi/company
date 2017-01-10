@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -697,6 +698,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             }
                         }, 1000);
                     }
+
                 });
     }
 
