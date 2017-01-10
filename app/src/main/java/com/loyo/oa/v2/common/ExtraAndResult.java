@@ -85,7 +85,7 @@ public class ExtraAndResult {
      */
     public static final int REQUSET_COMMENT = 200;
     /**
-     * 传递【抄送人】数据的请求码
+     * 传递丢公海原因 数据的请求码
      */
     public static final int REQUSET_COPY_PERSONS = 301;
     /**

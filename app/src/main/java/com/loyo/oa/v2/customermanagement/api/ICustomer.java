@@ -115,6 +115,14 @@ public interface ICustomer {
     Observable<Customer> toPublic(@Path("id") String id);
 
     /**
+     * 丢入公海
+     *
+     * @param id
+     */
+    @PUT("/customer/{id}/sea")
+    Observable<BaseResponse<Object>> toPublic(@Path("id") String id, @Body HashMap<String, Object> map);
+
+    /**
      * 从公海挑入
      *
      * @param id

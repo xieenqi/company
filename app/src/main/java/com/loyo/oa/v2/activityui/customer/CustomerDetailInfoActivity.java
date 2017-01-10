@@ -32,6 +32,7 @@ import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPrese
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
+import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -55,6 +56,7 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -301,8 +303,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     mPresenter.delete(mCustomer.getId());
                 } else {
                     /*此处投入公海操作*/
-//                    mPresenter.toPublic(mCustomer.getId());
-                    startActivity(new Intent(CustomerDetailInfoActivity.this, LoseCommonCustomerReasonActivity.class));
+                    mPresenter.toPublic(mCustomer.getId());
                 }
             }
         }, "提示", message);
@@ -506,8 +507,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 requestCode = ExtraAndResult.REQUEST_CODE;
                 break;
             /*订单管理*/
-            case R.id.ll_order:
-            {
+            case R.id.ll_order: {
                 boolean canAddOrder = mCustomer != null &&
                         PermissionManager.getInstance().hasCustomerAuthority(
                                 mCustomer.relationState,
@@ -520,10 +520,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 _class = CustomerOrderList.class;
                 requestCode = ExtraAndResult.REQUEST_CODE;
             }
-                break;
+            break;
             /*审批流程*/
-            case R.id.layout_approval:
-            {
+            case R.id.layout_approval: {
                 boolean canAddApproval = mCustomer != null &&
                         PermissionManager.getInstance().hasCustomerAuthority(
                                 mCustomer.relationState,
@@ -536,7 +535,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 _class = CustomerRelatedApprovalList.class;
                 requestCode = ExtraAndResult.REQUEST_CODE;
             }
-                break;
+            break;
         }
         if (null != _class && requestCode != -1) {
             goToChild(bundle, _class, requestCode);
@@ -597,8 +596,24 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    setPopViewEmbl(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
                     UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerTopublic);
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("key", "cus_reason_switcher");
+                    showLoading2("");
+                    CustomerService.getSigninUploadPhotoConfig(map).subscribe(new DefaultLoyoSubscriber<SigninPictures>(hud) {
+                        @Override
+                        public void onNext(SigninPictures signinPictures) {
+                            if (signinPictures != null && signinPictures.value.equals("1")) {
+                                Intent intent = new Intent(CustomerDetailInfoActivity.this, LoseCommonCustomerReasonActivity.class);
+                                intent.putExtra(ExtraAndResult.EXTRA_ID, mCustomer.getId());
+                                startActivityForResult(intent, ExtraAndResult.REQUSET_COPY_PERSONS);
+                                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                            } else {
+                                setPopViewEmbl(false, "确定将客户 \"" + mCustomer.name + "\" 投入公海吗?");
+                            }
+                        }
+                    });
+
                 }
             });
         dialog.show();
@@ -659,16 +674,16 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-
+                break;
+            //丢公海回来
+            case ExtraAndResult.REQUSET_COPY_PERSONS:
+                toPublicEmbl();
                 break;
         }
 
         switch (resultCode) {
             case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
                 isPutOcen = true;
-                break;
-            //新建跟进 回调
-            case FinalVariables.REQUEST_CREATE_TASK:
                 break;
         }
     }

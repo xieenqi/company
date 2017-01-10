@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import retrofit.http.Body;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 import rx.Observable;
@@ -218,6 +219,15 @@ public class CustomerService {
                         .create(ICustomer.class)
                         .toPublic(id)
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
+    }
+
+    public static Observable<BaseResponse<Object>> dumpCustomer(@Path("id") String id, @Body HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(ICustomer.class)
+                        .toPublic(id, map)
+                        .compose(RetrofitAdapterFactory.<BaseResponse<Object>>compatApplySchedulers());
     }
 
     public static Observable<ArrayList<CustomerExtraData>> getCustomerDynamic(HashMap<String, Object> map) {
