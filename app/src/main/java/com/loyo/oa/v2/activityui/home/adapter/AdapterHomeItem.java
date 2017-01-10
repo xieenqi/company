@@ -91,7 +91,7 @@ public class AdapterHomeItem extends BaseAdapter {
                             item.extra = num.bizNum + "个进行中";
                         }
                         item.viewed = num.viewed;
-                    }else if (item.title.equals("订单管理") && num.bizType == 20) { //订单管理
+                    }else if (item.title.equals("订单管理") && num.bizType == 28) { //订单管理
                         if (num.bizNum > 0) {
                             item.extra = num.bizNum + "个待处理";
                         }else{

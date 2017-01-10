@@ -919,6 +919,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/payment_tv_1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
@@ -926,6 +927,7 @@
                                 android:text="50000" />
 
                             <View
+                                android:id="@+id/payment_view_1"
                                 android:layout_width="30dp"
                                 android:layout_height="130dp"
                                 android:layout_gravity="center_horizontal"
@@ -940,6 +942,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/payment_tv_2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
@@ -947,6 +950,7 @@
                                 android:text="91000000" />
 
                             <View
+                                android:id="@+id/payment_view_2"
                                 android:layout_width="30dp"
                                 android:layout_height="130dp"
                                 android:layout_gravity="center_horizontal"
@@ -961,6 +965,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/payment_tv_3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
@@ -969,6 +974,7 @@
                                 android:text="4000000" />
 
                             <View
+                                android:id="@+id/payment_view_3"
                                 android:layout_width="30dp"
                                 android:layout_height="120dp"
                                 android:layout_gravity="center_horizontal"
@@ -1030,7 +1036,7 @@
                                 android:textSize="13sp" />
 
                             <TextView
-                                android:id="@+id/payment_tv_all_num"
+                                android:id="@+id/payment_tv_all"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"

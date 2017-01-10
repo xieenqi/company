@@ -13,6 +13,7 @@ import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
 import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
 import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.HomePaymentModel;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
 import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
@@ -173,13 +174,24 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
             }
         });
     }
-    /*获取回款统计*/
+    /*获取回款统计，柱状图*/
     @Override
     public void getPayment(int type) {
         HashMap<String,Object> map = new HashMap<>();
         map.put("qType",type);
         //这里需要新的接口
+        DashBoardService.getDashBoardHomePayment().subscribe(new DefaultLoyoSubscriber<HomePaymentModel>() {
+            @Override
+            public void onNext(HomePaymentModel homePaymentModel) {
+                crolView.paymentConSuccessEmbl(homePaymentModel);
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                crolView.moneyConErrorEmbl();
+            }
+        });
     }
 
     /**

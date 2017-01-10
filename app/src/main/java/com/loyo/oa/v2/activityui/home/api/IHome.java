@@ -31,10 +31,6 @@ public interface IHome {
     @GET("/feed")
     Observable<ArrayList<HttpMainRedDot>> getNumber();
 
-    //首页订单待处理数量过获取
-    @GET("/worksheets/self/count")
-    Observable<BaseResponse<Integer>> getWorksheetNumber();
-
     @GET("/checkupdate/android")
     Observable<CheckUpdateService.UpdateInfo> checkUpdate();
 

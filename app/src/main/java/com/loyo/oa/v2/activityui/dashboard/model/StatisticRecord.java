@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.dashboard.model;
 
+import com.loyo.oa.common.utils.BigNumberFormatTool;
 import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
 
 import java.text.DecimalFormat;
@@ -12,9 +13,6 @@ import java.util.ArrayList;
 
 public class StatisticRecord {
 
-    private final static long TEN_MILLION     = 10000000L;  // 千万
-    private final static long HUNDRED_MILLION = 100000000L; // 亿
-    private final static long TEN_THOUSAND    = 10000L;     // 万
 
     //公共字段
     public Integer total;
@@ -81,19 +79,8 @@ public class StatisticRecord {
      * 数据超过亿时，4舍5入的方式处理略写成亿为单位的数值（保留2位小数）
      */
     private String format(Double number,DashboardType type) {
-        if(null==number){
-            return "--";
-        }
-        String result;
-        DecimalFormat df=new DecimalFormat("#.##");
-        if(number>HUNDRED_MILLION){
-            result=df.format(number/HUNDRED_MILLION)+"亿";
-        }else if(number>TEN_MILLION){
-            result=df.format(number/TEN_THOUSAND)+"万";
-        }else{
-            result=df.format(number);
-        }
-        if(DashboardType.ORDER_MONEY==type){
+        String result=BigNumberFormatTool.format(number);
+        if(null!=result&&DashboardType.ORDER_MONEY==type){
             result= "¥"+result;
         }
         return result;

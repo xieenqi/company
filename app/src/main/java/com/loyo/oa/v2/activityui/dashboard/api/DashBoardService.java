@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.dashboard.api;
 
 import com.loyo.oa.v2.activityui.dashboard.common.DashboardType;
 import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.HomePaymentModel;
 import com.loyo.oa.v2.activityui.dashboard.model.StatisticRecord;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
 import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
@@ -51,6 +52,16 @@ public class DashBoardService {
                         .compose(RetrofitAdapterFactory.<MoneyStatistic>applySchedulers());
     }
 
+    //获取仪表盘首页，回款柱状图数据
+    public static Observable<HomePaymentModel> getDashBoardHomePayment() {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(IDashBoard.class)
+                        .getDashBoardHomePaymentData()
+                        .compose(RetrofitAdapterFactory.<HomePaymentModel>applySchedulers());
+    }
+
     //仪表盘 列表的数据接口
     public static Observable<PaginationX<StatisticRecord>>
     getDashBoardListData(HashMap<String, Object> params, DashboardType type) {
@@ -85,9 +96,7 @@ public class DashBoardService {
                 observable = dashBoard.getDashBoardSaleListData(params);
                 break;
             case PAYMENT:
-                //回款统 计
-
-
+                //回款统计
                 break;
             default:
                 throw new UnsupportedOperationException("获取数据类型错误！");

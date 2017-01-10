@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.dashboard.api;
 
 import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.HomePaymentModel;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
 import com.loyo.oa.v2.activityui.dashboard.model.StatisticRecord;
 import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
@@ -71,4 +72,11 @@ public interface IDashBoard {
     @GET("/statistics/order/mobile/detail")
     Observable<BaseResponse<PaginationX<StatisticRecord>>>
     getDashBoardSaleListData(@QueryMap HashMap<String, Object> map);
+
+    /**
+     *获取首页回款柱状图
+     */
+    @GET("/statistics/mobile/back_money/total")
+    Observable<BaseResponse<HomePaymentModel>>
+    getDashBoardHomePaymentData();
 }

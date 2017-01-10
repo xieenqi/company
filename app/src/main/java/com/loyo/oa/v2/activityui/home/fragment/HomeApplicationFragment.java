@@ -584,33 +584,14 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 获取首页红点数据
      */
     void requestNumber() {
-        mItemNumbers.clear();
-
         HomeService.getNumber().subscribe(new DefaultLoyoSubscriber<ArrayList<HttpMainRedDot>>() {
             @Override
             public void onNext(ArrayList<HttpMainRedDot> homeNumbers) {
-                mItemNumbers.addAll(removalRedNumber(homeNumbers));
+                mItemNumbers = removalRedNumber(homeNumbers);
                 testJurl();
                 homefragment.onNetworkChanged(true);
-
             }
         });
-        //单独请求工单，然后构造成HttpMainRedDot，一起来处理。
-        HomeService.getWorksheetNumber().subscribe(new DefaultLoyoSubscriber<Integer>(LoyoErrorChecker.SILENCE) {
-            @Override
-            public void onNext(Integer integer) {
-                HttpMainRedDot redDot = new HttpMainRedDot();
-                redDot.bizType=20;
-                //大于0个，就显示红点
-                if(integer>0)redDot.viewed=true;
-                redDot.bizNum=integer;
-                mItemNumbers.add(redDot);
-                testJurl();
-                homefragment.onNetworkChanged(true);
-
-            }
-        });
-
         // TODO: 建立单独的获取配置Service  目前初始化数据在首页加载完成在加载
         /* 获取配置数据 */
         WorksheetConfig.fetchWorksheetTypes();

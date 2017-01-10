@@ -119,7 +119,7 @@ public class Config_project {
 
     public static String ADD_WORK_REPORT_PL = SERVER_URL() + "/api/v2/oa";//添加工作报告 的默认点评人
 
-    public static String MAIN_RED_DOT = SERVER_URL_LOGIN() + "/api/v2/";//首页红点接口
+    public static String MAIN_RED_DOT = SERVER_URL_CUSTOMER() + "/api/v2/";//首页红点接口
 
     public static String GET_VERIFICATION_CODE = SERVER_URL_LOGIN() + "/oapi/sms";//绑定手机获取验证码
 

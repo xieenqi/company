@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.dashboard.viewcontrol;
 
 import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
 import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.HomePaymentModel;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
 import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
 import com.loyo.oa.v2.common.BaseView;
@@ -29,7 +30,7 @@ public interface HomeDashBoardView extends BaseView{
     void moneyConErrorEmbl();
 
 
-    void paymentConSuccessEmbl(Object paymentModel);
+    void paymentConSuccessEmbl(HomePaymentModel paymentModel);
 
     void paymentConErrorEmbl();
 }
