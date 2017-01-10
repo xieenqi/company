@@ -22,11 +22,13 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
+import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.Config_project;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
@@ -264,7 +266,7 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<ArrayList<CommonTag>>compatApplySchedulers());
     }
 
-    public static Observable<ArrayList<CommonTag>> getSaleactivitytypes(){
+    public static Observable<ArrayList<CommonTag>> getSaleactivitytypes() {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -325,7 +327,7 @@ public class CustomerService {
      */
     public static Observable<PaginationX<ApprovalItemModel>> getRelatedApprovalList(HashMap<String, Object> map) {
         return RetrofitAdapterFactory.getInstance()
-                .build(/*TODO:*/Config_project.API_URL()+ FinalVariables.wfinstance)
+                .build(/*TODO:*/Config_project.API_URL() + FinalVariables.wfinstance)
                 .create(ICustomer.class)
                 .getRelatedApprovalList(map)
                 .compose(RetrofitAdapterFactory.<PaginationX<ApprovalItemModel>>compatApplySchedulers());
@@ -366,6 +368,17 @@ public class CustomerService {
                         .create(ICustomer.class)
                         .getIndustry()
                         .compose(RetrofitAdapterFactory.<ArrayList<Industry>>compatApplySchedulers());
+
+    }
+
+    /* 获取丢公海原因*/
+    public static Observable<BaseResponse<ArrayList<SaleStage>>> getCommonReason() {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(ICustomer.class)
+                        .getCoomonReason()
+                        .compose(RetrofitAdapterFactory.<BaseResponse<ArrayList<SaleStage>>>compatApplySchedulers());
 
     }
 

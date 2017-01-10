@@ -58,7 +58,7 @@ public class LoseCommonCustomerReasonActivity extends BaseActivity implements Vi
                 break;
             case R.id.ll_reason:
                 Bundle stage = new Bundle();
-//                stage.putInt(ExtraAndResult.EXTRA_TYPE, SaleStageActivity.SALE_STAGE);
+                stage.putInt(ExtraAndResult.EXTRA_TYPE, SaleStageActivity.COMMON_REASON);
                 stage.putString(ExtraAndResult.EXTRA_NAME, "丢公海原因");
                 stage.putString(ExtraAndResult.EXTRA_DATA, tv_reason.getText().toString());
                 app.startActivityForResult(LoseCommonCustomerReasonActivity.this, SaleStageActivity.class,
