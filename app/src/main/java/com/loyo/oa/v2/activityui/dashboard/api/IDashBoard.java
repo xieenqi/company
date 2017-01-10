@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.dashboard.api;
 import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
 import com.loyo.oa.v2.activityui.dashboard.model.HomePaymentModel;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.PaymentListItemModel;
 import com.loyo.oa.v2.activityui.dashboard.model.StatisticRecord;
 import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -41,6 +42,13 @@ public interface IDashBoard {
     Observable<BaseResponse<MoneyStatistic>> getMoneyCount(@QueryMap HashMap<String, Object> map);
 
     /**
+     *获取首页回款柱状图
+     */
+    @GET("/statistics/mobile/back_money/total")
+    Observable<BaseResponse<HomePaymentModel>>
+    getDashBoardHomePaymentData();
+
+    /**
      *仪表盘 客户/线索跟进 列表数据接口
      */
     @GET("/statistics/sale-activity/mobile/data")
@@ -74,9 +82,9 @@ public interface IDashBoard {
     getDashBoardSaleListData(@QueryMap HashMap<String, Object> map);
 
     /**
-     *获取首页回款柱状图
+     * 仪表盘 回款统计 列表数据
      */
-    @GET("/statistics/mobile/back_money/total")
-    Observable<BaseResponse<HomePaymentModel>>
-    getDashBoardHomePaymentData();
+    @GET("/statistics/mobile/back_money/list")
+    Observable<BaseResponse<PaginationX<PaymentListItemModel>>>
+    getDashBoardHomePaymentListData(@QueryMap HashMap<String, Object> map);
 }
