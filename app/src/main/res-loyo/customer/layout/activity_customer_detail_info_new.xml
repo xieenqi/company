@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <include layout="@layout/include_common_title_edit" />
     </LinearLayout>
 
@@ -45,10 +46,10 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:gravity="center_vertical"
-                        android:paddingRight="@dimen/common_layout_padding"
-                        android:paddingTop="@dimen/common_text_in_space"
+                        android:orientation="horizontal"
                         android:paddingBottom="@dimen/common_text_in_space"
-                        android:orientation="horizontal">
+                        android:paddingRight="@dimen/common_layout_padding"
+                        android:paddingTop="@dimen/common_text_in_space">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -69,38 +70,38 @@
                                 android:textSize="16sp" />
 
                             <TextView
-                                android:layout_marginTop="15dp"
                                 android:id="@+id/tv_address"
+                                style="@style/common_text_line_second"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:singleLine="false"
-                                android:text=""
+                                android:layout_marginTop="15dp"
                                 android:gravity="left"
-                                style="@style/common_text_line_second"/>
+                                android:singleLine="false"
+                                android:text="" />
 
                             <LinearLayout
-                                android:layout_marginTop="6dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:id="@+id/tv_tags"
+                                    style="@style/common_text_line_second"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:singleLine="false"
-                                    android:text=""
                                     android:gravity="center_vertical"
-                                    style="@style/common_text_line_second"/>
+                                    android:singleLine="false"
+                                    android:text="" />
 
                                 <ImageView
                                     android:id="@+id/iv_select_tag"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
-                                    android:gravity="center_vertical"
-                                    android:background="@drawable/icon_edittag" />
+                                    android:background="@drawable/icon_edittag"
+                                    android:gravity="center_vertical" />
 
                             </LinearLayout>
 
@@ -108,29 +109,29 @@
                                 android:id="@+id/layout_4"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="top"
-                                android:visibility="gone"
                                 android:layout_marginTop="6dp"
-                                android:orientation="vertical">
+                                android:gravity="top"
+                                android:orientation="vertical"
+                                android:visibility="gone">
 
                                 <TextView
                                     android:id="@+id/tv_content41"
+                                    style="@style/common_text_line_second"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="left|center"
                                     android:maxLines="1"
-                                    android:text="无跟进丢公海"
-                                    style="@style/common_text_line_second"/>
+                                    android:text="无跟进丢公海" />
 
                                 <TextView
-                                    android:layout_marginTop="6dp"
                                     android:id="@+id/tv_content42"
+                                    style="@style/common_text_line_second"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
                                     android:gravity="left|center"
                                     android:maxLines="1"
-                                    android:text="无订单丢"
-                                    style="@style/common_text_line_second"/>
+                                    android:text="无订单丢" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -150,8 +151,8 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:scaleType="center"
                                 android:layout_alignParentRight="true"
+                                android:scaleType="center"
                                 android:src="@drawable/common_right_arrow" />
                         </RelativeLayout>
                     </LinearLayout>
@@ -188,12 +189,12 @@
                                 android:text="（0）" />
 
                             <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginRight="@dimen/common_layout_padding"
-                            android:scaleType="center"
-                            android:layout_alignParentRight="true"
-                            android:src="@drawable/common_right_arrow" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="@dimen/common_layout_padding"
+                                android:scaleType="center"
+                                android:src="@drawable/common_right_arrow" />
                         </RelativeLayout>
 
 
@@ -201,28 +202,28 @@
 
                         <TextView
                             android:id="@+id/tv_follow_content"
+                            style="@style/common_text_line_second"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/common_layout_padding"
                             android:layout_marginRight="@dimen/common_layout_padding"
                             android:layout_marginTop="@dimen/common_text_in_space"
-                            android:maxLines="3"
-                            android:text=""
-                            android:singleLine="false"
                             android:gravity="left"
-                            style="@style/common_text_line_second"/>
+                            android:maxLines="3"
+                            android:singleLine="false"
+                            android:text="" />
 
                         <TextView
                             android:id="@+id/tv_follow_crecter_type"
+                            style="@style/common_text_line_third"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/common_layout_padding"
                             android:layout_marginRight="@dimen/common_layout_padding"
                             android:layout_marginTop="@dimen/common_text_in_space"
-                            android:paddingBottom="@dimen/common_text_in_space"
-                            android:text=""
                             android:gravity="left"
-                            style="@style/common_text_line_third"/>
+                            android:paddingBottom="@dimen/common_text_in_space"
+                            android:text="" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -250,14 +251,15 @@
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="40dp"
                                     android:gravity="center"
-                                    android:text="sadf"/>
+                                    android:text="sadf" />
                             </LinearLayout>
 
                             <include layout="@layout/common_include_line_in_space" />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <include layout="@layout/common_include_line_out_space"/>
+                    <include layout="@layout/common_include_line_out_space" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -286,12 +288,13 @@
                                 android:layout_height="match_parent"
                                 android:layout_toRightOf="@+id/tv_contact"
                                 android:gravity="center"
-                                android:text="（0）"/>
+                                android:text="（0）" />
+
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:scaleType="center"
                                 android:layout_alignParentRight="true"
+                                android:scaleType="center"
                                 android:src="@drawable/common_right_arrow" />
                         </RelativeLayout>
 
@@ -301,24 +304,22 @@
                             android:id="@+id/layout_defaultname"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/common_line_height"
-                            android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            >
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:layout_marginLeft="@dimen/common_layout_padding"
+                                style="@style/common_text_line_main"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="默认联系人: "
-                                style="@style/common_text_line_main"
-                                />
+                                android:layout_marginLeft="@dimen/common_layout_padding"
+                                android:text="默认联系人: " />
+
                             <TextView
                                 android:id="@+id/default_name"
+                                style="@style/common_text_line_main"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=""
-                                style="@style/common_text_line_main"
-                                />
+                                android:text="" />
 
                         </LinearLayout>
 
@@ -403,8 +404,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="@dimen/margin_other_view"
-                                    android:gravity="left|center_vertical"
-                                    />
+                                    android:gravity="left|center_vertical" />
                             </LinearLayout>
                         </RelativeLayout>
 
@@ -482,9 +482,9 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/common_layout_padding"
                                 android:scaleType="center"
-                                android:layout_alignParentRight="true"
                                 android:src="@drawable/common_right_arrow" />
                         </RelativeLayout>
 
@@ -517,9 +517,9 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/common_layout_padding"
                                 android:scaleType="center"
-                                android:layout_alignParentRight="true"
                                 android:src="@drawable/common_right_arrow" />
                         </RelativeLayout>
 
@@ -551,9 +551,9 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/common_layout_padding"
                                 android:scaleType="center"
-                                android:layout_alignParentRight="true"
                                 android:src="@drawable/common_right_arrow" />
                         </RelativeLayout>
 
@@ -581,14 +581,14 @@
                                 android:layout_height="match_parent"
                                 android:layout_toRightOf="@+id/tv_task_title"
                                 android:gravity="center"
-                                android:text="（0）"/>
+                                android:text="（0）" />
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/common_layout_padding"
                                 android:scaleType="center"
-                                android:layout_alignParentRight="true"
                                 android:src="@drawable/common_right_arrow" />
                         </RelativeLayout>
 
@@ -620,9 +620,9 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/common_layout_padding"
                                 android:scaleType="center"
-                                android:layout_alignParentRight="true"
                                 android:src="@drawable/common_right_arrow" />
                         </RelativeLayout>
 
@@ -654,72 +654,72 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/common_layout_padding"
                                 android:scaleType="center"
-                                android:layout_alignParentRight="true"
                                 android:src="@drawable/common_right_arrow" />
                         </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>
 
-            <LinearLayout
-                android:id="@+id/menu_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@color/white"
-                android:elevation="5dip"
-                android:orientation="vertical">
 
 
                 <LinearLayout
-                    android:id="@+id/layout_menu"
+                    android:id="@+id/menu_bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_alignParentBottom="true"
+                    android:elevation="10dp"
+                    android:background="@color/common_activity_con_bg"
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/layout_gj"
-                        android:layout_width="0dip"
-                        android:layout_height="55dp"
-                        android:layout_weight="0.3"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:id="@+id/layout_menu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_cusdetails_gj" />
+                        <LinearLayout
+                            android:id="@+id/layout_gj"
+                            android:layout_width="0dip"
+                            android:layout_height="55dp"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/icon_cusdetails_gj" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="写跟进" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="写跟进" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_sign"
+                            android:layout_width="0dip"
+                            android:layout_height="55dp"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/icon_cusdetails_sign" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="拜访" />
+                        </LinearLayout>
+
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_sign"
-                        android:layout_width="0dip"
-                        android:layout_height="55dp"
-                        android:layout_weight="0.3"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_cusdetails_sign" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="拜访" />
-                    </LinearLayout>
-
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 

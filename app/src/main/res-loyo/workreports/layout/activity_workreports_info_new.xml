@@ -427,17 +427,18 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btn_workreport_review"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/common_layout_padding"
-                    android:background="@drawable/common_lable_blue"
-                    android:text="点评"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_workreport_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/common_layout_padding"
+                android:background="@drawable/common_lable_blue"
+                android:text="点评"
+                android:textColor="@color/white"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
