@@ -399,11 +399,13 @@
                             android:minWidth="@dimen/dimen_80"
                             android:text="丢公海原因" />
 
+
                         <TextView
                             android:id="@+id/tv_common_reason"
                             style="@style/text_item2"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
                             android:layout_weight="1"
                             android:gravity="right|center"
                             android:singleLine="false"
