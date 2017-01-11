@@ -317,6 +317,131 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_common"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/margin_other_view">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="@dimen/dimen_80"
+                            android:text="前负责人"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            tools:layout_editor_absoluteY="4445dp" />
+
+                        <TextView
+                            android:id="@+id/tv_common_persion"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:gravity="right|center"
+                            android:textColor="@color/text99" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/margin_other_view">
+
+                        <TextView
+                            android:id="@+id/tv_left2"
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="@dimen/dimen_80"
+                            android:text="丢公海类型"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            tools:layout_editor_absoluteY="3369dp" />
+
+                        <TextView
+                            android:id="@+id/tv_common_type"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:gravity="right|center"
+                            android:textColor="@color/text99" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="48dp"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/margin_other_view">
+
+                        <TextView
+                            android:id="@+id/tv_left3"
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="@dimen/dimen_80"
+                            android:text="丢公海原因" />
+
+                        <TextView
+                            android:id="@+id/tv_common_reason"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right|center"
+                            android:singleLine="false"
+                            android:textColor="@color/text99" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_recycledAt"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/margin_other_view">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="@dimen/dimen_80"
+                            android:text="丢公海时间" />
+
+                        <TextView
+                            android:id="@+id/tv_customer_recycledAt"
+                            style="@style/text_item2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:gravity="right|center"
+                            android:textColor="@color/text99" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line15" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -379,63 +504,6 @@
                     </LinearLayout>
 
                     <include layout="@layout/include_solid_line_left" />
-
-                    <!--<LinearLayout-->
-                    <!--android:id="@+id/ll_recycledAt"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="@dimen/view_h_title"-->
-                    <!--android:background="@color/white"-->
-                    <!--android:gravity="center_vertical"-->
-                    <!--android:orientation="horizontal"-->
-                    <!--android:paddingLeft="@dimen/margin_other_view"-->
-                    <!--android:paddingRight="@dimen/margin_other_view">-->
-
-                    <!--<TextView-->
-                    <!--style="@style/text_item1"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="fill_parent"-->
-                    <!--android:minWidth="@dimen/dimen_80"-->
-                    <!--android:text="丢公海时间" />-->
-
-                    <!--<TextView-->
-                    <!--android:id="@+id/tv_customer_recycledAt"-->
-                    <!--style="@style/text_item2"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:gravity="right|center"-->
-                    <!--android:text=""-->
-                    <!--android:textColor="@color/text99" />-->
-
-                    <!--</LinearLayout>-->
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/ll_recycledAt"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/view_h_title"
-                        android:paddingLeft="@dimen/margin_other_view"
-                        android:paddingRight="@dimen/margin_other_view">
-
-                        <TextView
-                            android:id="@+id/tv_left"
-                            style="@style/text_item1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:minWidth="@dimen/dimen_80"
-                            android:text="丢公海时间"
-                            app:layout_constraintLeft_toLeftOf="parent" />
-
-                        <TextView
-                            android:id="@+id/tv_customer_recycledAt"
-                            style="@style/text_item2"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:gravity="right|center"
-                            android:text="shffbfbcncvncnf"
-                            android:textColor="@color/text99"
-                            app:layout_constraintLeft_toRightOf="@+id/tv_left"
-                            app:layout_constraintRight_toRightOf="parent" />
-
-                    </android.support.constraint.ConstraintLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
