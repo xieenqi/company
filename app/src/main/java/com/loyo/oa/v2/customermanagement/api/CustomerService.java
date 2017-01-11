@@ -11,6 +11,8 @@ import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.Product;
+import com.loyo.oa.v2.activityui.dashboard.api.IDashBoard;
+import com.loyo.oa.v2.activityui.dashboard.model.HomePaymentModel;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
@@ -112,14 +114,15 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<ArrayList<ContactLeftExtras>>compatApplySchedulers());
     }
 
-    public static Observable<Customer> addNewCustomer(Map<String, Object> map) {
+    public static Observable<Customer> addNewCustomer(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ICustomer.class)
-                        .addNewCustomer(map)
-                        .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
+                        .addNewCustomer(params)
+                        .compose(RetrofitAdapterFactory.<Customer>applySchedulers());
     }
+
 
     public static Observable<ArrayList<ContactLeftExtras>> getContactsField() {
         return
