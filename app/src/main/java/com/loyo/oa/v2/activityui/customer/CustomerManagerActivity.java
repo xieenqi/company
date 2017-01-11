@@ -201,7 +201,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
             changeChild(1);
             setTitle("我参与的");
         } else if (jumpType == HttpJpushNotification.JumpType.COMMON_CUSTOMER.getValue()) {
-            changeChild(3);
+            changeChild(SaleItemStatus.length - 1);
             setTitle("公海客户");
         }
     }
