@@ -55,20 +55,20 @@ public class Customer extends BaseBeans {
     public enum RecycleType {
         NONE(0) {
             @Override
-            String getText() {
+            public String getText() {
                 return "--";
             }
         },
         MANUAL(1) {
             @Override
-            String getText() {
-                return "手动";
+            public String getText() {
+                return "手动丢公海";
             }
         },
         AUTOMATIC(2) {
             @Override
-            String getText() {
-                return "自动";
+            public String getText() {
+                return "自动丢公海";
             }
         };
 
@@ -82,7 +82,7 @@ public class Customer extends BaseBeans {
             return type;
         }
 
-        abstract String getText();
+        public abstract String getText();
 
         public static class RecycleTypeSerializer implements JsonSerializer<RecycleType>, JsonDeserializer<RecycleType> {
 
@@ -93,7 +93,12 @@ public class Customer extends BaseBeans {
 
             @Override
             public RecycleType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
+                RecycleType[] list = RecycleType.values();
+                for (int i = 0; i < list.length; i++) {
+                    if (list[i].type == json.getAsInt()) {
+                        return list[i];
+                    }
+                }
                 return RecycleType.NONE;
             }
         }

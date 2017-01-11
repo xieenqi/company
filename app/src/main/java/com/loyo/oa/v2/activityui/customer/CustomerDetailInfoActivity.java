@@ -604,7 +604,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("key", "cus_reason_switcher");
                     showLoading2("");
-                    CustomerService.getSigninUploadPhotoConfig(map).subscribe(new DefaultLoyoSubscriber<SigninPictures>(hud) {
+                    CustomerService.getSigninUploadPhotoConfig(map).subscribe(new DefaultLoyoSubscriber<SigninPictures>() {
                         @Override
                         public void onNext(SigninPictures signinPictures) {
                             if (signinPictures != null && signinPictures.value.equals("1")) {
@@ -615,6 +615,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                             } else {
                                 setPopViewEmbl(false, "确定将客户 \"" + mCustomer.name + "\" 投入公海吗?");
                             }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            super.onError(e);
                         }
                     });
 
