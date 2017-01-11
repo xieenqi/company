@@ -25,6 +25,8 @@ public interface HomeDashBoardView extends BaseView{
 
     void stockErrorEmbl();
 
+    void stockErrorEmbl(String errorMsg);
+
     void moneyConSuccessEmbl(MoneyStatistic moneyCountModel);
 
     void moneyConErrorEmbl();
