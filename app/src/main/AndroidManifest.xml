@@ -387,11 +387,6 @@
             android:name=".activityui.other.SelectEditDeleteActivity"
             android:launchMode="singleTop"
             android:theme="@style/dialog_edit_delete_StyleBottom"/>
-        <activity
-            android:name="com.loyo.oa.voip.VoIPCallActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
         <!-- 任务审核 -->
         <activity
             android:name=".activityui.tasks.TasksInfoScoreActivity_"

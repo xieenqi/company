@@ -8,30 +8,27 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import com.loyo.oa.v2.BuildConfig;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UpdateTipActivity;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
 import java.io.Serializable;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 版本
@@ -249,10 +246,25 @@ public class CheckUpdateService extends Service {
             return;
         }
 
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
-        startActivity(i);
+        /**
+         * Android 7.0 自动升级bug
+         * http://stackoverflow.com/questions/39147608/android-install-apk-with-intent-view-action-not-working-with-file-provider
+         */
+
+        if (Build.VERSION.SDK_INT >= 24 /*Build.VERSION_CODES.N*/) {
+            Uri apkUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", apkfile);
+            Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+            intent.setData(apkUri);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(intent);
+        } else {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
+            startActivity(i);
+        }
+
+
 
         stopSelf();
     }
