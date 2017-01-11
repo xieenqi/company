@@ -45,7 +45,7 @@
             android:orientation="vertical"
             android:layout_alignParentBottom="true"
             android:layout_height="wrap_content">
-            <include layout="@layout/common_include_full_line_space"/>
+            <include layout="@layout/common_include_line_full_space"/>
             <TextView
                 android:id="@+id/tv_upload"
                 android:layout_width="match_parent"

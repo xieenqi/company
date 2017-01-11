@@ -39,7 +39,7 @@
             android:layout_alignParentBottom="true"
             android:background="@color/common_activity_con_bg">
 
-            <include layout="@layout/common_include_full_line_space"/>
+            <include layout="@layout/common_include_line_full_space"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

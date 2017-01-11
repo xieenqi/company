@@ -103,7 +103,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content">
-        <include layout="@layout/common_include_full_line_space"/>
+        <include layout="@layout/common_include_line_full_space"/>
         <LinearLayout
             android:id="@+id/ll_add"
             android:layout_width="match_parent"

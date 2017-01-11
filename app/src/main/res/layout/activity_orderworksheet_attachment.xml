@@ -34,7 +34,7 @@
             swipe:swipeOffsetLeft="300dp"
             swipe:swipeOffsetRight="0dp"
             swipe:swipeOpenOnLongPress="false"/>
-        <include layout="@layout/common_include_full_line_space"/>
+        <include layout="@layout/common_include_line_full_space"/>
         <TextView
             android:id="@+id/tv_upload"
             android:layout_width="match_parent"

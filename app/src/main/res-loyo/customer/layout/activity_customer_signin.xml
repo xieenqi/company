@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
-        <include layout="@layout/common_include_full_line_space"/>
+        <include layout="@layout/common_include_line_full_space"/>
         <LinearLayout
             android:id="@+id/layout_add"
             android:layout_width="match_parent"
