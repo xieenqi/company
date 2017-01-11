@@ -79,7 +79,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             tv_contact_tel, customer_detail_wiretel, tv_sale_number, tv_visit_times, tv_task_count, tv_attachment_count,
             tv_approval_count,
             tv_follow_content, tv_follow_crecter_type, tv_contact_Number, tv_sale_count, tv_order_count,
-            tv_content41, tv_content42;
+            tv_content41, tv_content42, tv_content43;
     @ViewById
     ImageView img_public;
     @ViewById
@@ -243,6 +243,10 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_approval.setOnTouchListener(Global.GetTouch());
         if (mCustomer.state != Customer.DumpedCustomer)
             CommonMethod.commonCustomerRecycleTime(mCustomer, layout_4, tv_content41, tv_content42);
+
+        tv_content43.setVisibility(mCustomer.state == Customer.DumpedCustomer ? View.VISIBLE : View.GONE);
+        if (mCustomer.state == Customer.DumpedCustomer)
+            tv_content43.setText("丢公海原因：" + mCustomer.recycleReason);
 
         tv_customer_name.setText(mCustomer.name);
         if (null != mCustomer.loc) {
