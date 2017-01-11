@@ -4,10 +4,12 @@ package com.loyo.oa.v2.tool;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -29,6 +31,8 @@ import com.loyo.oa.v2.db.DBManager;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -166,10 +170,44 @@ public class BaseActivity extends AppCompatActivity {
         app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():begin");
 
         super.onSaveInstanceState(outState);
+        invokeFragmentManagerNoteStateNotSaved();
         outState.putString("token", MainApp.getToken());
         outState.putSerializable("user", MainApp.user);
 
         app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():end");
+    }
+
+    /**
+     * bugfix: FragmentActivity.onBackPressed Can not perform this action after onSaveInstanceState
+     *
+     * http://stackoverflow.com/questions/7469082/getting-exception-illegalstateexception-can-not-perform-this-action-after-onsa
+     */
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void invokeFragmentManagerNoteStateNotSaved() {
+        /**
+         * For post-Honeycomb devices
+         */
+        if (Build.VERSION.SDK_INT < 11) {
+            return;
+        }
+        try {
+            Class cls = getClass();
+            do {
+                cls = cls.getSuperclass();
+            } while (!"Activity".equals(cls.getSimpleName()));
+            Field fragmentMgrField = cls.getDeclaredField("mFragments");
+            fragmentMgrField.setAccessible(true);
+
+            Object fragmentMgr = fragmentMgrField.get(this);
+            cls = fragmentMgr.getClass();
+
+            Method noteStateNotSavedMethod = cls.getDeclaredMethod("noteStateNotSaved", new Class[] {});
+            noteStateNotSavedMethod.invoke(fragmentMgr, new Object[] {});
+            Log.d("DLOutState", "Successful call for noteStateNotSaved!!!");
+        } catch (Exception ex) {
+            Log.e("DLOutState", "Exception on worka FM.noteStateNotSaved", ex);
+        }
     }
 
     @Override

@@ -75,7 +75,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         onInitSlideMenu();
         tintManager.setTintColor(Color.parseColor("#33000000"));
                 /* 初始化AliOSSManager */
-        AliOSSManager.getInstance().initWithContext(getApplicationContext());
+//        AliOSSManager.getInstance().initWithContext(getApplicationContext());
         OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
         SaleStageConfig.getSaleStage();
         FolloUpConfig.getFolloUpStage();
