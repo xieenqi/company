@@ -36,12 +36,6 @@ public class StatisticRecord {
     public Double notBackMoney;
     public Double backMoney;
     public Double backMoneyTarget;
-    public Person director;
-
-    public class Person {
-        public String id;
-        public String name;
-    }
 
     public ArrayList<String> getDisplayColumnForType(final DashboardType type) {
         if (DashboardType.CUS_FOLLOWUP == type || DashboardType.SALE_FOLLOWUP == type || DashboardType.CUS_SIGNIN == type) {
@@ -81,7 +75,7 @@ public class StatisticRecord {
         } else if (DashboardType.PAYMENT == type) {
             // 回款统计
             return new ArrayList<String>() {{
-                add(director.name);
+                add(userName);
                 add(format(notBackMoney, type));
                 add(format(backMoney, type));
                 add(format(backMoneyTarget, type));
