@@ -134,6 +134,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 }
                 if (1 == pageIndex) {
                     adapter.reload(listX.records);
+                    lv_list.setAdapter(adapter);
                 } else {
                     adapter.addAll(listX.records);
                 }
