@@ -62,7 +62,7 @@ android {
             storePassword 'android'
         }
         SignConfig {
-            storeFile file('../sign/loyo_android_v2.jks')
+            storeFile file('../sign/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
@@ -74,8 +74,8 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 2017010601
-        versionName '1.4.9'
+        versionCode 2017010602
+        versionName '1.4.9.1'
     }
 
     buildTypes {
