@@ -114,12 +114,12 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<ArrayList<ContactLeftExtras>>compatApplySchedulers());
     }
 
-    public static Observable<Customer> addNewCustomer(HashMap<String, Object> params) {
+    public static Observable<Customer> addNewCustomer(HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ICustomer.class)
-                        .addNewCustomer(params)
+                        .addNewCustomer(map)
                         .compose(RetrofitAdapterFactory.<Customer>applySchedulers());
     }
 
