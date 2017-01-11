@@ -456,6 +456,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      */
 
     private boolean testDynamicword() {
+        if (extDatas == null) {
+            extDatas = new ArrayList<>();
+        }
         extDatas.clear();
         extDatas.addAll(opextDatasModel);
         extDatas.addAll(reextDatasModel);
