@@ -37,9 +37,9 @@
                     android:orientation="vertical">
                     <include layout="@layout/include_wfinstance_line_space"/>
                     <RelativeLayout
-                        android:paddingLeft="@dimen/wfinstance_layout_padding"
-                        android:paddingTop="@dimen/wfinstance_layout_padding"
-                        android:paddingBottom="@dimen/wfinstance_layout_padding"
+                        android:paddingLeft="@dimen/common_activity_bg"
+                        android:paddingTop="@dimen/common_activity_bg"
+                        android:paddingBottom="@dimen/common_activity_bg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical">
@@ -114,7 +114,7 @@
                         android:visibility="gone">
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/wfinstance_line_height"
+                            android:layout_height="@dimen/common_line_height"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -150,9 +150,9 @@
                         android:id="@+id/layout_wfinstance_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/wfinstance_layout_padding"
-                        android:layout_marginRight="@dimen/wfinstance_layout_padding"
-                        android:paddingBottom="@dimen/wfinstance_layout_padding"
+                        android:layout_marginLeft="@dimen/common_activity_bg"
+                        android:layout_marginRight="@dimen/common_activity_bg"
+                        android:paddingBottom="@dimen/common_activity_bg"
                         android:animateLayoutChanges="true"
                         android:visibility="gone"
                         android:orientation="vertical">
@@ -171,7 +171,7 @@
                             android:layout_height="@dimen/wfinstance_common_second_height"
                             android:background="@color/common_activity_bg"
                             android:gravity="center_vertical"
-                            android:paddingLeft="@dimen/wfinstance_layout_padding"
+                            android:paddingLeft="@dimen/common_activity_bg"
                             android:text="订单信息" />
 
                         <LinearLayout
@@ -180,18 +180,18 @@
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="false"
                             android:orientation="vertical"
-                            android:paddingRight="@dimen/wfinstance_layout_padding"
-                            android:paddingBottom="@dimen/wfinstance_layout_padding"
-                            android:paddingLeft="@dimen/wfinstance_layout_padding"/>
+                            android:paddingRight="@dimen/common_activity_bg"
+                            android:paddingBottom="@dimen/common_activity_bg"
+                            android:paddingLeft="@dimen/common_activity_bg"/>
 
                         <include layout="@layout/include_wfinstance_line_outspace" />
 
                         <LinearLayout
                             android:id="@+id/ll_product"
                             android:layout_width="match_parent"
-                            android:paddingLeft="@dimen/wfinstance_layout_padding"
-                            android:paddingRight="@dimen/wfinstance_layout_padding"
-                            android:layout_height="@dimen/wfinstance_line_height"
+                            android:paddingLeft="@dimen/common_activity_bg"
+                            android:paddingRight="@dimen/common_activity_bg"
+                            android:layout_height="@dimen/common_line_height"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -213,7 +213,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/wfinstance_common_arrow_margin_left"
+                                android:layout_marginLeft="9dp"
                                 android:scaleType="center"
                                 android:src="@drawable/wfinstance_right_arrow" />
 
@@ -224,10 +224,10 @@
                         <LinearLayout
                             android:id="@+id/ll_plan"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/wfinstance_line_height"
+                            android:layout_height="@dimen/common_line_height"
                             android:gravity="center_vertical"
-                            android:paddingRight="@dimen/wfinstance_layout_padding"
-                            android:paddingLeft="@dimen/wfinstance_layout_padding"
+                            android:paddingRight="@dimen/common_activity_bg"
+                            android:paddingLeft="@dimen/common_activity_bg"
                             android:orientation="horizontal">
 
                             <TextView
@@ -249,7 +249,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/wfinstance_common_arrow_margin_left"
+                                android:layout_marginLeft="9dp"
                                 android:scaleType="center"
                                 android:src="@drawable/wfinstance_right_arrow" />
 
@@ -270,7 +270,7 @@
                             android:layout_height="@dimen/wfinstance_common_second_height"
                             android:background="@color/common_activity_bg"
                             android:gravity="center_vertical"
-                            android:paddingLeft="@dimen/wfinstance_layout_padding"
+                            android:paddingLeft="@dimen/common_activity_bg"
                             android:text="回款信息"
                             style="@style/wfinstance_line_text_second_title"
                             />
@@ -281,8 +281,8 @@
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical"
-                            android:paddingBottom="@dimen/wfinstance_layout_padding"
-                            android:padding="@dimen/wfinstance_layout_padding"/>
+                            android:paddingBottom="@dimen/common_activity_bg"
+                            android:padding="@dimen/common_activity_bg"/>
 
 
                         <include layout="@layout/include_solid_line_left" />
@@ -292,12 +292,12 @@
                         android:id="@+id/layout_memo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/wfinstance_layout_padding"
+                        android:paddingLeft="@dimen/common_activity_bg"
                         android:background="@color/common_activity_con_bg"
                         android:orientation="vertical">
                         <include layout="@layout/include_wfinstance_line_space"/>
                         <LinearLayout
-                            android:layout_marginTop="@dimen/wfinstance_layout_padding"
+                            android:layout_marginTop="@dimen/common_activity_bg"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
@@ -325,8 +325,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
-                            android:layout_marginTop="@dimen/wfinstance_text_line_space"
-                            android:layout_marginBottom="@dimen/wfinstance_text_line_space"
+                            android:layout_marginTop="@dimen/common_text_in_space"
+                            android:layout_marginBottom="@dimen/common_text_in_space"
                             android:textIsSelectable="true"
                             />
                     </LinearLayout>
@@ -339,9 +339,9 @@
                         android:background="@color/common_activity_con_bg"
                         android:orientation="vertical">
                         <LinearLayout
-                            android:paddingLeft="@dimen/wfinstance_layout_padding"
+                            android:paddingLeft="@dimen/common_activity_bg"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/wfinstance_line_height"
+                            android:layout_height="@dimen/common_line_height"
                             android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/tv_attachment_count"
@@ -355,10 +355,10 @@
                                 />
 
                             <ImageView
-                                android:paddingRight="@dimen/wfinstance_layout_padding"
+                                android:paddingRight="@dimen/common_activity_bg"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/wfinstance_common_arrow_margin_left"
+                                android:layout_marginLeft="9dp"
                                 android:scaleType="center"
                                 android:src="@drawable/wfinstance_right_arrow" />
                         </LinearLayout>
@@ -368,9 +368,9 @@
                     <LinearLayout
                         android:id="@+id/ll_project"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/wfinstance_line_height"
-                        android:paddingLeft="@dimen/wfinstance_layout_padding"
-                        android:paddingRight="@dimen/wfinstance_layout_padding"
+                        android:layout_height="@dimen/common_line_height"
+                        android:paddingLeft="@dimen/common_activity_bg"
+                        android:paddingRight="@dimen/common_activity_bg"
                         android:background="@color/common_activity_con_bg"
                         android:orientation="horizontal">
 
@@ -397,9 +397,9 @@
                     <LinearLayout
                         android:id="@+id/ll_customer"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/wfinstance_line_height"
-                        android:paddingLeft="@dimen/wfinstance_layout_padding"
-                        android:paddingRight="@dimen/wfinstance_layout_padding"
+                        android:layout_height="@dimen/common_line_height"
+                        android:paddingLeft="@dimen/common_activity_bg"
+                        android:paddingRight="@dimen/common_activity_bg"
                         android:background="@color/common_activity_con_bg"
                         android:orientation="horizontal">
 
@@ -427,15 +427,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/wfinstance_layout_padding"
+                    android:paddingLeft="@dimen/common_activity_bg"
                     android:background="@color/common_activity_con_bg"
                     android:orientation="vertical">
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/wfinstance_line_height"
-                        android:paddingRight="@dimen/wfinstance_layout_padding"
+                        android:layout_height="@dimen/common_line_height"
+                        android:paddingRight="@dimen/common_activity_bg"
                         android:orientation="horizontal">
 
                         <TextView
@@ -466,7 +466,7 @@
                         android:background="@color/white"
                         android:divider="@android:color/transparent"
                         android:dividerHeight="0dp"
-                        android:paddingRight="@dimen/wfinstance_layout_padding"
+                        android:paddingRight="@dimen/common_activity_bg"
                         android:listSelector="@android:color/transparent" />
 
                 </LinearLayout>
