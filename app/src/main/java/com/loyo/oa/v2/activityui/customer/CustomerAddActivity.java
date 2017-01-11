@@ -714,12 +714,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             Intent intent = new Intent();
             intent.putExtra("id", retCustomer.id);
             intent.putExtra("name", retCustomer.name);
-            Locate oldeLoc = retCustomer.position;
-            List<Double> loc = new ArrayList<>();
-            loc.add(oldeLoc.loc[0]);
-            loc.add(oldeLoc.loc[1]);
-            Location location = new Location(loc, oldeLoc.addr);
-            intent.putExtra("loc", location);
+
+            if (retCustomer.position != null) {
+                List<Double> loc = new ArrayList<>();
+                Locate oldeLoc = retCustomer.position;
+                loc.add(oldeLoc.loc[0]);
+                loc.add(oldeLoc.loc[1]);
+                Location location = new Location(loc, oldeLoc.addr);
+                intent.putExtra("loc", location);
+            }
             intent.putExtra("contact", retCustomer.contacts);
             setResult(RESULT_OK, intent);
         }
