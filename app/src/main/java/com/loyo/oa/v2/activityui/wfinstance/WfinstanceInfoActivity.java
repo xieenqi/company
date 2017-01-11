@@ -469,7 +469,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             e.printStackTrace();
         }
         if (mWfInstance.creator != null) {
-            tv_title_creator.setText(mWfInstance.title);
+// todo:            tv_title_creator.setText(mWfInstance.title);
 
             if (null != mWfInstance.creator.shortPosition) {
                 tv_title_role.setText(mWfInstance.creator.shortPosition.getName());
@@ -489,7 +489,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + "）");
         tv_projectName.setText(null == mWfInstance.ProjectInfo || TextUtils.isEmpty(mWfInstance.ProjectInfo.title) ? "无" : mWfInstance.ProjectInfo.title);
-        tv_customerName.setText("/*todo:*/"/*todo:*/);
+        tv_customerName.setText(null == mWfInstance.customerName?"无":mWfInstance.customerName);
         if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode
                 || 500 == mWfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件  订单审批  回款审批
             layout_AttachFile.setVisibility(300 == mWfInstance.bizForm.bizCode ? View.GONE : View.VISIBLE);

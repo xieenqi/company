@@ -152,7 +152,9 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                                ArrayList<HashMap<String, Object>> workflowValues,
                                String mTemplateId, String projectId,
                                String uuid, String memo,
-                               int attachmentCount) {
+                               int attachmentCount,
+                               String customerId,
+                               String customerName) {
         bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizformId", mBizForm.getId());              //表单Id
@@ -169,6 +171,12 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         }
         map.put("memo", memo); //备注
         LogUtil.d("创建审批传参：" + MainApp.gson.toJson(map));
+        if (!TextUtils.isEmpty(customerId)) {
+            map.put("customerId", customerId);
+            if (!TextUtils.isEmpty(customerName)) {
+                map.put("customerName", customerName);
+            }
+        }
 
         WfinstanceService.addWfInstance(map)
                 .subscribe(new DefaultLoyoSubscriber<WfInstance>(crolView.getHUD(), "新建审批成功") {
