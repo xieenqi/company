@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:layout_marginTop="@dimen/wfinstance_text_line_space"
+        android:layout_marginTop="@dimen/common_text_in_space"
         >
 
         <TextView

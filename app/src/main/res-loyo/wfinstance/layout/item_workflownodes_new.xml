@@ -6,17 +6,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/wfinstance_layout_padding"
+        android:layout_marginTop="@dimen/common_layout_padding"
         android:background="@drawable/wfinstance_nodes_bg"
-        android:paddingLeft="@dimen/wfinstance_layout_padding"
+        android:paddingLeft="@dimen/common_layout_padding"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/wfinstance_layout_padding"
-            android:layout_marginRight="@dimen/wfinstance_layout_padding"
-            android:layout_marginTop="@dimen/wfinstance_layout_padding"
+            android:layout_marginBottom="@dimen/common_layout_padding"
+            android:layout_marginRight="@dimen/common_layout_padding"
+            android:layout_marginTop="@dimen/common_layout_padding"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -28,10 +28,10 @@
 
             <TextView
                 android:id="@+id/tv_creator_title"
-                style="@style/wfinstance_line_text_main"
+                style="@style/common_text_line_main"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/wfinstance_text_line_space"
+                android:layout_marginLeft="@dimen/common_text_in_space"
                 android:ellipsize="end"
                 android:maxEms="12"
                 android:maxLength="10"
@@ -65,32 +65,32 @@
             android:id="@+id/view_dashed_line"
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:layout_marginRight="@dimen/wfinstance_layout_padding"
+            android:layout_marginRight="@dimen/common_layout_padding"
             android:background="@drawable/view_dashed_line"
             android:layerType="software" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/wfinstance_layout_padding"
+            android:layout_marginRight="@dimen/common_layout_padding"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/wfinstance_text_line_space"
-                android:layout_marginBottom="@dimen/wfinstance_text_line_space"
+                android:layout_marginTop="@dimen/common_text_in_space"
+                android:layout_marginBottom="@dimen/common_text_in_space"
                 android:text="内容"
                 android:gravity="left"
-                style="@style/wfinstance_line_text_other_1"/>
+                style="@style/common_text_line_main"/>
 
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:layout_marginBottom="@dimen/wfinstance_text_line_space"
+                android:layout_marginBottom="@dimen/common_text_in_space"
                 style="@style/wfinstance_line_text_small"/>
 
         </LinearLayout>
