@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.customer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,10 @@ public class CustomerRelatedApprovalList extends BaseLoadingActivity implements 
         }
         groupsData = new GroupsData();
         initUI();
+
+        if (TextUtils.isEmpty(customerId)) {
+            finishWithPopAnimation();
+        }
     }
 
     @Override
@@ -175,7 +180,7 @@ public class CustomerRelatedApprovalList extends BaseLoadingActivity implements 
         map.put("status", "");
         map.put("bizformId", "");
 
-        CustomerService.getRelatedApprovalList(map)
+        CustomerService.getRelatedApprovalList(customerId, map)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<ApprovalItemModel>>(ll_loading) {
                     @Override
                     public void onError(Throwable e) {

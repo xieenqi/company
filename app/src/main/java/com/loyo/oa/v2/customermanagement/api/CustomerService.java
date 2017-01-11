@@ -11,8 +11,6 @@ import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.Product;
-import com.loyo.oa.v2.activityui.dashboard.api.IDashBoard;
-import com.loyo.oa.v2.activityui.dashboard.model.HomePaymentModel;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
@@ -30,7 +28,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import retrofit.http.Body;
 import retrofit.http.Path;
@@ -338,11 +335,11 @@ public class CustomerService {
     /**
      * 获取客户关联的审批列表
      */
-    public static Observable<PaginationX<ApprovalItemModel>> getRelatedApprovalList(HashMap<String, Object> map) {
+    public static Observable<PaginationX<ApprovalItemModel>> getRelatedApprovalList(String id, HashMap<String, Object> map) {
         return RetrofitAdapterFactory.getInstance()
                 .build(/*TODO:*/Config_project.API_URL() + FinalVariables.wfinstance)
                 .create(ICustomer.class)
-                .getRelatedApprovalList(map)
+                .getRelatedApprovalList(id, map)
                 .compose(RetrofitAdapterFactory.<PaginationX<ApprovalItemModel>>compatApplySchedulers());
     }
 

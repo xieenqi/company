@@ -176,6 +176,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
+            android:name=".activityui.customer.CustomerRelatedApprovalList"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
             android:name=".activityui.customer.CustomerContactManageActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"

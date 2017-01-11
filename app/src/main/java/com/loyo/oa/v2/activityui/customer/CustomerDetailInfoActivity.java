@@ -262,7 +262,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         tv_order_count.setText("（" + mCustomer.counter.order + "）");
         tv_task_count.setText("（" + mCustomer.counter.getTask() + "）");
         tv_attachment_count.setText("（" + mCustomer.counter.getFile() + "）");
-        tv_approval_count.setText("（" + "//TODO:" + "）");
+        tv_approval_count.setText("（" + mCustomer.counter.workflow + "）");
 
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
