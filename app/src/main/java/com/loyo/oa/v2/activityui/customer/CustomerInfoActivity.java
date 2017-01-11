@@ -151,7 +151,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        finish();
+//                        finish();
                     }
 
                     @Override
@@ -199,7 +199,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        finish();
+//                        finish();
                     }
 
                     @Override

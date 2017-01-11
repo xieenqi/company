@@ -113,7 +113,7 @@ public class LoseCommonCustomerReasonActivity extends BaseActivity implements Vi
                 stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                 if (stage != null) {
                     tv_reason.setText(stage.name);
-                    if (stage.isSys && "其它".equals(stage.name)) {
+                    if (stage.isSys && stage.name.startsWith("其他")) {
                         isReason = true;
                         et_reason.setHint("必填，请输入原因说明");
                     }
