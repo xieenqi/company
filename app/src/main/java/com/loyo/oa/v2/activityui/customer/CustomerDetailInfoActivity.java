@@ -246,7 +246,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
         tv_content43.setVisibility(mCustomer.state == Customer.DumpedCustomer ? View.VISIBLE : View.GONE);
         if (mCustomer.state == Customer.DumpedCustomer)
-            tv_content43.setText("丢公海原因：" + mCustomer.recycleReason);
+            tv_content43.setText("丢公海原因：" + (TextUtils.isEmpty(mCustomer.recycleReason) ? "--" : mCustomer.recycleReason));
 
         tv_customer_name.setText(mCustomer.name);
         if (null != mCustomer.loc) {
@@ -588,14 +588,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         }
 
         ActionSheetDialog dialog = new ActionSheetDialog(this).builder();
-        if (canDelete)
-            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    setPopViewEmbl(true, "你确定要删除客户?");
-                    UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerDelete);
-                }
-            });
         if (canDump)
             dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
@@ -604,7 +596,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("key", "cus_reason_switcher");
                     showLoading2("");
-                    CustomerService.getSigninUploadPhotoConfig(map).subscribe(new DefaultLoyoSubscriber<SigninPictures>() {
+                    CustomerService.getSigninUploadPhotoConfig(map).subscribe(new DefaultLoyoSubscriber<SigninPictures>(hud) {
                         @Override
                         public void onNext(SigninPictures signinPictures) {
                             if (signinPictures != null && signinPictures.value.equals("1")) {
@@ -623,6 +615,14 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                         }
                     });
 
+                }
+            });
+        if (canDelete)
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    setPopViewEmbl(true, "你确定要删除客户?");
+                    UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerDelete);
                 }
             });
         dialog.show();

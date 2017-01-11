@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.customer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -150,7 +151,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        finish();
+//                        finish();
                     }
 
                     @Override
@@ -198,7 +199,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        finish();
+//                        finish();
                     }
 
                     @Override
@@ -367,7 +368,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             tv_customer_recycledAt.setText(mCustomer.recycledAt != 0 ? DateTool.getDateTimeFriendly(mCustomer.recycledAt) : "--");
             tv_common_persion.setText(mCustomer.owner.name);
             tv_common_type.setText(mCustomer.recycleType.getText());
-            tv_common_reason.setText(mCustomer.recycleReason);
+            tv_common_reason.setText(TextUtils.isEmpty(mCustomer.recycleReason) ? "--" : mCustomer.recycleReason);
+            if (mCustomer.recycleReason.length() > 15)
+                tv_common_reason.setGravity(Gravity.LEFT | Gravity.CENTER);
         } else {
             layout_Extra.setVisibility(View.VISIBLE);
             ll_common.setVisibility(View.GONE);
