@@ -54,7 +54,7 @@ public class BusinessOperation {
     public final static String CLUE_DELETING         = "0409";  /* 线索删除 */
 
     public final static String CUSTOMER_RESPONSIBLE_PERSON_CHANGING = "0410";  /* 客户更改负责人 */
-    public final static String ORDER_RESPONSIBLE_PERSON_CHANGING = "041X";  /* TODO: 订单更改负责人 */
+    public final static String ORDER_RESPONSIBLE_PERSON_CHANGING = "0413";     /* 订单更改负责人 */
 
     @StringDef({
             DEFAULT,
