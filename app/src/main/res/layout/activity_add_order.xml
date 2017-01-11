@@ -380,7 +380,7 @@
 
                 <TextView
                     android:id="@+id/tv_source"
-                    style="@style/text_item1"
+                    style="@style/common_text_line_main"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_side_edge"
@@ -417,7 +417,8 @@
 
             <EditText
                 android:id="@+id/et_remake"
-                style="@style/edtText_normal"
+                style="@style/common_text_line_main"
+                android:paddingLeft="@dimen/common_layout_padding"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -426,9 +427,7 @@
                 android:maxLength="500"
                 android:minHeight="@dimen/dimen_100"
                 android:paddingBottom="@dimen/dimen_5"
-                android:paddingTop="@dimen/dimen_5"
-                android:textColor="@color/text66"
-                android:textSize="15sp" />
+                android:paddingTop="@dimen/dimen_5" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

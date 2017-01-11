@@ -301,6 +301,7 @@
                     android:id="@+id/layout_child_Add_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/white"
                     android:orientation="vertical" />
 
                 <include layout="@layout/common_include_line_out_space" />
