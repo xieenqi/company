@@ -194,7 +194,6 @@
                         style="@style/common_text_line_second"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/common_text_in_space"
                         android:gravity="left"
                         android:maxLines="3"
                         android:singleLine="false"
