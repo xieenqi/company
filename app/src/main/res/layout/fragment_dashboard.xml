@@ -924,12 +924,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginBottom="6dp"
-                                android:text="50000" />
+                                android:text=""
+                                android:textColor="#333333"
+                                android:textSize="16sp" />
 
                             <View
                                 android:id="@+id/payment_view_1"
                                 android:layout_width="30dp"
-                                android:layout_height="130dp"
+                                android:layout_height="0dp"
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/shape_dashboard_pay_1" />
                         </LinearLayout>
@@ -947,12 +949,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginBottom="6dp"
-                                android:text="91000000" />
+                                android:textColor="#333333"
+                                android:textSize="16sp" />
 
                             <View
                                 android:id="@+id/payment_view_2"
                                 android:layout_width="30dp"
-                                android:layout_height="130dp"
+                                android:layout_height="0dp"
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/shape_dashboard_pay_2" />
                         </LinearLayout>
@@ -970,13 +973,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginBottom="6dp"
-
-                                android:text="4000000" />
+                                android:textColor="#333333"
+                                android:textSize="16sp" />
 
                             <View
                                 android:id="@+id/payment_view_3"
                                 android:layout_width="30dp"
-                                android:layout_height="120dp"
+                                android:layout_height="0dp"
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/shape_dashboard_pay_3" />
                         </LinearLayout>
@@ -997,7 +1000,9 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="1"
                             android:gravity="center_horizontal"
-                            android:text="回款金额" />
+                            android:text="回款金额"
+                            android:textColor="#666666"
+                            android:textSize="13sp" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -1005,7 +1010,9 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="1"
                             android:gravity="center_horizontal"
-                            android:text="回款计划" />
+                            android:text="回款计划"
+                            android:textColor="#666666"
+                            android:textSize="13sp" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -1013,7 +1020,9 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="1"
                             android:gravity="center_horizontal"
-                            android:text="回款目标" />
+                            android:text="回款目标"
+                            android:textColor="#666666"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
                     <FrameLayout
