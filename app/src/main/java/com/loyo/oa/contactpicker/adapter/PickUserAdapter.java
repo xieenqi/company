@@ -89,6 +89,11 @@ public class PickUserAdapter extends BaseAdapter<PickUserModel,PickUserCell>
 
     @Override
     public void onUserItemClicked(PickUserCell object, int index) {
+
+        if(index < 0 || index > getItemCount()) {
+            return;
+        }
+
         PickUserModel model = getItem(index);
         if (callback == null) {
             return;
