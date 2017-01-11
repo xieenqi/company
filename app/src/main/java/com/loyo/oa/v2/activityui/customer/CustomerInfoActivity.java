@@ -368,7 +368,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             tv_customer_recycledAt.setText(mCustomer.recycledAt != 0 ? DateTool.getDateTimeFriendly(mCustomer.recycledAt) : "--");
             tv_common_persion.setText(mCustomer.owner.name);
             tv_common_type.setText(mCustomer.recycleType.getText());
-            tv_common_reason.setText(mCustomer.recycleReason);
+            tv_common_reason.setText(TextUtils.isEmpty(mCustomer.recycleReason) ? "--" : mCustomer.recycleReason);
             if (mCustomer.recycleReason.length() > 15)
                 tv_common_reason.setGravity(Gravity.LEFT | Gravity.CENTER);
         } else {
