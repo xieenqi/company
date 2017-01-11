@@ -127,6 +127,7 @@ public class Customer extends BaseBeans {
 
     public SaleActivity saleActivityInfo;
     public int saleActivityNum;
+    public int wfNum;
 
     public long activityRecycleAt;//跟进行为丢公海时间
     public long orderRecycleAt;   //订单丢公海时间

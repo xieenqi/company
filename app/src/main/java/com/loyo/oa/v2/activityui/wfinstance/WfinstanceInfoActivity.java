@@ -20,6 +20,7 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -469,7 +470,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             e.printStackTrace();
         }
         if (mWfInstance.creator != null) {
-            tv_title_creator.setText(mWfInstance.title);
+// todo:            tv_title_creator.setText(mWfInstance.title);
 
             if (null != mWfInstance.creator.shortPosition) {
                 tv_title_role.setText(mWfInstance.creator.shortPosition.getName());
@@ -489,7 +490,13 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + "）");
         tv_projectName.setText(null == mWfInstance.ProjectInfo || TextUtils.isEmpty(mWfInstance.ProjectInfo.title) ? "无" : mWfInstance.ProjectInfo.title);
-        tv_customerName.setText("/*todo:*/"/*todo:*/);
+        tv_customerName.setText(null == mWfInstance.customerName?"无":mWfInstance.customerName);
+        if (mWfInstance.customerId != null) {
+            tv_customerName.setTextColor(getResources().getColor(R.color.title_bg1));
+        }
+        else {
+            tv_customerName.setTextColor(getResources().getColor(R.color.text99));
+        }
         if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode
                 || 500 == mWfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件  订单审批  回款审批
             layout_AttachFile.setVisibility(300 == mWfInstance.bizForm.bizCode ? View.GONE : View.VISIBLE);
@@ -715,7 +722,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_nopass, R.id.layout_pass, R.id.layout_lastwork,
-            R.id.layout_AttachFile, R.id.ll_sale, R.id.ll_product, R.id.ll_plan})
+            R.id.layout_AttachFile, R.id.ll_sale, R.id.ll_product, R.id.ll_plan, R.id.ll_customer})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -797,6 +804,17 @@ public class WfinstanceInfoActivity extends BaseActivity {
 //                startActivityForResult(mIntent, 1);
 //                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 //                break;
+            case R.id.ll_customer:
+            {
+                if (mWfInstance != null && mWfInstance.customerId != null) {
+                    Intent intent2 = new Intent();
+                    intent2.putExtra("Id", mWfInstance.customerId);
+                    intent2.setClass(this, CustomerDetailInfoActivity_.class);
+                    startActivity(intent2);
+                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                }
+                break;
+            }
         }
     }
 

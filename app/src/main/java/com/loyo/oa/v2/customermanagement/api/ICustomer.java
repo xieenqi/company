@@ -276,8 +276,8 @@ public interface ICustomer {
     /**
      * 获取客户关联的审批列表
      */
-    @GET("/new/simplify")
-    Observable<PaginationX<ApprovalItemModel>> getRelatedApprovalList(@QueryMap HashMap<String, Object> map);
+    @GET("/cus/{id}")
+    Observable<PaginationX<ApprovalItemModel>> getRelatedApprovalList(@Path("id") String id, @QueryMap HashMap<String, Object> map);
 
     /**
      * 通知服务器请求回拨

@@ -276,7 +276,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
                     customerId = customer.getId();
-                    String customerName = customer.name;
+                    customerName = customer.name;
                     tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 }
                 else {
@@ -405,7 +405,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
         LogUtil.dee("requestAddWfinVeriSuccess");
         mPresenter.requestAddWfin(tv_title.getText().toString(), deptId, workflowValues,
                 mTemplateId, projectId, uuid, edt_memo.getText().toString().trim(),
-                controller.count());
+                controller.count(), customerId, customerName);
     }
 
     /**
