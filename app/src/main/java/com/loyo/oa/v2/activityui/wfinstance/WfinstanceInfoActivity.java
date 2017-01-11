@@ -293,6 +293,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         saleId = chanceData.id;
         ll_sale.setVisibility(View.VISIBLE);
         layout_wfinstance_content.setVisibility(View.GONE);
+        layout_wfinstance_content.setPadding(0,0,0,0);
         ll_sale.setOnTouchListener(Global.GetTouch());
         tv_sale.setText(chanceData.name);
         List<String> wfList = new ArrayList<>();
