@@ -73,7 +73,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private ArrayList<FollowFilter> mTags;
     private String menuTimeKey = "0"; /*时间*/
-    private String menuChosKey = "", method, typeId, activityType; /*筛选*/
+    private String method = "", typeId = "", activityType = ""; /*筛选*/
 
     private boolean isPullOrDown;
     private int commentPosition;
