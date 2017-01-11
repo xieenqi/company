@@ -260,6 +260,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                         map.remove("xPath");
                     }
                 }
+                pageIndex=1;
                 getPageData();
 
             }
