@@ -133,6 +133,17 @@
                                     android:maxLines="1"
                                     android:text="无订单丢" />
                             </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tv_content43"
+                                style="@style/common_text_line_second"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:gravity="left|center"
+                                android:maxLines="1"
+                                android:text="丢公海原因"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <RelativeLayout

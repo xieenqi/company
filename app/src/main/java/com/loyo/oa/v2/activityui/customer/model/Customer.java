@@ -2,6 +2,13 @@ package com.loyo.oa.v2.activityui.customer.model;
 
 import android.support.annotation.IntDef;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.OrganizationalMember;
@@ -9,6 +16,7 @@ import com.loyo.oa.v2.beans.SaleActivity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
@@ -44,23 +52,53 @@ public class Customer extends BaseBeans {
     public static final int CUSTOMER_TYPE_NEAR_TEAM = CUSTOMER_TYPE_MINE + 5;
 
 
-    public enum CustomerType {
-        MY(1),//我的客户
-        TEAM(2),//团队客户
-        PUBLIC(3),//公海客户
+    public enum RecycleType {
+        NONE(0) {
+            @Override
+            String getText() {
+                return "--";
+            }
+        },
+        MANUAL(1) {
+            @Override
+            String getText() {
+                return "手动";
+            }
+        },
+        AUTOMATIC(2) {
+            @Override
+            String getText() {
+                return "自动";
+            }
+        };
 
-        NEAR_MY(4),//附近我的客户
-        NEAR_COMPANY(5);//附近公司已赢单客户
+        private int type;
 
-        private int mValue;
-
-        CustomerType(int value) {
-            mValue = value;
+        RecycleType(int value) {
+            type = value;
         }
 
         public int getmValue() {
-            return mValue;
+            return type;
         }
+
+        abstract String getText();
+
+        public static class RecycleTypeSerializer implements JsonSerializer<RecycleType>, JsonDeserializer<RecycleType> {
+
+            @Override
+            public JsonElement serialize(RecycleType src, Type typeOfSrc, JsonSerializationContext context) {
+                return new JsonPrimitive(src.type);
+            }
+
+            @Override
+            public RecycleType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+
+                return RecycleType.NONE;
+            }
+        }
+
+
     }
 
     public String id;
@@ -96,6 +134,8 @@ public class Customer extends BaseBeans {
     public boolean orderRemind;   //订单丢公海提醒时间
 
     public long recycledAt;//丢公海的时间
+    public RecycleType recycleType;//丢公海类型 0.无 1.手动 2.自动
+    public String recycleReason;//丢公海原因
 
     @Override
     public String getOrderStr() {

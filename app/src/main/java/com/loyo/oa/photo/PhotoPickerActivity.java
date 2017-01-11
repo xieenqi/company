@@ -128,7 +128,9 @@ public class PhotoPickerActivity extends AppCompatActivity {
               LENGTH_LONG).show();
           return false;
         }
-        menuDoneItem.setTitle(getString(R.string.__picker_done_with_count, total, maxCount));
+        if (menuDoneItem != null) {
+          menuDoneItem.setTitle(getString(R.string.__picker_done_with_count, total, maxCount));
+        }
         return true;
       }
 
