@@ -16,13 +16,15 @@
             android:id="@+id/saledetils_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/common_text_line_main"/>
+            android:gravity="left|center_vertical"
+            style="@style/common_text_line_second"/>
 
         <TextView
             android:id="@+id/saledetils_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/common_text_line_main"/>
+            android:gravity="left|center_vertical"
+            style="@style/common_text_line_second"/>
     </LinearLayout>
 
 
