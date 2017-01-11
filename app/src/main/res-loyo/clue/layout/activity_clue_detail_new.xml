@@ -187,13 +187,17 @@
                     android:layout_marginLeft="@dimen/common_layout_padding"
                     android:layout_marginRight="@dimen/common_layout_padding"
                     android:layout_marginTop="@dimen/common_text_in_space"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/tv_track_content"
-                        style="@style/common_text_line_main"
+                        style="@style/common_text_line_second"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:gravity="left"
+                        android:maxLines="3"
+                        android:singleLine="false"
                         android:text="" />
 
                     <TextView
@@ -201,9 +205,10 @@
                         style="@style/common_text_line_third"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:textSize="12sp" />
-
+                        android:layout_marginTop="@dimen/common_text_in_space"
+                        android:gravity="left"
+                        android:paddingBottom="@dimen/common_text_in_space"
+                        android:text="" />
                 </LinearLayout>
 
                 <include layout="@layout/common_include_line_out_space" />
