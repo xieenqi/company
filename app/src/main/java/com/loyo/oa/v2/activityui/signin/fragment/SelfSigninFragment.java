@@ -275,7 +275,9 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
         msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
-        onPullDownToRefresh(listView);
+        listView.getRefreshableView().setSelection(0);
+        mPagination.setFirstPage();
+        getData();
     }
 
     /**

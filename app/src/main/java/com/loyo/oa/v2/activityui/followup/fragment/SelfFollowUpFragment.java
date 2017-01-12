@@ -284,7 +284,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("split", true);
         map.put("pageIndex", mPagination.getShouldLoadPageIndex());
         map.put("pageSize", mPagination.getPageSize());
-        LogUtil.d("发送数据:" + MainApp.gson.toJson(map));
         mPresenter.getListData(map);
     }
 
@@ -297,7 +296,9 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
-       onPullDownToRefresh(listView);
+        listView.getRefreshableView().setSelection(0);
+        mPagination.setFirstPage();
+        getData();
     }
 
     /**
