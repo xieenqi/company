@@ -485,9 +485,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 if (null != estimateData) {
                     mBundle.putSerializable("data", estimateData);
                 }
+                mBundle.putString("orderId", orderId);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
-                mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_ADD);
-                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
+                app.startActivityForResult(this, OrderEstimateListActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
 
             //工单
