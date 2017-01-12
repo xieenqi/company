@@ -120,7 +120,7 @@ public class PaginationX<T> implements Serializable {
 
 
     public int getTotalRecords() {
-        return totalRecords;
+        return records.size();
     }
 
     public void setTotalRecords(int t) {
