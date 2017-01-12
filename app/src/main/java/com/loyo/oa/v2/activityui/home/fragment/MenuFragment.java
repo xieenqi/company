@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.home.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.FeedbackActivity_;
@@ -34,6 +37,7 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -55,6 +59,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * 【侧边栏】fragment
  */
 public class MenuFragment extends BaseFragment {
+    private static final int REQUEST_WRITE=0x1;// 申请sd写权限
     private GestureDetector gesture; //手势识别
     private float minDistance = 120;//手势滑动最小距离
     private float minVelocity = 200;//手势滑动最小速度
@@ -230,25 +235,11 @@ public class MenuFragment extends BaseFragment {
                 break;
             //检查更新
             case R.id.ll_version:
-                if (PackageManager.PERMISSION_GRANTED ==
-                        mActivity.getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
-                    mIntentCheckUpdate = new Intent(getActivity(), CheckUpdateService.class);
-                    mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
-                    getActivity().startService(mIntentCheckUpdate);
-                } else {
-
-                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            cancelDialog();
-                        }
-                    }, new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            cancelDialog();
-                            Utils.doSeting(getActivity());
-                        }
-                    }, "提示", "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+                /**
+                 * 判断sd卡读写权限，检查升级
+                 */
+                if(PermissionTool.requestPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE,"需要使用储存权限",REQUEST_WRITE)){
+                    toUpdate();
                 }
                 break;
             //设置
@@ -258,6 +249,31 @@ public class MenuFragment extends BaseFragment {
                 break;
         }
 
+    }
+
+    /**
+     * 升级检测
+     */
+    private void toUpdate(){
+        mIntentCheckUpdate = new Intent(getActivity(), CheckUpdateService.class);
+        mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
+        getActivity().startService(mIntentCheckUpdate);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(REQUEST_WRITE==requestCode){
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                    toUpdate();
+                }
+                @Override
+                public void fail() {
+                    Toast("你拒绝了所需权限，不能完成操作");
+                }
+            });
+        }
     }
 
     /**

@@ -100,7 +100,7 @@ public class PermissionTool {
                 final Context finalContext = context;
                 new SweetAlertDialog(activity, SweetAlertDialog.NORMAL_TYPE)
                         .setTitleText("权限申请")
-                        .setContentText(rationale + "\n\n" + "请在应用详情-权限里面打开所需权限")//解释原因
+                        .setContentText(rationale + "\n\n" + "请在”设置”>“应用”>“权限”中配置权限")//解释原因
                         .setCancelText("取消")
                         .setConfirmText("开启")
                         .showCancelButton(true)
