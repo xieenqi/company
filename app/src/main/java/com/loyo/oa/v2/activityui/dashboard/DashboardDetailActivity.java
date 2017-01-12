@@ -55,7 +55,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     private DashboardType type;
     private DashboardDetailAdapter adapter;
     private PullToRefreshListView lv_list;
-
     private int pageIndex = 1;
     private HashMap<String, Object> map = new HashMap<String, Object>();
     private DynamicFilterByTime defaultTime;//默认的显示时间
@@ -135,6 +134,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 }
                 if (1 == pageIndex) {
                     adapter.reload(listX.records);
+                    lv_list.setAdapter(adapter);
                 } else {
                     adapter.addAll(listX.records);
                 }
@@ -243,7 +243,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 String key = model.getKey();
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-                Log.d(TAG, "onMenuModelsSelected() called with: menuIndex = [" + menuIndex + "], key:" + key + ",value;" + value);
                 if (0 == menuIndex) {
                     //时间
                     map.put("qType",key);
@@ -260,6 +259,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                         map.remove("xPath");
                     }
                 }
+                pageIndex=1;
+                ll_loading.setStatus(LoadingLayout.Loading);
                 getPageData();
 
             }

@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.dashboard.presenter.impl;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.network.model.APIException;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
@@ -153,6 +155,12 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
 
             @Override
             public void onError(Throwable e) {
+                if(e instanceof APIException){
+                    if(((APIException) e).code==60001){
+                        crolView.stockErrorEmbl(e.getMessage());
+                        return;
+                    }
+                }
                 crolView.stockErrorEmbl();
             }
         });

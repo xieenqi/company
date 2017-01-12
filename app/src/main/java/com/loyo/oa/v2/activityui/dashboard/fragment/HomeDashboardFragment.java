@@ -67,6 +67,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
             visit_totalsize, visit_count,
             voice_totalsize, voice_count,
             tv_nums1,tv_nums2,tv_nums3, payment_tv_all;
+    private TextView tvErrorMsg;//增量错误原因
 
     private TextView tv_target_count, tv_order_count,  /*  目标数量 订单数量  */
             tv_target_money, tv_order_money;  /*  目标金额 订单金额  */
@@ -209,7 +210,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         ll_stock = (LinearLayout) mView.findViewById(R.id.ll_stock);
         ll_money = (LinearLayout) mView.findViewById(R.id.ll_money);
         ll_pay = (LinearLayout) mView.findViewById(R.id.ll_pay);
-
+        tvErrorMsg = (TextView) mView.findViewById(R.id.dashboard_tv_errormsg);
         loading_view1 = (RelativeLayout) mView.findViewById(R.id.loading_view1);
         loading_view2 = (RelativeLayout) mView.findViewById(R.id.loading_view2);
         loading_view3 = (RelativeLayout) mView.findViewById(R.id.loading_view3);
@@ -586,6 +587,19 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 loading_error2,
                 loading_view2,
                 LoadStatus.ERROR);
+    }
+
+    // 获取存量增量,失败可能有服务器返回的提示，需要显示
+    @Override
+    public void stockErrorEmbl(String msg) {
+        mPresenter.setOnSucssView(
+                loadAnim2,
+                ll_stock,
+                loading_load2,
+                loading_error2,
+                loading_view2,
+                LoadStatus.ERROR);
+        tvErrorMsg.setText(msg);
     }
 
     // 获取数量金额成功
