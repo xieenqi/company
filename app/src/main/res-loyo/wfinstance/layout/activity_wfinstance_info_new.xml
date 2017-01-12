@@ -408,7 +408,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="left|center_vertical"
-                            android:text="所属客户"
+                            android:text="关联客户"
                             style="@style/common_text_line_main"
                             />
 
