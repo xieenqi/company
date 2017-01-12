@@ -116,6 +116,9 @@ public class LoseCommonCustomerReasonActivity extends BaseActivity implements Vi
                     if (stage.isSys && stage.name.startsWith("其他")) {
                         isReason = true;
                         et_reason.setHint("必填，请输入原因说明");
+                    } else {
+                        isReason = false;
+                        et_reason.setHint("请输入原因说明");
                     }
                 }
                 break;

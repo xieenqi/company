@@ -56,7 +56,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
     private CommCustomerAdapter adapter;
     private DropDownMenu filterMenu;
     private Button btn_add;
-    private String field = "lastActAt";
+    private String field = "recycledAt";
     private String order = "desc";
     private String tagsParams = "";
     private int page = 1;
