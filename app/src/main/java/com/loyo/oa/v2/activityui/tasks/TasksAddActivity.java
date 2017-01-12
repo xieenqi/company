@@ -31,6 +31,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
+import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
@@ -38,6 +39,7 @@ import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
+import com.loyo.oa.v2.activityui.wfinstance.WfInAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
@@ -494,10 +496,8 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 
             /*关联客户*/
             case R.id.layout_mycustomer:
-                Bundle bundle3 = new Bundle();
-                bundle3.putInt("from", TASKS_ADD_CUSTOMER);
-                bundle3.putInt(ExtraAndResult.EXTRA_TYPE, 1);
-                app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_CUSTOMER, bundle3);
+                app.startActivityForResult(this, SelfVisibleCustomerPickerActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_CUSTOMER, null);
                 break;
 
             default:
