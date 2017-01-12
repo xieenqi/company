@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
@@ -25,6 +26,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
+import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
 import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
@@ -312,7 +314,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= pageSize ? listModel.size() : pageSize : pageSize);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map, mPagination.getPageIndex());
+        mPresenter.getListData(map);
     }
 
     /**
@@ -329,12 +331,12 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 评论删除
      */
     @Override
-    public void deleteCommentEmbl(final String id) {
+    public void deleteCommentEmbl(final ListView adapter, final int position, final String id) {
         ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
         dialog.addSheetItem("删除评论", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                mPresenter.deleteComment(id);
+                mPresenter.deleteComment(adapter,position,id);
             }
         });
         dialog.show();
@@ -344,10 +346,15 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 刷新列表数据
      */
     @Override
-    public void rushListData(boolean shw) {
-        onPullDownToRefresh(listView);
+    public void rushListData(ListView list, int position) {
+        //删除一条评论
+        ListOrDetailsCommentAdapter adapter=((ListOrDetailsCommentAdapter)list.getAdapter());
+        adapter.remove(position);
+        if(0==adapter.getCount()){
+            //如果没有评论了，就隐藏显示评论的控件
+            ((ViewGroup)list.getParent()).setVisibility(View.GONE);
+        }
     }
-
     /**
      * 评论成功操作
      */
@@ -383,7 +390,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 获取列表数据失败
      */
     @Override
-    public void getListDataErrorEmbl() {
+    public void getListDataErrorEmbl(Throwable e) {
         listView.onRefreshComplete();
     }
 
