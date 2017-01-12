@@ -250,7 +250,7 @@ public interface ICustomer {
     Observable<Customer> getCustomerContacts(@Path("customerId") String id);
 
     @POST("/customer/")
-    Observable<BaseResponse<Customer>> addNewCustomer(@Body Map<String, Object> map);
+    Observable<Customer> addNewCustomer(@Body Map<String, Object> map);
 
     /**
      * 根据 key 获取后台设置信息

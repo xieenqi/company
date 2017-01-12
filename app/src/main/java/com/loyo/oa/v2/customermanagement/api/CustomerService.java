@@ -126,7 +126,7 @@ public class CustomerService {
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ICustomer.class)
                         .addNewCustomer(map)
-                        .compose(RetrofitAdapterFactory.<Customer>applySchedulers());
+                        .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
 
 
