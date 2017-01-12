@@ -2,10 +2,8 @@ package com.loyo.oa.v2.activityui.product.viewcontrol;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
-import com.loyo.oa.v2.activityui.product.model.ProductDynmModel;
+import com.loyo.oa.v2.activityui.product.model.ProductCustomField;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
-import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
-import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.ArrayList;
 
@@ -15,7 +13,7 @@ import java.util.ArrayList;
 
 public interface AddBuProductView {
 
-    void getDynmSuccessEmbl(ArrayList<ProductDynmModel> model);
+    void getDynmSuccessEmbl(ArrayList<ProductCustomField> model);
 
     void getDynmErrorEmbl();
 

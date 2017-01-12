@@ -105,12 +105,12 @@ public class OrderService {
     }
 
     public static
-    Observable<OrderDetail> getSaleDetails(String id) {
+    Observable<OrderDetail> getSaleDetails(String id, HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
                         .create(IOrder.class)
-                        .getSaleDetails(id)
+                        .getSaleDetails(id, map)
                         .compose(RetrofitAdapterFactory.<OrderDetail>compatApplySchedulers());
     }
 

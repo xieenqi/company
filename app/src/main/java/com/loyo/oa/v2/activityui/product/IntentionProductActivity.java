@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
@@ -25,7 +24,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -39,6 +37,7 @@ public class IntentionProductActivity extends BaseActivity {
 
     public static String KEY_CAN_EDIT = "com.logo.oa.IntentionProduct.KEY_CAN_EDIT";
     public static String KEY_CAN_DELETE = "com.logo.oa.IntentionProduct.KEY_CAN_DELETE";
+    public static String RET_HAS_CHANGE_DATA = "com.logo.oa.IntentionProduct.RET_HAS_CHANGE_DATA";
 
     private boolean canEdit = false;
     private boolean canDelete = false;
@@ -50,12 +49,12 @@ public class IntentionProductActivity extends BaseActivity {
     private CustomTextView tv_saleToal, tv_discount;
     private LinearLayout ll_back, ll_add, ll_statistics;
     private ListView lv_list;
-    ArrayList<SaleIntentionalProduct> listData = new ArrayList<>();
+    private ArrayList<SaleIntentionalProduct> listData = new ArrayList<>();
+    private boolean hasChangedData = false;
     SaleProductAdapter saleProductAdapter;
     private int editItemIndex;//改变item的位置记录
-    private boolean isKine = false;
 
-    Handler hadler = new Handler() {
+    Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
             if (listData.size() > 0) {
@@ -92,7 +91,6 @@ public class IntentionProductActivity extends BaseActivity {
         canDelete = getIntent().getBooleanExtra(KEY_CAN_DELETE, true/* 临时调整 */);
         saleId = getIntent().getStringExtra("saleId");
         fromPage = getIntent().getIntExtra("data", 0);
-        isKine = getIntent().getBooleanExtra("boolean", false);
         ArrayList<SaleIntentionalProduct> intentData
                 = (ArrayList<SaleIntentionalProduct>) getIntent()
                 .getSerializableExtra(ExtraAndResult.EXTRA_DATA);
@@ -123,9 +121,6 @@ public class IntentionProductActivity extends BaseActivity {
         tv_saleToal = (CustomTextView) findViewById(R.id.tv_saleToal);
         tv_discount = (CustomTextView) findViewById(R.id.tv_discount);
         ll_statistics = (LinearLayout) findViewById(R.id.ll_statistics);
-        if (fromPage == ActionCode.ORDER_DETAIL && !isKine) {
-            ll_add.setVisibility(View.GONE);
-        }
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -136,13 +131,7 @@ public class IntentionProductActivity extends BaseActivity {
                     onBackPressed();
                     break;
                 case R.id.ll_add:
-                   /* Bundle product = new Bundle();
-                    product.putString("saleId", saleId);
-                    product.putInt("data", fromPage);
-                    product.putSerializable("productList", listData);
-                    app.startActivityForResult(IntentionProductActivity.this, AddIntentionProductActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);*/
-                    app.startActivityForResult(IntentionProductActivity.this, AddBuyProductActivity.class,
+                    app.startActivityForResult(IntentionProductActivity.this, ProductDealActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, new Bundle());
 
                     break;
@@ -154,7 +143,7 @@ public class IntentionProductActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        hadler.sendEmptyMessage(0);
+        handler.sendEmptyMessage(0);
     }
 
     @Override
@@ -163,6 +152,7 @@ public class IntentionProductActivity extends BaseActivity {
         intent.putExtra(ExtraAndResult.STR_SELECT_TYPE, resultAction);
         intent.putExtra(ExtraAndResult.RESULT_DATA, listData);
         intent.putExtra("salePrice", tv_saleToal.getText().toString());
+        intent.putExtra(RET_HAS_CHANGE_DATA, hasChangedData);
         setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
@@ -180,7 +170,7 @@ public class IntentionProductActivity extends BaseActivity {
             @Override
             public void onNext(SaleProductEdit saleProductEdit) {
                 resultAction = ActionCode.SALE_DETAILS_RUSH;
-                hadler.sendEmptyMessage(0);
+                handler.sendEmptyMessage(0);
             }
         });
     }
@@ -192,25 +182,19 @@ public class IntentionProductActivity extends BaseActivity {
             switch (requestCode) {
                 //新增产品
                 case ExtraAndResult.REQUEST_CODE_PRODUCT:
-                    resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE, 0);
                     SaleIntentionalProduct product = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-                    saleProductAdapter.setData(product);
+                    saleProductAdapter.addProduct(product);
+                    hasChangedData = true;
+                    handler.sendEmptyMessage(0);
                     break;
                 //编辑产品
                 case ExtraAndResult.REQUEST_EDIT:
-                    /*SaleIntentionalProduct productEdit;
-                    try {
-                        HashMap<String, Object> map = (HashMap<String, Object>) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-                        productEdit = (SaleIntentionalProduct) map.get("proInfo");
-                    } catch (ClassCastException e) {
-                        e.printStackTrace();
-                        productEdit = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-                    }*/
                     SaleIntentionalProduct productEdit = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-                    resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE, 0);
                     listData.remove(editItemIndex);
                     listData.add(editItemIndex, productEdit);
                     saleProductAdapter.notifyDataSetChanged();
+                    hasChangedData = true;
+                    handler.sendEmptyMessage(0);
                     break;
             }
         }
@@ -226,7 +210,7 @@ public class IntentionProductActivity extends BaseActivity {
             return listData.size();
         }
 
-        public void setData(SaleIntentionalProduct product) {
+        public void addProduct(SaleIntentionalProduct product) {
             listData.add(product);
             notifyDataSetChanged();
         }
@@ -295,14 +279,14 @@ public class IntentionProductActivity extends BaseActivity {
                 public void onClick(View v) {
 
                     if (fromPage == ActionCode.SALE_FROM_DETAILS) {
-                        deleteProduct(item.id);
                         listData.remove(position);
                         saleProductAdapter.notifyDataSetChanged();
                     } else {
                         listData.remove(position);
                         saleProductAdapter.notifyDataSetChanged();
                     }
-                    hadler.sendEmptyMessage(0);
+                    hasChangedData = true;
+                    handler.sendEmptyMessage(0);
 
                 }
             });
@@ -312,23 +296,14 @@ public class IntentionProductActivity extends BaseActivity {
                 public void onClick(View v) {
                     editItemIndex = position;
                     Bundle product = new Bundle();
-                    product.putString("saleId", saleId);
-                    product.putInt("data", ActionCode.SALE_PRO_EDIT);
                     product.putSerializable(ExtraAndResult.EXTRA_DATA, item);
-                    app.startActivityForResult(IntentionProductActivity.this, AddBuyProductActivity.class,
+                    app.startActivityForResult(IntentionProductActivity.this, ProductDealActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, product);
-                    /*app.startActivityForResult(IntentionProductActivity.this, AddIntentionProductActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, product);*/
                 }
             });
 
             ll_edit.setVisibility(canEdit ? View.VISIBLE : View.GONE);
             ll_delete.setVisibility(canDelete ? View.VISIBLE : View.GONE);
-
-            if (fromPage == ActionCode.ORDER_DETAIL) {//此处详情过来的处理
-                ll_delete.setVisibility(View.GONE);
-                ll_edit.setVisibility(View.GONE);
-            }
         }
     }
 }

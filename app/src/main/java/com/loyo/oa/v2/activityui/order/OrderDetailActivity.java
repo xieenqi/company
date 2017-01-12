@@ -19,7 +19,6 @@ import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.common.ViewOrderDetailsExtra;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
-import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.application.MainApp;
@@ -34,6 +33,8 @@ import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -76,6 +77,10 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
      */
     public final static int ORDER_CREATE = 0x12;
 
+    /**
+     * 机会 生成订单
+     */
+    public final static int ORDER_COPY = 0x13;
 
     public Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -206,7 +211,8 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 break;
             case R.id.ll_product://购买产品
                 Bundle product = new Bundle();
-                product.putInt("data", ActionCode.ORDER_DETAIL);
+                product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, false);
+                product.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, false);
                 product.putSerializable(ExtraAndResult.EXTRA_DATA, mData.proInfo);
                 app.startActivityForResult(OrderDetailActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
@@ -263,7 +269,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
     }
 
     private void getData() {
-        OrderService.getSaleDetails(orderId)
+        OrderService.getSaleDetails(orderId, new HashMap<String, Object>())
                 .subscribe(new DefaultLoyoSubscriber<OrderDetail>(ll_loading) {
                     @Override
                     public void onNext(OrderDetail detail) {
@@ -282,7 +288,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
     private void bindData() {
         switch (mData.status) {
             case 1://待审核
-                img_title_right.setVisibility(View.GONE);
+                //img_title_right.setVisibility(View.GONE);
                 isDelete = false;
                 isEdit = false;
                 isAdd = false;
@@ -386,8 +392,8 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             dismissSweetAlert();
                             mBundle = new Bundle();
-                            mBundle.putInt("fromPage", ORDER_EDIT);
-                            mBundle.putSerializable("data", mData);
+                            mBundle.putInt("fromPage", ORDER_COPY);
+                            mBundle.putSerializable("orderId", mData.id);
                             app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class,
                                     MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                         }

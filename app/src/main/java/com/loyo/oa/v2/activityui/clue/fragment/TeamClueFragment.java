@@ -245,7 +245,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
 //                    }
 //                    listData.addAll(clueList.data.records);
 //                }
-//                adapter.setData(listData);
+//                adapter.addProduct(listData);
 //            }
 //
 //            @Override

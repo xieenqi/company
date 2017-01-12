@@ -195,7 +195,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
 //                            ll_loading.setStatus(LoadingLayout.Empty);
 //                        listData = clueList.data.records;
 //                    }
-//                    adapter.setData(listData);
+//                    adapter.addProduct(listData);
 //                } catch (NullPointerException e) {
 //                    e.printStackTrace();
 //                }

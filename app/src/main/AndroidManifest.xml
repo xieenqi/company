@@ -580,11 +580,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activityui.product.AddIntentionProductActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
             android:name=".activityui.sale.SaleSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
@@ -849,7 +844,7 @@
 
         <!-- 新增购买产品 -->
         <activity
-            android:name=".activityui.product.AddBuyProductActivity"
+            android:name=".activityui.product.ProductDealActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustResize" />

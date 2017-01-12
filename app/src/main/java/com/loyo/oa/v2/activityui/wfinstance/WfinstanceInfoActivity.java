@@ -29,7 +29,6 @@ import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
-import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
@@ -784,7 +783,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     return;
                 }
                 Bundle product = new Bundle();
-                product.putInt("data", ActionCode.ORDER_DETAIL);
+                product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, false);
+                product.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, false);
                 product.putSerializable(ExtraAndResult.EXTRA_DATA, mWfInstance.order.proInfo);
                 app.startActivityForResult(this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);

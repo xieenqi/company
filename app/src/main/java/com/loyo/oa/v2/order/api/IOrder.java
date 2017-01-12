@@ -46,7 +46,7 @@ public interface IOrder {
      * 获取 订单详情 order/57a0692d35d860eca276d964
      */
     @GET("/order/{id}")
-    Observable<OrderDetail> getSaleDetails(@Path("id") String id);
+    Observable<OrderDetail> getSaleDetails(@Path("id") String id, @QueryMap HashMap<String, Object> map);
 
     /**
      * 创建订单
