@@ -171,7 +171,6 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
                 case R.id.ll_poduct://选择意向产品
                     Bundle product = new Bundle();
                     product.putSerializable(ExtraAndResult.EXTRA_DATA, intentionProductData);
-                    product.putBoolean("boolean", true);
                     product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, true);
                     product.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, true);
                     app.startActivityForResult(AddMySaleActivity.this, IntentionProductActivity.class,

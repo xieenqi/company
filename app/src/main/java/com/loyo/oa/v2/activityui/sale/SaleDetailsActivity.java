@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
@@ -17,12 +17,13 @@ import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
-import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
+import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activityui.sale.bean.SaleOpportunity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.SaleDetailContract;
 import com.loyo.oa.v2.activityui.sale.presenter.SaleDetailPresenterImpl;
@@ -36,6 +37,7 @@ import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -438,9 +440,13 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
             /**意向产品*/
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
                 resultAction = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
-                if (resultAction == ActionCode.SALE_DETAILS_RUSH) {
-                    mPersenter.getPageData(selectId);
-                }
+//                if (resultAction == ActionCode.SALE_DETAILS_RUSH) {
+//                    mPersenter.getPageData(selectId);
+//                }
+                // 编辑，添加，删除
+
+                commitProductDealsIfNeeded(data);
+
                 break;
             /**销售阶段*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
@@ -459,6 +465,56 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
 
         }
 
+    }
+
+    private void commitProductDealsIfNeeded(Intent data){
+        boolean hasChangeData = (boolean) data.getBooleanExtra(IntentionProductActivity.RET_HAS_CHANGE_DATA, false);
+        ArrayList<SaleIntentionalProduct> listData
+                = (ArrayList<SaleIntentionalProduct>)
+                data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+        if (listData == null) {
+            listData = new ArrayList<>();
+        }
+        if (hasChangeData) {
+            mSaleDetails.setProInfos(listData);
+            commitProductDealsChange(listData);
+            productBuffer = new StringBuffer();
+            if (null != mSaleDetails.getProInfos()) {
+                for (SaleIntentionalProduct sitpeoduct : mSaleDetails.getProInfos()) {
+                    productBuffer.append(sitpeoduct.name + "、");
+                }
+                product.setText(productBuffer.toString().substring(0, productBuffer.toString().length() - 1));
+            }
+        }
+
+    }
+
+    private void commitProductDealsChange(ArrayList<SaleIntentionalProduct> deals) {
+        showCommitLoading();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", mSaleDetails.id);
+        map.put("creatorId", mSaleDetails.creatorId);
+        map.put("content", TextUtils.isEmpty(mSaleDetails.stageName) ? "" : mSaleDetails.stageName);
+
+        map.put("customerName", mSaleDetails.cusName);
+        map.put("customerId", mSaleDetails.customerId);
+        map.put("name", mSaleDetails.name);
+        map.put("stageId", mSaleDetails.stageId);
+        map.put("estimatedAmount", mSaleDetails.estimatedAmount);
+        map.put("estimatedTime", mSaleDetails.estimatedTime);
+        map.put("proInfos", deals);
+        map.put("chanceSource", mSaleDetails.chanceSource);
+        map.put("chanceType", mSaleDetails.chanceType);
+        map.put("memo", mSaleDetails.memo);
+        map.put("extensionDatas", mSaleDetails.extensionDatas);
+        map.put("loseReason", mSaleDetails.loseReason);
+        SaleService.updateSaleOpportunity(map, mSaleDetails.id)
+                .subscribe(new DefaultLoyoSubscriber<SaleOpportunity>(hud) {
+            @Override
+            public void onNext(SaleOpportunity saleOpportunity) {
+
+            }
+        });
     }
 
     /**

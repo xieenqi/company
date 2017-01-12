@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activityui.product.persenter.impl;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,13 +11,12 @@ import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.product.api.ProductService;
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
-import com.loyo.oa.v2.activityui.product.model.ProductDynmModel;
+import com.loyo.oa.v2.activityui.product.model.ProductCustomField;
 import com.loyo.oa.v2.activityui.product.persenter.AddBuProductPersenter;
 import com.loyo.oa.v2.activityui.product.viewcontrol.AddBuProductView;
 import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
-import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 
@@ -48,10 +46,10 @@ public class AddBuProductPersenterImpl implements AddBuProductPersenter {
     public void getProductDynm() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType",102);
-        ProductService.getProductDynm(map).subscribe(new DefaultLoyoSubscriber<ArrayList<ProductDynmModel>>(ll_loading) {
+        ProductService.getProductDynm(map).subscribe(new DefaultLoyoSubscriber<ArrayList<ProductCustomField>>(ll_loading) {
             @Override
-            public void onNext(ArrayList<ProductDynmModel> productDynmModel) {
-                addBuProductView.getDynmSuccessEmbl(productDynmModel);
+            public void onNext(ArrayList<ProductCustomField> productCustomField) {
+                addBuProductView.getDynmSuccessEmbl(productCustomField);
             }
 
             @Override
