@@ -147,11 +147,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
         CustomerService.getCustomerDynamic(map)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<CustomerExtraData>>(ll_loading) {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<CustomerExtraData>>() {
                     @Override
                     public void onError(Throwable e) {
-                        super.onError(e);
-//                        finish();
                     }
 
                     @Override
@@ -186,6 +184,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                                 edt_address_details.setHint("请输入客户详细地址(必填)");
                             }
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
                     }
                 });
     }
@@ -366,7 +368,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             layout_Extra.setVisibility(View.GONE);
             ll_common.setVisibility(View.VISIBLE);
             tv_customer_recycledAt.setText(mCustomer.recycledAt != 0 ? DateTool.getDateTimeFriendly(mCustomer.recycledAt) : "--");
-            tv_common_persion.setText(mCustomer.owner.name);
+            tv_common_persion.setText(mCustomer.owner == null ? "--" : mCustomer.owner.name);
             tv_common_type.setText(mCustomer.recycleType.getText());
             tv_common_reason.setText(TextUtils.isEmpty(mCustomer.recycleReason) ? "--" : mCustomer.recycleReason);
             if (mCustomer.recycleReason.length() > 15)
