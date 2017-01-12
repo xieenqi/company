@@ -250,6 +250,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private void initPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
+        mPagination.setFirstPage();
         getData();
     }
 

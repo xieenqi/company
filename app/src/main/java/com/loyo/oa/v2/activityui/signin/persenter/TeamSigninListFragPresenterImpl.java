@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.signin.persenter;
 
+import android.widget.ListView;
+
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.followup.api.FollowUpService;
 import com.loyo.oa.v2.activityui.signin.api.SignInService;
@@ -14,6 +16,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
+import java.sql.Savepoint;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
@@ -35,7 +38,7 @@ public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresen
      * 删除评论
      */
     @Override
-    public void deleteComment(String id) {
+    public void deleteComment(final ListView list, final int position, String id) {
 //        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
 //            @Override
 //            public void success(Object object, Response response) {
@@ -53,7 +56,7 @@ public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresen
         FollowUpService.deleteComment(id).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
             public void onNext(Object o) {
-                crolView.rushListData(false);
+                crolView.rushListData(list,position);
             }
         });
     }
@@ -111,7 +114,7 @@ public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresen
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                crolView.getListDataErrorEmbl();
+                crolView.getListDataErrorEmbl(e);
             }
         });
     }

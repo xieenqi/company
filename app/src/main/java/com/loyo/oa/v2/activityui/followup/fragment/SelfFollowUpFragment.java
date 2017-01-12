@@ -219,6 +219,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private void initPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
+        mPagination.setFirstPage();
         getData();
     }
 
@@ -370,7 +371,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     @Override
     public void getListDataErrorEmbl(Throwable e) {
-        //刷新晚餐
+        //刷新完成
         listView.onRefreshComplete();
         //判断，数据为空，就用ll_loading显示，否则使用toast提示
         @LoyoErrorChecker.CheckType

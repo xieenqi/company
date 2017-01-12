@@ -1,5 +1,9 @@
 package com.loyo.oa.v2.beans;
 
+import android.widget.Toast;
+
+import com.loyo.oa.v2.application.MainApp;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,12 +14,12 @@ public class PaginationX<T> implements Serializable {
     public ArrayList<T> records = new ArrayList<>();//用来存放所有的已经加载的数据
 
     public PaginationX() {
-        pageIndex = 0;
+        pageIndex = 1;
         pageSize = 20;
     }
 
     public PaginationX(int _pageSize) {
-        pageIndex = 0;
+        pageIndex = 1;
         pageSize = _pageSize;
     }
 
@@ -29,15 +33,6 @@ public class PaginationX<T> implements Serializable {
     public void setFirstPage() {
         pageIndex = 0;
     }
-
-//    /**
-//     * 判断是不是第一页，一般用在刷新的时候，如果是第一页，就需要清空原来的数据
-//     *
-//     * @return
-//     */
-//    public boolean isFirstPage() {
-//        return 0 == pageIndex;
-//    }
 
     /**
      * 当加载更多（加载下一页的时候），通过本函数获取应该加载的页码
@@ -68,7 +63,11 @@ public class PaginationX<T> implements Serializable {
             //新加载的数据为空，说明：1、下拉加载，没有更多数据了；2、刷新的时候，原来的数据被删除了
             //这里的判断方法是，在刷新的时候，会调用setFirstPage(),所以，pageIndex＝＝0；
             if(0==pageIndex){
+                //刷新没有数据
                 records.clear();
+            }else{
+                //加载更多没有数据
+                Toast.makeText(MainApp.getMainApp(),"没有数据了",Toast.LENGTH_LONG).show();
             }
         }
 

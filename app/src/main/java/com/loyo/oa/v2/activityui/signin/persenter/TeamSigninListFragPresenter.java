@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.signin.persenter;
 
+import android.widget.ListView;
+
 import java.util.HashMap;
 
 /**
@@ -9,7 +11,7 @@ import java.util.HashMap;
 public interface TeamSigninListFragPresenter {
 
     /*删除评论*/
-    void deleteComment(String id);
+    void deleteComment( ListView list,  int position, String id);
 
     /*发送评论*/
     void requestComment(HashMap<String,Object> map);
