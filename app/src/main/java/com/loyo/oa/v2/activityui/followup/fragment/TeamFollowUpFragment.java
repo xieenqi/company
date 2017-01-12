@@ -89,7 +89,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private int playVoiceSize = 0;
     private AudioPlayerView audioPlayer;
     private TextView lastView;
-    private String lastUrl = "";
+    private int pageSize = 5;
     private LoadingLayout ll_loading;
 
 
@@ -123,6 +123,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        pageSize = listModel.size();
         isPullOrDown = true;
         mPagination.setPageIndex(1);
         getData(true);
@@ -132,7 +133,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isPullOrDown = false;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData(true);
+        getData(false);
     }
 
     public void initView(View view) {
@@ -254,8 +255,8 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private void initPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
-        mPagination.setPageIndex(1);
         isPullOrDown = true;
+        mPagination.setPageIndex(1);
         getData(true);
     }
 
@@ -309,9 +310,9 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("typeId", typeId);
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
+        map.put("pageSize", isPullOrDown ? listModel.size() >= pageSize ? listModel.size() : pageSize : pageSize);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map,mPagination.getPageIndex());
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     /**
@@ -344,8 +345,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     @Override
     public void rushListData(boolean shw) {
-        isPullOrDown = true;
-        getData(shw);
+        onPullDownToRefresh(listView);
     }
 
     /**
@@ -439,14 +439,12 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                 LogUtil.dee("另一条");
                 //audioPlayer.onResume(textView);
                 audioPlayer.onStart(audioModel, textView);
-                lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
             LogUtil.dee("第一次播放");
             //audioPlayer.onResume(textView);
             audioPlayer.onStart(audioModel, textView);
-            lastUrl = audioModel.url;
             lastView = textView;
         }
         playVoiceSize++;

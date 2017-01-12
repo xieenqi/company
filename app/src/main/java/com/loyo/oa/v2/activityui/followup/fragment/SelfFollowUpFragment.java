@@ -92,6 +92,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private String lastUrl = "";
     private LoadingLayout ll_loading;
     private AudioPlayerView audioPlayer;
+    private int pageSize = 5;
 
 
     @SuppressLint("InflateParams")
@@ -123,6 +124,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        pageSize = listModel.size();
         isPullOrDown = true;
         mPagination.setPageIndex(1);
         getData(true);
@@ -132,7 +134,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isPullOrDown = false;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData(true);
+        getData(false);
     }
 
     public void initView(View view) {
@@ -217,8 +219,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private void initPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
-        mPagination.setPageIndex(1);
         isPullOrDown = true;
+        mPagination.setPageIndex(1);
         getData(true);
     }
 
@@ -268,7 +270,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 获取Self列表数据
      */
     private void getData(boolean isPullOrDown) {
-        if(null == MainApp.user || null == MainApp.user.id){
+        if (null == MainApp.user || null == MainApp.user.id) {
             Toast("正在拉去数据,请稍后..");
             getActivity().finish();
             return;
@@ -282,7 +284,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("activityType", activityType);
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
+        map.put("pageSize", isPullOrDown ? listModel.size() >= pageSize ? listModel.size() : pageSize : pageSize);
         LogUtil.d("发送数据:" + MainApp.gson.toJson(map));
         mPresenter.getListData(map, mPagination.getPageIndex());
     }
@@ -296,7 +298,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
-        getData(false);
+       onPullDownToRefresh(listView);
     }
 
     /**
@@ -332,8 +334,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     @Override
     public void rushListData(boolean shw) {
-        isPullOrDown = true;
-        getData(shw);
+        onPullDownToRefresh(listView);
     }
 
     /**

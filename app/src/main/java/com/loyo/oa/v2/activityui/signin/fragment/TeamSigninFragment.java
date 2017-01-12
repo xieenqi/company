@@ -92,6 +92,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
     private TextView lastView;
     private String lastUrl = "";
     private LoadingLayout ll_loading;
+    private int pageSize = 5;
 
 
     @SuppressLint("InflateParams")
@@ -124,6 +125,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        pageSize = listModel.size();
         isPullOrDown = true;
         mPagination.setPageIndex(1);
         getData(true);
@@ -133,7 +135,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isPullOrDown = false;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData(true);
+        getData(false);
     }
 
     public void initView(View view) {
@@ -236,8 +238,8 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
 
     private void initPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
-        mPagination.setPageIndex(1);
         isPullOrDown = true;
+        mPagination.setPageIndex(1);
         getData(true);
     }
 
@@ -295,9 +297,9 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
         map.put("orderType", Integer.parseInt(menuSortkey));
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
+        map.put("pageSize", isPullOrDown ? listModel.size() >= pageSize ? listModel.size() : pageSize : pageSize);
         LogUtil.dee("团队拜访,发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map,mPagination.getPageIndex());
+        mPresenter.getListData(map, mPagination.getPageIndex());
     }
 
     /**
@@ -331,8 +333,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
      */
     @Override
     public void rushListData(boolean shw) {
-        isPullOrDown = true;
-        getData(shw);
+        onPullDownToRefresh(listView);
     }
 
     /**

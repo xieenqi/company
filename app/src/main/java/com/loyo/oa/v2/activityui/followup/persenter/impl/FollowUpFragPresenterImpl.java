@@ -35,7 +35,7 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
         FollowUpService.deleteComment(id).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
             public void onNext(Object o) {
-                crolView.rushListData(false);
+                crolView.rushListData(true);
             }
         });
     }

@@ -80,8 +80,8 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     private CustomerFollowUpGroupAdapter mAdapter;
 
     private ArrayList<FollowUpGroupModel> listModel = new ArrayList<>();
-    private ArrayList<FollowUpGroupModel> viewModel = new ArrayList<>();
     private PaginationX<FollowUpGroupModel> mPagination = new PaginationX<>(20);
+    private int pageSize = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +120,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        pageSize=listModel.size();
         isPullOrDown = true;
         mPagination.setPageIndex(1);
         getData(true);
@@ -129,7 +130,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isPullOrDown = false;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData(true);
+        getData(false);
     }
 
     private void initView() {
@@ -190,7 +191,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         HashMap<String, Object> map = new HashMap<>();
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
+        map.put("pageSize", isPullOrDown ? listModel.size() >= pageSize ? listModel.size() : pageSize : pageSize);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         mPresenter.getListData(map, mCustomer.id, mPagination.getPageIndex());
     }
@@ -275,7 +276,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
-        getData(false);
+        onPullDownToRefresh(listView);
     }
 
     /**
@@ -324,8 +325,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
 
     @Override
     public void rushListData(boolean shw) {
-        isPullOrDown = true;
-        getData(shw);
+        onPullDownToRefresh(listView);
     }
 
     /**

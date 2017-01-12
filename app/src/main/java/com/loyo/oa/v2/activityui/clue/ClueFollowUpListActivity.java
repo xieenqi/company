@@ -84,6 +84,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private PaginationX<ClueFollowGroupModel> mPagination = new PaginationX<>(20);
 
     private boolean needToRefresh=false;
+    private int pageSize = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
 
     @Override
     public void getPageData() {
+        isPullOrDown = true;
+        mPagination.setPageIndex(1);
         getData(true);
     }
 
@@ -119,6 +122,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        pageSize=listModel.size();
         isPullOrDown = true;
         mPagination.setPageIndex(1);
         getData(true);
@@ -128,7 +132,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isPullOrDown = false;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData(true);
+        getData(false);
     }
 
 
@@ -190,7 +194,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         map.put("typeId", "");
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
+        map.put("pageSize", isPullOrDown ? listModel.size() >= pageSize ? listModel.size() : pageSize : pageSize);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         mPresenter.getListData(map, mPagination.getPageIndex());
     }
@@ -273,7 +277,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         layout_bottom_menu.addView(msgAudiomMenu);
         mPagination.setPageIndex(1);
         needToRefresh=true;//如果是增加，或者是修改了，要重新刷新，避免存在老数据
-        getData(false);
+        onPullDownToRefresh(listView);
     }
 
     /**
@@ -322,8 +326,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
 
     @Override
     public void rushListData(boolean shw) {
-        isPullOrDown = true;
-        getData(shw);
+       onPullDownToRefresh(listView);
     }
 
     /**

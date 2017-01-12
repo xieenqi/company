@@ -81,6 +81,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
     private SigninListFragPresenter mPresenter;
+    private int pageSize = 5;
 
 
     @Override
@@ -117,6 +118,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        pageSize=listModel.size();
         isPullOrDown = true;
         mPagination.setPageIndex(1);
         getData(true);
@@ -126,7 +128,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isPullOrDown = false;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData(true);
+        getData(false);
     }
 
     private void initView() {
@@ -195,7 +197,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
         map.put("split", true);
         map.put("customerId", mCustomer.id);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
+        map.put("pageSize", isPullOrDown ? listModel.size() >= pageSize ? listModel.size() : pageSize : pageSize);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         mPresenter.getListData(map, mPagination.getPageIndex());
     }
@@ -233,7 +235,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
-        getData(false);
+        onPullDownToRefresh(listView);
     }
 
     /**
@@ -282,8 +284,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
 
     @Override
     public void rushListData(boolean shw) {
-        isPullOrDown = true;
-        getData(shw);
+        onPullDownToRefresh(listView);
     }
 
     /**
