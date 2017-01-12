@@ -84,6 +84,15 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers());
     }
 
+    public static Observable<PaginationX<Customer>> getInvovedCustomers(HashMap<String, Object> params) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/FinalVariables.QUERY_CUSTOMERS_MY)
+                        .create(ICustomer.class)
+                        .getCustomers(params)
+                        .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers());
+    }
+
     public static Observable<PaginationX<Customer>> getDumpedCustomers(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()

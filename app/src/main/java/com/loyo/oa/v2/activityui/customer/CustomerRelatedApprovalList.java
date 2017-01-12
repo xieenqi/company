@@ -303,7 +303,7 @@ public class CustomerRelatedApprovalList extends BaseLoadingActivity implements 
                 this.model = model;
                 tv_title.setText(model.title);
                 tv_approver.setText(model.nextExecutorName);
-                tv_time.setText(DateTool.getDateFriendly(model.createdAt));
+                tv_time.setText(DateTool.getDateTimeFriendly(model.createdAt));
             }
         }
     }
