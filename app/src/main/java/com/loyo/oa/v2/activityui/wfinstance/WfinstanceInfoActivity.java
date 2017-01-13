@@ -22,6 +22,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
@@ -333,28 +334,78 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         layout_wfinstance_content.setVisibility(View.GONE);
         ll_order_layout.setVisibility(View.VISIBLE);
-        List<String> orderList = new ArrayList<>();
-        OrderDetail order = mWfInstance.order;
-        orderList.add("对应订单：" + order.title);
-        orderList.add("对应客户：" + order.customerName);
-        orderList.add("成交金额：" + order.dealMoney);
-        orderList.add("订单编号：" + order.orderNum);
+        HashMap<String, String> orderMap = new HashMap<>();
+        final OrderDetail order = mWfInstance.order;
+        addOrderField("对应订单：", order.title, getResources().getColor(R.color.title_bg1),
+                new OrderFieldCallback() {
+                    @Override
+                    public void onClick() {
+                        Intent mIntent = new Intent();
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, order.id);
+                        mIntent.setClass(WfinstanceInfoActivity.this, OrderDetailActivity.class);
+                        startActivity(mIntent);
+                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    }
+                });
+        addOrderField("对应客户：", order.customerName, getResources().getColor(R.color.title_bg1),
+                new OrderFieldCallback() {
+                    @Override
+                    public void onClick() {
+                        Intent intent = new Intent();
+                        intent.putExtra("Id", order.customerId);
+                        intent.setClass(WfinstanceInfoActivity.this, CustomerDetailInfoActivity_.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    }
+                });
+        if (!TextUtils.isEmpty(order.endReason)) {
+            addOrderField("终止原因：", order.endReason, getResources().getColor(R.color.wfinstance_text_red));
+        }
+        addOrderField("成交金额：", String.valueOf(order.dealMoney));
+        addOrderField("订单编号：", order.orderNum);
+        addOrderField("开始时间：", DateTool.getDateTimeFriendly(order.startAt));
+        addOrderField("结束时间：", DateTool.getDateTimeFriendly(order.endAt));
         if (null != order.extensionDatas && order.extensionDatas.size() > 0) {
             for (ContactLeftExtras ele : order.extensionDatas) {
-                orderList.add(ele.label + "：" + ele.val);
+                addOrderField(ele.label + "：" , ele.val);
             }
         }
-        orderList.add("备注：" + order.remark);
-        for (String text : orderList) {
-            View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
-            TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
-            tv_key.setText(text);
-            ll_order_content.addView(view_value);
-        }
+        addOrderField("备注：" , order.remark);
         tv_product.setText(order.proName);
         tv_plan_value.setText("¥" + order.backMoney + "（" + order.ratePayment + "%)");
         AttachmentUUId = order.attachmentUUId;
         AttachmentCount = order.attachmentCount;
+    }
+
+    private static abstract class OrderFieldCallback {
+        public abstract void onClick();
+    }
+
+
+    private void addOrderField(String key, String value, int color, final OrderFieldCallback callback) {
+        View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
+        TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
+        TextView tv_value = (TextView) view_value.findViewById(R.id.tv_value);
+        tv_key.setText(key);
+        tv_value.setText(value);
+        tv_value.setTextColor(color);
+        ll_order_content.addView(view_value);
+        if (callback != null) {
+            view_value.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onClick();
+                }
+            });
+        }
+    }
+
+    private void addOrderField(String key, String value, int color) {
+        addOrderField(key, value, color, null);
+    }
+
+    private void addOrderField(String key, String value) {
+        addOrderField(key, value, getResources().getColor(R.color.text99));
     }
 
     /**
