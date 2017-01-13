@@ -53,7 +53,7 @@
                                 android:layout_height="wrap_content">
 
                                 <TextView
-                                    android:id="@+id/tv_task_title"
+                                    android:id="@+id/tv_title_creator"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
@@ -61,13 +61,10 @@
                                     android:gravity="center_vertical"
                                     android:maxEms="50"
                                     android:singleLine="true"
-                                    android:text="测试"
+                                    android:text=""
                                     android:textSize="16sp"
                                     android:layout_marginRight="65dp"
                                     style="@style/common_text_line_main"/>
-
-
-
                                 <FrameLayout
                                     android:layout_width="60dp"
                                     android:layout_gravity="right|top"

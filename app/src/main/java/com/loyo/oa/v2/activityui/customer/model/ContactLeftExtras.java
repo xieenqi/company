@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.customer.model;
 
+import com.loyo.oa.common.utils.DateTool;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -24,5 +26,12 @@ public class ContactLeftExtras implements Serializable {
     public boolean canEdit;
     public String val;
     public ArrayList<String> defVal = new ArrayList<>();
+
+    public String getFormatValue() {
+        if ("birth".equals(type) ||"long".equals(type)) {
+            return DateTool.getDateTimeFriendly(Long.valueOf(val));
+        }
+        return val;
+    }
 
 }
