@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -22,7 +23,6 @@ import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.event.OrderAddWorkSheetFinish;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
-import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.activityui.worksheet.OrderWorksheetListActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.application.MainApp;
@@ -83,6 +83,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private String uuid;
     public  static String orderTitle;
     private OrderDetail mOrderDetail;
+    private String orderId;
     private OrderAddforExtraData orderAddforExtra;
 
     private Handler mHandler = new Handler() {
@@ -117,6 +118,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         mIntent = getIntent();
         if (null != mIntent) {
             mOrderDetail = (OrderDetail) mIntent.getSerializableExtra("data");
+            orderId = (String) mIntent.getSerializableExtra("orderId");
             fromPage = mIntent.getIntExtra("fromPage", OrderDetailActivity.ORDER_ADD);
             //客户创建订单
             customerId = mIntent.getStringExtra(ExtraAndResult.EXTRA_ID);
@@ -167,6 +169,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             tv_title.setText("生成订单");
             getAddDynamic();
             createData();
+        }
+        else if (fromPage == OrderDetailActivity.ORDER_COPY) {
+            tv_title.setText("复制订单");
+            getAddDynamic();
         }
 
     }
@@ -265,11 +271,61 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         CustomerService.getAddCustomerJur(map)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
                     @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        finishWithPopAnimation();
+                    }
+                    @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         mCusList = contactLeftExtrasArrayList;
                         bindExtraView(contactLeftExtrasArrayList);
+                        if (fromPage == OrderDetailActivity.ORDER_COPY && orderId != null) {
+                            getOrderData();
+                        }
                     }
                 });
+    }
+
+    /**
+     * 获取订单详情
+     */
+    private void getOrderData() {
+        showLoading2("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("isCopy", true);
+        OrderService.getSaleDetails(orderId, map)
+                .subscribe(new DefaultLoyoSubscriber<OrderDetail>(hud) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        finishWithPopAnimation();
+                    }
+
+                    @Override
+                    public void onNext(OrderDetail detail) {
+                        mOrderDetail = detail;
+                        buildCopyData();
+                    }
+                });
+    }
+
+    private void buildCopyData() {
+        uuid = StringUtil.getUUID();
+        customerId = mOrderDetail.customerId;
+        customerName = mOrderDetail.customerName;
+        productData = mOrderDetail.proInfo;
+        estimateData = mOrderDetail.paymentRecords;
+        mCusList = mOrderDetail.extensionDatas;
+
+        et_name.setText(mOrderDetail.title);
+        tv_customer.setText(mOrderDetail.customerName);
+        tv_stage.setText(getIntentionProductName());
+        tv_estimate.setText(getEstimateName());
+        tv_estimate.setText(getEstimateName());
+        et_money.setText(mOrderDetail.dealMoney + "");
+        et_ordernum.setText(mOrderDetail.orderNum);
+        et_remake.setText(mOrderDetail.remark);
+        bindExtraView(mCusList);
     }
 
     /**
@@ -317,15 +373,26 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         map.put("dealMoney", Float.parseFloat(et_money.getText().toString()));
         map.put("orderNum", et_ordernum.getText().toString());
         map.put("remark", et_remake.getText().toString());
+
+        /* 产品 */
         map.put("proInfo", productData);
+
+        /* 回款 */
         map.put("paymentRecords", estimateData);
+
+        /* 自定义字段 */
         map.put("extensionDatas", fieldData);
+        /* 工单 */
         map.put("reWorkSheet", reWorkSheet);
         LogUtil.dee("提交参数:" + MainApp.gson.toJson(map));
 
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             editOrderData(map);
-        } else {
+        } else if (fromPage == OrderDetailActivity.ORDER_ADD ||
+                fromPage == OrderDetailActivity.ORDER_CREATE) {
+            addOrderData(map);
+        }
+        else if (fromPage == OrderDetailActivity.ORDER_COPY) {
             addOrderData(map);
         }
     }
@@ -395,7 +462,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //对应客户
             case R.id.ll_customer:
-                app.startActivityForResult(OrderAddActivity.this, SigninSelectCustomerSearch.class,
+                app.startActivityForResult(OrderAddActivity.this, SelfVisibleCustomerPickerActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
                 break;
 
@@ -403,8 +470,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             case R.id.ll_stage:
                 mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, productData);
-                mBundle.putBoolean("boolean", true);
                 mBundle.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, true);
+                mBundle.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, true);
                 app.startActivityForResult(OrderAddActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
                 break;
@@ -418,9 +485,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 if (null != estimateData) {
                     mBundle.putSerializable("data", estimateData);
                 }
+                mBundle.putString("orderId", orderId);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
-                mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_ADD);
-                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
+                app.startActivityForResult(this, OrderEstimateListActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
 
             //工单

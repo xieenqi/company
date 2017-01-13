@@ -22,6 +22,7 @@ import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
+import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
@@ -32,7 +33,6 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.AddMySaleContract;
 import com.loyo.oa.v2.activityui.sale.presenter.AddMySalePresenterImpl;
-import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -154,7 +154,7 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
                     break;
                 case R.id.ll_customer://选择客户
                     Bundle b = new Bundle();
-                    app.startActivityForResult(AddMySaleActivity.this, SigninSelectCustomerSearch.class,
+                    app.startActivityForResult(AddMySaleActivity.this, SelfVisibleCustomerPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
                 case R.id.ll_stage://选择销售阶段
@@ -171,7 +171,6 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
                 case R.id.ll_poduct://选择意向产品
                     Bundle product = new Bundle();
                     product.putSerializable(ExtraAndResult.EXTRA_DATA, intentionProductData);
-                    product.putBoolean("boolean", true);
                     product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, true);
                     product.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, true);
                     app.startActivityForResult(AddMySaleActivity.this, IntentionProductActivity.class,

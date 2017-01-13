@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.dashboard.presenter.impl;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,12 +14,15 @@ import com.loyo.oa.v2.activityui.dashboard.api.DashBoardService;
 import com.loyo.oa.v2.activityui.dashboard.common.LoadStatus;
 import com.loyo.oa.v2.activityui.dashboard.common.ScreenType;
 import com.loyo.oa.v2.activityui.dashboard.model.FollowupStatistic;
+import com.loyo.oa.v2.activityui.dashboard.model.HomePaymentModel;
 import com.loyo.oa.v2.activityui.dashboard.model.MoneyStatistic;
 import com.loyo.oa.v2.activityui.dashboard.model.StockStatistic;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.network.model.APIException;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
@@ -151,6 +155,12 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
 
             @Override
             public void onError(Throwable e) {
+                if(e instanceof APIException){
+                    if(((APIException) e).code==60001){
+                        crolView.stockErrorEmbl(e.getMessage());
+                        return;
+                    }
+                }
                 crolView.stockErrorEmbl();
             }
         });
@@ -173,7 +183,24 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
             }
         });
     }
-
+    /*获取回款统计，柱状图*/
+    @Override
+    public void getPayment(int type) {
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("qType",type);
+        //这里需要新的接口
+        DashBoardService.getDashBoardHomePayment(map).subscribe(new DefaultLoyoSubscriber<HomePaymentModel>(LoyoErrorChecker.SILENCE) {
+            @Override
+            public void onNext(HomePaymentModel homePaymentModel) {
+                crolView.paymentConSuccessEmbl(homePaymentModel);
+            }
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                crolView.paymentConErrorEmbl();
+            }
+        });
+    }
 
     /**
      * 设置Loading状态

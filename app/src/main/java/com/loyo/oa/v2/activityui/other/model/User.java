@@ -18,6 +18,7 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
 
     public String id;
     public String companyId;
+    public String companyName;
     public String mobile;
     public String simplePinyin;
     public String avatar;

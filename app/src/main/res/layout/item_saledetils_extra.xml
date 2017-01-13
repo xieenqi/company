@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_4"
+        android:layout_marginTop="@dimen/common_text_in_space"
         android:orientation="horizontal"
         >
 
@@ -16,17 +16,15 @@
             android:id="@+id/saledetils_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp14"/>
+            android:gravity="left|center_vertical"
+            style="@style/common_text_line_second"/>
 
         <TextView
             android:id="@+id/saledetils_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp14"/>
+            android:gravity="left|center_vertical"
+            style="@style/common_text_line_second"/>
     </LinearLayout>
 
 

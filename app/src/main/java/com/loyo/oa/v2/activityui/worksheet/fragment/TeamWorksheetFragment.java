@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -52,7 +53,7 @@ import java.util.List;
 
 
 /**
- * 【团队线索】
+ * 【团队工单】
  * Created by yyy on 16/8/19.
  */
 public class TeamWorksheetFragment extends BaseGroupsDataFragment implements View.OnClickListener {
@@ -196,10 +197,13 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                         xpath = "";
                         userId = model.getKey();
                     }
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.departmentWorkSheetTeam);
                 } else if (menuIndex == 1) {
                     statusParam = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.stateWorkOrderTeam);
                 } else if (menuIndex == 2) {
                     typeParam = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.typeWorkOrderTeam);
                 }
                 refresh();
             }
@@ -241,8 +245,8 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Worksheet>>() {
                     @Override
                     public void onError(Throwable e) {
-                        @LoyoErrorChecker.CheckType int type = groupsData.size()>0
-                                ?LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                        @LoyoErrorChecker.CheckType int type = groupsData.size() > 0
+                                ? LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
                         mExpandableListView.onRefreshComplete();
                     }
 
@@ -252,17 +256,15 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                         if (isPullDown) {
                             groupsData.clear();
                         }
-                        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size()==0) {
+                        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size() == 0) {
                             ll_loading.setStatus(LoadingLayout.Empty);
-                        }
-                        else  if (PaginationX.isEmpty(x)){
+                        } else if (PaginationX.isEmpty(x)) {
                             Toast("没有更多数据了");
                             ll_loading.setStatus(LoadingLayout.Success);
-                        }
-                        else  {
+                        } else {
                             ll_loading.setStatus(LoadingLayout.Success);
                         }
-                        loadData(x!=null?x.records:new ArrayList<Worksheet>());
+                        loadData(x != null ? x.records : new ArrayList<Worksheet>());
                     }
                 });
 

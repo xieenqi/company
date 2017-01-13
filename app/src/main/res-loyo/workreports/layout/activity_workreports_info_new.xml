@@ -30,6 +30,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/common_activity_bg"
+
             android:orientation="vertical">
 
             <LinearLayout
@@ -45,25 +47,40 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/edt_workReport_title"
-                        style="@style/common_text_line_main"
+                    <FrameLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:focusable="false"
-                        android:gravity="left|center_vertical"
-                        android:maxWidth="250dp"
-                        android:singleLine="true"
-                        android:text="报告"
-                        android:textSize="16sp" />
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/tv_status"
-                        style="@style/common_text_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="top" />
+
+                        <EditText
+                            android:id="@+id/edt_workReport_title"
+                            style="@style/common_text_line_main"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="65dp"
+                            android:background="@android:color/transparent"
+                            android:focusable="false"
+                            android:gravity="left|center_vertical"
+                            android:singleLine="false"
+                            android:text="报告"
+                            android:textSize="16sp" />
+
+                        <FrameLayout
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|top"
+                            android:paddingTop="3dp">
+
+                            <TextView
+                                android:id="@+id/tv_status"
+                                style="@style/common_text_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="top" />
+                        </FrameLayout>
+                    </FrameLayout>
+
+
                 </LinearLayout>
 
                 <TextView
@@ -410,17 +427,18 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btn_workreport_review"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/common_layout_padding"
-                    android:background="@drawable/common_lable_blue"
-                    android:text="点评"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_workreport_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/common_layout_padding"
+                android:background="@drawable/common_lable_blue"
+                android:text="点评"
+                android:textColor="@color/white"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

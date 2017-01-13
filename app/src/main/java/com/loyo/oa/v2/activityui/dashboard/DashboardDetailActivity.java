@@ -39,6 +39,7 @@ import java.util.List;
 import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.COMMON;
 import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.ORDER_MONEY;
 import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.ORDER_NUMBER;
+import static com.loyo.oa.v2.activityui.dashboard.common.DashboardType.PAYMENT;
 
 /**
  * 【仪表盘】详情页面
@@ -54,7 +55,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     private DashboardType type;
     private DashboardDetailAdapter adapter;
     private PullToRefreshListView lv_list;
-
     private int pageIndex = 1;
     private HashMap<String, Object> map = new HashMap<String, Object>();
     private DynamicFilterByTime defaultTime;//默认的显示时间
@@ -105,6 +105,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         }else if( DashboardType.ORDER_MONEY == type) {
             //订单金额
             map.put("sType", "2");
+        }else if(DashboardType.PAYMENT==type){
+            //回款统计
         }
 
         if (adapter.isEmpty()) {
@@ -132,6 +134,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 }
                 if (1 == pageIndex) {
                     adapter.reload(listX.records);
+                    lv_list.setAdapter(adapter);
                 } else {
                     adapter.addAll(listX.records);
                 }
@@ -208,7 +211,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     private void loadFilterOptions() {
         List<DBDepartment> depts = new ArrayList<>();
         String title = "部门";
-        //TODO 数据权限具体调整
         //为超管或权限为全公司 展示全公司成员
         if (PermissionManager.getInstance().dataRange(type.getaPermission())
                 == Permission.COMPANY) {
@@ -226,7 +228,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         }
         //添加3个筛选字段
         List<FilterModel> options = new ArrayList<>();
-        options.add(ORDER_MONEY==type||ORDER_NUMBER==type ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel(defaultTime) : DashboardFilterTimeModel.getFilterModel(defaultTime));
+        options.add(ORDER_MONEY==type||ORDER_NUMBER==type||PAYMENT==type ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel(defaultTime) : DashboardFilterTimeModel.getFilterModel(defaultTime));
         options.add(type.getSort());
         options.add(new OrganizationFilterModel(depts, title));
 
@@ -241,7 +243,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 String key = model.getKey();
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-                Log.d(TAG, "onMenuModelsSelected() called with: menuIndex = [" + menuIndex + "], key:" + key + ",value;" + value);
                 if (0 == menuIndex) {
                     //时间
                     map.put("qType",key);
@@ -258,6 +259,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                         map.remove("xPath");
                     }
                 }
+                pageIndex=1;
+                ll_loading.setStatus(LoadingLayout.Loading);
                 getPageData();
 
             }
@@ -278,7 +281,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        Log.i(TAG, "onPullDownToRefresh: ");
         pageIndex = 1;
         getPageData();
 
@@ -286,7 +288,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        Log.i(TAG, "onPullUpToRefresh: "+pageIndex);
         pageIndex++;
         getPageData();
     }

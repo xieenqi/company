@@ -75,6 +75,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         }
         super.onCreate(savedInstanceState);
         initView();
+
     }
 
     @Override

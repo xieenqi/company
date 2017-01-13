@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by yyy on 16/12/30.
  */
 
-public class ProductDynmModel {
+public class ProductCustomField {
 
     public String name;
     public String fieldName;

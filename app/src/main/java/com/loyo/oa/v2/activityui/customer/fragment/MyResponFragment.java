@@ -15,6 +15,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -76,7 +77,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
     private DropDownMenu filterMenu;
 
     private String field = "lastActAt";
-    private String order = "desc";
+    private String order = "asc";
     private String tagsParams = "";
     private String position;
     private int page = 1;
@@ -172,8 +173,10 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomer);
                 } else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomer);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
                 isPullUp = false;
@@ -329,6 +332,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
                     bundle.putSerializable("nearCount", nearCount);
                     bundle.putInt("type", CustomerManagerActivity.NEARCUS_SELF);//团队2 个人1
                     app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.customerNearby);
                     break;
             }
         }

@@ -23,7 +23,9 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -49,6 +51,7 @@ public class SaleStageActivity extends BaseActivity {
     public static final int SALE_STAGE = 1;//销售阶段
     public static final int SALE_TYPE = 2;//机会类型
     public static final int SALE_SOURCE = 3;//机会来源
+    public static final int COMMON_REASON = 4;//丢公海的原因
 
     private int type;
     private String title, dataName = "", saleName, salePrice;
@@ -62,6 +65,16 @@ public class SaleStageActivity extends BaseActivity {
         setContentView(R.layout.activity_sale_stage);
         getIntentData();
         init();
+    }
+
+    private void getIntentData() {
+        Intent intent = getIntent();
+        type = intent.getIntExtra(ExtraAndResult.EXTRA_TYPE, -1);
+        title = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
+        dataName = intent.getStringExtra(ExtraAndResult.EXTRA_DATA);
+        saleName = intent.getStringExtra(ExtraAndResult.CC_USER_NAME);
+        salePrice = intent.getStringExtra(ExtraAndResult.EXTRA_BOOLEAN);
+        isProduct = intent.getBooleanExtra(ExtraAndResult.EXTRA_STATUS, false);
     }
 
     private void init() {
@@ -80,21 +93,22 @@ public class SaleStageActivity extends BaseActivity {
             adapterStage = new SaleStageAdapter();
             lv_list.setAdapter(adapterStage);
             getData();
-        } else {
+        } else if (SALE_TYPE == type || SALE_SOURCE == type) {
             adapterSourceType = new SourceTypeAdapter();
             lv_list.setAdapter(adapterSourceType);
             getData2();
+        } else if (COMMON_REASON == type) {
+            adapterStage = new SaleStageAdapter();
+            lv_list.setAdapter(adapterStage);
+            getData3();
         }
     }
 
-    private void getIntentData() {
-        Intent intent = getIntent();
-        type = intent.getIntExtra(ExtraAndResult.EXTRA_TYPE, -1);
-        title = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
-        dataName = intent.getStringExtra(ExtraAndResult.EXTRA_DATA);
-        saleName = intent.getStringExtra(ExtraAndResult.CC_USER_NAME);
-        salePrice = intent.getStringExtra(ExtraAndResult.EXTRA_BOOLEAN);
-        isProduct = intent.getBooleanExtra(ExtraAndResult.EXTRA_STATUS, false);
+    /**
+     * 获取销售阶段 数据
+     */
+    public void getData() {
+        adapterStage.setData(SaleStageConfig.getSaleStage(true));
     }
 
     public void getData2() {
@@ -111,11 +125,14 @@ public class SaleStageActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 获取销售阶段 数据
-     */
-    public void getData() {
-        adapterStage.setData(SaleStageConfig.getSaleStage(true));
+    public void getData3() {
+        showLoading2("");
+        CustomerService.getCommonReason().subscribe(new DefaultLoyoSubscriber<BaseResponse<ArrayList<SaleStage>>>(hud) {
+            @Override
+            public void onNext(BaseResponse<ArrayList<SaleStage>> saleStages) {
+                adapterStage.setData(saleStages.data);
+            }
+        });
     }
 
     /**
@@ -196,8 +213,9 @@ public class SaleStageActivity extends BaseActivity {
                                 intent.putExtra(ExtraAndResult.EXTRA_DATA, data.get(position));
                                 setResult(RESULT_OK, intent);
                                 dismissSweetAlert();
+                                finish();
                             }
-                        },"提示", Utils.modifyTextColor(tt, getResources().getColor(R.color.red1), 0, 10).toString());
+                        }, "提示", Utils.modifyTextColor(tt, getResources().getColor(R.color.red1), 0, 10).toString());
 
                         return;
                     } else if (tv_name.getText().toString().contains("输单") && !TextUtils.isEmpty(saleName)) {

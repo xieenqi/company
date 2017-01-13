@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -206,14 +207,14 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
                     case 0:
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeVisitTeam);
                         break;
-
                     /*排序*/
                     case 1:
                         menuSortkey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankVisitTeam);
                         break;
-
                     /*人员*/
                     case 2:
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
@@ -224,6 +225,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
                             departmentId = "";
                             userId = model.getKey();
                         }
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.departmentVisitTeam);
                         break;
                 }
                 initPageData();
@@ -306,6 +308,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
         layout_bottom_menu.setVisibility(View.VISIBLE);
         btn_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        UmengAnalytics.umengSend(mActivity, UmengAnalytics.replyVisitTeam);
     }
 
     /**

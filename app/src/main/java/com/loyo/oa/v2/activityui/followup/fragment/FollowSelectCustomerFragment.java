@@ -81,7 +81,7 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        adapter = new MyCustomerAdapter(app);
+        adapter = new MyCustomerAdapter(mActivity);
         lv_list.setAdapter(adapter);
         Global.SetTouchView(ll_search);
         pCersener.getPageData();

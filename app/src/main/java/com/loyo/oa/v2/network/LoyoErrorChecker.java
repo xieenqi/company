@@ -98,7 +98,7 @@ public class LoyoErrorChecker {
         }
         else {
             state = LoyoError.No_Network;
-            message = "网络异常";
+            message = "网络异常或数据异常";
         }
 
         return new LoyoError(message, state, e);

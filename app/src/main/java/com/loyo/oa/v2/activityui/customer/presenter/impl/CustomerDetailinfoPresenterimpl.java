@@ -56,8 +56,9 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void toPublic(String id) {
+        crolView.showStatusProgress();
         CustomerService.dumpCustomer(id)
-                .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                .subscribe(new DefaultLoyoSubscriber<Customer>(crolView.getHUD()) {
                     @Override
                     public void onNext(Customer customer) {
                         crolView.toPublicEmbl();

@@ -20,6 +20,7 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -28,7 +29,6 @@ import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
-import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
@@ -44,7 +44,6 @@ import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.ListView_inScrollView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -76,7 +75,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById
     TextView tv_memo;
     @ViewById
-    TextView tv_projectName;
+    TextView tv_projectName, tv_customerName;
     @ViewById
     TextView tv_time_creator;
     @ViewById
@@ -95,6 +94,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     ViewGroup layout_AttachFile;
     @ViewById
     LinearLayout ll_project;
+    @ViewById
+    LinearLayout ll_customer;
     @ViewById
     ViewGroup layout_lastwork;
     @ViewById
@@ -291,6 +292,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         saleId = chanceData.id;
         ll_sale.setVisibility(View.VISIBLE);
         layout_wfinstance_content.setVisibility(View.GONE);
+        layout_wfinstance_content.setPadding(0,0,0,0);
         ll_sale.setOnTouchListener(Global.GetTouch());
         tv_sale.setText(chanceData.name);
         List<String> wfList = new ArrayList<>();
@@ -468,7 +470,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             e.printStackTrace();
         }
         if (mWfInstance.creator != null) {
-            tv_title_creator.setText(mWfInstance.title);
+// todo:            tv_title_creator.setText(mWfInstance.title);
 
             if (null != mWfInstance.creator.shortPosition) {
                 tv_title_role.setText(mWfInstance.creator.shortPosition.getName());
@@ -488,6 +490,13 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + "）");
         tv_projectName.setText(null == mWfInstance.ProjectInfo || TextUtils.isEmpty(mWfInstance.ProjectInfo.title) ? "无" : mWfInstance.ProjectInfo.title);
+        tv_customerName.setText(null == mWfInstance.customerName?"无":mWfInstance.customerName);
+        if (mWfInstance.customerId != null) {
+            tv_customerName.setTextColor(getResources().getColor(R.color.title_bg1));
+        }
+        else {
+            tv_customerName.setTextColor(getResources().getColor(R.color.text99));
+        }
         if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode
                 || 500 == mWfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件  订单审批  回款审批
             layout_AttachFile.setVisibility(300 == mWfInstance.bizForm.bizCode ? View.GONE : View.VISIBLE);
@@ -497,23 +506,23 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
             case WfInstance.STATUS_NEW:
                 tv_status.setText("待审批");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_blue);
+                tv_status.setBackgroundResource(R.drawable.common_lable_blue);
                 break;
             case WfInstance.STATUS_PROCESSING:
                 tv_status.setText("审批中");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_purple);
+                tv_status.setBackgroundResource(R.drawable.common_lable_purple);
                 break;
             case WfInstance.STATUS_ABORT:
                 tv_status.setText("未通过");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_red);
+                tv_status.setBackgroundResource(R.drawable.common_lable_red);
                 break;
             case WfInstance.STATUS_APPROVED:
                 tv_status.setText("已通过");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_green);
+                tv_status.setBackgroundResource(R.drawable.common_lable_green);
                 break;
             case WfInstance.STATUS_FINISHED:
                 tv_status.setText("已通过");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_green); //状态4，5都归类为 已通过
+                tv_status.setBackgroundResource(R.drawable.common_lable_green); //状态4，5都归类为 已通过
                 break;
             default:
                 break;
@@ -713,7 +722,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_nopass, R.id.layout_pass, R.id.layout_lastwork,
-            R.id.layout_AttachFile, R.id.ll_sale, R.id.ll_product, R.id.ll_plan})
+            R.id.layout_AttachFile, R.id.ll_sale, R.id.ll_product, R.id.ll_plan, R.id.ll_customer})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -774,18 +783,20 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     return;
                 }
                 Bundle product = new Bundle();
-                product.putInt("data", ActionCode.ORDER_DETAIL);
+                product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, false);
+                product.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, false);
                 product.putSerializable(ExtraAndResult.EXTRA_DATA, mWfInstance.order.proInfo);
                 app.startActivityForResult(this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                 break;
             case R.id.ll_plan://订单 查看回款记录
                 Bundle mBundle = new Bundle();
-                mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_DETAILS);
                 mBundle.putString("price", mWfInstance.order.dealMoney + "");
                 mBundle.putString("orderId", mWfInstance.order.id);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
-                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
+                mBundle.putBoolean(OrderEstimateListActivity.KEY_COMMIT_CHANGE, true);
+                app.startActivityForResult(this, OrderEstimateListActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
 //            case R.id.ll_payment_order://回款审批到订单详情
 //                Intent mIntent = new Intent();
@@ -795,6 +806,17 @@ public class WfinstanceInfoActivity extends BaseActivity {
 //                startActivityForResult(mIntent, 1);
 //                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 //                break;
+            case R.id.ll_customer:
+            {
+                if (mWfInstance != null && mWfInstance.customerId != null) {
+                    Intent intent2 = new Intent();
+                    intent2.putExtra("Id", mWfInstance.customerId);
+                    intent2.setClass(this, CustomerDetailInfoActivity_.class);
+                    startActivity(intent2);
+                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                }
+                break;
+            }
         }
     }
 

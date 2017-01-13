@@ -35,11 +35,11 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
+import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
-import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
@@ -534,7 +534,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
             /*选择客户*/
             case R.id.ll_customer:
                 Bundle b = new Bundle();
-                app.startActivityForResult(FollowAddActivity.this, SigninSelectCustomerSearch.class,
+                app.startActivityForResult(FollowAddActivity.this, SelfVisibleCustomerPickerActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
 

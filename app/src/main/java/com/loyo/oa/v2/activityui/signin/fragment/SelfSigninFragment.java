@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -242,18 +243,21 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
                     case 0:
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeVisit);
                         break;
 
                     /*类型*/
                     case 1:
                         menuKindkey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.typeVisit);
                         break;
 
                     /*排序*/
                     case 2:
                         menuSortkey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankVisit);
                         break;
                 }
                 initPageData();
@@ -289,6 +293,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
         layout_bottom_menu.setVisibility(View.VISIBLE);
         btn_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        UmengAnalytics.umengSend(mActivity, UmengAnalytics.replyVisit);
     }
 
 
@@ -367,6 +372,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
             case R.id.btn_add:
                 startActivityForResult(new Intent(getActivity(), SignInActivity.class), Activity.RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.addVisit);
                 break;
 
         }

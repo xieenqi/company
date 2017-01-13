@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddEstimateActivity;
 import com.loyo.oa.v2.activityui.order.OrderAttachmentActivity;
-import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
@@ -129,16 +128,9 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 mBundle = new Bundle();
-                mBundle.putInt("size", mEstimateAdd.attachmentCount);
-                mBundle.putString("orderId", orderId);
-                if (fromPage == OrderEstimateListActivity.ORDER_ADD) {
-                    requestPage = OrderEstimateListActivity.OADD_EST_EDIT;
-                } else if (fromPage == OrderEstimateListActivity.ORDER_DETAILS) {
-                    requestPage = OrderEstimateListActivity.ODET_EST_EDIT;
-                }
-                mBundle.putInt("fromPage", requestPage);
                 mBundle.putSerializable(ExtraAndResult.RESULT_DATA, mData.get(position));
-                MainApp.getMainApp().startActivityForResult(mActivity, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, requestPage, mBundle);
+                MainApp.getMainApp().startActivityForResult(mActivity,
+                        OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, requestPage, mBundle);
             }
         });
         LogUtil.dee("status:"+mEstimateAdd.status);

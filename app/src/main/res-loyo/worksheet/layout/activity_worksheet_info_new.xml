@@ -47,21 +47,35 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/tv_title"
+                            <FrameLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:singleLine="false"
-                                android:maxWidth="260dp"
-                                android:text=""
-                                style="@style/common_text_line_main"/>
-                            <TextView
-                                android:id="@+id/tv_status"
-                                android:layout_gravity="top"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/common_text_label"/>
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/tv_title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:singleLine="false"
+                                    android:layout_marginRight="65dp"
+                                    android:text=""
+                                    style="@style/common_text_line_main"/>
+
+                                <FrameLayout
+                                    android:layout_width="60dp"
+                                    android:layout_gravity="right|top"
+                                    android:paddingTop="2dp"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:id="@+id/tv_status"
+                                        android:layout_gravity="top"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        style="@style/common_text_label"/>
+                                </FrameLayout>
+                            </FrameLayout>
+
                         </LinearLayout>
 
                         <TextView
@@ -207,6 +221,7 @@
                             android:id="@+id/tv_responsible_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:singleLine="false"
                             style="@style/common_text_line_second" />
                     </LinearLayout>
                 </LinearLayout>

@@ -229,7 +229,10 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
      * 编辑请求
      * */
     @Override
-    public void requestEditWfin(String id,String title,String deptId,ArrayList<HashMap<String, Object>> workflowValues,String projectId,String memo) {
+    public void requestEditWfin(String id,String title,String deptId,
+                                ArrayList<HashMap<String, Object>> workflowValues,
+                                String projectId,String memo,
+                                String customerId, String customerName) {
         LoyoProgressHUD hud = crolView.showStatusProgress();
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);                               //自定义标题
@@ -237,6 +240,12 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
         map.put("workflowValues", workflowValues);             //流程 内容
         map.put("projectId", projectId);                       //项目Id
         map.put("memo",memo); //备注
+        if (!TextUtils.isEmpty(customerId)) {
+            map.put("customerId", customerId);
+            if (!TextUtils.isEmpty(customerName)) {
+                map.put("customerName", customerName);
+            }
+        }
 
         WfinstanceService.editWfInstance(id,map)
                 .subscribe(new DefaultLoyoSubscriber<WfInstance>(hud, "编辑审批成功") {

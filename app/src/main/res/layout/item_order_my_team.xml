@@ -13,6 +13,7 @@
         android:paddingLeft="@dimen/margin_other_view"
         android:paddingRight="@dimen/margin_other_view"
         android:paddingTop="@dimen/dimen_10"
+        android:background="@color/common_activity_con_bg"
         >
 
         <LinearLayout

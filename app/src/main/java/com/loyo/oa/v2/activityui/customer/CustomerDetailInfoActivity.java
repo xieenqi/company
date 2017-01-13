@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.common.utils.PermissionTool;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
@@ -31,6 +32,7 @@ import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPrese
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
+import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -54,6 +56,7 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -63,18 +66,20 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * 作者 : ykb
  * 时间 : 15/9/24.
  */
-@EActivity(R.layout.activity_customer_detail_info)
+@EActivity(R.layout.activity_customer_detail_info_new)
 public class CustomerDetailInfoActivity extends BaseActivity implements CustomerDetailinfoView {
 
     @ViewById
     ViewGroup img_title_left, img_title_right, layout_customer_info, layout_contact, layout_send_sms,
             layout_call, layout_wiretel_call, layout_sale_activity, layout_visit, layout_task, layout_attachment,
+            layout_approval,
             ll_sale, ll_order, layout_4;
     @ViewById
     TextView tv_title_1, tv_customer_name, tv_address, tv_tags, tv_contact_name,
             tv_contact_tel, customer_detail_wiretel, tv_sale_number, tv_visit_times, tv_task_count, tv_attachment_count,
+            tv_approval_count,
             tv_follow_content, tv_follow_crecter_type, tv_contact_Number, tv_sale_count, tv_order_count,
-            tv_content41, tv_content42;
+            tv_content41, tv_content42, tv_content43;
     @ViewById
     ImageView img_public;
     @ViewById
@@ -148,19 +153,19 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     /**
      * 默认联系人设置
-     * */
-    private void initContact(){
+     */
+    private void initContact() {
         mContact = Utils.findDeault(mCustomer);
         if (null != mContact) {
             mPresenter.setDefaultContact(mContact.getId(), mCustomer.id);
             if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
-                tv_contact_tel.setText("无");
+                tv_contact_tel.setText("--");
             } else {
                 tv_contact_tel.setText(mContact.getTel());
             }
 
             if (null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())) {
-                customer_detail_wiretel.setText("无");
+                customer_detail_wiretel.setText("--");
             } else {
                 customer_detail_wiretel.setText(mContact.getWiretel());
             }
@@ -235,8 +240,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_visit.setOnTouchListener(Global.GetTouch());
         layout_task.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
+        layout_approval.setOnTouchListener(Global.GetTouch());
         if (mCustomer.state != Customer.DumpedCustomer)
             CommonMethod.commonCustomerRecycleTime(mCustomer, layout_4, tv_content41, tv_content42);
+
+        tv_content43.setVisibility(mCustomer.state == Customer.DumpedCustomer ? View.VISIBLE : View.GONE);
+        if (mCustomer.state == Customer.DumpedCustomer)
+            tv_content43.setText("丢公海原因：" + (TextUtils.isEmpty(mCustomer.recycleReason) ? "--" : mCustomer.recycleReason));
 
         tv_customer_name.setText(mCustomer.name);
         if (null != mCustomer.loc) {
@@ -247,18 +257,19 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         mTagItems.clear();
         mTagItems.addAll(mCustomer.tags);
 
-        tv_visit_times.setText("(" + mCustomer.counter.getVisit() + ")");
-        tv_sale_count.setText("(" + mCustomer.counter.getDemand() + ")");
-        tv_order_count.setText("(" + mCustomer.counter.order + ")");
-        tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
-        tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
+        tv_visit_times.setText("（" + mCustomer.counter.getVisit() + "）");
+        tv_sale_count.setText("（" + mCustomer.counter.getDemand() + "）");
+        tv_order_count.setText("（" + mCustomer.counter.order + "）");
+        tv_task_count.setText("（" + mCustomer.counter.getTask() + "）");
+        tv_attachment_count.setText("（" + mCustomer.counter.getFile() + "）");
+        tv_approval_count.setText("（" + mCustomer.counter.workflow + "）");
 
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
 
         //突出显示跟进动态
-        tv_sale_number.setText("(" + mCustomer.saleActivityNum + ")");
+        tv_sale_number.setText("（" + mCustomer.saleActivityNum + "）");
         if (null != mCustomer.saleActivityInfo) {
             tv_follow_content.setVisibility(View.VISIBLE);
             tv_follow_crecter_type.setVisibility(View.VISIBLE);
@@ -270,7 +281,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             tv_follow_content.setVisibility(View.GONE);
             tv_follow_crecter_type.setVisibility(View.GONE);
         }
-        tv_contact_Number.setText("(" + mCustomer.contacts.size() + ")");
+        tv_contact_Number.setText("（" + mCustomer.contacts.size() + "）");
 
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
@@ -295,6 +306,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 if (isKind) {
                     mPresenter.delete(mCustomer.getId());
                 } else {
+                    /*此处投入公海操作*/
                     mPresenter.toPublic(mCustomer.getId());
                 }
             }
@@ -304,7 +316,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
-            R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call,
+            R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_approval,
+            R.id.layout_wiretel_call,
             R.id.ll_sale, R.id.ll_order, R.id.layout_gj, R.id.layout_sign, R.id.iv_select_tag})
     void onClick(final View view) {
 
@@ -329,6 +342,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     mIntent.putExtra("customerId", mCustomer.getId());
                 }
                 startActivity(mIntent);
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerEditTag);
                 break;
 
             /*快捷拜访*/
@@ -336,6 +350,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mIntent = new Intent(CustomerDetailInfoActivity.this, SignInActivity.class);
                 mIntent.putExtra("data", mCustomer);
                 startActivity(mIntent);
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerVisit);
                 break;
 
             /*快捷跟进*/
@@ -345,6 +360,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mIntent.putExtra("isDetail", true);
                 mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 startActivity(mIntent);
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerAddFollow);
                 break;
 
             /*返回*/
@@ -382,6 +398,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                                  */
                             }
                         });
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.frompublicPublicDetail);
                 break;
             /*联系人*/
             case R.id.layout_contact:
@@ -441,6 +458,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = CustomerFollowUpListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
+                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerCheckFollow);
                 break;
             /*拜访签到*/
             case R.id.layout_visit:
@@ -493,7 +511,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 requestCode = ExtraAndResult.REQUEST_CODE;
                 break;
             /*订单管理*/
-            case R.id.ll_order:
+            case R.id.ll_order: {
                 boolean canAddOrder = mCustomer != null &&
                         PermissionManager.getInstance().hasCustomerAuthority(
                                 mCustomer.relationState,
@@ -505,7 +523,23 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = CustomerOrderList.class;
                 requestCode = ExtraAndResult.REQUEST_CODE;
-                break;
+            }
+            break;
+            /*审批流程*/
+            case R.id.layout_approval: {
+                boolean canAddApproval = mCustomer != null &&
+                        PermissionManager.getInstance().hasCustomerAuthority(
+                                mCustomer.relationState,
+                                mCustomer.state,
+                                CustomerAction.APPROVAL_ADD
+                        );
+                bundle.putBoolean("canAdd", canAddApproval);
+                bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
+                bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
+                _class = CustomerRelatedApprovalList.class;
+                requestCode = ExtraAndResult.REQUEST_CODE;
+            }
+            break;
         }
         if (null != _class && requestCode != -1) {
             goToChild(bundle, _class, requestCode);
@@ -554,18 +588,41 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         }
 
         ActionSheetDialog dialog = new ActionSheetDialog(this).builder();
+        if (canDump)
+            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerTopublic);
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("key", "cus_reason_switcher");
+                    showLoading2("");
+                    CustomerService.getSigninUploadPhotoConfig(map).subscribe(new DefaultLoyoSubscriber<SigninPictures>(hud) {
+                        @Override
+                        public void onNext(SigninPictures signinPictures) {
+                            if (signinPictures != null && signinPictures.value.equals("1")) {
+                                Intent intent = new Intent(CustomerDetailInfoActivity.this, LoseCommonCustomerReasonActivity.class);
+                                intent.putExtra(ExtraAndResult.EXTRA_ID, mCustomer.getId());
+                                startActivityForResult(intent, ExtraAndResult.REQUSET_COPY_PERSONS);
+                                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                            } else {
+                                setPopViewEmbl(false, "确定将客户 \"" + mCustomer.name + "\" 投入公海吗?");
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            super.onError(e);
+                        }
+                    });
+
+                }
+            });
         if (canDelete)
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
                     setPopViewEmbl(true, "你确定要删除客户?");
-                }
-            });
-        if (canDump)
-            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    setPopViewEmbl(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
+                    UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerDelete);
                 }
             });
         dialog.show();
@@ -626,16 +683,16 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-
+                break;
+            //丢公海回来
+            case ExtraAndResult.REQUSET_COPY_PERSONS:
+                toPublicEmbl();
                 break;
         }
 
         switch (resultCode) {
             case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
                 isPutOcen = true;
-                break;
-            //新建跟进 回调
-            case FinalVariables.REQUEST_CREATE_TASK:
                 break;
         }
     }

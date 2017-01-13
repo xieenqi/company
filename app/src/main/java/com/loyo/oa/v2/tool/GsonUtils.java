@@ -2,7 +2,9 @@ package com.loyo.oa.v2.tool;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItemType;
+import com.loyo.oa.v2.activityui.wfinstance.common.SubmitStatus;
 import com.loyo.oa.v2.activityui.worksheet.common.WSRole;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventAction;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
@@ -16,16 +18,32 @@ public class GsonUtils {
     public static Gson newInstance() {
         GsonBuilder builder = new GsonBuilder();
 
+        /* 工单状态 */
         builder.registerTypeAdapter(WorksheetStatus.class,
                 new WorksheetStatus.EnumSerializer());
+
+        /* 审批状态 */
+        builder.registerTypeAdapter(SubmitStatus.class,
+                new SubmitStatus.EnumSerializer());
+
+        /* 工单事件状态 */
         builder.registerTypeAdapter(WorksheetEventStatus.class,
                 new WorksheetEventStatus.EnumSerializer());
+
+        /* 工单事件操作 */
         builder.registerTypeAdapter(WorksheetEventAction.class,
                 new WorksheetEventAction.EnumSerializer());
+
+        /* 工单角色 */
         builder.registerTypeAdapter(WSRole.class,
                 new WSRole.WSRoleSerializer());
+
+        /* 系统消息的类别*/
         builder.registerTypeAdapter(SystemMessageItemType.class,
                 new SystemMessageItemType.SystemMessageSerializer());
+        /*丢公海的类型*/
+        builder.registerTypeAdapter(Customer.RecycleType.class,
+                new Customer.RecycleType.RecycleTypeSerializer());
         return builder.create();
     }
 }

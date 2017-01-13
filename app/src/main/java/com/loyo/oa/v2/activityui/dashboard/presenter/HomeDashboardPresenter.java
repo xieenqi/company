@@ -24,6 +24,9 @@ public interface HomeDashboardPresenter {
 
     void getMoneyCountData(int type);
 
+    //回款统计
+    void getPayment(int type);
+
     void setOnSucssView(AnimationDrawable anim,LinearLayout modelView, ImageView load, LinearLayout error, RelativeLayout loadview, LoadStatus status);
 
     String getNumFormat(long num);

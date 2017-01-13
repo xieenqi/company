@@ -123,7 +123,7 @@ public class WorksheetDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void setLayoutView() {
-        setContentView(R.layout.activity_worksheet_detial);
+        setContentView(R.layout.activity_worksheet_detial_new);
     }
 
     @Override

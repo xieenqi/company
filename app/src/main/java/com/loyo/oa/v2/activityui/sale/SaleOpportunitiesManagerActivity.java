@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
@@ -195,8 +196,10 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
                 int type;
                 if (mIndex == 0) {
                     type = SaleSearchActivity.MY_SALE_SEARCH;
+                    UmengAnalytics.umengSend(SaleOpportunitiesManagerActivity.this, UmengAnalytics.searchChanceMy);
                 } else {
                     type = SaleSearchActivity.TEAM_SALE_SEARCH;
+                    UmengAnalytics.umengSend(SaleOpportunitiesManagerActivity.this, UmengAnalytics.searchChanceTeam);
                 }
                 Bundle b = new Bundle();
                 b.putInt(ExtraAndResult.EXTRA_TYPE, type);

@@ -1,9 +1,8 @@
 package com.loyo.oa.v2.activityui.product.api;
 
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
-import com.loyo.oa.v2.activityui.product.model.ProductDynmModel;
+import com.loyo.oa.v2.activityui.product.model.ProductCustomField;
 import com.loyo.oa.v2.activityui.product.model.ProductListModel;
-import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorItem;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.tool.Config_project;
@@ -21,13 +20,13 @@ import rx.Observable;
 public class ProductService {
 
     //获取产品动态字段
-    public static Observable<ArrayList<ProductDynmModel>> getProductDynm(HashMap<String, Object> params) {
+    public static Observable<ArrayList<ProductCustomField>> getProductDynm(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IProduct.class)
                         .getProductDynm(params)
-                        .compose(RetrofitAdapterFactory.<ArrayList<ProductDynmModel>>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<ArrayList<ProductCustomField>>compatApplySchedulers());
     }
 
     //获取产品列表

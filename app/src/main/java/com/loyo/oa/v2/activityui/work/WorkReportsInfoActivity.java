@@ -53,7 +53,7 @@ import java.util.ArrayList;
  * 【报告详情】
  */
 
-@EActivity(R.layout.activity_workreports_info)
+@EActivity(R.layout.activity_workreports_info_new)
 public class WorkReportsInfoActivity extends BaseActivity {
 
     public final int MSG_DELETE_WORKREPORT = 100;
@@ -77,7 +77,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @ViewById
     TextView tv_review_time;
     @ViewById
-    ImageView img_workreport_status;
+    TextView tv_status;
     @ViewById
     Button btn_workreport_review;
     @ViewById
@@ -315,8 +315,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         OrganizationalMember reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.user ? mWorkReport.reviewer.user : null;
         tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : (mWorkReport.content.toString().contains("<") ? Html.fromHtml(mWorkReport.content) : mWorkReport.content));
         tv_reviewer.setText(mWorkReport.reviewer.user.getName());
-        tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人：无抄送人" : "抄送人：" + getJoinUserNames());
-
+        tv_toUser.setText(getJoinUserNames().isEmpty() ? "无" : getJoinUserNames());
         tv_workReport_time.setText("提交时间：" + date);
 
         if (null != mWorkReport.ProjectInfo && mWorkReport.ProjectInfo.title.length() != 0) {
@@ -328,8 +327,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
         showAttachment();
         if (mWorkReport.isReviewed()) {
             layout_score.setVisibility(View.VISIBLE);
-            img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
-            tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.user.getName());
+            tv_status.setBackgroundResource(R.drawable.common_lable_green);
+            tv_status.setText("已点评");
+            tv_reviewer_.setText("点评人：" +mWorkReport.reviewer.user.getName());
+
 //            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.reviewedAt + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             tv_review_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorkReport.reviewer.reviewedAt));
             btn_workreport_review.setVisibility(View.GONE);
@@ -346,7 +347,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
         } else {
             layout_score.setVisibility(View.GONE);
-            img_workreport_status.setImageResource(R.drawable.img_workreport_status1);
+            tv_status.setBackgroundResource(R.drawable.common_lable_blue);
+            tv_status.setText("待点评");
 
             if (reviewer != null && reviewer.isCurrentUser()) {
                 btn_workreport_review.setVisibility(View.VISIBLE);

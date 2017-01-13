@@ -136,7 +136,7 @@ public class EditUserMobileActivity extends BaseActivity {
         public void afterTextChanged(final Editable editable) {
             if (RegexUtil.regexk(editable.toString().trim(), RegexUtil.StringType.MOBILEL)) {
                 bt_verificationCode.setEnabled(true);
-                bt_verificationCode.setBackgroundResource(R.drawable.round_bg_shpe);//getResources().getColor(R.color.title_bg1)
+                bt_verificationCode.setBackgroundResource(R.drawable.common_lable_blue);
                 bt_verificationCode.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 bt_verificationCode.setEnabled(false);

@@ -426,6 +426,11 @@ public class BaseActivity extends AppCompatActivity {
         }, 300);
     }
 
+    public void finishWithPopAnimation() {
+        finish();
+        overridePendingTransition(R.anim.enter_lefttoright, R.anim.exit_lefttoright);
+    }
+
     /**
      * 展示带成功失败动画加载框
      */

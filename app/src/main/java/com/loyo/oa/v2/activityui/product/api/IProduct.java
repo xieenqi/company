@@ -1,9 +1,8 @@
 package com.loyo.oa.v2.activityui.product.api;
 
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
-import com.loyo.oa.v2.activityui.product.model.ProductDynmModel;
+import com.loyo.oa.v2.activityui.product.model.ProductCustomField;
 import com.loyo.oa.v2.activityui.product.model.ProductListModel;
-import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.customview.classify_seletor.ClassifySeletorItem;
 import com.loyo.oa.v2.network.model.BaseResponse;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public interface IProduct {
      * 获取产品动态字段
      */
     @GET("/properties")
-    Observable<ArrayList<ProductDynmModel>> getProductDynm(@QueryMap HashMap<String, Object> map);
+    Observable<ArrayList<ProductCustomField>> getProductDynm(@QueryMap HashMap<String, Object> map);
 
     /**
      * 产品列表

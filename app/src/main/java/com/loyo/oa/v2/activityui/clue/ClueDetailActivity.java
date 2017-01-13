@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.common.utils.PermissionTool;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -111,7 +112,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
 
     @Override
     public void setLayoutView() {
-        setContentView(R.layout.activity_clue_detail);
+        setContentView(R.layout.activity_clue_detail_new);
     }
 
     @Override
@@ -417,36 +418,36 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         map.put("mobile", phone);
         ClueService.getCallReturnInfo(map).
                 subscribe(new DefaultLoyoSubscriber<CallBackCallid>(hud) {
-            @Override
-            public void onNext(CallBackCallid callBackCallid) {
-                try {
-                    switch (callBackCallid.errcode) {
-                        case 0:
-                            Bundle mBundle = new Bundle();
-                            mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
-                            mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
-                            app.startActivity(ClueDetailActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-                            break;
+                    @Override
+                    public void onNext(CallBackCallid callBackCallid) {
+                        try {
+                            switch (callBackCallid.errcode) {
+                                case 0:
+                                    Bundle mBundle = new Bundle();
+                                    mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
+                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
+                                    app.startActivity(ClueDetailActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                                    break;
 
-                        case 50000:
-                            Toast("主叫与被叫号码不能相同!");
-                            break;
+                                case 50000:
+                                    Toast("主叫与被叫号码不能相同!");
+                                    break;
 
-                        case 50001:
-                            Toast("余额不足!");
-                            break;
+                                case 50001:
+                                    Toast("余额不足!");
+                                    break;
 
-                        case 50002:
-                            Toast("号码格式错误!");
-                            break;
+                                case 50002:
+                                    Toast("号码格式错误!");
+                                    break;
+                            }
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                            Toast(e.getMessage());
+                            finish();
+                        }
                     }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    Toast(e.getMessage());
-                    finish();
-                }
-            }
-        });
+                });
     }
 
 
@@ -488,6 +489,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
                 Bundle mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.sales);
                 app.startActivityForResult(ClueDetailActivity.this, ClueTransferActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
+                UmengAnalytics.umengSend(ClueDetailActivity.this, UmengAnalytics.toCustomerCluesMy);
             }
         });
 
@@ -501,6 +503,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                UmengAnalytics.umengSend(ClueDetailActivity.this, UmengAnalytics.transferCluesMy);
             }
         });
 
@@ -512,6 +515,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data);
                 app.startActivityForResult(ClueDetailActivity.this, ClueAddActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+                UmengAnalytics.umengSend(ClueDetailActivity.this, UmengAnalytics.edit_clues_my);
             }
         });
 
@@ -530,6 +534,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             dismissSweetAlert();
                             deleteClue();
+                            UmengAnalytics.umengSend(ClueDetailActivity.this, UmengAnalytics.deleteCluesMy);
                         }
                     }, "提示", "线索删除过后不可恢复，\n你确定要删除？");
                 }
@@ -623,8 +628,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
             map.put("remark", clue_note.getText().toString());
             map.put("region", regional);
             map.put("source", clue_source.getText().toString());
-        }
-        else {
+        } else {
             map.put("status", clueStatus);
         }
 
