@@ -193,13 +193,14 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         customerName = mOrderDetail.customerName;
         productData = mOrderDetail.proInfo;
         estimateData = mOrderDetail.paymentRecords;
+        reWorkSheet = mOrderDetail.reWorkSheet;
         mCusList = mOrderDetail.extensionDatas;
 
         et_name.setText(mOrderDetail.title);
         tv_customer.setText(mOrderDetail.customerName);
         tv_stage.setText(getIntentionProductName());
         tv_estimate.setText(getEstimateName());
-        tv_estimate.setText(getEstimateName());
+        tv_addorder.setText(getWorksheetDisplayValue());
         et_money.setText(mOrderDetail.dealMoney + "");
         et_ordernum.setText(mOrderDetail.orderNum);
         et_remake.setText(mOrderDetail.remark);
@@ -340,7 +341,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         tv_customer.setText(mOrderDetail.customerName);
         tv_stage.setText(getIntentionProductName());
         tv_estimate.setText(getEstimateName());
-        tv_estimate.setText(getEstimateName());
+        tv_addorder.setText(getWorksheetDisplayValue());
         et_money.setText(mOrderDetail.dealMoney + "");
         et_ordernum.setText(mOrderDetail.orderNum);
         et_remake.setText(mOrderDetail.remark);
@@ -564,6 +565,18 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             }
         }
         return estimateName.length() > 0 ? estimateName.substring(0, estimateName.length() - 1) : "";
+    }
+
+    private String getWorksheetDisplayValue() {
+        StringBuffer sBuffer = new StringBuffer();
+        for(OrderWorksheetListModel orderWorksheetListModel:reWorkSheet){
+            if(reWorkSheet.size() > 1){
+                sBuffer.append(orderWorksheetListModel.title+",");
+            }else{
+                sBuffer.append(orderWorksheetListModel.title);
+            }
+        }
+        return sBuffer.toString();
     }
 
     /**
