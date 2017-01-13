@@ -49,6 +49,8 @@ import java.util.HashMap;
  */
 public class OrderAddActivity extends BaseActivity implements View.OnClickListener {
 
+    public final static String KEY_CAPITAL_RETURNING_PLAN_EDIT = "com.loyo.OrderAddActivity.KEY_CAPITAL_RETURNING_PLAN_EDIT";
+    public final static String KEY_CAPITAL_RETURNING_RECORD_EDIT = "com.loyo.OrderAddActivity.KEY_CAPITAL_RETURNING_RECORD_EDIT";
     private TextView tv_title;
     private ImageView iv_submit;
     private LinearLayout ll_back;
@@ -85,6 +87,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private OrderDetail mOrderDetail;
     private String orderId;
     private OrderAddforExtraData orderAddforExtra;
+    private boolean capitalReturningPlanEdit = true;
+    private boolean capitalReturningRecordEdit = true;
 
     private Handler mHandler = new Handler() {
 
@@ -123,6 +127,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //客户创建订单
             customerId = mIntent.getStringExtra(ExtraAndResult.EXTRA_ID);
             customerName = mIntent.getStringExtra(ExtraAndResult.EXTRA_NAME);
+            capitalReturningPlanEdit = mIntent.getBooleanExtra(KEY_CAPITAL_RETURNING_PLAN_EDIT, true);
+            capitalReturningRecordEdit = mIntent.getBooleanExtra(KEY_CAPITAL_RETURNING_RECORD_EDIT, true);
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -500,7 +506,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                     mBundle.putSerializable("data", estimateData);
                 }
                 mBundle.putString("orderId", orderId);
-                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, capitalReturningRecordEdit);
                 app.startActivityForResult(this, OrderEstimateListActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;

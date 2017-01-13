@@ -181,12 +181,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
         tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");*/
 
         //如果来自详情，则请求回款记录
-        if (fromPage == ORDER_DETAILS) {
-            getPageData();
-            ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
-        }else {
-            ll_loading.setStatus(LoadingLayout.Success);
-        }
+        ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         mAdapter = new OrderEstimateListAdapter(this, capitalReturningList, mHandler, orderId, fromPage, isAdd);
         mAdapter.setOrderStatus(orderStatus);
         lv_listview.setAdapter(mAdapter);

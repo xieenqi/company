@@ -12,6 +12,11 @@ import java.util.ArrayList;
  */
 public class OrderDetail implements Serializable {
 
+
+    public final static int RelationResponsible = 1;         /*1表示责任人*/
+    public final static int RelationTeam = 2;                /*2表示团队*/
+    public final static int RelationInvolved = 3;            /*3表示业务相关*/
+
     public boolean wfSwitch;
     public int relationState;
 
@@ -23,7 +28,9 @@ public class OrderDetail implements Serializable {
     public String customerName;
     public String directorName;
     public String creatorName;
-    public int status;//1待审核 2未通过 3进行中 4已完成 5意外终止 6
+
+    //订单状态 1:待审核  2:未通过  3: 进行中(订单审核完成) 4: 已完成(回款完成)  5: 意外终止 7:审批中
+    public int status;
     public float dealMoney;//成交金额
     public float planMoney;//计划回款金额
     public int backMoney;
@@ -35,6 +42,8 @@ public class OrderDetail implements Serializable {
     public int planNum;
     public int worksheetNum;
     public long createdAt;
+    public long startAt;
+    public long endAt;
     public String proName;
     public String wfId;
     public String orderNum;//订单编号

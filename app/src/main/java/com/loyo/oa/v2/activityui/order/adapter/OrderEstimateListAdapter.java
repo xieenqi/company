@@ -139,17 +139,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             }
         });
         LogUtil.dee("status:"+mEstimateAdd.status);
-        //只有订单负责人，有权限操作回款
-        if (!isAdd) {
-            holder.ll_action.setVisibility(View.GONE);
-        } else {
-            //当订单状态为待审批 审批中 已通过 已完成时，不能编辑和删除
-            if (mEstimateAdd.status == 1 || mEstimateAdd.status == 2 || mEstimateAdd.status == 4 || mEstimateAdd.status == 5) {
-                holder.ll_action.setVisibility(View.GONE);
-            } else if(mEstimateAdd.status == 3){
-                holder.ll_action.setVisibility(View.VISIBLE);
-            }
-        }
+        holder.ll_action.setVisibility(isAdd?View.VISIBLE:View.GONE);
 
         //附件监听
         holder.ll_attachment.setOnClickListener(new View.OnClickListener() {

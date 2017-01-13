@@ -418,75 +418,96 @@
 
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/common_line_out_space"
                     android:background="@color/white"
-                    android:orientation="vertical"
-                    android:padding="@dimen/common_layout_padding">
-
+                    android:orientation="vertical">
                     <LinearLayout
+                        android:id="@+id/ll_responsible"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_height="@dimen/common_line_height"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/common_layout_padding"
+                        android:paddingRight="@dimen/common_layout_padding">
 
                         <TextView
-                            style="@style/common_text_line_third"
+                            style="@style/common_text_line_main"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="负责人：" />
+                            android:layout_height="match_parent"
+                            android:text="负责人" />
 
                         <TextView
                             android:id="@+id/tv_responsible_name"
-                            style="@style/common_text_line_third"
+                            style="@style/common_text_line_second"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:gravity="right|center_vertical"
+                            />
+                        <ImageView
+                            android:id="@+id/img_responsible_arrow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="9dp"
+                            android:scaleType="center"
+                            android:src="@drawable/order_right_arrow" />
 
                     </LinearLayout>
 
+                    <include layout="@layout/common_include_line_in_space" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/common_text_in_space"
-                        android:orientation="horizontal">
+                        android:layout_height="@dimen/common_line_height"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/common_layout_padding"
+                        android:paddingRight="@dimen/common_layout_padding">
 
                         <TextView
-                            style="@style/common_text_line_third"
+                            style="@style/common_text_line_main"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="创建人：" />
+                            android:layout_height="match_parent"
+                            android:text="创建人" />
 
                         <TextView
                             android:id="@+id/tv_creator_name"
                             style="@style/common_text_line_third"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:gravity="right|center_vertical"/>
 
                     </LinearLayout>
 
-                    <LinearLayout
+                    <include layout="@layout/common_include_line_in_space" />
 
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/common_text_in_space"
-                        android:orientation="horizontal">
+                        android:layout_height="@dimen/common_line_height"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/common_layout_padding"
+                        android:paddingRight="@dimen/common_layout_padding">
 
                         <TextView
-                            style="@style/common_text_line_third"
+                            style="@style/common_text_line_main"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="创建时间：" />
+                            android:layout_height="match_parent"
+                            android:text="创建时间" />
 
                         <TextView
                             android:id="@+id/tv_creator_time"
                             style="@style/common_text_line_third"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:gravity="right|center_vertical"/>
                     </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
