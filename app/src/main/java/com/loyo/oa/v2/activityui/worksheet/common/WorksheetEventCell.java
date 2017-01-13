@@ -40,7 +40,7 @@ public class WorksheetEventCell extends LinearLayout {
 
     public WorksheetEventCell(Context context, Handler handler) {
         super(context);
-        this.mContext=context;
+        this.mContext = context;
         content = LayoutInflater.from(context).inflate(R.layout.item_worksheet_event_new, null, false);
         iv_avatar = (RoundImageView) content.findViewById(R.id.iv_avatar);
         iv_status = (ImageView) content.findViewById(R.id.iv_status);
@@ -118,8 +118,8 @@ public class WorksheetEventCell extends LinearLayout {
         tv_time.setText(data.startTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getDateFriendly(data.startTime));
         LogUtil.dee("endTime:" + data.endTime);
         LogUtil.dee("status:" + data.status);
-        if (data.endTime != 0 && data.status != WorksheetEventStatus.UNACTIVATED) {
-            //事件 已处理 待处理 标红
+        if (data.endTime != 0) {
+            //事件 已处理 待处理 标红  *需求变动不区分事件状态有时间就显示20170112
             if (data.isOvertime) {
                 tv_time2.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(data.endTime) + "截止" + "(超时)");
                 tv_time2.setTextColor(getResources().getColor(R.color.red1));
@@ -127,7 +127,7 @@ public class WorksheetEventCell extends LinearLayout {
                 tv_time2.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(data.endTime) + "截止");
                 tv_time2.setTextColor(getResources().getColor(R.color.text99));
             }
-        } else if (data.endTime == 0 || data.status == WorksheetEventStatus.UNACTIVATED) {
+        } else if (data.endTime == 0) {
             tv_time2.setText("--");
             tv_time2.setTextColor(getResources().getColor(R.color.text99));
         }
@@ -137,7 +137,7 @@ public class WorksheetEventCell extends LinearLayout {
 
         /* 操作按钮 */
         tv_action.setVisibility(action.visible() ? View.VISIBLE : View.GONE);
-        tv_action.setTextAppearance(mContext,action.getIcon());
+        tv_action.setTextAppearance(mContext, action.getIcon());
         tv_action.setText(action.getBtnTitle());
 
         /* 事件 */

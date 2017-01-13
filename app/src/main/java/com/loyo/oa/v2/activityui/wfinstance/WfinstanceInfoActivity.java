@@ -791,11 +791,12 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 break;
             case R.id.ll_plan://订单 查看回款记录
                 Bundle mBundle = new Bundle();
-                mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_DETAILS);
                 mBundle.putString("price", mWfInstance.order.dealMoney + "");
                 mBundle.putString("orderId", mWfInstance.order.id);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
-                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
+                mBundle.putBoolean(OrderEstimateListActivity.KEY_COMMIT_CHANGE, true);
+                app.startActivityForResult(this, OrderEstimateListActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
 //            case R.id.ll_payment_order://回款审批到订单详情
 //                Intent mIntent = new Intent();
