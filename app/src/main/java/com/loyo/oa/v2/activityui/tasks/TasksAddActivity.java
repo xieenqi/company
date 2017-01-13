@@ -30,7 +30,6 @@ import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
@@ -39,7 +38,6 @@ import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
-import com.loyo.oa.v2.activityui.wfinstance.WfInAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
@@ -497,7 +495,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
             /*关联客户*/
             case R.id.layout_mycustomer:
                 app.startActivityForResult(this, SelfVisibleCustomerPickerActivity.class,
-                        MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_CUSTOMER, null);
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
                 break;
 
             default:
@@ -732,7 +730,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
         switch (requestCode) {
 
             /*关联客户回调*/
-            case FinalVariables.REQUEST_SELECT_CUSTOMER:
+            case ExtraAndResult.REQUEST_CODE_CUSTOMER:
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
                     customerId = customer.id;

@@ -23,7 +23,7 @@ import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
+import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
@@ -410,11 +410,8 @@ public class TasksEditActivity extends BaseActivity {
 
             /*关联客户*/
             case R.id.layout_mycustomer:
-                Bundle bundle3 = new Bundle();
-                bundle3.putInt("from", TASKS_ADD_CUSTOMER);
-                bundle3.putInt(ExtraAndResult.EXTRA_TYPE, 1);
-                app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_CUSTOMER, bundle3);
-                break;
+                app.startActivityForResult(this, SelfVisibleCustomerPickerActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);                break;
 
             default:
                 break;
@@ -659,7 +656,7 @@ public class TasksEditActivity extends BaseActivity {
         }
         switch (requestCode) {
                         /*关联客户回调*/
-            case FinalVariables.REQUEST_SELECT_CUSTOMER:
+            case ExtraAndResult.REQUEST_CODE_CUSTOMER:
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
                     mTask.setCustomerId(customer.id);
