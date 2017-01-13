@@ -44,6 +44,7 @@ import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -377,6 +378,10 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void getListDataErrorEmbl(Throwable e) {
         listView.onRefreshComplete();
+        //判断，数据为空，就用ll_loading显示，否则使用toast提示
+        @LoyoErrorChecker.CheckType
+        int type=mPagination.isEnpty()?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
+        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
     }
 
     @Override
