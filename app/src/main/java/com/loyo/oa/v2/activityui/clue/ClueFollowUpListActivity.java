@@ -83,7 +83,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private ArrayList<ClueFollowGroupModel> listModel = new ArrayList<>();
     private PaginationX<ClueFollowGroupModel> mPagination = new PaginationX<>(20);
 
-    private boolean needToRefresh=false;
+    private boolean needToRefresh = false;
     private int pageSize = 5;
 
     @Override
@@ -122,7 +122,11 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        pageSize=listModel.size();
+        //TODO 临时这样写后期重构
+        int size = listModel.size();
+        for (int i = 0; i < size; i++) {
+            pageSize += listModel.get(i).activities.size();
+        }
         isPullOrDown = true;
         mPagination.setPageIndex(1);
         getData(true);
@@ -276,7 +280,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         mPagination.setPageIndex(1);
-        needToRefresh=true;//如果是增加，或者是修改了，要重新刷新，避免存在老数据
+        needToRefresh = true;//如果是增加，或者是修改了，要重新刷新，避免存在老数据
         onPullDownToRefresh(listView);
     }
 
@@ -326,7 +330,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
 
     @Override
     public void rushListData(boolean shw) {
-       onPullDownToRefresh(listView);
+        onPullDownToRefresh(listView);
     }
 
     /**
@@ -351,7 +355,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     @Override
     public void getListDataSuccesseEmbl(PaginationX<ClueFollowGroupModel> paginationX) {
         listView.onRefreshComplete();
-        if (isPullOrDown||needToRefresh) {//增加了的，就要清除老数据
+        if (isPullOrDown || needToRefresh) {//增加了的，就要清除老数据
             listModel.clear();
             needToRefresh = false;
         }

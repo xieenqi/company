@@ -118,7 +118,11 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        pageSize=listModel.size();
+        //TODO 临时这样写后期重构
+        int size = listModel.size();
+        for (int i = 0; i < size; i++) {
+            pageSize += listModel.get(i).activities.size();
+        }
         isPullOrDown = true;
         mPagination.setPageIndex(1);
         getData(true);
