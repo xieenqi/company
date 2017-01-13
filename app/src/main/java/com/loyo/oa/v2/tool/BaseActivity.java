@@ -179,11 +179,11 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * bugfix: FragmentActivity.onBackPressed Can not perform this action after onSaveInstanceState
-     *
+     * <p>
      * http://stackoverflow.com/questions/7469082/getting-exception-illegalstateexception-can-not-perform-this-action-after-onsa
      */
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void invokeFragmentManagerNoteStateNotSaved() {
         /**
          * For post-Honeycomb devices
@@ -202,8 +202,8 @@ public class BaseActivity extends AppCompatActivity {
             Object fragmentMgr = fragmentMgrField.get(this);
             cls = fragmentMgr.getClass();
 
-            Method noteStateNotSavedMethod = cls.getDeclaredMethod("noteStateNotSaved", new Class[] {});
-            noteStateNotSavedMethod.invoke(fragmentMgr, new Object[] {});
+            Method noteStateNotSavedMethod = cls.getDeclaredMethod("noteStateNotSaved", new Class[]{});
+            noteStateNotSavedMethod.invoke(fragmentMgr, new Object[]{});
             Log.d("DLOutState", "Successful call for noteStateNotSaved!!!");
         } catch (Exception ex) {
             Log.e("DLOutState", "Exception on worka FM.noteStateNotSaved", ex);
@@ -255,6 +255,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
@@ -429,7 +430,7 @@ public class BaseActivity extends AppCompatActivity {
      * 展示带成功失败动画加载框
      */
     public void showCommitLoading() {
-        if (hud != null ) {
+        if (hud != null) {
             if (hud.isShowing()) {
                 hud.dismiss();
             }
@@ -442,7 +443,7 @@ public class BaseActivity extends AppCompatActivity {
      * 关闭带成功失败动画加载框
      */
     public void cancelCommitLoading() {
-        if (hud != null ) {
+        if (hud != null) {
             if (hud.isShowing()) {
                 hud.dismiss();
             }
@@ -454,7 +455,7 @@ public class BaseActivity extends AppCompatActivity {
      * 加载loading的方法
      */
     public void showLoading2(String msg) {
-        if (hud != null ) {
+        if (hud != null) {
             if (hud.isShowing()) {
                 hud.dismiss();
             }
@@ -464,7 +465,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void showLoading2(String msg, boolean cancelable) {
-        if (hud != null ) {
+        if (hud != null) {
             if (hud.isShowing()) {
                 hud.dismiss();
             }
@@ -474,7 +475,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void cancelLoading2() {
-        if (hud != null ) {
+        if (hud != null) {
             if (hud.isShowing()) {
                 hud.dismiss();
             }
