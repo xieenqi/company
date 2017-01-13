@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.order.bean;
 
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class OrderDetail implements Serializable {
     //public List<ExtensionDatas> extensionDatas;
     public ArrayList<ContactLeftExtras> extensionDatas;
     public ArrayList<SaleIntentionalProduct> proInfo;
+    public ArrayList<OrderWorksheetListModel> reWorkSheet;
     public String wfName;
     public String directorId;//负责人id
 
