@@ -553,9 +553,19 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             if (user == null) {
                 return;
             } else {
-                mData.directorName = user.getName();
-                tv_responsible_name.setText(mData.directorName);
-                // TODO:commit
+                showCommitLoading();
+                HashMap<String, Object> map = new HashMap<>();
+                HashMap<String, Object> owner = new HashMap<>();
+                owner.put("id", user.getId());
+                map.put("ids", mData.id);
+                map.put("owner", owner);
+                OrderService.updateOwner(map)
+                        .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
+                            @Override
+                            public void onNext(Object o) {
+                                getData();
+                            }
+                        });
             }
         }
     }
