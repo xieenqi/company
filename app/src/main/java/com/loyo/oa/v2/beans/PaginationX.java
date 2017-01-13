@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * 加载的时候，pageIndex使用＃getShouldLoadPageIndex()，pageSize使用：＃getPageSize()
  * 加载完成以后，调用#loadRecords(data)把新页的数据加进来。
  * 取用数据使用getRecords()
- * 判断当前数据为不为空使用：＃isEnpty()
+ * 判断当前数据为为空使用：＃isEnpty()
  * @param <T>
  */
 public class PaginationX<T> implements Serializable {
