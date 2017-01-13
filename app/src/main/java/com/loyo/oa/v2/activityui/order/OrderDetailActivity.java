@@ -61,7 +61,8 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
     private RelativeLayout img_title_right;
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
             tv_record, tv_record_value, tv_enclosure, tv_responsible_name, tv_creator_name,
-            tv_creator_time, tv_wfname, tv_order_number, tv_memo;
+            tv_creator_time, tv_wfname, tv_order_number, tv_memo,
+            tv_start_time, tv_end_time;
 
 
     /**
@@ -192,6 +193,9 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
 
         ll_responsible = (LinearLayout) findViewById(R.id.ll_responsible);
         img_responsible = (ImageView)findViewById(R.id.img_responsible_arrow);
+
+        tv_start_time = (TextView)findViewById(R.id.tv_start_time);
+        tv_end_time = (TextView)findViewById(R.id.tv_end_time);
 
     }
 
@@ -364,6 +368,8 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
         if(attachmentSize==0)tv_enclosure.setText("附件（"+ mData.attachmentCount + "）");//避免上传附件回来,把原来的数值抹掉了
 //        tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         tv_creator_time.setText(DateTool.getDateTimeFriendly(mData.createdAt));
+        tv_start_time.setText(DateTool.getDateTimeFriendly(mData.startAt));
+        tv_end_time.setText(DateTool.getDateTimeFriendly(mData.endAt));
         tv_plan_value.setText(mData.planMoney + "");
         OrderCommon.getOrderDetailsStatus(tv_status, mData.status);
         if (!TextUtils.isEmpty(mData.wfName)) {//是否关联审批

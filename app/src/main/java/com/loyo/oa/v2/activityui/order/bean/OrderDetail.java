@@ -42,6 +42,8 @@ public class OrderDetail implements Serializable {
     public int planNum;
     public int worksheetNum;
     public long createdAt;
+    public long startAt;
+    public long endAt;
     public String proName;
     public String wfId;
     public String orderNum;//订单编号
