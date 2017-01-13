@@ -78,6 +78,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
     private boolean capitalReturningPlanCRUD;
     private boolean capitalReturningRecordCRUD;
     private boolean responsibleChange;
+    private boolean worksheetAdd;
     private int attachmentSize = 0;
 
     /**
@@ -285,14 +286,9 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
                 }
-                boolean canAddWorksheet = false;
-                if (mData.status == 3 || mData.status == 4) {
-                    canAddWorksheet = true;
-                }
-
                 mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_OBJ, mData);
-                mBundle.putBoolean(ExtraAndResult.EXTRA_BOOLEAN, canAddWorksheet);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_BOOLEAN, worksheetAdd);
                 mBundle.putInt(ExtraAndResult.EXTRA_ID, mData.status);
                 app.startActivityForResult(this, OrderWorksheetsActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
@@ -340,6 +336,8 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
 
         responsibleChange
                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_RESPONSIBLE_PERSON_CHANGE);
+        worksheetAdd
+                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_WORKSHEET_ADD);
         img_title_right.setVisibility(
                 (isDelete || isEdit || isCopy || isStop) ? View.VISIBLE:View.GONE
         );
