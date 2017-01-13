@@ -164,7 +164,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         if (!isMyUser) {
@@ -268,7 +268,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     public void onFollowUpRushEvent(FollowUpRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         mPagination.setPageIndex(1);

@@ -147,10 +147,14 @@ public class PermissionTool {
      * @param callBack
      */
     public static void requestPermissionsResult(String[] permissions, int[] grantResults, PermissionsResultCallBack callBack) {
-        for (int grantResult : grantResults) {
-            if (PackageManager.PERMISSION_GRANTED != grantResult) {
-                callBack.fail();
-                return;
+        int len=permissions.length;
+        for (int i = 0; i < len; i++) {
+            Log.i("tttt", "requestPermissionsResult: permission:"+permissions[i]+",grantResult:"+grantResults[i]+",ok is:"+PackageManager.PERMISSION_GRANTED);
+            if(null!=permissions[i]){
+                if (PackageManager.PERMISSION_GRANTED != grantResults[i]) {
+                    callBack.fail();
+                    return;
+                }
             }
         }
         callBack.success();

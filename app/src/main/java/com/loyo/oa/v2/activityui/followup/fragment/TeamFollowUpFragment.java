@@ -164,7 +164,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         Utils.btnSpcHideForListView(getActivity(), listView.getRefreshableView(),

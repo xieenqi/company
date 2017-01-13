@@ -162,7 +162,7 @@ public class TeamSigninFragment extends BaseFragment implements PullToRefreshBas
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         Utils.btnSpcHideForListView(getActivity(), listView.getRefreshableView(),

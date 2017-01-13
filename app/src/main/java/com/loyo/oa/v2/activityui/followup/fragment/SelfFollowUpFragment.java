@@ -160,7 +160,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
         if (msgAudiomMenu == null) {
-            msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+            msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
             layout_bottom_menu.addView(msgAudiomMenu);
         }
         Utils.btnSpcHideForListViewTest(getActivity(), listView.getRefreshableView(),
@@ -296,7 +296,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Subscribe
     public void onFollowUpRushEvent(FollowUpRushEvent event) {
         msgAudiomMenu = null;
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         getData(false);

@@ -222,7 +222,7 @@ public class SignInActivity extends BaseActivity
                     return;
                 }
 
-                if (RecordUtils.permissionRecord()) {
+                if (RecordUtils.permissionRecord(this)) {
                     if ((boolean) v.getTag()) {
                         showInputKeyboard(edt_memo);
                         mfmodule.setIsRecording(false);
