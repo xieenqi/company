@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.order.permission;
 
-import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -23,6 +23,12 @@ import static com.loyo.oa.v2.order.permission.OrderAction.ORDER_WORKSHEET_ADD;
 
 public class OrderPermission {
 
+    private static OrderPermission ourInstance = new OrderPermission();
+
+    public static OrderPermission getInstance() {
+        return ourInstance;
+    }
+
     private static EnumSet[][] TABLE;
     /* 静态块，初始化数据 */
     {
@@ -30,9 +36,6 @@ public class OrderPermission {
                 {
                         /* 负责人, 待审批 */
                         EnumSet.of(ORDER_PREVIEW, ORDER_EDIT, ORDER_COPY, ORDER_DELETE),
-
-                        /* 负责人, 审批中 */
-                        EnumSet.of(ORDER_PREVIEW, ORDER_COPY),
                         /* 负责人, 未通过 */
                         EnumSet.of(ORDER_PREVIEW, ORDER_EDIT, ORDER_COPY, ORDER_DELETE),
                         /* 负责人, 进行中 */
@@ -44,13 +47,17 @@ public class OrderPermission {
                                 ORDER_WORKSHEET_ADD, ORDER_TERMINATE, ORDER_RESPONSIBLE_PERSON_CHANGE),
                         /* 负责人, 意外终止 */
                         EnumSet.of(ORDER_PREVIEW, ORDER_COPY, ORDER_DELETE),
+
+                        /*  不明状态 */
+                        EnumSet.of(ORDER_PREVIEW),
+
+                        /* 负责人, 审批中 */
+                        EnumSet.of(ORDER_PREVIEW, ORDER_COPY),
                 },
                 {
                         /* 团队, 待审批 */
                         EnumSet.of(ORDER_PREVIEW),
 
-                        /* 团队, 审批中 */
-                        EnumSet.of(ORDER_PREVIEW),
                         /* 团队, 未通过 */
                         EnumSet.of(ORDER_PREVIEW),
                         /* 团队, 进行中 */
@@ -64,13 +71,17 @@ public class OrderPermission {
                         /* 团队, 意外终止 */
                         EnumSet.of(ORDER_PREVIEW,
                                 ORDER_WORKSHEET_ADD),
+
+                        /*  不明状态 */
+                        EnumSet.of(ORDER_PREVIEW),
+
+                        /* 团队, 审批中 */
+                        EnumSet.of(ORDER_PREVIEW),
                 },
                 {
                         /* 业务相关, 待审批 */
                         EnumSet.of(ORDER_PREVIEW),
 
-                        /* 业务相关, 审批中 */
-                        EnumSet.of(ORDER_PREVIEW),
                         /* 业务相关, 未通过 */
                         EnumSet.of(ORDER_PREVIEW),
                         /* 业务相关, 进行中 */
@@ -79,13 +90,19 @@ public class OrderPermission {
                         EnumSet.of(ORDER_PREVIEW),
                         /* 业务相关, 意外终止 */
                         EnumSet.of(ORDER_PREVIEW),
+
+                        /*  不明状态 */
+                        EnumSet.of(ORDER_PREVIEW),
+
+                        /* 业务相关, 审批中 */
+                        EnumSet.of(ORDER_PREVIEW),
                 }
         };
         TABLE = table;
     }
 
 
-    public static boolean hasOrderAuthority(int relationState, int state, OrderAction action) {
+    public boolean hasOrderAuthority(int relationState, int state, OrderAction action) {
         /* 功能模块关闭 */
         if (!PermissionManager.getInstance().hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
             return false;
@@ -99,7 +116,7 @@ public class OrderPermission {
         }
 
         /* 订单状态不明 */
-        if (state < OrderState.NONE.ordinal() || state > OrderState.ORDER_TERMINATED.ordinal()) { //
+        if (state < 1 || state > 7) { //
             return false;
         }
 
@@ -112,16 +129,16 @@ public class OrderPermission {
         return false;
     }
 
-    public static OrderAuthority getOrderAuthorityLevel(int relationState) {
+    public  OrderAuthority getOrderAuthorityLevel(int relationState) {
         OrderAuthority level;
         switch(relationState) {
-            case Customer.RelationResponsible:
+            case OrderDetail.RelationResponsible:
                 level = OrderAuthority.RESPONSIBLE_PERSON_LEVEL;
                 break;
-            case Customer.RelationParticipated:
+            case OrderDetail.RelationTeam:
                 level = OrderAuthority.TEAM_LEVEL;
                 break;
-            case Customer.RelationInvolved:
+            case OrderDetail.RelationInvolved:
                 level = OrderAuthority.INVOLVED_VISITOR_LEVEL;
                 break;
             default:
