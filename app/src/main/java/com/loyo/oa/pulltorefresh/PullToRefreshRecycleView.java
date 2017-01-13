@@ -48,11 +48,12 @@ public class PullToRefreshRecycleView extends PullToRefreshBase<RecyclerView>{
     //3 是否滑动到底部
     @Override
     protected boolean isReadyForPullEnd() {
-        View view = getRefreshableView().getChildAt(getRefreshableView().getChildCount() - 1);
-        if (null != view) {
-            return getRefreshableView().getBottom() >= view.getBottom();
-        }
-        return false;
+//        View view = getRefreshableView().getChildAt(getRefreshableView().getChildCount() - 1);
+//        if (null != view) {
+//            return getRefreshableView().getBottom() >= view.getBottom();
+//        }
+//        return false;
+        return !getRefreshableView().canScrollVertically(1);
     }
 
     //重写4个方法
