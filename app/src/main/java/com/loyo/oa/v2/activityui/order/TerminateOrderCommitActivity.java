@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.common.utils.LoyoUIThread;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.order.bean.ProcessItem;
+import com.loyo.oa.v2.activityui.wfinstance.bean.WfTemplate;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -20,6 +20,8 @@ import com.loyo.oa.v2.tool.BaseActivity;
 
 import java.util.HashMap;
 
+import static com.loyo.oa.v2.activityui.order.TerminateOrderProcessListActivity.KEY_SELECTED_PROCESS;
+
 /**
  * Created by EthanGong on 2017/1/10.
  */
@@ -27,13 +29,15 @@ import java.util.HashMap;
 public class TerminateOrderCommitActivity extends BaseActivity {
 
     private final static int REQUEST_PROCESS_CODE = 100;
+    public final static String KEY_ORDER_ID = "com.loyo.TerminateOrderCommitActivity.KEY_ORDER_ID";
 
     private LinearLayout ll_back;
     private LinearLayout ll_process;
     private TextView tv_process;
     private Button commitButton;
     private EditText editText;
-    private ProcessItem selectedProcess;
+    private WfTemplate selectedProcess;
+    private String orderId;
 
     private View.OnClickListener onClickListener = new View.OnClickListener(){
 
@@ -52,7 +56,7 @@ public class TerminateOrderCommitActivity extends BaseActivity {
                 {
                     Bundle mBundle = new Bundle();
                     if (selectedProcess != null) {
-                        mBundle.putSerializable(TerminateOrderProcessListActivity.KEY_SELECTED_PROCESS,
+                        mBundle.putSerializable(KEY_SELECTED_PROCESS,
                                 selectedProcess);
                     }
                     app.startActivityForResult(TerminateOrderCommitActivity.this,
@@ -76,6 +80,11 @@ public class TerminateOrderCommitActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terminate_order_commit);
         setupUI();
+        retrieveData();
+    }
+
+    private void retrieveData() {
+        orderId = (String)getIntent().getSerializableExtra(KEY_ORDER_ID);
     }
 
     private void setupUI() {
@@ -102,9 +111,9 @@ public class TerminateOrderCommitActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data != null
                 && requestCode == REQUEST_PROCESS_CODE) {
-            ProcessItem item = (ProcessItem)data.getSerializableExtra(
-                    TerminateOrderProcessListActivity.KEY_SELECTED_PROCESS);
-            tv_process.setText(item.name);
+            WfTemplate item = (WfTemplate)data.getSerializableExtra(
+                    KEY_SELECTED_PROCESS);
+            tv_process.setText(item.getTitle());
             selectedProcess = item;
         }
     }
@@ -122,8 +131,9 @@ public class TerminateOrderCommitActivity extends BaseActivity {
         String reason = editText.getText().toString();
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("processId", selectedProcess.id);
-        map.put("reason", reason);
+        map.put("bizFormId", selectedProcess.getBizformId());
+        map.put("wfTplId", selectedProcess.getId());
+        map.put("endReason", reason);
 
         if (true/*test*/) {
             finishWithPopAnimation();
@@ -131,7 +141,7 @@ public class TerminateOrderCommitActivity extends BaseActivity {
         }
 
         showCommitLoading();
-        OrderService.terminationOrderWithProcess("", map)
+        OrderService.terminationOrderWithProcess(orderId, map)
                 .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
                     @Override
                     public void onNext(Object o) {

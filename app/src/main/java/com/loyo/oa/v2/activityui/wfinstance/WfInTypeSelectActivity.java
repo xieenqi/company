@@ -132,10 +132,11 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
                         mBundle.putSerializable("bizForm", bizForm);
                         mBundle.putString("projectTitle", projectTitle);
                         mBundle.putString("projectId", projectId);
-                        app.startActivityForResult(WfInTypeSelectActivity.this, ProcessSelectActivity.class, MainApp.ENTER_TYPE_RIGHT, 0, mBundle);
+                        app.startActivityForResult(WfInTypeSelectActivity.this, ProcessSelectActivity.class,
+                                MainApp.ENTER_TYPE_RIGHT, 0, mBundle);
                     }
-                }
-            }
+}
+}
         });
     }
 
