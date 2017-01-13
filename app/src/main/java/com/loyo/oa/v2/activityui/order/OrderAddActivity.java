@@ -166,7 +166,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             tv_title.setText("编辑订单");
-            editData();
+            getAddDynamic();
         } else if (fromPage == OrderDetailActivity.ORDER_ADD) {
             tv_title.setText("新建订单");
             getAddDynamic();
@@ -273,7 +273,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                         mCusList = contactLeftExtrasArrayList;
                         bindExtraView(contactLeftExtrasArrayList);
                         if (fromPage == OrderDetailActivity.ORDER_COPY && orderId != null) {
-                            getOrderData();
+                            getOrderData(orderId);
+                        }
+                        else if (fromPage == OrderDetailActivity.ORDER_EDIT) {
+                            getOrderData(mOrderDetail.id);
                         }
                     }
                 });
@@ -282,11 +285,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     /**
      * 获取订单详情
      */
-    private void getOrderData() {
+    private void getOrderData(String id) {
         showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("isCopy", true);
-        OrderService.getSaleDetails(orderId, map)
+        OrderService.getSaleDetails(id, map)
                 .subscribe(new DefaultLoyoSubscriber<OrderDetail>(hud) {
                     @Override
                     public void onError(Throwable e) {
@@ -297,7 +300,12 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                     @Override
                     public void onNext(OrderDetail detail) {
                         mOrderDetail = detail;
-                        buildCopyData();
+                        if (fromPage == OrderDetailActivity.ORDER_COPY && orderId != null) {
+                            buildCopyData();
+                        }
+                        else if (fromPage == OrderDetailActivity.ORDER_EDIT) {
+                            editData();
+                        }
                     }
                 });
     }
