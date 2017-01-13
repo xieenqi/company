@@ -12,6 +12,9 @@ import java.util.ArrayList;
  */
 public class OrderDetail implements Serializable {
 
+    public boolean wfSwitch;
+    public int relationState;
+
     public String attachmentUUId;
     public String id;
     public String companyId;

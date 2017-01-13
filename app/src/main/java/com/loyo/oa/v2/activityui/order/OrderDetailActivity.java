@@ -412,7 +412,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 }
             });
 
-        if (isStop)
+        if (true/*isStop*/)
             dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
@@ -470,8 +470,9 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
 
     private void terminationOrder() {
 
-        if (true/* TODO: config */) {
+        if (mData.wfSwitch) {
             Bundle mBundle = new Bundle();
+            mBundle.putString(TerminateOrderCommitActivity.KEY_ORDER_ID, mData.id);
             app.startActivityForResult(OrderDetailActivity.this, TerminateOrderCommitActivity.class,
                     MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
         }
