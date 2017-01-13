@@ -72,7 +72,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById
     ListView_inScrollView listView_workflowNodes;
     @ViewById
-    TextView tv_lastowrk, tv_attachment_count, tv_wfnodes_title;
+    TextView tv_lastowrk, tv_attachment_count, tv_wfnodes_title, tv_task_title;
     @ViewById
     TextView tv_memo;
     @ViewById
@@ -187,44 +187,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
             finish();
             return;
         }
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
-//            @Override
-//            public void success(final WfInstance wfInstance_current, final Response response) {
-//                HttpErrorCheck.checkResponse("审批详情返回的数据：", response);
-//                mWfInstance = wfInstance_current;
-//                Log.i("MSG_ATTACHMENT","date"+mWfInstance.attachments);
-//                if (null != wfInstance_current && null != wfInstance_current.workflowNodes) {
-//                    lstData_WfNodes.clear();
-//                    lstData_WfNodes.addAll(wfInstance_current.workflowNodes);
-//                }
-//                /**
-//                 * 赢单审批
-//                 */
-//                if (wfInstance_current==null || wfInstance_current.bizForm == null)
-//                {
-//                    return;
-//                }
-//
-//                if (300 == wfInstance_current.bizForm.bizCode) {
-//                    wfData(wfInstance_current);
-//                } else if (400 == wfInstance_current.bizForm.bizCode) {//订单审批
-//                    orderData();
-//                } else if (500 == wfInstance_current.bizForm.bizCode) {//回款审批
-//                    paymentData();
-//                } else {
-//                    initData_WorkflowValues();
-//                }
-//                updateUI();
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error,ll_loading);
-////                finish();
-//            }
-//        });
-
         WfinstanceService.getWfInstance(wfInstanceId).subscribe(new DefaultLoyoSubscriber<WfInstance>(ll_loading) {
 
             @Override
@@ -255,8 +217,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     wfData(wfInstance_current);
                 } else if (400 == wfInstance_current.bizForm.bizCode) {//订单审批
                     orderData();
+                    ll_customer.setVisibility(View.GONE);
                 } else if (500 == wfInstance_current.bizForm.bizCode) {//回款审批
                     paymentData();
+                    ll_customer.setVisibility(View.GONE);
                 } else {
                     initData_WorkflowValues();
                 }
@@ -367,7 +331,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         addOrderField("结束时间：", DateTool.getDateTimeFriendly(order.endAt));
         if (null != order.extensionDatas && order.extensionDatas.size() > 0) {
             for (ContactLeftExtras ele : order.extensionDatas) {
-                addOrderField(ele.label + "：" , ele.val);
+                addOrderField(ele.label + "：" , ele.getFormatValue());
             }
         }
         addOrderField("备注：" , order.remark);
@@ -421,7 +385,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
         List<String> paymentList = new ArrayList<>();
         paymentList.add("对应订单：" + payment.orderTitle);
         paymentList.add("对应客户：" + payment.customerName);
-//        paymentList.add("回款时间：" + DateTool.timet(payment.receivedAt + "", "yyyy.MM.dd"));
         paymentList.add("回款时间：" + com.loyo.oa.common.utils.DateTool.getDateFriendly(payment.receivedAt));
         paymentList.add("回款金额：" + "￥" + payment.receivedMoney);
         paymentList.add("开票金额：" + "￥" + payment.billingMoney);
@@ -521,7 +484,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             e.printStackTrace();
         }
         if (mWfInstance.creator != null) {
-// todo:            tv_title_creator.setText(mWfInstance.title);
+            tv_title_creator.setText(mWfInstance.title);
 
             if (null != mWfInstance.creator.shortPosition) {
                 tv_title_role.setText(mWfInstance.creator.shortPosition.getName());

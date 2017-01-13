@@ -478,11 +478,9 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onClick(final View v) {
-        v.setOnClickListener(new NoDoubleClickListener(4000) {
+        v.setOnClickListener(new NoDoubleClickListener(5000) {
             @Override
             public void onNoDoubleClick(View v) {
-
-
                 switch (v.getId()) {
 
             /*返回*/
