@@ -115,7 +115,7 @@ public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity imple
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
-                returnData(position - 1);
+                returnData(position - 2);
             }
         });
 
