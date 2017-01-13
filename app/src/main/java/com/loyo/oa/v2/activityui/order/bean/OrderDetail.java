@@ -55,8 +55,5 @@ public class OrderDetail implements Serializable {
     public ArrayList<OrderWorksheetListModel> reWorkSheet;
     public String wfName;
     public String directorId;//负责人id
-
-
-
-
+    public String endReason;
 }
