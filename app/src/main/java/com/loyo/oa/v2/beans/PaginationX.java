@@ -19,6 +19,7 @@ import java.util.ArrayList;
  * @param <T>
  */
 public class PaginationX<T> implements Serializable {
+    //一下字段是model
     public int pageIndex; //当前已经加载了数据的页码
     public int pageSize; //分页大小
     public int totalRecords; //全部记录总数
@@ -43,6 +44,15 @@ public class PaginationX<T> implements Serializable {
      */
     public void setFirstPage() {
         pageIndex = 0;
+    }
+
+    /**
+     * 刷新，或者重新加载数据的时候，需要把列表返回top
+     * 也就是，加载的是第一页，就返回top
+     * @return
+     */
+    public boolean isNeedToBackTop(){
+        return 1==pageIndex;
     }
 
     /**

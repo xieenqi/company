@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -48,14 +49,13 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
     private EditText edt_search;
     private ImageView iv_clean;
     private PullToRefreshListView expandableListView_search;
-    private ArrayList<ClueListItem> listData = new ArrayList<>();
     private CommonSearchAdapter adapter;
     private Bundle mBundle;
     private LayoutInflater mInflater;
+    private PaginationX<ClueListItem> mPaginationX=new PaginationX<>();
 
     private ClueType type;
-    private int page = 1;
-    private boolean isPullDown = true, isSelect, isResult;//是否加载第一页数据供选择  isResult是否设置返回值
+    private boolean  isSelect, isResult;//是否加载第一页数据供选择  isResult是否设置返回值
     private Intent mIntent;
 
 
@@ -145,11 +145,11 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 if (!isSelect) {//查看详情
                     mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
-                    mIntent.putExtra(ExtraAndResult.EXTRA_ID, listData.get(position - 1).id);
+                    mIntent.putExtra(ExtraAndResult.EXTRA_ID, mPaginationX.getRecords().get(position - 1).id);
                     startActivity(mIntent);
                 } else {//选择线索
                     Intent intent = new Intent();
-                    intent.putExtra(ClueListItem.class.getName(), listData.get(position - 1));
+                    intent.putExtra(ClueListItem.class.getName(), mPaginationX.getRecords().get(position - 1));
                     intent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
                     intent.setClass(ClueSearchActivity.this, FollowAddActivity.class);
                     if (isResult) {
@@ -180,8 +180,8 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
      */
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 15);
+        map.put("pageIndex", mPaginationX.getShouldLoadPageIndex());
+        map.put("pageSize", mPaginationX.getPageSize());
         map.put("keyword", strSearch);
 
         //新的网络模块
@@ -193,83 +193,42 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
     }
 
     //订阅者，处理网络请求事件
-    private DefaultLoyoSubscriber<ClueList> getDefaultLoyoSubscriber(){
-        return new DefaultLoyoSubscriber<ClueList>() {
+    private DefaultLoyoSubscriber<PaginationX<ClueListItem>> getDefaultLoyoSubscriber(){
+        return new DefaultLoyoSubscriber<PaginationX<ClueListItem>>() {
             @Override
             public void onError(Throwable e) {
-             /* 重写父类方法，不调用super */
+                 /* 重写父类方法，不调用super */
                 @LoyoErrorChecker.CheckType
-                int type = page != 1  ?
-                        LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                int type = mPaginationX.isEnpty()  ?LoyoErrorChecker.LOADING_LAYOUT : LoyoErrorChecker.TOAST;
                 LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                 expandableListView_search.onRefreshComplete();
             }
-
             @Override
-            public void onNext(ClueList clueList) {
+            public void onNext(PaginationX<ClueListItem> clueListItemPaginationX) {
                 expandableListView_search.onRefreshComplete();
                 ll_loading.setStatus(LoadingLayout.Success);
-                try {
-                    if (!isPullDown) {
-                        if (clueList.data.records == null)
-                            Toast("没有更多的数据了");
-                        else
-                            listData.addAll(clueList.data.records);
-                    } else {
-                        if (clueList.data.records == null)
-                            ll_loading.setStatus(LoadingLayout.Empty);
-                        else
-                            listData = clueList.data.records;
-                    }
-                    adapter.setAdapter();
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-
+                mPaginationX.loadRecords(clueListItemPaginationX);
+                if(mPaginationX.isEnpty()){
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                }
+                adapter.setAdapter();
+                if(mPaginationX.isNeedToBackTop()){
+                    expandableListView_search.getRefreshableView().setSelection(0);
                 }
             }
         };
     }
 
 
-//    @Override
-//    public void success(ClueList clueList, Response response) {
-//        expandableListView_search.onRefreshComplete();
-//        HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
-//        try {
-//            if (!isPullDown) {
-//                if (clueList.data.records == null)
-//                    Toast("没有更多的数据了");
-//                listData.addAll(clueList.data.records);
-//            } else {
-//                if (clueList.data.records == null)
-//                    ll_loading.setStatus(LoadingLayout.Empty);
-//                listData = clueList.data.records;
-//            }
-//            adapter.setAdapter();
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//
-//        }
-//    }
-//
-//    @Override
-//    public void failure(RetrofitError error) {
-//        expandableListView_search.onRefreshComplete();
-//        HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
-//    }
-
-
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = true;
-        page = 1;
+        mPaginationX.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = false;
-        page++;
+
         getData();
     }
 
@@ -286,7 +245,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
 
         @Override
         public int getCount() {
-            return listData == null ? 0 : listData.size();
+            return mPaginationX.getTotalRecords();
         }
 
         @Override
@@ -301,7 +260,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
 
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
-            ClueListItem clueListItem = listData.get(position);
+            ClueListItem clueListItem = mPaginationX.getRecords().get(position);
             Holder holder = null;
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.item_teamclue, null);

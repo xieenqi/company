@@ -30,6 +30,7 @@ import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.OrganizationManager;
@@ -59,15 +60,12 @@ import retrofit.client.Response;
  */
 public class TeamClueFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
-    private int page = 1;
-    private boolean isPullDown = true;
     private String xPath = "";
     private String userId = "";
     private String field = "";
     private String order = "";
     private String statusKey = "";
-
-    private ArrayList<ClueListItem> listData = new ArrayList<>();
+    private PaginationX<ClueListItem> mPaginationX=new PaginationX<>();
     private LoadingLayout ll_loading;
     private PullToRefreshListView lv_list;
     private TeamClueAdapter adapter;
@@ -106,7 +104,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 intent.putExtra(ExtraAndResult.IS_TEAM, false);
-                intent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */listData.get(position - 1).id);
+                intent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */mPaginationX.getRecords().get(position - 1).id);
                 intent.setClass(getActivity(), ClueDetailActivity.class);
                 startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -116,6 +114,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         adapter = new TeamClueAdapter(getActivity());
         lv_list.setAdapter(adapter);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
+        mPaginationX.setFirstPage();
         getData();
     }
 
@@ -177,8 +176,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.stateCluesTeam);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
-                isPullDown = true;
-                page = 1;
+                mPaginationX.setFirstPage();
                 getData();
             }
         });
@@ -217,89 +215,48 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
      */
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 15);
+        map.put("pageIndex", mPaginationX.getShouldLoadPageIndex());
+        map.put("pageSize", mPaginationX.getPageSize());
         map.put("status", statusKey);
         map.put("field", field);
         map.put("order", order);
         map.put("xpath", xPath);
         map.put("userId", userId);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                create(IClue.class).getTeamCluelist(map, new Callback<ClueList>() {
-//            @Override
-//            public void success(ClueList clueList, Response response) {
-//                lv_list.onRefreshComplete();
-//                HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
-//                if (isPullDown && clueList.data.records == null)
-//                    ll_loading.setStatus(LoadingLayout.Empty);
-//                if (null == clueList.data || clueList.data.records == null) {
-//                    if (isPullDown && listData.size() > 0) {
-//                        listData.clear();
-//                    } else {
-////                        Toast("没有相关数据");
-//                        return;
-//                    }
-//                } else {
-//                    if (isPullDown) {
-//                        listData.clear();
-//                    }
-//                    listData.addAll(clueList.data.records);
-//                }
-//                adapter.addProduct(listData);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                lv_list.onRefreshComplete();
-//                HttpErrorCheck.checkError(error, ll_loading, page == 1 ? true : false);
-//            }
-//        });
 
         ClueService.getTeamClueList(map)
-                .subscribe(new DefaultLoyoSubscriber<ClueList>() {
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<ClueListItem>>() {
                     @Override
                     public void onError(Throwable e) {
-                         /* 重写父类方法，不调用super */
+                       /* 重写父类方法，不调用super */
                         @LoyoErrorChecker.CheckType
-                        int type = page != 1 ?
-                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        int type = mPaginationX.isEnpty() ?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST ;
                         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                     }
 
                     @Override
-                    public void onNext(ClueList clueList) {
+                    public void onNext(PaginationX<ClueListItem> clueList) {
                         lv_list.onRefreshComplete();
                         ll_loading.setStatus(LoadingLayout.Success);
-                        if (isPullDown && clueList.data.records == null)
+                        mPaginationX.loadRecords(clueList);
+                        if(mPaginationX.isEnpty()){
                             ll_loading.setStatus(LoadingLayout.Empty);
-                        if (null == clueList.data || clueList.data.records == null) {
-                            if (isPullDown && listData.size() > 0) {
-                                listData.clear();
-                            } else {
-                                return;
-                            }
-                        } else {
-                            if (isPullDown) {
-                                listData.clear();
-                            }
-                            listData.addAll(clueList.data.records);
                         }
-                        adapter.setData(listData);
+                        adapter.setData(mPaginationX.getRecords());
+                        if(mPaginationX.isNeedToBackTop()){
+                            lv_list.getRefreshableView().setSelection(0);
+                        }
                     }
                 });
     }
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = true;
-        page = 1;
+        mPaginationX.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = false;
-        page++;
         getData();
     }
 
@@ -310,8 +267,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         switch (resultCode) {
             //新建 删除 编辑 转移客户,回调函数
             case ExtraAndResult.REQUEST_CODE:
-                isPullDown = true;
-                page = 1;
+                mPaginationX.setFirstPage();
                 getData();
                 break;
         }

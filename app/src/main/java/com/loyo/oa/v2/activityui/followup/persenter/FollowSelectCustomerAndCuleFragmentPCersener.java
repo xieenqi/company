@@ -113,54 +113,20 @@ public class FollowSelectCustomerAndCuleFragmentPCersener implements FollowSelec
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageClue);
         map.put("pageSize", 15);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
-//            @Override
-//            public void success(ClueList clueList, Response response) {
-//                HttpErrorCheck.checkResponse("我的线索列表：", response, vControl.getLoadingLayout());
-//                ArrayList<ClueListItem> data = clueList.data.records;
-//                if (null == data || data.size() == 0) {
-//                    if (isPullClue) {
-//                        vControl.showMsg("没有更多数据了!");
-//                    } else {
-//                        mCule.clear();
-//                        vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
-//                    }
-//                    vControl.getDataComplete();
-//                } else {
-//                    if (isPullClue) {
-//                        mCule.addAll(data);
-//                    } else {
-//                        mCule.clear();
-//                        mCule = data;
-//                    }
-//                }
-//                vControl.getDataComplete();
-//                vControl.bindClueData(mCule);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                vControl.getDataComplete();
-//                HttpErrorCheck.checkError(error, vControl.getLoadingLayout(), pageCus == 1 ? true : false);
-//            }
-//        });
 
-        //新的网络层
-        ClueService.getMyClueList(map).subscribe(new DefaultLoyoSubscriber<ClueList>() {
+        ClueService.getMyClueList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<ClueListItem>>() {
             @Override
             public void onError(Throwable e) {
                 /* 重写父类方法，不调用super */
                 @LoyoErrorChecker.CheckType
-                int type = pageCus != 1 ?
-                        LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                int type = pageCus != 1 ?LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
                 LoyoErrorChecker.checkLoyoError(e, type, vControl.getLoadingLayout());
             }
 
             @Override
-            public void onNext(ClueList clueList) {
+            public void onNext(PaginationX<ClueListItem> clueList) {
                 vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
-                ArrayList<ClueListItem> data = clueList.data.records;
+                ArrayList<ClueListItem> data = clueList.getRecords();
                 if (null == data || data.size() == 0) {
                     if (isPullClue) {
                         vControl.showMsg("没有更多数据了!");

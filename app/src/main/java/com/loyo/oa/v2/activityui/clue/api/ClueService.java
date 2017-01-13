@@ -5,6 +5,7 @@ import android.util.Log;
 import com.loyo.oa.v2.activityui.clue.model.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
+import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.clue.model.SourcesData;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.application.MainApp;
@@ -24,23 +25,23 @@ import rx.Observable;
 
 public class ClueService {
     //我的销售线索
-    public static Observable<ClueList> getMyClueList(HashMap<String, Object> params) {
+    public static Observable<PaginationX<ClueListItem>> getMyClueList(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IClue.class)
                         .getMyClueList(params)
-                        .compose(RetrofitAdapterFactory.<ClueList>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<PaginationX<ClueListItem>>applySchedulers());
     }
 
     //团队销售线索
-    public static Observable<ClueList> getTeamClueList(HashMap<String, Object> params) {
+    public static Observable<PaginationX<ClueListItem>> getTeamClueList(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IClue.class)
                         .getTeamClueList(params)
-                        .compose(RetrofitAdapterFactory.<ClueList>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<PaginationX<ClueListItem>>applySchedulers());
     }
     // 线索下的 跟进
     public static Observable<PaginationX<ClueFollowGroupModel>> followUp(HashMap<String, Object> params) {

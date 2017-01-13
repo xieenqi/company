@@ -3,12 +3,14 @@ package com.loyo.oa.v2.activityui.clue.api;
 import com.loyo.oa.v2.activityui.clue.model.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
+import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.clue.model.SourcesData;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,13 +33,13 @@ public interface IClue {
      * 我的线索列表
      */
     @GET("/salesleads/mobile")
-    Observable<ClueList> getMyClueList(@QueryMap HashMap<String, Object> map);
+    Observable<BaseResponse<PaginationX<ClueListItem>>> getMyClueList(@QueryMap HashMap<String, Object> map);
 
     /**
      * 团队线索列表
      */
     @GET("/salesleads/mobile/team")
-    Observable<ClueList> getTeamClueList(@QueryMap HashMap<String, Object> map);
+    Observable<BaseResponse<PaginationX<ClueListItem>>> getTeamClueList(@QueryMap HashMap<String, Object> map);
 
     /**
      * 线索下的 跟进
