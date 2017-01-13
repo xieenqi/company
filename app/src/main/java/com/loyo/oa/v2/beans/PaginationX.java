@@ -7,6 +7,17 @@ import com.loyo.oa.v2.application.MainApp;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * 分页实体处理类
+ * 带分页，全部使用本类，自动处理好页码的问题，使用方法如下：
+ * 加载第一页或者初始化的时候，调用＃setFirstPage()
+ * 加载更多不用处理，
+ * 加载的时候，pageIndex使用＃getShouldLoadPageIndex()，pageSize使用：＃getPageSize()
+ * 加载完成以后，调用#loadRecords(data)把新页的数据加进来。
+ * 取用数据使用getRecords()
+ * 判断当前数据为不为空使用：＃isEnpty()
+ * @param <T>
+ */
 public class PaginationX<T> implements Serializable {
     public int pageIndex; //当前已经加载了数据的页码
     public int pageSize; //分页大小
