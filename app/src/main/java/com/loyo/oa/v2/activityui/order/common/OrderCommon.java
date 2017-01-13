@@ -81,6 +81,10 @@ public class OrderCommon {
                     statusText = "--";
                     statusBj = R.drawable.common_lable_gray;
                     break;
+                case 7://审批中
+                    statusText = "审批中";
+                    statusBj = R.drawable.common_lable_blue;
+                    break;
             }
             view.setText(statusText);
             view.setBackgroundResource(statusBj);
