@@ -60,7 +60,8 @@ public class PermissionTool {
             fragment = (Fragment) activityOrFragment;
             context = fragment.getContext();
         } else {
-            throw new UnsupportedOperationException("申请权限必须传入activity或者fragment");
+//            throw new UnsupportedOperationException("申请权限必须传入activity或者fragment");
+            Log.e("权限申请","requestPermission: 申请权限必须传入activity或者fragment");
         }
         int i = 0;
         String[] needRequest = new String[permissions.length];//当权限被拒绝时候,存一下下标,表示不具有哪些权限

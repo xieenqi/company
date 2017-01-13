@@ -46,7 +46,7 @@ public class LauncherActivity extends Activity {
     void initVies() {
 //        setTouchView(NO_SCROLL);
         iv_launcher_adv.postDelayed(advRunner, 1000);//小微企业工作台
-        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
+        new LocationUtilGD(LauncherActivity.this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
                 UMengTools.sendLocationInfo(address, longitude, latitude);
