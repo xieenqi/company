@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -238,7 +239,7 @@ public class MenuFragment extends BaseFragment {
                 /**
                  * 判断sd卡读写权限，检查升级
                  */
-                if(PermissionTool.requestPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE,"需要使用储存权限",REQUEST_WRITE)){
+                if(PermissionTool.requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE,"需要使用储存权限",REQUEST_WRITE)){
                     toUpdate();
                 }
                 break;
@@ -262,6 +263,7 @@ public class MenuFragment extends BaseFragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.i("ttt", "onRequestPermissionsResult: ");
         if(REQUEST_WRITE==requestCode){
             PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
                 @Override
@@ -270,6 +272,7 @@ public class MenuFragment extends BaseFragment {
                 }
                 @Override
                 public void fail() {
+                    Log.i("ttt", "fail: ");
                     Toast("你拒绝了所需权限，不能完成操作");
                 }
             });

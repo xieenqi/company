@@ -98,7 +98,7 @@ public class PermissionTool {
             if (showRationale) {
                 //弹出提示,向用户解释申请许可的原因
                 final Context finalContext = context;
-                new SweetAlertDialog(activity, SweetAlertDialog.NORMAL_TYPE)
+                new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
                         .setTitleText("权限申请")
                         .setContentText(rationale + "\n\n" + "请在”设置”>“应用”>“权限”中配置权限")//解释原因
                         .setCancelText("取消")
@@ -149,6 +149,7 @@ public class PermissionTool {
     public static void requestPermissionsResult(String[] permissions, int[] grantResults, PermissionsResultCallBack callBack) {
         for (int grantResult : grantResults) {
             if (PackageManager.PERMISSION_GRANTED != grantResult) {
+                Log.i("ttttt", "requestPermissionsResult: ");
                 callBack.fail();
                 return;
             }
