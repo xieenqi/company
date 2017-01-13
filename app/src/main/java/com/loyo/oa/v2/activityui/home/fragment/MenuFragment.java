@@ -263,7 +263,6 @@ public class MenuFragment extends BaseFragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.i("ttt", "onRequestPermissionsResult: ");
         if(REQUEST_WRITE==requestCode){
             PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
                 @Override
@@ -272,7 +271,6 @@ public class MenuFragment extends BaseFragment {
                 }
                 @Override
                 public void fail() {
-                    Log.i("ttt", "fail: ");
                     Toast("你拒绝了所需权限，不能完成操作");
                 }
             });

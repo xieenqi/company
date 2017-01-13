@@ -172,7 +172,6 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
      * 绑定回款统计数据
      */
     private void bindPaymentData(HomePaymentModel paymentModel) {
-        Log.i("tttt", "bindPaymentData: 数据绑定");
         int maxViewHeight = 130;//view的柱状图的最大高度
         Double sum = paymentModel.backMoney + paymentModel.backMoneyTarget + paymentModel.planMoney;
         int payment = DensityUtil.dp2px(getActivity(), (float) (maxViewHeight * (paymentModel.backMoney / sum)));
