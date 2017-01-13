@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddEstimateActivity;
 import com.loyo.oa.v2.activityui.order.OrderAttachmentActivity;
@@ -25,6 +26,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 【回款记录】适配器
@@ -97,7 +99,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         }
         int index = position + 1;
         holder.tv_titlenum.setText("回款记录" + index);
-        holder.tv_esttime.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(mEstimateAdd.receivedAt ));
+        holder.tv_esttime.setText(DateTool.getDateFriendly(mEstimateAdd.receivedAt ));
         holder.tv_esttime_price.setText("￥" + mEstimateAdd.receivedMoney);
         holder.tv_price.setText("￥" + mEstimateAdd.billingMoney);
         holder.tv_payee.setText(mEstimateAdd.payeeUser.name);
@@ -128,6 +130,9 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 mBundle = new Bundle();
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                map.put("edit_index", position);
+                mBundle.putSerializable(OrderAddEstimateActivity.KEY_USER_INFO, map);
                 mBundle.putSerializable(ExtraAndResult.RESULT_DATA, mData.get(position));
                 MainApp.getMainApp().startActivityForResult(mActivity,
                         OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, requestPage, mBundle);
@@ -155,7 +160,8 @@ public class OrderEstimateListAdapter extends BaseAdapter {
                 mBundle.putBoolean("isOver", true);
                 mBundle.putString("uuid", mEstimateAdd.attachmentUUId);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
-                MainApp.getMainApp().startActivityForResult(mActivity, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
+                MainApp.getMainApp().startActivityForResult(mActivity, OrderAttachmentActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
             }
         });
 
