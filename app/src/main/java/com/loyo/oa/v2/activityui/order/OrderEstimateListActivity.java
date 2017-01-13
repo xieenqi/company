@@ -23,6 +23,7 @@ import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -180,12 +181,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
         tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");*/
 
         //如果来自详情，则请求回款记录
-        if (fromPage == ORDER_DETAILS) {
-            getPageData();
-            ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
-        }else {
-            ll_loading.setStatus(LoadingLayout.Success);
-        }
+        ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         mAdapter = new OrderEstimateListAdapter(this, capitalReturningList, mHandler, orderId, fromPage, isAdd);
         mAdapter.setOrderStatus(orderStatus);
         lv_listview.setAdapter(mAdapter);
@@ -201,6 +197,9 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
      * 删除订单
      */
     public void deleteData(EstimateAdd item) {
+        if (item == null) {
+            return;
+        }
         showLoading2("");
         OrderService.deletePayEstimate(item.id)
                 .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
@@ -212,6 +211,9 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     }
 
     public void addData(EstimateAdd item) {
+        if (item == null) {
+            return;
+        }
         showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
         map.put("attachmentUUId", item.attachmentUUId);
@@ -235,6 +237,9 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     }
 
     public void editData(EstimateAdd item) {
+        if (item == null) {
+            return;
+        }
         showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
         map.put("attachmentUUId", item.attachmentUUId);
@@ -355,10 +360,27 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
             }
         }
         else {
+            boolean isEdit = data.getBooleanExtra(OrderAddEstimateActivity.RET_IS_DATA_EDITED, false);
+            Serializable userInfo = data.getSerializableExtra(OrderAddEstimateActivity.KEY_USER_INFO);
             mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
-            capitalReturningList.add(mEstimateAdd);
-            hasChangedData = true;
-            reloadList();
+            if (mEstimateAdd != null) {
+                if (isEdit && userInfo != null) {
+                    Integer index = (Integer)((HashMap<String, Object>) userInfo).get("edit_index");
+                    if (index < capitalReturningList.size() && index >= 0) {
+                        capitalReturningList.remove(capitalReturningList.get(index));
+                        capitalReturningList.add(index, mEstimateAdd);
+                        hasChangedData = true;
+                        reloadList();
+                    }
+
+                }
+                else
+                {
+                    capitalReturningList.add(mEstimateAdd);
+                    hasChangedData = true;
+                    reloadList();
+                }
+            }
         }
     }
 }

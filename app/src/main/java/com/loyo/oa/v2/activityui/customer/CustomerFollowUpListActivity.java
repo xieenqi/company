@@ -167,7 +167,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         canAdd = mCustomer != null && mCustomer.state == Customer.NormalCustomer &&
@@ -279,7 +279,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     public void onFollowUpRushEvent(FollowUpRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         onPullDownToRefresh(listView);

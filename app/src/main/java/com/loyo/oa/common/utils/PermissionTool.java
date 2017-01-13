@@ -60,7 +60,8 @@ public class PermissionTool {
             fragment = (Fragment) activityOrFragment;
             context = fragment.getContext();
         } else {
-            throw new UnsupportedOperationException("申请权限必须传入activity或者fragment");
+//            throw new UnsupportedOperationException("申请权限必须传入activity或者fragment");
+            Log.e("权限申请","requestPermission: 申请权限必须传入activity或者fragment");
         }
         int i = 0;
         String[] needRequest = new String[permissions.length];//当权限被拒绝时候,存一下下标,表示不具有哪些权限
@@ -147,10 +148,14 @@ public class PermissionTool {
      * @param callBack
      */
     public static void requestPermissionsResult(String[] permissions, int[] grantResults, PermissionsResultCallBack callBack) {
-        for (int grantResult : grantResults) {
-            if (PackageManager.PERMISSION_GRANTED != grantResult) {
-                callBack.fail();
-                return;
+        int len=permissions.length;
+        for (int i = 0; i < len; i++) {
+            Log.i("tttt", "requestPermissionsResult: permission:"+permissions[i]+",grantResult:"+grantResults[i]+",ok is:"+PackageManager.PERMISSION_GRANTED);
+            if(null!=permissions[i]){
+                if (PackageManager.PERMISSION_GRANTED != grantResults[i]) {
+                    callBack.fail();
+                    return;
+                }
             }
         }
         callBack.success();

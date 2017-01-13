@@ -104,7 +104,12 @@ public enum LoyoBizType {
     //
 
     private int code;
+
     LoyoBizType(int code) {
         this.code = code;
+    }
+
+    public int getCode() {
+        return code;
     }
 }

@@ -21,6 +21,7 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.api.IFeedback;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
@@ -37,6 +38,7 @@ import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -48,6 +50,7 @@ import java.util.Locale;
 public class OrderAddEstimateActivity extends BaseActivity implements View.OnClickListener {
 
     public final static String RET_IS_DATA_EDITED = "com.loyo.OrderAddEstimateActivity.RET_IS_DATA_EDITED";
+    public final static String KEY_USER_INFO = "com.loyo.OrderAddEstimateActivity.KEY_USER_INFO";
 
     private LinearLayout ll_time;        //回款日期
     private LinearLayout ll_priecer;     //收款人
@@ -79,6 +82,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     private EstimateAdd mEstimateAdd;
     private HashMap<String, Object> map;
     private boolean isEdit = false;
+    private Serializable userInfo;
 
     private Handler mHandler = new Handler() {
 
@@ -141,6 +145,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             if (mEstimateAdd != null) {
                 attamentSize = mEstimateAdd.attachmentCount;
             }
+            userInfo = mIntent.getSerializableExtra(KEY_USER_INFO);
         }
 
         if (attamentSize != 0) {
@@ -257,6 +262,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         Intent intent = new Intent();
         intent.putExtra("data", mEstimateAdd);
         intent.putExtra(RET_IS_DATA_EDITED, isEdit);
+        if (userInfo != null) {
+            intent.putExtra(KEY_USER_INFO, userInfo);
+        }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 

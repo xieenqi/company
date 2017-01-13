@@ -8,13 +8,22 @@ import android.widget.LinearLayout;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.LoyoUIThread;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.adapter.TerminateProcessListAdapter;
-import com.loyo.oa.v2.activityui.order.bean.ProcessItem;
+import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
+import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
+import com.loyo.oa.v2.activityui.wfinstance.bean.WfTemplate;
+import com.loyo.oa.v2.activityui.wfinstance.common.WfinstanceBizformConfig;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by EthanGong on 2017/1/10.
@@ -26,7 +35,9 @@ public class TerminateOrderProcessListActivity extends BaseActivity implements P
     private PullToRefreshListView listView;
     private LoadingLayout ll_loading;
     private TerminateProcessListAdapter adapter;
-    private ProcessItem preSelectedItem;
+    private WfTemplate preSelectedItem;
+    private BizForm terminateBizForm;
+    private ArrayList<WfTemplate> templates;
 
     private View.OnClickListener onClickListener = new View.OnClickListener(){
 
@@ -50,6 +61,7 @@ public class TerminateOrderProcessListActivity extends BaseActivity implements P
         setContentView(R.layout.activity_terminate_order_process_list);
         setupUI();
         retrieveData();
+        getPageData();
     }
 
     private void setupUI() {
@@ -59,7 +71,7 @@ public class TerminateOrderProcessListActivity extends BaseActivity implements P
         ll_back.setOnClickListener(onClickListener);
 
         listView = (PullToRefreshListView)findViewById(R.id.lv_list);
-        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        listView.setMode(PullToRefreshBase.Mode.DISABLED);
         listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -82,14 +94,14 @@ public class TerminateOrderProcessListActivity extends BaseActivity implements P
     }
 
     private void retrieveData() {
-        preSelectedItem = (ProcessItem)getIntent().getSerializableExtra(KEY_SELECTED_PROCESS);
+        preSelectedItem = (WfTemplate)getIntent().getSerializableExtra(KEY_SELECTED_PROCESS);
         if (preSelectedItem != null) {
             adapter.setSelectedItem(preSelectedItem);
         }
     }
 
     private void finishWithResult() {
-        ProcessItem item = adapter.getSelectItem();
+        WfTemplate item = adapter.getSelectItem();
         if (item != null) {
             Intent intent = new Intent();
             intent.putExtra(KEY_SELECTED_PROCESS, item);
@@ -104,11 +116,92 @@ public class TerminateOrderProcessListActivity extends BaseActivity implements P
 
     private void getPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
-        getData();
+        getBizForm();
+    }
+
+    private void getBizForm() {
+        ArrayList<BizForm> list = WfinstanceBizformConfig.getBizform(true);
+        boolean needFetch = false;
+        if (list == null || list.size() == 0) {
+            needFetch = true;
+        }
+        BizForm targetForm = null;
+        for (BizForm form : list) {
+            if (form.bizCode == 401) {
+                targetForm = form;
+                break;
+            }
+        }
+        if (targetForm == null) {
+            needFetch = true;
+        }
+
+        if (needFetch) {
+            getBizFormList();
+        }
+        else {
+            terminateBizForm = targetForm;
+            getData();
+        }
+    }
+
+    /**
+     * 获取审批类别列表
+     */
+    private void getBizFormList() {
+        showLoading2("");
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pageIndex", 1);
+        params.put("pageSize", 2000);
+        WfinstanceService.getWfBizForms(params)
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<BizForm>>(hud) {
+                    @Override
+                    public void onNext(PaginationX<BizForm> bizFormPaginationX) {
+                        BizForm targetForm = null;
+                        if (PaginationX.isEmpty(bizFormPaginationX)) {
+                            for (BizForm form : bizFormPaginationX.records) {
+                                if (form.bizCode == 401) {
+                                    targetForm = form;
+                                    break;
+                                }
+                            }
+                        }
+                        if (targetForm == null) {
+                            LoyoToast.error(TerminateOrderProcessListActivity.this, "未配置意外终止审批流程");
+                        }
+                        else {
+                            terminateBizForm = targetForm;
+                            getData();
+                        }
+                    }
+                });
     }
 
     private void getData() {
-        ll_loading.setStatus(LoadingLayout.Success);
+
+//        if (terminateBizForm!=null /*&& !terminateBizForm.isEnable() && null == terminateBizForm .getFields()*/) {
+//            LoyoToast.info(TerminateOrderProcessListActivity.this, "该审批类型没有配置流程，请重新选择!");
+//            ll_loading.setStatus(LoadingLayout.No_Network);
+//            ll_loading.setNoNetworkText("该审批类型没有配置流程，请重新选择!");
+//            return;
+//        }
+
+        WfinstanceService.getWfTemplate(terminateBizForm.getId())
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<WfTemplate>>(ll_loading) {
+
+                    @Override
+                    public void onNext(ArrayList<WfTemplate> bizFormFieldsPaginationX) {
+
+                        templates = bizFormFieldsPaginationX;
+                        if (templates == null || templates.size() == 0) {
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        }
+                        else {
+                            ll_loading.setStatus(LoadingLayout.Success);
+                        }
+                        adapter.setData(templates);
+                    }
+                });
     }
 
     @Override

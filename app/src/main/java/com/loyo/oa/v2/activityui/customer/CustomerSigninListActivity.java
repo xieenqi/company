@@ -153,7 +153,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         tv_title.setVisibility(View.VISIBLE);
@@ -236,7 +236,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     public void onSigninNewRushEvent(SigninRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         onPullDownToRefresh(listView);

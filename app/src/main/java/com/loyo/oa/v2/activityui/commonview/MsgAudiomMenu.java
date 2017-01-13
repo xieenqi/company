@@ -51,6 +51,7 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
     private MsgAudioMenuCallBack callBack;
     private String UUID;
     private InputMethodManager imm;
+    private Object activityOrFragment;
 
     public interface MsgAudioMenuCallBack {
         void sendMsg(EditText editText);
@@ -75,11 +76,12 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
         }
     };
 
-    public MsgAudiomMenu(Context context, MsgAudioMenuCallBack callBack, String UUID) {
+    public MsgAudiomMenu(Context context, MsgAudioMenuCallBack callBack, String UUID,Object activityOrFragment) {
         super(context);
         this.callBack = callBack;
         this.mContext = context;
         this.UUID = UUID;
+        this.activityOrFragment=activityOrFragment;
         this.addView(initView());
     }
 
@@ -132,7 +134,7 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 parent = (LinearLayout) v.getParent().getParent().getParent().getParent().getParent();
-                if (RecordUtils.permissionRecord()) {
+                if (RecordUtils.permissionRecord(activityOrFragment)) {
                     if ((boolean) v.getTag()) {
                         mfmodule.setIsRecording(false);
                         v.setTag(false);
@@ -146,8 +148,6 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
                         layout_voicemenu.setVisibility(View.GONE);
                         hideInputKeyboard(edit_comment);
                     }
-                } else {
-                    Global.Toast("你没有配置录音或者储存权限");
                 }
 
             }

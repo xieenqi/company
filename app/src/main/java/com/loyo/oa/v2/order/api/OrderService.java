@@ -7,7 +7,6 @@ import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
-import com.loyo.oa.v2.activityui.order.bean.ProcessItem;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.tool.Config_project;
@@ -175,26 +174,6 @@ public class OrderService {
     }
 
     public static
-    Observable<Boolean> getTerminateProcessConfig() {
-        return
-                RetrofitAdapterFactory.getInstance()
-                        .build(Config_project.API_URL_CUSTOMER())
-                        .create(IOrder.class)
-                        .getTerminateProcessConfig()
-                        .compose(RetrofitAdapterFactory.<Boolean>applySchedulers());
-    }
-
-    public static
-    Observable<ArrayList<ProcessItem>> getTerminateProcessList() {
-        return
-                RetrofitAdapterFactory.getInstance()
-                        .build(Config_project.API_URL_CUSTOMER())
-                        .create(IOrder.class)
-                        .getTerminateProcessList()
-                        .compose(RetrofitAdapterFactory.<ArrayList<ProcessItem>>applySchedulers());
-    }
-
-    public static
     Observable<Object> terminationOrderWithProcess(@Path("id") String id, HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
@@ -202,6 +181,16 @@ public class OrderService {
                         .create(IOrder.class)
                         .terminationOrderWithProcess(id, map)
                         .compose(RetrofitAdapterFactory.<Object>compatApplySchedulers());
+    }
+
+    public static
+    Observable<Object> updateOwner(HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(Config_project.API_URL_CUSTOMER())
+                        .create(IOrder.class)
+                        .updateOwner(map)
+                        .compose(RetrofitAdapterFactory.<Object>applySchedulers());
     }
 
 }

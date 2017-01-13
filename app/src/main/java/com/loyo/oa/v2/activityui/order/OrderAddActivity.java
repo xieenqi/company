@@ -49,6 +49,8 @@ import java.util.HashMap;
  */
 public class OrderAddActivity extends BaseActivity implements View.OnClickListener {
 
+    public final static String KEY_CAPITAL_RETURNING_PLAN_EDIT = "com.loyo.OrderAddActivity.KEY_CAPITAL_RETURNING_PLAN_EDIT";
+    public final static String KEY_CAPITAL_RETURNING_RECORD_EDIT = "com.loyo.OrderAddActivity.KEY_CAPITAL_RETURNING_RECORD_EDIT";
     private TextView tv_title;
     private ImageView iv_submit;
     private LinearLayout ll_back;
@@ -85,6 +87,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private OrderDetail mOrderDetail;
     private String orderId;
     private OrderAddforExtraData orderAddforExtra;
+    private boolean capitalReturningPlanEdit = true;
+    private boolean capitalReturningRecordEdit = true;
 
     private Handler mHandler = new Handler() {
 
@@ -123,6 +127,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //客户创建订单
             customerId = mIntent.getStringExtra(ExtraAndResult.EXTRA_ID);
             customerName = mIntent.getStringExtra(ExtraAndResult.EXTRA_NAME);
+            capitalReturningPlanEdit = mIntent.getBooleanExtra(KEY_CAPITAL_RETURNING_PLAN_EDIT, true);
+            capitalReturningRecordEdit = mIntent.getBooleanExtra(KEY_CAPITAL_RETURNING_RECORD_EDIT, true);
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -168,7 +174,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         } else if (fromPage == OrderDetailActivity.ORDER_CREATE) {
             tv_title.setText("生成订单");
             getAddDynamic();
-            createData();
         }
         else if (fromPage == OrderDetailActivity.ORDER_COPY) {
             tv_title.setText("复制订单");
@@ -200,19 +205,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         et_remake.setText(mOrderDetail.remark);
         bindExtraView(mCusList);
 
-    }
-
-    /**
-     * 生成订单
-     */
-    void createData() {
-        uuid = mOrderDetail.attachmentUUId;
-        customerId = mOrderDetail.customerId;
-        customerName = mOrderDetail.customerName;
-        productData = mOrderDetail.proInfo;
-        et_money.setText(mOrderDetail.dealMoney + "");
-        tv_customer.setText(mOrderDetail.customerName);
-        tv_stage.setText(getIntentionProductName());
     }
 
     /**
@@ -311,10 +303,37 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     private void buildCopyData() {
         uuid = StringUtil.getUUID();
+        if (mOrderDetail.proInfo == null) {
+            mOrderDetail.proInfo = new ArrayList<>();
+        }
+
+
+        if (mOrderDetail.paymentRecords == null) {
+            mOrderDetail.paymentRecords = new ArrayList<>();
+        }
+
+        for (EstimateAdd capitalReturning : mOrderDetail.paymentRecords) {
+            capitalReturning.attachmentCount = 0;
+            capitalReturning.attachmentUUId = StringUtil.getUUID();
+            capitalReturning.status = 0;
+            capitalReturning.id = null;
+            capitalReturning.orderId = null;
+        }
+
+        if (mOrderDetail.reWorkSheet == null) {
+            mOrderDetail.reWorkSheet = new ArrayList<>();
+        }
+
+        for (OrderWorksheetListModel worksheetListModel : mOrderDetail.reWorkSheet) {
+            worksheetListModel.uuid = StringUtil.getUUID();
+        }
+
+        mOrderDetail.attachmentUUId = uuid;
         customerId = mOrderDetail.customerId;
         customerName = mOrderDetail.customerName;
         productData = mOrderDetail.proInfo;
         estimateData = mOrderDetail.paymentRecords;
+        reWorkSheet = mOrderDetail.reWorkSheet;
         mCusList = mOrderDetail.extensionDatas;
 
         et_name.setText(mOrderDetail.title);
@@ -325,6 +344,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         et_money.setText(mOrderDetail.dealMoney + "");
         et_ordernum.setText(mOrderDetail.orderNum);
         et_remake.setText(mOrderDetail.remark);
+
         bindExtraView(mCusList);
     }
 
@@ -486,7 +506,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                     mBundle.putSerializable("data", estimateData);
                 }
                 mBundle.putString("orderId", orderId);
-                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, capitalReturningRecordEdit);
                 app.startActivityForResult(this, OrderEstimateListActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
@@ -597,8 +617,14 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //选择回款
             case ExtraAndResult.REQUEST_CODE_SOURCE:
-                estimateData = (ArrayList<EstimateAdd>) data.getSerializableExtra("data");
-                tv_estimate.setText(getEstimateName());
+                if (data == null) {
+                    return;
+                }
+                ArrayList<EstimateAdd> deals = (ArrayList<EstimateAdd>) data.getSerializableExtra("data");
+                if (deals != null) {
+                    estimateData = deals;
+                    tv_estimate.setText(getEstimateName());
+                }
                 break;
 
             //附件回调

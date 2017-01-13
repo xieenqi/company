@@ -171,7 +171,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
         if (msgAudiomMenu == null) {
-            msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+            msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
             layout_bottom_menu.addView(msgAudiomMenu);
         }
 
@@ -276,7 +276,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
     public void onSigninNewRushEvent(SigninRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         listView.getRefreshableView().setSelection(0);
