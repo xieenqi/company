@@ -34,5 +34,20 @@ public class HttpJpushNotification implements Serializable {
         }
     }
 
+    public static final int JPUSH_TASK = 1;
+    public static final int JPUSH_WORK_REPORT = 2;
+    public static final int JPUSH_WFINSTANCE = 3;
+    public static final int JPUSH_PROJECT = 4;
+    public static final int JPUSH_BULLETIN = 5;
+    public static final int JPUSH_CUSTOMER = 6;
+    public static final int JPUSH_ORDER = 16;
+    public static final int JPUSH_WORKSHEET = 18;
+    public static final int JPUSH_WORKSHEET_EVENT = 19;
+    public static final int JPUSH_SIGNIN = 22;
+    public static final int JPUSH_SIGNIN_COMMENT = 24;
+    public static final int JPUSH_FOLLOWUP = 23;
+    public static final int JPUSH_FOLLOWUP_COMMENT = 25;
+
+
 }
 //{"operationType":"discuss","buzzId":"56a1c8a6526f152ed6000001","buzzType":1,"uuid":"e891057a-4b88-4b11-87dd-cfa99ed1a0f1"}

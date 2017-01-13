@@ -6,7 +6,7 @@ import java.lang.reflect.Type
 /** 推送的biztype
  * Created by xeq on 17/1/6.
  */
-enum class PushBizType constructor(public var type: Int) {
+enum class PushBizType constructor(public val type: Int) {
     PUSH_TASKS(1);
 
     class PushBizTypeSerializer : JsonSerializer<PushBizType>, JsonDeserializer<PushBizType> {

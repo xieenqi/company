@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.widget.Toast;
+
 import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
@@ -82,24 +83,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         CustomerTageConfig.getTage();
         WfinstanceBizformConfig.getBizform();
 
-        //兼容android6.0使用新的方式申请  后台定位的 不需要弹出提示框 16-12-30
-//        PermissionTool.requestPermission(this,new String[]{"android.permission.ACCESS_FINE_LOCATION"},"请打开定位服务，允许快启使用你的位置",1);
     }
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        if (1==requestCode){
-//            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
-//                @Override
-//                public void success() {
-//                }
-//
-//                @Override
-//                public void fail() {
-//                    Toast("没有定位权限,某些功能模块将不能使用!");
-//                }
-//            });
-//        }
-//    }
 
     @Override
     protected void onStart() {
@@ -246,28 +230,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
     protected void onNetworkChanged(boolean available) {
         super.onNetworkChanged(available);
     }
-//已经把本方法放到onCreate模块中,避免一直提示,只是在打开软件的时候提示权限申请
-//    /**
-//     * 检查定位权限是否打开
-//     */
-//    private void permissionLocation() {
-////        if (PackageManager.PERMISSION_GRANTED ==
-////                getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
-////        } else {
-////            ActivityCompat.requestPermissions(MainHomeActivity.this,
-////                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-////                    1);
-////        }
-////        if (PackageManager.PERMISSION_GRANTED ==
-////                getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
-////        } else {
-////            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
-////                    1);
-////        }
-//        //兼容android6.0使用新的方式申请
-//        PermissionTool.requestPermission(this,new String[]{"android.permission.ACCESS_FINE_LOCATION"},"某些功能模块,比如考勤管理需要地位权限.",1);
-//    }
-
 
     /**
      * 激光推送要跳转 的 页面
@@ -287,36 +249,36 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 return;
             }
             switch (MainApp.jpushData.buzzType) {
-                case 1:
+                case HttpJpushNotification.JPUSH_TASK:
                     intent.setClass(MainHomeActivity.this, TasksInfoActivity_.class);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 2:
+                case HttpJpushNotification.JPUSH_WORK_REPORT:
                     intent.setClass(MainHomeActivity.this, WorkReportsInfoActivity_.class);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 3:
+                case HttpJpushNotification.JPUSH_WFINSTANCE:
                     intent.setClass(MainHomeActivity.this, WfinstanceInfoActivity_.class);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 4:
+                case HttpJpushNotification.JPUSH_PROJECT:
                     intent.setClass(MainHomeActivity.this, ProjectInfoActivity_.class);
                     intent.putExtra("projectId", MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 5://通知公告
+                case HttpJpushNotification.JPUSH_BULLETIN://通知公告
                     intent.setClass(MainHomeActivity.this, BulletinManagerActivity_.class);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 6://客户详情
+                case HttpJpushNotification.JPUSH_CUSTOMER://客户详情
                     if (MainApp.jpushData.jumpType == HttpJpushNotification.JumpType.NUONE.getValue()) {
                         intent.setClass(MainHomeActivity.this, CustomerDetailInfoActivity_.class);
                         intent.putExtra("Id", MainApp.jpushData.buzzId);
@@ -329,29 +291,29 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     }
                     MainApp.jpushData = null;
                     break;
-                case 16://订单详情
+                case HttpJpushNotification.JPUSH_ORDER://订单详情
                     intent.setClass(MainHomeActivity.this, OrderDetailActivity.class);
 //                  mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 18://工单 事件相关都跳转到 工单详情
-                case 19:
+                case HttpJpushNotification.JPUSH_WORKSHEET://工单 事件相关都跳转到 工单详情
+                case HttpJpushNotification.JPUSH_WORKSHEET_EVENT:
                     intent.setClass(MainHomeActivity.this, WorksheetDetailActivity.class);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 22://拜访的推送
-                case 24://拜访的评论
+                case HttpJpushNotification.JPUSH_SIGNIN://拜访的推送
+                case HttpJpushNotification.JPUSH_SIGNIN_COMMENT://拜访的评论
                     intent.setClass(MainHomeActivity.this, SigninDetailsActivity.class);
                     intent.putExtra("id", MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 23://跟进动态的推送
-                case 25://跟进的评论
+                case HttpJpushNotification.JPUSH_FOLLOWUP://跟进动态的推送
+                case HttpJpushNotification.JPUSH_FOLLOWUP_COMMENT://跟进的评论
                     intent.setClass(MainHomeActivity.this, FollowUpDetailsActivity.class);
                     intent.putExtra("id", MainApp.jpushData.buzzId);
                     startActivity(intent);
