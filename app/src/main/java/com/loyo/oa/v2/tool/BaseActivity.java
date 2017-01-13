@@ -255,7 +255,6 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
