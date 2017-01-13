@@ -491,8 +491,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //对应客户
             case R.id.ll_customer:
+                Bundle b = new Bundle();
+                b.putBoolean(SelfVisibleCustomerPickerActivity.KEY_CAN_RETURN_EMPTY, false);
                 app.startActivityForResult(OrderAddActivity.this, SelfVisibleCustomerPickerActivity.class,
-                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
 
             //购买产品
