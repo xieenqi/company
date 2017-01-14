@@ -65,6 +65,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
 
     public final static String RET_HAS_CHANGED_DATA = "com.loyo.OrderEstimateListActivity.RET_HAS_CHANGED_DATA";
     public final static String KEY_COMMIT_CHANGE = "com.loyo.OrderEstimateListActivity.KEY_COMMIT_CHANGE";
+    public final static String KEY_GET_DATA = "com.loyo.OrderEstimateListActivity.KEY_GET_DATA";
 
     private LinearLayout ll_back;
     private LinearLayout ll_add;
@@ -90,6 +91,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     private int backMoney = 0;
     private double ratePayment = 0.0;
     private int orderStatus;
+    private boolean needFetchData = false;
 
 
     private Handler mHandler = new Handler() {
@@ -131,6 +133,9 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
+        if (needFetchData) {
+            getPageData();
+        }
     }
 
     @Override
@@ -158,6 +163,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
             if (null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")) {
                 capitalReturningList = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
             }
+            needFetchData = mIntent.getBooleanExtra(KEY_GET_DATA, false);
         }
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);

@@ -172,7 +172,12 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
         ArrayList<BizForm> newField = new ArrayList<>();
         for (BizForm ele : field) {
             //TODO 过滤自动生成的审批类型  优化审批重开接口 0921
-            if (ele.isEnable() && ele.bizCode != 300 && ele.bizCode != 400 && ele.bizCode != 500) {
+            if (ele.isEnable()
+                    && ele.bizCode != 300
+                    && ele.bizCode != 400 /* 订单 */
+                    && ele.bizCode != 500
+                    && ele.bizCode != 401 /* 意外终止 */)
+            {
                 newField.add(ele);
             }
         }

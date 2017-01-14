@@ -264,6 +264,9 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 if (mData.paymentRecords != null) {
                     mBundle.putSerializable("data", mData.paymentRecords);
                 }
+                else {
+                    mBundle.putSerializable(OrderEstimateListActivity.KEY_GET_DATA, true);
+                }
                 mBundle.putString("price", tv_money.getText().toString());
                 mBundle.putString("orderId", mData.id);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, capitalReturningRecordCRUD);
