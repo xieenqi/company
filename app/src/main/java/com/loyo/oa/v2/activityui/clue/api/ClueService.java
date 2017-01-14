@@ -5,7 +5,7 @@ import android.util.Log;
 import com.loyo.oa.v2.activityui.clue.model.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
-import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
+import com.loyo.oa.v2.activityui.clue.model.ClueSales; 
 import com.loyo.oa.v2.activityui.clue.model.SourcesData;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.application.MainApp;
@@ -62,14 +62,24 @@ public class ClueService {
                         .compose(RetrofitAdapterFactory.<SourcesData>compatApplySchedulers());
     }
 
+//    // 新建线索 表单传输
+//    public static Observable<ClueDetailWrapper> addClue(HashMap<String, Object> params) {
+//        return
+//                RetrofitAdapterFactory.getInstance()
+//                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+//                        .create(IClue.class)
+//                        .addClue(params)
+//                        .compose(RetrofitAdapterFactory.<ClueDetailWrapper>compatApplySchedulers());
+//    }
+
     // 新建线索 表单传输
-    public static Observable<ClueDetailWrapper> addClue(HashMap<String, Object> params) {
+    public static Observable<ClueSales> addClueNew(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IClue.class)
-                        .addClue(params)
-                        .compose(RetrofitAdapterFactory.<ClueDetailWrapper>compatApplySchedulers());
+                        .addClueNew(params)
+                        .compose(RetrofitAdapterFactory.<ClueSales>applySchedulers());
     }
 
     // 新建线索 表单传输

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
@@ -309,75 +310,80 @@ public class SignInActivity extends BaseActivity
 
     @Override
     public void onClick(final View v) {
-        switch (v.getId()) {
+        v.setOnClickListener(new NoDoubleClickListener(4000) {
+            @Override
+            public void onNoDoubleClick(View v) {
+                switch (v.getId()) {
 
-            case R.id.img_title_left:
-                onBackPressed();
-                break;
+                    case R.id.img_title_left:
+                        onBackPressed();
+                        break;
 
-            case R.id.img_title_right:
-                if (!checkData()) {
-                    return;
-                }
-                if (!isLocation) {
-                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            dismissSweetAlert();
-                            addSignIn();
+                    case R.id.img_title_right:
+                        if (!checkData()) {
+                            return;
                         }
-                    }, new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            isCusPosition = true;
-                            dismissSweetAlert();
-                            addSignIn();
+                        if (!isLocation) {
+                            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    dismissSweetAlert();
+                                    addSignIn();
+                                }
+                            }, new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    isCusPosition = true;
+                                    dismissSweetAlert();
+                                    addSignIn();
+                                }
+                            }, "提示", "该客户无定位信息,是否需要\n将签到地址设置为客户定位?", "不需要", "设为定位");
+                        } else {
+                            showCommitLoading();
+                            if (controller.count() == 0) {
+                                addSignIn();
+                            } else {
+                                controller.startUpload();
+                                controller.notifyCompletionIfNeeded();
+                            }
                         }
-                    }, "提示", "该客户无定位信息,是否需要\n将签到地址设置为客户定位?", "不需要", "设为定位");
-                } else {
-                    showCommitLoading();
-                    if (controller.count() == 0) {
-                        addSignIn();
-                    } else {
-                        controller.startUpload();
-                        controller.notifyCompletionIfNeeded();
-                    }
-                }
-                break;
+                        break;
 
             /*选择客户*/
-            case R.id.layout_customer_name:
-                if (LocationUtilGD.permissionLocation(this)) {
-                    Bundle b = new Bundle();
-                    b.putDouble("lon", loPosition);
-                    b.putDouble("lat", laPosition);
-                    app.startActivityForResult(this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
-                }
-                break;
+                    case R.id.layout_customer_name:
+                        if (LocationUtilGD.permissionLocation(SignInActivity.this)) {
+                            Bundle b = new Bundle();
+                            b.putDouble("lon", loPosition);
+                            b.putDouble("lat", laPosition);
+                            app.startActivityForResult(SignInActivity.this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
+                        }
+                        break;
 
             /*地址更新*/
-            case R.id.tv_reset_address:
-                if (LocationUtilGD.permissionLocation(this)) {
-                    Bundle mBundle = new Bundle();
-                    mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
-                    app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
-                }
-                break;
+                    case R.id.tv_reset_address:
+                        if (LocationUtilGD.permissionLocation(SignInActivity.this)) {
+                            Bundle mBundle = new Bundle();
+                            mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
+                            app.startActivityForResult(SignInActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                        }
+                        break;
 
-            case R.id.ll_contact://选择客户联系人
-                Bundle bContact = new Bundle();
-                bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
-                bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-                app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
-                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
-                break;
-            case R.id.iv_at_delete://清除@的人员
-                ll_at.setVisibility(View.GONE);
-                atDepts.clear();
-                atUserIds.clear();
-                collection = null;
-                break;
-        }
+                    case R.id.ll_contact://选择客户联系人
+                        Bundle bContact = new Bundle();
+                        bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
+                        bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
+                        app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
+                                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
+                        break;
+                    case R.id.iv_at_delete://清除@的人员
+                        ll_at.setVisibility(View.GONE);
+                        atDepts.clear();
+                        atUserIds.clear();
+                        collection = null;
+                        break;
+                }
+            }
+        });
     }
 
     private boolean checkData() {

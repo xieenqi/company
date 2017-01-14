@@ -3,7 +3,7 @@ package com.loyo.oa.v2.activityui.clue.api;
 import com.loyo.oa.v2.activityui.clue.model.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
-import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
+import com.loyo.oa.v2.activityui.clue.model.ClueSales; 
 import com.loyo.oa.v2.activityui.clue.model.SourcesData;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -53,11 +53,19 @@ public interface IClue {
     @GET("/saleslead/source")
     Observable<SourcesData> getSource();
 
+//    /**
+//     * 新建线索 表单传输
+//     */
+//    @POST("/salesleads")
+//    Observable<ClueDetailWrapper> addClue(@Body Map<String, Object> body);
+
+
     /**
      * 新建线索 表单传输
      */
     @POST("/salesleads")
-    Observable<ClueDetailWrapper> addClue(@Body Map<String, Object> body);
+    Observable<BaseResponse<ClueSales>> addClueNew(@Body Map<String, Object> body);
+
 
     /**
      * 获取 线索详情

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -30,7 +31,6 @@ import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
@@ -39,7 +39,6 @@ import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
-import com.loyo.oa.v2.activityui.wfinstance.WfInAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
@@ -377,132 +376,137 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson,
             R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer, R.id.layout_retask})
     void onClick(final View v) {
-        switch (v.getId()) {
+        v.setOnClickListener(new NoDoubleClickListener(4000) {
+            @Override
+            public void onNoDoubleClick(View v) {
+                switch (v.getId()) {
 
-            case R.id.img_title_left:
-                onBackPressed();
-                break;
+                    case R.id.img_title_left:
+                        onBackPressed();
+                        break;
 
-            //提交任务
-            case R.id.img_title_right:
-                title = edt_title.getText().toString().trim();
-                if (TextUtils.isEmpty(title)) {
-                    Toast(getString(R.string.app_title) + getString(R.string.app_no_null));
+                    //提交任务
+                    case R.id.img_title_right:
+                        title = edt_title.getText().toString().trim();
+                        if (TextUtils.isEmpty(title)) {
+                            Toast(getString(R.string.app_title) + getString(R.string.app_no_null));
+                            break;
+                        }
+
+                        content = edt_content.getText().toString().trim();
+                        if (TextUtils.isEmpty(content)) {
+                            Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
+                            break;
+                        }
+
+                        if (mDeadline <= 0 && tv_retask.getText().toString().trim().isEmpty()) {
+                            Toast("截止日期或重复任务必选一个功能！");
+                            break;
+                        }
+
+                        if (TextUtils.isEmpty(tv_deadline.getText().toString()) && tv_retask.getText().toString().equals("不重复")) {
+                            Toast("截止日期或重复任务必选一个功能！");
+                            break;
+                        }
+
+                        if (TextUtils.isEmpty(tv_deadline.getText().toString()) && tv_retask.getText().toString().trim().isEmpty()) {
+                            Toast("截止日期或重复任务必选一个功能！");
+                            break;
+                        }
+
+                        if (TextUtils.isEmpty(tv_retask.getText().toString()) && mDeadline <= 0) {
+                            Toast("截止日期或重复任务必选一个功能！");
+                            break;
+                        }
+
+
+                        if (newUser == null || TextUtils.isEmpty(newUser.getId())) {
+                            Toast("负责人" + getString(R.string.app_no_null));
+                            break;
+                        }
+                        //没有附件
+                        showCommitLoading();
+                        if (controller.count() == 0) {
+                            requestCommitTask();
+                            //有附件
+                        } else {
+                            img_title_right.setEnabled(false);
+                            controller.startUpload();
+                            controller.notifyCompletionIfNeeded();
+                        }
+                        break;
+
+                    //重复任务
+                    case R.id.layout_retask:
+                        setRepeatTask();
+                        break;
+
+                    //截至时间
+                    case R.id.layout_deadline:
+                        setDeadLine();
+                        break;
+
+                    //负责人选项
+                    case R.id.layout_responsiblePerson: {
+                        StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(newUser);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                        if (collection != null) {
+                            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                        }
+                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                        Intent intent = new Intent();
+                        intent.setClass(TasksAddActivity.this, ContactPickerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+
                     break;
-                }
 
-                content = edt_content.getText().toString().trim();
-                if (TextUtils.isEmpty(content)) {
-                    Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
+                    //参与人选项
+                    case R.id.tv_toUsers: {
+                        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                        if (collection != null) {
+                            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                        }
+                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                        Intent intent = new Intent();
+                        intent.setClass(TasksAddActivity.this, ContactPickerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                     break;
-                }
 
-                if (mDeadline <= 0 && tv_retask.getText().toString().trim().isEmpty()) {
-                    Toast("截止日期或重复任务必选一个功能！");
-                    break;
-                }
-
-                if (TextUtils.isEmpty(tv_deadline.getText().toString()) && tv_retask.getText().toString().equals("不重复")) {
-                    Toast("截止日期或重复任务必选一个功能！");
-                    break;
-                }
-
-                if (TextUtils.isEmpty(tv_deadline.getText().toString()) && tv_retask.getText().toString().trim().isEmpty()) {
-                    Toast("截止日期或重复任务必选一个功能！");
-                    break;
-                }
-
-                if (TextUtils.isEmpty(tv_retask.getText().toString()) && mDeadline <= 0) {
-                    Toast("截止日期或重复任务必选一个功能！");
-                    break;
-                }
-
-
-                if (newUser == null || TextUtils.isEmpty(newUser.getId())) {
-                    Toast("负责人" + getString(R.string.app_no_null));
-                    break;
-                }
-                //没有附件
-                showCommitLoading();
-                if (controller.count() == 0) {
-                    requestCommitTask();
-                    //有附件
-                } else {
-                    img_title_right.setEnabled(false);
-                    controller.startUpload();
-                    controller.notifyCompletionIfNeeded();
-                }
-                break;
-
-            //重复任务
-            case R.id.layout_retask:
-                setRepeatTask();
-                break;
-
-            //截至时间
-            case R.id.layout_deadline:
-                setDeadLine();
-                break;
-
-            //负责人选项
-            case R.id.layout_responsiblePerson: {
-                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(newUser);
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
-                if (collection != null) {
-                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
-                }
-                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
-                Intent intent = new Intent();
-                intent.setClass(this, ContactPickerActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-
-            break;
-
-            //参与人选项
-            case R.id.tv_toUsers: {
-                StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
-                if (collection != null) {
-                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
-                }
-                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
-                Intent intent = new Intent();
-                intent.setClass(this, ContactPickerActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-            break;
-
-            case R.id.layout_del:
-                userss.clear();
-                depts.clear();
-                tv_toUsers.setText("");
-                layout_del.setVisibility(View.GONE);
-                img_title_right_toUsers.setVisibility(View.VISIBLE);
-                break;
+                    case R.id.layout_del:
+                        userss.clear();
+                        depts.clear();
+                        tv_toUsers.setText("");
+                        layout_del.setVisibility(View.GONE);
+                        img_title_right_toUsers.setVisibility(View.VISIBLE);
+                        break;
 
             /*所属项目*/
-            case R.id.layout_project:
-                Bundle bundle2 = new Bundle();
-                bundle2.putInt("from", TASKS_ADD);
-                bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
-                break;
+                    case R.id.layout_project:
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putInt("from", TASKS_ADD);
+                        bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
+                        app.startActivityForResult(TasksAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                                FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
+                        break;
 
             /*关联客户*/
-            case R.id.layout_mycustomer:
-                app.startActivityForResult(this, SelfVisibleCustomerPickerActivity.class,
-                        MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_CUSTOMER, null);
-                break;
+                    case R.id.layout_mycustomer:
+                        app.startActivityForResult(TasksAddActivity.this, SelfVisibleCustomerPickerActivity.class,
+                                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+                        break;
 
-            default:
-                break;
-        }
+                    default:
+                        break;
+                }
+            }
+        });
     }
 
     @Click(R.id.layout_remind)
@@ -732,7 +736,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
         switch (requestCode) {
 
             /*关联客户回调*/
-            case FinalVariables.REQUEST_SELECT_CUSTOMER:
+            case ExtraAndResult.REQUEST_CODE_CUSTOMER:
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
                     customerId = customer.id;

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
@@ -19,6 +20,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -37,7 +39,11 @@ import java.util.HashMap;
  */
 public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, View.OnClickListener {
 
+    public final static String KEY_CAN_RETURN_EMPTY = "com.loyo.SelfVisibleCustomerPickerActivity.KEY_CAN_RETURN_EMPTY";
+
     protected String strSearch;
+    protected View headerView;
+    public RelativeLayout headerViewBtn;
     protected EditText edt_search;
     protected PullToRefreshListView expandableListView_search;
     protected ArrayList<Customer> lstData = new ArrayList<>();
@@ -45,11 +51,13 @@ public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity imple
     private Context mContext;
     private boolean isTopAdd = true;
     private int page = 1;
+    private boolean canReturnEmpty = true;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        retrieveData();
         initView();
     }
 
@@ -65,6 +73,18 @@ public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity imple
     }
 
     public void initView() {
+        LayoutInflater mInflater = LayoutInflater.from(this);
+        headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
+        headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
+        headerViewBtn.setVisibility(canReturnEmpty?View.VISIBLE:View.GONE);
+        headerViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                app.finishActivity(SelfVisibleCustomerPickerActivity.this,
+                        MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+            }
+        });
+
         findViewById(R.id.img_title_left).setOnClickListener(this);
         findViewById(R.id.iv_clean).setOnClickListener(this);
         edt_search = (EditText) findViewById(R.id.edt_search);
@@ -88,18 +108,26 @@ public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity imple
         expandableListView_search = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
         expandableListView_search.setMode(PullToRefreshBase.Mode.BOTH);
         expandableListView_search.setOnRefreshListener(this);
+        expandableListView_search.getRefreshableView().addHeaderView(headerView);
         adapter = new CommonSearchAdapter();
         expandableListView_search.setAdapter(adapter);
         /**列表监听器*/
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
-                returnData(position - 1);
+                returnData(position - 2);
             }
         });
 
         ll_loading.setStatus(LoadingLayout.Loading);
         dataRequestvoid();
+    }
+
+    private void retrieveData() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            canReturnEmpty = intent.getBooleanExtra(KEY_CAN_RETURN_EMPTY ,true);
+        }
     }
 
     @Override

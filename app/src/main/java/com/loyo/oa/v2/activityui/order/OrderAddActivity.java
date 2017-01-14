@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
@@ -29,6 +30,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.OrderAddforExtraData;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.order.api.OrderService;
@@ -77,6 +79,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private TextView tv_addorder; //工单
     private EditText et_ordernum; //订单编号
     private EditText et_remake;   //备注
+    private TextView tv_start_time;   //开始时间
+    private TextView tv_end_time; //结束时间
 
     private Intent mIntent;
     private Bundle mBundle;
@@ -89,6 +93,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private OrderAddforExtraData orderAddforExtra;
     private boolean capitalReturningPlanEdit = true;
     private boolean capitalReturningRecordEdit = true;
+    private long startAt;
+    private long endAt;
 
     private Handler mHandler = new Handler() {
 
@@ -153,6 +159,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         tv_source = (TextView) findViewById(R.id.tv_source);
         et_ordernum = (EditText) findViewById(R.id.et_ordernum);
         et_remake = (EditText) findViewById(R.id.et_remake);
+        tv_start_time = (TextView) findViewById(R.id.tv_start_time) ;
+        tv_end_time = (TextView) findViewById(R.id.tv_end_time) ;
 
         iv_submit.setOnTouchListener(Global.GetTouch());
         ll_back.setOnTouchListener(Global.GetTouch());
@@ -163,6 +171,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         ll_estimate.setOnClickListener(this);
         ll_source.setOnClickListener(this);
         ll_addorder.setOnClickListener(this);
+        tv_end_time.setOnClickListener(this);
+        tv_start_time.setOnClickListener(this);
 
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             tv_title.setText("编辑订单");
@@ -282,6 +292,34 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 });
     }
 
+    private boolean isStartTimeNeeded() {
+
+        boolean result = false;
+        if (mCusList != null) {
+            for (ContactLeftExtras extras: mCusList) {
+                if ("开始时间".equals(extras.label)) {
+                    result = extras.required;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private boolean isEndTimeNeeded() {
+        boolean result = false;
+        if (mCusList != null) {
+            for (ContactLeftExtras extras: mCusList) {
+                if ("结束时间".equals(extras.label)) {
+                    result = extras.required;
+                }
+            }
+        }
+
+        return result;
+    }
+
+
     /**
      * 获取订单详情
      */
@@ -375,6 +413,15 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             Toast("请选择成交金额!");
             return;
         }
+        if(isStartTimeNeeded() && startAt == 0 ) {
+            Toast("请选择开始时间!");
+            return;
+        }
+        if(isEndTimeNeeded() && startAt == 0 ) {
+            Toast("请选择结束时间!");
+            return;
+        }
+
         fieldData = new ArrayList<>();
         for (ContactLeftExtras extra : orderAddforExtra.getExtras()) {
             if (!extra.isSystem && extra.required && TextUtils.isEmpty(extra.val)) {
@@ -413,6 +460,12 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         map.put("extensionDatas", fieldData);
         /* 工单 */
         map.put("reWorkSheet", reWorkSheet);
+        if (startAt > 0) {
+            map.put("startAt", startAt);
+        }
+        if (endAt > 0) {
+            map.put("endAt", endAt);
+        }
         LogUtil.dee("提交参数:" + MainApp.gson.toJson(map));
 
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
@@ -491,8 +544,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //对应客户
             case R.id.ll_customer:
+                Bundle b = new Bundle();
+                b.putBoolean(SelfVisibleCustomerPickerActivity.KEY_CAN_RETURN_EMPTY, false);
                 app.startActivityForResult(OrderAddActivity.this, SelfVisibleCustomerPickerActivity.class,
-                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
 
             //购买产品
@@ -539,6 +594,43 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 mBundle.putString("uuid", uuid);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
+            case R.id.tv_start_time:
+            {
+                DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(mContext, null);
+                dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
+                    @Override
+                    public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
+                        long time= DateTool.getStamp(year, month, day,hour,min,0);
+                        startAt = time;
+                        tv_start_time.setText(DateTool.getDateTimeFriendly(startAt));
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                }, true, "取消");
+            }
+            break;
+
+            case R.id.tv_end_time:
+            {
+                DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(mContext, null);
+                dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
+                    @Override
+                    public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
+                        long time= DateTool.getStamp(year, month, day,hour,min,0);
+                        endAt = time;
+                        tv_end_time.setText(DateTool.getDateTimeFriendly(endAt));
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                }, true, "取消");
+            }
+            break;
 
         }
     }

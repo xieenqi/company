@@ -13,7 +13,7 @@ public enum OrderAction {
     ORDER_COPY(BusinessOperation.ORDER_MANAGEMENT),                       /* 编辑 */
     ORDER_DELETE(BusinessOperation.ORDER_MANAGEMENT),                     /* 删除 */
     ORDER_TERMINATE(BusinessOperation.ORDER_MANAGEMENT),                  /* 意外终止 */
-    ORDER_RESPONSIBLE_PERSON_CHANGE(BusinessOperation.ORDER_MANAGEMENT),  /* 修改负责人 */
+    ORDER_RESPONSIBLE_PERSON_CHANGE(BusinessOperation.ORDER_RESPONSIBLE_PERSON_CHANGING),  /* 修改负责人 */
 
     ORDER_CAPITAL_RETURN_PLAN_CRUD(BusinessOperation.ORDER_MANAGEMENT),   /* 增删改回款计划 */
     ORDER_CAPITAL_RETURN_RECORD_CRUD(BusinessOperation.ORDER_MANAGEMENT), /* 增删改回款记录 */

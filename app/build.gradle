@@ -149,6 +149,7 @@ android {
         compile "com.andkulikov:transitionseverywhere:1.7.0"
         compile 'me.itangqi.waveloadingview:library:0.3.2'
         compile 'com.umeng.analytics:analytics:latest.integration'
+        compile 'hk.ids.gws.android.sclick:library:1.0'
 
         //compile 'cn.fanrunqi:waveprogress:1.0.0'
         //compile 'com.lai.weavey:loadinglayout:1.2'//loading加载库
@@ -172,8 +173,6 @@ android {
         compile files('libs/slidingmenulibary.jar')
         //激光推送
         compile files('libs/jpush-android-2.1.3.jar')*/
-
-
     }
     productFlavors {
     }

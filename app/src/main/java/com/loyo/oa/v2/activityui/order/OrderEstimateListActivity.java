@@ -140,6 +140,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
 
     @Override
     public void getPageData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
 
@@ -186,6 +187,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
         mAdapter.setOrderStatus(orderStatus);
         lv_listview.setAdapter(mAdapter);
         reloadList();
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
     public void reloadList() {
