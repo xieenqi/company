@@ -19,9 +19,9 @@ import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
+import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.clue.model.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.model.ClueSales;
-import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
@@ -55,6 +55,8 @@ import java.util.HashMap;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ClueDetailActivity extends BaseLoadingActivity implements View.OnClickListener {
+
+    private final static String REQUEST_USER = "com.loyo.ClueDetailActivity.REQUEST_USER";
 
     /*  Navigation Bar */
     ViewGroup img_title_left /* 返回按钮 */,
@@ -498,6 +500,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
             public void onClick(int which) {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, REQUEST_USER);
                 Intent intent = new Intent();
                 intent.setClass(ClueDetailActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
@@ -633,33 +636,8 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         }
 
         LogUtil.d(app.gson.toJson(map));
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-//                .editClue(clueId, map, new Callback<Object>() {
-//                    @Override
-//                    public void success(Object o, Response response) {
-//                        HttpErrorCheck.checkResponse("【编辑详情】线索：", response);
-//                        /* 提交成功，更新本地model */
-//                        if (1 == function
-//                                && data != null && data != null && data.sales != null) {
-//                            data.sales.region = regional;
-//                            clue_region.setText(regional.salesleadDisplayText());
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-//                        /* 提交失败，更新UI至原来状态 */
-//                        if (1 == function
-//                                && data != null && data != null && data.sales != null) {
-//                            clue_region.setText(data.sales.region.salesleadDisplayText());
-//                        }
-//
-//                    }
-//                });
-
-        ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.PROGRESS_HUD) {
+        ClueService.editClue(clueId, map)
+                .subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.PROGRESS_HUD) {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
@@ -689,24 +667,12 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
     private void deleteClue() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("ids", clueId);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-//                .deleteClue(map, new Callback<Object>() {
-//                    @Override
-//                    public void success(Object o, Response response) {
-//                        HttpErrorCheck.checkResponse("【删除详情】线索：", response);
-//                        app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-//                    }
-//                });
-
-        ClueService.deleteClue(map).subscribe(new DefaultLoyoSubscriber<Object>() {
+        ClueService.deleteClue(map)
+                .subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
             public void onNext(Object o) {
-                app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                app.finishActivity(ClueDetailActivity.this,
+                        MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
             }
         });
     }
@@ -718,21 +684,8 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         HashMap<String, Object> map = new HashMap<>();
         map.put("ids", clueId);
         map.put("responsorId", responsorId);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-//                .transferClue(map, new Callback<Object>() {
-//                    @Override
-//                    public void success(Object o, Response response) {
-//                        HttpErrorCheck.checkResponse("【转 移】线索：", response);
-//                        app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-//                    }
-//                });
-
-        ClueService.transferClue(map).subscribe(new DefaultLoyoSubscriber<Object>() {
+        ClueService.transferClue(map)
+                .subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
             public void onNext(Object o) {
                 app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
@@ -745,23 +698,25 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
-        StaffMemberCollection collection = event.data;
-        final OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);
-        if (user == null) {
-            return;
+        if (REQUEST_USER.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            final OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);
+            if (user == null) {
+                return;
+            }
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    dismissSweetAlert();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    dismissSweetAlert();
+                    transferClue(user.getId());
+                }
+            }, "提示", "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
         }
-        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                dismissSweetAlert();
-            }
-        }, new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                dismissSweetAlert();
-                transferClue(user.getId());
-            }
-        }, "提示", "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
     }
 
     @Override

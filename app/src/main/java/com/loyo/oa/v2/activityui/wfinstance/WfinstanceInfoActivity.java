@@ -221,9 +221,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 } else if (401 == wfInstance_current.bizForm.bizCode) {//订单意外终止审批
                     orderData();
                     ll_customer.setVisibility(View.GONE);
+                    ll_project.setVisibility(View.GONE);
                 } else if (500 == wfInstance_current.bizForm.bizCode) {//回款审批
                     paymentData();
                     ll_customer.setVisibility(View.GONE);
+                    ll_project.setVisibility(View.GONE);
                 } else {
                     initData_WorkflowValues();
                 }
@@ -313,7 +315,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                         startActivity(mIntent);
                         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     }
-                });
+                }, false);
         addOrderField("对应客户：", order.customerName, getResources().getColor(R.color.title_bg1),
                 new OrderFieldCallback() {
                     @Override
@@ -324,9 +326,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
                         startActivity(intent);
                         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     }
-                });
+                }, false);
         if (!TextUtils.isEmpty(order.endReason) && (401 == mWfInstance.bizForm.bizCode)) {
-            addOrderField("终止原因：", order.endReason, getResources().getColor(R.color.wfinstance_text_red));
+            addOrderField("终止原因：", order.endReason, getResources().getColor(R.color.wfinstance_text_red), true);
         }
         addOrderField("成交金额：", String.valueOf(order.dealMoney));
         addOrderField("订单编号：", order.orderNum);
@@ -337,7 +339,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 addOrderField(ele.label + "：" , ele.getFormatValue());
             }
         }
-        addOrderField("备注：" , order.remark);
+        addOrderField("备注：" , order.remark, true);
         tv_product.setText(order.proName);
         tv_plan_value.setText("¥" + order.backMoney + "（" + order.ratePayment + "%)");
         AttachmentUUId = order.attachmentUUId;
@@ -349,13 +351,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
 
-    private void addOrderField(String key, String value, int color, final OrderFieldCallback callback) {
+    private void addOrderField(String key, String value, int color, final OrderFieldCallback callback, boolean multiLine) {
         View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
         TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
         TextView tv_value = (TextView) view_value.findViewById(R.id.tv_value);
         tv_key.setText(key);
         tv_value.setText(value);
         tv_value.setTextColor(color);
+        tv_value.setSingleLine(!multiLine);
         ll_order_content.addView(view_value);
         if (callback != null) {
             view_value.setOnClickListener(new View.OnClickListener() {
@@ -367,12 +370,16 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
     }
 
-    private void addOrderField(String key, String value, int color) {
-        addOrderField(key, value, color, null);
+    private void addOrderField(String key, String value, int color, boolean multiLine) {
+        addOrderField(key, value, color, null, multiLine);
+    }
+
+    private void addOrderField(String key, String value, boolean multiLine) {
+        addOrderField(key, value, getResources().getColor(R.color.text99), multiLine);
     }
 
     private void addOrderField(String key, String value) {
-        addOrderField(key, value, getResources().getColor(R.color.text99));
+        addOrderField(key, value, getResources().getColor(R.color.text99), false);
     }
 
     /**

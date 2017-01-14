@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfNodes;
@@ -94,10 +95,11 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
             if (wfInstanceStatus == 4) {
                 item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree_new);
                 item_info.tv_content.setTextColor(Color.parseColor("#333333"));
-                item_info.tv_content.setText(actionName + "：" + (TextUtils.isEmpty(actionInfo) ? "同意" : actionInfo));
+                String content = actionName + "：" + (TextUtils.isEmpty(actionInfo) ? "同意" : actionInfo);
+                item_info.tv_content.setText(content);
                 item_info.tv_time.setVisibility(View.VISIBLE);
 //                item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
-                item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
+                item_info.tv_time.setText(DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
             } else {
                 if (wfNodes.getActive() == 1) {
                     item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait_new);

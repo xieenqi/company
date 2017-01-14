@@ -13,6 +13,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
+import com.loyo.oa.v2.activityui.order.OrderManagementActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.signin.SigninDetailsActivity;
@@ -237,7 +238,7 @@ public enum SystemMessageItemType {
             return "Id";
         }
     },
-//    // TODO 公海客户暂还没有定义
+    //    // TODO 公海客户暂还没有定义
 //    /*公海客户详情*/
 //    MSG_CUSTOMER_PUBLIC(40) {
 //        public int getIcon() {
@@ -260,6 +261,14 @@ public enum SystemMessageItemType {
 
         public Class<?> getItemClass() {
             return OrderDetailActivity.class;
+        }
+
+        public Class<?> getItemClass(int jumpType) {
+            if (jumpType == 0) {
+                return getItemClass();
+            } else {
+                return OrderManagementActivity.class;
+            }
         }
 
         public String getExtraName() {
@@ -371,6 +380,10 @@ public enum SystemMessageItemType {
      * 获取跳转的class对象
      */
     public abstract Class<?> getItemClass();
+
+    public Class<?> getItemClass(int jumpType) {
+        return getItemClass();
+    }
 
     /**
      * item 跳转时的key值
