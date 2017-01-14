@@ -325,9 +325,36 @@
                         <TextView
                             android:id="@+id/tv_wfname"
                             style="@style/common_text_line_second"
-                            android:layout_width="wrap_content"
+                            android:ellipsize="middle"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left|center_vertical"
+                            android:gravity="left"
+                            android:textColor="#209AFF" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_wf_terminate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/common_text_in_space"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/common_text_line_second"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="终止审批：" />
+
+                        <TextView
+                            android:id="@+id/tv_wf_terminate_name"
+                            style="@style/common_text_line_second"
+                            android:ellipsize="middle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:gravity="left"
                             android:textColor="#209AFF" />
 
                     </LinearLayout>

@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * 新建工单
  */
-public class WorksheetAddActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class WorksheetAddActivity extends BaseFragmentActivity {
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -77,12 +77,6 @@ public class WorksheetAddActivity extends BaseFragmentActivity implements View.O
         fragments.add(step2Fragment);
 
         changeChild(0);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-        }
     }
 
     /**

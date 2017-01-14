@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static android.icu.text.RelativeDateTimeFormatter.Direction.THIS;
+
 /**
  * com.loyo.oa.v2.customview
  * 描述 :【创建订单】动态字段
@@ -55,6 +57,50 @@ public class OrderAddforExtraData extends LinearLayout {
         this.extras = extras;
         bindView(edit, valueColor, valueSize);
     }
+
+    public void bindData(ArrayList<ContactLeftExtras> extras) {
+        if (extras == null) {
+            return;
+        }
+
+        for (ContactLeftExtras item :extras) {
+            ContactLeftExtras origin = getExtraForName(item.name);
+            View child = getExtraView(item.name);
+            if (origin != null && child != null) {
+                EditText tv_content = (EditText) child.findViewById(R.id.et_content);
+                origin.val = item.val;
+                tv_content.setText(item.getFormatValue());
+            }
+        }
+
+    }
+
+    private ContactLeftExtras getExtraForName(String name) {
+        if (TextUtils.isEmpty(name)) {
+            return null;
+        }
+        for (ContactLeftExtras item :extras) {
+            if (item.name.equals(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private View getExtraView(String tag) {
+        if (TextUtils.isEmpty(tag)) {
+            return null;
+        }
+
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if(tag.equals(child.getTag())) {
+                return child;
+            }
+        }
+        return null;
+    }
+
 
     public ArrayList<ContactLeftExtras> getExtras() {
         return extras;
@@ -103,11 +149,12 @@ public class OrderAddforExtraData extends LinearLayout {
                 tv_content.setEnabled(true);
             }
 
+            extra.setTag(customerExtra.name);
             addView(extra);
 
             if(customerExtra.name.length() > 20){
                 if(!TextUtils.isEmpty(customerExtra.val))
-                tv_content.setText(customerExtra.val);
+                tv_content.setText(customerExtra.getFormatValue());
             }
 
             if (customerExtra.isList) {

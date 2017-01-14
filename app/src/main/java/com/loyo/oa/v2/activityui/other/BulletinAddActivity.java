@@ -45,13 +45,15 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import hk.ids.gws.android.sclick.SClick;
+
 /**
  * 【发布通知】
  * Restructure by yyy on 2016/10/9
  */
 
 @EActivity(R.layout.activity_bulletin_add)
-public class BulletinAddActivity extends BaseActivity implements BulletinAddView ,UploadControllerCallback {
+public class BulletinAddActivity extends BaseActivity implements BulletinAddView, UploadControllerCallback {
 
     @ViewById
     EditText edt_title;
@@ -107,7 +109,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     /**
      * 返回
-     * */
+     */
     @Click(R.id.img_title_left)
     void close() {
         onBackPressed();
@@ -115,11 +117,14 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     /**
      * 提交
-     * */
+     */
     @Click(R.id.img_title_right)
     void submit() {
+        if (!SClick.check(SClick.BUTTON_CLICK)) {
+            return;
+        }
         mBulletinAddPresenter.verifyText(edt_title.getText().toString().trim(),
-                                         edt_content.getText().toString().trim());
+                edt_content.getText().toString().trim());
     }
 
     /**
@@ -142,7 +147,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      */
     @OnActivityResult(PhotoPreview.REQUEST_CODE)
     void onDeletePhotoResult(final Intent data) {
-        if (data != null){
+        if (data != null) {
             int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
             if (index >= 0) {
                 controller.removeTaskAt(index);
@@ -178,7 +183,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     /**
      * 格式验证
-     * */
+     */
     @Override
     public void verifyError(int code) {
         switch (code) {
@@ -198,9 +203,9 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     /**
      * 格式验证通过
-     * */
+     */
     @Override
-    public void verifySuccess(String title,String content) {
+    public void verifySuccess(String title, String content) {
         showCommitLoading();
         controller.startUpload();
         controller.notifyCompletionIfNeeded();
@@ -208,7 +213,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     /**
      * 提交成功
-     * */
+     */
     @Override
     public void onSuccess(Bulletin mBulletin) {
         Intent intent = new Intent();
@@ -219,7 +224,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     /**
      * 提交失败
-     * */
+     */
     @Override
     public void onError() {
         Toast("提交失败");
@@ -227,7 +232,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     /**
      * 打开Loading
-     * */
+     */
     @Override
     public void showLoading() {
         showLoading2("正在提交");
@@ -235,7 +240,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     /**
      * 设置人员名字
-     * */
+     */
     @Override
     public void setReceiver(String name) {
         tv_recevier.setText(name);
@@ -243,7 +248,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     /**
      * 关闭弹出框
-     * */
+     */
     @Override
     public void dissweetAlert() {
         dismissSweetAlert();
@@ -305,7 +310,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }

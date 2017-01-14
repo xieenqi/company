@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoCapture;
@@ -188,7 +189,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             et_reason.setHint("请输入加班原因");
 //            String time = (DateTool.timet(extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
 //                    + "-" + DateTool.timet(serverTime + "", DateTool.DATE_FORMATE_TRANSACTION));
-            String time= com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(extraWorkStartTime)+"-"+ com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(serverTime);
+            String time = com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(extraWorkStartTime) + "-" + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(serverTime);
             SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
             tv_time_kind.setText(tvTimeName);
             tv_time.setText(builder);
@@ -216,26 +217,28 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.iv_refresh_address})
     void onClick(final View v) {
-        switch (v.getId()) {
-
+        v.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                switch (v.getId()) {
             /*返回*/
-            case R.id.img_title_left:
-                onBackPressed();
-                break;
+                    case R.id.img_title_left:
+                        onBackPressed();
+                        break;
 
             /*提交*/
-            case R.id.img_title_right:
+                    case R.id.img_title_right:
 
-                if (!mPresenter.checkAttendanceData(et_reason.getText().toString(),
-                        tv_address.getText().toString(),
-                        outKind, mAttendanceRecord.getState())) {
-                    return;
-                }
+                        if (!mPresenter.checkAttendanceData(et_reason.getText().toString(),
+                                tv_address.getText().toString(),
+                                outKind, mAttendanceRecord.getState())) {
+                            return;
+                        }
 
-                if (NeedPhoto && controller.count() == 0) {
-                    Toast("需要考勤照片，请拍照");
-                    return;
-                }
+                        if (NeedPhoto && controller.count() == 0) {
+                            Toast("需要考勤照片，请拍照");
+                            return;
+                        }
 
                 /*暂时取消外勤判断 */
                 /*if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK
@@ -245,21 +248,20 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                     commitAttendance();
                 }*/
 
-                img_title_right.setEnabled(false);
-                showCommitLoading();
-                controller.startUpload();
-                controller.notifyCompletionIfNeeded();
-                break;
+                        img_title_right.setEnabled(false);
+                        showCommitLoading();
+                        controller.startUpload();
+                        controller.notifyCompletionIfNeeded();
+                        break;
 
             /*刷新地址*/
-            case R.id.iv_refresh_address:
-                iv_refresh_address.startAnimation(animation);
-                new LocationUtilGD(this, this);
-                break;
-
-            default:
-                break;
-        }
+                    case R.id.iv_refresh_address:
+                        iv_refresh_address.startAnimation(animation);
+                        new LocationUtilGD(AttendanceAddActivity.this, AttendanceAddActivity.this);
+                        break;
+                }
+            }
+        });
     }
 
     /**
@@ -392,7 +394,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     /**
      * 打卡失败
-     * */
+     */
     @Override
     public void attendanceError() {
         img_title_right.setEnabled(true);
@@ -471,7 +473,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }
