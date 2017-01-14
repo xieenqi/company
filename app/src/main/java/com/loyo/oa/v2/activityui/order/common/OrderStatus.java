@@ -6,8 +6,8 @@ package com.loyo.oa.v2.activityui.order.common;
 
 public enum OrderStatus {
     ALL("全部状态", "0"),
-    WAIT_APPROVE("待审核", "1"),
-    APPROVE_PROCESSING("审核中", "7"),
+    WAIT_APPROVE("待审批", "1"),
+    APPROVE_PROCESSING("审批中", "7"),
     NOT_APPROVED("未通过", "2"),
     PROCESSING("进行中", "3"),
     FINISHED("已完成", "4"),

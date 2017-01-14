@@ -13,6 +13,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
+import com.loyo.oa.v2.activityui.order.OrderManagementActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.signin.SigninDetailsActivity;
@@ -204,7 +205,6 @@ public enum SystemMessageItemType {
         public Class<?> getItemClass() {
             return BulletinManagerActivity_.class;
         }
-
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
         }
@@ -261,6 +261,15 @@ public enum SystemMessageItemType {
         public Class<?> getItemClass() {
             return OrderDetailActivity.class;
         }
+
+    public Class<?> getItemClass(int jumpType) {
+        if (jumpType == 0) {
+            return getItemClass();
+        }
+        else {
+            return OrderManagementActivity.class;
+        }
+    }
 
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
@@ -371,6 +380,10 @@ public enum SystemMessageItemType {
      * 获取跳转的class对象
      */
     public abstract Class<?> getItemClass();
+
+    public Class<?> getItemClass(int jumpType) {
+        return getItemClass();
+    }
 
     /**
      * item 跳转时的key值

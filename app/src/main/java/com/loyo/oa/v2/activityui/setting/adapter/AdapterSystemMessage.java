@@ -15,18 +15,10 @@ import com.loyo.oa.v2.activityui.home.api.HomeService;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItemType;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by xeq on 16/11/7.
@@ -117,7 +109,7 @@ public class AdapterSystemMessage extends BaseAdapter {
                 intent.setClass(context, CustomerManagerActivity.class);
                 intent.putExtra(ExtraAndResult.EXTRA_TYPE, item.jumpType);
             } else {
-                intent.setClass(context, item.bizzType.getItemClass());
+                intent.setClass(context, item.bizzType.getItemClass(item.jumpType));
                 intent.putExtra(item.bizzType.getExtraName(), item.bizzId);
             }
             context.startActivity(intent);
