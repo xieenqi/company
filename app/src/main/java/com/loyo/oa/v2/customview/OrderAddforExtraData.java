@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.common.Global;
@@ -31,8 +32,6 @@ import com.loyo.oa.v2.tool.Utils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-
-import static android.icu.text.RelativeDateTimeFormatter.Direction.THIS;
 
 /**
  * com.loyo.oa.v2.customview
@@ -384,9 +383,9 @@ public class OrderAddforExtraData extends LinearLayout {
 //                            textView.setText(str);
 //                            String times = DateTool.getDataOne(str, DateTool.DATE_FORMATE_SPLITE_BY_POINT);
 //                            extra.val = times;
-                            long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, min, 0);
+                            long time = DateTool.getStamp(year, month, day, hour, min, 0);
                             extra.val = time + "";
-                            textView.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(time));
+                            textView.setText(DateTool.getDateTimeFriendly(time));
                         }
 
                         @Override
