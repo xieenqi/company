@@ -76,7 +76,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * 【 拜访签到 】 页面
  */
 public class SignInActivity extends BaseActivity
-        implements View.OnClickListener, SigninContract.View, UploadControllerCallback {
+        implements SigninContract.View, UploadControllerCallback {
 
     private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address,
             tv_at_text, tv_distance_deviation, tv_contact_name;
@@ -125,14 +125,14 @@ public class SignInActivity extends BaseActivity
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
         tv_customer_address = (TextView) findViewById(R.id.tv_customer_address);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
-        img_title_left.setOnClickListener(this);
+        img_title_left.setOnClickListener(click);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
-        img_title_right.setOnClickListener(this);
+        img_title_right.setOnClickListener(click);
         img_title_right.setOnTouchListener(Global.GetTouch());
         tv_reset_address = (TextView) findViewById(R.id.tv_reset_address);
         tv_reset_address.setOnTouchListener(Global.GetTouch());
-        tv_reset_address.setOnClickListener(this);
+        tv_reset_address.setOnClickListener(click);
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         wordcount = (TextView) findViewById(R.id.wordcount);
         edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
@@ -142,17 +142,17 @@ public class SignInActivity extends BaseActivity
         tv_at_text = (TextView) findViewById(R.id.tv_at_text);
         tv_distance_deviation = (TextView) findViewById(R.id.tv_distance_deviation);
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
-        ll_contact.setOnClickListener(this);
+        ll_contact.setOnClickListener(click);
         tv_address = (TextView) findViewById(R.id.tv_address);
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
-        iv_at_delete.setOnClickListener(this);
+        iv_at_delete.setOnClickListener(click);
         startLocation();
         initMultiFunctionModule();
         if (null == mCustomer) {
             layout_customer_name.setOnTouchListener(Global.GetTouch());
-            layout_customer_name.setOnClickListener(this);
+            layout_customer_name.setOnClickListener(click);
             ll_contact.setVisibility(View.GONE);
         } else {
             findViewById(R.id.divider_customer_name).setVisibility(View.VISIBLE);
@@ -308,83 +308,80 @@ public class SignInActivity extends BaseActivity
         mfmodule.setPictureIcon(R.drawable.icon_picture_photo);
     }
 
-    @Override
-    public void onClick(final View v) {
-        v.setOnClickListener(new NoDoubleClickListener(4000) {
-            @Override
-            public void onNoDoubleClick(View v) {
-                switch (v.getId()) {
+    NoDoubleClickListener click = new NoDoubleClickListener(4000) {
+        @Override
+        public void onNoDoubleClick(View v) {
+            switch (v.getId()) {
 
-                    case R.id.img_title_left:
-                        onBackPressed();
-                        break;
+                case R.id.img_title_left:
+                    onBackPressed();
+                    break;
 
-                    case R.id.img_title_right:
-                        if (!checkData()) {
-                            return;
-                        }
-                        if (!isLocation) {
-                            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    dismissSweetAlert();
-                                    addSignIn();
-                                }
-                            }, new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    isCusPosition = true;
-                                    dismissSweetAlert();
-                                    addSignIn();
-                                }
-                            }, "提示", "该客户无定位信息,是否需要\n将签到地址设置为客户定位?", "不需要", "设为定位");
-                        } else {
-                            showCommitLoading();
-                            if (controller.count() == 0) {
+                case R.id.img_title_right:
+                    if (!checkData()) {
+                        return;
+                    }
+                    if (!isLocation) {
+                        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                dismissSweetAlert();
                                 addSignIn();
-                            } else {
-                                controller.startUpload();
-                                controller.notifyCompletionIfNeeded();
                             }
+                        }, new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                isCusPosition = true;
+                                dismissSweetAlert();
+                                addSignIn();
+                            }
+                        }, "提示", "该客户无定位信息,是否需要\n将签到地址设置为客户定位?", "不需要", "设为定位");
+                    } else {
+                        showCommitLoading();
+                        if (controller.count() == 0) {
+                            addSignIn();
+                        } else {
+                            controller.startUpload();
+                            controller.notifyCompletionIfNeeded();
                         }
-                        break;
+                    }
+                    break;
 
             /*选择客户*/
-                    case R.id.layout_customer_name:
-                        if (LocationUtilGD.permissionLocation(SignInActivity.this)) {
-                            Bundle b = new Bundle();
-                            b.putDouble("lon", loPosition);
-                            b.putDouble("lat", laPosition);
-                            app.startActivityForResult(SignInActivity.this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
-                        }
-                        break;
+                case R.id.layout_customer_name:
+                    if (LocationUtilGD.permissionLocation(SignInActivity.this)) {
+                        Bundle b = new Bundle();
+                        b.putDouble("lon", loPosition);
+                        b.putDouble("lat", laPosition);
+                        app.startActivityForResult(SignInActivity.this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
+                    }
+                    break;
 
             /*地址更新*/
-                    case R.id.tv_reset_address:
-                        if (LocationUtilGD.permissionLocation(SignInActivity.this)) {
-                            Bundle mBundle = new Bundle();
-                            mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
-                            app.startActivityForResult(SignInActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
-                        }
-                        break;
+                case R.id.tv_reset_address:
+                    if (LocationUtilGD.permissionLocation(SignInActivity.this)) {
+                        Bundle mBundle = new Bundle();
+                        mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
+                        app.startActivityForResult(SignInActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                    }
+                    break;
 
-                    case R.id.ll_contact://选择客户联系人
-                        Bundle bContact = new Bundle();
-                        bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
-                        bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-                        app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
-                                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
-                        break;
-                    case R.id.iv_at_delete://清除@的人员
-                        ll_at.setVisibility(View.GONE);
-                        atDepts.clear();
-                        atUserIds.clear();
-                        collection = null;
-                        break;
-                }
+                case R.id.ll_contact://选择客户联系人
+                    Bundle bContact = new Bundle();
+                    bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
+                    bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
+                    app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
+                    break;
+                case R.id.iv_at_delete://清除@的人员
+                    ll_at.setVisibility(View.GONE);
+                    atDepts.clear();
+                    atUserIds.clear();
+                    collection = null;
+                    break;
             }
-        });
-    }
+        }
+    };
 
     private boolean checkData() {
         if (TextUtils.isEmpty(customerId)) {

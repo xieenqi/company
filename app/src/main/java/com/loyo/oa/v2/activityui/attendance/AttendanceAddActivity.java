@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import hk.ids.gws.android.sclick.SClick;
 
 import static com.loyo.oa.v2.R.id.image_upload_grid_view;
 
@@ -217,28 +218,27 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.iv_refresh_address})
     void onClick(final View v) {
-        v.setOnClickListener(new NoDoubleClickListener() {
-            @Override
-            public void onNoDoubleClick(View v) {
-                switch (v.getId()) {
+        switch (v.getId()) {
             /*返回*/
-                    case R.id.img_title_left:
-                        onBackPressed();
-                        break;
+            case R.id.img_title_left:
+                onBackPressed();
+                break;
 
             /*提交*/
-                    case R.id.img_title_right:
+            case R.id.img_title_right:
 
-                        if (!mPresenter.checkAttendanceData(et_reason.getText().toString(),
-                                tv_address.getText().toString(),
-                                outKind, mAttendanceRecord.getState())) {
-                            return;
-                        }
+                if (!mPresenter.checkAttendanceData(et_reason.getText().toString(),
+                        tv_address.getText().toString(),
+                        outKind, mAttendanceRecord.getState())) {
+                    return;
+                }
 
-                        if (NeedPhoto && controller.count() == 0) {
-                            Toast("需要考勤照片，请拍照");
-                            return;
-                        }
+                if (NeedPhoto && controller.count() == 0) {
+                    Toast("需要考勤照片，请拍照");
+                    return;
+                }else if (!SClick.check(SClick.BUTTON_CLICK, 5000)) {
+                    return;
+                }
 
                 /*暂时取消外勤判断 */
                 /*if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK
@@ -248,20 +248,18 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                     commitAttendance();
                 }*/
 
-                        img_title_right.setEnabled(false);
-                        showCommitLoading();
-                        controller.startUpload();
-                        controller.notifyCompletionIfNeeded();
-                        break;
+                img_title_right.setEnabled(false);
+                showCommitLoading();
+                controller.startUpload();
+                controller.notifyCompletionIfNeeded();
+                break;
 
             /*刷新地址*/
-                    case R.id.iv_refresh_address:
-                        iv_refresh_address.startAnimation(animation);
-                        new LocationUtilGD(AttendanceAddActivity.this, AttendanceAddActivity.this);
-                        break;
-                }
-            }
-        });
+            case R.id.iv_refresh_address:
+                iv_refresh_address.startAnimation(animation);
+                new LocationUtilGD(AttendanceAddActivity.this, AttendanceAddActivity.this);
+                break;
+        }
     }
 
     /**

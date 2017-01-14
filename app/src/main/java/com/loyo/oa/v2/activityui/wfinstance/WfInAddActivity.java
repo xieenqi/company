@@ -212,57 +212,52 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
     /**
      * 监听器
      */
-    private View.OnClickListener onClick = new View.OnClickListener() {
+    private NoDoubleClickListener onClick = new NoDoubleClickListener() {
         @Override
-        public void onClick(View v) {
-            v.setOnClickListener(new NoDoubleClickListener() {
-                @Override
-                public void onNoDoubleClick(View v) {
-                    switch (v.getId()) {
-                        //返回
-                        case R.id.img_title_left:
-                            app.finishActivity(WfInAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
-                            break;
+        public void onNoDoubleClick(View v) {
+            switch (v.getId()) {
+                //返回
+                case R.id.img_title_left:
+                    app.finishActivity(WfInAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                    break;
 
-                        //所属部门选择
-                        case R.id.ll_dept:
-                            app.startActivityForResult(WfInAddActivity.this, DepartmentChooseActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
-                            break;
+                //所属部门选择
+                case R.id.ll_dept:
+                    app.startActivityForResult(WfInAddActivity.this, DepartmentChooseActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
+                    break;
 
-                        //所属项目选择
-                        case R.id.ll_project:
-                            Bundle bundle2 = new Bundle();
-                            bundle2.putInt("from", BaseActivity.WFIN_ADD);
-                            bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                            app.startActivityForResult(WfInAddActivity.this, ProjectSearchActivity.class,
-                                    MainApp.ENTER_TYPE_RIGHT,
-                                    ExtraAndResult.REQUSET_PROJECT, bundle2);
-                            break;
-                        //所属客户选择
-                        case R.id.ll_customer:
-                            app.startActivityForResult(WfInAddActivity.this, SelfVisibleCustomerPickerActivity.class,
-                                    MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
-                            break;
+                //所属项目选择
+                case R.id.ll_project:
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putInt("from", BaseActivity.WFIN_ADD);
+                    bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
+                    app.startActivityForResult(WfInAddActivity.this, ProjectSearchActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT,
+                            ExtraAndResult.REQUSET_PROJECT, bundle2);
+                    break;
+                //所属客户选择
+                case R.id.ll_customer:
+                    app.startActivityForResult(WfInAddActivity.this, SelfVisibleCustomerPickerActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+                    break;
 
-                        //提交审批
-                        case R.id.img_title_right:
-                            //没有附件
-                            showCommitLoading();
-                            if (controller.count() == 0) {
-                                mPresenter.addWfinVeri(deptId);
-                            } else {
-                                controller.startUpload();
-                                controller.notifyCompletionIfNeeded();
-                            }
-                            break;
-
-                        //新增内容
-                        case R.id.btn_add:
-                            mPresenter.addTypeData(wfinstance_data_container);
-                            break;
+                //提交审批
+                case R.id.img_title_right:
+                    //没有附件
+                    showCommitLoading();
+                    if (controller.count() == 0) {
+                        mPresenter.addWfinVeri(deptId);
+                    } else {
+                        controller.startUpload();
+                        controller.notifyCompletionIfNeeded();
                     }
-                }
-            });
+                    break;
+
+                //新增内容
+                case R.id.btn_add:
+                    mPresenter.addTypeData(wfinstance_data_container);
+                    break;
+            }
         }
     };
 

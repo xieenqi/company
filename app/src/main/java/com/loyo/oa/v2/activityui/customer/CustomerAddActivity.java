@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
@@ -72,6 +71,8 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import hk.ids.gws.android.sclick.SClick;
 
 /**
  * 【新建 客户】 页面
@@ -368,155 +369,152 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             R.id.iv_phone_insert2, R.id.iv_call_insert1, R.id.iv_call_insert2, R.id.tv_gscx, R.id.layout_more,
             R.id.layout_customer_district})
     public void onClick(final View v) {
-        v.setOnClickListener(new NoDoubleClickListener() {
-            @Override
-            public void onNoDoubleClick(View v) {
-                switch (v.getId()) {
+        switch (v.getId()) {
 
             /*更多信息*/
-                    case R.id.layout_more:
-                        layout_more.setVisibility(View.GONE);
-                        containerOp.setVisibility(View.VISIBLE);
-                        break;
+            case R.id.layout_more:
+                layout_more.setVisibility(View.GONE);
+                containerOp.setVisibility(View.VISIBLE);
+                break;
 
             /*手机添加1*/
-                    case R.id.iv_phone_insert1:
-                        tv_phone_name1.setText("手机1    ");
-                        tv_phone_name2.setText("手机2    ");
-                        iv_phone_insert1.setVisibility(View.INVISIBLE);
-                        ll_phone_layout2.setVisibility(View.VISIBLE);
-                        break;
+            case R.id.iv_phone_insert1:
+                tv_phone_name1.setText("手机1    ");
+                tv_phone_name2.setText("手机2    ");
+                iv_phone_insert1.setVisibility(View.INVISIBLE);
+                ll_phone_layout2.setVisibility(View.VISIBLE);
+                break;
 
             /*手机添加2*/
-                    case R.id.iv_phone_insert2:
-                        tv_phone_name3.setText("手机3    ");
-                        iv_phone_insert2.setVisibility(View.INVISIBLE);
-                        ll_phone_layout3.setVisibility(View.VISIBLE);
-                        break;
+            case R.id.iv_phone_insert2:
+                tv_phone_name3.setText("手机3    ");
+                iv_phone_insert2.setVisibility(View.INVISIBLE);
+                ll_phone_layout3.setVisibility(View.VISIBLE);
+                break;
 
             /*电话添加1*/
-                    case R.id.iv_call_insert1:
-                        tv_call_name1.setText("座机1    ");
-                        tv_call_name2.setText("座机2    ");
-                        iv_call_insert1.setVisibility(View.INVISIBLE);
-                        ll_call_layout2.setVisibility(View.VISIBLE);
-                        break;
+            case R.id.iv_call_insert1:
+                tv_call_name1.setText("座机1    ");
+                tv_call_name2.setText("座机2    ");
+                iv_call_insert1.setVisibility(View.INVISIBLE);
+                ll_call_layout2.setVisibility(View.VISIBLE);
+                break;
 
             /*电话添加2*/
-                    case R.id.iv_call_insert2:
-                        tv_call_name3.setText("座机3    ");
-                        iv_call_insert2.setVisibility(View.INVISIBLE);
-                        ll_call_layout3.setVisibility(View.VISIBLE);
-                        break;
+            case R.id.iv_call_insert2:
+                tv_call_name3.setText("座机3    ");
+                iv_call_insert2.setVisibility(View.INVISIBLE);
+                ll_call_layout3.setVisibility(View.VISIBLE);
+                break;
 
             /*地区*/
-                    case R.id.layout_customer_district:
-                        loadAreaCodeTable();
-                        break;
+            case R.id.layout_customer_district:
+                loadAreaCodeTable();
+                break;
 
 
             /*刷新地址*/
-                    case R.id.img_refresh_address:
-                        if (LocationUtilGD.permissionLocation(CustomerAddActivity.this)) {
-                            mBundle = new Bundle();
-                            mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                            app.startActivityForResult(CustomerAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
-                        }
-                        break;
+            case R.id.img_refresh_address:
+                if (LocationUtilGD.permissionLocation(CustomerAddActivity.this)) {
+                    mBundle = new Bundle();
+                    mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
+                    app.startActivityForResult(CustomerAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                }
+                break;
 
             /*查重*/
-                    case R.id.tv_search:
-                        if (!edt_name.getText().toString().isEmpty()) {
-                            Bundle bundle1 = new Bundle();
-                            bundle1.putString("name", edt_name.getText().toString());
-                            app.startActivityForResult((Activity) mContext, CustomerRepeat.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
+            case R.id.tv_search:
+                if (!edt_name.getText().toString().isEmpty()) {
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("name", edt_name.getText().toString());
+                    app.startActivityForResult((Activity) mContext, CustomerRepeat.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
 
-                        } else {
-                            Toast("客户名称不能为空");
-                        }
-                        break;
+                } else {
+                    Toast("客户名称不能为空");
+                }
+                break;
              /*工商查询*/
-                    case R.id.tv_gscx:
-                        if (!edt_name.getText().toString().isEmpty()) {
-                            Bundle bundle1 = new Bundle();
-                            bundle1.putString("Keyword", edt_name.getText().toString());
-                            app.startActivityForResult((Activity) mContext, BusinessInquiryActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
-                            //统计工商查询次数(正式环境)
-                            UmengAnalytics.umengSend(mContext, UmengAnalytics.businessQuery);
-                        } else {
-                            Toast("客户名称不能为空");
-                        }
-                        break;
+            case R.id.tv_gscx:
+                if (!edt_name.getText().toString().isEmpty()) {
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("Keyword", edt_name.getText().toString());
+                    app.startActivityForResult((Activity) mContext, BusinessInquiryActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
+                    //统计工商查询次数(正式环境)
+                    UmengAnalytics.umengSend(mContext, UmengAnalytics.businessQuery);
+                } else {
+                    Toast("客户名称不能为空");
+                }
+                break;
 
-                    case R.id.img_title_left:
-                        app.finishActivity(CustomerAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
-                        break;
+            case R.id.img_title_left:
+                app.finishActivity(CustomerAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                break;
 
             /*提交*/
-                    case R.id.img_title_right:
+            case R.id.img_title_right:
 
-                        if (!Utils.isNetworkAvailable(mContext)) {
-                            Toast("请检查您的网络连接");
-                            return;
-                        }
+                if (!Utils.isNetworkAvailable(mContext)) {
+                    Toast("请检查您的网络连接");
+                    return;
+                }
 
-                        uuid = StringUtil.getUUID();
-                        customer_name = edt_name.getText().toString().trim();
-                        customerAddress = et_address.getText().toString().trim();
-                        customerContract = edt_contract.getText().toString().trim();
-                        customerContractTel = edt_contract_tel1.getText().toString().trim();
-                        customerWrietele = edt_contract_telnum1.getText().toString().trim();
-                        cusotmerDetalisAddress = edit_address_details.getText().toString().trim();
-                        memo = edt_content.getText().toString().trim();
+                uuid = StringUtil.getUUID();
+                customer_name = edt_name.getText().toString().trim();
+                customerAddress = et_address.getText().toString().trim();
+                customerContract = edt_contract.getText().toString().trim();
+                customerContractTel = edt_contract_tel1.getText().toString().trim();
+                customerWrietele = edt_contract_telnum1.getText().toString().trim();
+                cusotmerDetalisAddress = edit_address_details.getText().toString().trim();
+                memo = edt_content.getText().toString().trim();
 
-                        if (customer_name.isEmpty()) {
-                            Toast("请输入客户名称!");
-                            return;
-                        } else if (customerAddress.isEmpty() && cusLocation) {
-                            Toast("请输入的客户地址!");
-                            return;
-                        } else if (cusotmerDetalisAddress.isEmpty() && cusDetialAdress) {
-                            Toast("请输入的客户详细地址!");
-                            return;
-                        } else if (TextUtils.isEmpty(customerContractTel) && cusPhone) {
-                            Toast("请输入客户手机号码!");
-                            return;
-                        } else if (TextUtils.isEmpty(customerWrietele) && cusMobile) {
-                            Toast("请输入客户座机号码!");
-                            return;
-                        } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
-                            Toast("请输入联系人姓名!");
-                            return;
-                        } else if (TextUtils.isEmpty(memo) && cusMemo) {
-                            Toast("请填写客户简介!");
-                            return;
-                        } else if (!testDynamicword()) {
-                            Toast("请填写必填字段!");
-                            return;
-                        }
+                if (customer_name.isEmpty()) {
+                    Toast("请输入客户名称!");
+                    return;
+                } else if (customerAddress.isEmpty() && cusLocation) {
+                    Toast("请输入的客户地址!");
+                    return;
+                } else if (cusotmerDetalisAddress.isEmpty() && cusDetialAdress) {
+                    Toast("请输入的客户详细地址!");
+                    return;
+                } else if (TextUtils.isEmpty(customerContractTel) && cusPhone) {
+                    Toast("请输入客户手机号码!");
+                    return;
+                } else if (TextUtils.isEmpty(customerWrietele) && cusMobile) {
+                    Toast("请输入客户座机号码!");
+                    return;
+                } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
+                    Toast("请输入联系人姓名!");
+                    return;
+                } else if (TextUtils.isEmpty(memo) && cusMemo) {
+                    Toast("请填写客户简介!");
+                    return;
+                } else if (!testDynamicword()) {
+                    Toast("请填写必填字段!");
+                    return;
+                } else if (!SClick.check(SClick.BUTTON_CLICK, 5000)) {
+                    return;
+                }
 
-                        showCommitLoading();
-                        if (controller.count() <= 0) {
-                            requestCommitTask();
-                        } else {
-                            controller.startUpload();
-                            controller.notifyCompletionIfNeeded();
-                        }
+                showCommitLoading();
+                if (controller.count() <= 0) {
+                    requestCommitTask();
+                } else {
+                    controller.startUpload();
+                    controller.notifyCompletionIfNeeded();
+                }
 
 
-                        break;
+                break;
 
             /*选择标签*/
-                    case R.id.layout_customer_label:
-                        Bundle bundle2 = new Bundle();
-                        if (tags != null) {
-                            bundle2.putSerializable("tags", tags);
-                        }
-                        app.startActivityForResult((Activity) mContext, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
-                        break;
+            case R.id.layout_customer_label:
+                Bundle bundle2 = new Bundle();
+                if (tags != null) {
+                    bundle2.putSerializable("tags", tags);
                 }
-            }
-        });
+                app.startActivityForResult((Activity) mContext, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
+                break;
+        }
     }
 
     /**
