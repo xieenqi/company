@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
@@ -113,35 +114,40 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.img_title_left:
-                onBackPressed();
-                break;
-            case R.id.img_title_right:
-                if (TextUtils.isEmpty(et_name.getText().toString().trim())) {
-                    Toast("请输入线索名称");
-                    return;
-                } else if (TextUtils.isEmpty(et_company.getText().toString().trim())) {
-                    Toast("请输入公司名称");
-                    return;
+        v.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                switch (v.getId()) {
+                    case R.id.img_title_left:
+                        onBackPressed();
+                        break;
+                    case R.id.img_title_right:
+                        if (TextUtils.isEmpty(et_name.getText().toString().trim())) {
+                            Toast("请输入线索名称");
+                            return;
+                        } else if (TextUtils.isEmpty(et_company.getText().toString().trim())) {
+                            Toast("请输入公司名称");
+                            return;
+                        }
+                        if (et_name.getText().toString().trim().length() > 20) {
+                            Toast("线索名称应少于20个字符");
+                            return;
+                        }
+                        if (et_company.getText().toString().trim().length() > 50) {
+                            Toast("公司名称应少于50个字符");
+                            return;
+                        }
+                        addDataInfo();
+                        break;
+                    case R.id.ll_area://地区选择
+                        selectArea();
+                        break;
+                    case R.id.ll_source://线索来源选择
+                        selectSource();
+                        break;
                 }
-                if (et_name.getText().toString().trim().length() > 20) {
-                    Toast("线索名称应少于20个字符");
-                    return;
-                }
-                if (et_company.getText().toString().trim().length() > 50) {
-                    Toast("公司名称应少于50个字符");
-                    return;
-                }
-                addDataInfo();
-                break;
-            case R.id.ll_area://地区选择
-                selectArea();
-                break;
-            case R.id.ll_source://线索来源选择
-                selectSource();
-                break;
-        }
+            }
+        });
     }
 
 
@@ -195,7 +201,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
 
     /**
      * 新建编辑 线索
-     * */
+     */
     private void addDataInfo() {
         showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
@@ -232,18 +238,18 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if(null!=clueDetail){
+                            if (null != clueDetail) {
                                 app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT,
                                         ExtraAndResult.REQUEST_CODE, new Intent());
                             }
                         }
-                    },2000);
+                    }, 2000);
                 }
             });
 
 
         } else {
-            ClueService.editClue(clueId,map).subscribe(new DefaultLoyoSubscriber<Object>(hud, "编辑线索成功") {
+            ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<Object>(hud, "编辑线索成功") {
                 @Override
                 public void onNext(Object o) {
                     new Handler().postDelayed(new Runnable() {
@@ -251,7 +257,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                         public void run() {
                             onBackPressed();
                         }
-                    },2000);
+                    }, 2000);
                 }
             });
         }
