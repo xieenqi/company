@@ -134,12 +134,6 @@ public class TerminateOrderCommitActivity extends BaseActivity {
         map.put("bizFormId", selectedProcess.getBizformId());
         map.put("wfTplId", selectedProcess.getId());
         map.put("endReason", reason);
-
-        if (true/*test*/) {
-            finishWithPopAnimation();
-            return;
-        }
-
         showCommitLoading();
         OrderService.terminationOrderWithProcess(orderId, map)
                 .subscribe(new DefaultLoyoSubscriber<Object>(hud) {

@@ -62,6 +62,7 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
 
     @Override
     public void getPageData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
         getPlanList();
     }
 
@@ -149,33 +150,35 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
     }
 
     private void addCapitalReturningFromPlan(Intent data) {
-        if (data == null) {
-            return;
-        }
-        EstimateAdd mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
-        if (mEstimateAdd == null) {
-            return;
-        }
+        getPlanList();
+//        if (data == null) {
+//            return;
+//        }
+//        EstimateAdd mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
+//        if (mEstimateAdd == null) {
+//            return;
+//        }
 
-        showCommitLoading();
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("attachmentUUId", mEstimateAdd.attachmentUUId);
-        map.put("payeeMethod", mEstimateAdd.payeeMethod);
-        map.put("orderId", orderId);
-        map.put("attachmentsName", "");
-        map.put("receivedAt", mEstimateAdd.receivedAt);
-        map.put("receivedMoney", mEstimateAdd.receivedMoney);
-        map.put("billingMoney", mEstimateAdd.billingMoney);
-        map.put("remark", mEstimateAdd.remark);
-        map.put("payMethodString", getPayeeMethod(mEstimateAdd.payeeMethod));
-        map.put("payeeUser", mEstimateAdd.payeeUser);
-        map.put("planId", planIdForGenerateCapitalReturning);
-        OrderService.addPayEstimate(map)
-                .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
-                    @Override
-                    public void onNext(EstimateAdd add) {
-                    }
-                });
+//        showCommitLoading();
+//        HashMap<String, Object> map = new HashMap<>();
+//        map.put("attachmentUUId", mEstimateAdd.attachmentUUId);
+//        map.put("payeeMethod", mEstimateAdd.payeeMethod);
+//        map.put("orderId", orderId);
+//        map.put("attachmentsName", "");
+//        map.put("receivedAt", mEstimateAdd.receivedAt);
+//        map.put("receivedMoney", mEstimateAdd.receivedMoney);
+//        map.put("billingMoney", mEstimateAdd.billingMoney);
+//        map.put("remark", mEstimateAdd.remark);
+//        map.put("payMethodString", getPayeeMethod(mEstimateAdd.payeeMethod));
+//        map.put("payeeUser", mEstimateAdd.payeeUser);
+//        map.put("planId", planIdForGenerateCapitalReturning);
+//        OrderService.addPayEstimate(map)
+//                .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
+//                    @Override
+//                    public void onNext(EstimateAdd add) {
+//                        getPlanList();
+//                    }
+//                });
     }
 
     private String getPayeeMethod(int payeeMethod) {
@@ -199,6 +202,13 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
                 break;
         }
         return result;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent mIntent = new Intent();
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+        super.onBackPressed();
     }
 
     @Override
