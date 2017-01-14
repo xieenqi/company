@@ -22,6 +22,9 @@
         android:gravity="start|center_vertical"
         style="@style/wfinstance_line_text_other_3"
         android:textSize="14sp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:maxLines="1"
         android:textColor="@color/text99"
         />
 </LinearLayout>
