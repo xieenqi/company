@@ -353,6 +353,9 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_RESPONSIBLE_PERSON_CHANGE);
         worksheetAdd
                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_WORKSHEET_ADD);
+
+        isStop = isStop && ! mData.hasTerminate();
+
         img_title_right.setVisibility(
                 (isDelete || isEdit || isCopy || isStop) ? View.VISIBLE:View.GONE
         );
