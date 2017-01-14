@@ -66,6 +66,11 @@ public class OrderDetail implements Serializable {
     }
 
     public String getTerminateWfDisplayTitle() {
-        return  unExpectedWfName + "(" +getTerminateWfStatus()+")";
+        StringBuilder builder = new StringBuilder();
+        builder.append(unExpectedWfName);
+        builder.append("(");
+        builder.append(getTerminateWfStatus());
+        builder.append(")");
+        return builder.toString().trim();
     }
 }

@@ -326,9 +326,10 @@
                             android:id="@+id/tv_wfname"
                             style="@style/common_text_line_second"
                             android:ellipsize="middle"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left|center_vertical"
+                            android:gravity="left"
                             android:textColor="#209AFF" />
 
                     </LinearLayout>
@@ -350,9 +351,10 @@
                             android:id="@+id/tv_wf_terminate_name"
                             style="@style/common_text_line_second"
                             android:ellipsize="middle"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left|center_vertical"
+                            android:gravity="left"
                             android:textColor="#209AFF" />
 
                     </LinearLayout>
