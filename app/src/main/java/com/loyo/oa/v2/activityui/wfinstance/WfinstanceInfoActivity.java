@@ -221,9 +221,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 } else if (401 == wfInstance_current.bizForm.bizCode) {//订单意外终止审批
                     orderData();
                     ll_customer.setVisibility(View.GONE);
+                    ll_project.setVisibility(View.GONE);
                 } else if (500 == wfInstance_current.bizForm.bizCode) {//回款审批
                     paymentData();
                     ll_customer.setVisibility(View.GONE);
+                    ll_project.setVisibility(View.GONE);
                 } else {
                     initData_WorkflowValues();
                 }

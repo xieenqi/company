@@ -419,12 +419,12 @@
                             </LinearLayout>
                         </RelativeLayout>
 
-                        <include layout="@layout/common_include_line_in_space" />
 
                         <RelativeLayout
                             android:id="@+id/layout_wirete"
                             android:layout_width="fill_parent"
                             android:layout_height="@dimen/common_line_height">
+                            <include layout="@layout/common_include_line_in_space" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
