@@ -218,6 +218,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 } else if (400 == wfInstance_current.bizForm.bizCode) {//订单审批
                     orderData();
                     ll_customer.setVisibility(View.GONE);
+                } else if (401 == wfInstance_current.bizForm.bizCode) {//订单意外终止审批
+                    orderData();
+                    ll_customer.setVisibility(View.GONE);
                 } else if (500 == wfInstance_current.bizForm.bizCode) {//回款审批
                     paymentData();
                     ll_customer.setVisibility(View.GONE);
@@ -322,7 +325,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     }
                 });
-        if (!TextUtils.isEmpty(order.endReason)) {
+        if (!TextUtils.isEmpty(order.endReason) && (401 == mWfInstance.bizForm.bizCode)) {
             addOrderField("终止原因：", order.endReason, getResources().getColor(R.color.wfinstance_text_red));
         }
         addOrderField("成交金额：", String.valueOf(order.dealMoney));

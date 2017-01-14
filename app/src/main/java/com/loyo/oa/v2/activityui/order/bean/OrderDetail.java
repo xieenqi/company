@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.order.bean;
 
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activityui.wfinstance.common.SubmitStatus;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 
 import java.io.Serializable;
@@ -56,4 +57,15 @@ public class OrderDetail implements Serializable {
     public String wfName;
     public String directorId;//负责人id
     public String endReason;
+    public String unExpectedWfId;
+    public String unExpectedWfName;
+    public int unExpectedStatus;
+
+    public String getTerminateWfStatus() {
+        return SubmitStatus.getStatus(unExpectedStatus).getName();
+    }
+
+    public String getTerminateWfDisplayTitle() {
+        return  unExpectedWfName + "(" +getTerminateWfStatus()+")";
+    }
 }

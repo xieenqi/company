@@ -142,6 +142,8 @@ public class TerminateOrderCommitActivity extends BaseActivity {
                         LoyoUIThread.runAfterDelay(new Runnable() {
                             @Override
                             public void run() {
+                                Intent intent = new Intent();
+                                setResult(RESULT_OK, intent);
                                 finishWithPopAnimation();
                             }
                         },2000);
