@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
@@ -120,17 +121,22 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.img_title_left:
-                ((WorksheetAddActivity) getActivity()).previousStep();
-                break;
-            case R.id.img_title_right:
-                uuid = StringUtil.getUUID();
-                showCommitLoading();
-                controller.startUpload();
-                controller.notifyCompletionIfNeeded();
-                break;
-        }
+        v.setOnClickListener(new NoDoubleClickListener(5000) {
+            @Override
+            public void onNoDoubleClick(View v) {
+                switch (v.getId()) {
+                    case R.id.img_title_left:
+                        ((WorksheetAddActivity) getActivity()).previousStep();
+                        break;
+                    case R.id.img_title_right:
+                        uuid = StringUtil.getUUID();
+                        showCommitLoading();
+                        controller.startUpload();
+                        controller.notifyCompletionIfNeeded();
+                        break;
+                }
+            }
+        });
     }
 
     private void commitWorksheet() {
@@ -191,7 +197,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
                                 AppBus.getInstance().post(ws);
                                 app.finishActivity(getActivity(), MainApp.ENTER_TYPE_LEFT, 0, intent);
                             }
-                        },1000);
+                        }, 1000);
                     }
                 });
     }
@@ -247,7 +253,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }

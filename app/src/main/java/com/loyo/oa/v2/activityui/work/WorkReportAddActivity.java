@@ -20,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -455,106 +456,108 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         int year = DateTool.calendar.get(Calendar.YEAR);
         int month = DateTool.calendar.get(Calendar.MONTH);
 //        tv_time.setText(year + "." + String.format("%02d", (month + 1)));
-        tv_time.setText(com.loyo.oa.common.utils.DateTool.getYearMonth(System.currentTimeMillis()/1000));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getYearMonth(System.currentTimeMillis() / 1000));
         mSelectType = WorkReport.MONTH;
 
     }
 
     @Click({R.id.tv_resignin, R.id.img_title_left, R.id.img_title_right, R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_del, R.id.layout_mproject})
     void onClick(final View v) {
-        Bundle mBundle;
-        switch (v.getId()) {
+        v.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                Bundle mBundle;
+                switch (v.getId()) {
 
             /*返回*/
-            case R.id.img_title_left:
-                app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
-                break;
+                    case R.id.img_title_left:
+                        app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                        break;
 
             /*提交*/
-            case R.id.img_title_right:
-                content = edt_content.getText().toString().trim();
-                if (TextUtils.isEmpty(content)) {
-                    Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
-                    break;
-                }
-                if (mReviewer == null) {
-                    Toast(getString(R.string.review_user) + getString(R.string.app_no_null));
-                    break;
-                } else {
-                    if (mReviewer.user != null && MainApp.user.id.equals(mReviewer.user.getId())) {
-                        Toast("点评人不能是自己");
+                    case R.id.img_title_right:
+                        content = edt_content.getText().toString().trim();
+                        if (TextUtils.isEmpty(content)) {
+                            Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
+                            break;
+                        }
+                        if (mReviewer == null) {
+                            Toast(getString(R.string.review_user) + getString(R.string.app_no_null));
+                            break;
+                        } else {
+                            if (mReviewer.user != null && MainApp.user.id.equals(mReviewer.user.getId())) {
+                                Toast("点评人不能是自己");
+                                break;
+                            }
+                        }
+
+                        //没有附件
+                        showCommitLoading();
+                        if (controller.count() == 0) {
+                            requestCommitWork();
+                            //有附件
+                        } else {
+                            controller.startUpload();
+                            controller.notifyCompletionIfNeeded();
+                        }
+
                         break;
-                    }
-                }
-
-                //没有附件
-                showCommitLoading();
-                if (controller.count() == 0) {
-                    requestCommitWork();
-                    //有附件
-                } else {
-                    controller.startUpload();
-                    controller.notifyCompletionIfNeeded();
-                }
-
-                break;
 
             /*选择日期*/
-            case R.id.tv_resignin:
-                selectDate();
-                break;
+                    case R.id.tv_resignin:
+                        selectDate();
+                        break;
 
             /*点评人*/
-            case R.id.layout_reviewer: {
-                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer != null ? mReviewer.user : null);
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
-                if (collection != null) {
-                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
-                }
-                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
-                Intent intent = new Intent();
-                intent.setClass(this, ContactPickerActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-            break;
+                    case R.id.layout_reviewer: {
+                        StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer != null ? mReviewer.user : null);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                        if (collection != null) {
+                            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                        }
+                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                        Intent intent = new Intent();
+                        intent.setClass(WorkReportAddActivity.this, ContactPickerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                    break;
 
             /*抄送人*/
-            case R.id.layout_toUser: {
-                StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
-                if (collection != null) {
-                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
-                }
-                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
-                Intent intent = new Intent();
-                intent.setClass(this, ContactPickerActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-            break;
+                    case R.id.layout_toUser: {
+                        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                        if (collection != null) {
+                            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                        }
+                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                        Intent intent = new Intent();
+                        intent.setClass(WorkReportAddActivity.this, ContactPickerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                    break;
 
-            case R.id.layout_del:
-                users.clear();
-                depts.clear();
-                tv_toUser.setText("");
-                layout_del.setVisibility(View.GONE);
-                img_title_toUser.setVisibility(View.VISIBLE);
-                break;
+                    case R.id.layout_del:
+                        users.clear();
+                        depts.clear();
+                        tv_toUser.setText("");
+                        layout_del.setVisibility(View.GONE);
+                        img_title_toUser.setVisibility(View.VISIBLE);
+                        break;
 
             /*选择项目归档*/
-            case R.id.layout_mproject:
-                mBundle = new Bundle();
-                mBundle.putInt("from", WORK_ADD);
-                mBundle.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
-                break;
-
-            default:
-                break;
-        }
+                    case R.id.layout_mproject:
+                        mBundle = new Bundle();
+                        mBundle.putInt("from", WORK_ADD);
+                        mBundle.putInt(ExtraAndResult.EXTRA_STATUS, 1);
+                        app.startActivityForResult(WorkReportAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
+                        break;
+                }
+            }
+        });
     }
 
     /**
@@ -579,18 +582,18 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      * 编辑报告请求
      */
     public void updateReport(final HashMap map) {
-        WorkReportService.updateWorkReport(mWorkReport.getId(),map)
+        WorkReportService.updateWorkReport(mWorkReport.getId(), map)
                 .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud, "编辑报告成功") {
-            @Override
-            public void onNext(final WorkReport workReport) {
-                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void run() {
-                        dealResult(workReport);
+                    public void onNext(final WorkReport workReport) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dealResult(workReport);
+                            }
+                        }, 1000);
                     }
-                },1000);
-            }
-        });
+                });
     }
 
     /**
@@ -599,16 +602,16 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     public void creteReport(final HashMap map) {
         WorkReportService.createWorkReport(map)
                 .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud, "新建报告成功") {
-            @Override
-            public void onNext(final WorkReport workReport) {
-                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void run() {
-                        dealResult(workReport);
+                    public void onNext(final WorkReport workReport) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dealResult(workReport);
+                            }
+                        }, 1000);
                     }
-                },1000);
-            }
-        });
+                });
     }
 
 
@@ -963,7 +966,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     @Override
     public void onAddEvent(UploadController controller) {
         PhotoPicker.builder()
-                .setPhotoCount(9-controller.count())
+                .setPhotoCount(9 - controller.count())
                 .setShowCamera(true)
                 .setPreviewEnabled(false)
                 .start(this);
@@ -976,7 +979,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }
