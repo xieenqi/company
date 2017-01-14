@@ -23,6 +23,9 @@ import com.loyo.oa.v2.activityui.project.fragment.DiscussionFragment;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
+import com.loyo.oa.v2.beans.TaskRecord;
+import com.loyo.oa.v2.beans.WfInstanceRecord;
+import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
@@ -106,21 +109,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * 获取项目 详细数据
      */
     private void getProject() {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjectById(projectId, keyType, new RCallback<HttpProject>() {
-//            @Override
-//            public void success(final HttpProject _project, final Response response) {
-//                HttpErrorCheck.checkResponse("项目详情 ", response);
-//                project = _project;
-//                img_title_right.setEnabled(true);
-//                initData(project);
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error, ll_loading);
-//            }
-//        });
 
         ProjectService.getProjectById(projectId,keyType).subscribe(new DefaultLoyoSubscriber<HttpProject>(ll_loading) {
             @Override
@@ -149,23 +137,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 isRestart = project.status == 2 && project.isCreator();
                 //负责人和创建人相同 就取大的那个(创建人)
                 isEditMember = project.status == 1 && project.isManager() && !project.isCreator();
-
-//                Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-//                if (project.status == 1) {
-//                    if (project.isCreator()) {
-//                        intent.putExtra("delete", true);
-//                        intent.putExtra("edit", true);
-//                        intent.putExtra("extra", "结束项目"); //1:未完成
-//                    } else if (project.isManager()) {
-//                        intent.putExtra("edit", true);
-//                        intent.putExtra("editText", "修改参与人");
-//                    }
-//                } else {
-//                    if (project.isCreator()) {
-//                        intent.putExtra("extra", "重启项目"); //0:关闭
-//                    }
-//                }
-//                startActivityForResult(intent, ExtraAndResult.REQUSET_STATUS);
 
                 functionButton();
                 break;
@@ -268,8 +239,12 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     bundle.putInt("type", 12);
                 }
 
-                if (i <= 2) {
-                    fragmentX = new BaseChildMainListFragmentX();//任务，报告，审批
+                if(0==i){
+                    fragmentX = new BaseChildMainListFragmentX<TaskRecord>();//任务
+                }else if(1==i){
+                    fragmentX = new BaseChildMainListFragmentX<WorkReportRecord>();//报告
+                }else if (2==i) {
+                    fragmentX = new BaseChildMainListFragmentX<WfInstanceRecord>();//审批
                 } else if (i == TITLES.length - 1) {
                     fragmentX = new DiscussionFragment();//讨论
                 } else {
@@ -353,25 +328,10 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         adapter.notifyDataSetChanged();
         tabs.notifyDataSetChanged();
     }
-
     /**
      * 项目删除
      */
     public void deleteProject() {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).deleteProject(project.getId(), new RCallback<Project>() {
-//            @Override
-//            public void success(final Project o, final Response response) {
-//                HttpErrorCheck.checkResponse("删除项目：", response);
-//                Intent intent = new Intent();
-//                intent.putExtra("delete", project);
-//                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
 
         ProjectService.deleteProject(project.getId()).subscribe(new DefaultLoyoSubscriber<Project>() {
             @Override
@@ -433,30 +393,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             case TasksInfoActivity.REQUEST_EDIT:
                 getProject();
                 break;
-//            case ExtraAndResult.REQUSET_STATUS:
-//                if (data.getBooleanExtra("edit", false)) {
-//                    Bundle bundle = new Bundle();
-//                    bundle.putBoolean("mUpdate", true);
-//                    bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, project);
-//                    app.startActivityForResult(this, ProjectAddActivity_.class, MainApp.ENTER_TYPE_RIGHT,
-//                            TasksInfoActivity.REQUEST_EDIT, bundle);
-//                    isUpdate = true;
-//                }
-//                //删除回调
-//                else if (data.getBooleanExtra("delete", false)) {
-//                    deleteProject();
-//                }
-//                //结束任务或重启任务
-//                else if (data.getBooleanExtra("extra", false)) {
-//                    restartProject();
-//                }
-//                break;
-//            case 196708://讨论不能够@自己196708
-//                if (fragmentX instanceof DiscussionFragment) {
-//                    ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
-//                }
-//
-//                break;
 
         }
     }

@@ -26,6 +26,7 @@ import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Pagination;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.TaskRecord;
@@ -51,7 +52,7 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/9/7.
  */
-public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implements AbsListView.OnScrollListener {
+public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainListFragmentX_ implements AbsListView.OnScrollListener {
 
     private CommonExpandableListAdapter adapter;
     private HttpProject mProject;
@@ -137,58 +138,20 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     int pageIndex;
 
     @Override
-    public void GetData(final Boolean isTopAdd, final Boolean isBottomAdd) {
+    public void GetData() {
         if (null == mProject) {
             return;
         }
-
-        if (lstData == null) {
-            lstData = new ArrayList();
-        }
-        pageIndex = isBottomAdd ? (pagination.getPageIndex() + 1) : 1;
-        int pageSize = isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : pagination.getPageSize();
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", pageIndex);
-        map.put("pageSize", pageSize);
+        map.put("pageIndex", pagination.getShouldLoadPageIndex());
+        map.put("pageSize", pagination.getPageSize());
+        ProjectService.<T>getProjectNewSubs(mProject.getId(),type,map).subscribe(new DefaultLoyoSubscriber<PaginationX<T>>(ll_loading) {
+            @Override
+            public void onNext(PaginationX<T> tPaginationX) {
 
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjectNewSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
-//            @Override
-//            public void success(Pagination paginationx, Response response) {
-//                HttpErrorCheck.checkResponse("获取项目详情的任务，报告，审批json", response);
-//
-//                mExpandableListView.onRefreshComplete();
-//                if (!Pagination.isEmpty(paginationx)) {
-//                    ArrayList lstDataTemp = GetTData(paginationx);
-//                    pagination.setPageIndex(paginationx.getPageIndex());
-//                    pagination.setPageSize(paginationx.getPageSize());
-//                    if (isTopAdd) {
-//                        lstData.clear();
-//                    }
-//                    lstData.addAll(lstDataTemp);
-//                    onLoadSuccess(paginationx.getTotalRecords());
-//                    pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
-//                    changeAdapter();
-//                    expand();
-//                } else {
-//                    if (!(paginationx.getRecords().size() > 0) && pageIndex == 1) {
-//                        pagingGroupDatas.clear();
-//                        changeAdapter();
-//                    }
-//                }
-//                ll_loading.setStatus(LoadingLayout.Success);
-//                if (isTopAdd && lstData.size() == 0)
-//                    ll_loading.setStatus(LoadingLayout.Empty);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error, ll_loading);
-//                super.failure(error);
-//                if (null != mExpandableListView) {
-//                    mExpandableListView.onRefreshComplete();
-//                }
-//            }
-//        });
+            }
+        });
+
 
         ProjectService.getProjectNewSubs(mProject.getId(),type,map).subscribe(new DefaultLoyoSubscriber<Pagination>(ll_loading) {
             @Override
@@ -201,7 +164,6 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
 
             @Override
             public void onNext(Pagination paginationx) {
-
                 mExpandableListView.onRefreshComplete();
                 if (!Pagination.isEmpty(paginationx)) {
                     ArrayList lstDataTemp = GetTData(paginationx);

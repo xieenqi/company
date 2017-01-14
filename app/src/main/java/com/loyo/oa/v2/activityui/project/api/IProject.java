@@ -42,7 +42,7 @@ public interface IProject {
 
     //1:工作报告, 2:任务, 12:快捷审批
     @GET("/project/{id}/records/{bizType}/mobile/simplify")
-    Observable<Pagination> getProjectNewSubs(@Path("id") String id, @Path("bizType") int bizType, @QueryMap HashMap<String, Object> map);
+    <T> Observable<PaginationX<T>> getProjectNewSubs(@Path("id") String id, @Path("bizType") int bizType, @QueryMap HashMap<String, Object> map);
 
 
     @POST("/project")

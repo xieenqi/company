@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.project.api;
 import com.loyo.oa.v2.activityui.clue.api.IClue;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.activityui.project.ProjectAddActivity;
-import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
@@ -47,25 +46,14 @@ public class ProjectService {
                         .Update(id,body)
                         .compose(RetrofitAdapterFactory.<Project>compatApplySchedulers());
     }
-//没看到哪儿在用
-//1:工作报告, 2:任务, 12:快捷审批
-//    public static Observable<Pagination> getProjectSubs( String id,int bizType,HashMap<String, Object> map) {
-//        return
-//                RetrofitAdapterFactory.getInstance()
-//                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-//                        .create(IProject.class)
-//                        .getProjectSubs(id,bizType,map)
-//                        .compose(RetrofitAdapterFactory.<Pagination>compatApplySchedulers());
-//    }
-
     //1:工作报告, 2:任务, 12:快捷审批
-    public static Observable<Pagination> getProjectNewSubs(String id, int bizType,  HashMap<String, Object> map) {
+    public static <T> Observable<PaginationX<T>> getProjectNewSubs(String id, int bizType,  HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL())
                         .create(IProject.class)
-                        .getProjectNewSubs(id,bizType,map)
-                        .compose(RetrofitAdapterFactory.<Pagination>compatApplySchedulers());
+                        .<T>getProjectNewSubs(id,bizType,map)
+                        .compose(RetrofitAdapterFactory.<PaginationX<T>>compatApplySchedulers());
     }
 
     public static Observable<Project> Create(ProjectAddActivity.ProjectTransObj body) {

@@ -35,7 +35,6 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
     protected PaginationX<T> pagination = new PaginationX<>(20);
     protected PullToRefreshExpandableListView mExpandableListView;
     protected ArrayList<PagingGroupData_<T>> pagingGroupDatas = new ArrayList<>();
-    protected ArrayList<T> lstData=new ArrayList<>();
     public LoadingLayout ll_loading;
 
     @Override
@@ -59,7 +58,8 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
                 @Override
                 public void onReload(View v) {
                     ll_loading.setStatus(LoadingLayout.Loading);
-                    GetData(true, false);
+                    pagination.setFirstPage();
+                    GetData();
                 }
             });
             layout_add = (ViewGroup) mView.findViewById(R.id.layout_add);
@@ -76,7 +76,8 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
             mExpandableListView.setOnRefreshListener(this);
             init();
         }
-        GetData(true, false);
+        pagination.setFirstPage();
+        GetData();
         return mView;
     }
 
@@ -116,7 +117,7 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
         }
     }
 
-    public abstract void GetData(Boolean isTopAdd, Boolean isBottomAdd);
+    public abstract void GetData();
 
     public abstract void initAdapter();
 
@@ -136,33 +137,32 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        GetData(true, false);
+        pagination.setFirstPage();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        GetData(false, true);
+        GetData();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        //TODO 这里目前数加载数据，有空了，取消数据直接插入。
+        pagination.setFirstPage();
         if (resultCode == 0x09) {
-            GetData(true, false);
+            GetData();
         }
-
         if (null == data) {
             return;
         }
-
         switch (requestCode) {
             case REQUEST_CREATE:
                 T item = (T) data.getSerializableExtra("data");
                 if (item == null) {
                     return;
                 }
-                GetData(true, false);
+                GetData();
                 return;
             case REQUEST_REVIEW:
                 T reviewItem = (T) data.getSerializableExtra("review");
@@ -174,21 +174,21 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
                 if (null == reviewItem) {
                     return;
                 }
-                for (int i = 0; i < lstData.size(); i++) {
-                    if (TextUtils.equals(lstData.get(i).getId(), reviewItem.getId())) {
+                for (int i = 0; i < pagination.getLoadedTotalRecords(); i++) {
+                    if (TextUtils.equals(pagination.getRecords().get(i).getId(), reviewItem.getId())) {
                         if (deleteFlag) {
-                            lstData.remove(i);
+                            pagination.getRecords().remove(i);
                         } else {
-                            lstData.set(i, reviewItem);
+                            pagination.getRecords().set(i, reviewItem);
                         }
                         break;
                     }
                 }
-                GetData(true, false);
+                GetData();
                 break;
         }
 
-        pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
+        pagingGroupDatas = PagingGroupData_.convertGroupData(pagination.getRecords());
         changeAdapter();
         expand();
     }

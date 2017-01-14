@@ -139,8 +139,20 @@ public class PaginationX<T> implements Serializable {
     }
 
 
-    public int getTotalRecords() {
+    /**
+     * 获取已经加载的数据条数
+     * @return
+     */
+    public int getLoadedTotalRecords() {
         return records.size();
+    }
+
+    /**
+     * 获取全部的，包括还没有加载的数据条数
+     * @return
+     */
+    public int getTotalRecords() {
+        return totalRecords;
     }
 
     public void setTotalRecords(int t) {

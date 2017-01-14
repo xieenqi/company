@@ -23,7 +23,6 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.common.ClueType;
-import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -32,7 +31,6 @@ import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -245,7 +243,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
 
         @Override
         public int getCount() {
-            return mPaginationX.getTotalRecords();
+            return mPaginationX.getLoadedTotalRecords();
         }
 
         @Override

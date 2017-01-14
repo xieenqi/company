@@ -173,7 +173,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 //                    }
 //                    Collections.reverse(lstData_bulletin_current);
 //                    discussions.addAll(lstData_bulletin_current);
-//                    onLoadSuccess(pagination.getTotalRecords());
+//                    onLoadSuccess(pagination.getLoadedTotalRecords());
 //                    bindData();
 //                }
 //                lv_discuss.onRefreshComplete();
@@ -210,7 +210,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                     }
                     Collections.reverse(lstData_bulletin_current);
                     discussions.addAll(lstData_bulletin_current);
-                    onLoadSuccess(pagination.getTotalRecords());
+                    onLoadSuccess(pagination.getLoadedTotalRecords());
                     bindData();
                 }
                 lv_discuss.onRefreshComplete();
