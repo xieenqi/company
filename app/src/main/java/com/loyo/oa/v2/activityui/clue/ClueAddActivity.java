@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,6 +25,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.SharedUtil;
 
@@ -214,25 +214,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         map.put("remark", et_remake.getText().toString());
         map.put("source", tv_source.getText().toString());
         if (!isEdit) {
-//            这里的方式，存在添加失败，提示错误，重写网络请求
-//            ClueService.addClue(map).subscribe(new DefaultLoyoSubscriber<ClueDetailWrapper>(hud, "新建线索成功") {
-//                @Override
-//                public void onNext(final ClueDetailWrapper clueDetailWrapper) {
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if(clueDetailWrapper.errcode != 0){
-//                                Toast(clueDetailWrapper.errmsg);
-//                                return;
-//                            }else if(clueDetailWrapper.errcode == 0){
-//                                app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT,
-//                                        ExtraAndResult.REQUEST_CODE, new Intent());
-//                            }
-//                        }
-//                    },2000);
-//                }
-//            });
-            ClueService.addClueNew(map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "新建线索成功") {
+            ClueService.addClue(map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "新建线索成功") {
                 @Override
                 public void onNext(final ClueSales clueDetail) {
                     new Handler().postDelayed(new Runnable() {
@@ -246,18 +228,18 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                     }, 2000);
                 }
             });
-
-
         } else {
-            ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<Object>(hud, "编辑线索成功") {
+            ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "编辑线索成功") {
                 @Override
-                public void onNext(Object o) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            onBackPressed();
-                        }
-                    }, 2000);
+                public void onNext(ClueSales o) {
+                    if(null!=o){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onBackPressed();
+                            }
+                        }, 2000);
+                    }
                 }
             });
         }
