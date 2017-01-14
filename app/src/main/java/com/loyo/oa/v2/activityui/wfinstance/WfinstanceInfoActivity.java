@@ -818,6 +818,16 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 mBundle.putString("price", mWfInstance.order.dealMoney + "");
                 mBundle.putString("orderId", mWfInstance.order.id);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
+
+                if (mWfInstance.order.paymentRecords != null) {
+                    mBundle.putSerializable("data", mWfInstance.order.paymentRecords);
+                }
+                else {
+                    mBundle.putSerializable(OrderEstimateListActivity.KEY_GET_DATA, true);
+                }
+                mBundle.putInt("已回款", mWfInstance.order.backMoney);
+                mBundle.putDouble("回款率", mWfInstance.order.ratePayment);
+                mBundle.putInt("订单待审核", mWfInstance.order.status);//不显示回款记录状态
                 mBundle.putBoolean(OrderEstimateListActivity.KEY_COMMIT_CHANGE, true);
                 app.startActivityForResult(this, OrderEstimateListActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
