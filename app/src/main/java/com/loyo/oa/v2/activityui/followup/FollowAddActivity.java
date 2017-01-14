@@ -50,7 +50,6 @@ import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
@@ -77,6 +76,7 @@ import java.util.List;
 public class FollowAddActivity extends BaseActivity implements UploadControllerCallback {
 
     private static final int RECORD_REQUEST = 0x10;//获取录音需要的权限
+    private final static String REQUEST_AT_SELECT = "com.loyo.FollowAddActivity.REQUEST_AT_SELECT";
 
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
@@ -344,7 +344,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 if (collection != null) {
                     bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
                 }
-                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, REQUEST_AT_SELECT);
                 Intent intent = new Intent();
                 intent.setClass(FollowAddActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
@@ -712,9 +712,10 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
-        atDepts.clear();
-        atUserIds.clear();
-        if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+        if (REQUEST_AT_SELECT.equals(event.request)) {
+            atDepts.clear();
+            atUserIds.clear();
+
             String atText = "";
             collection = event.data;
             if (collection.depts.size() > 0) {
