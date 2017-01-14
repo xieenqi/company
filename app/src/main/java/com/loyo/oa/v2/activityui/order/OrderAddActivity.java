@@ -87,7 +87,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private int fromPage;
     private int attamentSize = 0;
     private String uuid;
-    public  static String orderTitle;
+    public static String orderTitle;
     private OrderDetail mOrderDetail;
     private String orderId;
     private OrderAddforExtraData orderAddforExtra;
@@ -104,9 +104,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             switch (msg.what) {
 
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
-                     if (attamentSize != 0) {
+                    if (attamentSize != 0) {
 
-                    tv_source.setText("附件（" + attamentSize + "）");
+                        tv_source.setText("附件（" + attamentSize + "）");
                     }
                     break;
                 case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
@@ -159,8 +159,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         tv_source = (TextView) findViewById(R.id.tv_source);
         et_ordernum = (EditText) findViewById(R.id.et_ordernum);
         et_remake = (EditText) findViewById(R.id.et_remake);
-        tv_start_time = (TextView) findViewById(R.id.tv_start_time) ;
-        tv_end_time = (TextView) findViewById(R.id.tv_end_time) ;
+        tv_start_time = (TextView) findViewById(R.id.tv_start_time);
+        tv_end_time = (TextView) findViewById(R.id.tv_end_time);
 
         iv_submit.setOnTouchListener(Global.GetTouch());
         ll_back.setOnTouchListener(Global.GetTouch());
@@ -184,8 +184,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         } else if (fromPage == OrderDetailActivity.ORDER_CREATE) {
             tv_title.setText("生成订单");
             getAddDynamic();
-        }
-        else if (fromPage == OrderDetailActivity.ORDER_COPY) {
+        } else if (fromPage == OrderDetailActivity.ORDER_COPY) {
             tv_title.setText("复制订单");
             getAddDynamic();
         }
@@ -214,10 +213,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         et_money.setText(mOrderDetail.dealMoney + "");
         et_ordernum.setText(mOrderDetail.orderNum);
         et_remake.setText(mOrderDetail.remark);
-        if(mOrderDetail.startAt > 0) {
+        if (mOrderDetail.startAt > 0) {
             tv_start_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.startAt));
         }
-        if(mOrderDetail.endAt > 0) {
+        if (mOrderDetail.endAt > 0) {
             tv_end_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.endAt));
         }
 
@@ -265,7 +264,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 动态字段绑定
      */
     public void bindExtraView(ArrayList<ContactLeftExtras> extrases) {
-        orderAddforExtra = new OrderAddforExtraData(mContext, extrases, true, R.color.title_bg1, 0);
+        orderAddforExtra = new OrderAddforExtraData(mContext, extrases, true, 0);
         tv_custom.addView(orderAddforExtra);
         setAddDynamic(extrases);
     }
@@ -285,14 +284,14 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                         super.onError(e);
                         finishWithPopAnimation();
                     }
+
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         mCusList = contactLeftExtrasArrayList;
                         bindExtraView(contactLeftExtrasArrayList);
                         if (fromPage == OrderDetailActivity.ORDER_COPY && orderId != null) {
                             getOrderData(orderId);
-                        }
-                        else if (fromPage == OrderDetailActivity.ORDER_EDIT) {
+                        } else if (fromPage == OrderDetailActivity.ORDER_EDIT) {
                             getOrderData(mOrderDetail.id);
                         }
                     }
@@ -303,7 +302,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
         boolean result = false;
         if (mCusList != null) {
-            for (ContactLeftExtras extras: mCusList) {
+            for (ContactLeftExtras extras : mCusList) {
                 if ("开始时间".equals(extras.label)) {
                     result = extras.required;
                 }
@@ -316,7 +315,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private boolean isEndTimeNeeded() {
         boolean result = false;
         if (mCusList != null) {
-            for (ContactLeftExtras extras: mCusList) {
+            for (ContactLeftExtras extras : mCusList) {
                 if ("结束时间".equals(extras.label)) {
                     result = extras.required;
                 }
@@ -347,8 +346,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                         mOrderDetail = detail;
                         if (fromPage == OrderDetailActivity.ORDER_COPY && orderId != null) {
                             buildCopyData();
-                        }
-                        else if (fromPage == OrderDetailActivity.ORDER_EDIT) {
+                        } else if (fromPage == OrderDetailActivity.ORDER_EDIT) {
                             editData();
                         }
                     }
@@ -399,10 +397,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         et_ordernum.setText(mOrderDetail.orderNum);
         et_remake.setText(mOrderDetail.remark);
 
-        if(mOrderDetail.startAt > 0) {
+        if (mOrderDetail.startAt > 0) {
             tv_start_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.startAt));
         }
-        if(mOrderDetail.endAt > 0) {
+        if (mOrderDetail.endAt > 0) {
             tv_end_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.endAt));
         }
 
@@ -429,11 +427,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             Toast("请选择成交金额!");
             return;
         }
-        if(isStartTimeNeeded() && startAt == 0 ) {
+        if (isStartTimeNeeded() && startAt == 0) {
             Toast("请选择开始时间!");
             return;
         }
-        if(isEndTimeNeeded() && startAt == 0 ) {
+        if (isEndTimeNeeded() && startAt == 0) {
             Toast("请选择结束时间!");
             return;
         }
@@ -489,8 +487,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         } else if (fromPage == OrderDetailActivity.ORDER_ADD ||
                 fromPage == OrderDetailActivity.ORDER_CREATE) {
             addOrderData(map);
-        }
-        else if (fromPage == OrderDetailActivity.ORDER_COPY) {
+        } else if (fromPage == OrderDetailActivity.ORDER_COPY) {
             addOrderData(map);
         }
     }
@@ -508,7 +505,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                             public void run() {
                                 app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                             }
-                        },2000);
+                        }, 2000);
                     }
                 });
 
@@ -530,8 +527,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                                         ExtraAndResult.REQUEST_CODE,
                                         new Intent());
                             }
-                        },2000);
+                        }, 2000);
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
@@ -546,9 +544,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //提交
             case R.id.iv_submit:
-                if(Utils.isNetworkAvailable(mContext)){
+                if (Utils.isNetworkAvailable(mContext)) {
                     commitOrder();
-                }else{
+                } else {
                     Toast("请检查您的网路连接");
                 }
                 break;
@@ -594,12 +592,12 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //工单
             case R.id.ll_addorder:
                 Intent mIntent = new Intent(OrderAddActivity.this, OrderWorksheetListActivity.class);
-                if(!TextUtils.isEmpty(et_name.getText().toString())){
+                if (!TextUtils.isEmpty(et_name.getText().toString())) {
                     orderTitle = et_name.getText().toString();
-                }else{
+                } else {
                     orderTitle = "";
                 }
-                mIntent.putExtra(ExtraAndResult.EXTRA_NAME,reWorkSheet);
+                mIntent.putExtra(ExtraAndResult.EXTRA_NAME, reWorkSheet);
                 startActivity(mIntent);
                 break;
 
@@ -610,13 +608,12 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 mBundle.putString("uuid", uuid);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
-            case R.id.tv_start_time:
-            {
+            case R.id.tv_start_time: {
                 DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(mContext, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
-                        long time= DateTool.getStamp(year, month, day,hour,min,0);
+                        long time = DateTool.getStamp(year, month, day, hour, min, 0);
                         startAt = time;
                         tv_start_time.setText(DateTool.getDateTimeFriendly(startAt));
                     }
@@ -629,13 +626,12 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             }
             break;
 
-            case R.id.tv_end_time:
-            {
+            case R.id.tv_end_time: {
                 DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(mContext, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
-                        long time= DateTool.getStamp(year, month, day,hour,min,0);
+                        long time = DateTool.getStamp(year, month, day, hour, min, 0);
                         endAt = time;
                         tv_end_time.setText(DateTool.getDateTimeFriendly(endAt));
                     }
@@ -685,10 +681,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     private String getWorksheetDisplayValue() {
         StringBuffer sBuffer = new StringBuffer();
-        for(OrderWorksheetListModel orderWorksheetListModel:reWorkSheet){
-            if(reWorkSheet.size() > 1){
-                sBuffer.append(orderWorksheetListModel.title+",");
-            }else{
+        for (OrderWorksheetListModel orderWorksheetListModel : reWorkSheet) {
+            if (reWorkSheet.size() > 1) {
+                sBuffer.append(orderWorksheetListModel.title + ",");
+            } else {
                 sBuffer.append(orderWorksheetListModel.title);
             }
         }
@@ -697,16 +693,16 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     /**
      * 添加工单数据回调
-     * */
+     */
     @Subscribe
-    public void onOrderAddWorkSheetFinish(OrderAddWorkSheetFinish event){
+    public void onOrderAddWorkSheetFinish(OrderAddWorkSheetFinish event) {
         reWorkSheet.clear();
         reWorkSheet.addAll((Collection<? extends OrderWorksheetListModel>) event.bundle.getSerializable(ExtraAndResult.EXTRA_ID));
         StringBuffer sBuffer = new StringBuffer();
-        for(OrderWorksheetListModel orderWorksheetListModel:reWorkSheet){
-            if(reWorkSheet.size() > 1){
-                sBuffer.append(orderWorksheetListModel.title+",");
-            }else{
+        for (OrderWorksheetListModel orderWorksheetListModel : reWorkSheet) {
+            if (reWorkSheet.size() > 1) {
+                sBuffer.append(orderWorksheetListModel.title + ",");
+            } else {
                 sBuffer.append(orderWorksheetListModel.title);
             }
         }
