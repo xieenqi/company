@@ -128,6 +128,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
 
             /*搜索*/
             case R.id.img_title_search_right:
+                Bundle b = new Bundle();
                 ClueType type;
                 if (mIndex == 0) {
                     type = ClueType.MY_CLUE;
@@ -135,9 +136,10 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
                 } else {
                     type = ClueType.TEAM_CLUE;
                     UmengAnalytics.umengSend(this, UmengAnalytics.searchCluesTeam);
+                    b.putBoolean("responsibleVisiblity", true);
                 }
                 LogUtil.dee("type:" + type);
-                Bundle b = new Bundle();
+
                 b.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, type);
                 app.startActivity(this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;

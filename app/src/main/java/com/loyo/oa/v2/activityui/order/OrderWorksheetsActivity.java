@@ -48,7 +48,6 @@ public class OrderWorksheetsActivity extends BaseLoadingActivity implements View
     private Bundle mBundle;
     protected GroupsData groupsData;
     private BaseGroupsDataAdapter adapter;
-    boolean isMyUser;
     boolean canAddWorksheet;
 
 
@@ -100,10 +99,6 @@ public class OrderWorksheetsActivity extends BaseLoadingActivity implements View
         });
 
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
-        isMyUser = detail.directorId != null && detail.directorId.equals(MainApp.getMainApp().user.id);
-        if (!isMyUser) {
-            layout_add.setVisibility(View.GONE);
-        }
         if (!canAddWorksheet) {
             layout_add.setVisibility(View.GONE);
         }

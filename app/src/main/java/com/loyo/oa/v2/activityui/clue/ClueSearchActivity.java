@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -55,7 +56,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
 
     private ClueType type;
     private int page = 1;
-    private boolean isPullDown = true, isSelect, isResult;//是否加载第一页数据供选择  isResult是否设置返回值
+    private boolean isPullDown = true, isSelect, isResult, responsibleVisiblity = false;//是否加载第一页数据供选择  isResult是否设置返回值  负者人项默认不显示
     private Intent mIntent;
 
 
@@ -87,6 +88,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
         type = (ClueType) mBundle.getSerializable(ClueSearchActivity.KEY_SEARCH_TYPE);
         isSelect = mBundle.getBoolean("isSelect", false);
         isResult = mBundle.getBoolean("isResult", false);
+        responsibleVisiblity = mBundle.getBoolean("responsibleVisiblity", false);
         mInflater = LayoutInflater.from(this);
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
@@ -193,13 +195,13 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
     }
 
     //订阅者，处理网络请求事件
-    private DefaultLoyoSubscriber<ClueList> getDefaultLoyoSubscriber(){
+    private DefaultLoyoSubscriber<ClueList> getDefaultLoyoSubscriber() {
         return new DefaultLoyoSubscriber<ClueList>() {
             @Override
             public void onError(Throwable e) {
              /* 重写父类方法，不调用super */
                 @LoyoErrorChecker.CheckType
-                int type = page != 1  ?
+                int type = page != 1 ?
                         LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
                 LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                 expandableListView_search.onRefreshComplete();
@@ -310,6 +312,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
                 holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
                 holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
                 holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+                holder.ll_responsible = (LinearLayout) convertView.findViewById(R.id.ll_responsible);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
@@ -324,7 +327,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
             } else {
                 holder.tv_time.setText("--");
             }
-
+            holder.ll_responsible.setVisibility(responsibleVisiblity ? View.VISIBLE : View.GONE);
             return convertView;
         }
 
@@ -333,6 +336,7 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
             TextView tv_customer;     /* 负责人 */
             TextView tv_time;         /* 跟进时间 */
             TextView tv_name;         /* 客户名称 */
+            LinearLayout ll_responsible;
         }
     }
 
