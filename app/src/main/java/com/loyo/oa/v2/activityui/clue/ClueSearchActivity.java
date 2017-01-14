@@ -193,10 +193,9 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
             ClueService.getTeamClueList(map).subscribe(getDefaultLoyoSubscriber());
         }
     }
-
     //订阅者，处理网络请求事件
-    private DefaultLoyoSubscriber<ClueList> getDefaultLoyoSubscriber() {
-        return new DefaultLoyoSubscriber<ClueList>() {
+    private DefaultLoyoSubscriber<PaginationX<ClueListItem>> getDefaultLoyoSubscriber(){
+        return new DefaultLoyoSubscriber<PaginationX<ClueListItem>>() {
             @Override
             public void onError(Throwable e) {
                  /* 重写父类方法，不调用super */
@@ -220,7 +219,6 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
             }
         };
     }
-
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
