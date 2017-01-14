@@ -203,8 +203,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         productData = mOrderDetail.proInfo;
         estimateData = mOrderDetail.paymentRecords;
         reWorkSheet = mOrderDetail.reWorkSheet;
-        mCusList = mOrderDetail.extensionDatas;
 
+        mCusList = mOrderDetail.extensionDatas;
         et_name.setText(mOrderDetail.title);
         tv_customer.setText(mOrderDetail.customerName);
         tv_stage.setText(getIntentionProductName());
@@ -214,12 +214,14 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         et_ordernum.setText(mOrderDetail.orderNum);
         et_remake.setText(mOrderDetail.remark);
         if (mOrderDetail.startAt > 0) {
+            startAt = mOrderDetail.startAt;
             tv_start_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.startAt));
         }
         if (mOrderDetail.endAt > 0) {
+            endAt = mOrderDetail.endAt;
             tv_end_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.endAt));
         }
-
+//TODO 自定义字段要和已有的字段中合一下（产品确认了在做）
         bindExtraView(mCusList);
 
     }
@@ -264,6 +266,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 动态字段绑定
      */
     public void bindExtraView(ArrayList<ContactLeftExtras> extrases) {
+        tv_custom.removeAllViews();
         orderAddforExtra = new OrderAddforExtraData(mContext, extrases, true, 0);
         tv_custom.addView(orderAddforExtra);
         setAddDynamic(extrases);
@@ -398,9 +401,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         et_remake.setText(mOrderDetail.remark);
 
         if (mOrderDetail.startAt > 0) {
+            startAt = mOrderDetail.startAt;
             tv_start_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.startAt));
         }
         if (mOrderDetail.endAt > 0) {
+            endAt = mOrderDetail.endAt;
             tv_end_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.endAt));
         }
 
