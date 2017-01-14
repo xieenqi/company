@@ -205,6 +205,7 @@ public enum SystemMessageItemType {
         public Class<?> getItemClass() {
             return BulletinManagerActivity_.class;
         }
+
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
         }
@@ -237,7 +238,7 @@ public enum SystemMessageItemType {
             return "Id";
         }
     },
-//    // TODO 公海客户暂还没有定义
+    //    // TODO 公海客户暂还没有定义
 //    /*公海客户详情*/
 //    MSG_CUSTOMER_PUBLIC(40) {
 //        public int getIcon() {
@@ -262,14 +263,13 @@ public enum SystemMessageItemType {
             return OrderDetailActivity.class;
         }
 
-    public Class<?> getItemClass(int jumpType) {
-        if (jumpType == 0) {
-            return getItemClass();
+        public Class<?> getItemClass(int jumpType) {
+            if (jumpType == 0) {
+                return getItemClass();
+            } else {
+                return OrderManagementActivity.class;
+            }
         }
-        else {
-            return OrderManagementActivity.class;
-        }
-    }
 
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
