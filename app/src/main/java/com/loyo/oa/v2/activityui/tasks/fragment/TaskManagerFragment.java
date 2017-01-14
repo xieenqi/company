@@ -18,6 +18,7 @@ import com.loyo.oa.v2.activityui.tasks.common.TaskStatusMenuModel;
 import com.loyo.oa.v2.activityui.tasks.common.TaskTypeMenuModel;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
+import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -42,8 +43,8 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<TaskRecord> 
     @Override
     public void GetData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", pagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
+        map.put("pageIndex", pagination.getShouldLoadPageIndex());
+        map.put("pageSize", pagination.getPageSize());
         map.put("joinType", typeParam);
         map.put("status", statusParam);
         map.put("endAt", System.currentTimeMillis() / 1000);
@@ -52,35 +53,12 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<TaskRecord> 
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<TaskRecord>>(ll_loading) {
                     @Override
                     public void onError(Throwable e) {
-                        super.onError(e);
-                        mExpandableListView.onRefreshComplete();
+                        TaskManagerFragment.this.fail(e);
                     }
 
                     @Override
                     public void onNext(PaginationX<TaskRecord> x) {
-                        mExpandableListView.onRefreshComplete();
-                        if (null == x) {
-                            return;
-                        }
-
-                        pagination = x;
-                        ArrayList<TaskRecord> lstDataTemp = x.getRecords();
-                        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
-                            Toast("没有更多数据了");
-                            return;
-                        }
-
-                        if (!isTopAdd) {
-                            lstData.addAll(lstDataTemp);
-                        } else {
-                            lstData = lstDataTemp;
-                        }
-                        pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
-                        changeAdapter();
-                        expand();
-                        ll_loading.setStatus(LoadingLayout.Success);
-                        if (isTopAdd && lstData.size() == 0)
-                            ll_loading.setStatus(LoadingLayout.Empty);
+                        TaskManagerFragment.this.success(x);
                     }
                 });
     }

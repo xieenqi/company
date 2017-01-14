@@ -82,26 +82,22 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
     @Override
     public void GetData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", pagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
+        map.put("pageIndex", pagination.getShouldLoadPageIndex());
+        map.put("pageSize", pagination.getPageSize());
         map.put("reportType", categoryParam);
         map.put("sendType", typeParam);
         map.put("isReviewed", statusParam);
 
         LogUtil.dll("客户端发送数据:" + MainApp.gson.toJson(map));
-        //这里借助CallBack接口调用，不能直接实现DefaultLoyoSubscriber，因为会有方法冲突
         WorkReportService.getWorkReportsData(map)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<WorkReportRecord>>() {
             @Override
             public void onError(Throwable e) {
-                @LoyoErrorChecker.CheckType
-                int type= pagination.getPageIndex() != 1 ? LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
-                ((Callback)WorkReportsManageFragment.this).failure(null);
+                WorkReportsManageFragment.this.fail(e);
             }
-
             @Override
             public void onNext(PaginationX<WorkReportRecord> workReportRecordPaginationX) {
-                ((Callback)WorkReportsManageFragment.this).success(workReportRecordPaginationX,null);
+                WorkReportsManageFragment.this.success(workReportRecordPaginationX);
             }
         });
     }

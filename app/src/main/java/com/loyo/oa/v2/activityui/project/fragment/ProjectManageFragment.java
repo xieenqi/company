@@ -53,31 +53,22 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
 
     @Override
     public void GetData() {
-        if (lstData == null) {
-            lstData = new ArrayList<>();
-        }
-
         HashMap<String, Object> params = new HashMap<>();
-        int pageIndex = pagination.getPageIndex();
-        params.put("pageIndex", pageIndex);
-        int pageSize = isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20;
-        params.put("pageSize", pageSize);
+        params.put("pageIndex", pagination.getShouldLoadPageIndex());
+        params.put("pageSize", pagination.getPageSize());
         params.put("status", statusParam);
         params.put("type", typeParam);
         params.put("endAt", System.currentTimeMillis() / 1000);
-//        params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         params.put("startAt", com.loyo.oa.common.utils.DateTool.getDateStamp("2014-01-01") / 1000);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params, this);
         ProjectService.getProjects(params).subscribe(new DefaultLoyoSubscriber<PaginationX<Project>>(ll_loading) {
             @Override
             public void onNext(PaginationX<Project> projectPaginationX) {
-                ((Callback)ProjectManageFragment.this).success(projectPaginationX,null);
+                ProjectManageFragment.this.success(projectPaginationX);
             }
 
             @Override
             public void onError(Throwable e) {
-                super.onError(e);
-                ((Callback)ProjectManageFragment.this).failure(null);
+                ProjectManageFragment.this.fail(e);
             }
         });
     }

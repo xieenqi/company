@@ -25,6 +25,7 @@ import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 
@@ -43,8 +44,7 @@ import retrofit.client.Response;
 public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends BaseFragment implements
         PullToRefreshBase.OnRefreshListener2,
         AbsListView.OnScrollListener,
-        View.OnTouchListener,
-        Callback<PaginationX<T>> {
+        View.OnTouchListener{
 
     protected View mView;
     protected Button btn_add;
@@ -54,32 +54,16 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     protected DropDownMenu filterMenu;
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
-    protected PaginationX<T> pagination = new PaginationX<T>(20);
-    protected ArrayList<PagingGroupData_<T>> pagingGroupDatas = new ArrayList<>();
-    protected ArrayList<T> lstData = new ArrayList<>();
+    protected PaginationX<T> pagination = new PaginationX<T>(20);//用来存放拿到的，没有排序分类的原始数据
+    protected ArrayList<PagingGroupData_<T>> pagingGroupDatas = new ArrayList<>();//对原始数据处理以后，可用来显示的数据
     protected PullToRefreshExpandableListView mExpandableListView;
-    protected boolean isTopAdd = true;
     protected LoadingLayout ll_loading;
-
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mInflater = LayoutInflater.from(activity);
     }
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-////        GetData();
-//    }
-
-//    private Runnable UiRunner = new Runnable() {
-//        @Override
-//        public void run() {
-//            btn_add.setVisibility(View.INVISIBLE);
-//        }
-//    };
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -105,6 +89,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                 @Override
                 public void onReload(View v) {
                     ll_loading.setStatus(LoadingLayout.Loading);
+
                     onPullDownToRefresh(mExpandableListView);
                 }
             });
@@ -143,7 +128,10 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
             initTab();
             init();
         }
-        onPullDownToRefresh(mExpandableListView);
+        //加载第一页数据
+        pagination.setFirstPage();
+        GetData();
+
         return mView;
     }
 
@@ -200,53 +188,36 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
-        pagination.setPageIndex(1);
+        pagination.setFirstPage();
         GetData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
-        pagination.setPageIndex(pagination.getPageIndex() + 1);
         GetData();
     }
 
-    @Override
-    public void success(PaginationX<T> tPaginationX, Response response) {
+    public void success(PaginationX<T> tPaginationX) {
         mExpandableListView.onRefreshComplete();
-        if (null == tPaginationX) {
-            return;
+        pagination.loadRecords(tPaginationX);
+        if(pagination.isEnpty()){
+            ll_loading.setStatus(LoadingLayout.Empty);
+        }else{
+            ll_loading.setStatus(LoadingLayout.Success);
         }
-
-        pagination = tPaginationX;
-        ArrayList<T> lstDataTemp = tPaginationX.getRecords();
-        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
-            Toast("没有更多数据了");
-            return;
-        }
-        //下接获取最新时，清空
-//        if (isTopAdd) {
-//            lstData.clear();
-//        }
-        if (!isTopAdd) {
-            lstData.addAll(lstDataTemp);
-        } else {
-            lstData = lstDataTemp;
-        }
-        pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
+        pagingGroupDatas = PagingGroupData_.convertGroupData(pagination.getRecords());
         changeAdapter();
         expand();
-        ll_loading.setStatus(LoadingLayout.Success);
-        if (isTopAdd && lstData.size() == 0)
-            ll_loading.setStatus(LoadingLayout.Empty);
 
     }
 
-    @Override
-    public void failure(RetrofitError error) {
-//        HttpErrorCheck.checkError(error, ll_loading);
+    public void fail(Throwable e) {
+        //刷新完成
         mExpandableListView.onRefreshComplete();
+        //判断，数据为空，就用ll_loading显示，否则使用toast提示
+        @LoyoErrorChecker.CheckType
+        int type=pagination.isEnpty()?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
+        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
     }
 
 
