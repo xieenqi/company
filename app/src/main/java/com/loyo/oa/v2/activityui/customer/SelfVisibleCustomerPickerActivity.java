@@ -34,7 +34,7 @@ import java.util.HashMap;
 /**
  * 新建拜访 [搜索客户选择]
  * Created by yyy on 15/12/24.
- *
+ * <p>
  * Copy From SigninSelectCustomerSearch & Refactor by Ethan 2016-01-12
  */
 public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, View.OnClickListener {
@@ -51,7 +51,7 @@ public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity imple
     private Context mContext;
     private boolean isTopAdd = true;
     private int page = 1;
-    private boolean canReturnEmpty = true;
+    private boolean canReturnEmpty = true, tagVisibility = false;//标签默认不显示
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity imple
         LayoutInflater mInflater = LayoutInflater.from(this);
         headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
         headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
-        headerViewBtn.setVisibility(canReturnEmpty?View.VISIBLE:View.GONE);
+        headerViewBtn.setVisibility(canReturnEmpty ? View.VISIBLE : View.GONE);
         headerViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,7 +126,8 @@ public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity imple
     private void retrieveData() {
         Intent intent = getIntent();
         if (intent != null) {
-            canReturnEmpty = intent.getBooleanExtra(KEY_CAN_RETURN_EMPTY ,true);
+            canReturnEmpty = intent.getBooleanExtra(KEY_CAN_RETURN_EMPTY, true);
+            tagVisibility = intent.getBooleanExtra("tagVisibility", false);
         }
     }
 
@@ -153,41 +154,41 @@ public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity imple
 
         CustomerService.getInvovedCustomers(params)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>(ll_loading) {
-            @Override
-            public void onNext(PaginationX<Customer> customerPaginationX) {
-                ll_loading.setStatus(LoadingLayout.Success);
-                expandableListView_search.onRefreshComplete();
-                if (null == customerPaginationX) {
-                    if (isTopAdd) {
-                        showNoData();
-                    } else {
-                        Toast("没有更多数据!");
+                    @Override
+                    public void onNext(PaginationX<Customer> customerPaginationX) {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        expandableListView_search.onRefreshComplete();
+                        if (null == customerPaginationX) {
+                            if (isTopAdd) {
+                                showNoData();
+                            } else {
+                                Toast("没有更多数据!");
+                            }
+                            return;
+                        }
+                        ArrayList<Customer> lstDataTemp = customerPaginationX.getRecords();
+                        if (lstDataTemp == null || lstDataTemp.size() == 0) {
+                            if (isTopAdd) {
+                                showNoData();
+                            } else {
+                                Toast("没有更多数据!");
+                            }
+                            return;
+                        } else {
+                            if (isTopAdd) {
+                                lstData.clear();
+                            }
+                            lstData.addAll(lstDataTemp);
+                        }
+                        changeAdapter();
                     }
-                    return;
-                }
-                ArrayList<Customer> lstDataTemp = customerPaginationX.getRecords();
-                if (lstDataTemp == null || lstDataTemp.size() == 0) {
-                    if (isTopAdd) {
-                        showNoData();
-                    } else {
-                        Toast("没有更多数据!");
-                    }
-                    return;
-                } else {
-                    if (isTopAdd) {
-                        lstData.clear();
-                    }
-                    lstData.addAll(lstDataTemp);
-                }
-                changeAdapter();
-            }
 
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                expandableListView_search.onRefreshComplete();
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        expandableListView_search.onRefreshComplete();
+                    }
+                });
     }
 
     void doSearch() {
@@ -277,6 +278,7 @@ public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity imple
 
                 String tagItems = Utils.getTagItems(item);
                 tv_tags.setText("标签：" + tagItems);
+                tv_tags.setVisibility(tagVisibility ? View.VISIBLE : View.GONE);
             }
         }
     }

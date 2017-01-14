@@ -1,7 +1,5 @@
 package com.loyo.oa.v2.activityui.clue.api;
 
-import android.util.Log;
-
 import com.loyo.oa.v2.activityui.clue.model.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
@@ -9,12 +7,11 @@ import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.clue.model.ClueSales;
 import com.loyo.oa.v2.activityui.clue.model.SourcesData;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
+import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.HashMap;
 import rx.Observable;
@@ -63,23 +60,14 @@ public class ClueService {
                         .compose(RetrofitAdapterFactory.<SourcesData>compatApplySchedulers());
     }
 
-//    // 新建线索 表单传输
-//    public static Observable<ClueDetailWrapper> addClue(HashMap<String, Object> params) {
-//        return
-//                RetrofitAdapterFactory.getInstance()
-//                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
-//                        .create(IClue.class)
-//                        .addClue(params)
-//                        .compose(RetrofitAdapterFactory.<ClueDetailWrapper>compatApplySchedulers());
-//    }
 
     // 新建线索 表单传输
-    public static Observable<ClueSales> addClueNew(HashMap<String, Object> params) {
+    public static Observable<ClueSales> addClue(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IClue.class)
-                        .addClueNew(params)
+                        .addClue(params)
                         .compose(RetrofitAdapterFactory.<ClueSales>applySchedulers());
     }
 
@@ -94,13 +82,13 @@ public class ClueService {
     }
 
     //编辑 线索
-    public static Observable<Object> editClue(String id,HashMap<String, Object> params) {
+    public static Observable<ClueSales> editClue(String id, HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(IClue.class)
                         .editClue(id,params)
-                        .compose(RetrofitAdapterFactory.<Object>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<ClueSales>applySchedulers());
     }
 
     // 删除

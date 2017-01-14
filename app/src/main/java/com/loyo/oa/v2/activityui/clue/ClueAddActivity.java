@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,6 +25,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.SharedUtil;
 
@@ -35,7 +35,7 @@ import java.util.HashMap;
  * 线索 新建 页面
  * Created by xeq on 16/8/20.
  */
-public class ClueAddActivity extends BaseActivity implements View.OnClickListener {
+public class ClueAddActivity extends BaseActivity {
 
     private RelativeLayout img_title_left, img_title_right;
     private TextView tv_title_1, tv_area, tv_source;
@@ -71,8 +71,8 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         tv_title_1.setText(TextUtils.isEmpty(clueId) ? "新建线索" : "编辑线索");
-        img_title_left.setOnClickListener(this);
-        img_title_right.setOnClickListener(this);
+        img_title_left.setOnClickListener(click);
+        img_title_right.setOnClickListener(click);
         et_name = (EditText) findViewById(R.id.et_name);
         et_company = (EditText) findViewById(R.id.et_company);
         et_phone = (EditText) findViewById(R.id.et_phone);
@@ -82,9 +82,9 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         tv_area = (TextView) findViewById(R.id.tv_area);
         tv_source = (TextView) findViewById(R.id.tv_source);
         ll_area = (LinearLayout) findViewById(R.id.ll_area);
-        ll_area.setOnClickListener(this);
+        ll_area.setOnClickListener(click);
         ll_source = (LinearLayout) findViewById(R.id.ll_source);
-        ll_source.setOnClickListener(this);
+        ll_source.setOnClickListener(click);
 
         et_phone.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
         et_tel.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
@@ -112,43 +112,40 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         tv_source.setText(sales.source);
     }
 
-    @Override
-    public void onClick(View v) {
-        v.setOnClickListener(new NoDoubleClickListener() {
-            @Override
-            public void onNoDoubleClick(View v) {
-                switch (v.getId()) {
-                    case R.id.img_title_left:
-                        onBackPressed();
-                        break;
-                    case R.id.img_title_right:
-                        if (TextUtils.isEmpty(et_name.getText().toString().trim())) {
-                            Toast("请输入线索名称");
-                            return;
-                        } else if (TextUtils.isEmpty(et_company.getText().toString().trim())) {
-                            Toast("请输入公司名称");
-                            return;
-                        }
-                        if (et_name.getText().toString().trim().length() > 20) {
-                            Toast("线索名称应少于20个字符");
-                            return;
-                        }
-                        if (et_company.getText().toString().trim().length() > 50) {
-                            Toast("公司名称应少于50个字符");
-                            return;
-                        }
-                        addDataInfo();
-                        break;
-                    case R.id.ll_area://地区选择
-                        selectArea();
-                        break;
-                    case R.id.ll_source://线索来源选择
-                        selectSource();
-                        break;
-                }
+    NoDoubleClickListener click = new NoDoubleClickListener() {
+        @Override
+        public void onNoDoubleClick(View v) {
+            switch (v.getId()) {
+                case R.id.img_title_left:
+                    onBackPressed();
+                    break;
+                case R.id.img_title_right:
+                    if (TextUtils.isEmpty(et_name.getText().toString().trim())) {
+                        Toast("请输入线索名称");
+                        return;
+                    } else if (TextUtils.isEmpty(et_company.getText().toString().trim())) {
+                        Toast("请输入公司名称");
+                        return;
+                    }
+                    if (et_name.getText().toString().trim().length() > 20) {
+                        Toast("线索名称应少于20个字符");
+                        return;
+                    }
+                    if (et_company.getText().toString().trim().length() > 50) {
+                        Toast("公司名称应少于50个字符");
+                        return;
+                    }
+                    addDataInfo();
+                    break;
+                case R.id.ll_area://地区选择
+                    selectArea();
+                    break;
+                case R.id.ll_source://线索来源选择
+                    selectSource();
+                    break;
             }
-        });
-    }
+        }
+    };
 
 
     /**
@@ -214,25 +211,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         map.put("remark", et_remake.getText().toString());
         map.put("source", tv_source.getText().toString());
         if (!isEdit) {
-//            这里的方式，存在添加失败，提示错误，重写网络请求
-//            ClueService.addClue(map).subscribe(new DefaultLoyoSubscriber<ClueDetailWrapper>(hud, "新建线索成功") {
-//                @Override
-//                public void onNext(final ClueDetailWrapper clueDetailWrapper) {
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if(clueDetailWrapper.errcode != 0){
-//                                Toast(clueDetailWrapper.errmsg);
-//                                return;
-//                            }else if(clueDetailWrapper.errcode == 0){
-//                                app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT,
-//                                        ExtraAndResult.REQUEST_CODE, new Intent());
-//                            }
-//                        }
-//                    },2000);
-//                }
-//            });
-            ClueService.addClueNew(map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "新建线索成功") {
+            ClueService.addClue(map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "新建线索成功") {
                 @Override
                 public void onNext(final ClueSales clueDetail) {
                     new Handler().postDelayed(new Runnable() {
@@ -246,18 +225,18 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                     }, 2000);
                 }
             });
-
-
         } else {
-            ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<Object>(hud, "编辑线索成功") {
+            ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "编辑线索成功") {
                 @Override
-                public void onNext(Object o) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            onBackPressed();
-                        }
-                    }, 2000);
+                public void onNext(ClueSales o) {
+                    if (null != o) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onBackPressed();
+                            }
+                        }, 2000);
+                    }
                 }
             });
         }

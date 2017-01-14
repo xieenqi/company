@@ -77,6 +77,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import hk.ids.gws.android.sclick.SClick;
+
 /**
  * 【工作报告】新建 编辑
  */
@@ -148,8 +150,8 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     private int mSelectType = WorkReport.DAY;
     private int retroIndex = 1;//蛋疼的兼容原来的1序
     private int bizType = 1;
-    private int uploadSize;
-    private int uploadNum;
+    //    private int uploadSize;
+//    private int uploadNum;
     private String currentValue;
     private String content;
 
@@ -158,12 +160,12 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
 
     UploadController controller;
 
-    private ArrayList<Attachment> lstData_Attachment = null;
+    //    private ArrayList<Attachment> lstData_Attachment = null;
     private ArrayList<OrganizationalMember> users = new ArrayList<>();
     private ArrayList<OrganizationalMember> depts = new ArrayList<>();
-    private List<String> mSelectPath;
-    private ArrayList<ImageInfo> pickPhotsResult;
-    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
+    //    private List<String> mSelectPath;
+//    private ArrayList<ImageInfo> pickPhotsResult;
+//    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
     private Members members = new Members();
@@ -463,101 +465,98 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
 
     @Click({R.id.tv_resignin, R.id.img_title_left, R.id.img_title_right, R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_del, R.id.layout_mproject})
     void onClick(final View v) {
-        v.setOnClickListener(new NoDoubleClickListener() {
-            @Override
-            public void onNoDoubleClick(View v) {
-                Bundle mBundle;
-                switch (v.getId()) {
+        Bundle mBundle;
+        switch (v.getId()) {
 
             /*返回*/
-                    case R.id.img_title_left:
-                        app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
-                        break;
+            case R.id.img_title_left:
+                app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                break;
 
             /*提交*/
-                    case R.id.img_title_right:
-                        content = edt_content.getText().toString().trim();
-                        if (TextUtils.isEmpty(content)) {
-                            Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
-                            break;
-                        }
-                        if (mReviewer == null) {
-                            Toast(getString(R.string.review_user) + getString(R.string.app_no_null));
-                            break;
-                        } else {
-                            if (mReviewer.user != null && MainApp.user.id.equals(mReviewer.user.getId())) {
-                                Toast("点评人不能是自己");
-                                break;
-                            }
-                        }
-
-                        //没有附件
-                        showCommitLoading();
-                        if (controller.count() == 0) {
-                            requestCommitWork();
-                            //有附件
-                        } else {
-                            controller.startUpload();
-                            controller.notifyCompletionIfNeeded();
-                        }
-
+            case R.id.img_title_right:
+                content = edt_content.getText().toString().trim();
+                if (TextUtils.isEmpty(content)) {
+                    Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
+                    break;
+                }
+                if (mReviewer == null) {
+                    Toast(getString(R.string.review_user) + getString(R.string.app_no_null));
+                    break;
+                } else {
+                    if (mReviewer.user != null && MainApp.user.id.equals(mReviewer.user.getId())) {
+                        Toast("点评人不能是自己");
                         break;
+                    }
+                }
+                if (!SClick.check(SClick.BUTTON_CLICK, 5000)) {
+                    return;
+                }
+                //没有附件
+                showCommitLoading();
+                if (controller.count() == 0) {
+                    requestCommitWork();
+                    //有附件
+                } else {
+                    controller.startUpload();
+                    controller.notifyCompletionIfNeeded();
+                }
+
+                break;
 
             /*选择日期*/
-                    case R.id.tv_resignin:
-                        selectDate();
-                        break;
+            case R.id.tv_resignin:
+                selectDate();
+                break;
 
             /*点评人*/
-                    case R.id.layout_reviewer: {
-                        StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer != null ? mReviewer.user : null);
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
-                        if (collection != null) {
-                            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
-                        }
-                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
-                        Intent intent = new Intent();
-                        intent.setClass(WorkReportAddActivity.this, ContactPickerActivity.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-                    break;
+            case R.id.layout_reviewer: {
+                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer != null ? mReviewer.user : null);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(WorkReportAddActivity.this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+            break;
 
             /*抄送人*/
-                    case R.id.layout_toUser: {
-                        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
-                        if (collection != null) {
-                            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
-                        }
-                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
-                        Intent intent = new Intent();
-                        intent.setClass(WorkReportAddActivity.this, ContactPickerActivity.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-                    break;
+            case R.id.layout_toUser: {
+                StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(WorkReportAddActivity.this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+            break;
 
-                    case R.id.layout_del:
-                        users.clear();
-                        depts.clear();
-                        tv_toUser.setText("");
-                        layout_del.setVisibility(View.GONE);
-                        img_title_toUser.setVisibility(View.VISIBLE);
-                        break;
+            case R.id.layout_del:
+                users.clear();
+                depts.clear();
+                tv_toUser.setText("");
+                layout_del.setVisibility(View.GONE);
+                img_title_toUser.setVisibility(View.VISIBLE);
+                break;
 
             /*选择项目归档*/
-                    case R.id.layout_mproject:
-                        mBundle = new Bundle();
-                        mBundle.putInt("from", WORK_ADD);
-                        mBundle.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                        app.startActivityForResult(WorkReportAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
-                        break;
-                }
-            }
-        });
+            case R.id.layout_mproject:
+                mBundle = new Bundle();
+                mBundle.putInt("from", WORK_ADD);
+                mBundle.putInt(ExtraAndResult.EXTRA_STATUS, 1);
+                app.startActivityForResult(WorkReportAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
+                break;
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,7 +166,8 @@ public class SigninListAdapter extends BaseAdapter {
         }
 
         /** @的相关人员 */
-        if(null != model.atNameAndDepts){
+        if(!TextUtils.isEmpty(model.atNameAndDepts)){
+            holder.tv_toast.setVisibility(View.VISIBLE);
             holder.tv_toast.setText("@" + model.atNameAndDepts);
         }else{
             holder.tv_toast.setVisibility(View.GONE);

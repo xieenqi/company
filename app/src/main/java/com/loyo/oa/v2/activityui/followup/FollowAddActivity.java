@@ -50,7 +50,6 @@ import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
@@ -74,9 +73,10 @@ import java.util.List;
  * <p/>
  * Create by yyy on 16/08/24
  */
-public class FollowAddActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
+public class FollowAddActivity extends BaseActivity implements UploadControllerCallback {
 
     private static final int RECORD_REQUEST = 0x10;//获取录音需要的权限
+    private final static String REQUEST_AT_SELECT = "com.loyo.FollowAddActivity.REQUEST_AT_SELECT";
 
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
@@ -170,15 +170,15 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
         iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
         ll_at = (LinearLayout) findViewById(R.id.ll_at);
         tv_at_text = (TextView) findViewById(R.id.tv_at_text);
-        img_title_left.setOnClickListener(this);
-        layout_sale_action.setOnClickListener(this);
-        layout_remain_time.setOnClickListener(this);
-        img_title_right.setOnClickListener(this);
-        ll_customer.setOnClickListener(this);
-        ll_contact.setOnClickListener(this);
-        iv_location_delete.setOnClickListener(this);
-        iv_at_delete.setOnClickListener(this);
-        ll_clue_company.setOnClickListener(this);
+        img_title_left.setOnClickListener(click);
+        layout_sale_action.setOnClickListener(click);
+        layout_remain_time.setOnClickListener(click);
+        img_title_right.setOnClickListener(click);
+        ll_customer.setOnClickListener(click);
+        ll_contact.setOnClickListener(click);
+        iv_location_delete.setOnClickListener(click);
+        iv_at_delete.setOnClickListener(click);
+        ll_clue_company.setOnClickListener(click);
         ll_customer.setVisibility(isCustom ? View.VISIBLE : View.GONE);
         ll_contact.setVisibility(isCustom ? View.VISIBLE : View.GONE);
         ll_clue_company.setVisibility(isCustom ? View.GONE : View.VISIBLE);
@@ -344,7 +344,7 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
                 if (collection != null) {
                     bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
                 }
-                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, REQUEST_AT_SELECT);
                 Intent intent = new Intent();
                 intent.setClass(FollowAddActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
@@ -476,114 +476,114 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
         }, false, "不提醒");
     }
 
-    @Override
-    public void onClick(final View v) {
-        v.setOnClickListener(new NoDoubleClickListener(5000) {
-            @Override
-            public void onNoDoubleClick(View v) {
-                switch (v.getId()) {
+
+    NoDoubleClickListener click = new NoDoubleClickListener(5000) {
+        @Override
+        public void onNoDoubleClick(View v) {
+            switch (v.getId()) {
 
             /*返回*/
-                    case R.id.img_title_left:
-                        app.finishActivity(FollowAddActivity.this, MainApp.ENTER_TYPE_LEFT, 0, null);
-                        break;
+                case R.id.img_title_left:
+                    app.finishActivity(FollowAddActivity.this, MainApp.ENTER_TYPE_LEFT, 0, null);
+                    break;
 
             /*下次跟进提醒*/
-                    case R.id.layout_remain_time:
-                        selectRemainTime();
-                        break;
+                case R.id.layout_remain_time:
+                    selectRemainTime();
+                    break;
 
             /*跟进方式*/
-                    case R.id.layout_sale_action:
-                        Bundle loseBundle = new Bundle();
-                        loseBundle.putString("title", "跟进方式");
-                        loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_SINGLE);
-                        loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_SALE_ACTIVE_ACTION);
-                        loseBundle.putString("tagName", tv_sale_action.getText().toString());
-                        app.startActivityForResult(FollowAddActivity.this, CommonTagSelectActivity_.class, app.ENTER_TYPE_RIGHT, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
-                        break;
+                case R.id.layout_sale_action:
+                    Bundle loseBundle = new Bundle();
+                    loseBundle.putString("title", "跟进方式");
+                    loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_SINGLE);
+                    loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_SALE_ACTIVE_ACTION);
+                    loseBundle.putString("tagName", tv_sale_action.getText().toString());
+                    app.startActivityForResult(FollowAddActivity.this, CommonTagSelectActivity_.class, app.ENTER_TYPE_RIGHT, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
+                    break;
 
             /*提交*/
-                    case R.id.img_title_right:
+                case R.id.img_title_right:
 
-                        content = edt.getText().toString().trim();
-                        if (StringUtil.isEmpty(content)) {
-                            Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
-                            return;
-                        } else if (TextUtils.isEmpty(tagItemIds)) {
-                            Toast("请选择跟进方式");
-                            return;
-                        } else if (isCustom) {
-                            if (null == mCustomer || TextUtils.isEmpty(mCustomer.getId())) {
-                                Toast("请选择跟进客户");
-                                return;
-                            }
-                        } else if (!isCustom) {
-                            if (null == mClue || TextUtils.isEmpty(mClue.id)) {
-                                Toast("请选择跟进线索");
-                                return;
-                            }
-                        }
-                        if (isRecordRun) {
-                            Toast("录音上传中稍后提交");
+                    content = edt.getText().toString().trim();
+                    if (StringUtil.isEmpty(content)) {
+                        Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
+                        return;
+                    } else if (TextUtils.isEmpty(tagItemIds)) {
+                        Toast("请选择跟进方式");
+                        return;
+                    } else if (isCustom) {
+                        if (null == mCustomer || TextUtils.isEmpty(mCustomer.getId())) {
+                            Toast("请选择跟进客户");
                             return;
                         }
+                    } else if (!isCustom) {
+                        if (null == mClue || TextUtils.isEmpty(mClue.id)) {
+                            Toast("请选择跟进线索");
+                            return;
+                        }
+                    }
+                    if (isRecordRun) {
+                        Toast("录音上传中稍后提交");
+                        return;
+                    }
 
-                        showCommitLoading();
-                        controller.startUpload();
-                        controller.notifyCompletionIfNeeded();
+                    showCommitLoading();
+                    controller.startUpload();
+                    controller.notifyCompletionIfNeeded();
 
-                        break;
+                    break;
 
             /*选择客户*/
-                    case R.id.ll_customer:
-                        Bundle b = new Bundle();
-                        app.startActivityForResult(FollowAddActivity.this, SelfVisibleCustomerPickerActivity.class,
-                                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
-                        break;
+                case R.id.ll_customer:
+                    Bundle b = new Bundle();
+                    b.putBoolean("tagVisibility", true);
+                    app.startActivityForResult(FollowAddActivity.this, SelfVisibleCustomerPickerActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
+                    break;
 
             /*选择联系人*/
-                    case R.id.ll_contact:
-                        Bundle bContact = new Bundle();
-                        bContact.putSerializable(ExtraAndResult.EXTRA_DATA, mCustomer.contacts);
-                        bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-                        app.startActivityForResult(FollowAddActivity.this, FollowContactSelectActivity.class,
-                                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
-                        break;
+                case R.id.ll_contact:
+                    Bundle bContact = new Bundle();
+                    bContact.putSerializable(ExtraAndResult.EXTRA_DATA, mCustomer.contacts);
+                    bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
+                    app.startActivityForResult(FollowAddActivity.this, FollowContactSelectActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
+                    break;
 
             /*选择图片*/
-                    case R.id.layout_image:
-                        PhotoPicker.builder()
-                                .setPhotoCount(9 - controller.count())
-                                .setShowCamera(true)
-                                .setPreviewEnabled(false)
-                                .start(FollowAddActivity.this);
+                case R.id.layout_image:
+                    PhotoPicker.builder()
+                            .setPhotoCount(9 - controller.count())
+                            .setShowCamera(true)
+                            .setPreviewEnabled(false)
+                            .start(FollowAddActivity.this);
             /*清除选择的定位信息*/
-                    case R.id.iv_location_delete:
-                        ll_location.setVisibility(View.GONE);
-                        location = null;
-                        break;
+                case R.id.iv_location_delete:
+                    ll_location.setVisibility(View.GONE);
+                    location = null;
+                    break;
             /*清除  @ 的相关人员*/
-                    case R.id.iv_at_delete:
-                        ll_at.setVisibility(View.GONE);
-                        atDepts.clear();
-                        atUserIds.clear();
-                        collection = null;
-                        break;
+                case R.id.iv_at_delete:
+                    ll_at.setVisibility(View.GONE);
+                    atDepts.clear();
+                    atUserIds.clear();
+                    collection = null;
+                    break;
             /*线索写跟进选择线索*/
-                    case R.id.ll_clue_company:
-                        Bundle bCule = new Bundle();
-                        bCule.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, ClueType.MY_CLUE);
-                        bCule.putBoolean("isSelect", true);
-                        bCule.putBoolean("isResult", true);
-                        app.startActivityForResult(FollowAddActivity.this, ClueSearchActivity.class,
-                                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, bCule);
+                case R.id.ll_clue_company:
+                    Bundle bCule = new Bundle();
+                    bCule.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, ClueType.MY_CLUE);
+                    bCule.putBoolean("isSelect", true);
+                    bCule.putBoolean("isResult", true);
+                    app.startActivityForResult(FollowAddActivity.this, ClueSearchActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, bCule);
 //                app.startActivity(FollowAddActivity.this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bCule);
-                        break;
-                }
+                    break;
             }
-        });
-    }
+        }
+    };
+
 
     boolean isSave = true;
     SaleActivity mSaleActivity;
@@ -712,9 +712,10 @@ public class FollowAddActivity extends BaseActivity implements View.OnClickListe
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
-        atDepts.clear();
-        atUserIds.clear();
-        if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+        if (REQUEST_AT_SELECT.equals(event.request)) {
+            atDepts.clear();
+            atUserIds.clear();
+
             String atText = "";
             collection = event.data;
             if (collection.depts.size() > 0) {

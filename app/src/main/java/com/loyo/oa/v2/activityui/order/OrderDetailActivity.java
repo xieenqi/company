@@ -347,12 +347,15 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
         capitalReturningPlanCRUD
                  = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_CAPITAL_RETURN_PLAN_CRUD);
         capitalReturningRecordCRUD
-                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_CAPITAL_RETURN_RECORD_CRUD);
+                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_CAPITAL_RETURN_RECORD_CRUD);
 
         responsibleChange
-                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_RESPONSIBLE_PERSON_CHANGE);
+                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_RESPONSIBLE_PERSON_CHANGE);
         worksheetAdd
-                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_WORKSHEET_ADD);
+                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_WORKSHEET_ADD);
+
+        isStop   = isStop && ! mData.hasTerminate();
+
         img_title_right.setVisibility(
                 (isDelete || isEdit || isCopy || isStop) ? View.VISIBLE:View.GONE
         );

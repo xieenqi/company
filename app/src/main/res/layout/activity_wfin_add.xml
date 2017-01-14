@@ -139,11 +139,12 @@
                     <TextView
                         style="@style/text_item2"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_40"
+                        android:layout_height="@dimen/dimen_30"
                         android:background="@color/activity_bg"
                         android:gravity="left|center_vertical"
                         android:paddingLeft="@dimen/dimen_14"
                         android:text="审批内容"
+                        android:textSize="@dimen/text_sp13"
                         android:textColor="#999999" />
 
                     <LinearLayout
@@ -151,7 +152,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:orientation="vertical"></LinearLayout>
+                        android:orientation="vertical">
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -162,7 +165,7 @@
                     android:background="@color/activity_bg"
                     android:text="新增内容"
                     android:textColor="@color/green51"
-                    android:textSize="@dimen/text_sp15" />
+                    android:textSize="@dimen/text_sp13" />
 
             </LinearLayout>
 

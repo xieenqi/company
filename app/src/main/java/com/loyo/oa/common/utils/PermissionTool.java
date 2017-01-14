@@ -55,10 +55,10 @@ public class PermissionTool {
         Context context = null;
         if (activityOrFragment instanceof Activity) {
             activity = (Activity) activityOrFragment;
-            context = activity.getBaseContext();
+            context = activity;
         } else if (activityOrFragment instanceof Fragment) {
             fragment = (Fragment) activityOrFragment;
-            context = fragment.getContext();
+            context = fragment.getActivity();
         } else {
 //            throw new UnsupportedOperationException("申请权限必须传入activity或者fragment");
             Log.e("权限申请","requestPermission: 申请权限必须传入activity或者fragment");
@@ -92,12 +92,12 @@ public class PermissionTool {
                 for (int j = 0; j < i; j++) {
                     if (fragment.shouldShowRequestPermissionRationale(needRequest[j])) {//如果用户永久拒绝了某个权限,就不能弹出提示,要解释原因
                         showRationale = true;
-
                         break;
                     }
                 }
             }
             if (showRationale) {
+                Log.i("", "requestPermission: 弹出提示框框");
                 //弹出提示,向用户解释申请许可的原因
                 final Context finalContext = context;
                 new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
@@ -121,6 +121,7 @@ public class PermissionTool {
                             }
                         })
                         .show();
+                
             } else {
                 //可以直接弹出申请提示框
                 if (null != activity) {

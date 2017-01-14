@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/dimen_10"
             android:ellipsize="end"
-            android:maxLength="14"
+            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@color/text33"
             android:textSize="@dimen/text_sp15" />
     </LinearLayout>
