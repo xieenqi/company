@@ -58,7 +58,7 @@ public class OrderCommon {
             int statusBj = R.drawable.common_lable_blue;
             switch (status) {
                 case 1:
-                    statusText = "待审核";
+                    statusText = "待审批";
                     statusBj = R.drawable.common_lable_purple;
                     break;
                 case 2:
