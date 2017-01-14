@@ -56,13 +56,13 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
     private final static String ORDER_RESPONSDER_REQUEST = "com.loyo.OrderDetailActivity.ORDER_RESPONSDER_REQUEST";
     private LinearLayout img_title_left, ll_extra, ll_product,
                          ll_record, ll_enclosure, ll_plan,
-                         ll_wflayout, ll_responsible;
+                         ll_wflayout, ll_responsible, ll_wf_terminate;
     private ImageView    img_responsible;
     private RelativeLayout img_title_right;
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
             tv_record, tv_record_value, tv_enclosure, tv_responsible_name, tv_creator_name,
             tv_creator_time, tv_wfname, tv_order_number, tv_memo,
-            tv_start_time, tv_end_time;
+            tv_start_time, tv_end_time, tv_wf_terminate_name;
 
 
     /**
@@ -198,6 +198,10 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
         tv_start_time = (TextView)findViewById(R.id.tv_start_time);
         tv_end_time = (TextView)findViewById(R.id.tv_end_time);
 
+        tv_wf_terminate_name = (TextView)findViewById(R.id.tv_wf_terminate_name);
+        ll_wf_terminate = (LinearLayout)findViewById(R.id.ll_wf_terminate);
+        ll_wf_terminate.setOnClickListener(this);
+
     }
 
     @Override
@@ -234,6 +238,17 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 intentWf.putExtra(ExtraAndResult.EXTRA_ID, mData.wfId);
                 intentWf.setClass(OrderDetailActivity.this, WfinstanceInfoActivity_.class);
                 startActivityForResult(intentWf, ExtraAndResult.REQUEST_CODE);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                break;
+            case R.id.ll_wf_terminate://跳转到相关审批
+                if (!PermissionManager.getInstance().hasPermission(BusinessOperation.APPROVAL_PROCESS)) {
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                    return;
+                }
+                Intent intentWf2 = new Intent();
+                intentWf2.putExtra(ExtraAndResult.EXTRA_ID, mData.unExpectedWfId);
+                intentWf2.setClass(OrderDetailActivity.this, WfinstanceInfoActivity_.class);
+                startActivityForResult(intentWf2, ExtraAndResult.REQUEST_CODE);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
             case R.id.ll_product://购买产品
@@ -332,12 +347,15 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
         capitalReturningPlanCRUD
                  = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_CAPITAL_RETURN_PLAN_CRUD);
         capitalReturningRecordCRUD
-                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_CAPITAL_RETURN_RECORD_CRUD);
+                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_CAPITAL_RETURN_RECORD_CRUD);
 
         responsibleChange
-                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_RESPONSIBLE_PERSON_CHANGE);
+                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_RESPONSIBLE_PERSON_CHANGE);
         worksheetAdd
-                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_WORKSHEET_ADD);
+                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_WORKSHEET_ADD);
+
+        isStop   = isStop && ! mData.hasTerminate();
+
         img_title_right.setVisibility(
                 (isDelete || isEdit || isCopy || isStop) ? View.VISIBLE:View.GONE
         );
@@ -374,6 +392,14 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             ll_wflayout.setVisibility(View.VISIBLE);
             tv_wfname.setText(mData.wfName);
         }
+        if (!TextUtils.isEmpty(mData.unExpectedWfId)) {//是否关联审批
+            ll_wf_terminate.setVisibility(View.VISIBLE);
+            tv_wf_terminate_name.setText(mData.getTerminateWfDisplayTitle());
+        }
+        else {
+            ll_wf_terminate.setVisibility(View.GONE);
+        }
+
         tv_order_number.setText(mData.orderNum);
         tv_memo.setText("备注：" + mData.remark);
         if (ll_extra.getChildCount() != 0) {

@@ -214,6 +214,13 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         et_money.setText(mOrderDetail.dealMoney + "");
         et_ordernum.setText(mOrderDetail.orderNum);
         et_remake.setText(mOrderDetail.remark);
+        if(mOrderDetail.startAt > 0) {
+            tv_start_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.startAt));
+        }
+        if(mOrderDetail.endAt > 0) {
+            tv_end_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.endAt));
+        }
+
         bindExtraView(mCusList);
 
     }
@@ -392,7 +399,16 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         et_ordernum.setText(mOrderDetail.orderNum);
         et_remake.setText(mOrderDetail.remark);
 
-        bindExtraView(mCusList);
+        if(mOrderDetail.startAt > 0) {
+            tv_start_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.startAt));
+        }
+        if(mOrderDetail.endAt > 0) {
+            tv_end_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.endAt));
+        }
+
+        if (orderAddforExtra != null) {
+            orderAddforExtra.bindData(mCusList);
+        }
     }
 
     /**

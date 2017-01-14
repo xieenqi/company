@@ -53,18 +53,12 @@ public interface IClue {
     @GET("/saleslead/source")
     Observable<SourcesData> getSource();
 
-//    /**
-//     * 新建线索 表单传输
-//     */
-//    @POST("/salesleads")
-//    Observable<ClueDetailWrapper> addClue(@Body Map<String, Object> body);
-
 
     /**
      * 新建线索 表单传输
      */
     @POST("/salesleads")
-    Observable<BaseResponse<ClueSales>> addClueNew(@Body Map<String, Object> body);
+    Observable<BaseResponse<ClueSales>> addClue(@Body Map<String, Object> body);
 
 
     /**
@@ -77,7 +71,7 @@ public interface IClue {
      * 编辑 线索
      */
     @PUT("/salesleads/{id}")
-    Observable<Object> editClue(@Path("id") String id, @Body HashMap<String, Object> map);
+    Observable<BaseResponse<ClueSales>> editClue(@Path("id") String id, @Body HashMap<String, Object> map);
 
     /**
      * 删除

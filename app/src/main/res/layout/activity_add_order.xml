@@ -424,7 +424,10 @@
                 android:background="@color/white"
                 android:gravity="top"
                 android:hint="备注"
+                android:singleLine="false"
+                android:maxLines="1000"
                 android:maxLength="500"
+                android:minLines="6"
                 android:minHeight="@dimen/dimen_100"
                 android:paddingBottom="@dimen/dimen_5"
                 android:paddingTop="@dimen/dimen_5" />

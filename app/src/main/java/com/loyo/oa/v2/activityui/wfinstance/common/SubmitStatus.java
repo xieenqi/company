@@ -127,4 +127,14 @@ public enum SubmitStatus implements GroupKey {
             return SubmitStatus.ALL;
         }
     }
+
+    public static SubmitStatus getStatus(int code) {
+        SubmitStatus[] list = SubmitStatus.values();
+        for (int i = 0; i < list.length; i++) {
+            if (list[i].code == code) {
+                return list[i];
+            }
+        }
+        return SubmitStatus.ALL;
+    }
 }
