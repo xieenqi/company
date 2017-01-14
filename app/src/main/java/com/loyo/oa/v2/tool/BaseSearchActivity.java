@@ -521,7 +521,7 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
 //                time.setText("跟进时间：" + app.df3.format(new Date(customer.lastActAt * 1000)));
                 time.setText("跟进时间：" + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(customer.lastActAt));
                 title.setText(customer.name);
-                content.setText("标签" + Utils.getTagItems(customer));
+                content.setText("标签:" + Utils.getTagItems(customer));
 
                 /*if (!TextUtils.isEmpty(customer.distance)) {
                     content.setText("距离：" + customer.distance);

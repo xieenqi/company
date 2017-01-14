@@ -148,8 +148,8 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     private int mSelectType = WorkReport.DAY;
     private int retroIndex = 1;//蛋疼的兼容原来的1序
     private int bizType = 1;
-    private int uploadSize;
-    private int uploadNum;
+//    private int uploadSize;
+//    private int uploadNum;
     private String currentValue;
     private String content;
 
@@ -158,12 +158,12 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
 
     UploadController controller;
 
-    private ArrayList<Attachment> lstData_Attachment = null;
+//    private ArrayList<Attachment> lstData_Attachment = null;
     private ArrayList<OrganizationalMember> users = new ArrayList<>();
     private ArrayList<OrganizationalMember> depts = new ArrayList<>();
-    private List<String> mSelectPath;
-    private ArrayList<ImageInfo> pickPhotsResult;
-    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
+//    private List<String> mSelectPath;
+//    private ArrayList<ImageInfo> pickPhotsResult;
+//    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
     private Members members = new Members();
