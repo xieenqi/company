@@ -51,13 +51,13 @@ public interface ISale {
      * 获取 我的销售机会列表
      */
     @GET("/chance/self")
-    Observable<SaleList> getSaleMyList(@QueryMap HashMap<String, Object> map);
+    Observable<PaginationX<SaleRecord>> getSaleMyList(@QueryMap HashMap<String, Object> map);
 
     /**
      * 获取 团队销售机会列表
      */
     @GET("/chance/team")
-    Observable<SaleList> getSaleTeamList(@QueryMap HashMap<String, Object> map);
+    Observable<PaginationX<SaleRecord>> getSaleTeamList(@QueryMap HashMap<String, Object> map);
 
     /**
      * 获取 销售机会详情

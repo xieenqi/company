@@ -23,11 +23,13 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.api.SaleService;
 import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -45,7 +47,7 @@ import retrofit.client.Response;
  * 【销售机会搜索】
  */
 
-public class SaleSearchActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, Callback<SaleList> {
+public class SaleSearchActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2 {
 
     public static final int TEAM_SALE_SEARCH = 20;//团队机会搜索
     public static final int MY_SALE_SEARCH = 30;//我的机会搜索
@@ -53,13 +55,10 @@ public class SaleSearchActivity extends BaseLoadingActivity implements PullToRef
     private EditText edt_search;
     private ImageView iv_clean;
     private PullToRefreshListView expandableListView_search;
-    private ArrayList<SaleRecord> listData = new ArrayList<>();
     private CommonSearchAdapter adapter;
     private LayoutInflater mInflater;
     private int fromPage;
-    private int page = 1;
-    private boolean isPullDown = true;
-
+    private PaginationX<SaleRecord> mPaginationX=new PaginationX<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +139,7 @@ public class SaleSearchActivity extends BaseLoadingActivity implements PullToRef
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, fromPage == MY_SALE_SEARCH ? false : true);
-                mIntent.putExtra("id", listData.get(position - 1).getId());
+                mIntent.putExtra("id", mPaginationX.getRecords().get(position - 1).getId());
                 mIntent.setClass(SaleSearchActivity.this, SaleDetailsActivity.class);
                 startActivity(mIntent);
                 SaleSearchActivity.this.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -157,6 +156,7 @@ public class SaleSearchActivity extends BaseLoadingActivity implements PullToRef
      */
     public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
+        mPaginationX.setFirstPage();
         getData();
     }
 
@@ -165,16 +165,12 @@ public class SaleSearchActivity extends BaseLoadingActivity implements PullToRef
      */
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 15);
+        map.put("pageIndex", mPaginationX.getShouldLoadPageIndex());
+        map.put("pageSize", mPaginationX.getPageSize());
         map.put("keyWords", strSearch);
         if (fromPage == MY_SALE_SEARCH) {
-//            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                    create(ISale.class).getSaleMyList(map, this);
             SaleService.getSaleMyList(map).subscribe(getSaleListSubscriber());
         } else if (fromPage == TEAM_SALE_SEARCH) {
-//            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                    create(ISale.class).getSaleTeamList(map, this);
             SaleService.getSaleTeamList(map).subscribe(getSaleListSubscriber());
         }
 
@@ -182,59 +178,39 @@ public class SaleSearchActivity extends BaseLoadingActivity implements PullToRef
     }
 
     //获取一个订阅者，来处理结果
-    private DefaultLoyoSubscriber<SaleList> getSaleListSubscriber(){
-        return new DefaultLoyoSubscriber<SaleList>(ll_loading) {
+    private DefaultLoyoSubscriber<PaginationX<SaleRecord>> getSaleListSubscriber(){
+        return new DefaultLoyoSubscriber<PaginationX<SaleRecord>>() {
             @Override
-            public void onNext(SaleList saleList) {
-                ((Callback)SaleSearchActivity.this).success(saleList,null);
+            public void onError(Throwable e) {
+                expandableListView_search.onRefreshComplete();
+                 /* 重写父类方法，不调用super */
+                @LoyoErrorChecker.CheckType
+                int type = mPaginationX.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST ;
+                LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
             }
 
             @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                ((Callback)SaleSearchActivity.this).failure(null);
+            public void onNext(PaginationX<SaleRecord> saleRecordPaginationX) {
+                expandableListView_search.onRefreshComplete();
+                mPaginationX.loadRecords(saleRecordPaginationX);
+                if(mPaginationX.isEnpty()){
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                }else{
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
+                adapter.setAdapter();
             }
         };
     }
 
     @Override
-    public void success(SaleList saleList, Response response) {
-        expandableListView_search.onRefreshComplete();
-        try {
-            if (!isPullDown) {
-                if (saleList.records != null && saleList.records.size() == 0)
-                    Toast("没有更多信息");
-                else listData.addAll(saleList.records);
-            } else {
-                listData = saleList.records;
-            }
-            adapter.setAdapter();
-            ll_loading.setStatus(LoadingLayout.Success);
-            if (listData.size() == 0)
-                ll_loading.setStatus(LoadingLayout.Empty);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void failure(RetrofitError error) {
-        expandableListView_search.onRefreshComplete();
-//        HttpErrorCheck.checkError(error, ll_loading);
-    }
-
-
-    @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = true;
-        page = 1;
+        mPaginationX.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = false;
-        page++;
         getData();
     }
 
@@ -251,7 +227,7 @@ public class SaleSearchActivity extends BaseLoadingActivity implements PullToRef
 
         @Override
         public int getCount() {
-            return listData == null ? 0 : listData.size();
+            return mPaginationX.getTotalRecords();
         }
 
         @Override
@@ -266,7 +242,7 @@ public class SaleSearchActivity extends BaseLoadingActivity implements PullToRef
 
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
-            SaleRecord item = listData.get(position);
+            SaleRecord item = mPaginationX.getRecords().get(position);
             Holder holder = null;
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.item_saleteamlist, null);

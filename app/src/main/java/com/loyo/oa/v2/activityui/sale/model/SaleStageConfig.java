@@ -50,7 +50,6 @@ public class SaleStageConfig {
     /* 读取缓存，如果没有缓冲，从网络获取 */
     public static ArrayList<SaleStage> getSaleStage(boolean fetchIfEmpty) {
         ArrayList<SaleStage> result = getSaleStageCache();
-
         if (fetchIfEmpty && (result == null || result.size()==0)) {
             getSaleStage();
         }

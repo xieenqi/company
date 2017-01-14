@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.sale.contract;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.BaseView;
 import com.loyo.oa.v2.common.base.BasePersenter;
 
@@ -19,6 +20,7 @@ public interface TeamSaleFragmentContract {
         void bindData(ArrayList<SaleRecord> recordData);
 
         LoadingLayout getLoadingUI();
+        void backToTop();
     }
 
     interface Presenter extends BasePersenter {
@@ -36,7 +38,7 @@ public interface TeamSaleFragmentContract {
     }
 
     interface Model {
-        void getData(HashMap<String, Object> map,int page);
+        void getData(HashMap<String, Object> map, PaginationX<SaleRecord> mPaginationX);
     }
 
 

@@ -54,23 +54,23 @@ public class SaleService {
                         .compose(RetrofitAdapterFactory.<SaleField>compatApplySchedulers());
     }
     //获取 我的销售机会列表
-    public static Observable<SaleList> getSaleMyList(HashMap<String, Object> params) {
+    public static Observable<PaginationX<SaleRecord>> getSaleMyList(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ISale.class)
                         .getSaleMyList(params)
-                        .compose(RetrofitAdapterFactory.<SaleList>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<PaginationX<SaleRecord>>compatApplySchedulers());
     }
 
     //获取 团队销售机会列表
-    public static Observable<SaleList> getSaleTeamList(HashMap<String, Object> params) {
+    public static Observable<PaginationX<SaleRecord>> getSaleTeamList(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ISale.class)
                         .getSaleTeamList(params)
-                        .compose(RetrofitAdapterFactory.<SaleList>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<PaginationX<SaleRecord>>compatApplySchedulers());
     }
 
     //获取 销售机会详情

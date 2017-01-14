@@ -239,6 +239,12 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
             adapterSaleTeam.setData(mData);
         }
     }
+    @Override
+    public void backToTop() {
+        if(null!=listView){
+            listView.getRefreshableView().setSelection(0);
+        }
+    }
 
     @Override
     public LoadingLayout getLoadingUI() {

@@ -152,6 +152,13 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
     }
 
     @Override
+    public void backToTop() {
+        if(null!=listView){
+            listView.getRefreshableView().setSelection(0);
+        }
+    }
+
+    @Override
     public LoadingLayout getLoadingUI() {
         return ll_loading;
     }
