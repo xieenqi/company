@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.order.bean;
 
+import android.text.TextUtils;
+
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.wfinstance.common.SubmitStatus;
@@ -72,5 +74,12 @@ public class OrderDetail implements Serializable {
         builder.append(getTerminateWfStatus());
         builder.append(")");
         return builder.toString().trim();
+    }
+
+    public boolean hasTerminate() {
+
+        return !TextUtils.isEmpty(unExpectedWfId)
+                && SubmitStatus.getStatus(unExpectedStatus) != SubmitStatus.UNAPPROVED;
+
     }
 }
