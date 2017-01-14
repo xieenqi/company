@@ -47,6 +47,7 @@ public class HttpJpushNotification implements Serializable {
     public static final int JPUSH_SIGNIN_COMMENT = 24;
     public static final int JPUSH_FOLLOWUP = 23;
     public static final int JPUSH_FOLLOWUP_COMMENT = 25;
+    public static final int JPUSH_EDIT_ORDER_RESPONSE = 28;//订单修改负责人
 
 
 }

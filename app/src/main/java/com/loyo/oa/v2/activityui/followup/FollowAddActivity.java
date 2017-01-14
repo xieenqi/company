@@ -477,7 +477,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     }
 
 
-    NoDoubleClickListener click = new NoDoubleClickListener(5000) {
+    NoDoubleClickListener click = new NoDoubleClickListener() {
         @Override
         public void onNoDoubleClick(View v) {
             switch (v.getId()) {
