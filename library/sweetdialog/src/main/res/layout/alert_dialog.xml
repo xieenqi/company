@@ -138,6 +138,8 @@
         android:textAlignment="center"
         android:textColor="#666666"
         android:textSize="14sp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:visibility="gone" />
 
     <LinearLayout
