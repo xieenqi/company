@@ -1,9 +1,11 @@
 package com.loyo.oa.v2.activityui.dashboard.fragment;
 
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +90,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     private int paymentType = 5;  //回款统计 默认本月
     private int followUpPage = 0;  //0:客户 1:线索
     private boolean isLoading;
+    private SwipeRefreshLayout srl_refresh;
 
     @Nullable
     @Override
@@ -121,6 +124,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
             }
         });
+        srl_refresh.setRefreshing(false);
     }
 
     /**
@@ -147,6 +151,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
             voice_totalsize.setText(csclueFowUp.getClueVoiceTotal());
             voice_count.setText(csclueFowUp.getClueVoiceDistinct());
         }
+        srl_refresh.setRefreshing(false);
     }
 
     /**
@@ -166,6 +171,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         tv_order_count.setText(mcModel.getTotalNumber());
         tv_target_money.setText(mcModel.getTargetAmount());
         tv_order_money.setText(mcModel.getTotalAmount());
+        srl_refresh.setRefreshing(false);
     }
 
     /**
@@ -190,6 +196,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         ViewGroup.LayoutParams layoutParams3 = view_payment_3.getLayoutParams();
         layoutParams3.height = targetPayment;
         view_payment_3.setLayoutParams(layoutParams3);
+        srl_refresh.setRefreshing(false);
     }
 
     private void initUI() {
@@ -288,6 +295,15 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 ll_dashboard_order_money, ll_case1, ll_case2, ll_case3, ll_case4, tv_click_rest1, tv_click_rest2, tv_click_rest3, tv_click_rest4, ll_pay);
         isLoading = true;
         getPageData();
+        srl_refresh = (SwipeRefreshLayout) mView.findViewById(R.id.srl_refresh);
+        srl_refresh.setColorSchemeColors(Color.parseColor("#2c9dfc"));
+        srl_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                srl_refresh.setRefreshing(true);
+                getPageData();
+            }
+        });
     }
 
     private void getPageData() {

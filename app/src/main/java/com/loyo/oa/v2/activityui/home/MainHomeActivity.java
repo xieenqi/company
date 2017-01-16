@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
 import com.loyo.oa.v2.activityui.home.slidingmenu.SlidingFragmentActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
+import com.loyo.oa.v2.activityui.order.OrderManagementActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
@@ -292,10 +293,16 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     MainApp.jpushData = null;
                     break;
                 case HttpJpushNotification.JPUSH_ORDER://订单详情
-                    intent.setClass(MainHomeActivity.this, OrderDetailActivity.class);
+                case HttpJpushNotification.JPUSH_EDIT_ORDER_RESPONSE://订单详情
+                    if (MainApp.jpushData.jumpType == HttpJpushNotification.JumpType.NUONE.getValue()) {
+                        intent.setClass(MainHomeActivity.this, OrderDetailActivity.class);
 //                  mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
-                    startActivity(intent);
+                        intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                        startActivity(intent);
+                    } else if (MainApp.jpushData.jumpType == HttpJpushNotification.JumpType.MY_RESON.getValue()) {
+                        intent.setClass(MainHomeActivity.this, OrderManagementActivity.class);
+                        startActivity(intent);
+                    }
                     MainApp.jpushData = null;
                     break;
                 case HttpJpushNotification.JPUSH_WORKSHEET://工单 事件相关都跳转到 工单详情

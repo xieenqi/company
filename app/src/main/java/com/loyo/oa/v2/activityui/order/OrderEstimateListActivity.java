@@ -65,6 +65,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
 
     public final static String RET_HAS_CHANGED_DATA = "com.loyo.OrderEstimateListActivity.RET_HAS_CHANGED_DATA";
     public final static String KEY_COMMIT_CHANGE = "com.loyo.OrderEstimateListActivity.KEY_COMMIT_CHANGE";
+    public final static String KEY_GET_DATA = "com.loyo.OrderEstimateListActivity.KEY_GET_DATA";
 
     private LinearLayout ll_back;
     private LinearLayout ll_add;
@@ -90,6 +91,8 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     private int backMoney = 0;
     private double ratePayment = 0.0;
     private int orderStatus;
+    private boolean needFetchData = false;
+    private boolean refreshStatOnly = false;
 
 
     private Handler mHandler = new Handler() {
@@ -131,6 +134,9 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
+        if (needFetchData || refreshStatOnly) {
+            getPageData();
+        }
     }
 
     @Override
@@ -158,6 +164,10 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
             if (null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")) {
                 capitalReturningList = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
             }
+            needFetchData = mIntent.getBooleanExtra(KEY_GET_DATA, false);
+            if (orderId != null && !needFetchData) {
+                refreshStatOnly = true;/* fix bug */
+            }
         }
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
@@ -181,6 +191,9 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
 /*      tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
         tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");*/
 
+        tv_totalprice.setText("￥" + backMoney);
+        tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");
+
         //如果来自详情，则请求回款记录
         ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         mAdapter = new OrderEstimateListAdapter(this, capitalReturningList, mHandler, orderId, fromPage, isAdd);
@@ -192,6 +205,8 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
 
     public void reloadList() {
         mAdapter.notifyDataSetChanged();
+        ll_loading.setStatus(
+                capitalReturningList.size() >0? LoadingLayout.Success:LoadingLayout.Empty);
     }
 
 
@@ -299,14 +314,15 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                         ll_loading.setStatus(LoadingLayout.Success);
                         if (null != list) {
                             mEstimateList = list;
-                            if (null != list.records) {
+                            mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
+                            if (needFetchData && null != list.records) {
                                 capitalReturningList.clear();
                                 capitalReturningList.addAll(list.records);
                                 reloadList();
-                                mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
-                                if (capitalReturningList.size() == 0)
-                                    ll_loading.setStatus(LoadingLayout.Empty);
                             }
+                            if (capitalReturningList.size() == 0)
+                                ll_loading.setStatus(LoadingLayout.Empty);
+
                         } else {
                             ll_loading.setStatus(LoadingLayout.No_Network);
                             ll_loading.setNoNetworkText("没有获取到数据");
@@ -378,7 +394,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                 }
                 else
                 {
-                    capitalReturningList.add(mEstimateAdd);
+                    capitalReturningList.add(0, mEstimateAdd);
                     hasChangedData = true;
                     reloadList();
                 }

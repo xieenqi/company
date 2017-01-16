@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout_extra"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_48"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_tag"
@@ -20,37 +19,35 @@
             android:layout_marginLeft="@dimen/margin_other_view"
             android:gravity="center_vertical"
             android:minWidth="80dp"
-            android:text="ddddd"/>
+            android:text="ddddd" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <EditText
                 android:id="@+id/et_content"
+                style="@style/common_text_line_second"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@+id/img_right_arrow"
                 android:background="@null"
                 android:paddingLeft="14dp"
-                android:singleLine="true"
                 android:paddingRight="4dp"
-                style="@style/common_text_line_second"
-                />
+                android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/img_right_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
                 android:layout_marginRight="@dimen/common_layout_padding"
-                android:src="@drawable/common_right_arrow"/>
+                android:gravity="center_vertical"
+                android:src="@drawable/common_right_arrow" />
         </RelativeLayout>
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line_left"/>
+    <include layout="@layout/include_solid_line_left" />
 
 </LinearLayout>

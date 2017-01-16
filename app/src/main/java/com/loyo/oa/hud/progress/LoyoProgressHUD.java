@@ -558,7 +558,7 @@ public class LoyoProgressHUD {
                     }
                     catch (Exception e) {}
                 }
-            }, 1500);
+            }, 2000);
         }
 
         public void dismissWithError(String msg) {
@@ -576,7 +576,7 @@ public class LoyoProgressHUD {
                     }
                     catch (Exception e) {}
                 }
-            }, 1500);
+            }, 2000);
         }
     }
 }

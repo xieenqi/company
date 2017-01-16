@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 
@@ -52,7 +52,7 @@ android {
                            'src/main/res-loyo/workreports',
                            'src/main/res-hud']
         }
-//        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += 'src/main/kotlin'
     }
     signingConfigs {
         debug {
@@ -187,7 +187,8 @@ repositories {
     flatDir {
         dirs 'libs'
     }
-    mavenCentral()
+//    mavenCentral()
+    jcenter()//在国内比较快
 }
 dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
@@ -195,7 +196,8 @@ dependencies {
     compile project(path: ':LibraryModule')
     compile project(':library:circularprogressbutton')
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
-//    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
 
 apt {

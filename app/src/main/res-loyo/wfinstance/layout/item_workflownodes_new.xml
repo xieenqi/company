@@ -14,9 +14,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/common_layout_padding"
+            android:layout_marginBottom="10dp"
             android:layout_marginRight="@dimen/common_layout_padding"
-            android:layout_marginTop="@dimen/common_layout_padding"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -34,7 +34,7 @@
                 android:layout_marginLeft="@dimen/common_text_in_space"
                 android:ellipsize="end"
                 android:maxEms="12"
-                android:maxLength="10"
+                android:maxLength="20"
                 android:singleLine="true"
                 android:text="销售部" />
 
@@ -83,6 +83,8 @@
                 android:layout_marginBottom="@dimen/common_text_in_space"
                 android:text="内容"
                 android:gravity="left"
+                android:singleLine="false"
+                android:maxLines="1000"
                 style="@style/common_text_line_main"/>
 
             <TextView

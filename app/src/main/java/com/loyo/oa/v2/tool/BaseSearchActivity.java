@@ -176,13 +176,13 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
                     case WFIN_ADD:
                         mIntent = new Intent();
                         mIntent.putExtra("data", lstData.get(position - 2));
-                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
+                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                         break;
                     //新建任务 所属项目
                     case TASKS_ADD:
                         mIntent = new Intent();
                         mIntent.putExtra("data", lstData.get(position - 2));
-                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
+                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                         break;
                     //新建任务 关联客户
                     case TASKS_ADD_CUSTOMER:
@@ -196,7 +196,7 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
                     case WORK_ADD:
                         mIntent = new Intent();
                         mIntent.putExtra("data", lstData.get(position - 2));
-                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
+                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                         break;
                     //客户管理
                     case CUSTOMER_MANAGE:
@@ -252,7 +252,7 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
         headerViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, new Intent());
+                app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
             }
         });
     }
