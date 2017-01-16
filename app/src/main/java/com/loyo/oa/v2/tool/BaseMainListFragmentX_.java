@@ -181,7 +181,6 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //TODO 这里目前数加载数据，有空了，取消数据直接插入。
         if (resultCode == 0x09) {
             pagination.setFirstPage();
             getData();
@@ -198,7 +197,6 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
                     return;
                 }
                 pagination.setFirstPage();
-                pagination.setTotalRecords(pagination.getTotalRecords()+1);
                 getData();
                 return;
             case REQUEST_REVIEW:

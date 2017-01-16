@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.project.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -182,7 +183,16 @@ public class TaskReoprtWfinstanceFragment<T extends BaseBeans> extends BaseMainL
         adapter.setData(pagingGroupDatas);
         adapter.notifyDataSetChanged();
         //数据改变的时候，需要更新activity的显示
-        ((OnLoadSuccessCallback)getActivity()).onLoadSuccess(type==12?3:type,pagination.getTotalRecords());
+        Log.i("tttttt", "dataChanged:  "+pagination.getTotalRecords());
+        int index=0;
+        if(2==type){
+            index=0;
+        }else if(1==type){
+            index=1;
+        }else if (12==type){
+            index=2;
+        }
+        ((OnLoadSuccessCallback)getActivity()).onLoadSuccess(index,pagination.getTotalRecords());
     }
 
 
