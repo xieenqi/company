@@ -182,9 +182,10 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //TODO 这里目前数加载数据，有空了，取消数据直接插入。
-        pagination.setFirstPage();
         if (resultCode == 0x09) {
+            pagination.setFirstPage();
             getData();
+            return;
         }
         if (null == data) {
             return;
@@ -196,6 +197,8 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
                 if (item == null) {
                     return;
                 }
+                pagination.setFirstPage();
+                pagination.setTotalRecords(pagination.getTotalRecords()+1);
                 getData();
                 return;
             case REQUEST_REVIEW:
@@ -213,6 +216,7 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
                     if (TextUtils.equals(pagination.getRecords().get(i).get("id").getAsString(), reviewItem.getId())) {
                         if (deleteFlag) {
                             pagination.getRecords().remove(i);
+                            pagination.setTotalRecords(pagination.getTotalRecords()-1);
                         } else {
                            Type type = new TypeToken<JsonObject>() {}.getType();
                             pagination.getRecords().set(i, (JsonObject) MainApp.gson.fromJson(MainApp.gson.toJson(pagination.getRecords().get(i)),type));

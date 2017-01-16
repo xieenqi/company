@@ -38,6 +38,7 @@ import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseMainListFragmentX_;
+import com.loyo.oa.v2.tool.OnLoadSuccessCallback;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -180,6 +181,8 @@ public class TaskReoprtWfinstanceFragment<T extends BaseBeans> extends BaseMainL
     public void dataChanged() {
         adapter.setData(pagingGroupDatas);
         adapter.notifyDataSetChanged();
+        //数据改变的时候，需要更新activity的显示
+        ((OnLoadSuccessCallback)getActivity()).onLoadSuccess(type==12?3:type,pagination.getTotalRecords());
     }
 
 
