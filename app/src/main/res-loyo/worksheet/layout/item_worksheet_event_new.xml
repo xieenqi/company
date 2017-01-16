@@ -126,7 +126,7 @@
                 <TextView
                     android:id="@+id/tv_action"
                     android:layout_width="64dp"
-                    android:layout_height="30dp"
+                    android:layout_height="33dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:drawablePadding="0dp"
