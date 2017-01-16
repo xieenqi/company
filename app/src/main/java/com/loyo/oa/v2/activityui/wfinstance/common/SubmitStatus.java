@@ -57,6 +57,14 @@ public enum SubmitStatus implements GroupKey {
         public int getIcon() {
             return R.drawable.bg_view_green_circle;
         }
+    },
+    FINISHED(5, "5", "已办结"){
+        public int getColor() {
+            return R.color.isfinish;
+        }
+        public int getIcon() {
+            return R.drawable.bg_view_green_circle;
+        }
     };
 
     public int code;

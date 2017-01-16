@@ -204,6 +204,8 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
 
     public void reloadList() {
         mAdapter.notifyDataSetChanged();
+        ll_loading.setStatus(
+                capitalReturningList.size() >0? LoadingLayout.Success:LoadingLayout.Empty);
     }
 
 
