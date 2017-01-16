@@ -855,6 +855,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 mBundle.putDouble("回款率", mWfInstance.order.ratePayment);
                 mBundle.putInt("订单待审核", mWfInstance.order.status);//不显示回款记录状态
                 mBundle.putBoolean(OrderEstimateListActivity.KEY_COMMIT_CHANGE, true);
+                mBundle.putString("orderId", mWfInstance.order.id);
                 app.startActivityForResult(this, OrderEstimateListActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
