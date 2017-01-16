@@ -92,6 +92,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     private double ratePayment = 0.0;
     private int orderStatus;
     private boolean needFetchData = false;
+    private boolean refreshStatOnly = false;
 
 
     private Handler mHandler = new Handler() {
@@ -133,7 +134,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
-        if (needFetchData) {
+        if (needFetchData || refreshStatOnly) {
             getPageData();
         }
     }
@@ -164,8 +165,8 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                 capitalReturningList = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
             }
             needFetchData = mIntent.getBooleanExtra(KEY_GET_DATA, false);
-            if (orderId != null) {
-                needFetchData = true;/* fix bug */
+            if (orderId != null && !needFetchData) {
+                refreshStatOnly = true;/* fix bug */
             }
         }
 
@@ -313,14 +314,15 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                         ll_loading.setStatus(LoadingLayout.Success);
                         if (null != list) {
                             mEstimateList = list;
-                            if (null != list.records) {
+                            mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
+                            if (needFetchData && null != list.records) {
                                 capitalReturningList.clear();
                                 capitalReturningList.addAll(list.records);
                                 reloadList();
-                                mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
-                                if (capitalReturningList.size() == 0)
-                                    ll_loading.setStatus(LoadingLayout.Empty);
                             }
+                            if (capitalReturningList.size() == 0)
+                                ll_loading.setStatus(LoadingLayout.Empty);
+
                         } else {
                             ll_loading.setStatus(LoadingLayout.No_Network);
                             ll_loading.setNoNetworkText("没有获取到数据");
