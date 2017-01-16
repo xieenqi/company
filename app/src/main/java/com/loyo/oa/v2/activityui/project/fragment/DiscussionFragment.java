@@ -47,7 +47,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
     private View mView;
     private PullToRefreshListView lv_discuss;
-    protected PaginationX<Discussion> mPagination = new PaginationX(20);
+    protected PaginationX<Discussion> mPagination = new PaginationX(5);
     private DiscussionAdapter adapter;
     private HttpProject project;
     private LayoutInflater mInflater;
@@ -173,6 +173,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             @Override
             public void onNext(PaginationX<Discussion> pagination) {
                 lv_discuss.onRefreshComplete();
+                //TODO 这里添加顺序有问题
                 Collections.reverse(pagination.getRecords());
                 mPagination.loadRecords(pagination);
                 if(mPagination.isEnpty()){
@@ -183,7 +184,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                 onLoadSuccess(pagination.getTotalRecords());
                 bindData();
                 //注意，这里的列表，是反转了的，底部才是顶部，
-                if(!mPagination.isNeedToBackTop()){
+                if(mPagination.isNeedToBackTop()){
                     scrollToBottom();
                 }
             }
@@ -192,12 +193,12 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        mPagination.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        mPagination.setFirstPage();
         getData();
     }
 
