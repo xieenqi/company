@@ -2,8 +2,11 @@ package com.loyo.oa.v2.activityui.worksheet.common;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -138,7 +141,20 @@ public class WorksheetEventCell extends LinearLayout {
         /* 操作按钮 */
         tv_action.setVisibility(action.visible() ? View.VISIBLE : View.GONE);
         tv_action.setTextAppearance(mContext, action.getIcon());
+        //不能只使用，设置style，bg和drawable不能通过style动态设置，所以需要使用下面的方式，单独设置。
+        tv_action.setBackgroundResource(action.getBackground());
         tv_action.setText(action.getBtnTitle());
+        //设置drawableLeft
+        if(null!=action.getDrawableLeft()){
+            Drawable drawable= getResources().getDrawable(action.getDrawableLeft());
+            // 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            tv_action.setCompoundDrawables(drawable,null,null,null);
+        }else{
+            tv_action.setCompoundDrawables(null,null,null,null);
+
+        }
+
 
         /* 事件 */
         tv_action.setOnTouchListener(Global.GetTouch());

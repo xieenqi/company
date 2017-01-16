@@ -19,27 +19,37 @@ public enum WorksheetEventAction implements Serializable {
 
     None{
         public int getIcon() {return R.style.worksheet_btn_trans;}
+        public int getBackground(){return R.drawable.worksheet_btn_bg_blue;}
+        public Integer getDrawableLeft(){return null;}
         public boolean visible() { return false;}
         public String getBtnTitle(){return "无";}
     },
 
     Transfer {
         public int getIcon() { return R.style.worksheet_btn_trans; }
+        public int getBackground(){return R.drawable.worksheet_btn_bg_blue;}
+        public Integer getDrawableLeft(){return null;}
         public boolean visible() { return true;}
         public String getBtnTitle(){ return "转移"; }
     },
     Dispatch {
         public int getIcon() {return R.style.worksheet_btn_assignment;}
+        public int getBackground(){return R.drawable.worksheet_btn_bg_red;}
+        public Integer getDrawableLeft(){return null;}
         public boolean visible() { return true; }
         public String getBtnTitle(){ return "分派";}
     },
     Redo {
         public int getIcon() { return R.style.worksheet_btn_redo;}
+        public int getBackground(){return R.drawable.worksheet_btn_bg_red;}
+        public Integer getDrawableLeft(){return R.drawable.no;}
         public boolean visible() { return true;}
         public String getBtnTitle(){ return "重做";}
     },
     Finish {
         public int getIcon() { return R.style.worksheet_btn_complete; }
+        public int getBackground(){return R.drawable.worksheet_btn_bg_blue;}
+        public Integer getDrawableLeft(){return R.drawable.yes;}
         public boolean visible() {return true; }
         public String getBtnTitle(){return "完成";}
     };
@@ -52,6 +62,8 @@ public enum WorksheetEventAction implements Serializable {
      * 获取显示图标
      */
     public abstract int getIcon();
+    public abstract int getBackground();
+    public abstract Integer getDrawableLeft();
     public abstract String getBtnTitle();
     public abstract boolean visible();
 
