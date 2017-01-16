@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.project.api;
 
+import com.google.gson.JsonObject;
 import com.loyo.oa.v2.activityui.clue.api.IClue;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.activityui.project.ProjectAddActivity;
@@ -49,13 +50,13 @@ public class ProjectService {
                         .compose(RetrofitAdapterFactory.<Project>compatApplySchedulers());
     }
     //1:工作报告, 2:任务, 12:快捷审批
-    public static <T extends BaseBeans> Observable<PaginationX<T>> getProjectNewSubs(String id, int bizType, HashMap<String, Object> map) {
+    public static  Observable<PaginationX<JsonObject>> getProjectNewSubs(String id, int bizType, HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL())
                         .create(IProject.class)
-                        .<T>getProjectNewSubs(id,bizType,map)
-                        .compose(RetrofitAdapterFactory.<PaginationX<T>>compatApplySchedulers());
+                        .getProjectNewSubs(id,bizType,map)
+                        .compose(RetrofitAdapterFactory.<PaginationX<JsonObject>>compatApplySchedulers());
     }
 
     public static Observable<Project> Create(ProjectAddActivity.ProjectTransObj body) {

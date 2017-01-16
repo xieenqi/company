@@ -1,8 +1,7 @@
-package com.loyo.oa.v2.tool;
+package com.loyo.oa.v2.activityui.project.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -11,9 +10,9 @@ import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.library.module.widget.loading.LoadingLayout;
-import com.loyo.oa.common.utils.JsonCommonTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.project.HttpProject;
@@ -27,7 +26,6 @@ import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
-import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Project;
@@ -39,14 +37,12 @@ import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
+import com.loyo.oa.v2.tool.BaseMainListFragmentX_;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.tool
@@ -54,8 +50,7 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/9/7.
  */
-public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainListFragmentX_<T> implements AbsListView.OnScrollListener {
-
+public class TaskReoprtWfinstanceFragment<T extends BaseBeans> extends BaseMainListFragmentX_<T> implements AbsListView.OnScrollListener {
     private CommonExpandableListAdapter adapter;
     private HttpProject mProject;
     private int type;
@@ -68,17 +63,18 @@ public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainLis
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (null != getArguments()) {
-            if (getArguments().containsKey("type")) {
-                type = getArguments().getInt("type");
-            }
-            if (getArguments().containsKey("project")) {
-                mProject = (HttpProject) getArguments().getSerializable("project");
-            }
-        }
         super.onCreate(savedInstanceState);
         initView();
+    }
 
+    @Override
+    public void getInputArguments() {
+        if (getArguments().containsKey("type")) {
+            type = getArguments().getInt("type");
+        }
+        if (getArguments().containsKey("project")) {
+            mProject = (HttpProject) getArguments().getSerializable("project");
+        }
     }
 
     @Override
@@ -139,14 +135,14 @@ public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainLis
 
 
     @Override
-    public void GetData() {
+    public void getData() {
         if (null == mProject) {
             return;
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pagination.getShouldLoadPageIndex());
         map.put("pageSize", pagination.getPageSize());
-        ProjectService.<T>getProjectNewSubs(mProject.getId(),type,map).subscribe(new DefaultLoyoSubscriber<PaginationX<T>>() {
+        ProjectService.getProjectNewSubs(mProject.getId(),type,map).subscribe(new DefaultLoyoSubscriber<PaginationX<JsonObject>>() {
             @Override
             public void onError(Throwable e) {
                 mExpandableListView.onRefreshComplete();
@@ -157,18 +153,16 @@ public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainLis
             }
 
             @Override
-            public void onNext(PaginationX<T> tPaginationX) {
+            public void onNext(PaginationX<JsonObject> tPaginationX) {
                 mExpandableListView.onRefreshComplete();
-
                 pagination.loadRecords(tPaginationX);
                 if(pagination.isEnpty()){
                     ll_loading.setStatus(LoadingLayout.Empty);
                 }else{
                     ll_loading.setStatus(LoadingLayout.Success);
                 }
-                ArrayList<T> res= JsonCommonTool.convert(TaskRecord.class,pagination.getRecords());
-                pagingGroupDatas = PagingGroupData_.convertGroupData(res);
-                changeAdapter();
+                convertData();
+                dataChanged();
                 expand();
             }
         });
@@ -183,11 +177,7 @@ public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainLis
     }
 
     @Override
-    public void changeAdapter() {
-        if (null == adapter) {
-            initAdapter();
-            return;
-        }
+    public void dataChanged() {
         adapter.setData(pagingGroupDatas);
         adapter.notifyDataSetChanged();
     }
@@ -286,39 +276,36 @@ public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainLis
         }
     }
 
-    @Override
-    public void openSearch(View v) {
 
-    }
 
     @Override
-    public String GetTitle() {
-        return "";
-    }
-
-    @Override
-    public ArrayList GetTData(Pagination p) {
+    public void convertData() {
+        ArrayList list=new ArrayList();
         Type type = null;
+        //获取类型
         switch (this.type) {
             case 1:
-                type = new TypeToken<ArrayList<WorkReportRecord>>() {
+                type = new TypeToken<WorkReportRecord>() {
                 }.getType();
+
                 break;
             case 2:
-                type = new TypeToken<ArrayList<TaskRecord>>() {
+                type = new TypeToken<TaskRecord>() {
                 }.getType();
                 break;
             case 12:
-                type = new TypeToken<ArrayList<WfInstanceRecord>>() {
+                type = new TypeToken<WfInstanceRecord>() {
                 }.getType();
                 break;
         }
-        return MainApp.gson.fromJson(MainApp.gson.toJson(p.getRecords()), type);
+        //把jsonObject装成json，然后转成需要的类型
+        for (int i = 0; i < pagination.getLoadedTotalRecords(); i++) {
+            list.add(MainApp.gson.fromJson(MainApp.gson.toJson(pagination.getRecords().get(i)), type));
+        }
+        //排序，分类以后的数据
+        pagingGroupDatas=PagingGroupData_.convertGroupData(list);
     }
 
-    @Override
-    public void filterGetData(Intent intent) {
-    }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {

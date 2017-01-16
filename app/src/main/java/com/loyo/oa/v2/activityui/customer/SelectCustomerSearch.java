@@ -155,7 +155,7 @@ public class SelectCustomerSearch extends BaseLoadingActivity implements PullToR
 //                            }
 //                            lstData.addAll(lstDataTemp);
 //                        }
-//                        changeAdapter();
+//                        dataChanged();
 //                    }
 //
 //                    @Override

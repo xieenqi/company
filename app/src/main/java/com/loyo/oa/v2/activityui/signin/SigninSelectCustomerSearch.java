@@ -155,7 +155,7 @@ public class SigninSelectCustomerSearch extends BaseLoadingActivity implements P
 //                            }
 //                            lstData.addAll(lstDataTemp);
 //                        }
-//                        changeAdapter();
+//                        dataChanged();
 //                    }
 //
 //                    @Override

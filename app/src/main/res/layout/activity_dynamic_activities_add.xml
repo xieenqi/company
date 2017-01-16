@@ -50,7 +50,7 @@
                         android:background="@null"
                         android:focusable="true"
                         android:gravity="left|top"
-                        android:hint="请填写跟进内容"
+                        android:textSize="14sp"
                         android:minHeight="100dp"
                         android:paddingBottom="@dimen/dimen_10"
                         android:paddingLeft="@dimen/margin_other_view"

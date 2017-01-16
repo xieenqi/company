@@ -20,6 +20,7 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.api.ProjectService;
 import com.loyo.oa.v2.activityui.project.fragment.AttachmentFragment;
 import com.loyo.oa.v2.activityui.project.fragment.DiscussionFragment;
+import com.loyo.oa.v2.activityui.project.fragment.TaskReoprtWfinstanceFragment;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
@@ -31,7 +32,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.BaseChildMainListFragmentX;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.OnLoadSuccessCallback;
@@ -240,11 +240,11 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 }
 
                 if(0==i){
-                    fragmentX = new BaseChildMainListFragmentX<TaskRecord>();//任务
+                    fragmentX = new TaskReoprtWfinstanceFragment<TaskRecord>();//任务
                 }else if(1==i){
-                    fragmentX = new BaseChildMainListFragmentX<WorkReportRecord>();//报告
+                    fragmentX = new TaskReoprtWfinstanceFragment<WorkReportRecord>();//报告
                 }else if (2==i) {
-                    fragmentX = new BaseChildMainListFragmentX<WfInstanceRecord>();//审批
+                    fragmentX = new TaskReoprtWfinstanceFragment<WfInstanceRecord>();//审批
                 } else if (i == TITLES.length - 1) {
                     fragmentX = new DiscussionFragment();//讨论
                 } else {
@@ -273,7 +273,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
 
         User creator = project.creator;
         tv_project_title.setText(project.title);
-//        tv_project_extra.setText(creator.getRealname() + " " + app.df2.format(new Date(project.getCreatedAt())) + " 发布");
         tv_project_extra.setText("负责人：" + managersPersion(project.managers));
 
         if (project.status == 1) {

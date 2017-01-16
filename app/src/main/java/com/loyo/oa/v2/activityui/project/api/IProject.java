@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.project.api;
 
+import com.google.gson.JsonObject;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.activityui.project.ProjectAddActivity;
 import com.loyo.oa.v2.beans.Pagination;
@@ -42,7 +43,7 @@ public interface IProject {
 
     //1:工作报告, 2:任务, 12:快捷审批
     @GET("/project/{id}/records/{bizType}/mobile/simplify")
-    <T> Observable<PaginationX<T>> getProjectNewSubs(@Path("id") String id, @Path("bizType") int bizType, @QueryMap HashMap<String, Object> map);
+    Observable<PaginationX<JsonObject>> getProjectNewSubs(@Path("id") String id, @Path("bizType") int bizType, @QueryMap HashMap<String, Object> map);
 
 
     @POST("/project")
