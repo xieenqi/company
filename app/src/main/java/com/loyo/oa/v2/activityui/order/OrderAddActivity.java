@@ -197,6 +197,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     public void editData() {
 
+        if (mOrderDetail.reWorkSheet == null) {
+            mOrderDetail.reWorkSheet = new ArrayList<>();
+        }
+
         uuid = mOrderDetail.attachmentUUId;
         customerId = mOrderDetail.customerId;
         customerName = mOrderDetail.customerName;
@@ -342,7 +346,12 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private void getOrderData(String id) {
         showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("isCopy", true);
+        if (fromPage == OrderDetailActivity.ORDER_EDIT) {
+            map.put("fetchList", true);
+        }
+        else {
+            map.put("isCopy", true);
+        }
         OrderService.getSaleDetails(id, map)
                 .subscribe(new DefaultLoyoSubscriber<OrderDetail>(hud) {
                     @Override

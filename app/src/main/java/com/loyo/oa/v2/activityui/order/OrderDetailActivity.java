@@ -483,7 +483,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                             dismissSweetAlert();
                             deleteOrder();
                         }
-                    }, "提示", "订单删除后不可恢复！删除后将清除订单中的所有回款记录、计划（工单除外） 你确定要删除吗？");
+                    }, "提示", "订单删除后不可恢复！删除后将清除订单中的所有回款记录、计划（工单除外）。你确定要删除吗？");
                 }
             });
         dialog.show();

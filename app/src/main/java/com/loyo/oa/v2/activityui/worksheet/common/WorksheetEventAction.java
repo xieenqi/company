@@ -41,7 +41,7 @@ public enum WorksheetEventAction implements Serializable {
     },
     Redo {
         public int getIcon() { return R.style.worksheet_btn_redo;}
-        public int getBackground(){return R.drawable.worksheet_btn_bg_red;}
+        public int getBackground(){return R.drawable.worksheet_btn_bg_blue;}
         public Integer getDrawableLeft(){return R.drawable.no;}
         public boolean visible() { return true;}
         public String getBtnTitle(){ return "重做";}

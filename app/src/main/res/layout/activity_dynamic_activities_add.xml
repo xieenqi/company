@@ -126,9 +126,7 @@
                     <!--添加@ 的人员-->
                     <include layout="@layout/include_at" />
 
-                    <View
-                        style="@style/view_split"
-                        android:layout_width="match_parent" />
+                    <include layout="@layout/include_solid_line_left" />
 
                 </LinearLayout>
 
