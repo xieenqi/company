@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
@@ -172,11 +173,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private String customerWrietele;
     private String cusotmerDetalisAddress;
     private String memo;
-
-    private int bizType = 0x01;
-    private int uploadSize;
-    private int uploadNum;
-
     private double laPosition;//当前位置的经纬度
     private double loPosition;
 
@@ -871,7 +867,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = uuid;
-            attachmentBatch.bizType = bizType;
+            attachmentBatch.bizType = LoyoBizType.Customer.getCode();
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");

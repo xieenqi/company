@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -75,7 +76,6 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     ArrayList<AttachmentForNew> attachmentForNew;
 
     UploadController controller;
-    private int bizType = 0;
 
     @AfterViews
     void init() {
@@ -261,7 +261,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = uuid;
-            attachmentBatch.bizType = bizType;
+            attachmentBatch.bizType = LoyoBizType.Bulletin.getCode();
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");

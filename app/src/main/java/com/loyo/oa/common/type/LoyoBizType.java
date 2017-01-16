@@ -64,7 +64,11 @@ public enum LoyoBizType {
     /*跟进评论*/
     ActivityCommentType(31),
     /*电话录音*/
-    IPVoice(32);
+    IPVoice(32),
+
+
+    //以下是服务端没有定义的 而我们有的
+    FollowUp(17);
 
     //    const (
     //    _                     BizType = iota //忽略掉 0, 从 1 开始

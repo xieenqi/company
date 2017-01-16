@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
@@ -58,7 +59,7 @@ import java.util.List;
  * 【线索转移客户】
  * Created by yyy on 16/8/22.
  */
-public class ClueTransferActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback{
+public class ClueTransferActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
@@ -102,11 +103,6 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
     private ArrayList<ImageInfo> pickPhotsResult;
 
     UploadController controller;
-
-    private int bizType = 0x01;
-    private int uploadSize;
-    private int uploadNum;
-
     private double laPosition;//当前位置的经纬度
     private double loPosition;
 
@@ -122,7 +118,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         public void dispatchMessage(final Message msg) {
             if (msg.what == 0x01) {
                 et_address.setText(myAddress);
-                if(null == mCluesales.address || TextUtils.isEmpty(mCluesales.address)){
+                if (null == mCluesales.address || TextUtils.isEmpty(mCluesales.address)) {
                     edit_address_details.setText(myAddress);
                 }
             }
@@ -136,16 +132,16 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         initUi();
     }
 
-    public void getIntentData(){
+    public void getIntentData() {
         mIntent = getIntent();
         mCluesales = (ClueSales) mIntent.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-        if(null == mCluesales){
+        if (null == mCluesales) {
             onBackPressed();
             Toast("参数为Null");
         }
     }
 
-    public void initUi(){
+    public void initUi() {
         super.setTitle("线索转换客户");
         getIntentData();
         img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
@@ -195,11 +191,11 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
 
     /**
      * 获取新建客户权限
-     * */
-    public void requestJurisdiction(){
+     */
+    public void requestJurisdiction() {
         showLoading2("");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("bizType",100);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("bizType", 100);
         CustomerService.getAddCustomerJur(map)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
@@ -276,7 +272,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
 
     /**
      * 新建客户请求
-     * */
+     */
     public void requestCommitTask() {
         HttpAddCustomer positionData = new HttpAddCustomer();
         positionData.loc.addr = customerAddress;
@@ -309,7 +305,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         map.put("wiretel", customerWrietele);
         map.put("tags", positionData.tags);
         map.put("salesleadId", mCluesales.id);
-        LogUtil.dee("转移客户发送数据:"+MainApp.gson.toJson(map));
+        LogUtil.dee("转移客户发送数据:" + MainApp.gson.toJson(map));
         CustomerService.addNewCustomer(map)
                 .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                     @Override
@@ -320,7 +316,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                             isSave = false;
                             Intent intent = new Intent();
                             intent.putExtra(Customer.class.getName(), retCustomer);
-                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT,RESULT_OK, intent);
+                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
 
                         } catch (Exception e) {
                             Global.ProcException(e);
@@ -333,8 +329,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
 
 
-
-        switch (v.getId()){
+        switch (v.getId()) {
 
 
               /*刷新地址*/
@@ -342,7 +337,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
 
                 mBundle = new Bundle();
                 mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(this,MapModifyView.class, MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
+                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
 
                 break;
 
@@ -380,13 +375,13 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                 } else if (cusotmerDetalisAddress.isEmpty()) {
                     Toast("请输入的客户详细地址!");
                     return;
-                } else if(TextUtils.isEmpty(customerContractTel) && cusPhone){
+                } else if (TextUtils.isEmpty(customerContractTel) && cusPhone) {
                     Toast("请输入客户手机号码!");
                     return;
-                } else if(TextUtils.isEmpty(customerWrietele)    && cusMobile){
+                } else if (TextUtils.isEmpty(customerWrietele) && cusMobile) {
                     Toast("请输入客户座机号码!");
                     return;
-                } else if(TextUtils.isEmpty(customerContract)    && cusGuys){
+                } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
                     Toast("请输入联系人姓名!");
                     return;
                 }
@@ -412,7 +407,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
             default:
                 break;
         }
-        }
+    }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -423,9 +418,9 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         }
 
         switch (requestCode) {
-            case  MapModifyView.SERACH_MAP:
+            case MapModifyView.SERACH_MAP:
                 positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-                if(null != positionResultItem){
+                if (null != positionResultItem) {
                     laPosition = positionResultItem.laPosition;
                     loPosition = positionResultItem.loPosition;
                     et_address.setText(positionResultItem.address);
@@ -523,7 +518,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = uuid;
-            attachmentBatch.bizType = bizType;
+            attachmentBatch.bizType = LoyoBizType.Customer.getCode();
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");
@@ -546,7 +541,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onAddEvent(UploadController controller) {
         PhotoPicker.builder()
-                .setPhotoCount(9-controller.count())
+                .setPhotoCount(9 - controller.count())
                 .setShowCamera(true)
                 .setPreviewEnabled(false)
                 .start(this);
@@ -559,7 +554,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }
@@ -587,7 +582,6 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
             requestCommitTask();
         }
     }
-
 
 
 }

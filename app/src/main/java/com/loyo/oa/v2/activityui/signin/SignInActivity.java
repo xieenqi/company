@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.common.click.NoDoubleClickListener;
+import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
@@ -707,7 +708,7 @@ public class SignInActivity extends BaseActivity
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = uuid;
-            attachmentBatch.bizType = 0/* */;
+            attachmentBatch.bizType = LoyoBizType.CustomerVisit.getCode();/* */
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");

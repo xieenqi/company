@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.click.NoDoubleClickListener;
+import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
@@ -72,7 +73,6 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
     private String processTitle;
     private String cusTitle;
     private String projectTitle, Process;
-    private int bizType = 12;
     private boolean isSave = true;
 
     private ViewGroup img_title_left;
@@ -428,7 +428,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = uuid;
-            attachmentBatch.bizType = bizType;
+            attachmentBatch.bizType = LoyoBizType.Approval.getCode();
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");

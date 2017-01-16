@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.click.NoDoubleClickListener;
+import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
@@ -92,7 +93,6 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     private ImageView iv_location_delete, iv_at_delete;
     private String content;
     private String uuid = StringUtil.getUUID();
-    private int bizType = 17;
     private List<String> mSelectPath;
     private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
     private ArrayList<Record> audioInfo = new ArrayList<>();//录音数据
@@ -362,7 +362,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = uuid;
-            attachmentBatch.bizType = bizType;
+            attachmentBatch.bizType = LoyoBizType.FollowUp.getCode();
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");
