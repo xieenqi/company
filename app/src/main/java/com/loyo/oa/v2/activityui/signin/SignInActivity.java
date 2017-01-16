@@ -372,24 +372,18 @@ public class SignInActivity extends BaseActivity
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 dismissSweetAlert();
-                                addSignIn();
+                                sendSigninData();
                             }
                         }, new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 isCusPosition = true;
                                 dismissSweetAlert();
-                                addSignIn();
+                                sendSigninData();
                             }
                         }, "提示", "该客户无定位信息,是否需要\n将签到地址设置为客户定位?", "不需要", "设为定位");
                     } else {
-                        showCommitLoading();
-                        if (controller.count() == 0) {
-                            addSignIn();
-                        } else {
-                            controller.startUpload();
-                            controller.notifyCompletionIfNeeded();
-                        }
+                        sendSigninData();
                     }
                     break;
 
@@ -451,6 +445,16 @@ public class SignInActivity extends BaseActivity
             return false;
         }
         return true;
+    }
+
+    private void sendSigninData() {
+        showCommitLoading();
+        if (controller.count() == 0) {
+            addSignIn();
+        } else {
+            controller.startUpload();
+            controller.notifyCompletionIfNeeded();
+        }
     }
 
     /**
