@@ -455,7 +455,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                             app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class,
                                     MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                         }
-                    }, "提示", "  复制订单将自动获取最新的产品信息，如产品名称、单价、单位等信息，你确定要复制吗？");
+                    }, "提示", "复制订单将自动获取最新的产品信息，如产品名称、单价、单位等信息，你确定要复制吗？");
 
                 }
             });
@@ -530,7 +530,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                                 }
                             });
                 }
-            }, "提示", "  意外终止后，此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
+            }, "提示", "意外终止后，此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
                     "意外终止后不可恢复，你确定要终止吗？");
         }
 
