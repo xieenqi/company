@@ -427,6 +427,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                     mBundle = new Bundle();
                     mBundle.putInt("fromPage", ORDER_EDIT);
                     mBundle.putSerializable("data", mData);
+                    mBundle.putSerializable("orderId", mData.id);
                     mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, capitalReturningRecordCRUD);
                     app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);

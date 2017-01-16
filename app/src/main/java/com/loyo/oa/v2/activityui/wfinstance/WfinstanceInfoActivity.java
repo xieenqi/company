@@ -547,7 +547,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         else {
             tv_customerName.setTextColor(getResources().getColor(R.color.text99));
         }
-        if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode
+        if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode || 401 == mWfInstance.bizForm.bizCode
                 || 500 == mWfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件  订单审批  回款审批
             layout_AttachFile.setVisibility(300 == mWfInstance.bizForm.bizCode ? View.GONE : View.VISIBLE);
             ll_project.setVisibility(View.GONE);
@@ -626,7 +626,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
 //        else if (mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")) {
 //            img_title_right.setVisibility(View.VISIBLE);
 //        }
-        if ("400".equals(mWfInstance.bizForm.bizCode + "") || "500".equals(mWfInstance.bizForm.bizCode + "")
+        if ("400".equals(mWfInstance.bizForm.bizCode + "")
+                || 401 ==mWfInstance.bizForm.bizCode
+                || "500".equals(mWfInstance.bizForm.bizCode + "")
                 || "300".equals(mWfInstance.bizForm.bizCode + "")) {
             img_title_right.setVisibility(View.GONE);//自动生成的审批不可以编辑删除
         }
@@ -855,6 +857,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 mBundle.putDouble("回款率", mWfInstance.order.ratePayment);
                 mBundle.putInt("订单待审核", mWfInstance.order.status);//不显示回款记录状态
                 mBundle.putBoolean(OrderEstimateListActivity.KEY_COMMIT_CHANGE, true);
+                mBundle.putString("orderId", mWfInstance.order.id);
                 app.startActivityForResult(this, OrderEstimateListActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;

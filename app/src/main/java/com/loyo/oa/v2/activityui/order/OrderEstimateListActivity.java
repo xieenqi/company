@@ -164,6 +164,9 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                 capitalReturningList = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
             }
             needFetchData = mIntent.getBooleanExtra(KEY_GET_DATA, false);
+            if (orderId != null) {
+                needFetchData = true;/* fix bug */
+            }
         }
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
@@ -186,6 +189,9 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
         //详情页面传过来的
 /*      tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
         tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");*/
+
+        tv_totalprice.setText("￥" + backMoney);
+        tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");
 
         //如果来自详情，则请求回款记录
         ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
@@ -384,7 +390,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                 }
                 else
                 {
-                    capitalReturningList.add(mEstimateAdd);
+                    capitalReturningList.add(0, mEstimateAdd);
                     hasChangedData = true;
                     reloadList();
                 }
