@@ -197,6 +197,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     public void editData() {
 
+        if (mOrderDetail.reWorkSheet == null) {
+            mOrderDetail.reWorkSheet = new ArrayList<>();
+        }
+
         uuid = mOrderDetail.attachmentUUId;
         customerId = mOrderDetail.customerId;
         customerName = mOrderDetail.customerName;
