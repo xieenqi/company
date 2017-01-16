@@ -154,7 +154,9 @@
                         android:visibility="gone"
                         android:orientation="vertical">
 
+
                     </LinearLayout>
+                    <include layout="@layout/include_solid_line_left" />
                     <!-- 订单审批-->
                     <LinearLayout
                         android:id="@+id/ll_order_layout"
