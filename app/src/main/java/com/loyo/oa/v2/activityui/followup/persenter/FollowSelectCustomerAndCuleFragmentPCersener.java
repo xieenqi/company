@@ -8,20 +8,13 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowSelectCustomerAndCuleFragmentVControl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 跟进对象 选择客户 和 选择线索 公用的一个 persenter
@@ -70,7 +63,7 @@ public class FollowSelectCustomerAndCuleFragmentPCersener implements FollowSelec
         params.put("pageSize", 15);
         LogUtil.d("我的客户查询参数：" + MainApp.gson.toJson(params));
 
-        CustomerService.getMyCustomers(params)
+        CustomerService.getInvovedCustomers(params)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>(vControl.getLoadingLayout()) {
                     @Override
                     public void onError(Throwable e) {

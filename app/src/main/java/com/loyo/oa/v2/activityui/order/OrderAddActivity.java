@@ -221,8 +221,15 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             endAt = mOrderDetail.endAt;
             tv_end_time.setText(DateTool.getDateTimeFriendly(mOrderDetail.endAt));
         }
+
 //TODO 自定义字段要和已有的字段中合一下（产品确认了在做）
-        bindExtraView(mCusList);
+
+        if (orderAddforExtra != null) {
+            orderAddforExtra.bindData(mCusList);
+        }
+        else {
+            bindExtraView(mCusList);
+        }
 
     }
 
@@ -411,6 +418,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
         if (orderAddforExtra != null) {
             orderAddforExtra.bindData(mCusList);
+        }
+        else {
+            bindExtraView(mCusList);
         }
     }
 

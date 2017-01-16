@@ -257,6 +257,7 @@
                     <!-- 回款审批-->
                     <LinearLayout
                         android:id="@+id/ll_payment_layout"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/common_activity_con_bg"
@@ -266,7 +267,6 @@
 
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
                             android:orientation="vertical">
 
                             <TextView
