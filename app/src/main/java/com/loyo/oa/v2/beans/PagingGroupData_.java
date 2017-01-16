@@ -1,6 +1,11 @@
 package com.loyo.oa.v2.beans;
 
+import android.util.Log;
+
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,6 +64,7 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
             }
         };
         Collections.sort(records, comparator);
+
 
         for (T item : records) {
             String order = "";
@@ -165,4 +171,6 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
 
         return groupData;
     }
+
+
 }

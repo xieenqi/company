@@ -17,6 +17,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.PagingGroupData;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.tool;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.JsonCommonTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.project.HttpProject;
@@ -33,8 +35,8 @@ import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 
@@ -52,7 +54,7 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/9/7.
  */
-public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainListFragmentX_ implements AbsListView.OnScrollListener {
+public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainListFragmentX_<T> implements AbsListView.OnScrollListener {
 
     private CommonExpandableListAdapter adapter;
     private HttpProject mProject;
@@ -135,7 +137,6 @@ public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainLis
         wiftPsn = PermissionManager.getInstance().hasPermission(BusinessOperation.APPROVAL_PROCESS);
     }
 
-    int pageIndex;
 
     @Override
     public void GetData() {
@@ -145,47 +146,30 @@ public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainLis
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pagination.getShouldLoadPageIndex());
         map.put("pageSize", pagination.getPageSize());
-        ProjectService.<T>getProjectNewSubs(mProject.getId(),type,map).subscribe(new DefaultLoyoSubscriber<PaginationX<T>>(ll_loading) {
-            @Override
-            public void onNext(PaginationX<T> tPaginationX) {
-
-            }
-        });
-
-
-        ProjectService.getProjectNewSubs(mProject.getId(),type,map).subscribe(new DefaultLoyoSubscriber<Pagination>(ll_loading) {
+        ProjectService.<T>getProjectNewSubs(mProject.getId(),type,map).subscribe(new DefaultLoyoSubscriber<PaginationX<T>>() {
             @Override
             public void onError(Throwable e) {
-                super.onError(e);
-                if (null != mExpandableListView) {
-                    mExpandableListView.onRefreshComplete();
-                }
+                mExpandableListView.onRefreshComplete();
+                /* 重写父类方法，不调用super */
+                @LoyoErrorChecker.CheckType
+                int type = pagination.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST ;
+                LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
             }
 
             @Override
-            public void onNext(Pagination paginationx) {
+            public void onNext(PaginationX<T> tPaginationX) {
                 mExpandableListView.onRefreshComplete();
-                if (!Pagination.isEmpty(paginationx)) {
-                    ArrayList lstDataTemp = GetTData(paginationx);
-                    pagination.setPageIndex(paginationx.getPageIndex());
-                    pagination.setPageSize(paginationx.getPageSize());
-                    if (isTopAdd) {
-                        lstData.clear();
-                    }
-                    lstData.addAll(lstDataTemp);
-                    onLoadSuccess(paginationx.getTotalRecords());
-                    pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
-                    changeAdapter();
-                    expand();
-                } else {
-                    if (!(paginationx.getRecords().size() > 0) && pageIndex == 1) {
-                        pagingGroupDatas.clear();
-                        changeAdapter();
-                    }
-                }
-                ll_loading.setStatus(LoadingLayout.Success);
-                if (isTopAdd && lstData.size() == 0)
+
+                pagination.loadRecords(tPaginationX);
+                if(pagination.isEnpty()){
                     ll_loading.setStatus(LoadingLayout.Empty);
+                }else{
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
+                ArrayList<T> res= JsonCommonTool.convert(TaskRecord.class,pagination.getRecords());
+                pagingGroupDatas = PagingGroupData_.convertGroupData(res);
+                changeAdapter();
+                expand();
             }
         });
     }
@@ -338,7 +322,6 @@ public class BaseChildMainListFragmentX<T extends BaseBeans> extends BaseMainLis
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        // TODO Auto-generated method stub
 
     }
 

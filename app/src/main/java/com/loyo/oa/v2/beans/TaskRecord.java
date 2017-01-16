@@ -10,10 +10,10 @@ import java.io.Serializable;
 public class TaskRecord extends BaseBeans implements Serializable{
 
     public String id;
-    public long planendAt;
-    public long actualendAt;
+    public Long planendAt;
+    public Long actualendAt;
     public String responsibleName;
-    public int status;
+    public Integer status;
     public String title;
     public boolean viewed;
     public CornBody cornBody;

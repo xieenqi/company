@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.beans;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.application.MainApp;
@@ -71,6 +72,9 @@ public class PaginationX<T> implements Serializable {
      * @param paginationX
      */
     public void loadRecords(PaginationX<T> paginationX) {
+
+
+
         if (!isEmpty(paginationX)) {
             //如果加载的是第一页的数据，就是刷新，会清空原来的，再添加新数据
             if (1 == paginationX.getPageIndex()) {
