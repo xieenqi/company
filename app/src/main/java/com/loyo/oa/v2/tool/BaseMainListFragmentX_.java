@@ -197,6 +197,7 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
                     return;
                 }
                 pagination.setFirstPage();
+                //TODO 这里可以拿新建以后个数据，以后有时间，再来整理
                 getData();
                 return;
             case REQUEST_REVIEW:

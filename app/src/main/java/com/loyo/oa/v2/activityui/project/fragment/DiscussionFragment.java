@@ -47,9 +47,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
     private View mView;
     private PullToRefreshListView lv_discuss;
-    private ArrayList<Discussion> discussions = new ArrayList<>();
     protected PaginationX<Discussion> mPagination = new PaginationX(20);
-    private boolean isTopAdd = true;
     private DiscussionAdapter adapter;
     private HttpProject project;
     private LayoutInflater mInflater;
@@ -96,6 +94,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             layout_discuss_action = (ViewGroup) mView.findViewById(R.id.layout_discuss_action);
 
             mHaitHelper = new HaitHelper(this, et_comment);
+            mPagination.setFirstPage();
             getData();
         }
         return mView;
@@ -159,81 +158,46 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("attachmentUUId", project.attachmentUUId);
-        map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? discussions.size() >= 2000 ? discussions.size() : 2000 : 2000);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).getDiscussions(map, new RCallback<PaginationX<Discussion>>() {
-//            @Override
-//            public void success(PaginationX<Discussion> pagination, Response response) {
-//                HttpErrorCheck.checkResponse("项目讨论内容：", response);
-//                if (!PaginationX.isEmpty(pagination)) {
-//                    ArrayList<Discussion> lstData_bulletin_current = pagination.getRecords();
-//                    mPagination = pagination;
-//                    if (isTopAdd) {
-//                        discussions.clear();
-//                    }
-//                    Collections.reverse(lstData_bulletin_current);
-//                    discussions.addAll(lstData_bulletin_current);
-//                    onLoadSuccess(pagination.getLoadedTotalRecords());
-//                    bindData();
-//                }
-//                lv_discuss.onRefreshComplete();
-//                scrollToBottom();
-//                ll_loading.setStatus(LoadingLayout.Success);
-//                if (isTopAdd && discussions.size() == 0)
-//                    ll_loading.setStatus(LoadingLayout.Empty);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error, ll_loading, mPagination.getPageIndex() == 1 ? true : false);
-//                super.failure(error);
-//                lv_discuss.onRefreshComplete();
-//            }
-//        });
+        map.put("pageIndex", mPagination.getShouldLoadPageIndex());
+        map.put("pageSize", mPagination.getPageSize());
 
         DiscussService.getDiscussions(map).subscribe(new DefaultLoyoSubscriber<PaginationX<Discussion>>() {
             @Override
             public void onError(Throwable e) {
                 @LoyoErrorChecker.CheckType
-                int type= mPagination.getPageIndex()!=1? LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                int type= mPagination.isEnpty()? LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
                 LoyoErrorChecker.checkLoyoError(e,type,ll_loading);
                 lv_discuss.onRefreshComplete();
             }
 
             @Override
             public void onNext(PaginationX<Discussion> pagination) {
-                if (!PaginationX.isEmpty(pagination)) {
-                    ArrayList<Discussion> lstData_bulletin_current = pagination.getRecords();
-                    mPagination = pagination;
-                    if (isTopAdd) {
-                        discussions.clear();
-                    }
-                    Collections.reverse(lstData_bulletin_current);
-                    discussions.addAll(lstData_bulletin_current);
-                    onLoadSuccess(pagination.getLoadedTotalRecords());
-                    bindData();
-                }
                 lv_discuss.onRefreshComplete();
-                scrollToBottom();
-                ll_loading.setStatus(LoadingLayout.Success);
-                if (isTopAdd && discussions.size() == 0)
+                Collections.reverse(pagination.getRecords());
+                mPagination.loadRecords(pagination);
+                if(mPagination.isEnpty()){
                     ll_loading.setStatus(LoadingLayout.Empty);
+                }else{
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
+                onLoadSuccess(pagination.getTotalRecords());
+                bindData();
+                //注意，这里的列表，是反转了的，底部才是顶部，
+                if(!mPagination.isNeedToBackTop()){
+                    scrollToBottom();
+                }
             }
         });
     }
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
-        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
+        mPagination.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-
-        isTopAdd = true;
-        mPagination.setPageIndex(1);
         getData();
     }
 
@@ -295,8 +259,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         DiscussService.createDiscussion(body).subscribe(new DefaultLoyoSubscriber<Discussion>() {
             @Override
             public void onNext(Discussion discussion) {
-                isTopAdd = true;
-                mPagination.setPageIndex(1);
+                mPagination.setFirstPage();
                 getData();
             }
         });
@@ -306,12 +269,12 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
         @Override
         public int getCount() {
-            return discussions.size();
+            return mPagination.getLoadedTotalRecords();
         }
 
         @Override
         public Discussion getItem(int i) {
-            return discussions.get(i);
+            return mPagination.getRecords().get(i);
         }
 
         @Override
@@ -326,7 +289,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
         @Override
         public int getItemViewType(int position) {
-            User creator = discussions.get(position).getCreator();
+            User creator = mPagination.getRecords().get(position).getCreator();
             if (null == creator) {
                 return super.getItemViewType(position);
             }
