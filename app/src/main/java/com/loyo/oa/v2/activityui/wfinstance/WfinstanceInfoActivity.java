@@ -306,7 +306,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         HashMap<String, String> orderMap = new HashMap<>();
         final OrderDetail order = mWfInstance.order;
         addOrderField("对应订单：", order.title, getResources().getColor(R.color.title_bg1),
-                new OrderFieldCallback() {
+                new FieldCallback() {
                     @Override
                     public void onClick() {
                         Intent mIntent = new Intent();
@@ -317,7 +317,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     }
                 }, false);
         addOrderField("对应客户：", order.customerName, getResources().getColor(R.color.title_bg1),
-                new OrderFieldCallback() {
+                new FieldCallback() {
                     @Override
                     public void onClick() {
                         Intent intent = new Intent();
@@ -346,12 +346,12 @@ public class WfinstanceInfoActivity extends BaseActivity {
         AttachmentCount = order.attachmentCount;
     }
 
-    private static abstract class OrderFieldCallback {
+    private static abstract class FieldCallback {
         public abstract void onClick();
     }
 
 
-    private void addOrderField(String key, String value, int color, final OrderFieldCallback callback, boolean multiLine) {
+    private void addOrderField(String key, String value, int color, final FieldCallback callback, boolean multiLine) {
         View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
         TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
         TextView tv_value = (TextView) view_value.findViewById(R.id.tv_value);
@@ -392,23 +392,49 @@ public class WfinstanceInfoActivity extends BaseActivity {
         layout_wfinstance_content.setVisibility(View.GONE);
         ll_payment_layout.setVisibility(View.VISIBLE);
         EstimateAdd payment = mWfInstance.paymentRecord.get(0);
-        List<String> paymentList = new ArrayList<>();
-        paymentList.add("对应订单：" + payment.orderTitle);
-        paymentList.add("对应客户：" + payment.customerName);
-        paymentList.add("回款时间：" + com.loyo.oa.common.utils.DateTool.getDateFriendly(payment.receivedAt));
-        paymentList.add("回款金额：" + "￥" + payment.receivedMoney);
-        paymentList.add("开票金额：" + "￥" + payment.billingMoney);
-        paymentList.add("收款人：" + payment.payeeUser.name);
-        paymentList.add("收款方式：" + OrderCommon.getPaymentMode(payment.payeeMethod));
-        paymentList.add("备注：" + payment.remark);
-        for (String text : paymentList) {
-            View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
-            TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
-            tv_key.setText(text);
-            ll_payment_content.addView(view_value);
-        }
+        addPaymentField("对应订单：", payment.orderTitle);
+        addPaymentField("对应客户：", payment.customerName);
+        addPaymentField("回款时间：", DateTool.getDateFriendly(payment.receivedAt));
+        addPaymentField("回款金额：", "￥" + payment.receivedMoney);
+        addPaymentField("开票金额：", "￥" + payment.billingMoney);
+        addPaymentField("收款人：", payment.payeeUser.name);
+        addPaymentField("收款方式：", OrderCommon.getPaymentMode(payment.payeeMethod));
+        addPaymentField("备注：" , payment.remark, true);
+
         AttachmentUUId = payment.attachmentUUId;
         AttachmentCount = payment.attachmentCount;
+    }
+
+
+    private void addPaymentField(String key, String value, int color, final FieldCallback callback, boolean multiLine) {
+        View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
+        TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
+        TextView tv_value = (TextView) view_value.findViewById(R.id.tv_value);
+        tv_key.setText(key);
+        tv_value.setText(value);
+        tv_value.setTextColor(color);
+        tv_value.setSingleLine(!multiLine);
+        ll_payment_content.addView(view_value);
+        if (callback != null) {
+            view_value.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onClick();
+                }
+            });
+        }
+    }
+
+    private void addPaymentField(String key, String value, int color, boolean multiLine) {
+        addPaymentField(key, value, color, null, multiLine);
+    }
+
+    private void addPaymentField(String key, String value, boolean multiLine) {
+        addPaymentField(key, value, getResources().getColor(R.color.text99), multiLine);
+    }
+
+    private void addPaymentField(String key, String value) {
+        addPaymentField(key, value, getResources().getColor(R.color.text99), false);
     }
 
     /**

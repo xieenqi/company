@@ -126,14 +126,13 @@
                 <TextView
                     android:id="@+id/tv_action"
                     android:layout_width="64dp"
-                    android:layout_height="27dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:drawablePadding="0dp"
                     android:layout_marginLeft="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    style="@style/worksheet_btn_complete"
                     android:layout_marginRight="5dp" />
                 <!--<ImageView-->
                     <!--android:id="@+id/iv_action"-->
