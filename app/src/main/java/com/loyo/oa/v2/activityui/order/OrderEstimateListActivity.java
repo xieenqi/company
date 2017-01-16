@@ -390,7 +390,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                 }
                 else
                 {
-                    capitalReturningList.add(mEstimateAdd);
+                    capitalReturningList.add(0, mEstimateAdd);
                     hasChangedData = true;
                     reloadList();
                 }
