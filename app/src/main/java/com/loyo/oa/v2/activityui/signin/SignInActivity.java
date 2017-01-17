@@ -107,6 +107,9 @@ public class SignInActivity extends BaseActivity
     ImageUploadGridView gridView;
     private View view;
     private MultiFunctionModule mfmodule;
+    public String cityCode;
+    public String message;
+    public String region;//地区
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -174,11 +177,6 @@ public class SignInActivity extends BaseActivity
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         controller.loadView(gridView);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         startLocation();
     }
 
@@ -192,6 +190,11 @@ public class SignInActivity extends BaseActivity
                 loPosition = longitude;
                 app.address = address;
                 tv_address.setText(address);
+
+                cityCode = app.cityCode;
+                message = app.message;
+                region = app.region;
+
                 LocationUtilGD.sotpLocation();
                 UMengTools.sendLocationInfo(address, longitude, latitude);
                 //此处是客户详情在定位成功过后再计算偏差
@@ -405,6 +408,13 @@ public class SignInActivity extends BaseActivity
 
             /*地址更新*/
                 case R.id.tv_reset_address:
+                    //避免其他地方定位影响
+                    app.longitude = loPosition;
+                    app.latitude = laPosition;
+                    app.address = tv_address.getText().toString();
+                    app.region = region;
+                    app.cityCode = cityCode;
+                    app.message = message;
                     if (LocationUtilGD.permissionLocation(SignInActivity.this)) {
                         Bundle mBundle = new Bundle();
                         mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
