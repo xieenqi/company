@@ -62,7 +62,7 @@ public class ProjectSearchActivity extends BaseSearchActivity<Project> {
     @Override
     public void onListItemClick(View view, int position) {
         Intent mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
-        mIntent.putExtra("projectId", paginationX.getRecords().get(position - 2).getId());
+        mIntent.putExtra("projectId", paginationX.getRecords().get(position).getId());
         startActivity(mIntent);
     }
 
