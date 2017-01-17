@@ -155,7 +155,6 @@ public class SignInActivity extends BaseActivity
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
         iv_at_delete.setOnClickListener(click);
-        startLocation();
         initMultiFunctionModule();
         if (null == mCustomer) {
             layout_customer_name.setOnTouchListener(Global.GetTouch());
@@ -175,6 +174,12 @@ public class SignInActivity extends BaseActivity
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         controller.loadView(gridView);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startLocation();
     }
 
     void startLocation() {
