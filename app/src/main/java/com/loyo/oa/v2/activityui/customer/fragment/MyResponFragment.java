@@ -190,20 +190,28 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
             /**
              * 列表监听 进入客户详情页面
              * */
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Intent intent = new Intent();
-                    intent.putExtra("Id", mPagination.getRecords().get(position - 1).getId());
-                    intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                    startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
-                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                }
-            });
+
         } else {
             adapter.notifyDataSetChanged();
         }
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intent = new Intent();
+                intent.putExtra("Id", mPagination.getRecords().get(position - 1).getId());
+                intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
+                startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            }
+        });
+        if (mPagination.isEnpty())
+            ll_loading.setStatus(LoadingLayout.Empty);
+        else {
+            ll_loading.setStatus(LoadingLayout.Success);
+        }
+        if(mPagination.isNeedToBackTop()){
+            listView.getRefreshableView().setSelection(0);
+        }
 
 
     }
@@ -279,14 +287,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
                         listView.onRefreshComplete();
                         mPagination.loadRecords(customerPaginationX);
                         bindData();
-                        if (mPagination.isEnpty())
-                            ll_loading.setStatus(LoadingLayout.Empty);
-                        else {
-                            ll_loading.setStatus(LoadingLayout.Success);
-                        }
-                        if(mPagination.isNeedToBackTop()){
-                            listView.getRefreshableView().setSelection(0);
-                        }
+
                         getNearCustomersInfo();
                         MainApp.getMainApp().isCutomerEdit = false;
                     }

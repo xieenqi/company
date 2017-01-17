@@ -72,15 +72,12 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
     private ArrayList<Tag> mTags;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
-    private ArrayList<Customer> mCustomers = new ArrayList<>();
     private String field = "lastActAt";
     private String order = "asc";
     private String userId = "";
     private String tagsParams = "";
     private String departmentId = "";
     private String position;
-    private int page = 1;
-    private boolean isPullUp = false;
     private LoadingLayout ll_loading;
 
     @Override
@@ -102,17 +99,12 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        page = 1;
-        isPullUp = false;
-        mPagination.setPageIndex(1);
+        mPagination.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        page++;
-        isPullUp = true;
-        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
         getData();
     }
 
@@ -250,8 +242,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
     private void getRefershData() {
         ll_loading.setStatus(LoadingLayout.Loading);
-        page = 1;
-        isPullUp = false;
+        mPagination.setFirstPage();
         getData();
     }
 
@@ -260,8 +251,8 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
      */
     private void getData() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", page);
-        params.put("pageSize", 15);
+        params.put("pageIndex", mPagination.getShouldLoadPageIndex());
+        params.put("pageSize", mPagination.getPageSize());
         params.put("field", field);
         params.put("order", order);
         params.put("tagsParams", tagsParams);
@@ -274,34 +265,17 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                     public void onError(Throwable e) {
                         /* 重写父类方法，不调用super */
                         @LoyoErrorChecker.CheckType
-                        int type = mCustomers.size() > 0 ?
-                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        int type = mPagination.isEnpty()? LoyoErrorChecker.LOADING_LAYOUT: LoyoErrorChecker.TOAST ;
                         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         listView.onRefreshComplete();
                     }
 
                     public void onNext(PaginationX<Customer> customerPaginationX) {
-                        if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
-                            if (!isPullUp) {
-                                mPagination.setPageIndex(1);
-                                mPagination.setPageSize(20);
-                                mCustomers.clear();
-                                bindData();
-                            } else {
-                                Toast("没有更多数据了");
-                                listView.onRefreshComplete();
-                                return;
-                            }
-                        } else {
-                            mPagination = customerPaginationX;
-                            if (!isPullUp) {
-                                mCustomers.clear();
-                            }
-                            mCustomers.addAll(customerPaginationX.getRecords());
-                            bindData();
-                        }
-                        getNearCustomersInfo();
                         listView.onRefreshComplete();
+                        mPagination.loadRecords(customerPaginationX);
+                        bindData();
+
+                        getNearCustomersInfo();
                         MainApp.getMainApp().isCutomerEdit = false;
                     }
                 });
@@ -313,12 +287,12 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private void bindData() {
 
         if (null == adapter) {
-            adapter = new TeamCustomerAdapter(getActivity(), mCustomers);
+            adapter = new TeamCustomerAdapter(getActivity(), mPagination.getRecords());
             listView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
         }
-        if (!isPullUp && mCustomers.size() == 0)
+        if (mPagination.isEnpty())
             ll_loading.setStatus(LoadingLayout.Empty);
         else {
             ll_loading.setStatus(LoadingLayout.Success);
@@ -330,12 +304,15 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent();
-                intent.putExtra("Id", mCustomers.get(position - 1).getId());
+                intent.putExtra("Id", mPagination.getRecords().get(position - 1).getId());
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                 startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
                 mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
+        if(mPagination.isNeedToBackTop()){
+            listView.getRefreshableView().setSelection(0);
+        }
     }
 
 
