@@ -69,8 +69,7 @@ public class OrderPermission {
                                 ORDER_WORKSHEET_ADD,
                                 ORDER_RESPONSIBLE_PERSON_CHANGE),
                         /* 团队, 意外终止 */
-                        EnumSet.of(ORDER_PREVIEW,
-                                ORDER_WORKSHEET_ADD),
+                        EnumSet.of(ORDER_PREVIEW),
 
                         /*  不明状态 */
                         EnumSet.of(ORDER_PREVIEW),

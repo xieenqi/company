@@ -443,6 +443,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ellipsize="end"
+                            android:textColor="@color/text66"
                             android:gravity="right|center_vertical"
                             android:maxLength="20"
                             android:singleLine="true"/>

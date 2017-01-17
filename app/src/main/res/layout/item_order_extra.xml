@@ -43,7 +43,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/common_layout_padding"
                 android:gravity="center_vertical"
-                android:src="@drawable/common_right_arrow" />
+                android:src="@drawable/right_arrow" />
         </RelativeLayout>
 
     </LinearLayout>

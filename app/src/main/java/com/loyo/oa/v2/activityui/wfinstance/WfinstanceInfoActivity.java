@@ -541,12 +541,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + "）");
         tv_projectName.setText(null == mWfInstance.ProjectInfo || TextUtils.isEmpty(mWfInstance.ProjectInfo.title) ? "无" : mWfInstance.ProjectInfo.title);
         tv_customerName.setText(null == mWfInstance.customerName?"无":mWfInstance.customerName);
-        if (mWfInstance.customerId != null) {
-            tv_customerName.setTextColor(getResources().getColor(R.color.title_bg1));
-        }
-        else {
-            tv_customerName.setTextColor(getResources().getColor(R.color.text99));
-        }
+        tv_customerName.setTextColor(getResources().getColor(R.color.text66));
         if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode || 401 == mWfInstance.bizForm.bizCode
                 || 500 == mWfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件  订单审批  回款审批
             layout_AttachFile.setVisibility(300 == mWfInstance.bizForm.bizCode ? View.GONE : View.VISIBLE);
