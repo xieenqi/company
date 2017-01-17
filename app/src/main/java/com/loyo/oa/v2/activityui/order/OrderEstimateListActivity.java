@@ -251,6 +251,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                 .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
                     @Override
                     public void onNext(EstimateAdd add) {
+                        hasChangedData = true;
                         getData();
                     }
                 });
@@ -277,6 +278,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                 .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
                     @Override
                     public void onNext(EstimateAdd add) {
+                        hasChangedData = true;
                         getData();
                     }
                 });
@@ -312,6 +314,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     public void getData() {
         OrderService.getPayEstimate(orderId)
                 .subscribe(new DefaultLoyoSubscriber<EstimateList>(ll_loading) {
+
                     @Override
                     public void onNext(EstimateList list) {
                         ll_loading.setStatus(LoadingLayout.Success);
