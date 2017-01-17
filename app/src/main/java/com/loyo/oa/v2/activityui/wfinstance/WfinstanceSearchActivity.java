@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.wfinstance;
 
 import android.content.Intent;
+import android.view.View;
 
 import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.work.fragment.WorkReportsManageFragment;
@@ -54,5 +55,15 @@ public class WfinstanceSearchActivity extends BaseSearchActivity<WfInstanceRecor
 
             }
         });
+    }
+
+    @Override
+    public void onListItemClick(View view, int position) {
+
+    }
+
+    @Override
+    public void bindData(CommonSearchAdapter.SearchViewHolder viewHolder, WfInstanceRecord data) {
+
     }
 }

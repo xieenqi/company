@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.work;
 
 import android.content.Intent;
+import android.view.View;
 
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.activityui.work.fragment.WorkReportsManageFragment;
@@ -50,5 +51,15 @@ public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReportReco
                 WorkReportsSearchActivity.this.success(workReportRecordPaginationX);
             }
         });
+    }
+
+    @Override
+    public void onListItemClick(View view, int position) {
+
+    }
+
+    @Override
+    public void bindData(CommonSearchAdapter.SearchViewHolder viewHolder, WorkReportRecord data) {
+
     }
 }

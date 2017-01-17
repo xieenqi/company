@@ -2,50 +2,44 @@ package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
-import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.customermanagement.api.ICustomer;
-import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
-import com.loyo.oa.v2.permission.BusinessOperation;
-import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.HashMap;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
+    private int type=0;
     @Override
     public void onCreate(final Bundle savedInstanceState) {
+        if(null!=getIntent()){
+            type=getIntent().getIntExtra(ExtraAndResult.EXTRA_TYPE,0);
+        }
         super.onCreate(savedInstanceState);
     }
+    @Override
+    public void onListItemClick(View view, int position) {
+        Intent mIntent= new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
+        mIntent.putExtra("Id", paginationX.getRecords().get(position).getId());
+        startActivity(mIntent);
+    }
 
-//    @Override
-    protected void openDetail(final int position) {
-
-        boolean customerAuth = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT);
-        if (!customerAuth) {
-
-            SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(this);
-            sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    sweetAlertDialog.dismiss();
-                }
-            }, "提示", "你无此功能权限");
-            return;
-        }
-
-        Intent intent = new Intent();
-        intent.setClass(mContext, CustomerDetailInfoActivity_.class);
-        intent.putExtra("Id", adapter.getItem(position).getId());
-        startActivity(intent);
+    @Override
+    public void bindData(CommonSearchAdapter.SearchViewHolder viewHolder, Customer data) {
+            viewHolder.time.setText("跟进时间：" + DateTool.getDateTimeFriendly(data.lastActAt));
+            viewHolder.title.setText(data.name);
+            viewHolder.content.setText("标签:" + Utils.getTagItems(data));
     }
 
 
@@ -57,7 +51,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
         params.put("pageIndex", paginationX.getShouldLoadPageIndex());
         params.put("pageSize", paginationX.getPageSize());
         params.put("keyWords", strSearch);
-        switch (customerType) {
+        switch (type) {
             /*我负责的查询*/
             case 1:
                 url = FinalVariables.SEARCH_CUSTOMERS_RESPON;
@@ -98,4 +92,6 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
                     }
                 });
     }
+
+
 }

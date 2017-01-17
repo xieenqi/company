@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.tasks;
 
 import android.content.Intent;
+import android.view.View;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -48,6 +49,16 @@ public class TasksSearchActivity extends BaseSearchActivity<TaskRecord> {
                        TasksSearchActivity.this.success(x);
                     }
                 });
+
+    }
+
+    @Override
+    public void onListItemClick(View view, int position) {
+
+    }
+
+    @Override
+    public void bindData(CommonSearchAdapter.SearchViewHolder viewHolder, TaskRecord data) {
 
     }
 }

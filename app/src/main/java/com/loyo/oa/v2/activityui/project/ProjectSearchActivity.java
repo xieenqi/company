@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.project;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.project.api.ProjectService;
@@ -9,6 +11,7 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.HashMap;
 
@@ -21,8 +24,13 @@ import retrofit.Callback;
  * 时间 : 15/10/14.
  */
 public class ProjectSearchActivity extends BaseSearchActivity<Project> {
+    private Bundle mBundle;
 
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mBundle=getIntent().getExtras();
+    }
 
     @Override
     public void getData() {
@@ -50,4 +58,15 @@ public class ProjectSearchActivity extends BaseSearchActivity<Project> {
         });
 
     }
+
+    @Override
+    public void onListItemClick(View view, int position) {
+
+    }
+
+    @Override
+    public void bindData(CommonSearchAdapter.SearchViewHolder viewHolder, Project data) {
+
+    }
+
 }

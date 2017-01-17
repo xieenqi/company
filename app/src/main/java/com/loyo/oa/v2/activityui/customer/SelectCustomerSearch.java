@@ -130,7 +130,7 @@ public class SelectCustomerSearch extends BaseLoadingActivity implements PullToR
 //                    @Override
 //                    public void success(final BaseBeanT<PaginationX<SigninSelectCustomer>> customerPaginationX, final Response response) {
 //                        HttpErrorCheck.checkResponse("拜访搜索选择客户:", response, ll_loading);
-//                        expandableListView_search.onRefreshComplete();
+//                        refreshListView.onRefreshComplete();
 ////                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 ////                        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 //                        if (null == customerPaginationX) {
@@ -161,7 +161,7 @@ public class SelectCustomerSearch extends BaseLoadingActivity implements PullToR
 //                    @Override
 //                    public void failure(final RetrofitError error) {
 //                        HttpErrorCheck.checkError(error, ll_loading);
-//                        expandableListView_search.onRefreshComplete();
+//                        refreshListView.onRefreshComplete();
 //                    }
 //                });
 
