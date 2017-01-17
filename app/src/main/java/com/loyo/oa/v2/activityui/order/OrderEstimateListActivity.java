@@ -134,8 +134,11 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
-        if (needFetchData || refreshStatOnly) {
+        if (needFetchData) {
             getPageData();
+        }
+        else if (refreshStatOnly){
+            getStatData();
         }
     }
 
@@ -315,11 +318,34 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                         if (null != list) {
                             mEstimateList = list;
                             mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
-                            if (needFetchData && null != list.records) {
+                            if (null != list.records) {
                                 capitalReturningList.clear();
                                 capitalReturningList.addAll(list.records);
                                 reloadList();
                             }
+                            if (capitalReturningList.size() == 0)
+                                ll_loading.setStatus(LoadingLayout.Empty);
+
+                        } else {
+                            ll_loading.setStatus(LoadingLayout.No_Network);
+                            ll_loading.setNoNetworkText("没有获取到数据");
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 获取收款记录列表
+     */
+    public void getStatData() {
+        OrderService.getPayEstimate(orderId)
+                .subscribe(new DefaultLoyoSubscriber<EstimateList>(ll_loading) {
+                    @Override
+                    public void onNext(EstimateList list) {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        if (null != list) {
+                            mEstimateList = list;
+                            mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
                             if (capitalReturningList.size() == 0)
                                 ll_loading.setStatus(LoadingLayout.Empty);
 
