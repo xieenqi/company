@@ -1056,7 +1056,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_marginLeft="10dp"
-                                    android:text="¥100000"
+                                    android:text=""
                                     android:textColor="#2c9dfc"
                                     android:textSize="13sp" />
                             </LinearLayout>
