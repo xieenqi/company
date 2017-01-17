@@ -46,6 +46,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.activityui.tasks.fragment.TaskManagerFragment;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 
 import java.util.ArrayList;
 
@@ -55,10 +56,16 @@ import retrofit.client.Response;
 
 /**
  * 搜索的 基类
- *
+ * 客户搜索；
+ * 项目搜索；
+ * 拜访搜索（新建拜访签到－选择客户－搜索）；
+ * 任务搜索；
+ * 工单搜索；
+ * 审批搜索；
+ * 等等。
  * @param <T>
  */
-public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, Callback {
+public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2{
     public static final int REQUEST_SEARCH = 1100;
 
     protected String strSearch;
@@ -66,15 +73,13 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
     private ImageView iv_clean;
     protected View headerView;
     protected PullToRefreshListView expandableListView_search;
-    protected ArrayList<T> lstData = new ArrayList<>();
     protected CommonSearchAdapter adapter;
-    protected PaginationX paginationX = new PaginationX(20);
+    protected PaginationX<T> paginationX = new PaginationX(20);
     public Customer customer;
     public RelativeLayout headerViewBtn;
     public Bundle mBundle;//子类在用
     protected int customerType;
     protected int befromPage;
-    protected boolean isTopAdd = true;
 
 
     @Override
@@ -111,6 +116,7 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
         customerType = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
         befromPage = mBundle.getInt("from");
         switchPage(befromPage);
+        paginationX.setFirstPage();
         getPageData();
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
@@ -175,13 +181,13 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
                     //新建审批
                     case WFIN_ADD:
                         mIntent = new Intent();
-                        mIntent.putExtra("data", lstData.get(position - 2));
+                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
                         app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                         break;
                     //新建任务 所属项目
                     case TASKS_ADD:
                         mIntent = new Intent();
-                        mIntent.putExtra("data", lstData.get(position - 2));
+                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
                         app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                         break;
                     //新建任务 关联客户
@@ -195,50 +201,50 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
                     //新建报告
                     case WORK_ADD:
                         mIntent = new Intent();
-                        mIntent.putExtra("data", lstData.get(position - 2));
+                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
                         app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                         break;
                     //客户管理
                     case CUSTOMER_MANAGE:
                         mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
-                        mIntent.putExtra("Id", lstData.get(position - 2).getId());
+                        mIntent.putExtra("Id", paginationX.getRecords().get(position - 2).getId());
                         startActivity(mIntent);
                         break;
                     //任务管理
                     case TASKS_MANAGE:
                         mIntent = new Intent(getApplicationContext(), TasksInfoActivity_.class);
-                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
                         startActivity(mIntent);
                         break;
                     //工作报告管理
                     case WORK_MANAGE:
                         mIntent = new Intent(getApplicationContext(), WorkReportsInfoActivity_.class);
-                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
                         startActivity(mIntent);
                         break;
                     //项目管理
                     case PEOJECT_MANAGE:
                         mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
-                        mIntent.putExtra("projectId", lstData.get(position - 2).getId());
+                        mIntent.putExtra("projectId", paginationX.getRecords().get(position - 2).getId());
                         startActivity(mIntent);
                         break;
                     //审批管理
                     case WFIN_MANAGE:
                         mIntent = new Intent(getApplicationContext(), WfinstanceInfoActivity_.class);
-                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
                         startActivity(mIntent);
                         break;
                     //线索管理
                     case CLUE_MANAGE:
                         mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
-                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
                         startActivity(mIntent);
                         break;
                     // 跟进对象 客户 到新建跟进动态
                     case DYNAMIC_MANAGE:
                         mIntent = new Intent(getApplicationContext(), FollowAddActivity.class);
                         mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
-                        mIntent.putExtra(Customer.class.getName(), (Customer) (lstData.get(position - 2)));
+                        mIntent.putExtra(Customer.class.getName(), (Customer) (paginationX.getRecords().get(position - 2)));
                         startActivity(mIntent);
                         break;
                 }
@@ -262,14 +268,8 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
      */
     public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
-        isTopAdd = true;
+        paginationX.setFirstPage();
         getData();
-/*        if (strSearch.length() > 0) {
-            isTopAdd = true;
-            getData();
-        } else {
-            onBackPressed();
-        }*/
     }
 
     /**
@@ -297,20 +297,13 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
-        paginationX.setPageIndex(1);
+        paginationX.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
-        paginationX.setPageIndex(paginationX.getPageIndex() + 1);
         getData();
-    }
-
-    void showNoData() {
-        ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     @Override
@@ -352,53 +345,34 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
         onBackPressed();
     }
 
-
-    @Override
-    public void success(Object o, Response response) {
+    /**
+     * 请求成功的时候
+     */
+    public void success(PaginationX<T> data){
         expandableListView_search.onRefreshComplete();
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        //imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        ll_loading.setStatus(LoadingLayout.Success);
-        if (null == o) {
-            if (isTopAdd) {
-                showNoData();
-            } else {
-                Toast("没有更多数据!");
-            }
-            return;
-        }
-
-        paginationX = (PaginationX) o;
-        ArrayList<T> lstDataTemp = paginationX.getRecords();
-
-        if (lstDataTemp == null || lstDataTemp.size() == 0) {
-            if (isTopAdd) {
-                showNoData();
-            } else {
-                Toast("没有更多数据!");
-            }
-            return;
-        } else {
-            if (isTopAdd) {
-                lstData.clear();
-            }
-            lstData.addAll(lstDataTemp);
+        paginationX.loadRecords(data);
+        if(paginationX.isEnpty()){
+            ll_loading.setStatus(LoadingLayout.Empty);
+        }else{
+            ll_loading.setStatus(LoadingLayout.Success);
         }
         changeAdapter();
-    }
+    };
 
-
-    @Override
-    public void failure(RetrofitError error) {
-//        HttpErrorCheck.checkError(error, ll_loading);
+    /**
+     *  请求失败的时候
+     * @param e
+     */
+    public void fail(Throwable e){
         expandableListView_search.onRefreshComplete();
+        @LoyoErrorChecker.CheckType
+        int type = paginationX.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT : LoyoErrorChecker.TOAST;
+        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
     }
+
 
     protected void changeAdapter() {
         adapter.notifyDataSetChanged();
-    }
-
-    protected void openDetail(int position) {
     }
 
     public void getData() {
@@ -408,12 +382,12 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
 
         @Override
         public int getCount() {
-            return lstData.size();
+            return paginationX.getRecords().size();
         }
 
         @Override
         public BaseBeans getItem(int i) {
-            return lstData.get(i);
+            return paginationX.getRecords().get(i);
         }
 
         @Override

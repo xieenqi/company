@@ -17,20 +17,20 @@ import retrofit.Callback;
 
 public class WfinstanceSearchActivity extends BaseSearchActivity<WfInstanceRecord> {
 
-    @Override
-    protected void openDetail(final int position) {
-        Intent intent = new Intent();
-        intent.setClass(mContext, WfinstanceInfoActivity_.class);
-        intent.putExtra(ExtraAndResult.EXTRA_ID, (adapter.getItem(position)).getId());
-        startActivityForResult(intent, WorkReportsManageFragment.REQUEST_REVIEW);
-    }
+//    @Override
+//    protected void openDetail(final int position) {
+//        Intent intent = new Intent();
+//        intent.setClass(mContext, WfinstanceInfoActivity_.class);
+//        intent.putExtra(ExtraAndResult.EXTRA_ID, (adapter.getItem(position)).getId());
+//        startActivityForResult(intent, WorkReportsManageFragment.REQUEST_REVIEW);
+//    }
 
     @Override
     public void getData() {
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", paginationX.getPageIndex());
-        map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
         map.put("keyWords", strSearch);
         map.put("type", 0);
         map.put("status", 0);
@@ -45,13 +45,13 @@ public class WfinstanceSearchActivity extends BaseSearchActivity<WfInstanceRecor
         WfinstanceService.getWfInstancesData(map).subscribe(new DefaultLoyoSubscriber<PaginationX<WfInstanceRecord>>(ll_loading) {
             @Override
             public void onNext(PaginationX<WfInstanceRecord> wfInstanceRecordPaginationX) {
-                ((Callback)WfinstanceSearchActivity.this).success(wfInstanceRecordPaginationX,null);
+                WfinstanceSearchActivity.this.success(wfInstanceRecordPaginationX);
             }
 
             @Override
             public void onError(Throwable e) {
-                super.onError(e);
-                ((Callback)WfinstanceSearchActivity.this).failure(null);
+                WfinstanceSearchActivity.this.fail(e);
+
             }
         });
     }

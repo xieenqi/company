@@ -54,12 +54,10 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
         String url = FinalVariables.SEARCH_CUSTOMERS_SELF; //这里填写我负责的查询 等服务端接口
         HashMap<String, Object> params = new HashMap<>();
 
-        params.put("pageIndex", paginationX.getPageIndex());
-        params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
+        params.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        params.put("pageSize", paginationX.getPageSize());
         params.put("keyWords", strSearch);
-
         switch (customerType) {
-
             /*我负责的查询*/
             case 1:
                 url = FinalVariables.SEARCH_CUSTOMERS_RESPON;
@@ -76,7 +74,6 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
             case 4:
                 url = FinalVariables.SEARCH_CUSTOMERS_PUBLIC;
                 break;
-
             default:
                 Toast("参数异常,请重启App");
                 finish();
@@ -91,28 +88,13 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
                     @Override
                     public void onError(Throwable e) {
-                        super.onError(e);
-                        expandableListView_search.onRefreshComplete();
-                        ll_loading.setStatus(LoadingLayout.Error);
+                        CustomerSearchActivity.this.fail(e);
                     }
 
                     @Override
                     public void onNext(PaginationX<Customer> customerPaginationX) {
-                        if (!isTopAdd && paginationX.isEmpty(customerPaginationX)) {
-                            Toast("没有更多数据!");
-                        }
-                        if (isTopAdd && paginationX.isEmpty(customerPaginationX)) {
-                            ll_loading.setStatus(LoadingLayout.Empty);
-                        } else {
-                            ll_loading.setStatus(LoadingLayout.Success);
-                        }
+                        CustomerSearchActivity.this.success(customerPaginationX);
 
-                        if (isTopAdd) {
-                            lstData.clear();
-                        }
-                        lstData.addAll(customerPaginationX.getRecords());
-                        expandableListView_search.onRefreshComplete();
-                        changeAdapter();
                     }
                 });
     }

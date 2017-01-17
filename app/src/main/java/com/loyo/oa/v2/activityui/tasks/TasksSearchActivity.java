@@ -18,13 +18,13 @@ import java.util.HashMap;
  */
 public class TasksSearchActivity extends BaseSearchActivity<TaskRecord> {
 
-    @Override
-    protected void openDetail(final int position) {
-        Intent intent = new Intent();
-        intent.setClass(mContext, TasksInfoActivity_.class);
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((Task) adapter.getItem(position)).getId());
-        startActivity(intent);
-    }
+//    @Override
+//    protected void openDetail(final int position) {
+//        Intent intent = new Intent();
+//        intent.setClass(mContext, TasksInfoActivity_.class);
+//        intent.putExtra(ExtraAndResult.EXTRA_ID, ((Task) adapter.getItem(position)).getId());
+//        startActivity(intent);
+//    }
 
     @Override
     public void getData() {
@@ -32,36 +32,20 @@ public class TasksSearchActivity extends BaseSearchActivity<TaskRecord> {
         params.put("keyword", strSearch);
         //params.put("endAt", System.currentTimeMillis() / 1000);
         //params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
-        params.put("pageIndex", paginationX.getPageIndex());
-        params.put("pageSize", isTopAdd?lstData.size()>=20?lstData.size():20:20);
+        params.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        params.put("pageSize", paginationX.getPageSize());
         params.put("joinType",0);
         params.put("status",0);
         TaskService.getTasksData(params)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<TaskRecord>>(ll_loading) {
                     @Override
                     public void onError(Throwable e) {
-                        super.onError(e);
-                        expandableListView_search.onRefreshComplete();
+                        TasksSearchActivity.this.fail(e);
                     }
 
                     @Override
                     public void onNext(PaginationX<TaskRecord> x) {
-                        expandableListView_search.onRefreshComplete();
-                        ll_loading.setStatus(LoadingLayout.Success);
-                        if (PaginationX.isEmpty(x)) {
-                            if (isTopAdd) {
-                                ll_loading.setStatus(LoadingLayout.Empty);
-                            } else {
-                                Toast("没有更多数据!");
-                            }
-                            return;
-                        }
-                        paginationX = (PaginationX) x;
-                        if (isTopAdd) {
-                            lstData.clear();
-                        }
-                        lstData.addAll(paginationX.getRecords());
-                        changeAdapter();
+                       TasksSearchActivity.this.success(x);
                     }
                 });
 

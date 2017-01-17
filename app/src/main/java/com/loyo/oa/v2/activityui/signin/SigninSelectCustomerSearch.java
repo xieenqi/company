@@ -125,45 +125,7 @@ public class SigninSelectCustomerSearch extends BaseLoadingActivity implements P
         params.put("pageIndex", page);
         params.put("pageSize", 20);
         params.put("keyWords", edt_search.getText().toString().trim());
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(ISigninOrFollowUp.class).
-//                signinSearchCutomer(params, new Callback<BaseBeanT<PaginationX<SigninSelectCustomer>>>() {
-//                    @Override
-//                    public void success(final BaseBeanT<PaginationX<SigninSelectCustomer>> customerPaginationX, final Response response) {
-//                        HttpErrorCheck.checkResponse("拜访搜索选择客户:", response, ll_loading);
-//                        expandableListView_search.onRefreshComplete();
-////                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-////                        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-//                        if (null == customerPaginationX) {
-//                            if (isTopAdd) {
-//                                showNoData();
-//                            } else {
-//                                Toast("没有更多数据!");
-//                            }
-//                            return;
-//                        }
-//                        ArrayList<SigninSelectCustomer> lstDataTemp = customerPaginationX.data.getRecords();
-//                        if (lstDataTemp == null || lstDataTemp.size() == 0) {
-//                            if (isTopAdd) {
-//                                showNoData();
-//                            } else {
-//                                Toast("没有更多数据!");
-//                            }
-//                            return;
-//                        } else {
-//                            if (isTopAdd) {
-//                                lstData.clear();
-//                            }
-//                            lstData.addAll(lstDataTemp);
-//                        }
-//                        dataChanged();
-//                    }
-//
-//                    @Override
-//                    public void failure(final RetrofitError error) {
-//                        HttpErrorCheck.checkError(error, ll_loading);
-//                        expandableListView_search.onRefreshComplete();
-//                    }
-//                });
+
 
         SignInService.signInSearchCutomer(params).subscribe(new DefaultLoyoSubscriber<BaseBeanT<PaginationX<SigninSelectCustomer>>>(ll_loading) {
             @Override

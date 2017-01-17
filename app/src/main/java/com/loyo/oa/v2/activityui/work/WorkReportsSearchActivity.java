@@ -19,15 +19,13 @@ import retrofit.Callback;
 
 public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReportRecord> {
 
-    private final int pageSize = 20;
-
-    @Override
-    protected void openDetail(final int position) {
-        Intent intent = new Intent();
-        intent.setClass(mContext, WorkReportsInfoActivity_.class);
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WorkReport) adapter.getItem(position)).getId());
-        startActivityForResult(intent, WorkReportsManageFragment.REQUEST_REVIEW);
-    }
+//    @Override
+//    protected void openDetail(final int position) {
+//        Intent intent = new Intent();
+//        intent.setClass(mContext, WorkReportsInfoActivity_.class);
+//        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WorkReport) adapter.getItem(position)).getId());
+//        startActivityForResult(intent, WorkReportsManageFragment.REQUEST_REVIEW);
+//    }
 
     @Override
     public void getData() {
@@ -38,19 +36,18 @@ public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReportReco
         params.put("isReviewed", 0);
         //params.put("endAt", System.currentTimeMillis() / 1000);
         //params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
-        params.put("pageIndex", paginationX.getPageIndex());
-        params.put("pageSize", isTopAdd?lstData.size()>=pageSize?lstData.size():pageSize:pageSize);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReportsData(params, this);
+        params.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        params.put("pageSize", paginationX.getPageSize());
 
         WorkReportService.getWorkReportsData(params).subscribe(new DefaultLoyoSubscriber<PaginationX<WorkReportRecord>>(ll_loading) {
             @Override
             public void onError(Throwable e) {
-                ((Callback)WorkReportsSearchActivity.this).failure(null);
+                WorkReportsSearchActivity.this.fail(e);
             }
 
             @Override
             public void onNext(PaginationX<WorkReportRecord> workReportRecordPaginationX) {
-                ((Callback)WorkReportsSearchActivity.this).success(workReportRecordPaginationX,null);
+                WorkReportsSearchActivity.this.success(workReportRecordPaginationX);
             }
         });
     }
