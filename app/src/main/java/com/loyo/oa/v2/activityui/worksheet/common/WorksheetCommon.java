@@ -12,27 +12,27 @@ public class WorksheetCommon {
 
     public static void setStatus(TextView tv, int status) {
         String info = "";
-        int bj = R.drawable.retange_gray;
+        int bj = R.drawable.common_lable_gray;
         switch (status) {
             case 1:
                 info = "待分派";
-                bj = R.drawable.retange_red;
+                bj = R.drawable.common_lable_red;
                 break;
             case 2:
                 info = "进行中";
-                bj = R.drawable.retange_purple;
+                bj = R.drawable.common_lable_purple;
                 break;
             case 3:
                 info = "待审核";
-                bj = R.drawable.retange_blue;
+                bj = R.drawable.common_lable_blue;
                 break;
             case 4:
                 info = "已完成";
-                bj = R.drawable.retange_green;
+                bj = R.drawable.common_lable_green;
                 break;
             case 5:
                 info = "意外终止";
-                bj = R.drawable.retange_gray;
+                bj = R.drawable.common_lable_gray;
                 break;
         }
         tv.setText(info);

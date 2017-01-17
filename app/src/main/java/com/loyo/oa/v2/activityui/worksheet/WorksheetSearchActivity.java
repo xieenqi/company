@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
@@ -209,34 +210,32 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
         DefaultLoyoSubscriber<PaginationX<Worksheet>> subscriber =
                 new DefaultLoyoSubscriber<PaginationX<Worksheet>>() {
 
-            @Override
-            public void onError(Throwable e) {
-                @LoyoErrorChecker.CheckType int type = groupsData.size() >0?
-                        LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
-                expandableListView.onRefreshComplete();
+                    @Override
+                    public void onError(Throwable e) {
+                        @LoyoErrorChecker.CheckType int type = groupsData.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        expandableListView.onRefreshComplete();
 
-            }
+                    }
 
-            @Override
-            public void onNext(PaginationX<Worksheet> x) {
-                expandableListView.onRefreshComplete();
-                if (isPullDown) {
-                    groupsData.clear();
-                }
-                if (isPullDown && PaginationX.isEmpty(x) && groupsData.size()==0) {
-                    ll_loading.setStatus(LoadingLayout.Empty);
-                }
-                else  if (PaginationX.isEmpty(x)){
-                    Toast("没有更多数据了");
-                    ll_loading.setStatus(LoadingLayout.Success);
-                }
-                else  {
-                    ll_loading.setStatus(LoadingLayout.Success);
-                }
+                    @Override
+                    public void onNext(PaginationX<Worksheet> x) {
+                        expandableListView.onRefreshComplete();
+                        if (isPullDown) {
+                            groupsData.clear();
+                        }
+                        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size() == 0) {
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        } else if (PaginationX.isEmpty(x)) {
+                            Toast("没有更多数据了");
+                            ll_loading.setStatus(LoadingLayout.Success);
+                        } else {
+                            ll_loading.setStatus(LoadingLayout.Success);
+                        }
 
-                loadData(x != null?x.records:new ArrayList<Worksheet>());
-            }
-        };
+                        loadData(x != null ? x.records : new ArrayList<Worksheet>());
+                    }
+                };
 
         if (searchType == WorksheetListType.SELF_CREATED || searchType == WorksheetListType.ASSIGNABLE) {
             HashMap<String, Object> map = new HashMap<>();
@@ -248,6 +247,8 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
 
             WorksheetService.getMyWorksheetList(map)
                     .subscribe(subscriber);
+            UmengAnalytics.umengSend(this, searchType == WorksheetListType.SELF_CREATED ? UmengAnalytics.searchWorkOrderCreate
+                    : UmengAnalytics.searchWorkOrderAssign);
         } else if (searchType == WorksheetListType.TEAM) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", page);
@@ -255,6 +256,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
             map.put("keyword", strSearch);
             WorksheetService.getTeamWorksheetList(map)
                     .subscribe(subscriber);
+            UmengAnalytics.umengSend(this, UmengAnalytics.searchWorkOrderTeam);
         } else if (searchType == WorksheetListType.RESPONSABLE) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", page);
@@ -265,7 +267,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                         @Override
                         public void onError(Throwable e) {
                             @LoyoErrorChecker.CheckType int type =
-                                    groupsData.size()>0?LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                                    groupsData.size() > 0 ? LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
                             LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                             expandableListView.onRefreshComplete();
                         }
@@ -277,21 +279,19 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                             if (isPullDown) {
                                 groupsData.clear();
                             }
-                            if (isPullDown && PaginationX.isEmpty(x) && groupsData.size()==0) {
+                            if (isPullDown && PaginationX.isEmpty(x) && groupsData.size() == 0) {
                                 ll_loading.setStatus(LoadingLayout.Empty);
-                            }
-                            else  if (PaginationX.isEmpty(x)){
+                            } else if (PaginationX.isEmpty(x)) {
                                 Toast("没有更多数据了");
                                 ll_loading.setStatus(LoadingLayout.Success);
-                            }
-                            else  {
+                            } else {
                                 ll_loading.setStatus(LoadingLayout.Success);
                             }
 
-                            loadWorksheetEvents(x!=null?x.records:new ArrayList<WorksheetEvent>());
+                            loadWorksheetEvents(x != null ? x.records : new ArrayList<WorksheetEvent>());
                         }
                     });
-
+            UmengAnalytics.umengSend(this, UmengAnalytics.searchWorkOrder);
         }
 
 

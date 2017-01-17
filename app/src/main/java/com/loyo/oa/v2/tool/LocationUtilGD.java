@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.tool;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
@@ -19,6 +21,7 @@ import retrofit.http.HEAD;
  * Created by pj on 16/1/29.
  */
 public class LocationUtilGD {
+    private static final int LOCATION_REQUEST=0x2;
     private MAMapLocationListener maMapLocationListener;
     private AfterLocation afterLocation;
     private MainApp app;
@@ -37,8 +40,9 @@ public class LocationUtilGD {
      * 开启定位
      */
     private void startLocate(final Context context) {
-        if (PackageManager.PERMISSION_GRANTED ==
-                app.getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
+        if(PermissionTool.requestPermission(context, Manifest.permission.ACCESS_FINE_LOCATION,"定位权限关闭",LOCATION_REQUEST)){
+//        if (PackageManager.PERMISSION_GRANTED ==
+//                app.getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
             maMapLocationListener = new MAMapLocationListener();
             locationClient = new AMapLocationClient(app);
             locationOption = new AMapLocationClientOption();

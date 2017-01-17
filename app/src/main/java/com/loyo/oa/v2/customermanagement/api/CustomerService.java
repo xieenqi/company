@@ -16,17 +16,20 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
+import com.loyo.oa.v2.activityui.wfinstance.bean.ApprovalItemModel;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
+import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.Config_project;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import retrofit.http.Body;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 import rx.Observable;
@@ -81,6 +84,15 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers());
     }
 
+    public static Observable<PaginationX<Customer>> getInvovedCustomers(HashMap<String, Object> params) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/FinalVariables.QUERY_CUSTOMERS_MY)
+                        .create(ICustomer.class)
+                        .getCustomers(params)
+                        .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers());
+    }
+
     public static Observable<PaginationX<Customer>> getDumpedCustomers(HashMap<String, Object> params) {
         return
                 RetrofitAdapterFactory.getInstance()
@@ -108,14 +120,15 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<ArrayList<ContactLeftExtras>>compatApplySchedulers());
     }
 
-    public static Observable<Customer> addNewCustomer(Map<String, Object> map) {
+    public static Observable<Customer> addNewCustomer(HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ICustomer.class)
                         .addNewCustomer(map)
-                        .compose(RetrofitAdapterFactory.<Customer>applySchedulers());
+                        .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
+
 
     public static Observable<ArrayList<ContactLeftExtras>> getContactsField() {
         return
@@ -217,6 +230,15 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
 
+    public static Observable<BaseResponse<Object>> dumpCustomer(@Path("id") String id, @Body HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(ICustomer.class)
+                        .toPublic(id, map)
+                        .compose(RetrofitAdapterFactory.<BaseResponse<Object>>compatApplySchedulers());
+    }
+
     public static Observable<ArrayList<CustomerExtraData>> getCustomerDynamic(HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
@@ -263,7 +285,7 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<ArrayList<CommonTag>>compatApplySchedulers());
     }
 
-    public static Observable<ArrayList<CommonTag>> getSaleactivitytypes(){
+    public static Observable<ArrayList<CommonTag>> getSaleactivitytypes() {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
@@ -319,6 +341,17 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<PaginationX<OrderListItem>>compatApplySchedulers());
     }
 
+    /**
+     * 获取客户关联的审批列表
+     */
+    public static Observable<PaginationX<ApprovalItemModel>> getRelatedApprovalList(String id, HashMap<String, Object> map) {
+        return RetrofitAdapterFactory.getInstance()
+                .build(/*TODO:*/Config_project.API_URL() + FinalVariables.wfinstance)
+                .create(ICustomer.class)
+                .getRelatedApprovalList(id, map)
+                .compose(RetrofitAdapterFactory.<PaginationX<ApprovalItemModel>>compatApplySchedulers());
+    }
+
     public static Observable<SigninPictures> getSigninUploadPhotoConfig(@QueryMap Map<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
@@ -354,6 +387,17 @@ public class CustomerService {
                         .create(ICustomer.class)
                         .getIndustry()
                         .compose(RetrofitAdapterFactory.<ArrayList<Industry>>compatApplySchedulers());
+
+    }
+
+    /* 获取丢公海原因*/
+    public static Observable<BaseResponse<ArrayList<SaleStage>>> getCommonReason() {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(ICustomer.class)
+                        .getCoomonReason()
+                        .compose(RetrofitAdapterFactory.<BaseResponse<ArrayList<SaleStage>>>compatApplySchedulers());
 
     }
 

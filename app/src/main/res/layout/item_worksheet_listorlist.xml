@@ -44,8 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="xxxx.jpg"
-                android:textColor="@color/text99"
-                android:textSize="@dimen/text_sp12"
+                android:textColor="#999999"
+                android:textSize="13sp"
                 />
 
             <TextView
@@ -54,8 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="--"
-                android:textColor="@color/text99"
-                android:textSize="@dimen/text_sp9"
+                android:textColor="#999999"
+                android:textSize="10sp"
                 />
 
         </RelativeLayout>

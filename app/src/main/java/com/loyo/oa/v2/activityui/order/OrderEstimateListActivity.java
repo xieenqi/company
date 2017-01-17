@@ -23,7 +23,9 @@ import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 订单【回款记录】
@@ -61,6 +63,10 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
 
     public final static int ORDER_PLAN = 0x31;
 
+    public final static String RET_HAS_CHANGED_DATA = "com.loyo.OrderEstimateListActivity.RET_HAS_CHANGED_DATA";
+    public final static String KEY_COMMIT_CHANGE = "com.loyo.OrderEstimateListActivity.KEY_COMMIT_CHANGE";
+    public final static String KEY_GET_DATA = "com.loyo.OrderEstimateListActivity.KEY_GET_DATA";
+
     private LinearLayout ll_back;
     private LinearLayout ll_add;
     private TextView tv_title, tv_rate_payment;
@@ -68,7 +74,11 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     private ListView lv_listview;
     private EstimateAdd mEstimateAdd;
     private EstimateList mEstimateList;
-    private ArrayList<EstimateAdd> mData = new ArrayList<>();
+
+    private ArrayList<EstimateAdd> capitalReturningList = new ArrayList<>();
+    private boolean hasChangedData = false;
+    private boolean commitChanges = false;
+
     private OrderEstimateListAdapter mAdapter;
     private Intent mIntent;
     private Bundle mBundle;
@@ -81,6 +91,8 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     private int backMoney = 0;
     private double ratePayment = 0.0;
     private int orderStatus;
+    private boolean needFetchData = false;
+    private boolean refreshStatOnly = false;
 
 
     private Handler mHandler = new Handler() {
@@ -89,22 +101,18 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
         public void handleMessage(Message msg) {
 
             switch (msg.what) {
-
-                case ExtraAndResult.MSG_WHAT_DIALOG:
-                    ll_add.setVisibility(View.GONE);
-                    break;
-
                 //订单删除操作
                 case ExtraAndResult.MSG_WHAT_GONG:
+                    mBundle = msg.getData();
+                    position = mBundle.getInt("posi");
 
-                    if (fromPage == ORDER_ADD) {
-                        mBundle = msg.getData();
-                        position = mBundle.getInt("posi");
-                        mData.remove(position);
-                        rushAdapter();
-                        ll_add.setVisibility(View.VISIBLE);
-                    } else if (fromPage == ORDER_DETAILS) {
-                        deleteData();
+                    if (commitChanges) {
+                        deleteData(capitalReturningList.get(position));
+                    }
+                    else {
+                        capitalReturningList.remove(position);
+                        hasChangedData = true;
+                        reloadList();
                     }
 
                     break;
@@ -126,6 +134,12 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
+        if (needFetchData) {
+            getPageData();
+        }
+        else if (refreshStatOnly){
+            getStatData();
+        }
     }
 
     @Override
@@ -135,6 +149,7 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
 
     @Override
     public void getPageData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
 
@@ -148,8 +163,13 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
             backMoney = mIntent.getIntExtra("已回款", 0);
             ratePayment = mIntent.getDoubleExtra("回款率", 0);
             orderStatus = mIntent.getIntExtra("订单待审核", 0);
+            commitChanges = mIntent.getBooleanExtra(KEY_COMMIT_CHANGE, false);
             if (null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")) {
-                mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
+                capitalReturningList = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
+            }
+            needFetchData = mIntent.getBooleanExtra(KEY_GET_DATA, false);
+            if (orderId != null && !needFetchData) {
+                refreshStatOnly = true;/* fix bug */
             }
         }
 
@@ -163,12 +183,9 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
         tv_dealprice = (CustomTextView) findViewById(R.id.tv_dealprice);
         lv_listview = (ListView) findViewById(R.id.lv_listview);
         tv_title.setText("回款记录");
-        if (null != dealPrice)
-            if (fromPage == OADD_EST_ADD || fromPage == OADD_EST_EDIT) {
-                tv_dealprice.setText("￥" + Utils.setValueDouble(dealPrice));
-            }
-        if (null != mData && mData.size() > 0)
-            ll_add.setVisibility(View.GONE);
+        if (null != dealPrice) {
+            tv_dealprice.setText("￥" + Utils.setValueDouble(dealPrice));
+        }
         ll_back.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         ll_back.setOnTouchListener(Global.GetTouch());
@@ -177,37 +194,115 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
 /*      tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
         tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");*/
 
+        tv_totalprice.setText("￥" + backMoney);
+        tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");
+
         //如果来自详情，则请求回款记录
-        if (fromPage == ORDER_DETAILS) {
-            getPageData();
-            ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
-        }else {
-            ll_loading.setStatus(LoadingLayout.Success);
-        }
-        mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage, isAdd);
+        ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
+        mAdapter = new OrderEstimateListAdapter(this, capitalReturningList, mHandler, orderId, fromPage, isAdd);
         mAdapter.setOrderStatus(orderStatus);
         lv_listview.setAdapter(mAdapter);
-        rushAdapter();
+        reloadList();
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
-    public void rushAdapter() {
+    public void reloadList() {
         mAdapter.notifyDataSetChanged();
+        ll_loading.setStatus(
+                capitalReturningList.size() >0? LoadingLayout.Success:LoadingLayout.Empty);
     }
 
 
     /**
      * 删除订单
      */
-    public void deleteData() {
-
+    public void deleteData(EstimateAdd item) {
+        if (item == null) {
+            return;
+        }
         showLoading2("");
-        OrderService.deletePayEstimate(mData.get(position).id)
+        OrderService.deletePayEstimate(item.id)
                 .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
                     @Override
                     public void onNext(EstimateAdd add) {
                         getData();
                     }
                 });
+    }
+
+    public void addData(EstimateAdd item) {
+        if (item == null) {
+            return;
+        }
+        showCommitLoading();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("attachmentUUId", item.attachmentUUId);
+        map.put("attachmentCount", item.attachmentCount);
+        map.put("payeeMethod", item.payeeMethod);
+        map.put("orderId", orderId);
+        map.put("attachmentsName", "");
+        map.put("receivedAt", item.receivedAt);
+        map.put("receivedMoney", item.receivedMoney);
+        map.put("billingMoney", item.billingMoney);
+        map.put("remark", item.remark);
+        map.put("payMethodString", getPayeeMethod(item.payeeMethod));
+        map.put("payeeUser", item.payeeUser);
+        OrderService.addPayEstimate(map)
+                .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
+                    @Override
+                    public void onNext(EstimateAdd add) {
+                        getData();
+                    }
+                });
+    }
+
+    public void editData(EstimateAdd item) {
+        if (item == null) {
+            return;
+        }
+        showCommitLoading();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("attachmentUUId", item.attachmentUUId);
+        map.put("attachmentCount", item.attachmentCount);
+        map.put("payeeMethod", item.payeeMethod);
+        map.put("orderId", orderId);
+        map.put("attachmentsName", "");
+        map.put("receivedAt", item.receivedAt);
+        map.put("receivedMoney", item.receivedMoney);
+        map.put("billingMoney", item.billingMoney);
+        map.put("remark", item.remark);
+        map.put("payMethodString", getPayeeMethod(item.payeeMethod));
+        map.put("payeeUser", item.payeeUser);
+        OrderService.editPayEstimate(item.id, map)
+                .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
+                    @Override
+                    public void onNext(EstimateAdd add) {
+                        getData();
+                    }
+                });
+    }
+
+    private String getPayeeMethod(int payeeMethod) {
+        String result = "其他";
+        switch (payeeMethod) {
+
+            case 1:
+                result= "现金";
+                break;
+
+            case 2:
+                result= "支票";
+                break;
+
+            case 3:
+                result= "银行转账";
+                break;
+
+            case 4:
+                result= "其它";
+                break;
+        }
+        return result;
     }
 
 
@@ -222,14 +317,38 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
                         ll_loading.setStatus(LoadingLayout.Success);
                         if (null != list) {
                             mEstimateList = list;
+                            mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
                             if (null != list.records) {
-                                mData.clear();
-                                mData.addAll(list.records);
-                                rushAdapter();
-                                mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
-                                if (mData.size() == 0)
-                                    ll_loading.setStatus(LoadingLayout.Empty);
+                                capitalReturningList.clear();
+                                capitalReturningList.addAll(list.records);
+                                reloadList();
                             }
+                            if (capitalReturningList.size() == 0)
+                                ll_loading.setStatus(LoadingLayout.Empty);
+
+                        } else {
+                            ll_loading.setStatus(LoadingLayout.No_Network);
+                            ll_loading.setNoNetworkText("没有获取到数据");
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 获取收款记录列表
+     */
+    public void getStatData() {
+        OrderService.getPayEstimate(orderId)
+                .subscribe(new DefaultLoyoSubscriber<EstimateList>(ll_loading) {
+                    @Override
+                    public void onNext(EstimateList list) {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        if (null != list) {
+                            mEstimateList = list;
+                            mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
+                            if (capitalReturningList.size() == 0)
+                                ll_loading.setStatus(LoadingLayout.Empty);
+
                         } else {
                             ll_loading.setStatus(LoadingLayout.No_Network);
                             ll_loading.setNoNetworkText("没有获取到数据");
@@ -250,14 +369,8 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
             //新建
             case R.id.ll_add:
                 mBundle = new Bundle();
-                mBundle.putString("orderId", orderId);
-                if (fromPage == OrderEstimateListActivity.ORDER_ADD) {
-                    requestPage = OrderEstimateListActivity.OADD_EST_ADD;
-                } else if (fromPage == OrderEstimateListActivity.ORDER_DETAILS) {
-                    requestPage = OrderEstimateListActivity.ODET_EST_ADD;
-                }
-                mBundle.putInt("fromPage", requestPage);
-                app.startActivityForResult(this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, requestPage, mBundle);
+                app.startActivityForResult(this, OrderAddEstimateActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, requestPage, mBundle);
                 break;
         }
     }
@@ -265,8 +378,9 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
 
     @Override
     public void onBackPressed() {
-        mIntent = new Intent();
-        mIntent.putExtra("data", mData);
+        Intent mIntent = new Intent();
+        mIntent.putExtra("data", capitalReturningList);
+        mIntent.putExtra(RET_HAS_CHANGED_DATA, hasChangedData);
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
         super.onBackPressed();
     }
@@ -275,30 +389,42 @@ public class OrderEstimateListActivity extends BaseLoadingActivity implements Vi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK) {
+        if (resultCode != RESULT_OK || null == data) {
             return;
         }
-        switch (requestCode) {
 
-            //新建订单 编辑与新建回调
-            case OADD_EST_ADD:
-            case OADD_EST_EDIT:
-                if (null == data) {
-                    return;
-                }
-                mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
-                mData.clear();
-                mData.add(mEstimateAdd);
-                rushAdapter();
-                break;
-
-            //订单详情 编辑与新建回调
-            case ODET_EST_EDIT:
-            case ODET_EST_ADD:
-                getData();
-                break;
-
+        if (commitChanges) {
+            boolean isEdit = data.getBooleanExtra(OrderAddEstimateActivity.RET_IS_DATA_EDITED, false);
+            mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
+            if (isEdit) {
+                editData(mEstimateAdd);
+            }
+            else {
+                addData(mEstimateAdd);
+            }
         }
-        mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_DIALOG);
+        else {
+            boolean isEdit = data.getBooleanExtra(OrderAddEstimateActivity.RET_IS_DATA_EDITED, false);
+            Serializable userInfo = data.getSerializableExtra(OrderAddEstimateActivity.KEY_USER_INFO);
+            mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
+            if (mEstimateAdd != null) {
+                if (isEdit && userInfo != null) {
+                    Integer index = (Integer)((HashMap<String, Object>) userInfo).get("edit_index");
+                    if (index < capitalReturningList.size() && index >= 0) {
+                        capitalReturningList.remove(capitalReturningList.get(index));
+                        capitalReturningList.add(index, mEstimateAdd);
+                        hasChangedData = true;
+                        reloadList();
+                    }
+
+                }
+                else
+                {
+                    capitalReturningList.add(0, mEstimateAdd);
+                    hasChangedData = true;
+                    reloadList();
+                }
+            }
+        }
     }
 }

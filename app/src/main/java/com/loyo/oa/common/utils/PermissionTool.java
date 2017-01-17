@@ -55,12 +55,14 @@ public class PermissionTool {
         Context context = null;
         if (activityOrFragment instanceof Activity) {
             activity = (Activity) activityOrFragment;
-            context = activity.getBaseContext();
+            context = activity;
         } else if (activityOrFragment instanceof Fragment) {
             fragment = (Fragment) activityOrFragment;
-            context = fragment.getContext();
+            context = fragment.getActivity();
         } else {
-            throw new UnsupportedOperationException("申请权限必须传入activity或者fragment");
+//            throw new UnsupportedOperationException("申请权限必须传入activity或者fragment");
+            Log.e("权限申请","requestPermission: 申请权限必须传入activity或者fragment");
+            return false;
         }
         int i = 0;
         String[] needRequest = new String[permissions.length];//当权限被拒绝时候,存一下下标,表示不具有哪些权限
@@ -90,17 +92,17 @@ public class PermissionTool {
                 for (int j = 0; j < i; j++) {
                     if (fragment.shouldShowRequestPermissionRationale(needRequest[j])) {//如果用户永久拒绝了某个权限,就不能弹出提示,要解释原因
                         showRationale = true;
-
                         break;
                     }
                 }
             }
             if (showRationale) {
+                Log.i("", "requestPermission: 弹出提示框框");
                 //弹出提示,向用户解释申请许可的原因
                 final Context finalContext = context;
-                new SweetAlertDialog(activity, SweetAlertDialog.NORMAL_TYPE)
+                new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
                         .setTitleText("权限申请")
-                        .setContentText(rationale + "\n\n" + "请在应用详情-权限里面打开所需权限")//解释原因
+                        .setContentText(rationale + "\n\n" + "请在”设置”>“应用”>“权限”中配置权限")//解释原因
                         .setCancelText("取消")
                         .setConfirmText("开启")
                         .showCancelButton(true)
@@ -119,6 +121,7 @@ public class PermissionTool {
                             }
                         })
                         .show();
+                
             } else {
                 //可以直接弹出申请提示框
                 if (null != activity) {
@@ -147,10 +150,14 @@ public class PermissionTool {
      * @param callBack
      */
     public static void requestPermissionsResult(String[] permissions, int[] grantResults, PermissionsResultCallBack callBack) {
-        for (int grantResult : grantResults) {
-            if (PackageManager.PERMISSION_GRANTED != grantResult) {
-                callBack.fail();
-                return;
+        int len=permissions.length;
+        for (int i = 0; i < len; i++) {
+            Log.i("tttt", "requestPermissionsResult: permission:"+permissions[i]+",grantResult:"+grantResults[i]+",ok is:"+PackageManager.PERMISSION_GRANTED);
+            if(null!=permissions[i]){
+                if (PackageManager.PERMISSION_GRANTED != grantResults[i]) {
+                    callBack.fail();
+                    return;
+                }
             }
         }
         callBack.success();

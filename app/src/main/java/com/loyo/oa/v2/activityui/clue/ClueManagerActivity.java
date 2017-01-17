@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.clue.common.ClueType;
@@ -127,14 +128,18 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
 
             /*搜索*/
             case R.id.img_title_search_right:
+                Bundle b = new Bundle();
                 ClueType type;
                 if (mIndex == 0) {
                     type = ClueType.MY_CLUE;
+                    UmengAnalytics.umengSend(this, UmengAnalytics.searchCluesMy);
                 } else {
                     type = ClueType.TEAM_CLUE;
+                    UmengAnalytics.umengSend(this, UmengAnalytics.searchCluesTeam);
+                    b.putBoolean("responsibleVisiblity", true);
                 }
                 LogUtil.dee("type:" + type);
-                Bundle b = new Bundle();
+
                 b.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, type);
                 app.startActivity(this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
@@ -188,6 +193,8 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             }
+            if (index == 1)
+                UmengAnalytics.umengSend(ClueManagerActivity.this, UmengAnalytics.cluesTeam);
         }
     }
 }

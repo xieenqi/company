@@ -13,12 +13,14 @@ public class HomeItem implements Serializable {
                     final String _title,
                     final String _cls,
                     @BusinessOperation.Type final String _code,
-                    final int _tag) {
+                    final int _tag,
+                    String umengAnalyticsId) {
         imageViewRes = _imageViewRes;
         title = _title;
         cls = _cls;
         code = _code;
         tag = _tag;
+        this.umengAnalyticsId = umengAnalyticsId;
     }
 
     public int imageViewRes;
@@ -31,4 +33,6 @@ public class HomeItem implements Serializable {
     //红点的数据
     public String extra = "";
     public boolean viewed = true;
+
+    public String umengAnalyticsId;
 }

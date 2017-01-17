@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -30,6 +31,7 @@ import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -132,9 +134,9 @@ public class FollowUpListAdapter extends BaseAdapter {
         holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createAt));
 
         String contact = TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName;
-        if(null != model.contactPhone && !TextUtils.isEmpty(model.contactPhone) && !contact.equals("无联系人信息")){
-            holder.tv_contact.setText(contact+"("+model.contactPhone+")");
-        }else{
+        if (null != model.contactPhone && !TextUtils.isEmpty(model.contactPhone) && !contact.equals("无联系人信息")) {
+            holder.tv_contact.setText(contact + "(" + model.contactPhone + ")");
+        } else {
             holder.tv_contact.setText(contact);
         }
 
@@ -270,10 +272,11 @@ public class FollowUpListAdapter extends BaseAdapter {
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
+            final ViewHolder finalHolder = holder;
             holder.lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    viewCrol.deleteCommentEmbl(model.comments.get(position).id);
+                    viewCrol.deleteCommentEmbl(finalHolder.lv_comment,position,model.comments.get(position).id);
                     return false;
                 }
             });

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
@@ -25,6 +26,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
+import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
 import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
@@ -42,6 +44,7 @@ import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -74,11 +77,9 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private String userId = "";
     private String xPath = "";
 
-    private boolean isPullOrDown;
     private int commentPosition;
 
-    private ArrayList<FollowUpListModel> listModel = new ArrayList<>();
-    private PaginationX<FollowUpListModel> mPagination = new PaginationX<>(20);
+    private PaginationX<FollowUpListModel> mPagination = new PaginationX<>();
 
     private FollowUpListAdapter mAdapter;
     private FollowUpFragPresenter mPresenter;
@@ -89,7 +90,6 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private int playVoiceSize = 0;
     private AudioPlayerView audioPlayer;
     private TextView lastView;
-    private int pageSize = 5;
     private LoadingLayout ll_loading;
 
 
@@ -123,17 +123,13 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        pageSize = listModel.size();
-        isPullOrDown = true;
-        mPagination.setPageIndex(1);
-        getData(true);
+        mPagination.setFirstPage();
+        getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isPullOrDown = false;
-        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData(false);
+        getData();
     }
 
     public void initView(View view) {
@@ -164,7 +160,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         Utils.btnSpcHideForListView(getActivity(), listView.getRefreshableView(),
@@ -255,9 +251,8 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private void initPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
-        isPullOrDown = true;
-        mPagination.setPageIndex(1);
-        getData(true);
+        mPagination.setFirstPage();
+        getData();
     }
 
     /**
@@ -265,7 +260,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new FollowUpListAdapter(getActivity(), listModel, this, this);
+            mAdapter = new FollowUpListAdapter(getActivity(), mPagination.getRecords(), this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -277,7 +272,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     private void requestComment(String content) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("bizzId", mPagination.getRecords().get(commentPosition).id);
         map.put("title", content);
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
@@ -290,7 +285,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     private void requestComment(Record record) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("bizzId", mPagination.getRecords().get(commentPosition).id);
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
@@ -301,7 +296,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     /**
      * 获取Team列表数据
      */
-    private void getData(boolean isPullOrDown) {
+    private void getData() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", userId);
         map.put("xpath", xPath);
@@ -309,10 +304,9 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("method", method);        //跟进类型0:全部 1:线索 2:客户
         map.put("typeId", typeId);
         map.put("split", true);
-        map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isPullOrDown ? listModel.size() >= pageSize ? listModel.size() : pageSize : pageSize);
-        LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map, mPagination.getPageIndex());
+        map.put("pageIndex", mPagination.getShouldLoadPageIndex());
+        map.put("pageSize", mPagination.getPageSize());
+        mPresenter.getListData(map);
     }
 
     /**
@@ -329,12 +323,12 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 评论删除
      */
     @Override
-    public void deleteCommentEmbl(final String id) {
+    public void deleteCommentEmbl(final ListView adapter, final int position, final String id) {
         ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
         dialog.addSheetItem("删除评论", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                mPresenter.deleteComment(id);
+                mPresenter.deleteComment(adapter,position,id);
             }
         });
         dialog.show();
@@ -344,10 +338,15 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 刷新列表数据
      */
     @Override
-    public void rushListData(boolean shw) {
-        onPullDownToRefresh(listView);
+    public void rushListData(ListView list, int position) {
+        //删除一条评论
+        ListOrDetailsCommentAdapter adapter=((ListOrDetailsCommentAdapter)list.getAdapter());
+        adapter.remove(position);
+        if(0==adapter.getCount()){
+            //如果没有评论了，就隐藏显示评论的控件
+            ((ViewGroup)list.getParent()).setVisibility(View.GONE);
+        }
     }
-
     /**
      * 评论成功操作
      */
@@ -355,7 +354,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     public void commentSuccessEmbl(CommentModel modle) {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        listModel.get(commentPosition).comments.add(modle);
+        mPagination.getRecords().get(commentPosition).comments.add(modle);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -363,28 +362,26 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 获取列表数据成功
      */
     @Override
-    public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
+    public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> baseBeanData) {
         listView.onRefreshComplete();
-        if (isPullOrDown) {
-            listModel.clear();
-        }
-        if (paginationX == null) {
-            return;
-        }
-        mPagination = paginationX.data;
-        listModel.addAll(paginationX.data.getRecords());
+        mPagination.loadRecords(baseBeanData.data);
         bindData();
         ll_loading.setStatus(LoadingLayout.Success);
-        if (isPullOrDown && listModel.size() == 0)
+        if (mPagination.isEnpty())
             ll_loading.setStatus(LoadingLayout.Empty);
+
     }
 
     /**
      * 获取列表数据失败
      */
     @Override
-    public void getListDataErrorEmbl() {
+    public void getListDataErrorEmbl(Throwable e) {
         listView.onRefreshComplete();
+        //判断，数据为空，就用ll_loading显示，否则使用toast提示
+        @LoyoErrorChecker.CheckType
+        int type=mPagination.isEnpty()?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
+        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
     }
 
     @Override

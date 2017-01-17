@@ -136,7 +136,7 @@ public final class FinalVariables {
     /**
      * 我的客户数集(我参与的 和 我负责的)http://192.168.31.131:8070/api/v2/customer/self?pageIndex=1&pageSize=20&keyWords=&field=createdAt&order=desc
      **/
-    public static final String QUERY_CUSTOMERS_MY = Config_project.API_URL_CUSTOMER() + "/customer/self";
+    public static final String QUERY_CUSTOMERS_MY = Config_project.API_URL_CUSTOMER() + "/customer/selfsearch/mobile/simplify";
 
 
     /**

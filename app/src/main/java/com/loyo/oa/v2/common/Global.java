@@ -34,7 +34,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,7 +65,6 @@ public final class Global {
 
     public static void ProcException(Exception ex) {
         try {
-            CrashReport.postCatchedException(ex.fillInStackTrace());
             ex.printStackTrace();
         } catch (Exception e) {
         }
@@ -74,7 +72,6 @@ public final class Global {
 
     public static void ProcException(Throwable throwable) {
         try {
-            CrashReport.postCatchedException(throwable);
             throwable.printStackTrace();
         } catch (Exception e) {
         }
@@ -85,7 +82,6 @@ public final class Global {
             return;
 
         try {
-            CrashReport.postCatchedException(ex.fillInStackTrace());
             ex.printStackTrace();
         } catch (Exception e) {
         }
@@ -173,7 +169,6 @@ public final class Global {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return pi.versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            Global.ProcException(e);
         }
 
         return "";

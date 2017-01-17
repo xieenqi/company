@@ -20,7 +20,9 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
@@ -28,7 +30,6 @@ import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
-import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
@@ -44,7 +45,6 @@ import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.ListView_inScrollView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -72,11 +72,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById
     ListView_inScrollView listView_workflowNodes;
     @ViewById
-    TextView tv_lastowrk, tv_attachment_count, tv_wfnodes_title;
+    TextView tv_lastowrk, tv_attachment_count, tv_wfnodes_title, tv_task_title;
     @ViewById
     TextView tv_memo;
     @ViewById
-    TextView tv_projectName;
+    TextView tv_projectName, tv_customerName;
     @ViewById
     TextView tv_time_creator;
     @ViewById
@@ -95,6 +95,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     ViewGroup layout_AttachFile;
     @ViewById
     LinearLayout ll_project;
+    @ViewById
+    LinearLayout ll_customer;
     @ViewById
     ViewGroup layout_lastwork;
     @ViewById
@@ -185,44 +187,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
             finish();
             return;
         }
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
-//            @Override
-//            public void success(final WfInstance wfInstance_current, final Response response) {
-//                HttpErrorCheck.checkResponse("审批详情返回的数据：", response);
-//                mWfInstance = wfInstance_current;
-//                Log.i("MSG_ATTACHMENT","date"+mWfInstance.attachments);
-//                if (null != wfInstance_current && null != wfInstance_current.workflowNodes) {
-//                    lstData_WfNodes.clear();
-//                    lstData_WfNodes.addAll(wfInstance_current.workflowNodes);
-//                }
-//                /**
-//                 * 赢单审批
-//                 */
-//                if (wfInstance_current==null || wfInstance_current.bizForm == null)
-//                {
-//                    return;
-//                }
-//
-//                if (300 == wfInstance_current.bizForm.bizCode) {
-//                    wfData(wfInstance_current);
-//                } else if (400 == wfInstance_current.bizForm.bizCode) {//订单审批
-//                    orderData();
-//                } else if (500 == wfInstance_current.bizForm.bizCode) {//回款审批
-//                    paymentData();
-//                } else {
-//                    initData_WorkflowValues();
-//                }
-//                updateUI();
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error,ll_loading);
-////                finish();
-//            }
-//        });
-
         WfinstanceService.getWfInstance(wfInstanceId).subscribe(new DefaultLoyoSubscriber<WfInstance>(ll_loading) {
 
             @Override
@@ -253,8 +217,15 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     wfData(wfInstance_current);
                 } else if (400 == wfInstance_current.bizForm.bizCode) {//订单审批
                     orderData();
+                    ll_customer.setVisibility(View.GONE);
+                } else if (401 == wfInstance_current.bizForm.bizCode) {//订单意外终止审批
+                    orderData();
+                    ll_customer.setVisibility(View.GONE);
+                    ll_project.setVisibility(View.GONE);
                 } else if (500 == wfInstance_current.bizForm.bizCode) {//回款审批
                     paymentData();
+                    ll_customer.setVisibility(View.GONE);
+                    ll_project.setVisibility(View.GONE);
                 } else {
                     initData_WorkflowValues();
                 }
@@ -291,6 +262,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         saleId = chanceData.id;
         ll_sale.setVisibility(View.VISIBLE);
         layout_wfinstance_content.setVisibility(View.GONE);
+        layout_wfinstance_content.setPadding(0,0,0,0);
         ll_sale.setOnTouchListener(Global.GetTouch());
         tv_sale.setText(chanceData.name);
         List<String> wfList = new ArrayList<>();
@@ -331,28 +303,83 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         layout_wfinstance_content.setVisibility(View.GONE);
         ll_order_layout.setVisibility(View.VISIBLE);
-        List<String> orderList = new ArrayList<>();
-        OrderDetail order = mWfInstance.order;
-        orderList.add("对应订单：" + order.title);
-        orderList.add("对应客户：" + order.customerName);
-        orderList.add("成交金额：" + order.dealMoney);
-        orderList.add("订单编号：" + order.orderNum);
+        HashMap<String, String> orderMap = new HashMap<>();
+        final OrderDetail order = mWfInstance.order;
+        addOrderField("对应订单：", order.title, getResources().getColor(R.color.title_bg1),
+                new FieldCallback() {
+                    @Override
+                    public void onClick() {
+                        Intent mIntent = new Intent();
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, order.id);
+                        mIntent.setClass(WfinstanceInfoActivity.this, OrderDetailActivity.class);
+                        startActivity(mIntent);
+                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    }
+                }, false);
+        addOrderField("对应客户：", order.customerName, getResources().getColor(R.color.title_bg1),
+                new FieldCallback() {
+                    @Override
+                    public void onClick() {
+                        Intent intent = new Intent();
+                        intent.putExtra("Id", order.customerId);
+                        intent.setClass(WfinstanceInfoActivity.this, CustomerDetailInfoActivity_.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    }
+                }, false);
+        if (!TextUtils.isEmpty(order.endReason) && (401 == mWfInstance.bizForm.bizCode)) {
+            addOrderField("终止原因：", order.endReason, getResources().getColor(R.color.wfinstance_text_red), true);
+        }
+        addOrderField("成交金额：", String.valueOf(order.dealMoney));
+        addOrderField("订单编号：", order.orderNum);
+        addOrderField("开始时间：", DateTool.getDateTimeFriendly(order.startAt));
+        addOrderField("结束时间：", DateTool.getDateTimeFriendly(order.endAt));
         if (null != order.extensionDatas && order.extensionDatas.size() > 0) {
             for (ContactLeftExtras ele : order.extensionDatas) {
-                orderList.add(ele.label + "：" + ele.val);
+                addOrderField(ele.label + "：" , ele.getFormatValue());
             }
         }
-        orderList.add("备注：" + order.remark);
-        for (String text : orderList) {
-            View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
-            TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
-            tv_key.setText(text);
-            ll_order_content.addView(view_value);
-        }
+        addOrderField("备注：" , order.remark, true);
         tv_product.setText(order.proName);
         tv_plan_value.setText("¥" + order.backMoney + "（" + order.ratePayment + "%)");
         AttachmentUUId = order.attachmentUUId;
         AttachmentCount = order.attachmentCount;
+    }
+
+    private static abstract class FieldCallback {
+        public abstract void onClick();
+    }
+
+
+    private void addOrderField(String key, String value, int color, final FieldCallback callback, boolean multiLine) {
+        View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
+        TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
+        TextView tv_value = (TextView) view_value.findViewById(R.id.tv_value);
+        tv_key.setText(key);
+        tv_value.setText(value);
+        tv_value.setTextColor(color);
+        tv_value.setSingleLine(!multiLine);
+        ll_order_content.addView(view_value);
+        if (callback != null) {
+            view_value.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onClick();
+                }
+            });
+        }
+    }
+
+    private void addOrderField(String key, String value, int color, boolean multiLine) {
+        addOrderField(key, value, color, null, multiLine);
+    }
+
+    private void addOrderField(String key, String value, boolean multiLine) {
+        addOrderField(key, value, getResources().getColor(R.color.text99), multiLine);
+    }
+
+    private void addOrderField(String key, String value) {
+        addOrderField(key, value, getResources().getColor(R.color.text99), false);
     }
 
     /**
@@ -365,24 +392,49 @@ public class WfinstanceInfoActivity extends BaseActivity {
         layout_wfinstance_content.setVisibility(View.GONE);
         ll_payment_layout.setVisibility(View.VISIBLE);
         EstimateAdd payment = mWfInstance.paymentRecord.get(0);
-        List<String> paymentList = new ArrayList<>();
-        paymentList.add("对应订单：" + payment.orderTitle);
-        paymentList.add("对应客户：" + payment.customerName);
-//        paymentList.add("回款时间：" + DateTool.timet(payment.receivedAt + "", "yyyy.MM.dd"));
-        paymentList.add("回款时间：" + com.loyo.oa.common.utils.DateTool.getDateFriendly(payment.receivedAt));
-        paymentList.add("回款金额：" + "￥" + payment.receivedMoney);
-        paymentList.add("开票金额：" + "￥" + payment.billingMoney);
-        paymentList.add("收款人：" + payment.payeeUser.name);
-        paymentList.add("收款方式：" + OrderCommon.getPaymentMode(payment.payeeMethod));
-        paymentList.add("备注：" + payment.remark);
-        for (String text : paymentList) {
-            View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
-            TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
-            tv_key.setText(text);
-            ll_payment_content.addView(view_value);
-        }
+        addPaymentField("对应订单：", payment.orderTitle);
+        addPaymentField("对应客户：", payment.customerName);
+        addPaymentField("回款时间：", DateTool.getDateFriendly(payment.receivedAt));
+        addPaymentField("回款金额：", "￥" + payment.receivedMoney);
+        addPaymentField("开票金额：", "￥" + payment.billingMoney);
+        addPaymentField("收款人：", payment.payeeUser.name);
+        addPaymentField("收款方式：", OrderCommon.getPaymentMode(payment.payeeMethod));
+        addPaymentField("备注：" , payment.remark, true);
+
         AttachmentUUId = payment.attachmentUUId;
         AttachmentCount = payment.attachmentCount;
+    }
+
+
+    private void addPaymentField(String key, String value, int color, final FieldCallback callback, boolean multiLine) {
+        View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
+        TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
+        TextView tv_value = (TextView) view_value.findViewById(R.id.tv_value);
+        tv_key.setText(key);
+        tv_value.setText(value);
+        tv_value.setTextColor(color);
+        tv_value.setSingleLine(!multiLine);
+        ll_payment_content.addView(view_value);
+        if (callback != null) {
+            view_value.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onClick();
+                }
+            });
+        }
+    }
+
+    private void addPaymentField(String key, String value, int color, boolean multiLine) {
+        addPaymentField(key, value, color, null, multiLine);
+    }
+
+    private void addPaymentField(String key, String value, boolean multiLine) {
+        addPaymentField(key, value, getResources().getColor(R.color.text99), multiLine);
+    }
+
+    private void addPaymentField(String key, String value) {
+        addPaymentField(key, value, getResources().getColor(R.color.text99), false);
     }
 
     /**
@@ -488,7 +540,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + "）");
         tv_projectName.setText(null == mWfInstance.ProjectInfo || TextUtils.isEmpty(mWfInstance.ProjectInfo.title) ? "无" : mWfInstance.ProjectInfo.title);
-        if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode
+        tv_customerName.setText(null == mWfInstance.customerName?"无":mWfInstance.customerName);
+        tv_customerName.setTextColor(getResources().getColor(R.color.text66));
+        if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode || 401 == mWfInstance.bizForm.bizCode
                 || 500 == mWfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件  订单审批  回款审批
             layout_AttachFile.setVisibility(300 == mWfInstance.bizForm.bizCode ? View.GONE : View.VISIBLE);
             ll_project.setVisibility(View.GONE);
@@ -497,23 +551,23 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
             case WfInstance.STATUS_NEW:
                 tv_status.setText("待审批");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_blue);
+                tv_status.setBackgroundResource(R.drawable.common_lable_blue);
                 break;
             case WfInstance.STATUS_PROCESSING:
                 tv_status.setText("审批中");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_purple);
+                tv_status.setBackgroundResource(R.drawable.common_lable_purple);
                 break;
             case WfInstance.STATUS_ABORT:
                 tv_status.setText("未通过");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_red);
+                tv_status.setBackgroundResource(R.drawable.common_lable_red);
                 break;
             case WfInstance.STATUS_APPROVED:
                 tv_status.setText("已通过");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_green);
+                tv_status.setBackgroundResource(R.drawable.common_lable_green);
                 break;
             case WfInstance.STATUS_FINISHED:
                 tv_status.setText("已通过");
-                tv_status.setBackgroundResource(R.drawable.wfinstance_retange_green); //状态4，5都归类为 已通过
+                tv_status.setBackgroundResource(R.drawable.common_lable_green); //状态4，5都归类为 已通过
                 break;
             default:
                 break;
@@ -567,7 +621,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
 //        else if (mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")) {
 //            img_title_right.setVisibility(View.VISIBLE);
 //        }
-        if ("400".equals(mWfInstance.bizForm.bizCode + "") || "500".equals(mWfInstance.bizForm.bizCode + "")
+        if ("400".equals(mWfInstance.bizForm.bizCode + "")
+                || 401 ==mWfInstance.bizForm.bizCode
+                || "500".equals(mWfInstance.bizForm.bizCode + "")
                 || "300".equals(mWfInstance.bizForm.bizCode + "")) {
             img_title_right.setVisibility(View.GONE);//自动生成的审批不可以编辑删除
         }
@@ -713,7 +769,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_nopass, R.id.layout_pass, R.id.layout_lastwork,
-            R.id.layout_AttachFile, R.id.ll_sale, R.id.ll_product, R.id.ll_plan})
+            R.id.layout_AttachFile, R.id.ll_sale, R.id.ll_product, R.id.ll_plan, R.id.ll_customer})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -774,18 +830,31 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     return;
                 }
                 Bundle product = new Bundle();
-                product.putInt("data", ActionCode.ORDER_DETAIL);
+                product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, false);
+                product.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, false);
                 product.putSerializable(ExtraAndResult.EXTRA_DATA, mWfInstance.order.proInfo);
                 app.startActivityForResult(this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                 break;
             case R.id.ll_plan://订单 查看回款记录
                 Bundle mBundle = new Bundle();
-                mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_DETAILS);
                 mBundle.putString("price", mWfInstance.order.dealMoney + "");
                 mBundle.putString("orderId", mWfInstance.order.id);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
-                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
+
+                if (mWfInstance.order.paymentRecords != null) {
+                    mBundle.putSerializable("data", mWfInstance.order.paymentRecords);
+                }
+                else {
+                    mBundle.putSerializable(OrderEstimateListActivity.KEY_GET_DATA, true);
+                }
+                mBundle.putInt("已回款", mWfInstance.order.backMoney);
+                mBundle.putDouble("回款率", mWfInstance.order.ratePayment);
+                mBundle.putInt("订单待审核", mWfInstance.order.status);//不显示回款记录状态
+                mBundle.putBoolean(OrderEstimateListActivity.KEY_COMMIT_CHANGE, true);
+                mBundle.putString("orderId", mWfInstance.order.id);
+                app.startActivityForResult(this, OrderEstimateListActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
 //            case R.id.ll_payment_order://回款审批到订单详情
 //                Intent mIntent = new Intent();
@@ -795,6 +864,17 @@ public class WfinstanceInfoActivity extends BaseActivity {
 //                startActivityForResult(mIntent, 1);
 //                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 //                break;
+            case R.id.ll_customer:
+            {
+                if (mWfInstance != null && mWfInstance.customerId != null) {
+                    Intent intent2 = new Intent();
+                    intent2.putExtra("Id", mWfInstance.customerId);
+                    intent2.setClass(this, CustomerDetailInfoActivity_.class);
+                    startActivity(intent2);
+                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                }
+                break;
+            }
         }
     }
 

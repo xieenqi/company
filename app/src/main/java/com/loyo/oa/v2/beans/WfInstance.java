@@ -38,6 +38,8 @@ public class WfInstance extends BaseBeans implements Serializable {
     public BizExtData bizExtData;
     public Demand demand;//购买意向
     public ProjectInfoName ProjectInfo;
+    public String customerId;
+    public String customerName;
     public SaleDetails chance;//销售机会
     public boolean viewed;
     public OrderDetail order;

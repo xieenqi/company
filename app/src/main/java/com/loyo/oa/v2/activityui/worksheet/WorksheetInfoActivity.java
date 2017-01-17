@@ -75,7 +75,7 @@ public class WorksheetInfoActivity extends BaseLoadingActivity implements View.O
 
     @Override
     public void setLayoutView() {
-        setContentView(R.layout.activity_worksheet_info);
+        setContentView(R.layout.activity_worksheet_info_new);
     }
 
     @Override
@@ -169,6 +169,9 @@ public class WorksheetInfoActivity extends BaseLoadingActivity implements View.O
             mAdapter = new WorkSheetListNestingAdapter(mWorksheetInfo.attachment, this);
             lv_listview.setAdapter(mAdapter);
             mAdapter.refreshData();
+        }else{
+            //没有就隐藏，不然ui会有间距的小问题
+            lv_listview.setVisibility(View.GONE);
         }
     }
 

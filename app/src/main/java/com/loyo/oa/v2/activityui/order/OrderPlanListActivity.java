@@ -27,6 +27,8 @@ import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.loyo.oa.v2.common.ExtraAndResult.REQUEST_CODE_STAGE;
+
 /**
  * 【回款计划】 列表页面
  * Created by xeq on 16/8/4.
@@ -43,6 +45,7 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
     private int status;
     private int pagForm;//1 审批过来
     private boolean isAdd;//需要编辑就传true
+    private String planIdForGenerateCapitalReturning = "";
 //    private LinearLayout ll_state;
 //    private ViewStub emptyView;
 
@@ -61,6 +64,7 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
 
     @Override
     public void getPageData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
         getPlanList();
     }
 
@@ -147,6 +151,67 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
                 });
     }
 
+    private void addCapitalReturningFromPlan(Intent data) {
+        if (data == null) {
+            return;
+        }
+        EstimateAdd mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
+        if (mEstimateAdd == null) {
+            return;
+        }
+
+        showCommitLoading();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("attachmentUUId", mEstimateAdd.attachmentUUId);
+        map.put("payeeMethod", mEstimateAdd.payeeMethod);
+        map.put("orderId", orderId);
+        map.put("attachmentsName", "");
+        map.put("receivedAt", mEstimateAdd.receivedAt);
+        map.put("receivedMoney", mEstimateAdd.receivedMoney);
+        map.put("billingMoney", mEstimateAdd.billingMoney);
+        map.put("remark", mEstimateAdd.remark);
+        map.put("payMethodString", getPayeeMethod(mEstimateAdd.payeeMethod));
+        map.put("payeeUser", mEstimateAdd.payeeUser);
+        map.put("planId", planIdForGenerateCapitalReturning);
+        OrderService.addPayEstimate(map)
+                .subscribe(new DefaultLoyoSubscriber<EstimateAdd>(hud) {
+                    @Override
+                    public void onNext(EstimateAdd add) {
+                        getPlanList();
+                    }
+                });
+    }
+
+    private String getPayeeMethod(int payeeMethod) {
+        String result = "其他";
+        switch (payeeMethod) {
+
+            case 1:
+                result= "现金";
+                break;
+
+            case 2:
+                result= "支票";
+                break;
+
+            case 3:
+                result= "银行转账";
+                break;
+
+            case 4:
+                result= "其它";
+                break;
+        }
+        return result;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent mIntent = new Intent();
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+        super.onBackPressed();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -179,6 +244,11 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
                 getPlanList();
                 break;
+            case ExtraAndResult.REQUEST_CODE_STAGE:
+            {
+                addCapitalReturningFromPlan(data);
+                break;
+            }
 
         }
     }
@@ -302,7 +372,8 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
                     mBundle = new Bundle();
                     mBundle.putSerializable("data", planEstimateList);
                     mBundle.putString("orderId", orderId);
-                    app.startActivityForResult(OrderPlanListActivity.this, OrderAddPlanActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
+                    app.startActivityForResult(OrderPlanListActivity.this, OrderAddPlanActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
                 }
             });
 
@@ -314,12 +385,12 @@ public class OrderPlanListActivity extends BaseLoadingActivity implements View.O
                     data.receivedMoney = (int) planEstimateList.planMoney;
                     data.payeeMethod = planEstimateList.payeeMethod;
                     data.remark = planEstimateList.remark;
+                    planIdForGenerateCapitalReturning = planEstimateList.id;
                     mBundle = new Bundle();
-                    mBundle.putString("orderId", orderId);
-                    mBundle.putString("planId", planEstimateList.id);
-                    mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_PLAN);
                     mBundle.putSerializable(ExtraAndResult.RESULT_DATA, data);
-                    app.startActivityForResult(OrderPlanListActivity.this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+                    app.startActivityForResult(OrderPlanListActivity.this,
+                            OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                            REQUEST_CODE_STAGE, mBundle);
                 }
             });
         }

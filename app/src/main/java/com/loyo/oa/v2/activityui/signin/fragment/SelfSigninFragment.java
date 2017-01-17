@@ -12,10 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -28,6 +30,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SigninListAdapter;
@@ -44,6 +47,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -70,7 +74,6 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
     private String menuTimekey = "0";        /*时间*/
     private String menuKindkey = "0";        /*类型*/
     private String menuSortkey = "0";        /*排序*/
-    private boolean isPullOrDown;
     private int commentPosition;
 
     private View mView;
@@ -79,7 +82,6 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
     private LinearLayout layout_bottom_menu;
 
     private PaginationX<SigninNewListModel> mPagination = new PaginationX<>(20);
-    private ArrayList<SigninNewListModel> listModel = new ArrayList<>();
     private SigninListAdapter mAdapter;
     private SelfSigninListFragPresenter mPresenter;
     private MsgAudiomMenu msgAudiomMenu;
@@ -93,7 +95,6 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
     private TextView lastView;
     private String lastUrl = "";
     private LoadingLayout ll_loading;
-    private int pageSize = 5;
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -124,17 +125,13 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        pageSize = listModel.size();
-        isPullOrDown = true;
-        mPagination.setPageIndex(1);
-        getData(true);
+        mPagination.setFirstPage();
+        getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isPullOrDown = false;
-        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData(false);
+        getData();
     }
 
     /**
@@ -142,13 +139,13 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new SigninListAdapter(getActivity(), listModel, this, this);
+            mAdapter = new SigninListAdapter(getActivity(), mPagination.getRecords(), this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }
         ll_loading.setStatus(LoadingLayout.Success);
-        if (isPullOrDown && listModel.size() == 0)
+        if (mPagination.isEnpty())
             ll_loading.setStatus(LoadingLayout.Empty);
     }
 
@@ -174,7 +171,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
         if (msgAudiomMenu == null) {
-            msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+            msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
             layout_bottom_menu.addView(msgAudiomMenu);
         }
 
@@ -189,7 +186,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
      */
     private void requestComment(String content) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("bizzId", mPagination.getRecords().get(commentPosition).id);
         map.put("title", content);
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
@@ -203,7 +200,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
      */
     private void requestComment(Record record) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("bizzId", mPagination.getRecords().get(commentPosition).id);
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
@@ -214,14 +211,14 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
     /**
      * 获取Self列表数据
      */
-    private void getData(boolean isPullOrDown) {
+    private void getData() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("timeType", Integer.parseInt(menuTimekey));
         map.put("queryType", Integer.parseInt(menuKindkey));
         map.put("orderType", Integer.parseInt(menuSortkey));
         map.put("split", true);
-        map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isPullOrDown ? listModel.size() >= pageSize ? listModel.size() : pageSize : pageSize);
+        map.put("pageIndex", mPagination.getShouldLoadPageIndex());
+        map.put("pageSize", mPagination.getPageSize());
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         mPresenter.getListData(map, mPagination.getPageIndex());
     }
@@ -246,18 +243,21 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
                     case 0:
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeVisit);
                         break;
 
                     /*类型*/
                     case 1:
                         menuKindkey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.typeVisit);
                         break;
 
                     /*排序*/
                     case 2:
                         menuSortkey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankVisit);
                         break;
                 }
                 initPageData();
@@ -268,19 +268,20 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
 
     private void initPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
-        isPullOrDown = true;
-        mPagination.setPageIndex(1);
-        getData(true);
+        mPagination.setFirstPage();
+        getData();
     }
 
     @Subscribe
     public void onSigninNewRushEvent(SigninRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
-        onPullDownToRefresh(listView);
+        listView.getRefreshableView().setSelection(0);
+        mPagination.setFirstPage();
+        getData();
     }
 
     /**
@@ -292,6 +293,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
         layout_bottom_menu.setVisibility(View.VISIBLE);
         btn_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        UmengAnalytics.umengSend(mActivity, UmengAnalytics.replyVisit);
     }
 
 
@@ -299,20 +301,27 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
      * 评论删除
      */
     @Override
-    public void deleteCommentEmbl(final String id) {
+    public void deleteCommentEmbl(final ListView list, final int position, final String id) {
         ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
         dialog.addSheetItem("删除评论", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                mPresenter.deleteComment(id);
+                mPresenter.deleteComment(list,position,id);
             }
         });
         dialog.show();
     }
 
     @Override
-    public void rushListData(boolean shw) {
-        onPullDownToRefresh(listView);
+    public void rushListData(ListView list, int position) {
+
+        //删除一条评论
+        ListOrDetailsCommentAdapter adapter=((ListOrDetailsCommentAdapter)list.getAdapter());
+        adapter.remove(position);
+        if(0==adapter.getCount()){
+            //如果没有评论了，就隐藏显示评论的控件
+            ((ViewGroup)list.getParent()).setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -322,7 +331,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
     public void commentSuccessEmbl(CommentModel modle) {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
-        listModel.get(commentPosition).comments.add(modle);
+        mPagination.getRecords().get(commentPosition).comments.add(modle);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -330,13 +339,9 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
      * 获取列表数据成功
      */
     @Override
-    public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
+    public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> baseBeanData) {
         listView.onRefreshComplete();
-        if (isPullOrDown) {
-            listModel.clear();
-        }
-        mPagination = paginationX.data;
-        listModel.addAll(paginationX.data.getRecords());
+        mPagination.loadRecords(baseBeanData.data);
         bindData();
     }
 
@@ -344,8 +349,13 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
      * 获取数据失败
      */
     @Override
-    public void getListDataErrorEmbl() {
+    public void getListDataErrorEmbl(Throwable e) {
+        //刷新完成
         listView.onRefreshComplete();
+        //判断，数据为空，就用ll_loading显示，否则使用toast提示
+        @LoyoErrorChecker.CheckType
+        int type=mPagination.isEnpty()?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
+        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
     }
 
     @Override
@@ -362,6 +372,7 @@ public class SelfSigninFragment extends BaseFragment implements PullToRefreshBas
             case R.id.btn_add:
                 startActivityForResult(new Intent(getActivity(), SignInActivity.class), Activity.RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.addVisit);
                 break;
 
         }

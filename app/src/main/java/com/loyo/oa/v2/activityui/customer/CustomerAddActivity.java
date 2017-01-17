@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.type.LoyoBizType;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
@@ -69,6 +72,8 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import hk.ids.gws.android.sclick.SClick;
 
 /**
  * 【新建 客户】 页面
@@ -168,11 +173,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private String customerWrietele;
     private String cusotmerDetalisAddress;
     private String memo;
-
-    private int bizType = 0x01;
-    private int uploadSize;
-    private int uploadNum;
-
     private double laPosition;//当前位置的经纬度
     private double loPosition;
 
@@ -411,10 +411,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*刷新地址*/
             case R.id.img_refresh_address:
-                if (LocationUtilGD.permissionLocation(this)) {
+                if (LocationUtilGD.permissionLocation(CustomerAddActivity.this)) {
                     mBundle = new Bundle();
                     mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                    app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                    app.startActivityForResult(CustomerAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 }
                 break;
 
@@ -436,15 +436,14 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     bundle1.putString("Keyword", edt_name.getText().toString());
                     app.startActivityForResult((Activity) mContext, BusinessInquiryActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
                     //统计工商查询次数(正式环境)
-                    if (Config_project.isRelease)
-                        MobclickAgent.onEvent(mContext, "BusinessQuery");
+                    UmengAnalytics.umengSend(mContext, UmengAnalytics.businessQuery);
                 } else {
                     Toast("客户名称不能为空");
                 }
                 break;
 
             case R.id.img_title_left:
-                app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                app.finishActivity(CustomerAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
 
             /*提交*/
@@ -488,13 +487,14 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else if (!testDynamicword()) {
                     Toast("请填写必填字段!");
                     return;
+                } else if (!SClick.check(SClick.BUTTON_CLICK, 5000)) {
+                    return;
                 }
 
                 showCommitLoading();
                 if (controller.count() <= 0) {
                     requestCommitTask();
-                }
-                else {
+                } else {
                     controller.startUpload();
                     controller.notifyCompletionIfNeeded();
                 }
@@ -509,9 +509,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     bundle2.putSerializable("tags", tags);
                 }
                 app.startActivityForResult((Activity) mContext, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
-                break;
-
-            default:
                 break;
         }
     }
@@ -587,7 +584,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             } else if (customerJur.label.contains("客户地址") && customerJur.required) {
                                 cusDetialAdress = true;//详细地址必填
                                 edit_address_details.setHint("请输入客户详细地址(必填)");
-                            } else if (customerJur.label.contains("简介") && customerJur.required){
+                            } else if (customerJur.label.contains("简介") && customerJur.required) {
                                 cusMemo = true;
                                 edt_content.setHint("客户简介(必填)");
                             }
@@ -696,8 +693,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 //                                }
                                 customerSendSucess(customer);
                             }
-                        },1000);
+                        }, 1000);
                     }
+
                 });
     }
 
@@ -869,7 +867,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = uuid;
-            attachmentBatch.bizType = bizType;
+            attachmentBatch.bizType = LoyoBizType.Customer.getCode();
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");
@@ -892,7 +890,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onAddEvent(UploadController controller) {
         PhotoPicker.builder()
-                .setPhotoCount(9-controller.count())
+                .setPhotoCount(9 - controller.count())
                 .setShowCamera(true)
                 .setPreviewEnabled(false)
                 .start(this);
@@ -905,7 +903,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }

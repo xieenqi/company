@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.presenter.MyCustomerFragPresenter;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.MyCustomerFragView;
@@ -18,19 +20,19 @@ import com.loyo.oa.v2.common.Global;
  * Created by yyy on 16/10/28.
  */
 
-public class MyCustomerFragPresenterImpl implements MyCustomerFragPresenter{
+public class MyCustomerFragPresenterImpl implements MyCustomerFragPresenter {
 
     private Context mContext;
     private MyCustomerFragView crolView;
 
-    public MyCustomerFragPresenterImpl(Context mContext, MyCustomerFragView crolView){
+    public MyCustomerFragPresenterImpl(Context mContext, MyCustomerFragView crolView) {
         this.mContext = mContext;
         this.crolView = crolView;
     }
 
     /**
      * 加载Pop添加客户弹窗
-     * */
+     */
     @Override
     public void setInsertPopWindiw(Button btn_add) {
         View mView = LayoutInflater.from(mContext).inflate(R.layout.activity_contactlist_add, null);
@@ -50,10 +52,10 @@ public class MyCustomerFragPresenterImpl implements MyCustomerFragPresenter{
         btn_add.getLocationOnScreen(location);
 
         int popupWidth = mView.getMeasuredWidth();
-        int popupHeight =  mView.getMeasuredHeight();
+        int popupHeight = mView.getMeasuredHeight();
 
-        popupWindow.showAtLocation(btn_add, Gravity.NO_GRAVITY, (location[0]+btn_add.getWidth()/2)-popupWidth/2,
-                location[1]-popupHeight);
+        popupWindow.showAtLocation(btn_add, Gravity.NO_GRAVITY, (location[0] + btn_add.getWidth() / 2) - popupWidth / 2,
+                location[1] - popupHeight);
 
         LinearLayout ll_autoinsert = (LinearLayout) mView.findViewById(R.id.ll_autoinsert);
         LinearLayout ll_handinsert = (LinearLayout) mView.findViewById(R.id.ll_handinsert);
@@ -66,6 +68,7 @@ public class MyCustomerFragPresenterImpl implements MyCustomerFragPresenter{
             @Override
             public void onClick(View v) {
                 crolView.intentHandInsert(popupWindow);
+                UmengAnalytics.umengSend(mContext, UmengAnalytics.customerAdd);
             }
         });
 
@@ -74,6 +77,7 @@ public class MyCustomerFragPresenterImpl implements MyCustomerFragPresenter{
             @Override
             public void onClick(View v) {
                 crolView.intentAutoInsert(popupWindow);
+                UmengAnalytics.umengSend(mContext, UmengAnalytics.customerAddContact);
             }
         });
     }

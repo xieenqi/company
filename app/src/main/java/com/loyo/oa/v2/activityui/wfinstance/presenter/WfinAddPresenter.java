@@ -18,7 +18,7 @@ public interface WfinAddPresenter {
     void requestAddWfin(String title,String deptId,ArrayList<HashMap<String, Object>> workflowValues,
                         String mTemplateId,String projectId,
                         String uuid,String memo,
-                        int attachmentCount);
+                        int attachmentCount,String customerId, String customerName);
 
     /*设置审批开始结束时间规范*/
     void setStartendTime();

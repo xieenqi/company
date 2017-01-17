@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -175,8 +176,10 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
                 if (menuIndex == 0) {
                     statusParam = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.stateWorkOrder);
                 } else if (menuIndex == 1) {
                     typeParam = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.typeWorkOrder);
                 }
                 refresh();
             }
@@ -218,7 +221,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
                     @Override
                     public void onError(Throwable e) {
                         @LoyoErrorChecker.CheckType int type =
-                                groupsData.size()>0?LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                                groupsData.size() > 0 ? LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
                         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         mExpandableListView.onRefreshComplete();
                     }
@@ -230,18 +233,16 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
                         if (isPullDown) {
                             groupsData.clear();
                         }
-                        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size()==0) {
+                        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size() == 0) {
                             ll_loading.setStatus(LoadingLayout.Empty);
-                        }
-                        else  if (PaginationX.isEmpty(x)){
+                        } else if (PaginationX.isEmpty(x)) {
                             Toast("没有更多数据了");
                             ll_loading.setStatus(LoadingLayout.Success);
-                        }
-                        else  {
+                        } else {
                             ll_loading.setStatus(LoadingLayout.Success);
                         }
 
-                        loadData(x!=null?x.records:new ArrayList<WorksheetEvent>());
+                        loadData(x != null ? x.records : new ArrayList<WorksheetEvent>());
                     }
                 });
 
@@ -267,12 +268,11 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
             //新建
             case R.id.btn_add:
-
                 mIntent = new Intent();
                 mIntent.setClass(getActivity(), WorksheetAddActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.createWorkSheet);
                 break;
         }
     }

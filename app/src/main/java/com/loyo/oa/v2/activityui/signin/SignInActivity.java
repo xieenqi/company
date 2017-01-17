@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.signin;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.click.NoDoubleClickListener;
+import com.loyo.oa.common.type.LoyoBizType;
+import com.loyo.oa.common.utils.PermissionTool;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMember;
@@ -37,6 +42,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.activityui.signin.presenter.SigninPresenterImpl;
@@ -74,7 +80,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * 【 拜访签到 】 页面
  */
 public class SignInActivity extends BaseActivity
-        implements View.OnClickListener, SigninContract.View, UploadControllerCallback {
+        implements SigninContract.View, UploadControllerCallback {
+    private static final int RECORD_REQUEST = 0x10;//获取录音需要的权限
 
     private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address,
             tv_at_text, tv_distance_deviation, tv_contact_name;
@@ -98,6 +105,8 @@ public class SignInActivity extends BaseActivity
     private SigninContract.Presenter presenter;
     UploadController controller;
     ImageUploadGridView gridView;
+    private View view;
+    private MultiFunctionModule mfmodule;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -123,14 +132,14 @@ public class SignInActivity extends BaseActivity
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
         tv_customer_address = (TextView) findViewById(R.id.tv_customer_address);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
-        img_title_left.setOnClickListener(this);
+        img_title_left.setOnClickListener(click);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
-        img_title_right.setOnClickListener(this);
+        img_title_right.setOnClickListener(click);
         img_title_right.setOnTouchListener(Global.GetTouch());
         tv_reset_address = (TextView) findViewById(R.id.tv_reset_address);
         tv_reset_address.setOnTouchListener(Global.GetTouch());
-        tv_reset_address.setOnClickListener(this);
+        tv_reset_address.setOnClickListener(click);
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         wordcount = (TextView) findViewById(R.id.wordcount);
         edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
@@ -140,17 +149,16 @@ public class SignInActivity extends BaseActivity
         tv_at_text = (TextView) findViewById(R.id.tv_at_text);
         tv_distance_deviation = (TextView) findViewById(R.id.tv_distance_deviation);
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
-        ll_contact.setOnClickListener(this);
+        ll_contact.setOnClickListener(click);
         tv_address = (TextView) findViewById(R.id.tv_address);
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
-        iv_at_delete.setOnClickListener(this);
-        startLocation();
+        iv_at_delete.setOnClickListener(click);
         initMultiFunctionModule();
         if (null == mCustomer) {
             layout_customer_name.setOnTouchListener(Global.GetTouch());
-            layout_customer_name.setOnClickListener(this);
+            layout_customer_name.setOnClickListener(click);
             ll_contact.setVisibility(View.GONE);
         } else {
             findViewById(R.id.divider_customer_name).setVisibility(View.VISIBLE);
@@ -166,6 +174,12 @@ public class SignInActivity extends BaseActivity
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         controller.loadView(gridView);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startLocation();
     }
 
     void startLocation() {
@@ -205,11 +219,42 @@ public class SignInActivity extends BaseActivity
         });
     }
 
+
+    private void startRecord(View view) {
+        if ((boolean) view.getTag()) {
+            showInputKeyboard(edt_memo);
+            mfmodule.setIsRecording(false);
+            view.setTag(false);
+        } else {
+            hideInputKeyboard(edt_memo);
+            mfmodule.setIsRecording(true);
+            view.setTag(true);
+        }
+        UmengAnalytics.umengSend(SignInActivity.this, UmengAnalytics.addVisitRecord);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (RECORD_REQUEST == requestCode) {
+            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
+                @Override
+                public void success() {
+                    startRecord(view);
+                }
+
+                @Override
+                public void fail() {
+                    Toast("你拒绝了所需权限，不能完成操作");
+                }
+            });
+        }
+    }
+
     /**
      * 初始化底部多功能部件
      */
     private void initMultiFunctionModule() {
-        final MultiFunctionModule mfmodule = new MultiFunctionModule(this);
+        mfmodule = new MultiFunctionModule(this);
         ll_root.addView(mfmodule);
         mfmodule.setEnableModle(true, true, false, true);
         /*录音*/
@@ -220,20 +265,30 @@ public class SignInActivity extends BaseActivity
                     Toast("最多只能添加3条语音");
                     return;
                 }
-
-                if (RecordUtils.permissionRecord()) {
-                    if ((boolean) v.getTag()) {
-                        showInputKeyboard(edt_memo);
-                        mfmodule.setIsRecording(false);
-                        v.setTag(false);
-                    } else {
-                        hideInputKeyboard(edt_memo);
-                        mfmodule.setIsRecording(true);
-                        v.setTag(true);
-                    }
-                } else {
-                    Toast("你没有配置录音或者储存权限");
+                view = v;
+                if (PermissionTool.requestPermission(SignInActivity.this, new String[]{
+                                Manifest.permission.RECORD_AUDIO, //录音权限
+                                Manifest.permission.READ_PHONE_STATE,//读取设备权限
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,//写入外存权限
+                                Manifest.permission.READ_EXTERNAL_STORAGE}//读取外存权限
+                        , "麦克风或者存储权限被禁用", RECORD_REQUEST)) {
+                    startRecord(v);
                 }
+
+//                if (RecordUtils.permissionRecord(this)) {
+//                    if ((boolean) v.getTag()) {
+//                        showInputKeyboard(edt_memo);
+//                        mfmodule.setIsRecording(false);
+//                        v.setTag(false);
+//                    } else {
+//                        hideInputKeyboard(edt_memo);
+//                        mfmodule.setIsRecording(true);
+//                        v.setTag(true);
+//                    }
+//                    UmengAnalytics.umengSend(SignInActivity.this, UmengAnalytics.addVisitRecord);
+//                } else {
+//                    Toast("你没有配置录音或者储存权限");
+//                }
 
             }
         });
@@ -281,6 +336,7 @@ public class SignInActivity extends BaseActivity
 //                            .start(SignInActivity.this);
                     PhotoCapture.builder()
                             .start(SignInActivity.this);
+                    UmengAnalytics.umengSend(SignInActivity.this, UmengAnalytics.addVisitPhoto);
                 }
             }
         });
@@ -298,84 +354,80 @@ public class SignInActivity extends BaseActivity
                 intent.setClass(SignInActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
+                UmengAnalytics.umengSend(SignInActivity.this, UmengAnalytics.addVisitAt);
             }
         });
         mfmodule.setPictureIcon(R.drawable.icon_picture_photo);
     }
 
-    @Override
-    public void onClick(final View v) {
-        switch (v.getId()) {
+    NoDoubleClickListener click = new NoDoubleClickListener(4000) {
+        @Override
+        public void onNoDoubleClick(View v) {
+            switch (v.getId()) {
 
-            case R.id.img_title_left:
-                onBackPressed();
-                break;
+                case R.id.img_title_left:
+                    onBackPressed();
+                    break;
 
-            case R.id.img_title_right:
-                if (!checkData()) {
-                    return;
-                }
-                if (!isLocation) {
-                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            dismissSweetAlert();
-                            addSignIn();
-                        }
-                    }, new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            isCusPosition = true;
-                            dismissSweetAlert();
-                            addSignIn();
-                        }
-                    }, "提示", "该客户无定位信息,是否需要\n将签到地址设置为客户定位?", "不需要", "设为定位");
-                } else {
-                    showCommitLoading();
-                    if (controller.count() == 0) {
-                        addSignIn();
+                case R.id.img_title_right:
+                    if (!checkData()) {
+                        return;
                     }
-                    else {
-                        controller.startUpload();
-                        controller.notifyCompletionIfNeeded();
+                    if (!isLocation) {
+                        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                dismissSweetAlert();
+                                sendSigninData();
+                            }
+                        }, new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                isCusPosition = true;
+                                dismissSweetAlert();
+                                sendSigninData();
+                            }
+                        }, "提示", "该客户无定位信息,是否需要\n将签到地址设置为客户定位?", "不需要", "设为定位");
+                    } else {
+                        sendSigninData();
                     }
-                }
-                break;
+                    break;
 
             /*选择客户*/
-            case R.id.layout_customer_name:
-                if (LocationUtilGD.permissionLocation(this)) {
-                    Bundle b = new Bundle();
-                    b.putDouble("lon", loPosition);
-                    b.putDouble("lat", laPosition);
-                    app.startActivityForResult(this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
-                }
-                break;
+                case R.id.layout_customer_name:
+                    if (LocationUtilGD.permissionLocation(SignInActivity.this)) {
+                        Bundle b = new Bundle();
+                        b.putDouble("lon", loPosition);
+                        b.putDouble("lat", laPosition);
+                        app.startActivityForResult(SignInActivity.this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
+                    }
+                    break;
 
             /*地址更新*/
-            case R.id.tv_reset_address:
-                if (LocationUtilGD.permissionLocation(this)) {
-                    Bundle mBundle = new Bundle();
-                    mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
-                    app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
-                }
-                break;
+                case R.id.tv_reset_address:
+                    if (LocationUtilGD.permissionLocation(SignInActivity.this)) {
+                        Bundle mBundle = new Bundle();
+                        mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
+                        app.startActivityForResult(SignInActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                    }
+                    break;
 
-            case R.id.ll_contact://选择客户联系人
-                Bundle bContact = new Bundle();
-                bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
-                bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-                app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
-                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
-                break;
-            case R.id.iv_at_delete://清除@的人员
-                ll_at.setVisibility(View.GONE);
-                atDepts.clear();
-                atUserIds.clear();
-                collection = null;
-                break;
+                case R.id.ll_contact://选择客户联系人
+                    Bundle bContact = new Bundle();
+                    bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
+                    bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
+                    app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
+                    break;
+                case R.id.iv_at_delete://清除@的人员
+                    ll_at.setVisibility(View.GONE);
+                    atDepts.clear();
+                    atUserIds.clear();
+                    collection = null;
+                    break;
+            }
         }
-    }
+    };
 
     private boolean checkData() {
         if (TextUtils.isEmpty(customerId)) {
@@ -399,6 +451,16 @@ public class SignInActivity extends BaseActivity
             return false;
         }
         return true;
+    }
+
+    private void sendSigninData() {
+        showCommitLoading();
+        if (controller.count() == 0) {
+            addSignIn();
+        } else {
+            controller.startUpload();
+            controller.notifyCompletionIfNeeded();
+        }
     }
 
     /**
@@ -651,7 +713,7 @@ public class SignInActivity extends BaseActivity
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = uuid;
-            attachmentBatch.bizType = 0/* */;
+            attachmentBatch.bizType = LoyoBizType.CustomerVisit.getCode();/* */
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");
@@ -690,7 +752,7 @@ public class SignInActivity extends BaseActivity
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }

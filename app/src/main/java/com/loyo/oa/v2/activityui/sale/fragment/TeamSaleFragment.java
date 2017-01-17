@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -89,7 +90,7 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
 
     public void initView(View view) {
 //        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
-        mSaleStages= SaleStageConfig.getSaleStage(true);
+        mSaleStages = SaleStageConfig.getSaleStage(true);
         ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
@@ -159,10 +160,13 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
                         xPath = "";
                         userId = model.getKey();
                     }
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.departmentChanceTeam);
                 } else if (menuIndex == 1) { // SaleStage
                     stageId = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.stageChanceTeam);
                 } else if (menuIndex == 2) { // 排序
                     sortType = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankChanceTeam);
                 }
                 mPresenter.getScreenData(stageId, sortType, xPath, userId);
             }

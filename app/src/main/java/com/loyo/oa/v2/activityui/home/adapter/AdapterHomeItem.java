@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactsActivity;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
@@ -90,6 +91,13 @@ public class AdapterHomeItem extends BaseAdapter {
                             item.extra = num.bizNum + "个进行中";
                         }
                         item.viewed = num.viewed;
+                    }else if (item.title.equals("工单管理") && num.bizType == 28) { //订单管理
+                        if (num.bizNum > 0) {
+                            item.extra = num.bizNum + "个待处理";
+                        }else{
+                            item.extra = "";
+                        }
+                        item.viewed = num.viewed;
                     }
 //            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
 //                extra = num.bizNum + "个将掉公海";
@@ -159,7 +167,7 @@ public class AdapterHomeItem extends BaseAdapter {
         ImageView view_number;
         TextView tv_title;
 
-        public void setContentView(HomeItem item, final int position) {
+        public void setContentView(final HomeItem item, final int position) {
 
             tv_extra.setText(item.extra);
             view_number.setVisibility(item.viewed ? View.GONE : View.VISIBLE);
@@ -225,6 +233,7 @@ public class AdapterHomeItem extends BaseAdapter {
                             e.printStackTrace();
                         }
                     }
+                    UmengAnalytics.umengSend(activity, item.umengAnalyticsId);
                 }
             });
 

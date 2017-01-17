@@ -21,6 +21,7 @@ public class OrderStatusMenuModel implements MenuModel {
         List<MenuModel> statusModel = new ArrayList<>();
         statusModel.add(new OrderStatusMenuModel(OrderStatus.ALL));
         statusModel.add(new OrderStatusMenuModel(OrderStatus.WAIT_APPROVE));
+        statusModel.add(new OrderStatusMenuModel(OrderStatus.APPROVE_PROCESSING));
         statusModel.add(new OrderStatusMenuModel(OrderStatus.NOT_APPROVED));
         statusModel.add(new OrderStatusMenuModel(OrderStatus.PROCESSING));
         statusModel.add(new OrderStatusMenuModel(OrderStatus.FINISHED));

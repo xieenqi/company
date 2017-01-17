@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.signin.viewcontrol;
 
+import android.widget.ListView;
+
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
@@ -16,10 +18,10 @@ public interface SigninListView {
     void commentEmbl(int position);
 
     /*删除附件操作*/
-    void deleteCommentEmbl(String id);
+    void deleteCommentEmbl( ListView list,  int position,String id);
 
     /*刷新列表数据*/
-    void rushListData(boolean shw);
+    void rushListData(ListView list, int position);
 
     /*发送评论成功操作*/
     void commentSuccessEmbl(CommentModel modle);
@@ -28,7 +30,7 @@ public interface SigninListView {
     void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX);
 
     /*获取列表数据失败*/
-    void getListDataErrorEmbl();
+    void getListDataErrorEmbl(Throwable e);
 
     LoadingLayout getLoadingView();
 

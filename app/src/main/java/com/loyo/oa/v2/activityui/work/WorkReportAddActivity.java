@@ -20,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -75,6 +76,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+
+import hk.ids.gws.android.sclick.SClick;
 
 /**
  * 【工作报告】新建 编辑
@@ -147,8 +150,8 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     private int mSelectType = WorkReport.DAY;
     private int retroIndex = 1;//蛋疼的兼容原来的1序
     private int bizType = 1;
-    private int uploadSize;
-    private int uploadNum;
+    //    private int uploadSize;
+//    private int uploadNum;
     private String currentValue;
     private String content;
 
@@ -157,12 +160,12 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
 
     UploadController controller;
 
-    private ArrayList<Attachment> lstData_Attachment = null;
+    //    private ArrayList<Attachment> lstData_Attachment = null;
     private ArrayList<OrganizationalMember> users = new ArrayList<>();
     private ArrayList<OrganizationalMember> depts = new ArrayList<>();
-    private List<String> mSelectPath;
-    private ArrayList<ImageInfo> pickPhotsResult;
-    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
+    //    private List<String> mSelectPath;
+//    private ArrayList<ImageInfo> pickPhotsResult;
+//    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
     private Members members = new Members();
@@ -455,7 +458,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         int year = DateTool.calendar.get(Calendar.YEAR);
         int month = DateTool.calendar.get(Calendar.MONTH);
 //        tv_time.setText(year + "." + String.format("%02d", (month + 1)));
-        tv_time.setText(com.loyo.oa.common.utils.DateTool.getYearMonth(System.currentTimeMillis()/1000));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getYearMonth(System.currentTimeMillis() / 1000));
         mSelectType = WorkReport.MONTH;
 
     }
@@ -467,7 +470,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
 
             /*返回*/
             case R.id.img_title_left:
-                app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
 
             /*提交*/
@@ -486,7 +489,9 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                         break;
                     }
                 }
-
+                if (!SClick.check(SClick.BUTTON_CLICK, 5000)) {
+                    return;
+                }
                 //没有附件
                 showCommitLoading();
                 if (controller.count() == 0) {
@@ -514,7 +519,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 }
                 bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
                 Intent intent = new Intent();
-                intent.setClass(this, ContactPickerActivity.class);
+                intent.setClass(WorkReportAddActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -530,7 +535,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 }
                 bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
                 Intent intent = new Intent();
-                intent.setClass(this, ContactPickerActivity.class);
+                intent.setClass(WorkReportAddActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -549,10 +554,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 mBundle = new Bundle();
                 mBundle.putInt("from", WORK_ADD);
                 mBundle.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
-                break;
-
-            default:
+                app.startActivityForResult(WorkReportAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
                 break;
         }
     }
@@ -579,18 +581,18 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      * 编辑报告请求
      */
     public void updateReport(final HashMap map) {
-        WorkReportService.updateWorkReport(mWorkReport.getId(),map)
+        WorkReportService.updateWorkReport(mWorkReport.getId(), map)
                 .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud, "编辑报告成功") {
-            @Override
-            public void onNext(final WorkReport workReport) {
-                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void run() {
-                        dealResult(workReport);
+                    public void onNext(final WorkReport workReport) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dealResult(workReport);
+                            }
+                        }, 1000);
                     }
-                },1000);
-            }
-        });
+                });
     }
 
     /**
@@ -599,16 +601,16 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     public void creteReport(final HashMap map) {
         WorkReportService.createWorkReport(map)
                 .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud, "新建报告成功") {
-            @Override
-            public void onNext(final WorkReport workReport) {
-                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void run() {
-                        dealResult(workReport);
+                    public void onNext(final WorkReport workReport) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dealResult(workReport);
+                            }
+                        }, 1000);
                     }
-                },1000);
-            }
-        });
+                });
     }
 
 
@@ -963,7 +965,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     @Override
     public void onAddEvent(UploadController controller) {
         PhotoPicker.builder()
-                .setPhotoCount(9-controller.count())
+                .setPhotoCount(9 - controller.count())
                 .setShowCamera(true)
                 .setPreviewEnabled(false)
                 .start(this);
@@ -976,7 +978,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }

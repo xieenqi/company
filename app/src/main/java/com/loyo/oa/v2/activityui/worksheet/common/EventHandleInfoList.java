@@ -41,7 +41,7 @@ public class EventHandleInfoList extends LinearLayout {
 
 
     private void bindView(final Context context, final EventHandleInfoItem data) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_event_handler_info_list, null, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_event_handler_info_list_new, null, false);
         iv_avatar = (RoundImageView) view.findViewById(R.id.iv_avatar);
         tv_time = (TextView) view.findViewById(R.id.tv_time);
         tv_content = (TextView) view.findViewById(R.id.tv_content);

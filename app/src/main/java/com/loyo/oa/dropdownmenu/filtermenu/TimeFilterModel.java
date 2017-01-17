@@ -27,8 +27,8 @@ public class TimeFilterModel {
     public static FilterModel getFilterModel2() {
 
         List<MenuModel> list = new ArrayList<>();
-        list.add(new MenuFilterByTimeModel(FilterByTime.FOLLOW, SortOrder.DESC));
         list.add(new MenuFilterByTimeModel(FilterByTime.FOLLOW, SortOrder.ASC));
+        list.add(new MenuFilterByTimeModel(FilterByTime.FOLLOW, SortOrder.DESC));
         list.add(new MenuFilterByTimeModel(FilterByTime.CREATE, SortOrder.DESC));
         list.add(new MenuFilterByTimeModel(FilterByTime.CREATE, SortOrder.ASC));
         list.add(new MenuFilterByTimeModel(FilterByTime.FOLLOW_RECYCLE, SortOrder.ASC));

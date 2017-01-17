@@ -85,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="23dp"
                     android:text="(已超时)"
-                    android:textColor="@color/text99"
+                    android:textColor="#f5625a"
                     android:textSize="12sp"
                     android:visibility="gone"/>
 

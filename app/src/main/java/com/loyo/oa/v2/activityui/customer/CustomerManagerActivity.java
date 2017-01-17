@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
 import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
@@ -253,23 +254,22 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
             case R.id.img_title_search_right:
                 int type = 0;
                 switch (tv_title_1.getText().toString()) {
-
                     case "我负责的":
                         type = 1;
+                        UmengAnalytics.umengSend(this, UmengAnalytics.searchCustomer);
                         break;
-
                     case "我参与的":
                         type = 2;
+                        UmengAnalytics.umengSend(this, UmengAnalytics.searchCustomerJoin);
                         break;
-
                     case "团队客户":
                         type = 3;
+                        UmengAnalytics.umengSend(this, UmengAnalytics.searchCustomerTeam);
                         break;
-
                     case "公海客户":
                         type = 4;
+                        UmengAnalytics.umengSend(this, UmengAnalytics.searchPublic);
                         break;
-
                 }
 
                 Bundle b = new Bundle();

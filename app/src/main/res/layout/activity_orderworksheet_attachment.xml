@@ -4,15 +4,15 @@
               android:layout_height="match_parent"
               android:fitsSystemWindows="true"
               android:clipToPadding="true"
-              android:background="@color/white"
+              android:background="@color/common_activity_bg"
               android:orientation="vertical">
 
     <include layout="@layout/include_common_title"/>
 
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         >
 
         <com.loyo.oa.v2.customview.swipelistview.SwipeListView
@@ -34,18 +34,18 @@
             swipe:swipeOffsetLeft="300dp"
             swipe:swipeOffsetRight="0dp"
             swipe:swipeOpenOnLongPress="false"/>
-
+        <include layout="@layout/common_include_line_full_space"/>
         <TextView
             android:id="@+id/tv_upload"
             android:layout_width="match_parent"
             android:layout_height="@dimen/view_h_title"
             android:layout_alignParentBottom="true"
-            android:background="@color/activity_bg"
+            android:background="@color/common_activity_con_bg"
             android:drawablePadding="@dimen/dimen_5"
             android:gravity="center"
             android:text="附件上传"
-            android:textColor="@color/title_bg1"
             android:visibility="gone"
+            android:textColor="@color/title_bg1"
             />
     </RelativeLayout>
 </LinearLayout>

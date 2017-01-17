@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--activity背景颜色-->
-    <color name="wfinstance_activity_bg">#f4f4f4</color>
-    <color name="wfinstance_activity_con_bg">#ffffff</color>
     <color name="wfinstance_text_red">#f5625a</color>
 </resources>

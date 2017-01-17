@@ -9,7 +9,7 @@ public enum FilterByTime {
     CREATE("创建时间", "createdAt"),
     FOLLOW_RECYCLE("无跟进丢公海时间", "activityRecycleAt"),
     ORDER_RECYCLE("无订单丢公海时间", "orderRecycleAt"),
-    RECYCLED_AT("按丢公海时间", "recycledAt");
+    RECYCLED_AT("丢公海时间", "recycledAt");
 
     public String key;
     public String value;

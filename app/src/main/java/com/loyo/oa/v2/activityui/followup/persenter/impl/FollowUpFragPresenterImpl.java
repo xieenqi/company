@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.followup.persenter.impl;
 
 import android.content.Context;
+import android.widget.ListView;
 
 import com.loyo.oa.v2.activityui.followup.api.FollowUpService;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
@@ -31,11 +32,11 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
      * 删除评论
      */
     @Override
-    public void deleteComment(String id) {
+    public void deleteComment(final ListView list, final int position, String id) {
         FollowUpService.deleteComment(id).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
             public void onNext(Object o) {
-                crolView.rushListData(true);
+                crolView.rushListData(list,position);
             }
         });
     }
@@ -57,13 +58,12 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
      * 获取列表数据
      */
     @Override
-    public void getListData(HashMap<String, Object> map, final int page) {
+    public void getListData(HashMap<String, Object> map) {
         FollowUpService.followUp(map)
                 .subscribe(new DefaultLoyoSubscriber<BaseBeanT<PaginationX<FollowUpListModel>>>(crolView.getLoadingLayout()) {
             @Override
             public void onError(Throwable e) {
-                super.onError(e);
-                crolView.getListDataErrorEmbl();
+                crolView.getListDataErrorEmbl(e);
             }
 
             @Override

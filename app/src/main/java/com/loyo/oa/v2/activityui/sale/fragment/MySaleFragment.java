@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -22,6 +23,7 @@ import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueManagerActivity;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterMySaleList;
@@ -68,7 +70,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
     private void initView(View view) {
 //        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
-        mSaleStages= SaleStageConfig.getSaleStage(true);
+        mSaleStages = SaleStageConfig.getSaleStage(true);
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
@@ -114,8 +116,10 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
                 String stageId = "", sortType = "";
                 if (menuIndex == 0) { // SaleStage
                     stageId = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.stageChanceMy);
                 } else if (menuIndex == 1) { // 排序
                     sortType = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankChanceMy);
                 }
                 mPersenter.getScreenData(stageId, sortType);
             }
@@ -175,15 +179,12 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
                 //新建机会
                 case R.id.btn_add:
-                    Intent  mIntent = new Intent();
+                    Intent mIntent = new Intent();
                     mIntent.setClass(getActivity(), AddMySaleActivity.class);
                     startActivityForResult(mIntent, mActivity.RESULT_FIRST_USER);
                     mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.createChanceMy);
                     break;
-
-                default:
-                    break;
-
             }
         }
     };

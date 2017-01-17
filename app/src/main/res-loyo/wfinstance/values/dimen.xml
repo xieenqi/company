@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="wfinstance_layout_padding">14dp</dimen>
-    <dimen name="wfinstance_line_height">48dp</dimen>
-    <dimen name="wfinstance_text_line_space">10dp</dimen>
-    <dimen name="wfinstance_common_arrow_margin_left">9dp</dimen>
     <dimen name="wfinstance_common_second_height">30dp</dimen>
 </resources>

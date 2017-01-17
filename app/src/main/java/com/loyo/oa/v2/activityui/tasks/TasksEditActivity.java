@@ -17,13 +17,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
+import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
@@ -42,6 +43,7 @@ import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -54,6 +56,8 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import hk.ids.gws.android.sclick.SClick;
 
 @EActivity(R.layout.activity_tasks_edit) //本Activity的布局文件
 public class TasksEditActivity extends BaseActivity {
@@ -302,7 +306,7 @@ public class TasksEditActivity extends BaseActivity {
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
-                app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
+                app.finishActivity(TasksEditActivity.this, MainApp.ENTER_TYPE_LEFT, 0, null);
                 break;
             case R.id.img_title_right:
                 String title = edt_title.getText().toString().trim();
@@ -344,6 +348,9 @@ public class TasksEditActivity extends BaseActivity {
                     Toast("负责人" + getString(R.string.app_no_null));
                     break;
                 }
+                if (!SClick.check(SClick.BUTTON_CLICK, 5000)) {
+                    return;
+                }
                 requestCommitTask(title, content);
                 break;
 
@@ -358,7 +365,7 @@ public class TasksEditActivity extends BaseActivity {
                 }
                 bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
                 Intent intent = new Intent();
-                intent.setClass(this, ContactPickerActivity.class);
+                intent.setClass(TasksEditActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -374,7 +381,7 @@ public class TasksEditActivity extends BaseActivity {
                 }
                 bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
                 Intent intent = new Intent();
-                intent.setClass(this, ContactPickerActivity.class);
+                intent.setClass(TasksEditActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -405,18 +412,13 @@ public class TasksEditActivity extends BaseActivity {
                 Bundle bundle2 = new Bundle();
                 bundle2.putInt("from", TASKS_ADD);
                 bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
+                app.startActivityForResult(TasksEditActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
                 break;
 
             /*关联客户*/
             case R.id.layout_mycustomer:
-                Bundle bundle3 = new Bundle();
-                bundle3.putInt("from", TASKS_ADD_CUSTOMER);
-                bundle3.putInt(ExtraAndResult.EXTRA_TYPE, 1);
-                app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_CUSTOMER, bundle3);
-                break;
-
-            default:
+                app.startActivityForResult(TasksEditActivity.this, SelfVisibleCustomerPickerActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
                 break;
         }
     }
@@ -457,6 +459,7 @@ public class TasksEditActivity extends BaseActivity {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                LogUtil.d("------------------爸爸不不不不不不------------------");
                                 task.setViewed(true);
                                 Intent intent = new Intent();
                                 intent.putExtra("data", task);
@@ -659,7 +662,7 @@ public class TasksEditActivity extends BaseActivity {
         }
         switch (requestCode) {
                         /*关联客户回调*/
-            case FinalVariables.REQUEST_SELECT_CUSTOMER:
+            case ExtraAndResult.REQUEST_CODE_CUSTOMER:
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
                     mTask.setCustomerId(customer.id);

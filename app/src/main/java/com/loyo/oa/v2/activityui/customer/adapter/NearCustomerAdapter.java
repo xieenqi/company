@@ -125,7 +125,7 @@ public class NearCustomerAdapter extends BaseAdapter {
             layout3.setVisibility(View.GONE);
 
             img1.setImageResource(R.drawable.icon_customer_tag);
-            img2.setImageResource(R.drawable.icon_follow_up_creator);
+            img2.setImageResource(R.drawable.icon_customer_responder);
 
             tv_content1.setText("标签：" + tagItems);
             String ownerName = customer.owner!=null?customer.owner.getRealname():"无";
@@ -143,7 +143,7 @@ public class NearCustomerAdapter extends BaseAdapter {
             layout2.setVisibility(View.GONE);
             layout3.setVisibility(View.GONE);
 
-            img1.setImageResource(R.drawable.img_sign_list_position);
+            img1.setImageResource(R.drawable.icon_add_location);
             img2.setImageResource(R.drawable.icon_customer_demands_plan);
 
             tv_content1.setText("地址：" + customer.position!=null?customer.position.addr:"无定位");

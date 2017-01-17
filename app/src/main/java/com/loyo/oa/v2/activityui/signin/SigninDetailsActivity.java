@@ -231,7 +231,7 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访详情");
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
         layout_bottom_menu.addView(msgAudiomMenu);
         getPageData();
     }

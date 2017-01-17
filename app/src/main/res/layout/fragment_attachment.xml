@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/common_activity_bg">
 
     <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ll_loading"
@@ -20,6 +20,7 @@
             swipe:swipeActionRight="reveal"
             swipe:swipeAnimationTime="200"
             swipe:swipeBackView="@+id/back"
+            android:background="@color/common_activity_bg"
             swipe:swipeCloseAllItemsWhenMoveList="true"
             swipe:swipeFrontView="@+id/front"
             swipe:swipeMode="left"
@@ -34,8 +35,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/activity_bg">
+        android:background="@color/common_activity_con_bg">
 
+        <include layout="@layout/common_include_line_full_space"/>
 
         <LinearLayout
             android:layout_width="wrap_content"

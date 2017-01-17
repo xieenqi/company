@@ -14,6 +14,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import retrofit.http.Path;
 import rx.Observable;
 
 /**
@@ -103,12 +104,12 @@ public class OrderService {
     }
 
     public static
-    Observable<OrderDetail> getSaleDetails(String id) {
+    Observable<OrderDetail> getSaleDetails(String id, HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(Config_project.API_URL_CUSTOMER())
                         .create(IOrder.class)
-                        .getSaleDetails(id)
+                        .getSaleDetails(id, map)
                         .compose(RetrofitAdapterFactory.<OrderDetail>compatApplySchedulers());
     }
 
@@ -170,6 +171,26 @@ public class OrderService {
                         .create(IOrder.class)
                         .getPlanEstimateList(map)
                         .compose(RetrofitAdapterFactory.<ArrayList<PlanEstimateList>>compatApplySchedulers());
+    }
+
+    public static
+    Observable<Object> terminationOrderWithProcess(@Path("id") String id, HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(Config_project.API_URL_CUSTOMER())
+                        .create(IOrder.class)
+                        .terminationOrderWithProcess(id, map)
+                        .compose(RetrofitAdapterFactory.<Object>compatApplySchedulers());
+    }
+
+    public static
+    Observable<Object> updateOwner(HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(Config_project.API_URL_CUSTOMER())
+                        .create(IOrder.class)
+                        .updateOwner(map)
+                        .compose(RetrofitAdapterFactory.<Object>applySchedulers());
     }
 
 }

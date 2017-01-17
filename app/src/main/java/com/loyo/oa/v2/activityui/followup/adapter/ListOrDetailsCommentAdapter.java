@@ -47,6 +47,14 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter {
         return 0;
     }
 
+    /**
+     * 删除评论，从ui上面删除
+     * @param position 评论的position
+     */
+    public void remove(int position){
+        commentsl.remove(position);
+        notifyDataSetChanged();
+    }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -155,8 +156,10 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                         xPath = "";
                         userId = model.getKey();
                     }
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.departmentOrderTeam);
                 } else if (menuIndex == 1) { //
                     statusType = key;
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.stageOrderTeam);
                 } else if (menuIndex == 2) { //
                     CommonSortType type = ((CommonSortTypeMenuModel) model).type;
                     if (type == CommonSortType.AMOUNT) {
@@ -164,6 +167,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                     } else if (type == CommonSortType.CREATE) {
                         field = "createdAt";
                     }
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankOrderTeam);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
                 isPullDown = true;
@@ -191,8 +195,8 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
 
                     @Override
                     public void onError(Throwable e) {
-                        @LoyoErrorChecker.CheckType int type = listData.size()>0?
-                                LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                        @LoyoErrorChecker.CheckType int type = listData.size() > 0 ?
+                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
 
                         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         lv_list.onRefreshComplete();

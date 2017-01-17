@@ -32,7 +32,7 @@ public enum DashboardType implements Serializable {
 
         @Override
         public String[] getTableHead() {
-            return new String[]{"姓名","次数","客户数"};
+            return new String[]{"姓名", "次数", "客户数"};
         }
     },
     // 客户拜访
@@ -51,9 +51,10 @@ public enum DashboardType implements Serializable {
         public FilterModel getSort() {
             return DashboardSortTypeMenuModel.getCusFolloupFilterModel();
         }
+
         @Override
         public String[] getTableHead() {
-            return new String[]{"姓名","次数","客户数"};
+            return new String[]{"姓名", "次数", "客户数"};
         }
 
     },
@@ -73,9 +74,10 @@ public enum DashboardType implements Serializable {
         public FilterModel getSort() {
             return DashboardSortTypeMenuModel.getCusRecordFilterModel();
         }
+
         @Override
         public String[] getTableHead() {
-            return new String[]{"姓名","次数","客户数","通话时长"};
+            return new String[]{"姓名", "次数", "客户数", "通话时长"};
         }
     },
     //线索 跟进
@@ -94,9 +96,10 @@ public enum DashboardType implements Serializable {
         public FilterModel getSort() {
             return DashboardSortTypeMenuModel.getSaleFolloupFilterModel();
         }
+
         @Override
         public String[] getTableHead() {
-            return new String[]{"姓名","次数","线索数"};
+            return new String[]{"姓名", "次数", "线索数"};
         }
     },
     //线索电话录音
@@ -115,9 +118,10 @@ public enum DashboardType implements Serializable {
         public FilterModel getSort() {
             return DashboardSortTypeMenuModel.getSaleRecordFilterModel();
         }
+
         @Override
         public String[] getTableHead() {
-            return new String[]{"姓名","次数","线索数","通话时长"};
+            return new String[]{"姓名", "次数", "线索数", "通话时长"};
         }
     },
     //订单数量
@@ -136,9 +140,10 @@ public enum DashboardType implements Serializable {
         public FilterModel getSort() {
             return DashboardSortTypeMenuModel.getOrderNumberFilterModel();
         }
+
         @Override
         public String[] getTableHead() {
-            return new String[]{"姓名","目标数量","订单数量","完成率"};
+            return new String[]{"姓名", "目标数量", "订单数量", "完成率"};
         }
     },
     //订单金额
@@ -157,9 +162,10 @@ public enum DashboardType implements Serializable {
         public FilterModel getSort() {
             return DashboardSortTypeMenuModel.getOrderMoneyFilterModel();
         }
+
         @Override
         public String[] getTableHead() {
-            return new String[]{"姓名","目标金额","订单金额","完成率"};
+            return new String[]{"姓名", "目标金额", "订单金额", "完成率"};
         }
     },
     //存量／增量
@@ -178,15 +184,43 @@ public enum DashboardType implements Serializable {
         public FilterModel getSort() {
             return DashboardSortTypeMenuModel.getFilterModel();
         }
+
         @Override
         public String[] getTableHead() {
-            return new String[]{"姓名","增量","存量"};
+            return new String[]{"姓名", "增量", "存量"};
+        }
+    },
+    //回款统计
+    PAYMENT {
+        @Override
+        public String getTitle() {
+            return "回款统计";
+        }
+
+        @Override
+        public String getaPermission() {
+            return BusinessOperation.ORDER_MANAGEMENT;
+        }
+
+        @Override
+        public FilterModel getSort() {
+            return DashboardSortTypeMenuModel.getPaymentFilterModel();
+        }
+
+        @Override
+        public String[] getTableHead() {
+            return new String[]{"姓名", "应收款", "回款金额", "回款目标"};
         }
     };
 
     public abstract String getTitle();
-    public abstract @BusinessOperation.Type String getaPermission();
+
+    public abstract
+    @BusinessOperation.Type
+    String getaPermission();
+
     public abstract FilterModel getSort();
+
     //获取表头标题
     public abstract String[] getTableHead();
 

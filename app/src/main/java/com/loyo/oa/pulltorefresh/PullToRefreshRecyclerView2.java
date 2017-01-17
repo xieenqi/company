@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -323,11 +324,12 @@ public class PullToRefreshRecyclerView2 extends PullToRefreshBase<RecyclerView> 
 	}
 
 	protected boolean isReadyForPullEnd() {
-		View view = getRefreshableView().getChildAt(getRefreshableView().getChildCount() - 1);
-		if (null != view) {
-			return getRefreshableView().getBottom() >= view.getBottom();
-		}
-		return false;
+//		View view = getRefreshableView().getChildAt(getRefreshableView().getChildCount() - 1);
+//		if (null != view) {
+//			return getRefreshableView().getBottom() >= view.getBottom();
+//		}
+// 		return false;
+		return !getRefreshableView().canScrollVertically(1);
 	}
 
 	@Override

@@ -44,9 +44,9 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             holder.tv_worksheet = (TextView) convertView.findViewById(R.id.tv_worksheet);
             holder.tv_deadline = (TextView) convertView.findViewById(R.id.tv_deadline);
             holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-            holder.iv_action = (ImageView) convertView.findViewById(R.id.iv_action);
+            holder.tv_action = (TextView) convertView.findViewById(R.id.tv_action);
             final ViewHolder holderFinal = holder;
-            holder.iv_action.setOnClickListener(new View.OnClickListener() {
+            holder.tv_action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final WorksheetEvent wse = holderFinal.wse;
@@ -80,8 +80,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
         TextView tv_endtime_tag;
 
         TextView tv_time;
-        ImageView iv_action;
-
+        TextView tv_action;
         WorksheetEvent wse;
 
         public void loadData(WorksheetEvent wse) {
@@ -116,9 +115,9 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             }
 
             if (wse.status == WorksheetEventStatus.WAITPROCESS) {
-                iv_action.setVisibility(View.VISIBLE);
+                tv_action.setVisibility(View.VISIBLE);
             } else {
-                iv_action.setVisibility(View.GONE);
+                tv_action.setVisibility(View.GONE);
             }
         }
     }

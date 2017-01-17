@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/dimen_70"
+    android:background="@color/common_activity_con_bg"
     android:orientation="vertical">
 
     <LinearLayout

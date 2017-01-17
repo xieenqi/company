@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CommonPageAdapter;
 import com.loyo.oa.v2.activityui.dashboard.fragment.HomeDashboardFragment;
@@ -43,7 +44,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
     private HomeApplicationFragment mHomeApplicationFragment;//tab1又实现2个fragment 我自己的项目有这个需求 点击侧滑直接切换tab的fragment
     private HomeStatisticsFragment mHomeStatisticsFragment;
     private HomeDashboardFragment mHomeDashboardFragment;
-//    private ArrayList<RadioButton> title = new ArrayList<RadioButton>();// 4个标题
+    //    private ArrayList<RadioButton> title = new ArrayList<RadioButton>();// 4个标题
     private ViewPager pager;
     private RoundImageView heading;
     private Bundle mBundle;
@@ -222,9 +223,11 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         } else {
             ((MainHomeActivity) getActivity()).gotoStart();
         }
-//        title.get(index).setChecked(true);// 设置被选中，否则布局里面的背景不会切换
         if (1 == index && null != mHomeDashboardFragment) {
             mHomeDashboardFragment.onInIt();
+            UmengAnalytics.umengSend(mActivity, UmengAnalytics.statisticsButton);
+        } else {
+            UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageButton);
         }
     }
 

@@ -6,6 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.db.DBManager;
@@ -14,6 +15,7 @@ import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.user.api.UserService;
 
 import org.androidannotations.annotations.EIntentService;
@@ -60,6 +62,8 @@ public class InitDataService extends IntentService {
                             MainApp.user = user;
                             DBManager.Instance().putUser(json);//保存用户信息
                             sendDataChangeBroad(user);
+                            SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.UID, user.name + "（" + user.getId() + "）");
+                            SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.CID, user.companyName + "（" + user.companyId + "）");
                         } catch (Exception E) {
                             E.printStackTrace();
                         }

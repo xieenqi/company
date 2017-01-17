@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,7 +166,8 @@ public class SigninListAdapter extends BaseAdapter {
         }
 
         /** @的相关人员 */
-        if(null != model.atNameAndDepts){
+        if(!TextUtils.isEmpty(model.atNameAndDepts)){
+            holder.tv_toast.setVisibility(View.VISIBLE);
             holder.tv_toast.setText("@" + model.atNameAndDepts);
         }else{
             holder.tv_toast.setVisibility(View.GONE);
@@ -218,10 +220,11 @@ public class SigninListAdapter extends BaseAdapter {
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
+            final ViewHolder finalHolder = holder;
             holder.lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    viewCrol.deleteCommentEmbl(model.comments.get(position).id);
+                    viewCrol.deleteCommentEmbl(finalHolder.lv_comment,position,model.comments.get(position).id);
                     return false;
                 }
             });

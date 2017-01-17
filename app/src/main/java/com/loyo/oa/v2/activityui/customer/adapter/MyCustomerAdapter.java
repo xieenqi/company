@@ -12,8 +12,10 @@ import android.widget.TextView;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.common.CommonMethod;
+import com.loyo.oa.v2.activityui.followup.FollowSelectActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 
@@ -110,7 +112,8 @@ public class MyCustomerAdapter extends BaseAdapter {
 
         tv_content1.setText("标签：" + tagItems);
         tv_content2.setText("跟进时间：" + lastActivityAt);
-        CommonMethod.commonCustomerRecycleTime(customer, layout_4, tv_content41, tv_content42);
+        if (!(mContext instanceof FollowSelectActivity))
+            CommonMethod.commonCustomerRecycleTime(customer, layout_4, tv_content41, tv_content42);
         return convertView;
     }
 

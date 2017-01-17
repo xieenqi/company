@@ -26,6 +26,9 @@ public interface WfinEditPresenter {
     void requestEditWfinVeri(String deptId);
 
     /*编辑请求*/
-    void requestEditWfin(String id, String title, String deptId, ArrayList<HashMap<String, Object>> workflowValues, String projectId, String memo);
+    void requestEditWfin(String id, String title, String deptId,
+                         ArrayList<HashMap<String, Object>> workflowValues,
+                         String projectId, String memo,
+                         String customerId, String customerName);
 
 }

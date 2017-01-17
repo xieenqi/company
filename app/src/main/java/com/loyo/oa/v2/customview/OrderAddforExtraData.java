@@ -20,12 +20,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -50,11 +53,55 @@ public class OrderAddforExtraData extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public OrderAddforExtraData(Context context, ArrayList<ContactLeftExtras> extras, boolean edit, int valueColor, int valueSize) {
+    public OrderAddforExtraData(Context context, ArrayList<ContactLeftExtras> extras, boolean edit, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
-        bindView(edit, valueColor, valueSize);
+        bindView(edit, valueSize);
     }
+
+    public void bindData(ArrayList<ContactLeftExtras> extras) {
+        if (extras == null) {
+            return;
+        }
+
+        for (ContactLeftExtras item : extras) {
+            ContactLeftExtras origin = getExtraForName(item.name);
+            View child = getExtraView(item.name);
+            if (origin != null && child != null) {
+                EditText tv_content = (EditText) child.findViewById(R.id.et_content);
+                origin.val = item.val;
+                tv_content.setText(item.getFormatValue());
+            }
+        }
+
+    }
+
+    private ContactLeftExtras getExtraForName(String name) {
+        if (TextUtils.isEmpty(name)) {
+            return null;
+        }
+        for (ContactLeftExtras item : extras) {
+            if (item.name.equals(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private View getExtraView(String tag) {
+        if (TextUtils.isEmpty(tag)) {
+            return null;
+        }
+
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (tag.equals(child.getTag())) {
+                return child;
+            }
+        }
+        return null;
+    }
+
 
     public ArrayList<ContactLeftExtras> getExtras() {
         return extras;
@@ -64,10 +111,9 @@ public class OrderAddforExtraData extends LinearLayout {
      * 绑定数据
      *
      * @param edit
-     * @param valueColor
      * @param valueSize
      */
-    private void bindView(boolean edit, int valueColor, int valueSize) {
+    private void bindView(boolean edit, int valueSize) {
         if (null == extras || extras.isEmpty()) {
             return;
         }
@@ -81,7 +127,7 @@ public class OrderAddforExtraData extends LinearLayout {
                 continue;
             }
 
-            if(customerExtra.isSystem){
+            if (customerExtra.isSystem) {
                 continue;
             }
 
@@ -96,18 +142,18 @@ public class OrderAddforExtraData extends LinearLayout {
                 tv_tag.setTextSize(valueSize);
                 tv_content.setTextSize(valueSize);
             }
-            tv_content.setTextColor(valueColor);
             tv_tag.setText(customerExtra.label);
 
             if (customerExtra.isList) {//改过
                 tv_content.setEnabled(true);
             }
 
+            extra.setTag(customerExtra.name);
             addView(extra);
 
-            if(customerExtra.name.length() > 20){
-                if(!TextUtils.isEmpty(customerExtra.val))
-                tv_content.setText(customerExtra.val);
+            if (customerExtra.name.length() > 20) {
+                if (!TextUtils.isEmpty(customerExtra.val))
+                    tv_content.setText(customerExtra.getFormatValue());
             }
 
             if (customerExtra.isList) {
@@ -220,7 +266,7 @@ public class OrderAddforExtraData extends LinearLayout {
     public void pickDate(final ContactLeftExtras extra, final TextView textView) {
         final Calendar cal = Calendar.getInstance();
         Locale.setDefault(Locale.CHINA);//设置语言
-        final DatePickerDialog mDialog = new DatePickerDialog(mContext, AlertDialog.THEME_HOLO_LIGHT,null,
+        final DatePickerDialog mDialog = new DatePickerDialog(mContext, AlertDialog.THEME_HOLO_LIGHT, null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 
         //手动设置按钮
@@ -260,6 +306,7 @@ public class OrderAddforExtraData extends LinearLayout {
     private class BizFiedTextWatcher implements TextWatcher {
 
         private ContactLeftExtras extra;
+
         private BizFiedTextWatcher(ContactLeftExtras extra) {
             this.extra = extra;
         }
@@ -336,9 +383,9 @@ public class OrderAddforExtraData extends LinearLayout {
 //                            textView.setText(str);
 //                            String times = DateTool.getDataOne(str, DateTool.DATE_FORMATE_SPLITE_BY_POINT);
 //                            extra.val = times;
-                            long time=com.loyo.oa.common.utils.DateTool.getStamp(year, month, day,hour,min,0);
-                            extra.val= time+"";
-                            textView.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(time));
+                            long time = DateTool.getStamp(year, month, day, hour, min, 0);
+                            extra.val = time + "";
+                            textView.setText(DateTool.getDateTimeFriendly(time));
                         }
 
                         @Override

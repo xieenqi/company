@@ -70,7 +70,7 @@ public class WorkSheetListNestingAdapter extends BaseAdapter {
         final boolean isImage = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_worksheet_listorlist, null);
+            convertView = inflater.inflate(R.layout.item_worksheet_listorlist_new, null);
             holder.pb_progress = (ProgressBar) convertView.findViewById(R.id.pb_progress);
             holder.iv_image = (XCRoundRectImageView) convertView.findViewById(R.id.iv_image);
             holder.tv_image_name = (TextView) convertView.findViewById(R.id.tv_image_name);

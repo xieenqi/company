@@ -1,7 +1,5 @@
 package com.loyo.oa.upload.alioss;
 
-import android.content.Context;
-
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.OSSClient;

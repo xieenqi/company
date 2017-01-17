@@ -234,7 +234,7 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("跟进详情");
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
         layout_bottom_menu.addView(msgAudiomMenu);
         getPageData();
     }

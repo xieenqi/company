@@ -2,8 +2,11 @@ package com.loyo.oa.v2.activityui.worksheet.common;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,7 +18,6 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -31,19 +33,21 @@ public class WorksheetEventCell extends LinearLayout {
 
     View content;
     private RoundImageView iv_avatar;
-    private ImageView iv_status, iv_action;
-    private TextView tv_content, tv_name, tv_time, tv_time2;
+    private ImageView iv_status;
+    private TextView tv_content, tv_name, tv_time, tv_time2, tv_action;
 
+    private Context mContext;
     Handler handler;
 
     private WorksheetEventsSupporter data;
 
     public WorksheetEventCell(Context context, Handler handler) {
         super(context);
-        content = LayoutInflater.from(context).inflate(R.layout.item_worksheet_event, null, false);
+        this.mContext = context;
+        content = LayoutInflater.from(context).inflate(R.layout.item_worksheet_event_new, null, false);
         iv_avatar = (RoundImageView) content.findViewById(R.id.iv_avatar);
         iv_status = (ImageView) content.findViewById(R.id.iv_status);
-        iv_action = (ImageView) content.findViewById(R.id.iv_action);
+        tv_action = (TextView) content.findViewById(R.id.tv_action);
         tv_content = (TextView) content.findViewById(R.id.tv_content);
         tv_name = (TextView) content.findViewById(R.id.tv_name);
         tv_time = (TextView) content.findViewById(R.id.tv_time);
@@ -117,8 +121,8 @@ public class WorksheetEventCell extends LinearLayout {
         tv_time.setText(data.startTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getDateFriendly(data.startTime));
         LogUtil.dee("endTime:" + data.endTime);
         LogUtil.dee("status:" + data.status);
-        if (data.endTime != 0 && data.status != WorksheetEventStatus.UNACTIVATED) {
-            //事件 已处理 待处理 标红
+        if (data.endTime != 0) {
+            //事件 已处理 待处理 标红  *需求变动不区分事件状态有时间就显示20170112
             if (data.isOvertime) {
                 tv_time2.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(data.endTime) + "截止" + "(超时)");
                 tv_time2.setTextColor(getResources().getColor(R.color.red1));
@@ -126,7 +130,7 @@ public class WorksheetEventCell extends LinearLayout {
                 tv_time2.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(data.endTime) + "截止");
                 tv_time2.setTextColor(getResources().getColor(R.color.text99));
             }
-        } else if (data.endTime == 0 || data.status == WorksheetEventStatus.UNACTIVATED) {
+        } else if (data.endTime == 0) {
             tv_time2.setText("--");
             tv_time2.setTextColor(getResources().getColor(R.color.text99));
         }
@@ -135,14 +139,28 @@ public class WorksheetEventCell extends LinearLayout {
         iv_status.setImageResource(data.status.getStatusIcon(iv_avatar));
 
         /* 操作按钮 */
-        iv_action.setVisibility(action.visible() ? View.VISIBLE : View.INVISIBLE);
-        iv_action.setImageResource(action.getIcon());
+        tv_action.setVisibility(action.visible() ? View.VISIBLE : View.GONE);
+        tv_action.setTextAppearance(mContext, action.getIcon());
+        //不能只使用，设置style，bg和drawable不能通过style动态设置，所以需要使用下面的方式，单独设置。
+        tv_action.setBackgroundResource(action.getBackground());
+        tv_action.setText(action.getBtnTitle());
+        //设置drawableLeft
+        if(null!=action.getDrawableLeft()){
+            Drawable drawable= getResources().getDrawable(action.getDrawableLeft());
+            // 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            tv_action.setCompoundDrawables(drawable,null,null,null);
+        }else{
+            tv_action.setCompoundDrawables(null,null,null,null);
+
+        }
+
 
         /* 事件 */
-        iv_action.setOnTouchListener(Global.GetTouch());
+        tv_action.setOnTouchListener(Global.GetTouch());
 
         final WorksheetEventAction theAction = action;
-        iv_action.setOnClickListener(new OnClickListener() {
+        tv_action.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Message msg = new Message();

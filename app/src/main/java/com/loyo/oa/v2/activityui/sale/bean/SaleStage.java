@@ -9,6 +9,7 @@ public class SaleStage implements Serializable {
     public String id;
     public String name;
     public float prob;
+    public boolean isSys;
 
     public boolean isSelect = false;//本地标记选择状态
 

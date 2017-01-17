@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.commonview;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
@@ -10,6 +11,7 @@ import android.media.SoundPool;
 import android.os.Environment;
 
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
@@ -210,13 +212,16 @@ public class RecordUtils {
     /**
      * 用户是否配置 录音权限     * @return
      */
-    public static boolean permissionRecord() {
-        if (PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")
-                && PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
-                && PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.READ_PHONE_STATE", "com.loyo.oa.v2")
-                ) {
+    public static boolean permissionRecord(Object activityOrFragment) {
+        if(PermissionTool.requestPermission(activityOrFragment,new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE},"你没有配置录音或者储存权限",1)){
             return true;
         }
+//        if (PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")
+//                && PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
+//                && PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.READ_PHONE_STATE", "com.loyo.oa.v2")
+//                ) {
+//            return true;
+//        }
         return false;
     }
 

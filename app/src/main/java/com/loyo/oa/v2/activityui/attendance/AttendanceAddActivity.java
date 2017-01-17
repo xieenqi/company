@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoCapture;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import hk.ids.gws.android.sclick.SClick;
 
 import static com.loyo.oa.v2.R.id.image_upload_grid_view;
 
@@ -188,7 +190,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             et_reason.setHint("请输入加班原因");
 //            String time = (DateTool.timet(extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
 //                    + "-" + DateTool.timet(serverTime + "", DateTool.DATE_FORMATE_TRANSACTION));
-            String time= com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(extraWorkStartTime)+"-"+ com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(serverTime);
+            String time = com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(extraWorkStartTime) + "-" + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(serverTime);
             SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
             tv_time_kind.setText(tvTimeName);
             tv_time.setText(builder);
@@ -217,7 +219,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.iv_refresh_address})
     void onClick(final View v) {
         switch (v.getId()) {
-
             /*返回*/
             case R.id.img_title_left:
                 onBackPressed();
@@ -234,6 +235,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
                 if (NeedPhoto && controller.count() == 0) {
                     Toast("需要考勤照片，请拍照");
+                    return;
+                }else if (!SClick.check(SClick.BUTTON_CLICK, 5000)) {
                     return;
                 }
 
@@ -254,10 +257,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             /*刷新地址*/
             case R.id.iv_refresh_address:
                 iv_refresh_address.startAnimation(animation);
-                new LocationUtilGD(this, this);
-                break;
-
-            default:
+                new LocationUtilGD(AttendanceAddActivity.this, AttendanceAddActivity.this);
                 break;
         }
     }
@@ -392,7 +392,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     /**
      * 打卡失败
-     * */
+     */
     @Override
     public void attendanceError() {
         img_title_right.setEnabled(true);
@@ -471,7 +471,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }

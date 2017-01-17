@@ -14,6 +14,7 @@ public class Counter implements Serializable {
     private int visit;
     private int file;
     public int order;
+    public int workflow;
 
     public int getFile() {
         return file;

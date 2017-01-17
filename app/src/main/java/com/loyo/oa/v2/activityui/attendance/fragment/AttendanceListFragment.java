@@ -356,7 +356,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         int type = validateItem.getType();
         map.clear();
         map.put("inorout", type);
-        new LocationUtilGD(app, this);
+        new LocationUtilGD(getActivity(), this);
     }
 
 

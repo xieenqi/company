@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.customer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -72,14 +73,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     @ViewById
     ViewGroup img_title_left, layout_Extra, img_title_right, layout_customer_district, layout_customer_label,
-            layout_customer_responser, layout_customer_join_users, ll_recycledAt;
+            layout_customer_responser, layout_customer_join_users, ll_common;
     @ViewById(R.id.layout_customer_optional_info)
     LinearLayout containerOp, layout_rushpackger;
     @ViewById
     EditText tv_address, tv_customer_name, edt_customer_memo, edt_address_details;
     @ViewById
     TextView tv_customer_creator, tv_customer_responser, tv_customer_join_users, tv_customer_create_at,
-            tv_labels, tv_district, tv_customer_recycledAt;
+            tv_labels, tv_district, tv_common_persion, tv_common_type, tv_common_reason, tv_customer_recycledAt;
     @ViewById
     ImageView img_go_where, img_refresh_address, img_del_join_users;
     @ViewById
@@ -146,11 +147,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
         CustomerService.getCustomerDynamic(map)
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<CustomerExtraData>>(ll_loading) {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<CustomerExtraData>>() {
                     @Override
                     public void onError(Throwable e) {
-                        super.onError(e);
-                        finish();
                     }
 
                     @Override
@@ -186,6 +185,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                             }
                         }
                     }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
                 });
     }
 
@@ -198,7 +201,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        finish();
+//                        finish();
                     }
 
                     @Override
@@ -363,11 +366,16 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         /* 公海客户特殊操作 */
         if (mCustomer.state == Customer.DumpedCustomer) {
             layout_Extra.setVisibility(View.GONE);
-            ll_recycledAt.setVisibility(View.VISIBLE);
+            ll_common.setVisibility(View.VISIBLE);
             tv_customer_recycledAt.setText(mCustomer.recycledAt != 0 ? DateTool.getDateTimeFriendly(mCustomer.recycledAt) : "--");
+            tv_common_persion.setText(mCustomer.owner == null ? "--" : mCustomer.owner.name);
+            tv_common_type.setText(mCustomer.recycleType.getText());
+            tv_common_reason.setText(TextUtils.isEmpty(mCustomer.recycleReason) ? "--" : mCustomer.recycleReason);
+            if (mCustomer.recycleReason.length() > 15)
+                tv_common_reason.setGravity(Gravity.LEFT | Gravity.CENTER);
         } else {
             layout_Extra.setVisibility(View.VISIBLE);
-            ll_recycledAt.setVisibility(View.GONE);
+            ll_common.setVisibility(View.GONE);
         }
     }
 

@@ -60,7 +60,7 @@
                     android:gravity="right|center_vertical"
                     android:maxEms="15"
                     android:singleLine="true"
-                    android:textColor="@color/title_bg1" />
+                    android:textColor="@color/text66" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:text=""
-                        android:textColor="@color/title_bg1" />
+                        android:textColor="@color/text66" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -139,11 +139,12 @@
                     <TextView
                         style="@style/text_item2"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_40"
+                        android:layout_height="@dimen/dimen_30"
                         android:background="@color/activity_bg"
                         android:gravity="left|center_vertical"
                         android:paddingLeft="@dimen/dimen_14"
                         android:text="审批内容"
+                        android:textSize="@dimen/text_sp13"
                         android:textColor="#999999" />
 
                     <LinearLayout
@@ -151,7 +152,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:orientation="vertical"></LinearLayout>
+                        android:orientation="vertical">
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -162,7 +165,7 @@
                     android:background="@color/activity_bg"
                     android:text="新增内容"
                     android:textColor="@color/green51"
-                    android:textSize="@dimen/text_sp15" />
+                    android:textSize="@dimen/text_sp13" />
 
             </LinearLayout>
 
@@ -296,7 +299,47 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:text=""
-                        android:textColor="@color/title_bg1" />
+                        android:textColor="@color/text66" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow" />
+                </LinearLayout>
+
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/margin_side_edge" />
+
+                <LinearLayout
+                    android:id="@+id/ll_customer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="@dimen/dimen_16"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:layout_marginTop="@dimen/dimen_16"
+                        android:text="关联客户" />
+
+                    <TextView
+                        android:id="@+id/tv_customer"
+                        style="@style/text_item2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:text=""
+                        android:textColor="@color/text66" />
 
                     <ImageView
                         android:layout_width="wrap_content"

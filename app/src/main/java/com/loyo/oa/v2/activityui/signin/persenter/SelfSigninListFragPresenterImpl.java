@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.signin.persenter;
 
+import android.widget.ListView;
+
 import com.loyo.oa.v2.activityui.followup.api.FollowUpService;
 import com.loyo.oa.v2.activityui.signin.api.SignInService;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
@@ -27,25 +29,12 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
      * 删除评论
      */
     @Override
-    public void deleteComment(String id) {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
-//            @Override
-//            public void success(Object object, Response response) {
-//                HttpErrorCheck.checkResponse("评论", response);
-//                crolView.rushListData(false);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//                super.failure(error);
-//            }
-//        });
+    public void deleteComment(final ListView list, final int position, String id) {
 
         FollowUpService.deleteComment(id).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
             public void onNext(Object o) {
-                crolView.rushListData(false);
+                crolView.rushListData(list,position);
             }
         });
     }
@@ -98,8 +87,7 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
                 .subscribe(new DefaultLoyoSubscriber<BaseBeanT<PaginationX<SigninNewListModel>>>(crolView.getLoadingView()) {
             @Override
             public void onError(Throwable e) {
-                super.onError(e);
-                crolView.getListDataErrorEmbl();
+                crolView.getListDataErrorEmbl(e);
             }
 
             @Override

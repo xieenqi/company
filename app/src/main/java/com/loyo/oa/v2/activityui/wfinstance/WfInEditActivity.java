@@ -17,6 +17,8 @@ import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
@@ -51,6 +53,8 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
     public static final int MSG_ATTACHMENT = 200;//上传完了附件的回调code
 
     private String projectId;
+    private String customerId;
+    private String customerName;
     private String deptId;
     private String uuid;
     private String memo;
@@ -59,6 +63,9 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
     private int bizType = 12;
     private int uploadSize;
     private int uploadNum;
+
+    private ViewGroup ll_customer;
+    private TextView tv_customer;
 
     private ViewGroup img_title_left;
     private ViewGroup img_title_right;
@@ -126,6 +133,14 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
         img_title_right.setOnClickListener(onClick);
         ll_dept.setOnClickListener(onClick);
         edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
+
+
+        ll_customer = (ViewGroup) findViewById(R.id.ll_customer);
+        ll_customer.setOnTouchListener(Global.GetTouch());
+        ll_customer.setOnClickListener(onClick);
+
+        tv_customer = (TextView) findViewById(R.id.tv_customer);
+
         mPresenter = new WfinEditPresenterImpl(mContext, this, WfInEditActivity.this);
 
         if (null != mWfInstance.bizForm) {
@@ -145,6 +160,9 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
             memo = mWfInstance.memo;
         }
 
+        customerId = mWfInstance.customerId;
+        customerName = mWfInstance.customerName;
+
         tv_title.setText(cusTitle);
         edt_memo.setText(memo);
         gridView.setVisibility(View.GONE);
@@ -154,6 +172,8 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
 
         projectAddWfinstance();
         setDefaultDept();
+
+        tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
     }
 
     /**
@@ -239,6 +259,10 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
                             MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
 
                     break;
+                case R.id.ll_customer:
+                    app.startActivityForResult(WfInEditActivity.this, SelfVisibleCustomerPickerActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+                    break;
                 default:
                     break;
             }
@@ -266,6 +290,20 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
             return;
         }
         switch (requestCode) {
+            //选择客户
+            case ExtraAndResult.REQUEST_CODE_CUSTOMER:
+                Customer customer = (Customer) data.getSerializableExtra("data");
+                if (null != customer) {
+                    customerId = customer.getId();
+                    customerName = customer.name;
+                    tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+                }
+                else {
+                    customerId = "";
+                    tv_customer.setText("无");
+                }
+                break;
+
             case MSG_ATTACHMENT:
                 if (data == null || data.getExtras() == null) {
                     return;
@@ -354,7 +392,8 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
         mPresenter.requestEditWfin(mWfInstance.id,
                 tv_title.getText().toString(),
                 deptId, workflowValues,
-                projectId, edt_memo.getText().toString().trim());
+                projectId, edt_memo.getText().toString().trim(),
+                customerId, customerName);
     }
 
     @Override

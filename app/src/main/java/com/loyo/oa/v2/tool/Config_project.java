@@ -7,7 +7,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static boolean isRelease = true;                               //是否是正式产品
+    public static boolean isRelease = false;                               //是否是正式产品
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;     //dbug模式
 
@@ -119,7 +119,7 @@ public class Config_project {
 
     public static String ADD_WORK_REPORT_PL = SERVER_URL() + "/api/v2/oa";//添加工作报告 的默认点评人
 
-    public static String MAIN_RED_DOT = SERVER_URL_LOGIN() + "/api/v2/";//首页红点接口
+    public static String MAIN_RED_DOT = SERVER_URL_CUSTOMER() + "/api/v2/";//首页红点接口
 
     public static String GET_VERIFICATION_CODE = SERVER_URL_LOGIN() + "/oapi/sms";//绑定手机获取验证码
 

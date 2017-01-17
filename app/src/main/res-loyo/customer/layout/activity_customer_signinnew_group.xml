@@ -28,14 +28,15 @@
             android:text="今天"
             android:textColor="@color/text99"
             android:textSize="14sp" />
-    </LinearLayout>
+    </LinearLayout> 
 
     <com.loyo.oa.v2.customview.CustomerListView
         android:id="@+id/layout_listview"
-        android:layout_marginRight="14dp"
+        android:paddingRight="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="#00000000"
+        android:background="@color/common_activity_con_bg"
         android:dividerHeight="3dp"
         />
 

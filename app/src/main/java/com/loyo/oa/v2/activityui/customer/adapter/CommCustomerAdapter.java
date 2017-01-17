@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -120,6 +121,7 @@ public class CommCustomerAdapter extends BaseAdapter {
                                 mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
                             }
                         });
+                UmengAnalytics.umengSend(mContext, UmengAnalytics.frompublicPublic);
             }
         });
 

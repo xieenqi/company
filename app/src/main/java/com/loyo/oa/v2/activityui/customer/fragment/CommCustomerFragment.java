@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -55,7 +56,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
     private CommCustomerAdapter adapter;
     private DropDownMenu filterMenu;
     private Button btn_add;
-    private String field = "lastActAt";
+    private String field = "recycledAt";
     private String order = "desc";
     private String tagsParams = "";
     private int page = 1;
@@ -157,8 +158,10 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timePublic);
                 } else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
+                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagPublic);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
                 isPullUp = false;

@@ -172,7 +172,7 @@
         android:id="@+id/ll_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ll_add"
+        android:layout_above="@+id/ll_add_temp"
         android:layout_below="@+id/ll_restimate"
         app:isFirstVisible="true">
 
@@ -186,30 +186,37 @@
     </com.library.module.widget.loading.LoadingLayout>
 
     <LinearLayout
-        android:id="@+id/ll_add"
+        android:id="@+id/ll_add_temp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/common_activity_con_bg"
         android:layout_alignParentBottom="true"
-        android:background="@color/activity_bg"
-        android:gravity="center"
-        android:minHeight="@dimen/dimen_48"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <include layout="@layout/common_include_line_full_space"/>
+        <LinearLayout
+            android:id="@+id/ll_add"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/icon_common_add" />
+            android:gravity="center"
+            android:minHeight="@dimen/dimen_48"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/icon_common_add" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:text="新增回款记录"
+                android:textColor="@color/title_bg1"
+                android:textSize="15sp" />
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:text="新增回款记录"
-            android:textColor="@color/title_bg1"
-            android:textSize="15sp" />
     </LinearLayout>
+
 
 </RelativeLayout>
