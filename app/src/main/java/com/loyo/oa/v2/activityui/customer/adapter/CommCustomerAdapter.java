@@ -69,7 +69,7 @@ public class CommCustomerAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final Customer customer = mCustomers.get(position);
         final String id = customer.getId();
         if (convertView == null) {
@@ -118,7 +118,8 @@ public class CommCustomerAdapter extends BaseAdapter {
                         .subscribe(new DefaultLoyoSubscriber<Customer>() {
                             @Override
                             public void onNext(Customer customer) {
-                                mHandler.sendEmptyMessage(CustomerManagerActivity.CUSTOMER_COMM_RUSH);
+                                mCustomers.remove(position);
+                                notifyDataSetChanged();
                             }
                         });
                 UmengAnalytics.umengSend(mContext, UmengAnalytics.frompublicPublic);

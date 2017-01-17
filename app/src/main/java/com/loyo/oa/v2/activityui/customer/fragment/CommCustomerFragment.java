@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.CommCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
@@ -49,97 +51,23 @@ import java.util.List;
  * 【公海客户】列表
  * Created by yyy on 16/6/1.
  */
-public class CommCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
-
-    private View mView;
-    private PullToRefreshListView listView;
-    private CommCustomerAdapter adapter;
-    private DropDownMenu filterMenu;
-    private Button btn_add;
-    private String field = "recycledAt";
-    private String order = "desc";
-    private String tagsParams = "";
-    private int page = 1;
-    private boolean isPullUp = false;
-
-    private PaginationX<Customer> mPagination = new PaginationX<>(20);
-    private ArrayList<Customer> mCustomers = new ArrayList<>();
-    private ArrayList<Tag> mTags;
-    private LoadingLayout ll_loading;
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.what) {
-                //公海挑入
-                case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
-                    getData();
-                    /*AppBus.getInstance().post(new MyCustomerListRushEvent());
-                    Intent intent = new Intent();
-                    intent.putExtra("Id", msg.getData().getString("id"));
-                    intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                    startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
-                    mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);*/
-                    break;
-            }
-        }
-    };
+public class CommCustomerFragment extends BaseCustomerFragment {
 
     @Override
-    public void onResume() {
-        super.onResume();
+    protected void initFilterParams() {
+        params.put("field","recycledAt");
+        params.put("order","asc");
+
+    }
+    @Override
+    protected void initDate() {
+        adapter = new CommCustomerAdapter(app, mPagination.getRecords(),mHandler);
+        listView.setAdapter(adapter);
+        mPagination.setFirstPage();
         getData();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (null == mView) {
-            mView = inflater.inflate(R.layout.fragment_cus, null);
-            initView(mView);
-            loadFilterOptions();
-        }
-        return mView;
-    }
-
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        page = 1;
-        isPullUp = false;
-        mPagination.setPageIndex(1);
-        getData();
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        page++;
-        isPullUp = true;
-        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData();
-    }
-
-    public void initView(View view) {
-        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
-        ll_loading.setStatus(LoadingLayout.Loading);
-        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
-            @Override
-            public void onReload(View v) {
-                ll_loading.setStatus(LoadingLayout.Loading);
-                getData();
-            }
-        });
-        btn_add = (Button) view.findViewById(R.id.btn_add);
-        btn_add.setVisibility(View.GONE);
-        mTags = CustomerTageConfig.getTage(true);
-        listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
-        listView.setMode(PullToRefreshBase.Mode.BOTH);
-        listView.setOnRefreshListener(this);
-        filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-        getData();
-    }
-
-    private void loadFilterOptions() {
+    protected void loadFilterOptions() {
         List<FilterModel> options = new ArrayList<>();
         options.add(TimeFilterModel.getFilterModel3());
         options.add(TagMenuModel.getTagFilterModel(mTags));
@@ -156,98 +84,36 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
                     String value = model.getValue();
                     filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
                     String[] keys = key.split(" ");
-                    field = keys[0];
-                    order = keys[1];
+                    params.put("field",keys[0]);
+                    params.put("order",keys[0]);
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.timePublic);
                 } else if (menuIndex == 1) { // TagFilter
-                    tagsParams = userInfo.toString();
+                    params.put("tagsParams",userInfo.toString());
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagPublic);
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
-                isPullUp = false;
-                page = 1;
+                mPagination.setFirstPage();
                 getData();
             }
         });
     }
 
     /**
-     * 绑定数据
+     * 获取数据
      */
-    private void bindData() {
-
-        if (null == adapter) {
-            adapter = new CommCustomerAdapter(getActivity(), mCustomers, mHandler);
-            listView.setAdapter(adapter);
-        } else {
-            adapter.notifyDataSetChanged();
-        }
-        if (!isPullUp && mCustomers.size() == 0)
-            ll_loading.setStatus(LoadingLayout.Empty);
-        else {
-            ll_loading.setStatus(LoadingLayout.Success);
-        }
-        /**
-         * 列表监听 进入客户详情页面
-         * */
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent();
-                intent.putExtra("Id", mCustomers.get(position - 1).getId());
-                intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
-                mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-            }
-        });
-    }
-
-
-    /**
-     * 获取数据,默认设置倒序
-     */
-    private void getData() {
+    protected void getData() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", page);
-        params.put("pageSize", 15);
-        params.put("field", field);
-        params.put("order", order);
-        params.put("tagsParams", tagsParams);
-        LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
+        params.put("pageIndex", mPagination.getShouldLoadPageIndex());
+        params.put("pageSize", mPagination.getPageSize());
         CustomerService.getDumpedCustomers(params)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
                     public void onError(Throwable e) {
                         /* 重写父类方法，不调用super */
-                        @LoyoErrorChecker.CheckType
-                        int type = mCustomers.size() > 0 ?
-                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
-                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
-                        listView.onRefreshComplete();
+                      fail(e);
                     }
 
                     public void onNext(PaginationX<Customer> customerPaginationX) {
-                        if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
-                            if (!isPullUp) {
-                                mPagination.setPageIndex(1);
-                                mPagination.setPageSize(20);
-                                mCustomers.clear();
-                                bindData();
-                            } else {
-                                Toast("没有更多数据了");
-                                listView.onRefreshComplete();
-                                return;
-                            }
-                        } else {
-                            mPagination = customerPaginationX;
-                            if (!isPullUp) {
-                                mCustomers.clear();
-                            }
-                            mCustomers.addAll(customerPaginationX.getRecords());
-                            bindData();
-                        }
-
-                        listView.onRefreshComplete();
-                        MainApp.getMainApp().isCutomerEdit = false;
+                      success(customerPaginationX);
                     }
                 });
     }
@@ -257,6 +123,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
      */
     @Subscribe
     public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
+        mPagination.setFirstPage();
         getData();
     }
 
