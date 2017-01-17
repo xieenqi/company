@@ -26,6 +26,7 @@ public class PaginationX<T> implements Serializable {
     public int totalRecords; //全部记录总数
     public ArrayList<T> records = new ArrayList<>();//用来存放所有的已经加载的数据
 
+    private int loadPageIndex=0;
     public PaginationX() {
         pageIndex = 1;
         pageSize = 20;
@@ -53,7 +54,7 @@ public class PaginationX<T> implements Serializable {
      * @return
      */
     public boolean isNeedToBackTop(){
-        return 1==pageIndex;
+        return 1==pageIndex&&loadPageIndex==1;
     }
 
     /**
@@ -73,6 +74,7 @@ public class PaginationX<T> implements Serializable {
      */
     public void loadRecords(PaginationX<T> paginationX) {
         totalRecords=paginationX.getTotalRecords();
+        loadPageIndex=paginationX.pageIndex;
         if (!isEmpty(paginationX)) {
             //如果加载的是第一页的数据，就是刷新，会清空原来的，再添加新数据
             if (1 == paginationX.getPageIndex()) {
