@@ -47,7 +47,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
     private View mView;
     private PullToRefreshListView lv_discuss;
-    protected PaginationX<Discussion> mPagination = new PaginationX(5);
+    protected PaginationX<Discussion> mPagination = new PaginationX(20);
     private DiscussionAdapter adapter;
     private HttpProject project;
     private LayoutInflater mInflater;
@@ -135,10 +135,11 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         if (null == adapter) {
             if (null == adapter) {
                 adapter = new DiscussionAdapter();
+                adapter.setData(mPagination.getRecords());
                 lv_discuss.setAdapter(adapter);
             }
         } else {
-            adapter.notifyDataSetChanged();
+            adapter.setData(mPagination.getRecords());
         }
     }
 
@@ -173,8 +174,6 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             @Override
             public void onNext(PaginationX<Discussion> pagination) {
                 lv_discuss.onRefreshComplete();
-                //TODO 这里添加顺序有问题
-                Collections.reverse(pagination.getRecords());
                 mPagination.loadRecords(pagination);
                 if(mPagination.isEnpty()){
                     ll_loading.setStatus(LoadingLayout.Empty);
@@ -241,22 +240,8 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         body.put("attachmentUUId", project.attachmentUUId);
         body.put("content", comment);
         body.put("bizType", 5);
-
         body.put("mentionedUserIds", mHaitHelper.getSelectUser(comment));
         mHaitHelper.clear();
-
-//        LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
-//
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).createDiscussion(body, new RCallback<Discussion>() {
-//            @Override
-//            public void success(Discussion d, Response response) {
-//                HttpErrorCheck.checkResponse("项目发送讨论内容：", response);
-//                isTopAdd = true;
-//                mPagination.setPageIndex(1);
-//                getData();
-//            }
-//        });
-
         DiscussService.createDiscussion(body).subscribe(new DefaultLoyoSubscriber<Discussion>() {
             @Override
             public void onNext(Discussion discussion) {
@@ -268,14 +253,21 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
     private class DiscussionAdapter extends BaseAdapter {
 
+        private ArrayList<Discussion> data=new ArrayList<>();
+        public void setData(ArrayList<Discussion> data){
+            this.data.clear();
+            this.data.addAll(data);
+            Collections.reverse(this.data);
+            notifyDataSetChanged();
+        }
         @Override
         public int getCount() {
-            return mPagination.getLoadedTotalRecords();
+            return data.size();
         }
 
         @Override
         public Discussion getItem(int i) {
-            return mPagination.getRecords().get(i);
+            return data.get(i);
         }
 
         @Override
@@ -290,7 +282,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
         @Override
         public int getItemViewType(int position) {
-            User creator = mPagination.getRecords().get(position).getCreator();
+            User creator = data.get(position).getCreator();
             if (null == creator) {
                 return super.getItemViewType(position);
             }
