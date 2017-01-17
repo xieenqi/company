@@ -61,7 +61,7 @@ public class CommCustomerFragment extends BaseCustomerFragment {
     }
     @Override
     protected void initDate() {
-        adapter = new CommCustomerAdapter(app, mPagination.getRecords(),mHandler);
+        adapter = new CommCustomerAdapter(app, mPagination.getRecords());
         listView.setAdapter(adapter);
         mPagination.setFirstPage();
         getData();

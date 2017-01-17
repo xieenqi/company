@@ -36,11 +36,9 @@ public class CommCustomerAdapter extends BaseAdapter {
 
     private ArrayList<Customer> mCustomers;
     private Context mContext;
-    private Handler mHandler;
     private LayoutInflater inflater;
 
-    public CommCustomerAdapter(final Context context, ArrayList<Customer> customers, Handler mHandler) {
-        this.mHandler = mHandler;
+    public CommCustomerAdapter(final Context context, ArrayList<Customer> customers) {
         mCustomers = customers;
         mContext = context;
         inflater = LayoutInflater.from(mContext);
