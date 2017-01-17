@@ -28,4 +28,16 @@ enum class PushBizType constructor(public val type: Int) {
             return JsonPrimitive(src!!.type)
         }
     }
+
+    //此处相当于 java 的静态方法
+    companion object {
+        fun getname(): Int {
+            return PUSH_TASKS.type;
+        }
+    }
+
+    //PushBizType 的扩展方法
+    fun PushBizType.sayName() {
+
+    }
 }
