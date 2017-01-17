@@ -99,9 +99,20 @@ public class MyMemberFragment extends BaseCustomerFragment {
 
                     public void onNext(PaginationX<Customer> customerPaginationX) {
                        success(customerPaginationX);
+                        getNearCustomersInfo();
                     }
                 });
     }
+
+    @Override
+    protected void onNearCustomerBtn() {
+        Bundle bundle = new Bundle();
+        bundle.putString("position", position);
+        bundle.putSerializable("nearCount", nearCount);
+        bundle.putInt("type", CustomerManagerActivity.NEARCUS_SELF);//团队2 个人1
+        app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+    }
+
 
     @Override
     protected void initFilterParams() {

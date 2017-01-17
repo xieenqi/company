@@ -177,8 +177,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     private void initFragments() {
         for (int i = 0; i < TITLES.length; i++) {
             Bundle bundle = new Bundle();
-            bundle.putInt("type", i == 0 ? (type == Customer.CUSTOMER_TYPE_MINE ?
-                    Customer.CUSTOMER_TYPE_NEAR_MINE : Customer.CUSTOMER_TYPE_NEAR_TEAM) : Customer.CUSTOMER_TYPE_NEAR_COMPANY);
+            bundle.putInt("type", i == 0 ? (type == Customer.CUSTOMER_TYPE_MINE ?Customer.CUSTOMER_TYPE_NEAR_MINE : Customer.CUSTOMER_TYPE_NEAR_TEAM) : Customer.CUSTOMER_TYPE_NEAR_COMPANY);
             bundle.putString("position", position);
             bundle.putBoolean("isNear", true);
             NearCustomerFragment fragment = (NearCustomerFragment) Fragment.instantiate(this,

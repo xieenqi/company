@@ -204,7 +204,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     /**
      * 绑定数据
      */
-    private void bindData() {
+    protected void bindData() {
         adapter.notifyDataSetChanged();
         if (mPagination.isEnpty())
             ll_loading.setStatus(LoadingLayout.Empty);
@@ -218,7 +218,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     /**
      * 显示附近客户
      */
-    private void showNearCustomersView() {
+    protected void showNearCustomersView() {
         nearLayout.setVisibility(View.VISIBLE);
         int oX = app.diptoPx(240);
         int nX = 0;
@@ -233,7 +233,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     /**
      * http获取附近客户信息
      */
-    private void getNearCustomersInfo() {
+    protected void getNearCustomersInfo() {
         new LocationUtilGD(mActivity, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
@@ -276,7 +276,6 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
         listView.onRefreshComplete();
         mPagination.loadRecords(customerPaginationX);
         bindData();
-        getNearCustomersInfo();
         MainApp.getMainApp().isCutomerEdit = false;
     }
 
@@ -301,16 +300,20 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
 
                 //附近的客户
                 case R.id.layout_near_customers:
-                    Bundle bundle = new Bundle();
-                    bundle.putString("position", position);
-                    bundle.putSerializable("nearCount", nearCount);
-                    bundle.putInt("type", CustomerManagerActivity.NEARCUS_SELF);//团队2 个人1
-                    app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+                    onNearCustomerBtn();
+
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.customerNearby);
                     break;
             }
         }
     };
+
+    /**
+     * 附近客户按钮被点击的时候。
+     */
+    protected void onNearCustomerBtn(){
+
+    }
 
 
     /**

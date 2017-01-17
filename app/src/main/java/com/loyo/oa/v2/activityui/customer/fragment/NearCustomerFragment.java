@@ -30,6 +30,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import rx.internal.util.unsafe.MpmcArrayQueue;
+
 /**
  * 【附近客户】列表 我的附近  我团队的附近
  * Created by yyy on 16/6/1.
@@ -40,8 +42,6 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
     private PullToRefreshListView listView;
     private NearCustomerAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
-    private ArrayList<Customer> mCustomers = new ArrayList<>();
-
     private String filed = "lastActAt";
     private String order = "desc";
     private String userId = "";
@@ -50,8 +50,6 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
     private String position;
 
     private int customer_type;
-    private int page = 1;
-    private boolean isPullUp = false;
     private LoadingLayout ll_loading;
 
     @Nullable
@@ -66,17 +64,12 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        page = 1;
-        isPullUp = false;
-        mPagination.setPageIndex(1);
+        mPagination.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        page++;
-        isPullUp = true;
-        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
         getData();
     }
 
@@ -105,7 +98,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
      * @return
      */
     public ArrayList<Customer> getmCustomers() {
-        return mCustomers;
+        return mPagination.getRecords();
     }
 
     /**
@@ -113,14 +106,13 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
      */
     private void getData() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", page);
-        params.put("pageSize", 15);
+        params.put("pageIndex", mPagination.getShouldLoadPageIndex());
+        params.put("pageSize", mPagination.getPageSize());
         params.put("field", filed);
         params.put("order", order);
         params.put("tagItemIds", tagItemIds);
         params.put("deptId", departmentId);
         params.put("userId", userId);
-        LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
 
         String url = "";
         switch (customer_type) {
@@ -152,36 +144,16 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                     public void onError(Throwable e) {
                         /* 重写父类方法，不调用super */
                         @LoyoErrorChecker.CheckType
-                        int type = mCustomers.size() > 0 ?
-                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        int type = mPagination.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT : LoyoErrorChecker.TOAST;
                         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         listView.onRefreshComplete();
                     }
 
                     public void onNext(PaginationX<Customer> customerPaginationX) {
-                        if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
-                            if (!isPullUp) {
-                                mPagination.setPageIndex(1);
-                                mPagination.setPageSize(20);
-                                mCustomers.clear();
-                                bindData();
-                            } else {
-                                Toast("没有更多数据了");
-                                listView.onRefreshComplete();
-                            }
-                        } else {
-                            mPagination = customerPaginationX;
-                            if (!isPullUp) {
-                                mCustomers.clear();
-                            }
-                            mCustomers.addAll(customerPaginationX.getRecords());
-                            bindData();
-                        }
                         listView.onRefreshComplete();
+                        mPagination.loadRecords(customerPaginationX);
+                        bindData();
                         MainApp.getMainApp().isCutomerEdit = false;
-                        ll_loading.setStatus(LoadingLayout.Success);
-                        if (!isPullUp && mCustomers.size() == 0)
-                            ll_loading.setStatus(LoadingLayout.Empty);
                     }
                 });
     }
@@ -192,34 +164,32 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
     private void bindData() {
 
         if (null == adapter) {
-            adapter = new NearCustomerAdapter(getActivity(), mCustomers, customer_type);
+            adapter = new NearCustomerAdapter(getActivity(), mPagination.getRecords(), customer_type);
             listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    if (customer_type == Customer.CUSTOMER_TYPE_NEAR_COMPANY) {
+                        Toast("你没有查看权限");
+                    } else {
+                        Intent intent = new Intent();
+                        intent.putExtra("Id", mPagination.getRecords().get(position - 1).getId());
+                        intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
+                        startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
+                        mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    }
+                }
+            });
         } else {
             adapter.notifyDataSetChanged();
         }
-
-        if(!isPullUp&&mCustomers.size()==0)
+        if(mPagination.isEnpty())
             ll_loading.setStatus(LoadingLayout.Empty);
         else {
             ll_loading.setStatus(LoadingLayout.Success);
         }
-
-        /**
-         * 列表监听 进入客户详情页面
-         * */
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if (customer_type == Customer.CUSTOMER_TYPE_NEAR_COMPANY) {
-                    Toast("你没有查看权限");
-                } else {
-                    Intent intent = new Intent();
-                    intent.putExtra("Id", mCustomers.get(position - 1).getId());
-                    intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                    startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
-                    mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                }
-            }
-        });
+        if (mPagination.isNeedToBackTop()) {
+            listView.getRefreshableView().setSelection(0);
+        }
     }
 }

@@ -140,6 +140,17 @@ public class TeamCustomerFragment extends BaseCustomerFragment {
     }
 
 
+    @Override
+    protected void onNearCustomerBtn() {
+        Bundle bundle = new Bundle();
+        bundle.putString("position", position);
+        bundle.putSerializable("nearCount", nearCount);
+        bundle.putInt("type", CustomerManagerActivity.NEARCUS_TEAM);//团队2 个人1
+        app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_ZOOM_IN, false, bundle);
+        UmengAnalytics.umengSend(mActivity, UmengAnalytics.customerNearby);
+    }
+
+
     /**
      * 获取数据
      */
@@ -156,8 +167,39 @@ public class TeamCustomerFragment extends BaseCustomerFragment {
 
                     public void onNext(PaginationX<Customer> customerPaginationX) {
                        success(customerPaginationX);
+                        getNearCustomersInfo();
                     }
                 });
+    }
+
+
+    /**
+     * http获取附近客户信息
+     */
+    protected void getNearCustomersInfo() {
+        new LocationUtilGD(mActivity, new LocationUtilGD.AfterLocation() {
+            @Override
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+                LocationUtilGD.sotpLocation();
+                position = String.valueOf(longitude).concat(",").concat(String.valueOf(latitude));
+                CustomerService.getNearbyTeamCustomerCount(position)
+                        .subscribe(new DefaultLoyoSubscriber<NearCount>() {
+                            public void onNext(NearCount count) {
+                                nearCount = count;
+                                if (null != nearCount) {
+                                    nearTv.setText("发现" + nearCount.total + "个附近客户");
+                                    showNearCustomersView();
+                                }
+                            }
+                        });
+                UMengTools.sendLocationInfo(address, longitude, latitude);
+            }
+
+            @Override
+            public void OnLocationGDFailed() {
+                LocationUtilGD.sotpLocation();
+            }
+        });
     }
 
     /**
