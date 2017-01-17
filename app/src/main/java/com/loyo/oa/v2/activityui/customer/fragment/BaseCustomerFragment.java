@@ -60,8 +60,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 客户管理 的基类
- * Created by yyy on 16/6/1.
+ * 客户管理，四个基本fragment的基类，统一数据处理和ui
+ * 有处理不一样的地方，直接覆盖方法就可以了。
  */
 public abstract class BaseCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, MyCustomerFragView {
 

@@ -85,7 +85,7 @@ public class CommCustomerFragment extends BaseCustomerFragment {
                     filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
                     String[] keys = key.split(" ");
                     params.put("field",keys[0]);
-                    params.put("order",keys[0]);
+                    params.put("order",keys[1]);
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.timePublic);
                 } else if (menuIndex == 1) { // TagFilter
                     params.put("tagsParams",userInfo.toString());
