@@ -35,11 +35,7 @@ public class ViewOrderDetailsExtra extends LinearLayout {
         name = (TextView) convertView.findViewById(R.id.saledetils_name);
         value = (TextView) convertView.findViewById(R.id.saledetils_value);
         name.setText(mData.label + "：");
-        if (!TextUtils.isEmpty(mData.val) && "long".equals(mData.type)) {
-            value.setText(DateTool.getDateTimeFriendly(Long.parseLong(mData.val)));
-        } else {
-            value.setText(mData.val);
-        }
+        value.setText(mData.getFormatValue());
         addView(convertView);
     }
 }
