@@ -84,8 +84,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 
     @Override
     public void getPageData() {
-        ll_loading.setVisibility(View.VISIBLE);
-        ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
 
@@ -93,7 +91,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
      * 初始化
      */
     void initView() {
-        ll_loading.setVisibility(View.GONE);
+        ll_loading.setStatus(LoadingLayout.Success);
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
