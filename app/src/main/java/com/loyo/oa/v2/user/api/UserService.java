@@ -71,7 +71,7 @@ public class UserService {
     Observable<Object> updatePassword(HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
-                        .build(FinalVariables.GET_ORGANIZATION)
+                        .build(FinalVariables.URL_UPDATE_PASSWORD)
                         .create(IUser.class)
                         .updatePassword(map)
                         .compose(RetrofitAdapterFactory.<Object>compatApplySchedulers());
