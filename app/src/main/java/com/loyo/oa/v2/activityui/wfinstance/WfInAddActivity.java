@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Department;
+import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.common.ApprovalAddBuilder;
@@ -230,7 +231,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
                 case R.id.ll_project:
                     Bundle bundle2 = new Bundle();
                     bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                    app.startActivityForResult(WfInAddActivity.this, WfinAddOrEditProjectSearchActivity.class,
+                    app.startActivityForResult(WfInAddActivity.this, OtherModuleSelectSelectProjectActivity.class,
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);
                     break;

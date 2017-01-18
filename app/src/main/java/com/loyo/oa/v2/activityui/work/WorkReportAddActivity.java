@@ -34,6 +34,7 @@ import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
+import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.work.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
@@ -552,9 +553,8 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             /*选择项目归档*/
             case R.id.layout_mproject:
                 mBundle = new Bundle();
-                mBundle.putInt("from", WORK_ADD);
                 mBundle.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                app.startActivityForResult(WorkReportAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
+                app.startActivityForResult(WorkReportAddActivity.this, OtherModuleSelectSelectProjectActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
                 break;
         }
     }

@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.wfinstance;
+package com.loyo.oa.v2.activityui.project;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
-import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.project.api.ProjectService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -20,11 +19,11 @@ import java.util.HashMap;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 :项目搜索
+ * 描述 : 选择项目，这个主要是提供给其他模块调用，选择项目，eg，任务，审批的关联项目调用
  * 作者 : ykb
  * 时间 : 15/10/14.
  */
-public class WfinAddOrEditProjectSearchActivity extends BaseSearchActivity<Project> {
+public class OtherModuleSelectSelectProjectActivity extends BaseSearchActivity<Project> {
     private Bundle mBundle;
 
     @Override
@@ -51,12 +50,12 @@ public class WfinAddOrEditProjectSearchActivity extends BaseSearchActivity<Proje
         ProjectService.getProjects(params).subscribe(new DefaultLoyoSubscriber<PaginationX<Project>>(ll_loading) {
             @Override
             public void onNext(PaginationX<Project> projectPaginationX) {
-                WfinAddOrEditProjectSearchActivity.this.success(projectPaginationX);
+                OtherModuleSelectSelectProjectActivity.this.success(projectPaginationX);
             }
 
             @Override
             public void onError(Throwable e) {
-                WfinAddOrEditProjectSearchActivity.this.fail(e);
+                OtherModuleSelectSelectProjectActivity.this.fail(e);
             }
         });
 
@@ -71,7 +70,7 @@ public class WfinAddOrEditProjectSearchActivity extends BaseSearchActivity<Proje
     public void onListItemClick(View view, int position) {
         Intent mIntent = new Intent();
         mIntent.putExtra("data", paginationX.getRecords().get(position));
-        app.finishActivity(WfinAddOrEditProjectSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+        app.finishActivity(OtherModuleSelectSelectProjectActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
     }
 
     @Override

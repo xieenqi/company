@@ -163,4 +163,14 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         pCersener.pullUpCus();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Intent mIntent = new Intent(mActivity, FollowAddActivity.class);
+        mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+        mIntent.putExtra(Customer.class.getName(), adapter.getItemData(position - 1));
+        startActivity(mIntent);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+        mActivity.finish();
+    }
 }

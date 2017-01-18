@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
+import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
@@ -410,9 +411,8 @@ public class TasksEditActivity extends BaseActivity {
             /*关联项目*/
             case R.id.layout_project:
                 Bundle bundle2 = new Bundle();
-                bundle2.putInt("from", TASKS_ADD);
                 bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                app.startActivityForResult(TasksEditActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
+                app.startActivityForResult(TasksEditActivity.this, OtherModuleSelectSelectProjectActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
                 break;
 
             /*关联客户*/

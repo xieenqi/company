@@ -165,7 +165,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 //                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
 //                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 //                        break;
-//                    //新建任务 所属项目
+//                    //新建任务 所属项目－－
 //                    case TASKS_ADD:
 //                        mIntent = new Intent();
 //                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
@@ -179,7 +179,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 //                    case SIGNIN_ADD:
 //                        returnData(position - 2);
 //                        break;
-//                    //新建报告
+//                    //新建报告--
 //                    case WORK_ADD:
 //                        mIntent = new Intent();
 //                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
@@ -191,13 +191,13 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 //                        mIntent.putExtra("Id", paginationX.getRecords().get(position - 2).getId());
 //                        startActivity(mIntent);
 //                        break;
-//                    //任务管理
+//                    //任务管理--
 //                    case TASKS_MANAGE:
 //                        mIntent = new Intent(getApplicationContext(), TasksInfoActivity_.class);
 //                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
 //                        startActivity(mIntent);
 //                        break;
-//                    //工作报告管理
+//                    //工作报告管理--
 //                    case WORK_MANAGE:
 //                        mIntent = new Intent(getApplicationContext(), WorkReportsInfoActivity_.class);
 //                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
@@ -209,13 +209,13 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 //                        mIntent.putExtra("projectId", paginationX.getRecords().get(position - 2).getId());
 //                        startActivity(mIntent);
 //                        break;
-//                    //审批管理
+//                    //审批管理--
 //                    case WFIN_MANAGE:
 //                        mIntent = new Intent(getApplicationContext(), WfinstanceInfoActivity_.class);
 //                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
 //                        startActivity(mIntent);
 //                        break;
-//                    //线索管理
+//                    //线索管理--
 //                    case CLUE_MANAGE:
 //                        mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
 //                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());

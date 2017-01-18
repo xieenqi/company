@@ -37,6 +37,7 @@ import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
 import com.loyo.oa.v2.application.MainApp;
@@ -490,9 +491,8 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
             /*所属项目*/
                     case R.id.layout_project:
                         Bundle bundle2 = new Bundle();
-                        bundle2.putInt("from", TASKS_ADD);
                         bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                        app.startActivityForResult(TasksAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                        app.startActivityForResult(TasksAddActivity.this, OtherModuleSelectSelectProjectActivity.class, MainApp.ENTER_TYPE_RIGHT,
                                 FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
                         break;
 

@@ -20,7 +20,7 @@ import retrofit.Callback;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 :项目搜索
+ * 描述 :项目搜索,从项目管理中进来，项目搜索
  * 作者 : ykb
  * 时间 : 15/10/14.
  */

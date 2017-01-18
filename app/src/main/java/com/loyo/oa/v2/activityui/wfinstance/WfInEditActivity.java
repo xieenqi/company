@@ -21,6 +21,7 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Department;
+import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.event.WfinRushEvent;
@@ -213,7 +214,6 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
     private View.OnClickListener onClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Log.i("tttttttttt", "onClick: 1111");
             switch (v.getId()) {
                 //返回
                 case R.id.img_title_left:
@@ -232,10 +232,9 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
 
                 //所属项目选择
                 case R.id.ll_project:
-                    Log.i("tttttttttt", "onClick: ll_project");
                     Bundle bundle2 = new Bundle();
                     bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                    app.startActivityForResult(WfInEditActivity.this, WfinAddOrEditProjectSearchActivity.class,
+                    app.startActivityForResult(WfInEditActivity.this, OtherModuleSelectSelectProjectActivity.class,
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);
                     break;
