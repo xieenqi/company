@@ -134,9 +134,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
         refreshListView.setOnRefreshListener(this);
 
         ListView listView = refreshListView.getRefreshableView();
-        adapter = new CommonSearchAdapter();
-        listView.setAdapter(adapter);
         if (isShowHeadView()) {
+            Log.i("tttttttttt", "initView: show");
             LayoutInflater mInflater = LayoutInflater.from(this);
             headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
             headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
@@ -150,13 +149,17 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
             });
         }
 
+        adapter = new CommonSearchAdapter();
+        listView.setAdapter(adapter);
+
+
 //        /**列表监听器*/
 //        refreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 //                Intent mIntent;
 //                switch (befromPage) {
-//                    //新建审批
+//                    //新建审批--
 //                    case WFIN_ADD:
 //                        mIntent = new Intent();
 //                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
@@ -182,7 +185,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 //                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
 //                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 //                        break;
-//                    //客户管理
+//                    //客户管理--
 //                    case CUSTOMER_MANAGE:
 //                        mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
 //                        mIntent.putExtra("Id", paginationX.getRecords().get(position - 2).getId());
@@ -200,7 +203,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 //                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
 //                        startActivity(mIntent);
 //                        break;
-//                    //项目管理
+//                    //项目管理--
 //                    case PEOJECT_MANAGE:
 //                        mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
 //                        mIntent.putExtra("projectId", paginationX.getRecords().get(position - 2).getId());
@@ -232,7 +235,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
         refreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("ttttt", "onItemClick: position="+position);
                 if(isShowHeadView()){
                     onListItemClick(view, position-2);
                 }else{
@@ -271,6 +273,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
     public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
         paginationX.setFirstPage();
+        ll_loading.setStatus(LoadingLayout.Loading);
         getPageData();
     }
 

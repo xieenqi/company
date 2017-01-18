@@ -546,6 +546,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
+            android:name=".activityui.wfinstance.WfinAddOrEditProjectSearchActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
             android:name=".activityui.discuss.MyDiscussActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

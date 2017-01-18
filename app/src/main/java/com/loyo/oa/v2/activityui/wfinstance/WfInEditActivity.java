@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.wfinstance;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -213,6 +214,7 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
     private View.OnClickListener onClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Log.i("tttttttttt", "onClick: 1111");
             switch (v.getId()) {
                 //返回
                 case R.id.img_title_left:
@@ -231,10 +233,10 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
 
                 //所属项目选择
                 case R.id.ll_project:
+                    Log.i("tttttttttt", "onClick: ll_project");
                     Bundle bundle2 = new Bundle();
-                    bundle2.putInt("from", BaseActivity.WFIN_ADD);
                     bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                    app.startActivityForResult(WfInEditActivity.this, ProjectSearchActivity.class,
+                    app.startActivityForResult(WfInEditActivity.this, WfinAddOrEditProjectSearchActivity.class,
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);
                     break;
