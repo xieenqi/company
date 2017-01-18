@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.j256.ormlite.stmt.query.In;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
 import com.loyo.oa.v2.activityui.project.api.ProjectService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -31,20 +34,34 @@ import java.util.HashMap;
 public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<Customer> {
 
     private int type = 0;
+    private boolean jumpNewPage=false;
+    private Class<?> cls;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         if (null != getIntent()) {
             type = getIntent().getIntExtra(ExtraAndResult.EXTRA_TYPE, 0);
+            jumpNewPage = getIntent().getBooleanExtra("jumpNewPage", false);
+            cls= (Class<?>) getIntent().getSerializableExtra("class");
         }
         super.onCreate(savedInstanceState);
+        getPageData();
     }
 
     @Override
     public void onListItemClick(View view, int position) {
-        Intent mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
-        mIntent.putExtra("Id", paginationX.getRecords().get(position).getId());
-        startActivity(mIntent);
+        if(jumpNewPage){
+            Intent mIntent=new Intent();
+            mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+            mIntent.putExtra(Customer.class.getName(), paginationX.getRecords().get(position));
+            mIntent.setClass(this,cls);
+            startActivity(mIntent);
+            overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+        }else{
+            Intent intent=new Intent();
+            intent.putExtra("data",paginationX.getRecords().get(position));
+            app.finishActivity(OtherModuleSelectSelectCustomerActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        }
     }
 
     @Override
@@ -54,10 +71,6 @@ public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<
         viewHolder.content.setText("标签:" + Utils.getTagItems(data));
     }
 
-    @Override
-    public boolean isShowHeadView() {
-        return true;
-    }
 
     @Override
     public void getData() {

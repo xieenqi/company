@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.followup.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,19 @@ import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
+import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowSelectCustomerAndCuleFragmentPCersener;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowSelectCustomerAndCuleFragmentVControl;
+import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
+import com.loyo.oa.v2.activityui.work.WorkReportAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
@@ -30,6 +35,8 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 写跟进 选择 【客户】
@@ -42,6 +49,7 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
     private FollowSelectCustomerAndCuleFragmentPCersener pCersener;
     private MyCustomerAdapter adapter;
     private LoadingLayout ll_loading;
+    private final int CUSTOMER_SELECT=1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,10 +96,11 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
         ll_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle b = new Bundle();
-                b.putInt(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
-                b.putInt("from", BaseActivity.DYNAMIC_MANAGE);
-                app.startActivity(mActivity, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                Intent intent=new Intent(mActivity,OtherModuleSelectSelectCustomerActivity.class);
+                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
+                intent.putExtra("jumpNewPage", true);
+                intent.putExtra("class", FollowAddActivity.class);
+                startActivityForResult(intent,CUSTOMER_SELECT);
             }
         });
     }
@@ -134,7 +143,6 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
                 mIntent.putExtra(Customer.class.getName(), adapter.getItemData(position - 1));
                 startActivity(mIntent);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                mActivity.finish();
             }
         });
     }
@@ -164,13 +172,4 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
         pCersener.pullUpCus();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Intent mIntent = new Intent(mActivity, FollowAddActivity.class);
-        mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
-        mIntent.putExtra(Customer.class.getName(), adapter.getItemData(position - 1));
-        startActivity(mIntent);
-        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-        mActivity.finish();
-    }
 }
