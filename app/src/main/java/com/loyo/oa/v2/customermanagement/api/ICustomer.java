@@ -21,6 +21,7 @@ import com.loyo.oa.v2.beans.CustomerFollowUpModel;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.customermanagement.model.CustomerWrapper;
 import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.ArrayList;
@@ -250,7 +251,7 @@ public interface ICustomer {
     Observable<Customer> getCustomerContacts(@Path("customerId") String id);
 
     @POST("/customer/")
-    Observable<Customer> addNewCustomer(@Body Map<String, Object> map);
+    Observable<CustomerWrapper> addNewCustomer(@Body Map<String, Object> map);
 
     /**
      * 根据 key 获取后台设置信息

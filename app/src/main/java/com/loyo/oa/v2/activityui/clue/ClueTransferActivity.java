@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.type.LoyoBizType;
+import com.loyo.oa.common.utils.LoyoUIThread;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
@@ -41,6 +42,7 @@ import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.customermanagement.model.CustomerWrapper;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -307,19 +309,32 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         map.put("salesleadId", mCluesales.id);
         LogUtil.dee("转移客户发送数据:" + MainApp.gson.toJson(map));
         CustomerService.addNewCustomer(map)
-                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
+                .subscribe(new DefaultLoyoSubscriber<CustomerWrapper>(hud) {
                     @Override
-                    public void onNext(Customer customer) {
-                        try {
-                            Customer retCustomer = customer;
-                            Toast("转移成功");
-                            isSave = false;
-                            Intent intent = new Intent();
-                            intent.putExtra(Customer.class.getName(), retCustomer);
-                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                    public void onNext(final CustomerWrapper customer) {
 
-                        } catch (Exception e) {
-                            Global.ProcException(e);
+                        if (customer.errcode != 0) {
+                            hud.dismiss();
+                            showCommitLoading();
+                            LoyoUIThread.runAfterDelay(new Runnable() {
+                                @Override
+                                public void run() {
+                                    hud.dismissWithError(customer.errmsg);
+                                }
+                            }, 1000);
+                        }
+                        else {
+                            try {
+                                Customer retCustomer = customer;
+                                Toast("转移成功");
+                                isSave = false;
+                                Intent intent = new Intent();
+                                intent.putExtra(Customer.class.getName(), retCustomer);
+                                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+
+                            } catch (Exception e) {
+                                Global.ProcException(e);
+                            }
                         }
                     }
                 });
