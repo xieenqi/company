@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.type.LoyoBizType;
+import com.loyo.oa.common.utils.LoyoUIThread;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
@@ -49,19 +49,18 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.customermanagement.model.CustomerWrapper;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
-import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -74,6 +73,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import hk.ids.gws.android.sclick.SClick;
+import rx.Subscription;
 
 /**
  * 【新建 客户】 页面
@@ -680,20 +680,29 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
         LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
 
-        CustomerService.addNewCustomer(map)
-                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
+        Subscription subscribe = CustomerService.addNewCustomer(map)
+                .subscribe(new DefaultLoyoSubscriber<CustomerWrapper>(hud) {
                     @Override
-                    public void onNext(final Customer customer) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //没有附件
-//                                if (customer == null || customer.id == null) {
-//                                    return;
-//                                }
-                                customerSendSucess(customer);
-                            }
-                        }, 1000);
+                    public void onNext(final CustomerWrapper customer) {
+                        if (customer.errcode != 0) {
+                            hud.dismiss();
+                            showCommitLoading();
+                            LoyoUIThread.runAfterDelay(new Runnable() {
+                                @Override
+                                public void run() {
+                                    hud.dismissWithError(customer.errmsg);
+                                }
+                            }, 100);
+
+                        }
+                        else {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    customerSendSucess(customer);
+                                }
+                            }, 1000);
+                        }
                     }
 
                 });
