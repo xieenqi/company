@@ -195,7 +195,6 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
      */
     public void projectAddWfinstance() {
         if (!TextUtils.isEmpty(projectId)) {
-            ll_project.setEnabled(false);
             tv_project.setText(projectTitle);
         }
     }
