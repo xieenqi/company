@@ -33,6 +33,7 @@ public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer>
     public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_HAVE_TAG = "haveTag";
+    public static final String EXTRA_PICKER_ID = "Id";
 
     private int type = 0;
     private boolean jumpNewPage = false;
@@ -71,6 +72,7 @@ public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer>
             Bundle b = new Bundle();
             b.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
             b.putSerializable(Customer.class.getName(), paginationX.getRecords().get(position));
+            b.putString(EXTRA_PICKER_ID, paginationX.getRecords().get(position).getId());
             MainApp.getMainApp().startActivity(this, cls, MainApp.ENTER_TYPE_RIGHT, false, b);
         } else {
             Intent intent = new Intent();

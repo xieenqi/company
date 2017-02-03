@@ -86,7 +86,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     LoadingLayout ll_loading;
 
     Customer mCustomer;
-    @Extra("Id")
+    @Extra(CustomerSearchOrPickerActivity.EXTRA_PICKER_ID)
     String id;
     //    @Extra(ExtraAndResult.EXTRA_TYPE)  弃用了
 //    public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户" 5.游客

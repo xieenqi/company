@@ -20,8 +20,6 @@ import java.util.HashMap;
 /**
  * com.loyo.oa.v2.activity
  * 描述 : 选择项目，这个主要是提供给其他模块调用，选择项目，eg，任务，审批的关联项目调用
- * 作者 : ykb
- * 时间 : 15/10/14.
  */
 public class OtherModuleSelectSelectProjectActivity extends BaseSearchActivity<Project> {
     private Bundle mBundle;
