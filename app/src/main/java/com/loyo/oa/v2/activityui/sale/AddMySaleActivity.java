@@ -157,6 +157,7 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
                     b.putBoolean(SelfVisibleCustomerPickerActivity.KEY_CAN_RETURN_EMPTY, false);
                     app.startActivityForResult(AddMySaleActivity.this, SelfVisibleCustomerPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
+
                     break;
                 case R.id.ll_stage://选择销售阶段
                     Bundle stage = new Bundle();

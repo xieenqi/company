@@ -36,6 +36,11 @@ import rx.Subscription;
  * 时间 : 15/10/14.
  */
 public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<Customer> {
+    //可传入参数定义
+    public static final String EXTRA_JUMPNEWPAGE="jumpNewPage";
+    public static final String EXTRA_CLASS="class";
+    public static final String EXTRA_CANBEEMPTY="canBeEmpty";
+    public static final String EXTRA_TYPE="type";
 
     private int type = 0;
     private boolean jumpNewPage=false;
@@ -45,10 +50,10 @@ public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         if (null != getIntent()) {
-            type = getIntent().getIntExtra(ExtraAndResult.EXTRA_TYPE, 0);
-            jumpNewPage = getIntent().getBooleanExtra("jumpNewPage", false);
-            canBeEmpty = getIntent().getBooleanExtra("canBeEmpty", false);
-            cls= (Class<?>) getIntent().getSerializableExtra("class");
+            type = getIntent().getIntExtra(EXTRA_TYPE, 0);
+            canBeEmpty = getIntent().getBooleanExtra(EXTRA_CANBEEMPTY, false);
+            jumpNewPage = getIntent().getBooleanExtra(EXTRA_JUMPNEWPAGE, false);
+            cls= (Class<?>) getIntent().getSerializableExtra(EXTRA_CLASS);
         }
         super.onCreate(savedInstanceState);
         ll_loading.setStatus(LoadingLayout.Success);

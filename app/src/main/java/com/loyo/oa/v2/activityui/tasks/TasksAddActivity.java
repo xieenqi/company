@@ -504,8 +504,8 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 //                        app.startActivityForResult(TasksAddActivity.this, SelfVisibleCustomerPickerActivity.class,
 //                                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
                         Bundle parm = new Bundle();
-                        parm.putInt(ExtraAndResult.EXTRA_TYPE, 5);
-                        parm.putBoolean("canBeEmpty",true);
+                        parm.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE, 5);
+                        parm.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_CANBEEMPTY,true);
                         app.startActivityForResult(TasksAddActivity.this, OtherModuleSelectSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, parm);
                         break;
 

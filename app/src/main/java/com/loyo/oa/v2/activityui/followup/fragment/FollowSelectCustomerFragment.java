@@ -96,11 +96,11 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
         ll_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,OtherModuleSelectSelectCustomerActivity.class);
-                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
-                intent.putExtra("jumpNewPage", true);
-                intent.putExtra("class", FollowAddActivity.class);
-                startActivityForResult(intent,CUSTOMER_SELECT);
+                Bundle b=new Bundle();
+                b.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_JUMPNEWPAGE,true);
+                b.putSerializable(OtherModuleSelectSelectCustomerActivity.EXTRA_CLASS,FollowAddActivity.class);
+                b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,CustomerManagerActivity.CUSTOMER_MY);
+                MainApp.getMainApp().startActivityForResult(mActivity,OtherModuleSelectSelectCustomerActivity.class,MainApp.ENTER_TYPE_RIGHT,CUSTOMER_SELECT,b);
             }
         });
     }
