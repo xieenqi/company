@@ -63,12 +63,6 @@ public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer>
     @Override
     public void onListItemClick(View view, int position) {
         if (jumpNewPage) {
-//            Intent mIntent=new Intent();
-//            mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
-//            mIntent.putExtra(Customer.class.getName(), paginationX.getRecords().get(position));
-//            mIntent.setClass(this,cls);
-//            startActivity(mIntent);
-//            overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             Bundle b = new Bundle();
             b.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
             b.putSerializable(Customer.class.getName(), paginationX.getRecords().get(position));

@@ -11,7 +11,7 @@ import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.project.ProjectAddActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
-import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
+import com.loyo.oa.v2.activityui.project.ProjectSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.project.adapter.ProjectExpandableListAdapter;
 import com.loyo.oa.v2.activityui.project.api.ProjectService;
 import com.loyo.oa.v2.activityui.project.common.ProjectStatusMenuModel;
@@ -167,9 +167,13 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
      */
     @Override
     public void openSearch() {
+//        Bundle mBundle = new Bundle();
+//        mBundle.putInt("from", BaseActivity.PEOJECT_MANAGE);
+//        app.startActivity(getActivity(), ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
         Bundle mBundle = new Bundle();
-        mBundle.putInt("from", BaseActivity.PEOJECT_MANAGE);
-        app.startActivity(getActivity(), ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+        mBundle.putBoolean(ProjectSearchOrPickerActivity.EXTRA_JUMP_NEW_PAGE,true);
+        mBundle.putSerializable(ProjectSearchOrPickerActivity.EXTRA_JUMP_PAGE_CLASS,ProjectInfoActivity_.class);
+        app.startActivity(getActivity(), ProjectSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
     }
 
     @Override

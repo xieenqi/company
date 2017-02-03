@@ -25,7 +25,7 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Department;
-import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
+import com.loyo.oa.v2.activityui.project.ProjectSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.common.ApprovalAddBuilder;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinAddPresenter;
@@ -229,8 +229,9 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
                 //所属项目选择
                 case R.id.ll_project:
                     Bundle bundle2 = new Bundle();
-                    bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                    app.startActivityForResult(WfInAddActivity.this, OtherModuleSelectSelectProjectActivity.class,
+                    bundle2.putInt(ProjectSearchOrPickerActivity.EXTRA_STATUS, 1);
+                    bundle2.putBoolean(ProjectSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY, true);
+                    app.startActivityForResult(WfInAddActivity.this, ProjectSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);
                     break;

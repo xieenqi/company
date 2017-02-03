@@ -20,7 +20,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -34,13 +33,14 @@ import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
-import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
+import com.loyo.oa.v2.activityui.project.ProjectSearchOrPickerActivity;
+import com.loyo.oa.v2.activityui.wfinstance.WfInAddActivity;
 import com.loyo.oa.v2.activityui.work.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.activityui.work.bean.HttpDefaultComment;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
@@ -57,7 +57,6 @@ import com.loyo.oa.v2.customview.SingleRowWheelView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -554,7 +553,8 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             case R.id.layout_mproject:
                 mBundle = new Bundle();
                 mBundle.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                app.startActivityForResult(WorkReportAddActivity.this, OtherModuleSelectSelectProjectActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
+                mBundle.putBoolean(ProjectSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY, true);
+                app.startActivityForResult(WorkReportAddActivity.this, ProjectSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
                 break;
         }
     }

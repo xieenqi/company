@@ -21,14 +21,32 @@ import java.util.HashMap;
  * com.loyo.oa.v2.activity
  * 描述 : 选择项目，这个主要是提供给其他模块调用，选择项目，eg，任务，审批的关联项目调用
  */
-public class OtherModuleSelectSelectProjectActivity extends BaseSearchActivity<Project> {
-    private Bundle mBundle;
+public class ProjectSearchOrPickerActivity extends BaseSearchActivity<Project> {
 
+    //可传入参数定义
+    public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";
+    public static final String EXTRA_JUMP_PAGE_CLASS = "class";
+    public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";
+    public static final String EXTRA_PICKER_ID = "projectId";
+    public static final String EXTRA_STATUS = "extra_status";
+
+    private boolean jumpNewPage = false;
+    private Class<?> cls;
+    private boolean canBeEmpty = false;
+    private int status=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent=getIntent();
+        if (null != intent) {
+            canBeEmpty = intent.getBooleanExtra(EXTRA_CAN_BE_EMPTY, false);
+            jumpNewPage = intent.getBooleanExtra(EXTRA_JUMP_NEW_PAGE, false);
+            cls = (Class<?>) intent.getSerializableExtra(EXTRA_JUMP_PAGE_CLASS);
+            status = intent.getIntExtra(EXTRA_STATUS, 0);
+
+        }
         super.onCreate(savedInstanceState);
-        mBundle = getIntent().getExtras();
         ll_loading.setStatus(LoadingLayout.Success);
+
     }
 
     @Override
@@ -36,7 +54,7 @@ public class OtherModuleSelectSelectProjectActivity extends BaseSearchActivity<P
         HashMap<String, Object> params = new HashMap<>();
         params.put("keyword", strSearch);
         //项目 默认搜索全部 选择项目只能是进行中 全部(0) 进行(1) 完成(2)
-        params.put("status", mBundle.getInt(ExtraAndResult.EXTRA_STATUS, -1) == -1 ? 0 : mBundle.getInt(ExtraAndResult.EXTRA_STATUS, -1));
+        params.put("status", status);
         params.put("type", 0);
         params.put("endAt", System.currentTimeMillis() / 1000);
         params.put("startAt", DateTool.getDateStamp("2014-01-01") / 1000);
@@ -46,27 +64,37 @@ public class OtherModuleSelectSelectProjectActivity extends BaseSearchActivity<P
         subscribe=ProjectService.getProjects(params).subscribe(new DefaultLoyoSubscriber<PaginationX<Project>>(ll_loading) {
             @Override
             public void onNext(PaginationX<Project> projectPaginationX) {
-                OtherModuleSelectSelectProjectActivity.this.success(projectPaginationX);
+                ProjectSearchOrPickerActivity.this.success(projectPaginationX);
             }
 
             @Override
             public void onError(Throwable e) {
-                OtherModuleSelectSelectProjectActivity.this.fail(e);
+                ProjectSearchOrPickerActivity.this.fail(e);
             }
         });
 
     }
 
+
+
     @Override
     public boolean isShowHeadView() {
-        return true;
+        return canBeEmpty;
     }
 
     @Override
     public void onListItemClick(View view, int position) {
-        Intent mIntent = new Intent();
-        mIntent.putExtra("data", paginationX.getRecords().get(position));
-        app.finishActivity(OtherModuleSelectSelectProjectActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+        if (jumpNewPage) {
+            Bundle b = new Bundle();
+            b.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+            b.putSerializable(Project.class.getName(), paginationX.getRecords().get(position));
+            b.putString(EXTRA_PICKER_ID, paginationX.getRecords().get(position).getId());
+            MainApp.getMainApp().startActivity(this, cls, MainApp.ENTER_TYPE_RIGHT, false, b);
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("data", paginationX.getRecords().get(position));
+            app.finishActivity(ProjectSearchOrPickerActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        }
     }
 
     @Override
