@@ -23,7 +23,7 @@ import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
@@ -418,9 +418,9 @@ public class TasksEditActivity extends BaseActivity {
 //                app.startActivityForResult(TasksEditActivity.this, SelfVisibleCustomerPickerActivity.class,
 //                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
                 Bundle b=new Bundle();
-                b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,5);
-                b.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_HAVE_TAG,false);
-                app.startActivityForResult(TasksEditActivity.this, OtherModuleSelectSelectCustomerActivity.class,
+                b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
+                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_HAVE_TAG,false);
+                app.startActivityForResult(TasksEditActivity.this, CustomerSearchOrPickerActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
         }

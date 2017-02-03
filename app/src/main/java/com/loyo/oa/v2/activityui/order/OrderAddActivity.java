@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -588,8 +588,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 //                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
 
                 Bundle b = new Bundle();
-                b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,5);
-                app.startActivityForResult(OrderAddActivity.this, OtherModuleSelectSelectCustomerActivity.class,
+                b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
+                app.startActivityForResult(OrderAddActivity.this, CustomerSearchOrPickerActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
 

@@ -28,7 +28,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
@@ -272,10 +271,15 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                         break;
                 }
 
+//                Bundle b = new Bundle();
+//                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
+//                b.putInt("from", BaseActivity.CUSTOMER_MANAGE);
+//                app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 Bundle b = new Bundle();
-                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
-                b.putInt("from", BaseActivity.CUSTOMER_MANAGE);
-                app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, type);
+                app.startActivity(this, CustomerSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+
+
                 break;
 
             default:

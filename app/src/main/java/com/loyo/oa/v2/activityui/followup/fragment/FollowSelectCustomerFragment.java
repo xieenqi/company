@@ -14,7 +14,7 @@ import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
-import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
@@ -89,10 +89,10 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
             @Override
             public void onClick(View v) {
                 Bundle b=new Bundle();
-                b.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_JUMP_NEW_PAGE,true);
-                b.putSerializable(OtherModuleSelectSelectCustomerActivity.EXTRA_JUMP_PAGE_CLASS,FollowAddActivity.class);
-                b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,CustomerManagerActivity.CUSTOMER_MY);
-                MainApp.getMainApp().startActivityForResult(mActivity,OtherModuleSelectSelectCustomerActivity.class,MainApp.ENTER_TYPE_RIGHT,CUSTOMER_SELECT,b);
+                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_JUMP_NEW_PAGE,true);
+                b.putSerializable(CustomerSearchOrPickerActivity.EXTRA_JUMP_PAGE_CLASS,FollowAddActivity.class);
+                b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,CustomerManagerActivity.CUSTOMER_MY);
+                MainApp.getMainApp().startActivityForResult(mActivity,CustomerSearchOrPickerActivity.class,MainApp.ENTER_TYPE_RIGHT,CUSTOMER_SELECT,b);
             }
         });
     }

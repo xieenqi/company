@@ -22,12 +22,11 @@ import java.util.HashMap;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 : 选择项目，这个主要是提供给其他模块调用，选择项目，eg，任务，审批的关联项目调用
+ * 描述 : 搜索或者选择项目，eg，客户管理里面搜索，任务，审批的关联项目选择客户调用
  * 如果传递jumpNewPage＝true，需要传入一个class，然后跳到这个页面,type是客户类型
- * 作者 : ykb
- * 时间 : 15/10/14.
+ * 作者 : jie
  */
-public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<Customer> {
+public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer> {
     //可传入参数定义
     public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";
     public static final String EXTRA_JUMP_PAGE_CLASS = "class";
@@ -76,7 +75,7 @@ public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<
         } else {
             Intent intent = new Intent();
             intent.putExtra("data", paginationX.getRecords().get(position));
-            app.finishActivity(OtherModuleSelectSelectCustomerActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+            app.finishActivity(CustomerSearchOrPickerActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
         }
     }
 
@@ -129,12 +128,12 @@ public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>(LoyoErrorChecker.SILENCE) {
                     @Override
                     public void onError(Throwable e) {
-                        OtherModuleSelectSelectCustomerActivity.this.fail(e);
+                        CustomerSearchOrPickerActivity.this.fail(e);
                     }
 
                     @Override
                     public void onNext(PaginationX<Customer> customerPaginationX) {
-                        OtherModuleSelectSelectCustomerActivity.this.success(customerPaginationX);
+                        CustomerSearchOrPickerActivity.this.success(customerPaginationX);
 
                     }
                 });

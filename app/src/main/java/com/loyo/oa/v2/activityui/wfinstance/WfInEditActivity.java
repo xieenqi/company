@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.wfinstance;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,7 +17,7 @@ import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
@@ -263,9 +262,9 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
 //                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
 
                     Bundle b = new Bundle();
-                    b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,5);
-                    b.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_HAVE_TAG,false);
-                    app.startActivityForResult(WfInEditActivity.this, OtherModuleSelectSelectCustomerActivity.class,
+                    b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
+                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_HAVE_TAG,false);
+                    app.startActivityForResult(WfInEditActivity.this, CustomerSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
                 default:
