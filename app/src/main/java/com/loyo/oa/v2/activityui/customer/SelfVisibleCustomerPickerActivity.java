@@ -270,7 +270,6 @@ public class SelfVisibleCustomerPickerActivity extends BaseLoadingActivity imple
 
         class Holder {
             TextView tv_name, tv_followup_time, tv_tags;
-
             public void setContent(Customer item) {
                 tv_name.setText(item.name);
                 String lastActivityAt = DateTool.getDateTimeFriendly(item.lastActAt);

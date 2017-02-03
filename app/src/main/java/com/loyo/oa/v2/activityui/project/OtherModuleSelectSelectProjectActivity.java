@@ -30,9 +30,7 @@ public class OtherModuleSelectSelectProjectActivity extends BaseSearchActivity<P
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBundle = getIntent().getExtras();
-        //这里是进入就显示全部项目
-        ll_loading.setStatus(LoadingLayout.Loading);
-        getPageData();
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
     @Override
@@ -47,7 +45,7 @@ public class OtherModuleSelectSelectProjectActivity extends BaseSearchActivity<P
         params.put("pageIndex", paginationX.getShouldLoadPageIndex());
         params.put("pageSize", paginationX.getPageSize());
 
-        ProjectService.getProjects(params).subscribe(new DefaultLoyoSubscriber<PaginationX<Project>>(ll_loading) {
+        subscribe=ProjectService.getProjects(params).subscribe(new DefaultLoyoSubscriber<PaginationX<Project>>(ll_loading) {
             @Override
             public void onNext(PaginationX<Project> projectPaginationX) {
                 OtherModuleSelectSelectProjectActivity.this.success(projectPaginationX);

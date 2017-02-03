@@ -74,7 +74,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
                 break;
 
         }
-        RetrofitAdapterFactory.getInstance()
+        subscribe=RetrofitAdapterFactory.getInstance()
                 .build(/*TODO:*/url)
                 .create(ICustomer.class)
                 .getCustomers(params)

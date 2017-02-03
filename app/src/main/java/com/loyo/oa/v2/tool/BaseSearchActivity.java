@@ -46,6 +46,8 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 
+import rx.Subscription;
+
 /**
  * 搜索的 基类
  * 客户搜索；
@@ -69,7 +71,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
     public CommonSearchAdapter adapter;
     public PaginationX<T> paginationX = new PaginationX(20);
     public RelativeLayout headerViewBtn;
-
+    public Subscription subscribe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,12 +122,26 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
+
             @Override
             public void afterTextChanged(Editable editable) {
-                doSearch();
+                //数据为空的时候，不显示数据
+                if (TextUtils.isEmpty(editable.toString())) {
+                    //不再处理后续网络请求的返回
+                    if (null != subscribe) {
+                        subscribe.unsubscribe();
+                        subscribe = null;
+                    }
+                    paginationX.getRecords().clear();
+                    adapter.notifyDataSetChanged();
+                    ll_loading.setStatus(LoadingLayout.Success);
+                } else {
+                    doSearch();
+                }
             }
         });
         edt_search.requestFocus();
@@ -135,7 +151,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 
         ListView listView = refreshListView.getRefreshableView();
         if (isShowHeadView()) {
-            Log.i("tttttttttt", "initView: show");
             LayoutInflater mInflater = LayoutInflater.from(this);
             headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
             headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
@@ -235,10 +250,10 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
         refreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(isShowHeadView()){
-                    onListItemClick(view, position-2);
-                }else{
-                    onListItemClick(view, position-1);
+                if (isShowHeadView()) {
+                    onListItemClick(view, position - 2);
+                } else {
+                    onListItemClick(view, position - 1);
                 }
             }
         });
@@ -329,7 +344,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
     public void success(PaginationX<T> data) {
         refreshListView.onRefreshComplete();
         paginationX.loadRecords(data);
-        if (paginationX.isEnpty()) {
+        if (paginationX.isEnpty() && !isShowHeadView()) {
             ll_loading.setStatus(LoadingLayout.Empty);
         } else {
             ll_loading.setStatus(LoadingLayout.Success);
@@ -359,6 +374,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
      * 加载数据的方法，子类通过复写分方法，异步加载数据；
      * 加载以后，成功就调用＃success（）；
      * 失败就调用fail（）；
+     * 注意，需要把网络请求的实例赋值给subscribe，否则无法取消请求
      */
     public abstract void getData();
 
@@ -366,7 +382,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
      * 当item被点击的时候，子类复写，来决定怎么处理
      * 默认处理是把数据添加到intent里面，关闭当前页面，带回去
      */
-    public  void onListItemClick(View view, int position){
+    public void onListItemClick(View view, int position) {
         Intent intent = new Intent();
         intent.putExtra("data", adapter.getItem(position));
         setResult(RESULT_OK, intent);
@@ -384,10 +400,11 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 
     /**
      * 绑定数据
+     *
      * @param viewHolder 试图
-     * @param data 数据
+     * @param data       数据
      */
-    public abstract void bindData(CommonSearchAdapter.SearchViewHolder viewHolder,T data);
+    public abstract void bindData(CommonSearchAdapter.SearchViewHolder viewHolder, T data);
 
     public class CommonSearchAdapter extends BaseAdapter {
 
@@ -411,11 +428,11 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
             SearchViewHolder viewHolder = null;
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_listview_common, null, false);
-            }else{
-                viewHolder= (SearchViewHolder) convertView.getTag();
+            } else {
+                viewHolder = (SearchViewHolder) convertView.getTag();
             }
-            if(null==viewHolder){
-                viewHolder=new SearchViewHolder();
+            if (null == viewHolder) {
+                viewHolder = new SearchViewHolder();
                 viewHolder.title = ViewHolder.get(convertView, R.id.tv_title);
                 viewHolder.content = ViewHolder.get(convertView, R.id.tv_content);
                 viewHolder.time = ViewHolder.get(convertView, R.id.tv_time);
@@ -424,7 +441,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
                 convertView.setTag(viewHolder);
             }
             T item = getItem(i);
-            bindData(viewHolder,item);
+            bindData(viewHolder, item);
             return convertView;
 
 //            Object o=null;
@@ -529,7 +546,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 //            }
 //            return convertView;
         }
-        public class SearchViewHolder{
+
+        public class SearchViewHolder {
             public TextView title;
             public TextView content;
             public TextView time;

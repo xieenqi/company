@@ -33,8 +33,7 @@ public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReportReco
         //params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         params.put("pageIndex", paginationX.getShouldLoadPageIndex());
         params.put("pageSize", paginationX.getPageSize());
-
-        WorkReportService.getWorkReportsData(params).subscribe(new DefaultLoyoSubscriber<PaginationX<WorkReportRecord>>(ll_loading) {
+        subscribe=WorkReportService.getWorkReportsData(params).subscribe(new DefaultLoyoSubscriber<PaginationX<WorkReportRecord>>(ll_loading) {
             @Override
             public void onError(Throwable e) {
                 WorkReportsSearchActivity.this.fail(e);

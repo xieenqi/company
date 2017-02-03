@@ -19,15 +19,19 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.HashMap;
 
+import rx.Subscription;
+
 /**
  * com.loyo.oa.v2.activity
  * 描述 : 选择项目，这个主要是提供给其他模块调用，选择项目，eg，任务，审批的关联项目调用
+ * 如果传递jumpNewPage＝true，需要传入一个class，然后跳到这个页面,type是客户类型
  * 作者 : ykb
  * 时间 : 15/10/14.
  */
@@ -36,27 +40,38 @@ public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<
     private int type = 0;
     private boolean jumpNewPage=false;
     private Class<?> cls;
+    private boolean canBeEmpty=false;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         if (null != getIntent()) {
             type = getIntent().getIntExtra(ExtraAndResult.EXTRA_TYPE, 0);
             jumpNewPage = getIntent().getBooleanExtra("jumpNewPage", false);
+            canBeEmpty = getIntent().getBooleanExtra("canBeEmpty", false);
             cls= (Class<?>) getIntent().getSerializableExtra("class");
         }
         super.onCreate(savedInstanceState);
-        getPageData();
+        ll_loading.setStatus(LoadingLayout.Success);
+    }
+
+    @Override
+    public boolean isShowHeadView() {
+        return canBeEmpty;
     }
 
     @Override
     public void onListItemClick(View view, int position) {
         if(jumpNewPage){
-            Intent mIntent=new Intent();
-            mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
-            mIntent.putExtra(Customer.class.getName(), paginationX.getRecords().get(position));
-            mIntent.setClass(this,cls);
-            startActivity(mIntent);
-            overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//            Intent mIntent=new Intent();
+//            mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+//            mIntent.putExtra(Customer.class.getName(), paginationX.getRecords().get(position));
+//            mIntent.setClass(this,cls);
+//            startActivity(mIntent);
+//            overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            Bundle b=new Bundle();
+            b.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+            b.putSerializable(Customer.class.getName(), paginationX.getRecords().get(position));
+            MainApp.getMainApp().startActivity(this,cls,MainApp.ENTER_TYPE_RIGHT,false,b);
         }else{
             Intent intent=new Intent();
             intent.putExtra("data",paginationX.getRecords().get(position));
@@ -74,9 +89,8 @@ public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<
 
     @Override
     public void getData() {
-        String url = FinalVariables.SEARCH_CUSTOMERS_SELF; //这里填写我负责的查询 等服务端接口
+        String url; //这里填写我负责的查询 等服务端接口
         HashMap<String, Object> params = new HashMap<>();
-
         params.put("pageIndex", paginationX.getShouldLoadPageIndex());
         params.put("pageSize", paginationX.getPageSize());
         params.put("keyWords", strSearch);
@@ -97,18 +111,20 @@ public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<
             case 4:
                 url = FinalVariables.SEARCH_CUSTOMERS_PUBLIC;
                 break;
-            default:
-                Toast("参数异常,请重启App");
-                finish();
+            /*我的客户数集(我参与的 和 我负责的)*/
+            case 5:
+                url=FinalVariables.QUERY_CUSTOMERS_MY;
                 break;
-
+            default:
+                //如果没有获取到type 参数，就抛出异常
+                throw new UnsupportedOperationException("type类型为空或者不支持！");
         }
-        RetrofitAdapterFactory.getInstance()
+         subscribe=RetrofitAdapterFactory.getInstance()
                 .build(/*TODO:*/url)
                 .create(ICustomer.class)
                 .getCustomers(params)
                 .compose(RetrofitAdapterFactory.<PaginationX<Customer>>compatApplySchedulers())
-                .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
+                .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>(LoyoErrorChecker.SILENCE) {
                     @Override
                     public void onError(Throwable e) {
                         OtherModuleSelectSelectCustomerActivity.this.fail(e);

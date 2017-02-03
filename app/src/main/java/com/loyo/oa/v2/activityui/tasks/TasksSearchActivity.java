@@ -22,14 +22,6 @@ import java.util.HashMap;
  */
 public class TasksSearchActivity extends BaseSearchActivity<TaskRecord> {
 
-//    @Override
-//    protected void openDetail(final int position) {
-//        Intent intent = new Intent();
-//        intent.setClass(mContext, TasksInfoActivity_.class);
-//        intent.putExtra(ExtraAndResult.EXTRA_ID, ((Task) adapter.getItem(position)).getId());
-//        startActivity(intent);
-//    }
-
     @Override
     public void getData() {
         HashMap<String, Object> params = new HashMap<>();
@@ -40,7 +32,7 @@ public class TasksSearchActivity extends BaseSearchActivity<TaskRecord> {
         params.put("pageSize", paginationX.getPageSize());
         params.put("joinType", 0);
         params.put("status", 0);
-        TaskService.getTasksData(params)
+        subscribe=TaskService.getTasksData(params)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<TaskRecord>>(ll_loading) {
                     @Override
                     public void onError(Throwable e) {
