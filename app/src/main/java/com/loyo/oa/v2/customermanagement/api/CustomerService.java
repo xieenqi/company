@@ -21,6 +21,7 @@ import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.customermanagement.model.CustomerWrapper;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.Config_project;
@@ -120,13 +121,13 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<ArrayList<ContactLeftExtras>>compatApplySchedulers());
     }
 
-    public static Observable<Customer> addNewCustomer(HashMap<String, Object> map) {
+    public static Observable<CustomerWrapper> addNewCustomer(HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ICustomer.class)
                         .addNewCustomer(map)
-                        .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<CustomerWrapper>compatApplySchedulers());
     }
 
 
