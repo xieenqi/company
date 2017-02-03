@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.followup.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,25 +17,18 @@ import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
-import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowSelectCustomerAndCuleFragmentPCersener;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowSelectCustomerAndCuleFragmentVControl;
-import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
-import com.loyo.oa.v2.activityui.work.WorkReportAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 
 import java.util.ArrayList;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * 写跟进 选择 【客户】
@@ -97,8 +89,8 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
             @Override
             public void onClick(View v) {
                 Bundle b=new Bundle();
-                b.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_JUMPNEWPAGE,true);
-                b.putSerializable(OtherModuleSelectSelectCustomerActivity.EXTRA_CLASS,FollowAddActivity.class);
+                b.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_JUMP_NEW_PAGE,true);
+                b.putSerializable(OtherModuleSelectSelectCustomerActivity.EXTRA_JUMP_PAGE_CLASS,FollowAddActivity.class);
                 b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,CustomerManagerActivity.CUSTOMER_MY);
                 MainApp.getMainApp().startActivityForResult(mActivity,OtherModuleSelectSelectCustomerActivity.class,MainApp.ENTER_TYPE_RIGHT,CUSTOMER_SELECT,b);
             }

@@ -37,7 +37,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
-import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
+import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
@@ -537,8 +537,9 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             /*选择客户*/
                 case R.id.ll_customer:
                     Bundle b = new Bundle();
-                    b.putBoolean("tagVisibility", true);
-                    app.startActivityForResult(FollowAddActivity.this, SelfVisibleCustomerPickerActivity.class,
+                    b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,5);
+                    b.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_CAN_BE_EMPTY,true);
+                    app.startActivityForResult(FollowAddActivity.this, OtherModuleSelectSelectCustomerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
 

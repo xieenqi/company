@@ -22,11 +22,10 @@ import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
+import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
-import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.common.ApprovalAddBuilder;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinAddPresenter;
@@ -237,7 +236,12 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
                     break;
                 //所属客户选择
                 case R.id.ll_customer:
-                    app.startActivityForResult(WfInAddActivity.this, SelfVisibleCustomerPickerActivity.class,
+//                    app.startActivityForResult(WfInAddActivity.this, SelfVisibleCustomerPickerActivity.class,
+//                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+                    Bundle b = new Bundle();
+                    b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,5);
+                    b.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_HAVE_TAG,false);
+                    app.startActivityForResult(WfInAddActivity.this, OtherModuleSelectSelectCustomerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
                     break;
 

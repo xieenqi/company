@@ -31,17 +31,13 @@ import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
-import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
-import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
@@ -505,7 +501,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 //                                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
                         Bundle parm = new Bundle();
                         parm.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE, 5);
-                        parm.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_CANBEEMPTY,true);
+                        parm.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_CAN_BE_EMPTY,true);
                         app.startActivityForResult(TasksAddActivity.this, OtherModuleSelectSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, parm);
                         break;
 

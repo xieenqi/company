@@ -4,19 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.j256.ormlite.stmt.query.In;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
-import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
-import com.loyo.oa.v2.activityui.project.api.ProjectService;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -25,8 +19,6 @@ import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.HashMap;
-
-import rx.Subscription;
 
 /**
  * com.loyo.oa.v2.activity
@@ -37,23 +29,27 @@ import rx.Subscription;
  */
 public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<Customer> {
     //可传入参数定义
-    public static final String EXTRA_JUMPNEWPAGE="jumpNewPage";
-    public static final String EXTRA_CLASS="class";
-    public static final String EXTRA_CANBEEMPTY="canBeEmpty";
-    public static final String EXTRA_TYPE="type";
+    public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";
+    public static final String EXTRA_JUMP_PAGE_CLASS = "class";
+    public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";
+    public static final String EXTRA_TYPE = "type";
+    public static final String EXTRA_HAVE_TAG = "haveTag";
 
     private int type = 0;
-    private boolean jumpNewPage=false;
+    private boolean jumpNewPage = false;
     private Class<?> cls;
-    private boolean canBeEmpty=false;
+    private boolean canBeEmpty = false;
+    private boolean haveTag = true;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         if (null != getIntent()) {
             type = getIntent().getIntExtra(EXTRA_TYPE, 0);
-            canBeEmpty = getIntent().getBooleanExtra(EXTRA_CANBEEMPTY, false);
-            jumpNewPage = getIntent().getBooleanExtra(EXTRA_JUMPNEWPAGE, false);
-            cls= (Class<?>) getIntent().getSerializableExtra(EXTRA_CLASS);
+            canBeEmpty = getIntent().getBooleanExtra(EXTRA_CAN_BE_EMPTY, false);
+            jumpNewPage = getIntent().getBooleanExtra(EXTRA_JUMP_NEW_PAGE, false);
+            cls = (Class<?>) getIntent().getSerializableExtra(EXTRA_JUMP_PAGE_CLASS);
+            haveTag = getIntent().getBooleanExtra(EXTRA_HAVE_TAG, true);
+
         }
         super.onCreate(savedInstanceState);
         ll_loading.setStatus(LoadingLayout.Success);
@@ -66,20 +62,20 @@ public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<
 
     @Override
     public void onListItemClick(View view, int position) {
-        if(jumpNewPage){
+        if (jumpNewPage) {
 //            Intent mIntent=new Intent();
 //            mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
 //            mIntent.putExtra(Customer.class.getName(), paginationX.getRecords().get(position));
 //            mIntent.setClass(this,cls);
 //            startActivity(mIntent);
 //            overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-            Bundle b=new Bundle();
+            Bundle b = new Bundle();
             b.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
             b.putSerializable(Customer.class.getName(), paginationX.getRecords().get(position));
-            MainApp.getMainApp().startActivity(this,cls,MainApp.ENTER_TYPE_RIGHT,false,b);
-        }else{
-            Intent intent=new Intent();
-            intent.putExtra("data",paginationX.getRecords().get(position));
+            MainApp.getMainApp().startActivity(this, cls, MainApp.ENTER_TYPE_RIGHT, false, b);
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("data", paginationX.getRecords().get(position));
             app.finishActivity(OtherModuleSelectSelectCustomerActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
         }
     }
@@ -89,6 +85,7 @@ public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<
         viewHolder.time.setText("跟进时间：" + DateTool.getDateTimeFriendly(data.lastActAt));
         viewHolder.title.setText(data.name);
         viewHolder.content.setText("标签:" + Utils.getTagItems(data));
+        viewHolder.content.setVisibility(haveTag?View.VISIBLE:View.GONE);
     }
 
 
@@ -118,13 +115,13 @@ public class OtherModuleSelectSelectCustomerActivity extends BaseSearchActivity<
                 break;
             /*我的客户数集(我参与的 和 我负责的)*/
             case 5:
-                url=FinalVariables.QUERY_CUSTOMERS_MY;
+                url = FinalVariables.QUERY_CUSTOMERS_MY;
                 break;
             default:
                 //如果没有获取到type 参数，就抛出异常
                 throw new UnsupportedOperationException("type类型为空或者不支持！");
         }
-         subscribe=RetrofitAdapterFactory.getInstance()
+        subscribe = RetrofitAdapterFactory.getInstance()
                 .build(/*TODO:*/url)
                 .create(ICustomer.class)
                 .getCustomers(params)

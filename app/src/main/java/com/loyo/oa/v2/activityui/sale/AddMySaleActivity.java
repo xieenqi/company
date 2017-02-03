@@ -22,7 +22,7 @@ import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
-import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
+import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
@@ -153,11 +153,16 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
                     inspectData();
                     break;
                 case R.id.ll_customer://选择客户
-                    Bundle b = new Bundle();
-                    b.putBoolean(SelfVisibleCustomerPickerActivity.KEY_CAN_RETURN_EMPTY, false);
-                    app.startActivityForResult(AddMySaleActivity.this, SelfVisibleCustomerPickerActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
+//                    Bundle b = new Bundle();
+//                    b.putBoolean(SelfVisibleCustomerPickerActivity.KEY_CAN_RETURN_EMPTY, false);
+//                    app.startActivityForResult(AddMySaleActivity.this, SelfVisibleCustomerPickerActivity.class,
+//                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
 
+                    Bundle b = new Bundle();
+                    b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,5);
+                    b.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_HAVE_TAG,false);
+                    app.startActivityForResult(AddMySaleActivity.this, OtherModuleSelectSelectCustomerActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
                 case R.id.ll_stage://选择销售阶段
                     Bundle stage = new Bundle();

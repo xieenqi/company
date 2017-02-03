@@ -17,19 +17,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
+import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.project.OtherModuleSelectSelectProjectActivity;
-import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.OrganizationalMember;
@@ -417,8 +415,13 @@ public class TasksEditActivity extends BaseActivity {
 
             /*关联客户*/
             case R.id.layout_mycustomer:
-                app.startActivityForResult(TasksEditActivity.this, SelfVisibleCustomerPickerActivity.class,
-                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+//                app.startActivityForResult(TasksEditActivity.this, SelfVisibleCustomerPickerActivity.class,
+//                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+                Bundle b=new Bundle();
+                b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,5);
+                b.putBoolean(OtherModuleSelectSelectCustomerActivity.EXTRA_HAVE_TAG,false);
+                app.startActivityForResult(TasksEditActivity.this, OtherModuleSelectSelectCustomerActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
         }
     }

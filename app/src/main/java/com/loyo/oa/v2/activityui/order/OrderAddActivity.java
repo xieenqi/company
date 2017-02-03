@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.SelfVisibleCustomerPickerActivity;
+import com.loyo.oa.v2.activityui.customer.OtherModuleSelectSelectCustomerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -582,9 +582,14 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //对应客户
             case R.id.ll_customer:
+//                Bundle b = new Bundle();
+//                b.putBoolean(SelfVisibleCustomerPickerActivity.KEY_CAN_RETURN_EMPTY, false);
+//                app.startActivityForResult(OrderAddActivity.this, SelfVisibleCustomerPickerActivity.class,
+//                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
+
                 Bundle b = new Bundle();
-                b.putBoolean(SelfVisibleCustomerPickerActivity.KEY_CAN_RETURN_EMPTY, false);
-                app.startActivityForResult(OrderAddActivity.this, SelfVisibleCustomerPickerActivity.class,
+                b.putInt(OtherModuleSelectSelectCustomerActivity.EXTRA_TYPE,5);
+                app.startActivityForResult(OrderAddActivity.this, OtherModuleSelectSelectCustomerActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
 
