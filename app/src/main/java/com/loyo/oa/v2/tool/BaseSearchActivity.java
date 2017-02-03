@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -27,6 +28,8 @@ import com.loyo.oa.v2.activityui.tasks.fragment.TaskManagerFragment;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
+
+import java.io.Serializable;
 
 import rx.Subscription;
 
@@ -42,7 +45,7 @@ import rx.Subscription;
  *
  * @param <T>
  */
-public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2 {
+public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2 {
     public static final int REQUEST_SEARCH = 1100;
 
     public String strSearch;
@@ -54,6 +57,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
     public PaginationX<T> paginationX = new PaginationX(20);
     public RelativeLayout headerViewBtn;
     public Subscription subscribe;
+    public ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +135,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
         refreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         refreshListView.setOnRefreshListener(this);
 
-        ListView listView = refreshListView.getRefreshableView();
+        listView = refreshListView.getRefreshableView();
         if (isShowHeadView()) {
             LayoutInflater mInflater = LayoutInflater.from(this);
             headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
@@ -146,9 +150,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
             });
         }
 
-        adapter = new CommonSearchAdapter();
-        listView.setAdapter(adapter);
-
+        listView.setAdapter(setAdapter());
 
 //        /**列表监听器*/
 //        refreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -168,11 +170,11 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 //                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
 //                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 //                        break;
-//                    //新建任务 关联客户
+//                    //新建任务 关联客户－－
 //                    case TASKS_ADD_CUSTOMER:
 //                        returnData(position - 2);
 //                        break;
-//                    //新建拜访
+//                    //新建拜访－－
 //                    case SIGNIN_ADD:
 //                        returnData(position - 2);
 //                        break;
@@ -218,7 +220,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
 //                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
 //                        startActivity(mIntent);
 //                        break;
-//                    // 跟进对象 客户 到新建跟进动态
+//                    // 跟进对象 客户 到新建跟进动－－
 //                    case DYNAMIC_MANAGE:
 //                        mIntent = new Intent(getApplicationContext(), FollowAddActivity.class);
 //                        mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
@@ -239,6 +241,13 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
                 }
             }
         });
+    }
+    /**
+     * 如果item的条目不一样，可以覆盖这个方法，自定义adapter
+     */
+    public BaseAdapter setAdapter(){
+        adapter = new CommonSearchAdapter();
+        return adapter;
     }
 //    /**
 //     * 根据业务 展示"无"Item
@@ -386,7 +395,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseLoadin
      * @param viewHolder 试图
      * @param data       数据
      */
-    public abstract void bindData(CommonSearchAdapter.SearchViewHolder viewHolder, T data);
+    public void bindData(CommonSearchAdapter.SearchViewHolder viewHolder, T data){}
 
     public class CommonSearchAdapter extends BaseAdapter {
 

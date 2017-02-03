@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
-import com.loyo.oa.v2.activityui.work.fragment.WorkReportsManageFragment;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -14,7 +13,6 @@ import com.loyo.oa.v2.tool.BaseSearchActivity;
 
 import java.util.HashMap;
 
-import retrofit.Callback;
 
 
 public class WfinstanceSearchActivity extends BaseSearchActivity<WfInstanceRecord> {

@@ -52,7 +52,6 @@ public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer>
 
         }
         super.onCreate(savedInstanceState);
-        ll_loading.setStatus(LoadingLayout.Success);
     }
 
     @Override

@@ -135,7 +135,6 @@ public class FollowSelectClueFragment extends BaseFragment implements FollowSele
                 intent.setClass(mActivity, FollowAddActivity.class);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                mActivity.finish();
             }
         });
     }
