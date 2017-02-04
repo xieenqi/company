@@ -46,8 +46,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     Button btn_notice_add;
     @ViewById
     LoadingLayout ll_loading;
-    protected PaginationX<Bulletin> mPagination = new PaginationX(20);
-    private boolean isTopAdd = true;
+    protected PaginationX<Bulletin> paginationX = new PaginationX(20);
     private final int REQUEST_NEW = 1;
     private LinearLayoutManager layoutManager;
     private BulletinManagerPresenterImpl managerPresenter;
@@ -80,6 +79,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     private void loadingData() {
         ll_loading.setStatus(LoadingLayout.Loading);
+        paginationX.setFirstPage();
         getData();
     }
 
@@ -87,7 +87,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
      * 获取通知列表
      */
     void getData() {
-        managerPresenter.requestListData(mPagination.getPageIndex(), 20, isTopAdd);
+        managerPresenter.requestListData(paginationX);
     }
 
     /**
@@ -109,15 +109,12 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     @Override
     public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
-        isTopAdd = true;
-        mPagination.setPageIndex(1);
+        paginationX.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
-        isTopAdd = false;
-        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
         getData();
     }
 
@@ -129,8 +126,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
         Bulletin b = (Bulletin) data.getSerializableExtra("data");
         if (b != null) {
-            isTopAdd = true;
-            mPagination.setPageIndex(1);
+            paginationX.setFirstPage();
             getData();
         }
     }
@@ -179,7 +175,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
      */
     @Override
     public void bindListData() {
-        managerPresenter.bindListData(lv_notice);
+        managerPresenter.bindListData(lv_notice, paginationX);
 //        ll_loading.setStatus(LoadingLayout.Success);
     }
 

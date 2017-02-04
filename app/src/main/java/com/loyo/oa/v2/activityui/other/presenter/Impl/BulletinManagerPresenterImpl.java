@@ -29,7 +29,6 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
     private NoticeAdapter2 adapter;
     private BulletinManagerView crolView;
-    private ArrayList<Bulletin> bulletins = new ArrayList<>();
 
     private Activity mActivity;
     private Context mContext;
@@ -44,10 +43,10 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
      * 请求列表数据
      */
     @Override
-    public void requestListData(final int pageIndex, final int pageSize, final boolean isTopAdd) {
+    public void requestListData(final PaginationX<Bulletin> paginationX) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", pageIndex);
-        map.put("pageSize", pageSize);
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
         AnnouncementService.getNoticeList(map)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Bulletin>>(crolView.getLoadingLayout()) {
                     @Override
@@ -58,22 +57,12 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
                     @Override
                     public void onNext(PaginationX<Bulletin> pagination) {
-                        if (!PaginationX.isEmpty(pagination)) {
-                            ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
-                            if (isTopAdd) {
-                                bulletins.clear();
-                            }
-                            bulletins.addAll(lstData_bulletin_current);
-                            crolView.bindListData();
+                        paginationX.loadRecords(pagination);
+                        if(paginationX.isEnpty()){
+                            crolView.emptyData();
+                        }else{
                             crolView.getLoadingLayout().setStatus(LoadingLayout.Success);
-                        } else {
-                            if (pagination != null && pagination.getRecords() != null && pagination.getRecords().size() == 0 && isTopAdd) {
-                                crolView.emptyData();
-                            } else {
-                                crolView.getLoadingLayout().setStatus(LoadingLayout.Success);
-                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
-                            }
-
+                            crolView.bindListData();
                         }
                         crolView.refreshCmpl();
                     }
@@ -84,13 +73,13 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
      * 数据绑定
      */
     @Override
-    public void bindListData(PullToRefreshRecyclerView2 mRecycleView) {
+    public void bindListData(PullToRefreshRecyclerView2 mRecycleView,PaginationX<Bulletin> paginationX) {
         if (null == adapter) {
-            adapter = new NoticeAdapter2(bulletins, mContext, mActivity);
+            adapter = new NoticeAdapter2(paginationX.getRecords(), mContext, mActivity);
             mRecycleView.getRefreshableView().setAdapter(adapter);
 
         } else {
-            adapter.setmDatas(bulletins);
+            adapter.setmDatas(paginationX.getRecords());
         }
     }
 
