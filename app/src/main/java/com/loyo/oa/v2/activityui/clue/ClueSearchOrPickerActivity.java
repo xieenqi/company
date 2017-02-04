@@ -8,15 +8,19 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
+import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 
@@ -151,8 +155,7 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
             holder.tv_company_name.setText(clueListItem.companyName);
             holder.tv_customer.setText(clueListItem.name);
             if (clueListItem.lastActAt != 0) {
-//                holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd HH:mm"));
-                holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(clueListItem.lastActAt));
+                holder.tv_time.setText(DateTool.getDateTimeFriendly(clueListItem.lastActAt));
             } else {
                 holder.tv_time.setText("--");
             }
@@ -167,5 +170,13 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
             TextView tv_name;         /* 客户名称 */
             LinearLayout ll_responsible;
         }
+    }
+
+    /**
+     * 新建跟进成功以后，关闭本页
+     */
+    @Subscribe
+    public void onFollowUpRushEvent(FollowUpRushEvent event) {
+        finish();
     }
 }

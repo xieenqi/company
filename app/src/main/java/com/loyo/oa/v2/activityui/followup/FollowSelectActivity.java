@@ -9,11 +9,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.adapter.CommonPageAdapter;
+import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.fragment.FollowSelectClueFragment;
 import com.loyo.oa.v2.activityui.followup.fragment.FollowSelectCustomerFragment;
 import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,14 @@ public class FollowSelectActivity extends BaseFragmentActivity implements View.O
         selectCustomer = new FollowSelectCustomerFragment();
         selectClue = new FollowSelectClueFragment();
         initView();
+    }
+
+    /**
+     * 新建跟进成功以后，关闭本页
+     */
+    @Subscribe
+    public void onFollowUpRushEvent(FollowUpRushEvent event) {
+       finish();
     }
 
     private void initView() {

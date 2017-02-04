@@ -7,6 +7,7 @@ import android.view.View;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -17,6 +18,8 @@ import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 
@@ -132,5 +135,13 @@ public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer>
 
                     }
                 });
+    }
+
+    /**
+     * 新建跟进成功以后，关闭本页
+     */
+    @Subscribe
+    public void onFollowUpRushEvent(FollowUpRushEvent event) {
+        finish();
     }
 }
