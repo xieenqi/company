@@ -56,7 +56,7 @@ public class OrderSearchOrPickerActivity extends BaseSearchActivity<OrderListIte
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", paginationX.getShouldLoadPageIndex());
         map.put("pageSize", paginationX.getPageSize());
-        map.put("keyword", strSearch);
+        map.put("keyWords", strSearch);
         DefaultLoyoSubscriber<PaginationX<OrderListItem>> defaultLoyoSubscriber = new DefaultLoyoSubscriber<PaginationX<OrderListItem>>() {
             @Override
             public void onError(Throwable e) {
@@ -72,7 +72,7 @@ public class OrderSearchOrPickerActivity extends BaseSearchActivity<OrderListIte
         switch (type) {
             /*我的订单*/
             case MY_ORDER:
-                subscriber=OrderService.getOrderMyList(map).subscribe(defaultLoyoSubscriber);
+                subscriber=OrderService.getOrderMyList(map).subscribe (defaultLoyoSubscriber);
                 break;
             /*团队订单*/
             case TEAM_ORDER:
