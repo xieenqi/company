@@ -20,9 +20,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.activityui.tasks.fragment.TaskManagerFragment;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
@@ -53,7 +51,7 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
     public ImageView iv_clean;
     public View headerView;
     public PullToRefreshListView refreshListView;
-    public CommonSearchAdapter adapter;
+    public BaseAdapter adapter;
     public PaginationX<T> paginationX = new PaginationX(20);
     public RelativeLayout headerViewBtn;
     public Subscription subscribe;
@@ -150,7 +148,8 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
             });
         }
 
-        listView.setAdapter(setAdapter());
+        adapter=setAdapter();
+        listView.setAdapter(adapter);
 
 //        /**列表监听器*/
 //        refreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -375,7 +374,7 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
      */
     public void onListItemClick(View view, int position) {
         Intent intent = new Intent();
-        intent.putExtra("data", adapter.getItem(position));
+        intent.putExtra("data", (T)adapter.getItem(position));
         setResult(RESULT_OK, intent);
         onBackPressed();
     }

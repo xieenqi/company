@@ -15,7 +15,7 @@ import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
+import com.loyo.oa.v2.activityui.clue.ClueSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
@@ -87,9 +87,10 @@ public class FollowSelectClueFragment extends BaseFragment implements FollowSele
             @Override
             public void onClick(View v) {
                 Bundle b = new Bundle();
-                b.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, ClueType.MY_CLUE);
-                b.putBoolean("isSelect", true);
-                app.startActivity(mActivity, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                b.putSerializable(ClueSearchOrPickerActivity.EXTRA_TYPE, ClueType.MY_CLUE);
+                b.putBoolean(ClueSearchOrPickerActivity.EXTRA_JUMP_NEW_PAGE,true);
+                b.putSerializable(ClueSearchOrPickerActivity.EXTRA_JUMP_PAGE_CLASS,FollowAddActivity.class);
+                app.startActivity(mActivity, ClueSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
         });
         adapter = new MyClueAdapter(mActivity);

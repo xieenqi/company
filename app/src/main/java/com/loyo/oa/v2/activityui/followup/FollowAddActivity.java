@@ -27,7 +27,7 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
+import com.loyo.oa.v2.activityui.clue.ClueSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
@@ -538,7 +538,6 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 case R.id.ll_customer:
                     Bundle b = new Bundle();
                     b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
-                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY,true);
                     app.startActivityForResult(FollowAddActivity.this, CustomerSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
@@ -574,12 +573,9 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             /*线索写跟进选择线索*/
                 case R.id.ll_clue_company:
                     Bundle bCule = new Bundle();
-                    bCule.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, ClueType.MY_CLUE);
-                    bCule.putBoolean("isSelect", true);
-                    bCule.putBoolean("isResult", true);
-                    app.startActivityForResult(FollowAddActivity.this, ClueSearchActivity.class,
+                    bCule.putSerializable(ClueSearchOrPickerActivity.EXTRA_TYPE, ClueType.MY_CLUE);
+                    app.startActivityForResult(FollowAddActivity.this, ClueSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, bCule);
-//                app.startActivity(FollowAddActivity.this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bCule);
                     break;
             }
         }
@@ -700,7 +696,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 }
                 break;
             case ExtraAndResult.REQUEST_EDIT:
-                mClue = (ClueListItem) data.getSerializableExtra(ClueListItem.class.getName());
+                mClue = (ClueListItem) data.getSerializableExtra("data");
                 contactName = mClue.responsorName;
                 tv_clue_company.setText(mClue.companyName);
                 tv_clue_name.setText(mClue.responsorName);

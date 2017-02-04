@@ -27,7 +27,6 @@ import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -136,12 +135,12 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
                 } else {
                     type = ClueType.TEAM_CLUE;
                     UmengAnalytics.umengSend(this, UmengAnalytics.searchCluesTeam);
-                    b.putBoolean("responsibleVisiblity", true);
+                    b.putBoolean(ClueSearchOrPickerActivity.EXTRA_RESPONSEBLE_SHOW, true);
                 }
-                LogUtil.dee("type:" + type);
-
-                b.putSerializable(ClueSearchActivity.KEY_SEARCH_TYPE, type);
-                app.startActivity(this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                b.putSerializable(ClueSearchOrPickerActivity.EXTRA_TYPE, type);
+                b.putBoolean(ClueSearchOrPickerActivity.EXTRA_JUMP_NEW_PAGE,true);
+                b.putSerializable(ClueSearchOrPickerActivity.EXTRA_JUMP_PAGE_CLASS,ClueDetailActivity.class);
+                app.startActivity(this, ClueSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }

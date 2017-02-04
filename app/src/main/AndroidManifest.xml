@@ -687,7 +687,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activityui.clue.ClueSearchActivity"
+            android:name=".activityui.clue.ClueSearchOrPickerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />

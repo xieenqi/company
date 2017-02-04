@@ -8,50 +8,42 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.library.module.widget.loading.LoadingLayout;
-import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
-import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
-import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 
 import java.util.HashMap;
 
 
-public class ClueSearchActivityNew extends BaseSearchActivity<ClueListItem> {
+public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem> {
     //可传入参数定义
-    public static final String EXTRA_TYPE = "type";//类型，是1:个人或者2:团队
-    public static final String EXTRA_RESPONSEBLE_SHOW = "responsibleVisiblity";
-    public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";
-    public static final String EXTRA_JUMP_PAGE_CLASS = "class";
-    public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";
-    public static final String EXTRA_PICKER_ID = "Id";
+    public static final String EXTRA_TYPE = "type";//类型，是个人或者团队，，这里用枚举替换
+    public static final String EXTRA_RESPONSEBLE_SHOW = "responsibleVisiblity";//是否显示负责人
+    public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";//是否是跳转页面
+    public static final String EXTRA_JUMP_PAGE_CLASS = "class";//跳转的目标页面
+    public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";//选择的时候 ，是否可以返回"无"
 
-    private int type = 0;
+    private ClueType type = ClueType.MY_CLUE;
     private boolean jumpNewPage = false;
     private Class<?> cls;
     private boolean canBeEmpty = false;
-    private boolean responsibleVisiblity=true;
-
+    private boolean responsibleVisiblity=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent=getIntent();
         if (null != intent) {
-            type = intent.getIntExtra(EXTRA_TYPE, 0);
+            type = (ClueType) intent.getSerializableExtra(EXTRA_TYPE);
             canBeEmpty = intent.getBooleanExtra(EXTRA_CAN_BE_EMPTY, false);
             jumpNewPage = intent.getBooleanExtra(EXTRA_JUMP_NEW_PAGE, false);
             cls = (Class<?>) intent.getSerializableExtra(EXTRA_JUMP_PAGE_CLASS);
-            responsibleVisiblity=intent.getBooleanExtra(EXTRA_RESPONSEBLE_SHOW,true);
+            responsibleVisiblity=intent.getBooleanExtra(EXTRA_RESPONSEBLE_SHOW,false);
         }
         super.onCreate(savedInstanceState);
     }
@@ -65,18 +57,22 @@ public class ClueSearchActivityNew extends BaseSearchActivity<ClueListItem> {
         map.put("keyWords", strSearch);
         switch (type) {
             /*我的线索*/
-            case 1:
+            case MY_CLUE:
                 ClueService.getMyClueList(map).subscribe(getDefaultLoyoSubscriber());
                 break;
             /*团队线索*/
-            case 2:
+            case TEAM_CLUE:
                 ClueService.getTeamClueList(map).subscribe(getDefaultLoyoSubscriber());
-
                 break;
             default:
                 //如果没有获取到type 参数，就抛出异常
                 throw new UnsupportedOperationException("type类型为空或者不支持！");
         }
+    }
+
+    @Override
+    public boolean isShowHeadView() {
+        return canBeEmpty;
     }
 
     //订阅者，处理网络请求事件
@@ -94,9 +90,17 @@ public class ClueSearchActivityNew extends BaseSearchActivity<ClueListItem> {
     }
     @Override
     public void onListItemClick(View view, int position) {
-        Intent mIntent = new Intent(getApplicationContext(), WfinstanceInfoActivity_.class);
-        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position).id);
-        startActivity(mIntent);
+        if (jumpNewPage) {
+            Bundle b = new Bundle();
+            b.putSerializable(ClueListItem.class.getName(), paginationX.getRecords().get(position));
+            b.putString(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position).id);
+            b.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
+            MainApp.getMainApp().startActivity(this, cls, MainApp.ENTER_TYPE_RIGHT, false, b);
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("data", paginationX.getRecords().get(position));
+            app.finishActivity(ClueSearchOrPickerActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        }
     }
 
     @Override
