@@ -22,11 +22,11 @@ import java.util.HashMap;
  */
 
 public class MyDisscussPControl implements MyDiscussPersenter {
-    private boolean isTopAdd = false;
-    private int pageIndex = 1;
-    private ArrayList<HttpDiscussItem> listData = new ArrayList<>();
+
+    private PaginationX<HttpDiscussItem> paginationX=new PaginationX<>(20);
     private MyDisscussVControl vControl;
     private Handler handler;
+
 
     public MyDisscussPControl(MyDisscussVControl vControl, Handler handler) {
         this.vControl = vControl;
@@ -34,72 +34,48 @@ public class MyDisscussPControl implements MyDiscussPersenter {
     }
 
     @Override
-    public void getPageData(Object... pag) {
+    public void getPageData(final Object... pag) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", pageIndex + "");
-        map.put("pageSize", "10");
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class).
-//                getDiscussList(map, new RCallback<PaginationX<HttpDiscussItem>>() {
-//                    @Override
-//                    public void success(final PaginationX<HttpDiscussItem> discuss, final Response response) {
-//                        HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
-//                        if (!PaginationX.isEmpty(discuss)) {
-//                            if (isTopAdd) {
-//                                listData = null;
-//                                listData = discuss.getRecords();
-//                            } else {
-//                                listData.addAll(discuss.getRecords());
-//                            }
-//                            bindPageData(listData);
-//                            vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
-//                        } else {
-//                            if (isTopAdd) {
-//                                vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
-//                            } else {
-//                                vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
-//                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
-//                            }
-//                        }
-//                        vControl.hideProgress();
-//                    }
-//
-//                    @Override
-//                    public void failure(final RetrofitError error) {
-//                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout(),pageIndex==1?true:false);
-//                        super.failure(error);
-//                        vControl.hideProgress();
-//                    }
-//                });
-
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
         DiscussService.getDiscussList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<HttpDiscussItem>>() {
             @Override
             public void onError(Throwable e) {
                 @LoyoErrorChecker.CheckType
-                int type=pageIndex!=1? LoyoErrorChecker.TOAST:LoyoErrorChecker.LOADING_LAYOUT;
+                int type=paginationX.isEnpty()? LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
                 LoyoErrorChecker.checkLoyoError(e,type,vControl.getLoadingLayout());
                 vControl.hideProgress();
             }
 
             @Override
             public void onNext(PaginationX<HttpDiscussItem> discuss) {
-                if (!PaginationX.isEmpty(discuss)) {
-                    if (isTopAdd) {
-                        listData = null;
-                        listData = discuss.getRecords();
-                    } else {
-                        listData.addAll(discuss.getRecords());
-                    }
-                    bindPageData(listData);
+                paginationX.loadRecords(discuss);
+                if(paginationX.isEnpty()){
+                    vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
+                }else{
+                    bindPageData(paginationX.getRecords());
                     vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
-                } else {
-                    if (isTopAdd) {
-                        vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
-                    } else {
-                        vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
-                        Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
-                    }
                 }
                 vControl.hideProgress();
+
+//                if (!PaginationX.isEmpty(discuss)) {
+//                    if (isTopAdd) {
+//                        listData = null;
+//                        listData = discuss.getRecords();
+//                    } else {
+//                        listData.addAll(discuss.getRecords());
+//                    }
+//                    bindPageData(listData);
+//                    vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+//                } else {
+//                    if (isTopAdd) {
+//                        vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
+//                    } else {
+//                        vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+//                        Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+//                    }
+//                }
+//                vControl.hideProgress();
             }
         });
     }
@@ -125,18 +101,14 @@ public class MyDisscussPControl implements MyDiscussPersenter {
     public void openItem() {
 
     }
-
     @Override
     public void onPullDown() {
-        pageIndex = 1;
-        isTopAdd = true;
+        paginationX.setFirstPage();
         getPageData();
     }
 
     @Override
     public void onPullUp() {
-        pageIndex++;
-        isTopAdd = false;
         getPageData();
     }
 }

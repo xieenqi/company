@@ -28,6 +28,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
@@ -55,15 +56,16 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     private DashboardType type;
     private DashboardDetailAdapter adapter;
     private PullToRefreshListView lv_list;
-    private int pageIndex = 1;
+    private PaginationX<StatisticRecord> paginationX=new PaginationX(20);
     private HashMap<String, Object> map = new HashMap<String, Object>();
     private DynamicFilterByTime defaultTime;//默认的显示时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        map.put("pageIndex", pageIndex);
-        map.put("pageSize", "30");
+        paginationX.setFirstPage();
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
         map.put("qType", "0");
         map.put("sortBy", "1");
 
@@ -79,7 +81,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void getPageData() {
-        map.put("pageIndex", pageIndex);
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
         //根据type，判断请求的类型，构造参数
         if (DashboardType.CUS_FOLLOWUP == type) {
             //客户跟进
@@ -118,27 +120,24 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<StatisticRecord>>(ll_loading) {
             @Override
             public void onError(Throwable e) {
-                if(adapter.isEmpty()){
-                    super.onError(e);
-                }else{
-                    ll_loading.setStatus(LoadingLayout.Success);
-                }
+                  /* 重写父类方法，不调用super, 当有数据时，使用Toast，无数据时才使用整屏错误页面 */
+                @LoyoErrorChecker.CheckType
+                int type =paginationX.isEnpty()?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
+                LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
+                lv_list.onRefreshComplete();
+
             }
             @Override
             public void onNext(PaginationX<StatisticRecord> listX) {
-                ll_loading.setStatus(LoadingLayout.Success);
                 lv_list.onRefreshComplete();
-                if(PaginationX.isEmpty(listX)){
-                    Toast.makeText(DashboardDetailActivity.this, "没有数据", Toast.LENGTH_SHORT).show();
-                    return;
+                paginationX.loadRecords(listX);
+                if(paginationX.isEnpty()){
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                }else{
+                    ll_loading.setStatus(LoadingLayout.Success);
+                    adapter.reload(paginationX.getRecords());
+                    lv_list.notify();
                 }
-                if (1 == pageIndex) {
-                    adapter.reload(listX.records);
-                    lv_list.setAdapter(adapter);
-                } else {
-                    adapter.addAll(listX.records);
-                }
-
             }
         });
     }
@@ -259,7 +258,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                         map.remove("xPath");
                     }
                 }
-                pageIndex=1;
+               paginationX.setFirstPage();
                 ll_loading.setStatus(LoadingLayout.Loading);
                 getPageData();
 
@@ -281,14 +280,13 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        pageIndex = 1;
+        paginationX.setFirstPage();
         getPageData();
 
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        pageIndex++;
         getPageData();
     }
 }
