@@ -136,7 +136,6 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 }else{
                     ll_loading.setStatus(LoadingLayout.Success);
                     adapter.reload(paginationX.getRecords());
-                    lv_list.notify();
                 }
             }
         });
