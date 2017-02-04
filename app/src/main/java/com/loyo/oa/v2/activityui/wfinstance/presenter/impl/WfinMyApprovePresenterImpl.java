@@ -22,6 +22,8 @@ import com.loyo.oa.v2.activityui.wfinstance.common.BizFormMenuModel;
 import com.loyo.oa.v2.activityui.wfinstance.common.WfinstanceBizformConfig;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMyApprovePresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMyApproveView;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -43,7 +45,6 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
     private WfinMyApproveView crolView;
 
     private ArrayList<WflnstanceItemData> datas = new ArrayList<>();
-    private ArrayList<WflnstanceListItem> lstData = new ArrayList<>();
 
     private String status;
     private String bizFormId = "";
@@ -59,42 +60,47 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter {
      * 获取审批列表数据
      */
     @Override
-    public void getApproveWfInstancesList(final int page, final boolean isTopAdd) {
+    public void getApproveWfInstancesList(final PaginationX<WflnstanceListItem> paginationX) {
 //        crolView.showProgress("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 20);
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
         map.put("status", status);
         map.put("bizformId", bizFormId); //自定义筛选字段
-        WfinstanceService.getApproveWfInstancesList(map).subscribe(new DefaultLoyoSubscriber<MySubmitWflnstance>() {
+        WfinstanceService.getApproveWfInstancesList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<WflnstanceListItem>>() {
             @Override
             public void onError(Throwable e) {
 
                  /* 重写父类方法，不调用super, 当有数据时，使用Toast，无数据时才使用整屏错误页面 */
                 @LoyoErrorChecker.CheckType
-                int type =page != 1  ?LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                int type =paginationX.isEnpty()?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
                 LoyoErrorChecker.checkLoyoError(e, type, crolView.getLoading());
                 crolView.setListRefreshComplete();
             }
 
             @Override
-            public void onNext(MySubmitWflnstance mySubmitWflnstance) {
+            public void onNext(PaginationX<WflnstanceListItem> x) {
                 crolView.setListRefreshComplete();
-                if (null == mySubmitWflnstance) {
-                    return;
-                }
-                ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
-                if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
-                    crolView.showMsg("没有更多数据了");
-                    return;
-                }
-                if (!isTopAdd) {
-                    lstData.addAll(lstDataTemp);
-                } else {
-                    lstData = lstDataTemp;
-                }
-                datas = WfinstanceUitls.convertGroupApproveData(lstData);
+                paginationX.loadRecords(x);
+                datas.clear();
+                datas = WfinstanceUitls.convertGroupApproveData(paginationX.getRecords());
                 crolView.bindListData(datas);
+
+//                if (null == mySubmitWflnstance) {
+//                    return;
+//                }
+//                ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
+//                if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
+//                    crolView.showMsg("没有更多数据了");
+//                    return;
+//                }
+//                if (!isTopAdd) {
+//                    lstData.addAll(lstDataTemp);
+//                } else {
+//                    lstData = lstDataTemp;
+//                }
+//                datas = WfinstanceUitls.convertGroupApproveData(lstData);
+//                crolView.bindListData(datas);
             }
         });
     };

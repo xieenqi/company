@@ -7,6 +7,8 @@ import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.MySubmitWflnstance;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfTemplate;
+import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
+import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
@@ -103,21 +105,21 @@ public class WfinstanceService {
     }
 
     // 获取我提交的 审批 列表数据
-    public static Observable<MySubmitWflnstance> getSubmitWfInstancesList(HashMap<String, Object> map) {
+    public static Observable<PaginationX<WflnstanceListItem>> getSubmitWfInstancesList(HashMap<String, Object> map) {
         return RetrofitAdapterFactory.getInstance()
                 .build(/*TODO:*/Config_project.API_URL()+ FinalVariables.wfinstance)
                 .create(IWfinstance.class)
                 .getSubmitWfInstancesList(map)
-                .compose(RetrofitAdapterFactory.<MySubmitWflnstance>compatApplySchedulers());
+                .compose(RetrofitAdapterFactory.<PaginationX<WflnstanceListItem>>compatApplySchedulers());
     }
 
     // 获取 我审批的 审批 列表数据
-    public static Observable<MySubmitWflnstance> getApproveWfInstancesList(HashMap<String, Object> map) {
+    public static Observable<PaginationX<WflnstanceListItem>> getApproveWfInstancesList(HashMap<String, Object> map) {
         return RetrofitAdapterFactory.getInstance()
                 .build(/*TODO:*/Config_project.API_URL()+FinalVariables.wfinstance)
                 .create(IWfinstance.class)
                 .getApproveWfInstancesList(map)
-                .compose(RetrofitAdapterFactory.<MySubmitWflnstance>compatApplySchedulers());
+                .compose(RetrofitAdapterFactory.<PaginationX<WflnstanceListItem>>compatApplySchedulers());
     }
 
     // 获取审批详情

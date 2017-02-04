@@ -4,6 +4,10 @@ package com.loyo.oa.v2.activityui.wfinstance.presenter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
+import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.WfInstance;
+
 /**
  * Created by yyy on 16/10/17.
  */
@@ -14,7 +18,7 @@ public interface WfinMyApprovePresenter {
 //    void getWfBizForms();
 
     /*获取审批列表数据*/
-    void getApproveWfInstancesList(int page,boolean isTopAdd);
+    void getApproveWfInstancesList(PaginationX<WflnstanceListItem> paginationX);
 
 //    /*初始化顶部菜单*/
 //    void initDropMenu(String[]FILTER_STATUS);

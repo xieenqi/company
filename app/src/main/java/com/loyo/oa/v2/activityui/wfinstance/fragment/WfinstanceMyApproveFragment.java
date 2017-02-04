@@ -26,6 +26,9 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMyApprovePresenter;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinMyApprovePresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMyApproveView;
+import com.loyo.oa.v2.beans.Pagination;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -47,9 +50,8 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
     private PullToRefreshExpandableListView expandableListView;
 
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待我审批的", "未到我审批的", "我同意的", "我驳回的"};
-    private boolean isTopAdd = false;
-    private int page = 1;
     private LoadingLayout ll_loading;
+    private PaginationX<WflnstanceListItem> paginationX=new PaginationX<>(20);
 
     @Override
     public void onAttach(Activity activity) {
@@ -80,8 +82,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
         expandableListView.setOnRefreshListener(this);
-        page = 1;
-        isTopAdd = true;
+        paginationX.setFirstPage();
         mPresenter = new WfinMyApprovePresenterImpl(filterMenu, this, getActivity());
         mPresenter.loadFilterOptions();
         initList();
@@ -131,9 +132,8 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
      */
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
-        page = 1;
-        mPresenter.getApproveWfInstancesList(page, isTopAdd);
+       paginationX.setFirstPage();
+        mPresenter.getApproveWfInstancesList(paginationX);
     }
 
     /**
@@ -141,9 +141,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
      */
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
-        page++;
-        mPresenter.getApproveWfInstancesList(page, isTopAdd);
+        mPresenter.getApproveWfInstancesList(paginationX);
     }
 
     @Override
@@ -193,8 +191,11 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         mAdapter.setData(datas);
         expand(datas);
         ll_loading.setStatus(LoadingLayout.Success);
-        if(isTopAdd&&datas.size()==0)
+        if(paginationX.isEnpty())
             ll_loading.setStatus(LoadingLayout.Empty);
+        if(paginationX.isNeedToBackTop()){
+             expandableListView.getRefreshableView().setSelection(0);
+        }
     }
 
     /**
@@ -224,8 +225,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
      */
     @Subscribe
     public void onRushListData(BizForm bizForm) {
-        isTopAdd = true;
-        page = 1;
-        mPresenter.getApproveWfInstancesList(page, isTopAdd);
+        paginationX.setFirstPage();
+        mPresenter.getApproveWfInstancesList(paginationX);
     }
 }

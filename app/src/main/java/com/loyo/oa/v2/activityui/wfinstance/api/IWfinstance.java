@@ -3,6 +3,8 @@ package com.loyo.oa.v2.activityui.wfinstance.api;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.MySubmitWflnstance;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfTemplate;
+import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
+import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
@@ -82,13 +84,13 @@ public interface IWfinstance {
      * 获取我提交的 审批 列表数据
      */
     @GET("/new/simplify")
-    Observable<MySubmitWflnstance> getSubmitWfInstancesList(@QueryMap HashMap<String, Object> map);
+    Observable<PaginationX<WflnstanceListItem>> getSubmitWfInstancesList(@QueryMap HashMap<String, Object> map);
 
     /**
      * 获取 我审批的 审批 列表数据
      */
     @GET("/approve/mobile")
-    Observable<MySubmitWflnstance> getApproveWfInstancesList(@QueryMap HashMap<String, Object> map);
+    Observable<PaginationX<WflnstanceListItem>> getApproveWfInstancesList(@QueryMap HashMap<String, Object> map);
 
     /**
      * 获取审批详情

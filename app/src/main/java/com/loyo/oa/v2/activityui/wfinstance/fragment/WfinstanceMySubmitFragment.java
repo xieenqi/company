@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMySubmitPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinMySubmitPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMySubmitView;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -45,8 +46,7 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     private Button btn_add;
     protected com.loyo.oa.dropdownmenu.DropDownMenu filterMenu;
 
-    private int page = 1;
-    private boolean isTopAdd = false;
+    private PaginationX<WflnstanceListItem> paginationX=new PaginationX<>(20);
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
     private LoadingLayout ll_loading;
 
@@ -136,9 +136,8 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
      */
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
-        page = 1;
-        mPresenter.getApproveWfInstancesList(page, isTopAdd);
+       paginationX.setFirstPage();
+        mPresenter.getApproveWfInstancesList(paginationX);
     }
 
     /**
@@ -146,9 +145,8 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
      */
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
-        page++;
-        mPresenter.getApproveWfInstancesList(page, isTopAdd);
+
+        mPresenter.getApproveWfInstancesList(paginationX);
     }
 
     /**
@@ -176,8 +174,11 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         mAdapter.setData(datas);
         expand(datas);
         ll_loading.setStatus(LoadingLayout.Success);
-        if(isTopAdd&&datas.size()==0)
+        if(paginationX.isEnpty())
             ll_loading.setStatus(LoadingLayout.Empty);
+        if(paginationX.isNeedToBackTop()){
+            expandableListView.getRefreshableView().setSelection(0);
+        }
     }
 
     /**
@@ -229,9 +230,8 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
      */
     @Subscribe
     public void onRushListData(BizForm bizForm) {
-        isTopAdd = true;
-        page = 1;
-        mPresenter.getApproveWfInstancesList(page, isTopAdd);
+        paginationX.setFirstPage();
+        mPresenter.getApproveWfInstancesList(paginationX);
     }
 
 /*    @Override

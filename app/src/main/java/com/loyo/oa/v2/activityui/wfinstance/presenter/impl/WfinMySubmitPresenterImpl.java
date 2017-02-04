@@ -83,75 +83,32 @@ public class WfinMySubmitPresenterImpl implements WfinMySubmitPresenter {
      * 获取审批列表数据
      */
     @Override
-    public void getApproveWfInstancesList(final int page, final boolean isTopAdd) {
+    public void getApproveWfInstancesList(final PaginationX<WflnstanceListItem> paginationX) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 20);
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
         map.put("status", status);
         map.put("bizformId", bizFormId); //自定义筛选字段
 
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL() +
-//                FinalVariables.wfinstance).create(IWfInstance.class).
-//                getSubmitWfInstancesList(map, new Callback<MySubmitWflnstance>() {
-//                    @Override
-//                    public void success(MySubmitWflnstance mySubmitWflnstance, Response response) {
-//                        HttpErrorCheck.checkResponse("【我提的交】列表数据：", response);
-//                        crolView.setListRefreshComplete();
-//                        if (null == mySubmitWflnstance) {
-//                            return;
-//                        }
-//                        ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
-//                        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
-//                            crolView.showMsg("没有更多数据了");
-//                            return;
-//                        }
-//
-//                        if (!isTopAdd) {
-//                            lstData.addAll(lstDataTemp);
-//                        } else {
-//                            lstData = lstDataTemp;
-//                        }
-//                        datas = WfinstanceUitls.convertGroupSubmitData(lstData);
-//                        crolView.bindListData(datas);
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error, crolView.getLoading(), page == 1 ? true : false);
-//                        crolView.setListRefreshComplete();
-//                    }
-//                });
-
-        WfinstanceService.getSubmitWfInstancesList(map).subscribe(new DefaultLoyoSubscriber<MySubmitWflnstance>(crolView.getLoading()) {
+        WfinstanceService.getSubmitWfInstancesList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<WflnstanceListItem>>(crolView.getLoading()) {
             @Override
             public void onError(Throwable e) {
-               /* 重写父类方法，不调用super, 当有数据时，使用Toast，无数据时才使用整屏错误页面 */
+                 /* 重写父类方法，不调用super, 当有数据时，使用Toast，无数据时才使用整屏错误页面 */
                 @LoyoErrorChecker.CheckType
-                int type =page != 1  ?
-                        LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                int type =paginationX.isEnpty()?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
                 LoyoErrorChecker.checkLoyoError(e, type, crolView.getLoading());
                 crolView.setListRefreshComplete();
             }
 
             @Override
-            public void onNext(MySubmitWflnstance mySubmitWflnstance) {
+            public void onNext(PaginationX<WflnstanceListItem> x) {
                 crolView.setListRefreshComplete();
-                if (null == mySubmitWflnstance) {
-                    return;
-                }
-                ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
-                if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
-                    crolView.showMsg("没有更多数据了");
-                    return;
-                }
-
-                if (!isTopAdd) {
-                    lstData.addAll(lstDataTemp);
-                } else {
-                    lstData = lstDataTemp;
-                }
-                datas = WfinstanceUitls.convertGroupSubmitData(lstData);
+                crolView.setListRefreshComplete();
+                paginationX.loadRecords(x);
+                datas.clear();
+                datas = WfinstanceUitls.convertGroupSubmitData(paginationX.getRecords());
                 crolView.bindListData(datas);
+
             }
         });
     }
