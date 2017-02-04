@@ -181,6 +181,9 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                             ll_loading.setStatus(LoadingLayout.Empty);
                         }else{
                             adapter.setData(paginationX.getRecords());
+                            if(paginationX.isNeedToBackTop()){
+                                lv_list.getRefreshableView().setSelection(0);
+                            }
                         }
                     }
                 });

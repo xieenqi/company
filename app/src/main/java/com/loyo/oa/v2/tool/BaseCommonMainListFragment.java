@@ -208,7 +208,9 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         pagingGroupDatas = PagingGroupData_.convertGroupData(pagination.getRecords());
         changeAdapter();
         expand();
-
+        if (pagination.isNeedToBackTop()){
+            mExpandableListView.getRefreshableView().setSelection(0);
+        }
     }
 
     public void fail(Throwable e) {

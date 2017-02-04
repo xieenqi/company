@@ -205,6 +205,9 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                             ll_loading.setStatus(LoadingLayout.Empty);
                         }else{
                             adapter.setData(paginationX.getRecords());
+                            if(paginationX.isNeedToBackTop()){
+                                lv_list.getRefreshableView().setSelection(0);
+                            }
                         }
                     }
                 });
