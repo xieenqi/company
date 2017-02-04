@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.worksheet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Groupable;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -41,8 +43,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import rx.Subscription;
+
 /**
  * 【工单搜索】
+ * 说明，不基于BaseSearchActivity，主要是因为本搜索使用expandableListView做分类处理，而BaseSearchActivity未实现分类。
  */
 
 public class WorksheetSearchActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2 {
@@ -52,14 +57,12 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
     private PullToRefreshExpandableListView expandableListView;
 
     private WorksheetListType searchType;
-    private int page = 1;
-    private boolean isPullDown = true;
     private Bundle mBundle;
     private String strSearch;
     protected GroupsData groupsData;
-
     private BaseGroupsDataAdapter adapter;
-
+    private PaginationX paginationX = new PaginationX<>(20);
+    private Subscription subscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +126,20 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
 
             @Override
             public void afterTextChanged(Editable editable) {
-                doSearch();
+                //数据为空的时候，不显示数据
+                if (TextUtils.isEmpty(editable.toString())) {
+                    //不再处理后续网络请求的返回
+                    if (null != subscription) {
+                        subscription.unsubscribe();
+                        subscription = null;
+                    }
+                    paginationX.getRecords().clear();
+                    groupsData.clear();
+                    adapter.notifyDataSetChanged();
+                    ll_loading.setStatus(LoadingLayout.Success);
+                } else {
+                    doSearch();
+                }
             }
         });
         edt_search.requestFocus();
@@ -185,8 +201,7 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
     /* 工单事件信息变更 */
     @Subscribe
     public void onWorksheetEventUpdated(WorksheetEventChangeEvent event) {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         getData();
     }
 
@@ -202,72 +217,54 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
      */
     public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
+        paginationX.setFirstPage();
+        ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
 
     protected void getData() {
-
         DefaultLoyoSubscriber<PaginationX<Worksheet>> subscriber =
                 new DefaultLoyoSubscriber<PaginationX<Worksheet>>() {
 
                     @Override
                     public void onError(Throwable e) {
-                        @LoyoErrorChecker.CheckType int type = groupsData.size() > 0 ?
-                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        @LoyoErrorChecker.CheckType int type = paginationX.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT : LoyoErrorChecker.TOAST;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         expandableListView.onRefreshComplete();
-
                     }
 
                     @Override
                     public void onNext(PaginationX<Worksheet> x) {
                         expandableListView.onRefreshComplete();
-                        if (isPullDown) {
-                            groupsData.clear();
-                        }
-                        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size() == 0) {
+                        paginationX.loadRecords(x);
+                        if (paginationX.isEnpty()) {
                             ll_loading.setStatus(LoadingLayout.Empty);
-                        } else if (PaginationX.isEmpty(x)) {
-                            Toast("没有更多数据了");
-                            ll_loading.setStatus(LoadingLayout.Success);
                         } else {
                             ll_loading.setStatus(LoadingLayout.Success);
                         }
-
-                        loadData(x != null ? x.records : new ArrayList<Worksheet>());
+                        loadData(paginationX.getRecords());
                     }
                 };
-
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
+        map.put("keyword", strSearch);
         if (searchType == WorksheetListType.SELF_CREATED || searchType == WorksheetListType.ASSIGNABLE) {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("pageIndex", page);
-            map.put("pageSize", 15);
             map.put("type", searchType == WorksheetListType.SELF_CREATED
                     ? 1/* 我创建的 */ : 2/* 我分派的 */);
-            map.put("keyword", strSearch);
-
-            WorksheetService.getMyWorksheetList(map)
-                    .subscribe(subscriber);
+            subscription = WorksheetService.getMyWorksheetList(map).subscribe(subscriber);
             UmengAnalytics.umengSend(this, searchType == WorksheetListType.SELF_CREATED ? UmengAnalytics.searchWorkOrderCreate
                     : UmengAnalytics.searchWorkOrderAssign);
         } else if (searchType == WorksheetListType.TEAM) {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("pageIndex", page);
-            map.put("pageSize", 15);
-            map.put("keyword", strSearch);
-            WorksheetService.getTeamWorksheetList(map)
+            subscription = WorksheetService.getTeamWorksheetList(map)
                     .subscribe(subscriber);
             UmengAnalytics.umengSend(this, UmengAnalytics.searchWorkOrderTeam);
         } else if (searchType == WorksheetListType.RESPONSABLE) {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("pageIndex", page);
-            map.put("pageSize", 15);
-            map.put("keyword", strSearch);
-            WorksheetService.getResponsableWorksheetList(map)
+            subscription = WorksheetService.getResponsableWorksheetList(map)
                     .subscribe(new DefaultLoyoSubscriber<PaginationX<WorksheetEvent>>() {
                         @Override
                         public void onError(Throwable e) {
-                            @LoyoErrorChecker.CheckType int type =
-                                    groupsData.size() > 0 ? LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                            @LoyoErrorChecker.CheckType int type = paginationX.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT : LoyoErrorChecker.TOAST;
                             LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                             expandableListView.onRefreshComplete();
                         }
@@ -275,20 +272,13 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                         @Override
                         public void onNext(PaginationX<WorksheetEvent> x) {
                             expandableListView.onRefreshComplete();
-
-                            if (isPullDown) {
-                                groupsData.clear();
-                            }
-                            if (isPullDown && PaginationX.isEmpty(x) && groupsData.size() == 0) {
+                            paginationX.loadRecords(x);
+                            if (paginationX.isEnpty()) {
                                 ll_loading.setStatus(LoadingLayout.Empty);
-                            } else if (PaginationX.isEmpty(x)) {
-                                Toast("没有更多数据了");
-                                ll_loading.setStatus(LoadingLayout.Success);
                             } else {
                                 ll_loading.setStatus(LoadingLayout.Success);
                             }
-
-                            loadWorksheetEvents(x != null ? x.records : new ArrayList<WorksheetEvent>());
+                            loadData(paginationX.getRecords());
                         }
                     });
             UmengAnalytics.umengSend(this, UmengAnalytics.searchWorkOrder);
@@ -297,7 +287,13 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
 
     }
 
+    /**
+     * 先清空，再重新添加数据
+     *
+     * @param list
+     */
     private void loadData(List<Worksheet> list) {
+        groupsData.clear();
         Iterator<Worksheet> iterator = list.iterator();
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
@@ -306,7 +302,13 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
         expand();
     }
 
+    /**
+     * 先清空，再重新添加数据
+     *
+     * @param list
+     */
     private void loadWorksheetEvents(List<WorksheetEvent> list) {
+        groupsData.clear();
         Iterator<WorksheetEvent> iterator = list.iterator();
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
@@ -323,15 +325,12 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = false;
-        page++;
         getData();
     }
 
