@@ -54,7 +54,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import hk.ids.gws.android.sclick.SClick;
 
 import static com.loyo.oa.v2.R.id.image_upload_grid_view;
-
 /**
  * 【新增考勤】
  * Restruture by yyy on 16/10/11
