@@ -213,7 +213,7 @@ public class FileTool {
 		try {
 			// InputStream in = getResources().openRawResource(R.raw.ansi);
 			// 读取assets文件夹中的txt文件,将它放入输入流中
-			InputStream in = context.getAssets().open("subscribe.json");
+			InputStream in = context.getAssets().open("subscriber.json");
 			// 获得输入流的长度
 			int length = in.available();
 			// 创建字节输入

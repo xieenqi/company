@@ -220,7 +220,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
 //        TypedFile typedFile = new TypedFile("image/*", file);
 //        TypedString typedUuid = new TypedString(mProject.attachmentUUId);
 //        AttachmentService.newUpload(typedUuid, bizType, typedFile)
-//                .subscribe(new DefaultLoyoSubscriber<Attachment>() {
+//                .subscriber(new DefaultLoyoSubscriber<Attachment>() {
 //                    @Override
 //                    public void onNext(Attachment attachment) {
 //                        if (mAttachments != null) {

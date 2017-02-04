@@ -681,7 +681,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 //                        LogUtil.dee("typeFile:" + typedFile);
 //                        TypedString typedUuid = new TypedString(uuid);
 //                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
-//                                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud, true) {
+//                                .subscriber(new DefaultLoyoSubscriber<Attachment>(hud, true) {
 //
 //                                    @Override
 //                                    public void onError(Throwable e) {

@@ -28,7 +28,7 @@ public class WfinstanceSearchActivity extends BaseSearchActivity<WfInstanceRecor
         map.put("type", 0);
         map.put("status", 0);
 
-        subscribe=WfinstanceService.getWfInstancesData(map).subscribe(new DefaultLoyoSubscriber<PaginationX<WfInstanceRecord>>(ll_loading) {
+        subscriber =WfinstanceService.getWfInstancesData(map).subscribe(new DefaultLoyoSubscriber<PaginationX<WfInstanceRecord>>(ll_loading) {
             @Override
             public void onNext(PaginationX<WfInstanceRecord> wfInstanceRecordPaginationX) {
                 WfinstanceSearchActivity.this.success(wfInstanceRecordPaginationX);

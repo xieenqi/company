@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.common.OrderType;
 import com.loyo.oa.v2.activityui.order.fragment.MyOrderFragment;
 import com.loyo.oa.v2.activityui.order.fragment.TeamOrderFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
@@ -117,17 +118,22 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
                 changeTitleImg();
                 break;
             case R.id.img_title_search_right:
-                int type;
+                OrderType type;
                 if (mIndex == 0) {
-                    type = OrderSearchActivity.MY_SALE_SEARCH;
+                    type = OrderType.MY_ORDER;
                     UmengAnalytics.umengSend(this, UmengAnalytics.searchOrder);
                 } else {
-                    type = OrderSearchActivity.TEAM_SALE_SEARCH;
+                    type = OrderType.TEAM_ORDER;
                     UmengAnalytics.umengSend(this, UmengAnalytics.searchOrderTeam);
                 }
+
                 Bundle b = new Bundle();
-                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
-                app.startActivity(this, OrderSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                b.putSerializable(OrderSearchOrPickerActivity.EXTRA_TYPE, type);
+                b.putBoolean(OrderSearchOrPickerActivity.EXTRA_JUMP_NEW_PAGE,true);
+                b.putSerializable(OrderSearchOrPickerActivity.EXTRA_JUMP_PAGE_CLASS,OrderDetailActivity.class);
+                app.startActivity(this, OrderSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+
+
                 break;
         }
     }

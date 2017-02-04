@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.clue;
+package com.loyo.oa.v2.activityui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,46 +8,44 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.api.ClueService;
-import com.loyo.oa.v2.activityui.clue.common.ClueType;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
-import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
+import com.loyo.oa.v2.activityui.order.common.OrderType;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
-
-import org.greenrobot.eventbus.Subscribe;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.HashMap;
 
+import rx.Observer;
 
-public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem> {
+
+public class OrderSearchOrPickerActivity extends BaseSearchActivity<OrderListItem> {
     //可传入参数定义
-    public static final String EXTRA_TYPE = "type";//类型，是个人或者团队，，这里用枚举替换
-    public static final String EXTRA_RESPONSEBLE_SHOW = "responsibleVisiblity";//是否显示负责人
+    public static final String EXTRA_TYPE = "type";//类型，是个人或者团队，，这里用枚举
     public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";//是否是跳转页面
     public static final String EXTRA_JUMP_PAGE_CLASS = "class";//跳转的目标页面
     public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";//选择的时候 ，是否可以返回"无"
 
-    private ClueType type = ClueType.MY_CLUE;
+    private OrderType type = OrderType.MY_ORDER;
     private boolean jumpNewPage = false;
     private Class<?> cls;
     private boolean canBeEmpty = false;
-    private boolean responsibleVisiblity=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent=getIntent();
         if (null != intent) {
-            type = (ClueType) intent.getSerializableExtra(EXTRA_TYPE);
+            type = (OrderType) intent.getSerializableExtra(EXTRA_TYPE);
             canBeEmpty = intent.getBooleanExtra(EXTRA_CAN_BE_EMPTY, false);
             jumpNewPage = intent.getBooleanExtra(EXTRA_JUMP_NEW_PAGE, false);
             cls = (Class<?>) intent.getSerializableExtra(EXTRA_JUMP_PAGE_CLASS);
-            responsibleVisiblity=intent.getBooleanExtra(EXTRA_RESPONSEBLE_SHOW,false);
         }
         super.onCreate(savedInstanceState);
     }
@@ -59,14 +57,26 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
         map.put("pageIndex", paginationX.getShouldLoadPageIndex());
         map.put("pageSize", paginationX.getPageSize());
         map.put("keyword", strSearch);
+        DefaultLoyoSubscriber<PaginationX<OrderListItem>> defaultLoyoSubscriber = new DefaultLoyoSubscriber<PaginationX<OrderListItem>>() {
+            @Override
+            public void onError(Throwable e) {
+                fail(e);
+            }
+
+            @Override
+            public void onNext(PaginationX<OrderListItem> orderListItemPaginationX) {
+                success(orderListItemPaginationX);
+            }
+        };
+
         switch (type) {
-            /*我的线索*/
-            case MY_CLUE:
-                subscriber=ClueService.getMyClueList(map).subscribe(getDefaultLoyoSubscriber());
+            /*我的订单*/
+            case MY_ORDER:
+                subscriber=OrderService.getOrderMyList(map).subscribe(defaultLoyoSubscriber);
                 break;
-            /*团队线索*/
-            case TEAM_CLUE:
-                subscriber=ClueService.getTeamClueList(map).subscribe(getDefaultLoyoSubscriber());
+            /*团队订单*/
+            case TEAM_ORDER:
+                subscriber=OrderService.getOrderTeamList(map).subscribe(defaultLoyoSubscriber);
                 break;
             default:
                 //如果没有获取到type 参数，就抛出异常
@@ -79,19 +89,7 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
         return canBeEmpty;
     }
 
-    //订阅者，处理网络请求事件
-    private DefaultLoyoSubscriber<PaginationX<ClueListItem>> getDefaultLoyoSubscriber(){
-        return new DefaultLoyoSubscriber<PaginationX<ClueListItem>>() {
-            @Override
-            public void onError(Throwable e) {
-                fail(e);
-            }
-            @Override
-            public void onNext(PaginationX<ClueListItem> clueListItepaginationX) {
-                success(clueListItepaginationX);
-            }
-        };
-    }
+
     @Override
     public void onListItemClick(View view, int position) {
         if (jumpNewPage) {
@@ -99,20 +97,21 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
             b.putSerializable(ClueListItem.class.getName(), paginationX.getRecords().get(position));
             b.putString(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position).id);
             b.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
+//            b.putBoolean(ExtraAndResult.IS_TEAM, type==OrderType.MY_ORDER ? false : true);//重构前有，但是，发现传过去，并没有用到
             MainApp.getMainApp().startActivity(this, cls, MainApp.ENTER_TYPE_RIGHT, false, b);
         } else {
             Intent intent = new Intent();
             intent.putExtra("data", paginationX.getRecords().get(position));
-            app.finishActivity(ClueSearchOrPickerActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+            app.finishActivity(OrderSearchOrPickerActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
         }
     }
 
     @Override
     public BaseAdapter setAdapter() {
-        return new ClueSearchAdapter();
+        return new CommonSearchAdapter();
     }
 
-    public class ClueSearchAdapter extends BaseAdapter {
+    public class CommonSearchAdapter extends BaseAdapter {
 
 
         public void setAdapter() {
@@ -121,7 +120,7 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
 
         @Override
         public int getCount() {
-            return paginationX.getLoadedTotalRecords();
+            return paginationX.isEnpty() ? 0 : paginationX.getLoadedTotalRecords();
         }
 
         @Override
@@ -136,47 +135,42 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
 
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
-            ClueListItem clueListItem = paginationX.getRecords().get(position);
+            OrderListItem item = paginationX.getRecords().get(position);
             Holder holder = null;
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_teamclue, null);
+                convertView = getLayoutInflater().inflate(R.layout.item_order_my_team, null);
                 holder = new Holder();
-                holder.tv_company_name = (TextView) convertView.findViewById(R.id.tv_company_name);
-                holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
+                holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
+                holder.tv_status = (TextView) convertView.findViewById(R.id.tv_status);
                 holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
                 holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+                holder.tv_money = (TextView) convertView.findViewById(R.id.tv_money);
+                holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
+                holder.tv_product = (TextView) convertView.findViewById(R.id.tv_product);
                 holder.ll_responsible = (LinearLayout) convertView.findViewById(R.id.ll_responsible);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
-
-            holder.tv_name.setText(clueListItem.name);
-            holder.tv_company_name.setText(clueListItem.companyName);
-            holder.tv_customer.setText(clueListItem.name);
-            if (clueListItem.lastActAt != 0) {
-                holder.tv_time.setText(DateTool.getDateTimeFriendly(clueListItem.lastActAt));
-            } else {
-                holder.tv_time.setText("--");
-            }
-            holder.ll_responsible.setVisibility(responsibleVisiblity ? View.VISIBLE : View.GONE);
+            holder.setContent(item);
             return convertView;
         }
 
         class Holder {
-            TextView tv_company_name; /* 公司名称 */
-            TextView tv_customer;     /* 负责人 */
-            TextView tv_time;         /* 跟进时间 */
-            TextView tv_name;         /* 客户名称 */
+            TextView tv_title, tv_status, tv_time, tv_name, tv_money, tv_customer, tv_product;
             LinearLayout ll_responsible;
+
+            public void setContent(OrderListItem item) {
+                ll_responsible.setVisibility(type == OrderType.TEAM_ORDER ? View.VISIBLE : View.GONE);
+                tv_title.setText(item.title);
+                OrderCommon.getOrderDetailsStatus(tv_status, item.status);
+                tv_name.setText(item.directorName);
+                tv_money.setText(Utils.setValueDouble(item.dealMoney));
+                tv_customer.setText(item.customerName);
+                tv_product.setText(item.proName);
+                tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(item.createdAt + "")));
+            }
         }
     }
 
-    /**
-     * 新建跟进成功以后，关闭本页
-     */
-    @Subscribe
-    public void onFollowUpRushEvent(FollowUpRushEvent event) {
-        finish();
-    }
 }

@@ -237,7 +237,7 @@ public class AttachmentActivity extends BaseActivity implements UploadController
 //        TypedFile typedFile = new TypedFile("image/*", file);
 //        TypedString typedUuid = new TypedString(uuid);
 //        AttachmentService.newUpload(typedUuid, bizType, typedFile)
-//                .subscribe(new DefaultLoyoSubscriber<Attachment>(hud) {
+//                .subscriber(new DefaultLoyoSubscriber<Attachment>(hud) {
 //                    @Override
 //                    public void onNext(Attachment attachment) {
 //                        getAttachments();

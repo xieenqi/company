@@ -54,7 +54,7 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
     public BaseAdapter adapter;
     public PaginationX<T> paginationX = new PaginationX(20);
     public RelativeLayout headerViewBtn;
-    public Subscription subscribe;
+    public Subscription subscriber;
     public ListView listView;
 
     @Override
@@ -116,9 +116,9 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
                 //数据为空的时候，不显示数据
                 if (TextUtils.isEmpty(editable.toString())) {
                     //不再处理后续网络请求的返回
-                    if (null != subscribe) {
-                        subscribe.unsubscribe();
-                        subscribe = null;
+                    if (null != subscriber) {
+                        subscriber.unsubscribe();
+                        subscriber = null;
                     }
                     paginationX.getRecords().clear();
                     adapter.notifyDataSetChanged();

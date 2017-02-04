@@ -61,7 +61,7 @@ public class ProjectSearchOrPickerActivity extends BaseSearchActivity<Project> {
         params.put("pageIndex", paginationX.getShouldLoadPageIndex());
         params.put("pageSize", paginationX.getPageSize());
 
-        subscribe=ProjectService.getProjects(params).subscribe(new DefaultLoyoSubscriber<PaginationX<Project>>(ll_loading) {
+        subscriber =ProjectService.getProjects(params).subscribe(new DefaultLoyoSubscriber<PaginationX<Project>>(ll_loading) {
             @Override
             public void onNext(PaginationX<Project> projectPaginationX) {
                 ProjectSearchOrPickerActivity.this.success(projectPaginationX);

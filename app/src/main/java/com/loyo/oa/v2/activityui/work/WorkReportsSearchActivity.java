@@ -5,18 +5,14 @@ import android.view.View;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
-import com.loyo.oa.v2.activityui.work.fragment.WorkReportsManageFragment;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 
 import java.util.HashMap;
-
-import retrofit.Callback;
 
 
 public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReportRecord> {
@@ -33,7 +29,7 @@ public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReportReco
         //params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         params.put("pageIndex", paginationX.getShouldLoadPageIndex());
         params.put("pageSize", paginationX.getPageSize());
-        subscribe=WorkReportService.getWorkReportsData(params).subscribe(new DefaultLoyoSubscriber<PaginationX<WorkReportRecord>>(ll_loading) {
+        subscriber =WorkReportService.getWorkReportsData(params).subscribe(new DefaultLoyoSubscriber<PaginationX<WorkReportRecord>>(ll_loading) {
             @Override
             public void onError(Throwable e) {
                 WorkReportsSearchActivity.this.fail(e);

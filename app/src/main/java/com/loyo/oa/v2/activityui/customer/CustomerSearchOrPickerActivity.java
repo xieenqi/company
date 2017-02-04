@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
@@ -118,7 +117,7 @@ public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer>
                 //如果没有获取到type 参数，就抛出异常
                 throw new UnsupportedOperationException("type类型为空或者不支持！");
         }
-        subscribe = RetrofitAdapterFactory.getInstance()
+        subscriber = RetrofitAdapterFactory.getInstance()
                 .build(/*TODO:*/url)
                 .create(ICustomer.class)
                 .getCustomers(params)
