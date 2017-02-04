@@ -81,14 +81,12 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
 
     @Subscribe
     public void onWorksheetCreated(WorksheetChangeEvent event) {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         getData();
     }
 
     public void refresh() {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
@@ -229,8 +227,8 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
 //        * pageIndex
 //        * pageSize
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 15);
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
         map.put("status", statusParam);
         map.put("templateId", typeParam);
 
@@ -245,40 +243,63 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Worksheet>>() {
                     @Override
                     public void onError(Throwable e) {
-                        @LoyoErrorChecker.CheckType int type = groupsData.size() > 0
-                                ? LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        @LoyoErrorChecker.CheckType int type = paginationX.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT : LoyoErrorChecker.TOAST;
+                        LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         mExpandableListView.onRefreshComplete();
                     }
 
                     @Override
                     public void onNext(PaginationX<Worksheet> x) {
+//                        mExpandableListView.onRefreshComplete();
+//                        if (isPullDown) {
+//                            groupsData.clear();
+//                        }
+//                        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size() == 0) {
+//                            ll_loading.setStatus(LoadingLayout.Empty);
+//                        } else if (PaginationX.isEmpty(x)) {
+//                            Toast("没有更多数据了");
+//                            ll_loading.setStatus(LoadingLayout.Success);
+//                        } else {
+//                            ll_loading.setStatus(LoadingLayout.Success);
+//                        }
+//                        loadData(x != null ? x.records : new ArrayList<Worksheet>());
+
                         mExpandableListView.onRefreshComplete();
-                        if (isPullDown) {
-                            groupsData.clear();
-                        }
-                        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size() == 0) {
+                        paginationX.loadRecords(x);
+                        if(paginationX.isEnpty()){
                             ll_loading.setStatus(LoadingLayout.Empty);
-                        } else if (PaginationX.isEmpty(x)) {
-                            Toast("没有更多数据了");
-                            ll_loading.setStatus(LoadingLayout.Success);
-                        } else {
+                        }else{
                             ll_loading.setStatus(LoadingLayout.Success);
                         }
-                        loadData(x != null ? x.records : new ArrayList<Worksheet>());
+                        loadData(paginationX.getRecords());
                     }
                 });
 
     }
 
     private void loadData(List<Worksheet> list) {
+//        Iterator<Worksheet> iterator = list.iterator();
+//        while (iterator.hasNext()) {
+//            groupsData.addItem(iterator.next());
+//        }
+//        groupsData.sort();
+//        adapter.notifyDataSetChanged();
+//        LogUtil.dee("size:" + groupsData.size());
+//        expand();
+        groupsData.clear();
         Iterator<Worksheet> iterator = list.iterator();
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
         }
         groupsData.sort();
         adapter.notifyDataSetChanged();
-        LogUtil.dee("size:" + groupsData.size());
         expand();
+
+        //是否需要返回顶部
+        if (paginationX.isNeedToBackTop()) {
+            mExpandableListView.getRefreshableView().setSelection(0);
+        }
+
     }
 
     @Override
@@ -304,8 +325,8 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         switch (resultCode) {
             //新建 删除 编辑 转移客户,回调函数
             case ExtraAndResult.REQUEST_CODE:
-                isPullDown = true;
-                page = 1;
+                paginationX.setFirstPage();
+                getData();
                 break;
         }
     }

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.common.fragment;
 
 import android.widget.ExpandableListView;
 
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
@@ -31,8 +32,7 @@ public abstract class BaseGroupsDataFragment extends BaseFragment implements Pul
 
     protected GroupsData groupsData;
 
-    protected int page = 1;     /*翻页页数*/
-    protected boolean isPullDown = true;
+    protected PaginationX paginationX=new PaginationX(20);
 
     public abstract void initAdapter();
 
@@ -57,15 +57,12 @@ public abstract class BaseGroupsDataFragment extends BaseFragment implements Pul
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = false;
-        page++;
         getData();
     }
 }

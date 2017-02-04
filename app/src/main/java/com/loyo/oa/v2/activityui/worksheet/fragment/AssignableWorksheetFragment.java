@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
@@ -67,8 +68,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
 
     @Subscribe
     public void onWorksheetCreated(WorksheetChangeEvent event) {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         getData();
     }
 
@@ -128,6 +128,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
 
         Utils.btnHideForListView(expandableListView, btn_add);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
+        paginationX.setFirstPage();
         getData();
     }
 
@@ -176,8 +177,8 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
 //        * pageIndex
 //        * pageSize
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 15);
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
         map.put("type", 2/* 我分派的 */);
         map.put("status", statusParam);
         map.put("templateId", typeParam);
@@ -186,9 +187,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Worksheet>>() {
                     @Override
                     public void onError(Throwable e) {
-                        @LoyoErrorChecker.CheckType
-                        int type = groupsData.size() > 0 ?
-                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        @LoyoErrorChecker.CheckType int type = paginationX.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT : LoyoErrorChecker.TOAST;
                         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         mExpandableListView.onRefreshComplete();
                     }
@@ -196,45 +195,40 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
                     @Override
                     public void onNext(PaginationX<Worksheet> x) {
                         mExpandableListView.onRefreshComplete();
-                        loadData(x);
+                        paginationX.loadRecords(x);
+                        if(paginationX.isEnpty()){
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        }else{
+                            ll_loading.setStatus(LoadingLayout.Success);
+                        }
+                        loadData(paginationX.getRecords());
                     }
                 });
 
     }
 
     public void refresh() {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
 
-    private void loadData(PaginationX<Worksheet> x) {
-        if (isPullDown) {
-            groupsData.clear();
+    private void loadData(List<Worksheet> x) {
+        groupsData.clear();
+        Iterator<Worksheet> iterator = x.iterator();
+        while (iterator.hasNext()) {
+            groupsData.addItem(iterator.next());
         }
-        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size() == 0) {
-            ll_loading.setStatus(LoadingLayout.Empty);
-        } else if (PaginationX.isEmpty(x)) {
-            Toast("没有更多数据了");
-            ll_loading.setStatus(LoadingLayout.Success);
-        } else {
-            ll_loading.setStatus(LoadingLayout.Success);
-        }
-
-        if (x != null) {
-            Iterator<Worksheet> iterator = x.records.iterator();
-            while (iterator.hasNext()) {
-                groupsData.addItem(iterator.next());
-            }
-            groupsData.sort();
-        }
-
+        groupsData.sort();
         try {
             adapter.notifyDataSetChanged();
             expand();
         } catch (Exception e) {
 
+        }
+        //是否需要返回顶部
+        if(paginationX.isNeedToBackTop()){
+            mExpandableListView.getRefreshableView().setSelection(0);
         }
     }
 
@@ -260,8 +254,9 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
         switch (resultCode) {
             //新建 删除 编辑 转移客户,回调函数
             case ExtraAndResult.REQUEST_CODE:
-                isPullDown = true;
-                page = 1;
+                paginationX.setFirstPage();
+                //TODO 这里要处理，应该是直接修改数据集
+                getData();
                 break;
         }
     }

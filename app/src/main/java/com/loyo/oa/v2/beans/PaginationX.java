@@ -26,6 +26,7 @@ public class PaginationX<T> implements Serializable {
     public int totalRecords; //全部记录总数
     public ArrayList<T> records = new ArrayList<>();//用来存放所有的已经加载的数据
 
+
     private int loadPageIndex=0;
     public PaginationX() {
         pageIndex = 1;

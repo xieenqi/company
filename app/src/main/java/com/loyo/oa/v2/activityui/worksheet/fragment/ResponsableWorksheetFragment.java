@@ -85,16 +85,14 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     /* 工单信息变更 */
     @Subscribe
     public void onWorksheetCreated(WorksheetChangeEvent event) {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         getData();
     }
 
     /* 工单事件信息变更 */
     @Subscribe
     public void onWorksheetEventUpdated(WorksheetEventChangeEvent event) {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         getData();
     }
 
@@ -151,10 +149,9 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
                 });
         initAdapter();
         expand();
-
         Utils.btnHideForListView(expandableListView, btn_add);
-
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
+        paginationX.setFirstPage();
         getData();
     }
 
@@ -173,7 +170,6 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
                 String key = model.getKey();
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-
                 if (menuIndex == 0) {
                     statusParam = key;
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.stateWorkOrder);
@@ -195,8 +191,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     }
 
     public void refresh() {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
@@ -212,16 +207,15 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 //        * pageIndex
 //        * pageSize
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 15);
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
         map.put("status", statusParam);
         map.put("templateId", typeParam);
         WorksheetService.getResponsableWorksheetList(map)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<WorksheetEvent>>() {
                     @Override
                     public void onError(Throwable e) {
-                        @LoyoErrorChecker.CheckType int type =
-                                groupsData.size() > 0 ? LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        @LoyoErrorChecker.CheckType int type = paginationX.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT : LoyoErrorChecker.TOAST;
                         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         mExpandableListView.onRefreshComplete();
                     }
@@ -229,26 +223,20 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
                     @Override
                     public void onNext(PaginationX<WorksheetEvent> x) {
                         mExpandableListView.onRefreshComplete();
-
-                        if (isPullDown) {
-                            groupsData.clear();
-                        }
-                        if (isPullDown && PaginationX.isEmpty(x) && groupsData.size() == 0) {
+                        paginationX.loadRecords(x);
+                        if(paginationX.isEnpty()){
                             ll_loading.setStatus(LoadingLayout.Empty);
-                        } else if (PaginationX.isEmpty(x)) {
-                            Toast("没有更多数据了");
-                            ll_loading.setStatus(LoadingLayout.Success);
-                        } else {
+                        }else{
                             ll_loading.setStatus(LoadingLayout.Success);
                         }
-
-                        loadData(x != null ? x.records : new ArrayList<WorksheetEvent>());
+                        loadData(paginationX.getRecords());
                     }
                 });
 
     }
 
     private void loadData(List<WorksheetEvent> list) {
+        groupsData.clear();
         Iterator<WorksheetEvent> iterator = list.iterator();
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
@@ -259,6 +247,10 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
             expand();
         } catch (Exception e) {
 
+        }
+        //是否需要返回顶部
+        if(paginationX.isNeedToBackTop()){
+            mExpandableListView.getRefreshableView().setSelection(0);
         }
     }
 
@@ -280,12 +272,12 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (resultCode) {
             //新建 删除 编辑 转移客户,回调函数
+            //TODO 这里要处理，应该是直接修改数据集
             case ExtraAndResult.REQUEST_CODE:
-                isPullDown = true;
-                page = 1;
+                paginationX.setFirstPage();
+                getData();
                 break;
         }
     }
