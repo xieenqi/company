@@ -58,7 +58,7 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", paginationX.getShouldLoadPageIndex());
         map.put("pageSize", paginationX.getPageSize());
-        map.put("keyWords", strSearch);
+        map.put("keyword", strSearch);
         switch (type) {
             /*我的线索*/
             case MY_CLUE:
