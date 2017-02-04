@@ -38,6 +38,7 @@ public class MyDiscussActivity extends BaseLoadingActivity implements View.OnCli
     private TextView tv_edit;
     private DiscussAdapter2 adapter;
 
+
     Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -64,6 +65,7 @@ public class MyDiscussActivity extends BaseLoadingActivity implements View.OnCli
 
     @Override
     public void getPageData() {
+
         pControl.onPullDown();
     }
 
