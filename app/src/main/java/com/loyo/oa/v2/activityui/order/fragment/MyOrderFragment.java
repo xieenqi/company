@@ -101,6 +101,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
 
     private void getPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
+        paginationX.setFirstPage();
         getData();
     }
 
@@ -136,9 +137,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                     }
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankOrder);
                 }
-                ll_loading.setStatus(LoadingLayout.Loading);
-                paginationX.setFirstPage();
-                getData();
+                getPageData();
             }
         });
     }
@@ -146,7 +145,6 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             //新建
             case R.id.btn_add:
                 mBundle = new Bundle();
@@ -202,7 +200,6 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (resultCode) {
             //新建订单回调 订单详细 删除成功刷新列表
             case ExtraAndResult.REQUEST_CODE:

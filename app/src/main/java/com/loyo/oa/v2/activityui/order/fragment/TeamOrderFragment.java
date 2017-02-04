@@ -56,11 +56,8 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
 
     private String statusType = "0";
     private String field = "";
-    private int page = 1;
-    private boolean isPullDown = true;
-
-    private List<OrderListItem> listData = new ArrayList<>();
     private String xPath = "", userId = "";
+    private PaginationX<OrderListItem> paginationX=new PaginationX<>(20);
 
 
     @Nullable
@@ -105,7 +102,8 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
 
     private void getPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
-        onPullDownToRefresh(lv_list);
+        paginationX.setFirstPage();
+        getData();
     }
 
     private void loadFilterOptions() {
@@ -169,10 +167,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                     }
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.rankOrderTeam);
                 }
-                ll_loading.setStatus(LoadingLayout.Loading);
-                isPullDown = true;
-                page = 1;
-                getData();
+                getPageData();
             }
         });
     }
@@ -184,8 +179,8 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
 
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 15);
+        map.put("pageIndex", paginationX.getShouldLoadPageIndex());
+        map.put("pageSize", paginationX.getPageSize());
         map.put("status", statusType);
         map.put("filed", field);
         map.put("xpath", xPath);
@@ -195,9 +190,8 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
 
                     @Override
                     public void onError(Throwable e) {
-                        @LoyoErrorChecker.CheckType int type = listData.size() > 0 ?
-                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
-
+                        @LoyoErrorChecker.CheckType
+                        int type = paginationX.isEnpty() ?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST ;
                         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
                         lv_list.onRefreshComplete();
                     }
@@ -206,14 +200,12 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                     public void onNext(PaginationX<OrderListItem> orderListItemPaginationX) {
                         lv_list.onRefreshComplete();
                         ll_loading.setStatus(LoadingLayout.Success);
-                        if (!isPullDown) {
-                            listData.addAll(orderListItemPaginationX.records);
-                        } else {
-                            listData = orderListItemPaginationX.records;
-                            if (listData.size() == 0)
-                                ll_loading.setStatus(LoadingLayout.Empty);
+                        paginationX.loadRecords(orderListItemPaginationX);
+                        if(paginationX.isEnpty()){
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        }else{
+                            adapter.setData(paginationX.getRecords());
                         }
-                        adapter.setData(listData);
                     }
                 });
 
@@ -221,15 +213,12 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = true;
-        page = 1;
+        paginationX.setFirstPage();
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = false;
-        page++;
         getData();
     }
 }
