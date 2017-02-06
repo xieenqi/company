@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,8 +149,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
      */
     public void scrollToBottom() {
         if (adapter != null && adapter.getCount() > 0) {
-//            lv_discuss.getRefreshableView().setSelection(adapter.getCount() - 1);
-            lv_discuss.getRefreshableView().setSelection(lv_discuss.getBottom());
+            lv_discuss.getRefreshableView().setSelection(adapter.getCount()-1);
         }
     }
 
