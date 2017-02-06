@@ -50,11 +50,11 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="top"
+                        android:gravity="center_vertical"
                         android:hint="获取当前位置中..."
-                        android:paddingTop="@dimen/dimen_8"
                         android:singleLine="false"
                         android:text=""
+                        android:maxLines="2"
                         android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp15" />
 
