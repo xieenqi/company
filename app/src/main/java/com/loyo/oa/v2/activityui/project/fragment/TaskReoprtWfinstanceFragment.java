@@ -183,7 +183,6 @@ public class TaskReoprtWfinstanceFragment<T extends BaseBeans> extends BaseMainL
         adapter.setData(pagingGroupDatas);
         adapter.notifyDataSetChanged();
         //数据改变的时候，需要更新activity的显示
-        Log.i("tttttt", "dataChanged:  "+pagination.getTotalRecords());
         int index=0;
         if(2==type){
             index=0;

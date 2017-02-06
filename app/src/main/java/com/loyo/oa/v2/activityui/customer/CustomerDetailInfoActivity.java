@@ -655,15 +655,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if (isPutOcen) {
                 AppBus.getInstance().post(new MyCustomerListRushEvent());
-                Log.i("tttttt", "onKeyDown: isPutOcen");
                 finish();
             } else if (isEdit) {
-                Log.i("tttttt", "onKeyDown: isEdit");
                 AppBus.getInstance().post(new EditCustomerRushEvent());
                 AppBus.getInstance().post(new MyCustomerListRushEvent());
                 finish();
             } else {
-                Log.i("tttttt", "onKeyDown: nothing");
                 onBackPressed();
             }
             return true;
