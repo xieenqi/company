@@ -181,7 +181,6 @@
                         android:background="@color/white"
                         android:gravity="left|top"
                         android:hint="客户简介"
-                        android:maxLength="500"
                         android:minHeight="80dp"
                         android:paddingLeft="@dimen/margin_other_view"
                         android:paddingRight="@dimen/dimen_14"

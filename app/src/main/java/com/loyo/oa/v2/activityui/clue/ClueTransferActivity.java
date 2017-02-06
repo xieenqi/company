@@ -325,11 +325,11 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                         }
                         else {
                             try {
-                                Customer retCustomer = customer;
+//                                Customer retCustomer = customer;
                                 Toast("转移成功");
                                 isSave = false;
                                 Intent intent = new Intent();
-                                intent.putExtra(Customer.class.getName(), retCustomer);
+//                                intent.putExtra(Customer.class.getName(), retCustomer);
                                 app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
 
                             } catch (Exception e) {

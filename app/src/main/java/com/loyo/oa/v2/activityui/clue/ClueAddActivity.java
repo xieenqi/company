@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,6 +28,7 @@ import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.HashMap;
@@ -117,9 +119,9 @@ public class ClueAddActivity extends BaseActivity {
         tv_source.setText(sales.source);
     }
 
-    NoDoubleClickListener click = new NoDoubleClickListener(10) {
+    View.OnClickListener click = new OnClickListener() {
         @Override
-        public void onNoDoubleClick(View v) {
+        public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.img_title_left:
                     onBackPressed();
@@ -164,7 +166,7 @@ public class ClueAddActivity extends BaseActivity {
         final SelectCityView selectCityView = new SelectCityView(this, cityValue);
         selectCityView.setCanceledOnTouchOutside(true);
         selectCityView.show();
-        selectCityView.setOnclickselectCity(new View.OnClickListener() {
+        selectCityView.setOnclickselectCity(new OnClickListener() {
             @Override
             public void onClick(final View view) {
                 String[] cityArr = selectCityView.getResult();
