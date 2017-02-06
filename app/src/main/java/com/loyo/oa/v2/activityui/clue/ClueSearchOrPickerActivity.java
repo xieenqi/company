@@ -38,9 +38,6 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
         Intent intent=getIntent();
         if (null != intent) {
             type = (ClueType) intent.getSerializableExtra(EXTRA_TYPE);
-            canBeEmpty = intent.getBooleanExtra(EXTRA_CAN_BE_EMPTY, false);
-            jumpNewPage = intent.getBooleanExtra(EXTRA_JUMP_NEW_PAGE, false);
-            cls = (Class<?>) intent.getSerializableExtra(EXTRA_JUMP_PAGE_CLASS);
             responsibleVisiblity=intent.getBooleanExtra(EXTRA_RESPONSEBLE_SHOW,false);
         }
         super.onCreate(savedInstanceState);

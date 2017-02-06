@@ -41,11 +41,7 @@ public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer>
     public void onCreate(final Bundle savedInstanceState) {
         if (null != getIntent()) {
             type = getIntent().getIntExtra(EXTRA_TYPE, 0);
-            canBeEmpty = getIntent().getBooleanExtra(EXTRA_CAN_BE_EMPTY, false);
-            jumpNewPage = getIntent().getBooleanExtra(EXTRA_JUMP_NEW_PAGE, false);
-            cls = (Class<?>) getIntent().getSerializableExtra(EXTRA_JUMP_PAGE_CLASS);
             haveTag = getIntent().getBooleanExtra(EXTRA_HAVE_TAG, true);
-
         }
         super.onCreate(savedInstanceState);
     }

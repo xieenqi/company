@@ -40,9 +40,6 @@ public class SaleSearchOrPickerActivity extends BaseSearchActivity<SaleRecord> {
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent=getIntent();
         if (null != intent) {
-            canBeEmpty = intent.getBooleanExtra(EXTRA_CAN_BE_EMPTY, false);
-            jumpNewPage = intent.getBooleanExtra(EXTRA_JUMP_NEW_PAGE, false);
-            cls = (Class<?>) intent.getSerializableExtra(EXTRA_JUMP_PAGE_CLASS);
             type= (SaleType) intent.getSerializableExtra(ExtraAndResult.EXTRA_TYPE);
         }
         super.onCreate(savedInstanceState);

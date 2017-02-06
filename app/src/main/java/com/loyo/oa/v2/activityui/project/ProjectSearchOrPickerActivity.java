@@ -31,9 +31,6 @@ public class ProjectSearchOrPickerActivity extends BaseSearchActivity<Project> {
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent=getIntent();
         if (null != intent) {
-            canBeEmpty = intent.getBooleanExtra(EXTRA_CAN_BE_EMPTY, false);
-            jumpNewPage = intent.getBooleanExtra(EXTRA_JUMP_NEW_PAGE, false);
-            cls = (Class<?>) intent.getSerializableExtra(EXTRA_JUMP_PAGE_CLASS);
             status = intent.getIntExtra(EXTRA_STATUS, 0);
 
         }

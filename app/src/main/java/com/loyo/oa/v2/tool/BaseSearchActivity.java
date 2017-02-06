@@ -49,11 +49,13 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
     public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";//是否是跳转页面
     public static final String EXTRA_JUMP_PAGE_CLASS = "class";//跳转的目标页面
     public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";//选择的时候 ，是否可以返回"无"
+    public static final String EXTRA_LOAD_DEFAULT = "loadData";// 进来就加载默认数据
 
 
     public boolean jumpNewPage = false;
     public Class<?> cls;
     public boolean canBeEmpty = false;
+    public boolean loadDefaultData = false;
 
     public static final int REQUEST_SEARCH = 1100;
 
@@ -71,7 +73,18 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getIntentData();
         initView();
+    }
+
+    private void getIntentData(){
+        Intent intent=getIntent();
+        if(null!=intent){
+            canBeEmpty = getIntent().getBooleanExtra(EXTRA_CAN_BE_EMPTY, false);
+            jumpNewPage = getIntent().getBooleanExtra(EXTRA_JUMP_NEW_PAGE, false);
+            loadDefaultData = getIntent().getBooleanExtra(EXTRA_LOAD_DEFAULT, false);
+            cls = (Class<?>) getIntent().getSerializableExtra(EXTRA_JUMP_PAGE_CLASS);
+        }
     }
 
     @Override
@@ -162,7 +175,7 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
         adapter=setAdapter();
         listView.setAdapter(adapter);
         //如果可以为空，说明是选择器，就加载默认的数据
-        if(canBeEmpty){
+        if(loadDefaultData){
             paginationX.setFirstPage();
             getPageData();
         }
