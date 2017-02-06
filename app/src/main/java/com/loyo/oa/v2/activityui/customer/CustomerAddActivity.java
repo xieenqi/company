@@ -28,6 +28,7 @@ import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.clue.model.ClueSales;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
@@ -84,6 +85,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
     public static final int REQUEST_CUSTOMER_SERACH = 7;
+    public static final int TYPE_CLUE_TO_CUSTOMER = 1223;//线索转为客户
 
     @ViewById
     ViewGroup img_title_left;
@@ -110,7 +112,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     //新建拜访 过来新建客户成功过后需要把数据回传到新建拜访页面
     @Extra("isResultSignin")
     boolean isResultSignin = false;
-
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    int actionType;
+    @Extra(ExtraAndResult.EXTRA_DATA)
+    ClueSales clueSales;//线索转为客户的数据
 
     private TextView tv_phone_name1;
     private TextView tv_phone_name2;
@@ -191,13 +196,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private PositionResultItem positionResultItem;
 
     UploadController controller;
+    LocationUtilGD locationGd;
 
     private Handler mHandler = new Handler() {
         @Override
         public void dispatchMessage(final Message msg) {
             if (msg.what == 0x01) {
                 et_address.setText(myAddress);
-                edit_address_details.setText(myAddress);
+                if (TextUtils.isEmpty(edit_address_details.getText().toString()))
+                    edit_address_details.setText(myAddress);
             }
         }
     };
@@ -249,9 +256,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         iv_call_insert2.setOnTouchListener(Global.GetTouch());
 
         edit_address_details = (EditText) findViewById(R.id.edit_address_details);
-        super.setTitle("新建客户");
+        super.setTitle(actionType == TYPE_CLUE_TO_CUSTOMER ? "线索转换客户" : "新建客户");
         getTempCustomer();
-        startLocation();
         requestJurisdiction();
         if (app.latitude != -1 && app.longitude != -1) {
             laPosition = app.latitude;
@@ -271,9 +277,16 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         controller.loadView(gridView);
+        /*线索转为客户*/
+        if (actionType == TYPE_CLUE_TO_CUSTOMER && clueSales != null) {
+            edt_name.setText(clueSales.companyName);
+            edit_address_details.setText(clueSales.address);
+            edt_contract.setText(clueSales.name);
+            edt_contract_tel1.setText(clueSales.cellphone);
+            edt_contract_telnum1.setText(clueSales.tel);
+        }
+        startLocation();
     }
-
-    LocationUtilGD locationGd;
 
     /**
      * 获取定位
@@ -677,6 +690,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("extDatas", extDatas);
         map.put("summary", memo);
         map.put("regional", regional);
+        if (actionType == TYPE_CLUE_TO_CUSTOMER && clueSales != null)
+            map.put("salesleadId", clueSales.id);
 
         LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
 
@@ -694,8 +709,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                                 }
                             }, 100);
 
-                        }
-                        else {
+                        } else {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -732,8 +746,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             }
             intent.putExtra("contact", retCustomer.contacts);
             setResult(RESULT_OK, intent);
+        } else if (actionType == TYPE_CLUE_TO_CUSTOMER) {
+            Toast("转移成功");
+            Intent intent = new Intent();
+            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        } else {
+            onBackPressed();
         }
-        onBackPressed();
     }
 
     @Override
