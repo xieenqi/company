@@ -745,7 +745,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 intent.putExtra("loc", location);
             }
             intent.putExtra("contact", retCustomer.contacts);
-            setResult(RESULT_OK, intent);
+            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
         } else if (actionType == TYPE_CLUE_TO_CUSTOMER) {
             Toast("转移成功");
             Intent intent = new Intent();
