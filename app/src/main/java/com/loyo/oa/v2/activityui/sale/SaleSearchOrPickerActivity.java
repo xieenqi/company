@@ -33,10 +33,6 @@ import static com.loyo.oa.v2.activityui.sale.common.SaleType.MY_SALE_SEARCH;
  * 描述 : 搜索，选择；
  */
 public class SaleSearchOrPickerActivity extends BaseSearchActivity<SaleRecord> {
-    //参数定义
-    public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";
-    public static final String EXTRA_JUMP_PAGE_CLASS = "class";
-    public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";
     public static final String EXTRA_PICKER_ID = "id";
 
     private boolean jumpNewPage = false;

@@ -68,7 +68,11 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     public final static int CUSTOMER_COMM_RUSH = 0x02;
 
     /**
-     * 我的客户
+     * 我的客户.
+     *
+     *
+     * .
+     *
      */
     public final static int CUSTOMER_MY = 1;
 //

@@ -29,9 +29,6 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
     //可传入参数定义
     public static final String EXTRA_TYPE = "type";//类型，是个人或者团队，，这里用枚举替换
     public static final String EXTRA_RESPONSEBLE_SHOW = "responsibleVisiblity";//是否显示负责人
-    public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";//是否是跳转页面
-    public static final String EXTRA_JUMP_PAGE_CLASS = "class";//跳转的目标页面
-    public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";//选择的时候 ，是否可以返回"无"
 
     private ClueType type = ClueType.MY_CLUE;
     private boolean jumpNewPage = false;

@@ -17,7 +17,6 @@ import java.util.HashMap;
 
 public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReportRecord> {
 
-
     @Override
     public void getData() {
         HashMap<String, Object> params = new HashMap<>();

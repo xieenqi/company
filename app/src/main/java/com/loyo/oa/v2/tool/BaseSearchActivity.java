@@ -44,6 +44,12 @@ import rx.Subscription;
  * @param <T>
  */
 public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2 {
+
+
+    public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";//是否是跳转页面
+    public static final String EXTRA_JUMP_PAGE_CLASS = "class";//跳转的目标页面
+    public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";//选择的时候 ，是否可以返回"无"
+
     public static final int REQUEST_SEARCH = 1100;
 
     public String strSearch;

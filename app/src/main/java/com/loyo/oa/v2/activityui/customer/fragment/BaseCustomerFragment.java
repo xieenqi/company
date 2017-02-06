@@ -87,8 +87,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     @Override
     public void onResume() {
         super.onResume();
-        mPagination.setFirstPage();
-        getData();
+
     }
 
     @SuppressLint("InflateParams")

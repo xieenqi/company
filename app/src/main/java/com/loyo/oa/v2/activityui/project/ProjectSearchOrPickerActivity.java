@@ -23,10 +23,6 @@ import java.util.HashMap;
  */
 public class ProjectSearchOrPickerActivity extends BaseSearchActivity<Project> {
 
-    //可传入参数定义
-    public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";
-    public static final String EXTRA_JUMP_PAGE_CLASS = "class";
-    public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";
     public static final String EXTRA_PICKER_ID = "projectId";
     public static final String EXTRA_STATUS = "extra_status";
 

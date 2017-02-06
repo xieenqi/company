@@ -133,7 +133,8 @@ public class MyMemberFragment extends BaseCustomerFragment {
      */
     @Subscribe
     public void onEditCustomerRushEvent(EditCustomerRushEvent event) {
-        getData();
+//TODO 暂时不刷新数据，后面考虑，直接通过Event直接把编辑以后的数据push过来。
+//        getData();
     }
 
 
