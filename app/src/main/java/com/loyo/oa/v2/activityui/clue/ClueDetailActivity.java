@@ -24,6 +24,8 @@ import com.loyo.oa.v2.activityui.clue.model.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.model.ClueSales;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerAddActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
@@ -490,7 +492,8 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
                 }
                 Bundle mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.sales);
-                app.startActivityForResult(ClueDetailActivity.this, ClueTransferActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
+                mBundle.putSerializable(ExtraAndResult.EXTRA_TYPE, CustomerAddActivity.TYPE_CLUE_TO_CUSTOMER);
+                app.startActivityForResult(ClueDetailActivity.this, CustomerAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
                 UmengAnalytics.umengSend(ClueDetailActivity.this, UmengAnalytics.toCustomerCluesMy);
             }
         });
@@ -638,27 +641,27 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         LogUtil.d(app.gson.toJson(map));
         ClueService.editClue(clueId, map)
                 .subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.PROGRESS_HUD) {
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
                  /* 提交失败，更新UI至原来状态 */
-                if (1 == function
-                        && data != null && data != null && data.sales != null) {
-                    clue_region.setText(data.sales.region.salesleadDisplayText());
-                }
-            }
+                        if (1 == function
+                                && data != null && data != null && data.sales != null) {
+                            clue_region.setText(data.sales.region.salesleadDisplayText());
+                        }
+                    }
 
-            @Override
-            public void onNext(Object o) {
+                    @Override
+                    public void onNext(Object o) {
                 /* 提交成功，更新本地model */
-                if (1 == function
-                        && data != null && data != null && data.sales != null) {
-                    data.sales.region = regional;
-                    clue_region.setText(regional.salesleadDisplayText());
-                }
+                        if (1 == function
+                                && data != null && data != null && data.sales != null) {
+                            data.sales.region = regional;
+                            clue_region.setText(regional.salesleadDisplayText());
+                        }
 
-            }
-        });
+                    }
+                });
     }
 
     /**
@@ -669,12 +672,12 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         map.put("ids", clueId);
         ClueService.deleteClue(map)
                 .subscribe(new DefaultLoyoSubscriber<Object>() {
-            @Override
-            public void onNext(Object o) {
-                app.finishActivity(ClueDetailActivity.this,
-                        MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-            }
-        });
+                    @Override
+                    public void onNext(Object o) {
+                        app.finishActivity(ClueDetailActivity.this,
+                                MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                    }
+                });
     }
 
     /**
@@ -686,11 +689,11 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         map.put("responsorId", responsorId);
         ClueService.transferClue(map)
                 .subscribe(new DefaultLoyoSubscriber<Object>() {
-            @Override
-            public void onNext(Object o) {
-                app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-            }
-        });
+                    @Override
+                    public void onNext(Object o) {
+                        app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                    }
+                });
     }
 
     /**
