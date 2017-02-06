@@ -19,6 +19,7 @@ import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
+import com.loyo.oa.v2.activityui.sale.common.SaleType;
 import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
 import com.loyo.oa.v2.activityui.sale.fragment.MySaleFragment;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
@@ -193,17 +194,19 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
                 changeTitleImg();
                 break;
             case R.id.img_title_search_right:
-                int type;
+                SaleType type;
                 if (mIndex == 0) {
-                    type = SaleSearchActivity.MY_SALE_SEARCH;
+                    type = SaleType.MY_SALE_SEARCH;
                     UmengAnalytics.umengSend(SaleOpportunitiesManagerActivity.this, UmengAnalytics.searchChanceMy);
                 } else {
-                    type = SaleSearchActivity.TEAM_SALE_SEARCH;
+                    type = SaleType.TEAM_SALE_SEARCH;
                     UmengAnalytics.umengSend(SaleOpportunitiesManagerActivity.this, UmengAnalytics.searchChanceTeam);
                 }
                 Bundle b = new Bundle();
-                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
-                app.startActivity(this, SaleSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                b.putSerializable(ExtraAndResult.EXTRA_TYPE, type);
+                b.putBoolean(SaleSearchOrPickerActivity.EXTRA_JUMP_NEW_PAGE,true);
+                b.putSerializable(SaleSearchOrPickerActivity.EXTRA_JUMP_PAGE_CLASS,SaleDetailsActivity.class);
+                app.startActivity(this, SaleSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }
