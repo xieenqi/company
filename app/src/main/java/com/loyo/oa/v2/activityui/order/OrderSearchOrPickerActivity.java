@@ -31,9 +31,6 @@ public class OrderSearchOrPickerActivity extends BaseSearchActivity<OrderListIte
     public static final String EXTRA_TYPE = "type";//类型，是个人或者团队，，这里用枚举
 
     private OrderType type = OrderType.MY_ORDER;
-    private boolean jumpNewPage = false;
-    private Class<?> cls;
-    private boolean canBeEmpty = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

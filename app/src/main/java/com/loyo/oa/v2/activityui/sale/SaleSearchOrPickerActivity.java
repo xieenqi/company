@@ -35,9 +35,6 @@ import static com.loyo.oa.v2.activityui.sale.common.SaleType.MY_SALE_SEARCH;
 public class SaleSearchOrPickerActivity extends BaseSearchActivity<SaleRecord> {
     public static final String EXTRA_PICKER_ID = "id";
 
-    private boolean jumpNewPage = false;
-    private Class<?> cls;
-    private boolean canBeEmpty = false;
     private SaleType type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

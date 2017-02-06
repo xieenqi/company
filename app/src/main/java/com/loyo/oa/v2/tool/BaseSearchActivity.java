@@ -50,6 +50,11 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
     public static final String EXTRA_JUMP_PAGE_CLASS = "class";//跳转的目标页面
     public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";//选择的时候 ，是否可以返回"无"
 
+
+    public boolean jumpNewPage = false;
+    public Class<?> cls;
+    public boolean canBeEmpty = false;
+
     public static final int REQUEST_SEARCH = 1100;
 
     public String strSearch;
@@ -156,6 +161,11 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
 
         adapter=setAdapter();
         listView.setAdapter(adapter);
+        //如果可以为空，说明是选择器，就加载默认的数据
+        if(canBeEmpty){
+            paginationX.setFirstPage();
+            getPageData();
+        }
 
 //        /**列表监听器*/
 //        refreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

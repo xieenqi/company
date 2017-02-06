@@ -31,9 +31,6 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
     public static final String EXTRA_RESPONSEBLE_SHOW = "responsibleVisiblity";//是否显示负责人
 
     private ClueType type = ClueType.MY_CLUE;
-    private boolean jumpNewPage = false;
-    private Class<?> cls;
-    private boolean canBeEmpty = false;
     private boolean responsibleVisiblity=false;
 
     @Override

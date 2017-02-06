@@ -30,17 +30,11 @@ import java.util.HashMap;
  */
 public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer> {
     //可传入参数定义
-    public static final String EXTRA_JUMP_NEW_PAGE = "jumpNewPage";
-    public static final String EXTRA_JUMP_PAGE_CLASS = "class";
-    public static final String EXTRA_CAN_BE_EMPTY = "canBeEmpty";
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_HAVE_TAG = "haveTag";
     public static final String EXTRA_PICKER_ID = "Id";
 
     private int type = 0;
-    private boolean jumpNewPage = false;
-    private Class<?> cls;
-    private boolean canBeEmpty = false;
     private boolean haveTag = true;
 
     @Override

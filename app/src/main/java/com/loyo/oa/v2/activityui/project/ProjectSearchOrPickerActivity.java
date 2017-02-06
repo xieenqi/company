@@ -26,9 +26,6 @@ public class ProjectSearchOrPickerActivity extends BaseSearchActivity<Project> {
     public static final String EXTRA_PICKER_ID = "projectId";
     public static final String EXTRA_STATUS = "extra_status";
 
-    private boolean jumpNewPage = false;
-    private Class<?> cls;
-    private boolean canBeEmpty = false;
     private int status=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
