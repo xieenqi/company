@@ -155,7 +155,6 @@ public class TeamCustomerFragment extends BaseCustomerFragment {
      * 获取数据
      */
     protected void getData() {
-        HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", mPagination.getShouldLoadPageIndex());
         params.put("pageSize", mPagination.getPageSize());
 
