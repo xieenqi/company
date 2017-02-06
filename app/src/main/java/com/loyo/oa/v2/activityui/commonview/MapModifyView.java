@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -456,7 +457,7 @@ public class MapModifyView extends BaseActivity
                         mBundle = new Bundle();
                         mBundle.putSerializable("data", resultItems.get(selectPosition));
                         mIntent.putExtras(mBundle);
-                        app.finishActivity(this, MainApp.ENTER_TYPE_RIGHT, -1, mIntent);
+                        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, -1, mIntent);
                     } else {
                         Toast("无处理结果,请稍后");
                     }
