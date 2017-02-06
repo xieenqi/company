@@ -46,10 +46,6 @@ public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer>
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public boolean isShowHeadView() {
-        return canBeEmpty;
-    }
 
     @Override
     public void onListItemClick(View view, int position) {

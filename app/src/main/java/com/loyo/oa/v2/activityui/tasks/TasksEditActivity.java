@@ -422,6 +422,7 @@ public class TasksEditActivity extends BaseActivity {
                 b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
                 b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_HAVE_TAG,false);
                 b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY,true);
+                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
                 app.startActivityForResult(TasksEditActivity.this, CustomerSearchOrPickerActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;

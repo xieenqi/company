@@ -233,6 +233,7 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
                     Bundle bundle2 = new Bundle();
                     bundle2.putInt(ProjectSearchOrPickerActivity.EXTRA_STATUS, 1);
                     bundle2.putBoolean(ProjectSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY, true);
+                    bundle2.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
                     app.startActivityForResult(WfInEditActivity.this, ProjectSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);
@@ -266,6 +267,7 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
                     b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
                     b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_HAVE_TAG,false);
                     b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY,true);
+                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
                     app.startActivityForResult(WfInEditActivity.this, CustomerSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;

@@ -158,7 +158,7 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
         refreshListView.setOnRefreshListener(this);
 
         listView = refreshListView.getRefreshableView();
-        if (isShowHeadView()) {
+        if (canBeEmpty) {
             LayoutInflater mInflater = LayoutInflater.from(this);
             headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
             headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
@@ -180,89 +180,10 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
             getPageData();
         }
 
-//        /**列表监听器*/
-//        refreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                Intent mIntent;
-//                switch (befromPage) {
-//                    //新建审批--
-//                    case WFIN_ADD:
-//                        mIntent = new Intent();
-//                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
-//                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-//                        break;
-//                    //新建任务 所属项目－－
-//                    case TASKS_ADD:
-//                        mIntent = new Intent();
-//                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
-//                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-//                        break;
-//                    //新建任务 关联客户－－
-//                    case TASKS_ADD_CUSTOMER:
-//                        returnData(position - 2);
-//                        break;
-//                    //新建拜访－－
-//                    case SIGNIN_ADD:
-//                        returnData(position - 2);
-//                        break;
-//                    //新建报告--
-//                    case WORK_ADD:
-//                        mIntent = new Intent();
-//                        mIntent.putExtra("data", paginationX.getRecords().get(position - 2));
-//                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-//                        break;
-//                    //客户管理--
-//                    case CUSTOMER_MANAGE:
-//                        mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
-//                        mIntent.putExtra("Id", paginationX.getRecords().get(position - 2).getId());
-//                        startActivity(mIntent);
-//                        break;
-//                    //任务管理--
-//                    case TASKS_MANAGE:
-//                        mIntent = new Intent(getApplicationContext(), TasksInfoActivity_.class);
-//                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
-//                        startActivity(mIntent);
-//                        break;
-//                    //工作报告管理--
-//                    case WORK_MANAGE:
-//                        mIntent = new Intent(getApplicationContext(), WorkReportsInfoActivity_.class);
-//                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
-//                        startActivity(mIntent);
-//                        break;
-//                    //项目管理--
-//                    case PEOJECT_MANAGE:
-//                        mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
-//                        mIntent.putExtra("projectId", paginationX.getRecords().get(position - 2).getId());
-//                        startActivity(mIntent);
-//                        break;
-//                    //审批管理--
-//                    case WFIN_MANAGE:
-//                        mIntent = new Intent(getApplicationContext(), WfinstanceInfoActivity_.class);
-//                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
-//                        startActivity(mIntent);
-//                        break;
-//                    //线索管理--
-//                    case CLUE_MANAGE:
-//                        mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
-//                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, paginationX.getRecords().get(position - 2).getId());
-//                        startActivity(mIntent);
-//                        break;
-//                    // 跟进对象 客户 到新建跟进动－－
-//                    case DYNAMIC_MANAGE:
-//                        mIntent = new Intent(getApplicationContext(), FollowAddActivity.class);
-//                        mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
-//                        mIntent.putExtra(Customer.class.getName(), (Customer) (paginationX.getRecords().get(position - 2)));
-//                        startActivity(mIntent);
-//                        break;
-//                }
-//                hideInputKeyboard(edt_search);
-//            }
-//        });
         refreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (isShowHeadView()) {
+                if (canBeEmpty) {
                     onListItemClick(view, position - 2);
                 } else {
                     onListItemClick(view, position - 1);
@@ -277,28 +198,6 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
         adapter = new CommonSearchAdapter();
         return adapter;
     }
-//    /**
-//     * 根据业务 展示"无"Item
-//     */
-//    public void switchPage(int befromPage) {
-//        switch (befromPage) {
-//            case WFIN_ADD:
-//                headerViewBtn.setVisibility(View.VISIBLE);
-//                break;
-//
-//            case TASKS_ADD:
-//                headerViewBtn.setVisibility(View.VISIBLE);
-//                break;
-//
-//            case TASKS_ADD_CUSTOMER:
-//                headerViewBtn.setVisibility(View.VISIBLE);
-//                break;
-//
-//            case WORK_ADD:
-//                headerViewBtn.setVisibility(View.VISIBLE);
-//                break;
-//        }
-//    }
 
 
     /**
@@ -363,7 +262,7 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
     public void success(PaginationX<T> data) {
         refreshListView.onRefreshComplete();
         paginationX.loadRecords(data);
-        if (paginationX.isEnpty() && !isShowHeadView()) {
+        if (paginationX.isEnpty() && !canBeEmpty) {
             ll_loading.setStatus(LoadingLayout.Empty);
         } else {
             ll_loading.setStatus(LoadingLayout.Success);
@@ -406,15 +305,6 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
         intent.putExtra("data", (T)adapter.getItem(position));
         setResult(RESULT_OK, intent);
         onBackPressed();
-    }
-
-    /**
-     * 是否显示头部无的按钮,默认不显示，需要显示，直接复写本方法
-     *
-     * @return
-     */
-    public boolean isShowHeadView() {
-        return false;
     }
 
     /**
@@ -462,108 +352,6 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
             T item = getItem(i);
             bindData(viewHolder, item);
             return convertView;
-
-//            Object o=null;
-//            TextView title = ViewHolder.get(convertView, R.id.tv_title);
-//            TextView content = ViewHolder.get(convertView, R.id.tv_content);
-//            TextView time = ViewHolder.get(convertView, R.id.tv_time);
-//            View ack = ViewHolder.get(convertView, R.id.view_ack);
-//            ViewGroup layout_discuss = ViewHolder.get(convertView, R.id.layout_discuss);
-//            layout_discuss.setVisibility(View.GONE);
-//            time.setVisibility(View.VISIBLE);
-//            //审批
-//            if (o instanceof WfInstanceRecord) {
-//                WfInstanceRecord wfInstance = (WfInstanceRecord) o;
-//                if (wfInstance.title != null) {
-//                    title.setText(wfInstance.title);
-//                }
-//                time.setText("提交时间: " + DateTool.getDateTimeFriendly(wfInstance.createdAt));
-//                if (null != wfInstance.nextExecutorName) {
-//                    content.setText(String.format("申请人 %s", wfInstance.nextExecutorName));
-//                }
-//
-//            }
-//            //任务
-//            else if (o instanceof TaskRecord) {
-//                TaskRecord task = (TaskRecord) o;
-//                try {
-//                    if (task.planendAt == 0) {
-//                        time.setText("任务截止时间: 无");
-//                    } else {
-//                        time.setText("任务截止时间: " + DateTool.getDateTimeFriendly(task.planendAt));
-//                    }
-//                } catch (Exception e) {
-//                    Global.ProcException(e);
-//                }
-//                if (null != task.responsibleName) {
-//                    content.setText("负责人: " + task.responsibleName);
-//                }
-//                if (!TextUtils.isEmpty(task.title)) {
-//                    title.setText(task.title);
-//                }
-//            }
-//            //报告
-//            else if (o instanceof WorkReportRecord) {
-//                final WorkReportRecord workReport = (WorkReportRecord) o;
-//                if (null != workReport.reviewerName) {
-//                    content.setText("点评: " + workReport.reviewerName);
-//                }
-//                StringBuilder reportTitle = new StringBuilder(workReport.title);
-//                String reportType = "";
-//                switch (workReport.type) {
-//                    case WorkReport.DAY:
-//                        reportType = " 日报";
-//                        break;
-//                    case WorkReport.WEEK:
-//                        reportType = " 周报";
-//                        break;
-//                    case WorkReport.MONTH:
-//                        reportType = " 月报";
-//                        break;
-//                }
-//                reportTitle.append(reportType);
-//                if (workReport.isDelayed) {
-//                    reportTitle.append(" (补签)");
-//                }
-//                title.setText(reportTitle);
-//                String end = "提交时间: " + DateTool.getDateTimeFriendly(workReport.createdAt);
-//                time.setText(end);
-//
-//            }
-//            //项目
-//            else if (o instanceof Project) {
-//                Project project = (Project) o;
-//                try {
-//                    time.setText("提交时间: " + DateTool.getDateTimeFriendly(project.getCreatedAt() / 1000));
-//                } catch (Exception e) {
-//                    Global.ProcException(e);
-//                }
-//
-//                content.setText(project.content);
-//                ack.setVisibility(View.GONE);
-//                title.setText(project.title);
-//            }
-//            //客户
-//            else if (o instanceof Customer) {
-//
-//                customer = (Customer) o;
-//                time.setText("跟进时间：" + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(customer.lastActAt));
-//                title.setText(customer.name);
-//                content.setText("标签:" + Utils.getTagItems(customer));
-//
-//            } else if (o instanceof ClueListItem) {
-//
-//                ClueListItem clueListItem = (ClueListItem) o;
-//                if (clueListItem.lastActAt == 0) {
-//                    time.setText("--");
-//                } else {
-//                    time.setText("跟进时间：" + com.loyo.oa.common.utils.DateTool.getDateFriendly(clueListItem.lastActAt));
-//                }
-//                title.setText(clueListItem.name);
-//                content.setText("公司名称" + clueListItem.companyName);
-//
-//            }
-//            return convertView;
         }
 
         public class SearchViewHolder {

@@ -65,10 +65,6 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
         }
     }
 
-    @Override
-    public boolean isShowHeadView() {
-        return canBeEmpty;
-    }
 
     //订阅者，处理网络请求事件
     private DefaultLoyoSubscriber<PaginationX<ClueListItem>> getDefaultLoyoSubscriber(){

@@ -492,6 +492,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
                         Bundle bundle2 = new Bundle();
                         bundle2.putInt(ProjectSearchOrPickerActivity.EXTRA_STATUS, 1);
                         bundle2.putBoolean(ProjectSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY, true);
+                        bundle2.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
                         app.startActivityForResult(TasksAddActivity.this, ProjectSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT,
                                 FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
                         break;
@@ -503,6 +504,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
                         Bundle parm = new Bundle();
                         parm.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, 5);
                         parm.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY,true);
+                        parm.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
                         app.startActivityForResult(TasksAddActivity.this, CustomerSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, parm);
                         break;
 

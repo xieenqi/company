@@ -589,7 +589,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
                 Bundle b = new Bundle();
                 b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
-                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY,true);
+                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
                 app.startActivityForResult(OrderAddActivity.this, CustomerSearchOrPickerActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;

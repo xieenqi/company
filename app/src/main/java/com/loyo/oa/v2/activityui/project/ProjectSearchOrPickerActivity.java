@@ -66,12 +66,6 @@ public class ProjectSearchOrPickerActivity extends BaseSearchActivity<Project> {
     }
 
 
-
-    @Override
-    public boolean isShowHeadView() {
-        return canBeEmpty;
-    }
-
     @Override
     public void onListItemClick(View view, int position) {
         if (jumpNewPage) {
