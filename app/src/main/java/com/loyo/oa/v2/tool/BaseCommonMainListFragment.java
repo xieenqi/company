@@ -226,8 +226,8 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == 0x09) {
+            pagination.setFirstPage();
             GetData();
         }
 
