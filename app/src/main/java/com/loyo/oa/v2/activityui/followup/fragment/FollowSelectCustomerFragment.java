@@ -91,7 +91,7 @@ public class FollowSelectCustomerFragment extends BaseFragment implements Follow
                 Bundle b=new Bundle();
                 b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_JUMP_NEW_PAGE,true);
                 b.putSerializable(CustomerSearchOrPickerActivity.EXTRA_JUMP_PAGE_CLASS,FollowAddActivity.class);
-                b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,CustomerManagerActivity.CUSTOMER_MY);
+                b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
                 MainApp.getMainApp().startActivityForResult(mActivity,CustomerSearchOrPickerActivity.class,MainApp.ENTER_TYPE_RIGHT,CUSTOMER_SELECT,b);
             }
         });

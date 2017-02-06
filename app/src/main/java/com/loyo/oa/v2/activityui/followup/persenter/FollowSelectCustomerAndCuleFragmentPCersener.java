@@ -25,10 +25,10 @@ public class FollowSelectCustomerAndCuleFragmentPCersener implements FollowSelec
     public static final int SELECT_CUSTOMER = 101;
     public static final int SELECT_CULE = 102;
     private FollowSelectCustomerAndCuleFragmentVControl vControl;
-    private int type, pageCus = 1, pageClue = 1;
+    private int type;
     private boolean isPullCus, isPullClue;
-    private ArrayList<Customer> mCustomers = new ArrayList<>();
-    private ArrayList<ClueListItem> mCule = new ArrayList<>();
+    private PaginationX<Customer> paginationXCustomer=new PaginationX<>();
+    private PaginationX<ClueListItem> paginationXClue=new PaginationX<>();
 
     public FollowSelectCustomerAndCuleFragmentPCersener(FollowSelectCustomerAndCuleFragmentVControl vControl, int type) {
         this.type = type;
@@ -59,8 +59,8 @@ public class FollowSelectCustomerAndCuleFragmentPCersener implements FollowSelec
      */
     private void getCustomerData() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", pageCus);
-        params.put("pageSize", 15);
+        params.put("pageIndex", paginationXCustomer.getShouldLoadPageIndex());
+        params.put("pageSize", paginationXCustomer.getPageSize());
         LogUtil.d("我的客户查询参数：" + MainApp.gson.toJson(params));
 
         CustomerService.getInvovedCustomers(params)
@@ -69,32 +69,21 @@ public class FollowSelectCustomerAndCuleFragmentPCersener implements FollowSelec
                     public void onError(Throwable e) {
                         /* 重写父类方法，不调用super */
                         @LoyoErrorChecker.CheckType
-                        int type = mCustomers.size() > 0 ?
-                                LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                        int type = paginationXCustomer.isEnpty() ?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
                         LoyoErrorChecker.checkLoyoError(e, type, vControl.getLoadingLayout());
                         vControl.getDataComplete();
                     }
 
                     @Override
                     public void onNext(PaginationX<Customer> customerPaginationX) {
-                        vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
-                        if (PaginationX.isEmpty(customerPaginationX)) {
-                            if (isPullCus) {
-                                vControl.showMsg("没有更多数据了!");
-                            } else {
-                                mCustomers.clear();
-                                vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
-                            }
-                        } else {
-                            if (isPullCus) {
-                                mCustomers.addAll(customerPaginationX.records);
-                            } else {
-                                mCustomers.clear();
-                                mCustomers = customerPaginationX.records;
-                            }
-                        }
                         vControl.getDataComplete();
-                        vControl.bindCustomerData(mCustomers);
+                        paginationXCustomer.loadRecords(customerPaginationX);
+                        if(paginationXCustomer.isEnpty()){
+                            vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
+                        }else{
+                            vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+                        }
+                        vControl.bindCustomerData(paginationXCustomer.getRecords());
                     }
                 });
     }
@@ -104,40 +93,30 @@ public class FollowSelectCustomerAndCuleFragmentPCersener implements FollowSelec
      */
     private void getCuleData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", pageClue);
-        map.put("pageSize", 15);
+        map.put("pageIndex", paginationXClue.getShouldLoadPageIndex());
+        map.put("pageSize", paginationXClue.getPageSize());
 
         ClueService.getMyClueList(map).subscribe(new DefaultLoyoSubscriber<PaginationX<ClueListItem>>() {
             @Override
             public void onError(Throwable e) {
                 /* 重写父类方法，不调用super */
                 @LoyoErrorChecker.CheckType
-                int type = pageCus != 1 ?LoyoErrorChecker.TOAST : LoyoErrorChecker.LOADING_LAYOUT;
+                int type =paginationXClue.isEnpty() ?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
                 LoyoErrorChecker.checkLoyoError(e, type, vControl.getLoadingLayout());
             }
 
             @Override
             public void onNext(PaginationX<ClueListItem> clueList) {
-                vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
-                ArrayList<ClueListItem> data = clueList.getRecords();
-                if (null == data || data.size() == 0) {
-                    if (isPullClue) {
-                        vControl.showMsg("没有更多数据了!");
-                    } else {
-                        mCule.clear();
-                        vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
-                    }
-                    vControl.getDataComplete();
-                } else {
-                    if (isPullClue) {
-                        mCule.addAll(data);
-                    } else {
-                        mCule.clear();
-                        mCule = data;
-                    }
-                }
                 vControl.getDataComplete();
-                vControl.bindClueData(mCule);
+                paginationXClue.loadRecords(clueList);
+                if(paginationXClue.isEnpty()){
+                    vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
+                }else{
+                    vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+                }
+                vControl.bindClueData(paginationXClue.getRecords());
+
+
             }
         });
 
@@ -145,29 +124,24 @@ public class FollowSelectCustomerAndCuleFragmentPCersener implements FollowSelec
 
     @Override
     public void pullDownCus() {
-        isPullCus = false;
-        pageCus = 1;
-        getPageData(pageCus);
+        paginationXCustomer.setFirstPage();
+        getPageData();
     }
 
     @Override
     public void pullUpCus() {
-        isPullCus = true;
-        pageCus++;
-        getPageData(pageCus);
+
+        getPageData();
     }
 
     @Override
     public void pullDownCule() {
-        isPullClue = false;
-        pageClue = 1;
-        getPageData(pageClue);
+        paginationXClue.setFirstPage();
+        getPageData();
     }
 
     @Override
     public void pullUpCule() {
-        isPullClue = true;
-        pageClue++;
-        getPageData(pageClue);
+        getPageData();
     }
 }

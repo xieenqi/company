@@ -29,7 +29,7 @@ public class PaginationX<T> implements Serializable {
 
     private int loadPageIndex=0;
     public PaginationX() {
-        pageIndex = 1;
+        pageIndex = 0;
         pageSize = 20;
     }
 
