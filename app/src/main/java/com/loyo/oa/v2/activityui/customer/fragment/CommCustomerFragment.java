@@ -102,9 +102,9 @@ public class CommCustomerFragment extends BaseCustomerFragment {
      * 获取数据
      */
     protected void getData() {
-        HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", mPagination.getShouldLoadPageIndex());
         params.put("pageSize", mPagination.getPageSize());
+
         CustomerService.getDumpedCustomers(params)
                 .subscribe(new DefaultLoyoSubscriber<PaginationX<Customer>>() {
                     public void onError(Throwable e) {

@@ -88,7 +88,6 @@ public class MyMemberFragment extends BaseCustomerFragment {
      * 获取数据,默认设置倒序
      */
     protected void getData() {
-        HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", mPagination.getShouldLoadPageIndex());
         params.put("pageSize", mPagination.getPageSize());
         CustomerService.getMemberCustomers(params)
