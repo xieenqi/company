@@ -31,6 +31,9 @@ import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.HashMap;
 
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
 /**
  * 线索 新建 页面
  * Created by xeq on 16/8/20.
@@ -46,6 +49,7 @@ public class ClueAddActivity extends BaseActivity {
     private String clueId;
     private ClueDetailWrapper.ClueDetail editData;
     private boolean isEdit = false;
+    CompositeSubscription subscriptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,7 @@ public class ClueAddActivity extends BaseActivity {
         setContentView(R.layout.activity_add_clue);
         getIntentData();
         initView();
+        subscriptions = new CompositeSubscription();
     }
 
     private void getIntentData() {
@@ -112,7 +117,7 @@ public class ClueAddActivity extends BaseActivity {
         tv_source.setText(sales.source);
     }
 
-    NoDoubleClickListener click = new NoDoubleClickListener() {
+    NoDoubleClickListener click = new NoDoubleClickListener(10) {
         @Override
         public void onNoDoubleClick(View v) {
             switch (v.getId()) {
@@ -211,7 +216,7 @@ public class ClueAddActivity extends BaseActivity {
         map.put("remark", et_remake.getText().toString());
         map.put("source", tv_source.getText().toString());
         if (!isEdit) {
-            ClueService.addClue(map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "新建线索成功") {
+            Subscription Sub = ClueService.addClue(map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "新建线索成功") {
                 @Override
                 public void onNext(final ClueSales clueDetail) {
                     new Handler().postDelayed(new Runnable() {
@@ -225,8 +230,9 @@ public class ClueAddActivity extends BaseActivity {
                     }, 2000);
                 }
             });
+            subscriptions.add(Sub);
         } else {
-            ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "编辑线索成功") {
+            Subscription Sub = ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "编辑线索成功") {
                 @Override
                 public void onNext(ClueSales o) {
                     if (null != o) {
@@ -239,6 +245,13 @@ public class ClueAddActivity extends BaseActivity {
                     }
                 }
             });
+            subscriptions.add(Sub);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscriptions.unsubscribe();
     }
 }
