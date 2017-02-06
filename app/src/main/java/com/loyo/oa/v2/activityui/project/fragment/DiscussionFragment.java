@@ -92,6 +92,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             });
             lv_discuss.setMode(PullToRefreshBase.Mode.BOTH);
             lv_discuss.setOnRefreshListener(this);
+            setListViewHeaderAndFooter();
             layout_discuss_action = (ViewGroup) mView.findViewById(R.id.layout_discuss_action);
 
             mHaitHelper = new HaitHelper(this, et_comment);
@@ -99,6 +100,19 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             getData();
         }
         return mView;
+    }
+
+    /**
+     * 设置上拉和下来的提示文字
+     */
+    private void setListViewHeaderAndFooter(){
+        lv_discuss.getFooterLayout().setPullLabel("上拉刷新");
+        lv_discuss.getFooterLayout().setReleaseLabel("松开刷新");
+        lv_discuss.getFooterLayout().setRefreshingLabel("正在刷新...");
+
+        lv_discuss.getHeaderLayout().setPullLabel("下拉加载");
+        lv_discuss.getHeaderLayout().setReleaseLabel("松开加载");
+        lv_discuss.getHeaderLayout().setRefreshingLabel("正在加载...");
     }
 
     @Override
