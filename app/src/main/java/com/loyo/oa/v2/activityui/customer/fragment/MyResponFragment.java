@@ -64,6 +64,14 @@ import java.util.List;
  * Created by yyy on 16/6/1.
  */
 public class MyResponFragment  extends BaseCustomerFragment {
+
+    @Override
+    public void initView(View view) {
+        super.initView(view);
+        //只有我负责才现实添加按钮
+        btn_add.setVisibility(View.VISIBLE);
+    }
+
     protected void getData() {
         params.put("pageIndex", mPagination.getShouldLoadPageIndex());
         params.put("pageSize", mPagination.getPageSize());
