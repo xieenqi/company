@@ -56,7 +56,7 @@ public class CommCustomerFragment extends BaseCustomerFragment {
     @Override
     protected void initFilterParams() {
         params.put("field","recycledAt");
-        params.put("order","asc");
+        params.put("order","desc");
 
     }
     @Override
