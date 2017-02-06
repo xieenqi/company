@@ -242,8 +242,9 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
                     Bundle b = new Bundle();
                     b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
                     b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_HAVE_TAG,false);
+                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY,true);
                     app.startActivityForResult(WfInAddActivity.this, CustomerSearchOrPickerActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
 
                 //提交审批

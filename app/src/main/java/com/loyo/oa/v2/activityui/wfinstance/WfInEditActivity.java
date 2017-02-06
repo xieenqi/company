@@ -265,6 +265,7 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView {
                     Bundle b = new Bundle();
                     b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
                     b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_HAVE_TAG,false);
+                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY,true);
                     app.startActivityForResult(WfInEditActivity.this, CustomerSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
