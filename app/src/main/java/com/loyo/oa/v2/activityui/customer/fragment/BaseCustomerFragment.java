@@ -158,6 +158,14 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
         mPresenter = new MyCustomerFragPresenterImpl(getActivity(), this);
     }
 
+
+    //处理增删改以后的列表页面的数据
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
     /**
      * 初始化数据
      */
