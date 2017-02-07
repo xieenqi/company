@@ -156,7 +156,6 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
 
 
         mPresenter = new MyCustomerFragPresenterImpl(getActivity(), this);
-        Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
     }
 
     /**

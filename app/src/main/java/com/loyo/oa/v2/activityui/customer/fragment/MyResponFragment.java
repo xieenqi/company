@@ -70,6 +70,7 @@ public class MyResponFragment  extends BaseCustomerFragment {
         super.initView(view);
         //只有我负责才现实添加按钮
         btn_add.setVisibility(View.VISIBLE);
+        Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
     }
 
     protected void getData() {
