@@ -33,6 +33,7 @@ import java.util.HashMap;
  * 新建拜访 [搜索客户选择]
  * Created by yyy on 15/12/24.
  */
+//TODO 准备删掉
 public class SigninSelectCustomerSearch extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, View.OnClickListener {
 
     protected String strSearch;
@@ -125,8 +126,6 @@ public class SigninSelectCustomerSearch extends BaseLoadingActivity implements P
         params.put("pageIndex", page);
         params.put("pageSize", 20);
         params.put("keyWords", edt_search.getText().toString().trim());
-
-
         SignInService.signInSearchCutomer(params).subscribe(new DefaultLoyoSubscriber<BaseBeanT<PaginationX<SigninSelectCustomer>>>(ll_loading) {
             @Override
             public void onNext(BaseBeanT<PaginationX<SigninSelectCustomer>> customerPaginationX) {

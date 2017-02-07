@@ -507,7 +507,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name=".activityui.signin.SigninSelectCustomerSearch"
+            android:name=".activityui.signin.SigninSelectCustomerSearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.signin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -13,14 +14,26 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.model.CallUserResp;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Locate;
 import com.loyo.oa.v2.activityui.signin.adapter.SigninSelectCustomerAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
+import com.loyo.oa.v2.activityui.signin.event.SigninCustomerRushEvent;
 import com.loyo.oa.v2.activityui.signin.persenter.SigninSelectCustomerPControl;
 import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninSelectCustomerVControl;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Location;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 拜访签到【选择客户】页面
@@ -40,6 +53,13 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
         super.onCreate(savedInstanceState);
         pControl = new SigninSelectCustomerPControl(this);
         initView();
+        AppBus.getInstance().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        AppBus.getInstance().unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -66,15 +86,27 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SigninSelectCustomer item = adapter.getItemData(position - 1);
-                Intent intent = new Intent();
-                intent.putExtra("id", item.id);
-                intent.putExtra("name", item.name);
-                if (adapter.isLocationOk(item)) {//有定位信息才传
-                    intent.putExtra("loc", item.position);
+//                Intent intent = new Intent();
+//                intent.putExtra("id", item.id);
+//                intent.putExtra("name", item.name);
+//                if (adapter.isLocationOk(item)) {//有定位信息才传
+//                    intent.putExtra("loc", item.position);
+//                }
+//                intent.putExtra("contact", item.contacts);
+//                setResult(RESULT_OK, intent);
+//                onBackPressed();
+
+                SigninSelectCustomer signinSelectCustomer = new SigninSelectCustomer();
+                signinSelectCustomer.contacts=item.contacts;
+                signinSelectCustomer.name=item.name;
+                signinSelectCustomer.id=item.id;
+                if (adapter.isLocationOk(item)) {
+                    signinSelectCustomer.position=item.position;//有定位信息才传
                 }
-                intent.putExtra("contact", item.contacts);
-                setResult(RESULT_OK, intent);
+                SigninCustomerRushEvent signinCustomerRushEvent = new SigninCustomerRushEvent(signinSelectCustomer);
+                AppBus.getInstance().post(signinCustomerRushEvent);
                 onBackPressed();
+
             }
         });
         getPageData();
@@ -99,19 +131,15 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
                 break;
             /*搜索客户*/
             case R.id.ll_search:
-                Intent intents = new Intent(this, SigninSelectCustomerSearch.class);
-                intents.putExtra("isSignin", true);
-                startActivityForResult(intents, SEARCH_CUSTOMER);
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                Bundle b = new Bundle();
+                app.startActivityForResult(this, SigninSelectCustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, SEARCH_CUSTOMER, b);
                 break;
             /*创建一个新客户*/
             case R.id.ll_add_customer:
                 Intent intent = new Intent(SigninSelectCustomerActivity.this, CustomerAddActivity_.class);
-                intent.putExtra("isResultSignin", true);
-                startActivityForResult(intent, CREAT_CUSTOMER);
+                startActivity(intent);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
-
         }
     }
 
@@ -123,19 +151,53 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
         }
         switch (requestCode) {
             case SEARCH_CUSTOMER:
-            case CREAT_CUSTOMER:
-//                ArrayList<Contact> contact = (ArrayList<Contact>) data.getSerializableExtra("contact");
-                Intent intent = new Intent();
-                intent.putExtra("id", data.getStringExtra("id"));
-                intent.putExtra("name", data.getStringExtra("name"));
-                intent.putExtra("loc", data.getSerializableExtra("loc"));
-                intent.putExtra("contact", data.getSerializableExtra("contact"));
-                setResult(RESULT_OK, intent);
+                //因为CustomerSearchOrPickerActivity统一提供回调，所以再回调处理。
+                SigninSelectCustomer customer = (SigninSelectCustomer) data.getSerializableExtra("data");
+                SigninCustomerRushEvent signinCustomerRushEvent = new SigninCustomerRushEvent(customer);
+                AppBus.getInstance().post(signinCustomerRushEvent);
                 onBackPressed();
                 break;
+            case CREAT_CUSTOMER:
+                break;
         }
-
     }
+
+    /**
+     * 通过EventBus处理新建客户
+     */
+    @Subscribe
+    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
+        //如果是添加的客户，收到以后，转换成客户signinCustomerRushEvent，然后再发送出去
+        if (MyCustomerListRushEvent.EVENT_CODE_ADD == event.eventCode) {
+            SigninCustomerRushEvent signinCustomerRushEvent = new SigninCustomerRushEvent(getSigninSelectCustomer(event.data));
+            AppBus.getInstance().post(signinCustomerRushEvent);
+            finish();
+            Log.i("ttttt", "onMyCustomerListRushEvent: 关闭选择");
+        }
+    }
+
+    /**
+     * 把一个customer转换成SigninSelectCustomer类型
+     * @param customer
+     * @return
+     */
+    private SigninSelectCustomer getSigninSelectCustomer(Customer customer) {
+        SigninSelectCustomer signinSelectCustomer = new SigninSelectCustomer();
+
+        List<Double> loc = new ArrayList<>();
+        Locate oldeLoc = customer.position;
+        if(oldeLoc!=null&&oldeLoc.loc.length==2){
+            loc.add(oldeLoc.loc[0]);
+            loc.add(oldeLoc.loc[1]);
+            Location location = new Location(loc, oldeLoc.addr);
+            signinSelectCustomer.position=location;
+        }
+        signinSelectCustomer.contacts=customer.contacts;
+        signinSelectCustomer.name=customer.name;
+        signinSelectCustomer.id=customer.id;
+        return signinSelectCustomer;
+    }
+
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {

@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.customer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,6 @@ import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.customer.common.CommonMethod;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
-import com.loyo.oa.v2.activityui.customer.event.EditCustomerRushEvent;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
@@ -39,7 +36,6 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -367,7 +363,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*返回*/
             case R.id.img_title_left:
                 if (isPutOcen) {
-                    AppBus.getInstance().post(new MyCustomerListRushEvent());
+//                    AppBus.getInstance().post(new MyCustomerListRushEvent());
                     finish();
                 } else {
                     onBackPressed();
@@ -653,17 +649,17 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     public boolean onKeyDown(final int keyCode, final KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            if (isPutOcen) {
-                AppBus.getInstance().post(new MyCustomerListRushEvent());
-                finish();
-            } else if (isEdit) {
-                AppBus.getInstance().post(new EditCustomerRushEvent());
-                AppBus.getInstance().post(new MyCustomerListRushEvent());
-                finish();
-            } else {
-                onBackPressed();
-            }
-            return true;
+//            if (isPutOcen) {
+//                AppBus.getInstance().post(new MyCustomerListRushEvent());
+//                finish();
+//            } else if (isEdit) {
+//                AppBus.getInstance().post(new EditCustomerRushEvent());
+//                AppBus.getInstance().post(new MyCustomerListRushEvent());
+//                finish();
+//            } else {
+//                onBackPressed();
+//            }
+//            return true;
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -677,10 +673,10 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 try {
                     Bundle bundle = data.getExtras();
                     boolean isCreator = bundle.getBoolean("isCreator");
-                    if (!isCreator) {
-                        AppBus.getInstance().post(new MyCustomerListRushEvent());
-                        finish();
-                    }
+//                    if (!isCreator) {
+//                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+//                        finish();
+//                    }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -704,7 +700,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @Override
     public void toPublicEmbl() {
         isPutOcen = true;
-        AppBus.getInstance().post(new MyCustomerListRushEvent());
+//        AppBus.getInstance().post(new MyCustomerListRushEvent());
         finish();
     }
 
@@ -713,7 +709,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
      */
     @Override
     public void deleteEmbl() {
-        AppBus.getInstance().post(new MyCustomerListRushEvent());
+//        AppBus.getInstance().post(new MyCustomerListRushEvent());
         finish();
     }
 

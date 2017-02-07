@@ -29,8 +29,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
+ *
  * 新建跟进动态
  */
+//TODO 这个类好像没有用到
 public class SaleActivitiesAddActivity extends BaseActivity implements View.OnClickListener {
 
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
