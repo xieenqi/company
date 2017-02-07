@@ -283,21 +283,6 @@ public class SignInActivity extends BaseActivity
                     startRecord(v);
                 }
 
-//                if (RecordUtils.permissionRecord(this)) {
-//                    if ((boolean) v.getTag()) {
-//                        showInputKeyboard(edt_memo);
-//                        mfmodule.setIsRecording(false);
-//                        v.setTag(false);
-//                    } else {
-//                        hideInputKeyboard(edt_memo);
-//                        mfmodule.setIsRecording(true);
-//                        v.setTag(true);
-//                    }
-//                    UmengAnalytics.umengSend(SignInActivity.this, UmengAnalytics.addVisitRecord);
-//                } else {
-//                    Toast("你没有配置录音或者储存权限");
-//                }
-
             }
         });
         edt_memo.setOnClickListener(new View.OnClickListener() {
@@ -582,28 +567,6 @@ public class SignInActivity extends BaseActivity
                         controller.reloadGridView();
                     }
                 }
-                break;
-            /*选择客户回调*/
-            case BaseSearchActivity.REQUEST_SEARCH:
-//                customerId = data.getStringExtra("id");
-//                customerName = data.getStringExtra("name");
-//                contactList = (ArrayList<Contact>) data.getSerializableExtra("contact");
-//                Location loc = (Location) data.getSerializableExtra("loc");
-//                if (loc != null) {
-//                    customerAddress = loc.addr;
-//                }
-//                if (contactList != null && contactList.size() > 0) {
-//                    ll_contact.setVisibility(View.VISIBLE);
-//                    tv_contact_name.setText(presenter.getDefaultContact(contactList));
-//                } else {
-//                    ll_contact.setVisibility(View.GONE);
-//                    tv_contact_name.setText("");
-//                }
-//                tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
-//                edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
-//                tv_customer_address.setVisibility(View.VISIBLE);
-//                tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
-//                distanceInfo(loc);
                 break;
              /* 选择客户联系人 回调*/
             case ExtraAndResult.REQUEST_CODE_STAGE:

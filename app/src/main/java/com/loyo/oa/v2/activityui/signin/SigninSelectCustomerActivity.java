@@ -86,15 +86,6 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SigninSelectCustomer item = adapter.getItemData(position - 1);
-//                Intent intent = new Intent();
-//                intent.putExtra("id", item.id);
-//                intent.putExtra("name", item.name);
-//                if (adapter.isLocationOk(item)) {//有定位信息才传
-//                    intent.putExtra("loc", item.position);
-//                }
-//                intent.putExtra("contact", item.contacts);
-//                setResult(RESULT_OK, intent);
-//                onBackPressed();
 
                 SigninSelectCustomer signinSelectCustomer = new SigninSelectCustomer();
                 signinSelectCustomer.contacts=item.contacts;
@@ -151,7 +142,7 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
         }
         switch (requestCode) {
             case SEARCH_CUSTOMER:
-                //因为CustomerSearchOrPickerActivity统一提供回调，所以再回调处理。
+                //因为搜索页面统一提供回调，所以再回调处理。
                 SigninSelectCustomer customer = (SigninSelectCustomer) data.getSerializableExtra("data");
                 SigninCustomerRushEvent signinCustomerRushEvent = new SigninCustomerRushEvent(customer);
                 AppBus.getInstance().post(signinCustomerRushEvent);
@@ -172,7 +163,6 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
             SigninCustomerRushEvent signinCustomerRushEvent = new SigninCustomerRushEvent(getSigninSelectCustomer(event.data));
             AppBus.getInstance().post(signinCustomerRushEvent);
             finish();
-            Log.i("ttttt", "onMyCustomerListRushEvent: 关闭选择");
         }
     }
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -247,23 +248,6 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         if (clueId == null) {
             return;
         }
-//        RestAdapterFactory.getInstance()
-//                .build(Config_project.API_URL_CUSTOMER())
-//                .create(IClue.class)
-//                .getClueDetail(clueId, new Callback<BaseBeanT<ClueDetailWrapper.ClueDetail>>() {
-//                    @Override
-//                    public void success(BaseBeanT<ClueDetailWrapper.ClueDetail> detail, Response response) {
-//                        HttpErrorCheck.checkResponse("线索详情：", response, ll_loading);
-//                        data = detail.data;
-//                        bindData();
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error, ll_loading);
-//                    }
-//                });
-
         ClueService.getClueDetail(clueId).subscribe(new DefaultLoyoSubscriber<BaseBeanT<ClueDetailWrapper.ClueDetail>>(ll_loading) {
             @Override
             public void onNext(BaseBeanT<ClueDetailWrapper.ClueDetail> detail) {
