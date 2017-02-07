@@ -146,16 +146,17 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
                     paginationX.getRecords().clear();
                     adapter.notifyDataSetChanged();
                     ll_loading.setStatus(LoadingLayout.Success);
+                    refreshListView.setMode(PullToRefreshBase.Mode.MANUAL_REFRESH_ONLY);
                 } else {
+                    refreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
                     doSearch();
                 }
             }
         });
         edt_search.requestFocus();
         refreshListView = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
-        refreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         refreshListView.setOnRefreshListener(this);
-
+        refreshListView.setMode(PullToRefreshBase.Mode.MANUAL_REFRESH_ONLY);
         listView = refreshListView.getRefreshableView();
         if (canBeEmpty) {
             LayoutInflater mInflater = LayoutInflater.from(this);
