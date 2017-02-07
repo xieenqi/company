@@ -65,9 +65,6 @@ public class MyResponFragment  extends BaseCustomerFragment {
      */
     @Subscribe
     public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
-//        mPagination.setFirstPage();
-//        getData();
-
         if(MyCustomerListRushEvent.EVENT_CODE_ADD==event.eventCode){
             mPagination.getRecords().add(0,event.data);
             adapter.notifyDataSetChanged();

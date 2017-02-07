@@ -40,7 +40,7 @@ import java.util.List;
  * 【客户列表】fragment管理类
  * Created by yyy on 16/6/1.
  */
-public class CustomerManagerActivity extends BaseFragmentActivity implements View.OnClickListener, MyMemberFragment.MemberCallback {
+public class CustomerManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
 
     /**
      * 筛选取消
@@ -304,23 +304,4 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         ll_category.setVisibility(ll_category.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
     }
 
-    /**
-     * 重启Activity
-     */
-    void reStart() {
-        Intent intent = getIntent();
-        overridePendingTransition(0, 0);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(intent);
-    }
-
-    /**
-     * 我参与界面新建完成,要回到我负责界面,直接重启activity
-     */
-    @Override
-    public void comeBackHeadPage() {
-        reStart();
-    }
 }

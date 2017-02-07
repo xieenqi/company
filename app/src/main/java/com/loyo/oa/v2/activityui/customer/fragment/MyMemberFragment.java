@@ -20,22 +20,9 @@ import org.greenrobot.eventbus.Subscribe;
  * Created by yyy on 16/6/1.
  */
 public class MyMemberFragment extends BaseCustomerFragment {
-
-    private MemberCallback memberCallback;
-
-    public interface MemberCallback {
-        void comeBackHeadPage();
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            memberCallback = (MemberCallback) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().getClass().getName()
-                    + " must implements interface MyListener");
-        }
     }
 
     /**
