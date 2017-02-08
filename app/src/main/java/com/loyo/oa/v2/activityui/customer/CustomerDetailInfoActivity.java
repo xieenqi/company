@@ -22,13 +22,19 @@ import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.customer.common.CommonMethod;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
+import com.loyo.oa.v2.activityui.customer.model.ExtraData;
+import com.loyo.oa.v2.activityui.customer.model.Locate;
+import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPresenterimpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
@@ -36,6 +42,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -54,6 +61,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -88,8 +96,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     //    @Extra(ExtraAndResult.EXTRA_TYPE)  弃用了
 //    public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户" 5.游客
     public boolean isPutOcen;
-    public boolean isEdit;
     public boolean canEdit;
+    //拜访，福建，销售，任务等等的条数，还是需要重新加载数据，不然需要修改的地方太多了。
+    public boolean needToRefresh=false;
     private Contact mContact;
     private RelativeLayout layout_wirete, layout_phone;
     private LinearLayout layout_gj, layout_sign;
@@ -140,12 +149,18 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         } else {
             layout_sign.setVisibility(View.GONE);
         }
+        mPresenter.getData(id);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.getData(id);
+        //目前修改的时间，必须客户信息，客户标签，通过eventBus更新数据变化，不重新去拉取
+        //但是，拜访，订单，附件，销售等的个数，还是需要重新拉取数据来刷新，不然，改动太大。
+        if(needToRefresh){
+            mPresenter.getData(id);
+            needToRefresh=false;
+        }
     }
 
     /**
@@ -177,11 +192,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         }
     }
 
+
+
     /**
      * 数据初始化
      */
     private void initData() {
-
         if (null == mCustomer) {
             finish();
             return;
@@ -347,6 +363,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mIntent = new Intent(CustomerDetailInfoActivity.this, SignInActivity.class);
                 mIntent.putExtra("data", mCustomer);
                 startActivity(mIntent);
+                needToRefresh=true;
                 UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerVisit);
                 break;
 
@@ -357,6 +374,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mIntent.putExtra("isDetail", true);
                 mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 startActivity(mIntent);
+                needToRefresh=true;
                 UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerAddFollow);
                 break;
 
@@ -389,6 +407,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                             @Override
                             public void onNext(Customer customer) {
                                 mPresenter.getData(id);
+                                Toast("跳入客户成功");
                                 /*跳转到列表,并刷新列表
                                   AppBus.getInstance().post(new MyCustomerListRushEvent());
                                   finish();
@@ -407,6 +426,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     bundle.putBoolean("canEdit", canEdit);
                     _class = CustomerContactManageActivity_.class;
                     requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
+                    needToRefresh=true;
                 } catch (NullPointerException e) {
                     Toast("参数不全");
                 }
@@ -455,6 +475,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = CustomerFollowUpListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
+                needToRefresh=true;
                 UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerCheckFollow);
                 break;
             /*拜访签到*/
@@ -462,6 +483,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = CustomerSigninListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;
+                needToRefresh=true;
                 break;
             /*任务计划*/
             case R.id.layout_task:
@@ -475,6 +497,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = TaskListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS;
+                needToRefresh=true;
                 break;
             /*文件*/
             case R.id.layout_attachment:
@@ -492,6 +515,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putInt("bizType", 6);
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;
+                needToRefresh=true;
                 break;
             /*销售机会*/
             case R.id.ll_sale:
@@ -506,6 +530,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = SaleManageActivity.class;
                 requestCode = ExtraAndResult.REQUEST_CODE;
+                needToRefresh=true;
                 break;
             /*订单管理*/
             case R.id.ll_order: {
@@ -520,6 +545,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = CustomerOrderList.class;
                 requestCode = ExtraAndResult.REQUEST_CODE;
+                needToRefresh=true;
             }
             break;
             /*审批流程*/
@@ -535,6 +561,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = CustomerRelatedApprovalList.class;
                 requestCode = ExtraAndResult.REQUEST_CODE;
+                needToRefresh=true;
             }
             break;
         }
@@ -630,8 +657,27 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
      */
     @Subscribe
     public void onEditCustomerEvent(EditCustomerEvent event) {
-        isEdit = true;
+
     }
+
+    /**
+     * 编辑行为确认
+     */
+    @Subscribe
+    public void onMyCustomerPushEvent(MyCustomerListRushEvent event) {
+        Customer updateCus=event.data;
+        mCustomer.name=updateCus.name;
+        mCustomer.summary=updateCus.summary;
+        mCustomer.owner= updateCus.owner;
+        mCustomer.members= updateCus.members;
+        mCustomer.tags= updateCus.tags;
+        mCustomer.loc= updateCus.loc;
+        mCustomer.position= updateCus.position;
+        mCustomer.extDatas= updateCus.extDatas;
+        mCustomer.regional= updateCus.regional;
+        initData();
+    }
+
 
     /**
      * 查看子内容

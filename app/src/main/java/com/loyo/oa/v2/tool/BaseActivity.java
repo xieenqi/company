@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
@@ -79,7 +80,7 @@ public class BaseActivity extends AppCompatActivity {
         app = (MainApp) getApplicationContext();
         mContext = this;
 //        mDetector = new GestureDetector(this, this);
-        com.loyo.oa.v2.common.event.AppBus.getInstance().register(this);
+        AppBus.getInstance().register(this);
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
             customProgressDialog = new CustomProgressDialog(this);
@@ -101,8 +102,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         cancelCommitLoading();
-
-        com.loyo.oa.v2.common.event.AppBus.getInstance().unregister(this);
+        AppBus.getInstance().unregister(this);
         unRegisterBaseReceiver();
         //关闭键盘
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

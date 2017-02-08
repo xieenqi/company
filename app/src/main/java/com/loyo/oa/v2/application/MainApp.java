@@ -87,7 +87,6 @@ public class MainApp extends Application {
     private static MainApp mainApp;
     public static Gson gson;
     public static HttpJpushNotification jpushData;
-    public boolean isCutomerEdit = false;//客户信息是否编辑过
     public static int permissionPage;
 
     public DisplayImageOptions options_rounded;

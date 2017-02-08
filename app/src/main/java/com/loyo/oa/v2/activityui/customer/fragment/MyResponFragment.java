@@ -61,7 +61,7 @@ public class MyResponFragment  extends BaseCustomerFragment {
     }
 
     /**
-     * 刷新列表回调
+     * eventbus，数据改变的时候，更新列表。
      */
     @Subscribe
     public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {

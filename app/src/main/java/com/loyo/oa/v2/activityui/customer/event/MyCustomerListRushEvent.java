@@ -13,6 +13,10 @@ public class MyCustomerListRushEvent extends CommonEvent<Customer>{
     public static final int EVENT_CODE_ADD=0x1;
     public static final int EVENT_CODE_DEL=0x2;
     public static final int EVENT_CODE_UPDATE=0x3;
+
+    public MyCustomerListRushEvent() {
+    }
+
     public MyCustomerListRushEvent(Customer customer) {
         data=customer;
     }

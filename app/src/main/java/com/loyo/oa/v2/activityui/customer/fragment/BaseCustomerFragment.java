@@ -274,7 +274,6 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
         listView.onRefreshComplete();
         mPagination.loadRecords(customerPaginationX);
         bindData();
-        MainApp.getMainApp().isCutomerEdit = false;
     }
 
     protected void fail(Throwable e) {

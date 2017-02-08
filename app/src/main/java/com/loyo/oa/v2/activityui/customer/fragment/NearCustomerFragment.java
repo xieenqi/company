@@ -153,7 +153,6 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                         listView.onRefreshComplete();
                         mPagination.loadRecords(customerPaginationX);
                         bindData();
-                        MainApp.getMainApp().isCutomerEdit = false;
                     }
                 });
     }

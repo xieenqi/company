@@ -21,6 +21,7 @@ import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.event.CustomerLabelRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
@@ -48,6 +49,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -574,8 +576,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 更新客戶
      */
     private void updateCustomer() {
-        Locate adrDetailsData = new Locate();
-        String customerName = tv_customer_name.getText().toString().trim();
+        final Locate adrDetailsData = new Locate();
+        final String customerName = tv_customer_name.getText().toString().trim();
         String customerAddress = tv_address.getText().toString().trim();
         final String summary = edt_customer_memo.getText().toString().trim();
         String addressDetails = edt_address_details.getText().toString().trim();
@@ -602,7 +604,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
 
         mLocate.addr = customerAddress;
-        HashMap<String, Object> map = new HashMap<>();
+        final HashMap<String, Object> map = new HashMap<>();
         map.put("name", customerName);
         map.put("summary", summary);
         map.put("owner", owner);
@@ -613,17 +615,24 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         map.put("extDatas", extDatas);
         map.put("regional", regional);
 
-        LogUtil.d("提交客户信息，发送的数据:" + MainApp.gson.toJson(map));
-
         showCommitLoading();
-
         CustomerService.updateCustomer(mCustomer.getId(), map)
                 .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                     @Override
                     public void onNext(final Customer customer) {
-                        app.isCutomerEdit = true;
-                        customer.loc = mLocate;
-                        AppBus.getInstance().post(new EditCustomerEvent());
+                        //通过eventBus，把修改以后的数据发送出去，刷新详情，列表的数据
+                        Customer updateCus=new Customer();
+                        updateCus.name=customerName;
+                        updateCus.summary=summary;
+                        updateCus.owner=owner;
+                        updateCus.members=members;
+                        updateCus.tags=mTagItems;
+                        updateCus.loc=adrDetailsData;
+                        updateCus.position=mLocate;
+                        updateCus.extDatas=extDatas;
+                        updateCus.regional=regional;
+                        MyCustomerListRushEvent myCustomerListRushEvent=new MyCustomerListRushEvent(updateCus);
+                        AppBus.getInstance().post(myCustomerListRushEvent);
                         finish();
                     }
                 });
@@ -645,7 +654,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         tv_labels.setText(appendTagItem(mTagItems));
         mCustomer.tags = mTagItems;
     }
-
 
     /**
      * 选人回调
