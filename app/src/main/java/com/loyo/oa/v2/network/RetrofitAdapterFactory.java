@@ -98,7 +98,7 @@ public class RetrofitAdapterFactory {
                     .flatMap(new Func1() {
                         @Override
                         public Object call(Object response) {
-                            return flatResponse((BaseResponse<Object>)response);
+                            return flatResponse((BaseResponse<Object>) response);
                         }
                     });
         }
@@ -183,8 +183,7 @@ public class RetrofitAdapterFactory {
                                     new APIException(
                                             ((CompatBaseResponse) response).errcode,
                                             ((CompatBaseResponse) response).errmsg, response));
-                        }
-                        else {
+                        } else {
                             subscriber.onNext(response);
                         }
                     }
@@ -215,8 +214,7 @@ public class RetrofitAdapterFactory {
                         subscriber.onError(new APIException(((CompatBaseResponse) response).errcode,
                                 ((CompatBaseResponse) response).errmsg,
                                 response));
-                    }
-                    else {
+                    } else {
                         subscriber.onNext(response);
                     }
                 }
