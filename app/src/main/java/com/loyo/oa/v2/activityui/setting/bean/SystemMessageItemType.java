@@ -9,6 +9,8 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity;
+import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
+import com.loyo.oa.v2.activityui.clue.ClueManagerActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
@@ -238,21 +240,28 @@ public enum SystemMessageItemType {
             return "Id";
         }
     },
-    //    // TODO 公海客户暂还没有定义
-//    /*公海客户详情*/
-//    MSG_CUSTOMER_PUBLIC(40) {
-//        public int getIcon() {
-//            return R.drawable.icon_sys_custom_public;
-//        }
-//
-//        public Class<?> getItemClass() {
-//            return CustomerDetailInfoActivity_.class;
-//        }
-//
-//        public String getExtraName() {
-//            return "Id";
-//        }
-//    },
+    /*线索相关*/
+    MSG_CULE(33) {
+        public int getIcon() {
+            return R.drawable.icon_sys_cule;
+        }
+
+        public Class<?> getItemClass() {
+            return ClueDetailActivity.class;
+        }
+
+        public Class<?> getItemClass(int jumpType) {
+            if (jumpType == 0) {
+                return getItemClass();
+            } else {
+                return ClueManagerActivity.class;
+            }
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
     /*订单详情*/
     MSG_ORDER(25) {
         public int getIcon() {

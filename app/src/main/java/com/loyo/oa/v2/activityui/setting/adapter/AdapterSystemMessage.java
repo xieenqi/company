@@ -113,17 +113,6 @@ public class AdapterSystemMessage extends BaseAdapter {
                 intent.putExtra(item.bizzType.getExtraName(), item.bizzId);
             }
             context.startActivity(intent);
-//            RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
-//                    readSystemMessageOne(item.id, new Callback<Object>() {
-//                        @Override
-//                        public void success(Object o, Response response) {
-//                            HttpErrorCheck.checkResponse("读取一条系统消息", response);
-//                        }
-//
-//                        @Override
-//                        public void failure(RetrofitError error) {
-//                        }
-//                    });
             HomeService.readSystemMessageOne(item.id).subscribe(new DefaultLoyoSubscriber<Object>(LoyoErrorChecker.SILENCE) {
                 @Override
                 public void onNext(Object o) {
