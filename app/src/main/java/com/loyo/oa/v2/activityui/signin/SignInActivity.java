@@ -41,10 +41,13 @@ import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
 import com.loyo.oa.v2.activityui.commonview.RecordUtils;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
+import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
+import com.loyo.oa.v2.activityui.signin.event.SigninCustomerRushEvent;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.activityui.signin.presenter.SigninPresenterImpl;
 import com.loyo.oa.v2.application.MainApp;
@@ -129,6 +132,7 @@ public class SignInActivity extends BaseActivity
         presenter.getIsPhoto();
         initUI();
         LocationUtilGD.permissionLocation(this);
+        AppBus.getInstance().register(this);
     }
 
     void initUI() {
@@ -279,21 +283,6 @@ public class SignInActivity extends BaseActivity
                     startRecord(v);
                 }
 
-//                if (RecordUtils.permissionRecord(this)) {
-//                    if ((boolean) v.getTag()) {
-//                        showInputKeyboard(edt_memo);
-//                        mfmodule.setIsRecording(false);
-//                        v.setTag(false);
-//                    } else {
-//                        hideInputKeyboard(edt_memo);
-//                        mfmodule.setIsRecording(true);
-//                        v.setTag(true);
-//                    }
-//                    UmengAnalytics.umengSend(SignInActivity.this, UmengAnalytics.addVisitRecord);
-//                } else {
-//                    Toast("你没有配置录音或者储存权限");
-//                }
-
             }
         });
         edt_memo.setOnClickListener(new View.OnClickListener() {
@@ -403,7 +392,7 @@ public class SignInActivity extends BaseActivity
                         Bundle b = new Bundle();
                         b.putDouble("lon", loPosition);
                         b.putDouble("lat", laPosition);
-                        app.startActivityForResult(SignInActivity.this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
+                        app.startActivity(SignInActivity.this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT,false, b);
                     }
                     break;
 
@@ -579,28 +568,6 @@ public class SignInActivity extends BaseActivity
                     }
                 }
                 break;
-            /*选择客户回调*/
-            case BaseSearchActivity.REQUEST_SEARCH:
-                customerId = data.getStringExtra("id");
-                customerName = data.getStringExtra("name");
-                contactList = (ArrayList<Contact>) data.getSerializableExtra("contact");
-                Location loc = (Location) data.getSerializableExtra("loc");
-                if (loc != null) {
-                    customerAddress = loc.addr;
-                }
-                if (contactList != null && contactList.size() > 0) {
-                    ll_contact.setVisibility(View.VISIBLE);
-                    tv_contact_name.setText(presenter.getDefaultContact(contactList));
-                } else {
-                    ll_contact.setVisibility(View.GONE);
-                    tv_contact_name.setText("");
-                }
-                tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
-                edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
-                tv_customer_address.setVisibility(View.VISIBLE);
-                tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
-                distanceInfo(loc);
-                break;
              /* 选择客户联系人 回调*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
                 Contact contact = (Contact) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
@@ -610,6 +577,37 @@ public class SignInActivity extends BaseActivity
                 break;
         }
     }
+
+
+    /**
+     * 通过EventBus处理选择客户
+     */
+    @Subscribe
+    public void onSigninCustomerRushEvent(SigninCustomerRushEvent event) {
+        //如果是添加的客户，收到以后，转换成选择一个客户，然后再发送出去
+            customerId = event.data.id;
+            customerName = event.data.name;
+            contactList = event.data.contacts;
+            Location loc = event.data.position;
+            if (loc != null) {
+                customerAddress = loc.addr;
+            }
+            if (contactList != null && contactList.size() > 0) {
+                ll_contact.setVisibility(View.VISIBLE);
+                tv_contact_name.setText(presenter.getDefaultContact(contactList));
+            } else {
+                ll_contact.setVisibility(View.GONE);
+                tv_contact_name.setText("");
+            }
+            tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+            edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
+            tv_customer_address.setVisibility(View.VISIBLE);
+            tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
+            distanceInfo(loc);
+
+    }
+
+
 
     private void distanceInfo(Location loc) {
         if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
@@ -634,6 +632,7 @@ public class SignInActivity extends BaseActivity
 
     @Override
     protected void onDestroy() {
+        AppBus.getInstance().unregister(this);
         super.onDestroy();
     }
 

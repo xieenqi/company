@@ -64,7 +64,6 @@ import java.util.List;
  * 有处理不一样的地方，直接覆盖方法就可以了。
  */
 public abstract class BaseCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, MyCustomerFragView {
-
     protected Intent mIntent;
     protected View mView;
     protected Button btn_add;
@@ -81,6 +80,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     protected ArrayList<Tag> mTags;
     protected LoadingLayout ll_loading;
 
+    protected int clickPosition=-1;//记录在列表中，点击来哪条记录，方便在其他页面更新来以后，在这里回调。
     //请求参数
     protected HashMap<String, Object> params = new HashMap<>();
 
@@ -149,15 +149,14 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                 Intent intent = new Intent();
                 intent.putExtra("Id", mPagination.getRecords().get(position - 1).getId());
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
+                startActivity(intent);
+                clickPosition=position;
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
-
-
         mPresenter = new MyCustomerFragPresenterImpl(getActivity(), this);
-        Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
     }
+
 
     /**
      * 初始化数据

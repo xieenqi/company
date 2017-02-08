@@ -728,31 +728,16 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * @param retCustomer
      */
     public void customerSendSucess(Customer retCustomer) {
-        MyCustomerListRushEvent event = new MyCustomerListRushEvent();
-        AppBus.getInstance().post(event);
-        isSave = false;
-        if (isResultSignin) {
-            Intent intent = new Intent();
-            intent.putExtra("id", retCustomer.id);
-            intent.putExtra("name", retCustomer.name);
-
-            if (retCustomer.position != null && retCustomer.position.loc != null) {
-                List<Double> loc = new ArrayList<>();
-                Locate oldeLoc = retCustomer.position;
-                loc.add(oldeLoc.loc[0]);
-                loc.add(oldeLoc.loc[1]);
-                Location location = new Location(loc, oldeLoc.addr);
-                intent.putExtra("loc", location);
-            }
-            intent.putExtra("contact", retCustomer.contacts);
-            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-        } else if (actionType == TYPE_CLUE_TO_CUSTOMER) {
+        if (actionType == TYPE_CLUE_TO_CUSTOMER) {
             Toast("转移成功");
-            Intent intent = new Intent();
-            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-        } else {
-            onBackPressed();
+            setResult(RESULT_OK);
         }
+        MyCustomerListRushEvent event = new MyCustomerListRushEvent(retCustomer);
+        event.eventCode=MyCustomerListRushEvent.EVENT_CODE_ADD;
+        AppBus.getInstance().post(event);
+        isSave = false;//已经提交到服务器，不需要本地保存
+        onBackPressed();
+
     }
 
     @Override

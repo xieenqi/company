@@ -57,7 +57,6 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
     public boolean canBeEmpty = false;
     public boolean loadDefaultData = false;
 
-    public static final int REQUEST_SEARCH = 1100;
 
     public String strSearch;
     public EditText edt_search;
