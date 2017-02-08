@@ -16,6 +16,7 @@ public class MyCustomerRushEvent extends CommonEvent<Customer>{
 
     public static final int EVENT_SUB_CODE_INFO=0x1;//跟新客户信息
     public static final int EVENT_SUB_CODE_LABEL=0x2;//更新标签
+    public static final int EVENT_SUB_CODE_RECYCLER=0x3;//更新跟进时间，丢公海时间
 
     public MyCustomerRushEvent() {
     }

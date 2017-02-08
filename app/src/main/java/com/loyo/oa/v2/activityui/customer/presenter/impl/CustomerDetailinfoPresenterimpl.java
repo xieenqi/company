@@ -9,6 +9,7 @@ import android.view.View;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Member;
@@ -19,6 +20,7 @@ import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
@@ -116,6 +118,10 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
                     @Override
                     public void onNext(Customer customer) {
                         crolView.getDataSuccessEmbl(customer);
+                        MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(customer);
+                        myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                        myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER;
+                        AppBus.getInstance().post(myCustomerRushEvent);
                     }
                 });
     }

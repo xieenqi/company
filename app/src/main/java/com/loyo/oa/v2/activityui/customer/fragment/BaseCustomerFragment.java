@@ -85,6 +85,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     @Override
     public void onResume() {
         super.onResume();
+        //这里必须要清除，不然，可能会造成处理不该处理的通知。
         clickPosition = -1;
 
     }
@@ -366,8 +367,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                 break;
             case MyCustomerRushEvent.EVENT_CODE_UPDATE:
                 if (clickPosition < 0) return;//说明没有点击的条目
-                //跟新，分两种，编辑来客户信息或者更新来标签
-                if (MyCustomerRushEvent.EVENT_SUB_CODE_INFO == event.subCode) {
+                if (MyCustomerRushEvent.EVENT_SUB_CODE_INFO == event.subCode) {//更新客户信息，在客户信息被编辑的时候
                     Customer updateCus=event.data;
                     Customer mCustomer=mPagination.getRecords().get(clickPosition);
                     mCustomer.name=updateCus.name;
@@ -380,10 +380,14 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                     mCustomer.extDatas= updateCus.extDatas;
                     mCustomer.regional= updateCus.regional;
                     adapter.notifyDataSetChanged();
-                } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {
+                } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {//更新标签
                     Customer updateCus=event.data;
                     Customer mCustomer=mPagination.getRecords().get(clickPosition);
                     mCustomer.tags=updateCus.tags;
+                    adapter.notifyDataSetChanged();
+                }else if(MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER==event.subCode){//更新写跟进，拜访，添加订单以后的丢公海时间，数据来自详情页
+                    mPagination.getRecords().remove(clickPosition);
+                    mPagination.getRecords().add(clickPosition,event.data);
                     adapter.notifyDataSetChanged();
                 }
                 break;

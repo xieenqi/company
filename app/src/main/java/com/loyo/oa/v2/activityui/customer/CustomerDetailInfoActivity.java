@@ -91,7 +91,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 //    public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户" 5.游客
     public boolean isPutOcen;
     public boolean canEdit;
-    //拜访，福建，销售，任务等等的条数，还是需要重新加载数据，不然需要修改的地方太多了。
+    //拜访，福建，销售，任务等等的条数，还是需要重新加载数据，不然需要修改的地方太多，并且，写跟进，添加订单以后，丢公害时间会变化，所以，必须去服务器拉取。。
     public boolean needToRefresh=false;
     private Contact mContact;
     private RelativeLayout layout_wirete, layout_phone;
@@ -402,10 +402,10 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                             public void onNext(Customer customer) {
                                 mPresenter.getData(id);
                                 Toast("跳入客户成功");
-                                /*跳转到列表,并刷新列表
-                                  AppBus.getInstance().post(new MyCustomerRushEvent());
-                                  finish();
-                                 */
+                                //通知列表页面删除
+                                MyCustomerRushEvent myCustomerRushEvent =new MyCustomerRushEvent();
+                                myCustomerRushEvent.eventCode= MyCustomerRushEvent.EVENT_CODE_DEL;
+                                AppBus.getInstance().post(myCustomerRushEvent);
                             }
                         });
                 UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.frompublicPublicDetail);
@@ -714,7 +714,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 //                try {
 //                    boolean isCreator = data.getBooleanExtra("isCreator",true);
 //                    if(!isCreator){
-//                        //TODO 这地方，要重构，再源头直接发消息
 //                        MyCustomerRushEvent myCustomerRushEvent=new MyCustomerRushEvent();
 //                        myCustomerRushEvent.eventCode=MyCustomerRushEvent.EVENT_CODE_DEL;//投入公海，就是从前面的列表删除
 //                        AppBus.getInstance().post(myCustomerRushEvent);
