@@ -1,19 +1,9 @@
 package com.loyo.oa.v2.activityui.customer.fragment;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
-import android.widget.AdapterView;
-import android.widget.TextView;
 
-import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.UmengAnalytics;
-import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
@@ -21,39 +11,26 @@ import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.TimeFilterModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
-import com.loyo.oa.v2.activityui.customer.adapter.TeamCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
-import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
-import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.LocationUtilGD;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -205,7 +182,7 @@ public class TeamCustomerFragment extends BaseCustomerFragment {
      * 刷新列表回调
      */
     @Subscribe
-    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
+    public void onMyCustomerListRushEvent(MyCustomerRushEvent event) {
         getData();
     }
 

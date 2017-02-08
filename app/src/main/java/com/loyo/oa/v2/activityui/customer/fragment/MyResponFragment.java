@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -60,15 +60,5 @@ public class MyResponFragment  extends BaseCustomerFragment {
         params.put("order","asc");
     }
 
-    /**
-     * eventbus，数据改变的时候，更新列表。
-     */
-    @Subscribe
-    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
-        if(MyCustomerListRushEvent.EVENT_CODE_ADD==event.eventCode){
-            mPagination.getRecords().add(0,event.data);
-            adapter.notifyDataSetChanged();
-        }
-    }
 
 }

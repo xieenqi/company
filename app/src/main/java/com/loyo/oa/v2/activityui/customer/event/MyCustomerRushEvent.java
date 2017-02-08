@@ -8,16 +8,19 @@ import com.loyo.oa.v2.common.event.CommonEvent;
  * 数据的更细，统一使用EventBus，不再采用startAcrivityForResult
  */
 
-public class MyCustomerListRushEvent extends CommonEvent<Customer>{
+public class MyCustomerRushEvent extends CommonEvent<Customer>{
     //定义可能通知的类型，方便相应的地方，使用eventCode传递
     public static final int EVENT_CODE_ADD=0x1;
     public static final int EVENT_CODE_DEL=0x2;
     public static final int EVENT_CODE_UPDATE=0x3;
 
-    public MyCustomerListRushEvent() {
+    public static final int EVENT_SUB_CODE_INFO=0x1;//跟新客户信息
+    public static final int EVENT_SUB_CODE_LABEL=0x2;//更新标签
+
+    public MyCustomerRushEvent() {
     }
 
-    public MyCustomerListRushEvent(Customer customer) {
+    public MyCustomerRushEvent(Customer customer) {
         data=customer;
     }
 }

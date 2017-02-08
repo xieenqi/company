@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.signin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -14,9 +13,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
-import com.loyo.oa.v2.activityui.customer.model.CallUserResp;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Locate;
 import com.loyo.oa.v2.activityui.signin.adapter.SigninSelectCustomerAdapter;
@@ -29,7 +26,6 @@ import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -157,9 +153,9 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
      * 通过EventBus处理新建客户
      */
     @Subscribe
-    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
+    public void onMyCustomerListRushEvent(MyCustomerRushEvent event) {
         //如果是添加的客户，收到以后，转换成客户signinCustomerRushEvent，然后再发送出去
-        if (MyCustomerListRushEvent.EVENT_CODE_ADD == event.eventCode) {
+        if (MyCustomerRushEvent.EVENT_CODE_ADD == event.eventCode) {
             SigninCustomerRushEvent signinCustomerRushEvent = new SigninCustomerRushEvent(getSigninSelectCustomer(event.data));
             AppBus.getInstance().post(signinCustomerRushEvent);
             finish();

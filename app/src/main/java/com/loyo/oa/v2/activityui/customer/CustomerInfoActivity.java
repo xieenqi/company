@@ -19,9 +19,7 @@ import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
-import com.loyo.oa.v2.activityui.customer.event.CustomerLabelRushEvent;
-import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
@@ -49,7 +47,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -63,6 +60,7 @@ import java.util.List;
 
 /**
  * 【客户信息】 页面
+ * //TODO 写客户详情需求的时候注意，有一个customer的实体，怎嚒还定义来一套变量，没有细看，可以的话，删除掉。
  */
 @EActivity(R.layout.activity_customer_info)
 public class CustomerInfoActivity extends BaseFragmentActivity {
@@ -631,8 +629,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         updateCus.position=mLocate;
                         updateCus.extDatas=extDatas;
                         updateCus.regional=regional;
-                        MyCustomerListRushEvent myCustomerListRushEvent=new MyCustomerListRushEvent(updateCus);
-                        AppBus.getInstance().post(myCustomerListRushEvent);
+                        MyCustomerRushEvent myCustomerRushEvent =new MyCustomerRushEvent(updateCus);
+                        myCustomerRushEvent.eventCode= MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                        myCustomerRushEvent.subCode= MyCustomerRushEvent.EVENT_SUB_CODE_INFO;
+                        AppBus.getInstance().post(myCustomerRushEvent);
                         finish();
                     }
                 });
@@ -647,12 +647,18 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
+
+    /**
+     * 更新Label
+     * @param event
+     */
     @Subscribe
-    public void onCustomerLabelRushEvent(CustomerLabelRushEvent event) {
-        Bundle bundle = event.bundle;
-        mTagItems = (ArrayList<NewTag>) bundle.getSerializable("data");
-        tv_labels.setText(appendTagItem(mTagItems));
-        mCustomer.tags = mTagItems;
+    public void onCustomerRushEvent(MyCustomerRushEvent event){
+        if(MyCustomerRushEvent.EVENT_CODE_UPDATE==event.eventCode&& MyCustomerRushEvent.EVENT_SUB_CODE_LABEL== MyCustomerRushEvent.EVENT_SUB_CODE_LABEL){
+            tv_labels.setText(appendTagItem(event.data.tags));
+            mCustomer.tags = event.data.tags;
+            mTagItems=event.data.tags;
+        }
     }
 
     /**
@@ -660,7 +666,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
-
         if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             OrganizationalMember user = Compat.convertStaffCollectionToNewUser(collection);

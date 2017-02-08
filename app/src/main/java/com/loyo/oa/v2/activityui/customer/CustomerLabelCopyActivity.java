@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,9 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.event.CustomerLabelRushEvent;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Item_info_Group;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.TagItem;
@@ -30,7 +32,7 @@ import java.util.ArrayList;
 /**
  * 客户标签选择【标签】
  */
-public class CustomerLabelCopyActivity extends BaseActivity implements View.OnClickListener{
+public class CustomerLabelCopyActivity extends BaseActivity implements View.OnClickListener {
 
     private ViewGroup img_title_right;
     private ExpandableListView expand_listview_label;
@@ -53,8 +55,8 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
 
         mTagItems = (ArrayList<TagItem>) getIntent().getSerializableExtra("tagitems");
         mCustomerId = getIntent().getStringExtra("customerId");
-        canEdit = getIntent().getBooleanExtra("canEdit",false);
-        fromPage = getIntent().getIntExtra("fromPage",0);
+        canEdit = getIntent().getBooleanExtra("canEdit", false);
+        fromPage = getIntent().getIntExtra("fromPage", 0);
 
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -142,7 +144,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
             /*返回*/
             case R.id.img_title_left:
@@ -156,11 +158,9 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         }
 
 
-
     }
 
     class LabelsHandler extends BaseHandler {
-
         @Override
         public void handleMessage(final Message msg) {
             super.handleMessage(msg);
@@ -183,16 +183,27 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
 
     /**
      * 设置标签
-     * */
-    private void setLabel(){
+     */
+    private void setLabel() {
         showLoading2("");
         CustomerService.setCusLabel(mCustomerId, convertNewTags())
                 .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
                     @Override
                     public void onNext(Contact contact) {
+                        sendLableChangeChange();
                         finish();
                     }
                 });
+    }
+
+    //设置成功以后，再发送消息，更新本地UI
+    private void sendLableChangeChange() {
+        Customer updateCus = new Customer();
+        updateCus.tags = convertNewTags();
+        MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(updateCus);
+        myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+        myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_LABEL;
+        AppBus.getInstance().post(myCustomerRushEvent);
     }
 
     /**
@@ -220,20 +231,19 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
 
     /**
      * 设置不同业务的处理方式
-     * */
+     */
     void setPageResult() {
         /*客户详情*/
-        if(fromPage == 0){
+        if (fromPage == 0) {
             setLabel();
         }
         /*客户信息*/
-        else{
-            CustomerLabelRushEvent event = new CustomerLabelRushEvent();
-            event.bundle = new Bundle();
-            event.bundle.putSerializable("data",convertNewTags());
-            AppBus.getInstance().post(event);
+        else {
+            sendLableChangeChange();
             finish();
         }
+
+
     }
 
     BaseExpandableListAdapter adapter = new BaseExpandableListAdapter() {
