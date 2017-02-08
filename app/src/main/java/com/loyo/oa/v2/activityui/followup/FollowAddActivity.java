@@ -191,7 +191,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 ll_customer.setVisibility(View.GONE);
         } else if (null != mClue && !isCustom) {
             tv_clue_company.setText(mClue.companyName);
-            tv_clue_name.setText(mClue.responsorName);
+            tv_clue_name.setText(mClue.name);
             if (isDetail)
                 ll_clue_company.setVisibility(View.GONE);
         }
@@ -537,8 +537,8 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             /*选择客户*/
                 case R.id.ll_customer:
                     Bundle b = new Bundle();
-                    b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
-                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
+                    b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, 5);
+                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT, true);
                     app.startActivityForResult(FollowAddActivity.this, CustomerSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;

@@ -65,7 +65,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private String id;
     private int parent, child;
 
-    private String name, responsorName;
+    private String companyName, clueName;
     private String clueId;
 
     /*录音 评论 播放相关*/
@@ -143,8 +143,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private void getIntenData() {//intent.putExtra(ExtraAndResult.RESULT_NAME, data.data.sales.responsorName);
         Intent intent = getIntent();
         clueId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
-        name = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
-        responsorName = intent.getStringExtra(ExtraAndResult.RESULT_NAME);
+        companyName = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
+        clueName = intent.getStringExtra(ExtraAndResult.RESULT_NAME);
         isMyUser = intent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, false);
         if (TextUtils.isEmpty(clueId)) {
             onBackPressed();
@@ -172,7 +172,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid, this);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         if (!isMyUser) {
@@ -222,8 +222,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
             case R.id.layout_add:
                 ClueListItem item = new ClueListItem();
                 item.id = clueId;
-                item.companyName = name;
-                item.responsorName = responsorName;
+                item.companyName = companyName;
+                item.name = clueName;
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(ClueListItem.class.getName(), item);
                 bundle.putBoolean("isDetail", true);
@@ -276,7 +276,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     public void onFollowUpRushEvent(FollowUpRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid, this);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         mPagination.setPageIndex(1);

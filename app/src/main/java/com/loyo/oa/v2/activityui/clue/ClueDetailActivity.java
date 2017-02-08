@@ -445,12 +445,12 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
     private void clueActivity() {
         Intent intent = new Intent();
         intent.putExtra(ExtraAndResult.EXTRA_ID, data.sales.id);
-        String name = data.sales.companyName;
-        if (TextUtils.isEmpty(name)) {
-            name = "";
+        String companyName = data.sales.companyName;
+        if (TextUtils.isEmpty(companyName)) {
+            companyName = "";
         }
-        intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
-        intent.putExtra(ExtraAndResult.RESULT_NAME, data.sales.responsorName);
+        intent.putExtra(ExtraAndResult.EXTRA_NAME, companyName);
+        intent.putExtra(ExtraAndResult.RESULT_NAME, data.sales.name);
         intent.putExtra(ExtraAndResult.EXTRA_ADD, isAdd);
         intent.setClass(this, ClueFollowUpListActivity.class);
         startActivityForResult(intent, this.RESULT_FIRST_USER);
