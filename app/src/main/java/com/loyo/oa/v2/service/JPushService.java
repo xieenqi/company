@@ -11,11 +11,9 @@ import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.SharedUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,8 +62,6 @@ public class JPushService extends BroadcastReceiver {
             } else if (8 == pushMsgData.silentType || 9 == pushMsgData.silentType) {//更新8组织架构与9个人信息
                 if (!getUserInfo(pushMsgData))
                     pushMsgData.silentType = 8;//更改别人的信息制动转成 更新8组织架构
-                //缓存要更新组织架构的信息
-                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE, 8 == pushMsgData.silentType ? "all" : "one");
                 LogUtil.d("更新数据激光推送：更新8组织架构与9个人信息 ");
                 TrackRule.initUserData(MainApp.getMainApp());
 
@@ -92,8 +88,6 @@ public class JPushService extends BroadcastReceiver {
             LogUtil.d(" 键值数据： " + pushData);
             // 打开自定义的Activity
             MainApp.jpushData = pushData;// 给这个创建一个对象就可以了可以到相应的页面
-//、            if (pushData==null||pushData.Id <= 0)
-//                App.notiflyNews = null;
             ExitActivity.getInstance().finishAllActivity();
             Intent in = new Intent();
             in.setClass(context, MainHomeActivity.class);
@@ -102,6 +96,7 @@ public class JPushService extends BroadcastReceiver {
             //清除所有通知
             if (manger != null)
                 manger.cancelAll();
+//            manger.cancel(bundle.getInt("cn.jpush.android.NOTIFICATION_ID"));
 
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
