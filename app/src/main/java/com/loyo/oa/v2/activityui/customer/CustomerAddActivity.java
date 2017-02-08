@@ -31,7 +31,7 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.clue.model.ClueSales;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -39,13 +39,11 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
 import com.loyo.oa.v2.activityui.customer.model.HttpAddCustomer;
-import com.loyo.oa.v2.activityui.customer.model.Locate;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
-import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
@@ -732,8 +730,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             Toast("转移成功");
             setResult(RESULT_OK);
         }
-        MyCustomerListRushEvent event = new MyCustomerListRushEvent(retCustomer);
-        event.eventCode=MyCustomerListRushEvent.EVENT_CODE_ADD;
+        MyCustomerRushEvent event = new MyCustomerRushEvent(retCustomer);
+        event.eventCode= MyCustomerRushEvent.EVENT_CODE_ADD;
         AppBus.getInstance().post(event);
         isSave = false;//已经提交到服务器，不需要本地保存
         onBackPressed();

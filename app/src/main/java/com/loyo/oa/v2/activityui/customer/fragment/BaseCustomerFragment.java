@@ -29,11 +29,8 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.MyContactMailList;
-import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
@@ -41,7 +38,6 @@ import com.loyo.oa.v2.activityui.customer.presenter.MyCustomerFragPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.MyCustomerFragPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.MyCustomerFragView;
 import com.loyo.oa.v2.activityui.other.model.Tag;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -52,8 +48,6 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;

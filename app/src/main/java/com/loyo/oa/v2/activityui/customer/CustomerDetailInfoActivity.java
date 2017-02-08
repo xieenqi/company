@@ -21,20 +21,14 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.customer.common.CommonMethod;
-import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
-import com.loyo.oa.v2.activityui.customer.model.ExtraData;
-import com.loyo.oa.v2.activityui.customer.model.Locate;
-import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPresenterimpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
@@ -42,7 +36,6 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -61,7 +54,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -381,7 +373,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*返回*/
             case R.id.img_title_left:
                 if (isPutOcen) {
-//                    AppBus.getInstance().post(new MyCustomerListRushEvent());
+//                    AppBus.getInstance().post(new MyCustomerRushEvent());
                     finish();
                 } else {
                     onBackPressed();
@@ -409,7 +401,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                                 mPresenter.getData(id);
                                 Toast("跳入客户成功");
                                 /*跳转到列表,并刷新列表
-                                  AppBus.getInstance().post(new MyCustomerListRushEvent());
+                                  AppBus.getInstance().post(new MyCustomerRushEvent());
                                   finish();
                                  */
                             }
@@ -656,26 +648,27 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
      * 编辑行为确认
      */
     @Subscribe
-    public void onEditCustomerEvent(EditCustomerEvent event) {
+    public void onMyCustomerPushEvent(MyCustomerRushEvent event) {
+        if(MyCustomerRushEvent.EVENT_CODE_UPDATE==event.eventCode){
+            //更新客户信息
+            if(MyCustomerRushEvent.EVENT_SUB_CODE_INFO==event.subCode){
+                Customer updateCus=event.data;
+                mCustomer.name=updateCus.name;
+                mCustomer.summary=updateCus.summary;
+                mCustomer.owner= updateCus.owner;
+                mCustomer.members= updateCus.members;
+                mCustomer.tags= updateCus.tags;
+                mCustomer.loc= updateCus.loc;
+                mCustomer.position= updateCus.position;
+                mCustomer.extDatas= updateCus.extDatas;
+                mCustomer.regional= updateCus.regional;
+                initData();
+            }
+        }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
+            //更新label
 
-    }
+        }
 
-    /**
-     * 编辑行为确认
-     */
-    @Subscribe
-    public void onMyCustomerPushEvent(MyCustomerListRushEvent event) {
-        Customer updateCus=event.data;
-        mCustomer.name=updateCus.name;
-        mCustomer.summary=updateCus.summary;
-        mCustomer.owner= updateCus.owner;
-        mCustomer.members= updateCus.members;
-        mCustomer.tags= updateCus.tags;
-        mCustomer.loc= updateCus.loc;
-        mCustomer.position= updateCus.position;
-        mCustomer.extDatas= updateCus.extDatas;
-        mCustomer.regional= updateCus.regional;
-        initData();
     }
 
 
@@ -696,11 +689,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 //            if (isPutOcen) {
-//                AppBus.getInstance().post(new MyCustomerListRushEvent());
+//                AppBus.getInstance().post(new MyCustomerRushEvent());
 //                finish();
 //            } else if (isEdit) {
 //                AppBus.getInstance().post(new EditCustomerRushEvent());
-//                AppBus.getInstance().post(new MyCustomerListRushEvent());
+//                AppBus.getInstance().post(new MyCustomerRushEvent());
 //                finish();
 //            } else {
 //                onBackPressed();
@@ -720,7 +713,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     Bundle bundle = data.getExtras();
                     boolean isCreator = bundle.getBoolean("isCreator");
 //                    if (!isCreator) {
-//                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+//                        AppBus.getInstance().post(new MyCustomerRushEvent());
 //                        finish();
 //                    }
                 } catch (NullPointerException e) {
@@ -746,7 +739,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @Override
     public void toPublicEmbl() {
         isPutOcen = true;
-//        AppBus.getInstance().post(new MyCustomerListRushEvent());
+//        AppBus.getInstance().post(new MyCustomerRushEvent());
         finish();
     }
 
@@ -755,7 +748,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
      */
     @Override
     public void deleteEmbl() {
-//        AppBus.getInstance().post(new MyCustomerListRushEvent());
+//        AppBus.getInstance().post(new MyCustomerRushEvent());
         finish();
     }
 

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerRushEvent;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -65,8 +65,8 @@ public class MyMemberFragment extends BaseCustomerFragment {
      * 新建回调，直接把新添加的那一条，放在列表最前面
      */
     @Subscribe
-    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
-        if (MyCustomerListRushEvent.EVENT_CODE_ADD == event.eventCode) {
+    public void onMyCustomerListRushEvent(MyCustomerRushEvent event) {
+        if (MyCustomerRushEvent.EVENT_CODE_ADD == event.eventCode) {
             mPagination.getRecords().add(0, event.data);
             adapter.notifyDataSetChanged();
         }
