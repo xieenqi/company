@@ -69,6 +69,7 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
     private ArrayList<SaleStage> mSaleStages;
     private TeamSaleFragmentContract.Presenter mPresenter;
     private LoadingLayout ll_loading;
+    private String xPath = "", userId = "", stageId = "", sortType = "";
 
 
     @Nullable
@@ -150,7 +151,7 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
                 String key = model.getKey();
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-                String xPath = "", userId = "", stageId = "", sortType = "";
+
                 if (menuIndex == 0) { // SaleStage
                     // TODO:
                     if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
