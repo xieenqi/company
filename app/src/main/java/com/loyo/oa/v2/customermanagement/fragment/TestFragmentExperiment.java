@@ -29,7 +29,7 @@ import java.util.Random;
  * Created by EthanGong on 2017/2/8.
  */
 
-public class TestFragment extends Fragment {
+public class TestFragmentExperiment extends Fragment {
     private WeakReference<PullToRefreshRecyclerView2> theView;
     PullToRefreshRecyclerView2 rv;
 
@@ -52,7 +52,7 @@ public class TestFragment extends Fragment {
     }
 
     private void setupRecyclerView(PullToRefreshRecyclerView2 recyclerView) {
-        recyclerView.setMode(PullToRefreshBase.Mode.BOTH);
+        recyclerView.setMode(pullToRefreshEnabled?PullToRefreshBase.Mode.BOTH:PullToRefreshBase.Mode.PULL_FROM_END);
         recyclerView.getRefreshableView().setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         recyclerView.getRefreshableView().setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(),
                 getRandomSublist(Cheeses.sCheeseStrings, 30)));
@@ -137,5 +137,8 @@ public class TestFragment extends Fragment {
 
     public void setPullToRefreshEnabled(boolean pullToRefreshEnabled) {
         this.pullToRefreshEnabled = pullToRefreshEnabled;
+        if (theView != null && theView.get() != null) {
+            theView.get().setMode(pullToRefreshEnabled?PullToRefreshBase.Mode.BOTH:PullToRefreshBase.Mode.PULL_FROM_END);
+        }
     }
 }

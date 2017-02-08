@@ -20,7 +20,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     ViewGroup img_title_left, img_title_right;
     TextView tv_title_1;
-    AppBarLayout appBarLayout;
     CustomerPagerAdapter adapter;
 
     @Override
@@ -48,11 +47,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-
-        appBarLayout.addOnOffsetChangedListener(this);
-
     }
 
     /**

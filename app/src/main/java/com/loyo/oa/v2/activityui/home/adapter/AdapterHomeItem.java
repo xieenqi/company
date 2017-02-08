@@ -18,7 +18,6 @@ import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 
 import java.util.ArrayList;
 
@@ -204,13 +203,13 @@ public class AdapterHomeItem extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
 
-                    if (true) {
-                        mIntent.setClass(activity, CustomerDetailActivity.class);
-                        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, wfinstanceCount);
-                        activity.startActivity(mIntent);
-                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                        return;
-                    }
+//                    if (true) {
+//                        mIntent.setClass(activity, CustomerDetailActivity.class);
+//                        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, wfinstanceCount);
+//                        activity.startActivity(mIntent);
+//                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                        return;
+//                    }
 
                     if (null != MainApp.lstDepartment && MainApp.lstDepartment.size() != 0) {
                         mIntent.setClass(activity, ContactsActivity.class);

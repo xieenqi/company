@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapter;
-import com.loyo.oa.v2.customermanagement.fragment.TestFragment;
+import com.loyo.oa.v2.customermanagement.fragment.TestFragmentExperiment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
 public class CustomerDetailActivityExperiment extends BaseFragmentActivity
@@ -67,16 +67,16 @@ public class CustomerDetailActivityExperiment extends BaseFragmentActivity
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new CustomerPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new TestFragment(), "跟进 1");
-        adapter.addFragment(new TestFragment(), "联系人 2");
-        adapter.addFragment(new TestFragment(), "拜访 3");
+        adapter.addFragment(new TestFragmentExperiment(), "跟进 1");
+        adapter.addFragment(new TestFragmentExperiment(), "联系人 2");
+        adapter.addFragment(new TestFragmentExperiment(), "拜访 3");
 
-        adapter.addFragment(new TestFragment(), "机会 4");
-        adapter.addFragment(new TestFragment(), "订单 5");
-        adapter.addFragment(new TestFragment(), "任务 6");
+        adapter.addFragment(new TestFragmentExperiment(), "机会 4");
+        adapter.addFragment(new TestFragmentExperiment(), "订单 5");
+        adapter.addFragment(new TestFragmentExperiment(), "任务 6");
 
-        adapter.addFragment(new TestFragment(), "审批 7");
-        adapter.addFragment(new TestFragment(), "附件 8");
+        adapter.addFragment(new TestFragmentExperiment(), "审批 7");
+        adapter.addFragment(new TestFragmentExperiment(), "附件 8");
         viewPager.setAdapter(adapter);
     }
 

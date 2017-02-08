@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.loyo.oa.v2.customermanagement.fragment.TestFragment;
+import com.loyo.oa.v2.customermanagement.fragment.TestFragmentExperiment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +55,8 @@ public class CustomerPagerAdapter extends FragmentPagerAdapter {
     public void setPullToRefreshEnabled(boolean pullToRefreshEnabled) {
         this.pullToRefreshEnabled = pullToRefreshEnabled;
         for (Fragment fragment : mFragments) {
-            if (fragment instanceof TestFragment) {
-                ((TestFragment) fragment).setPullToRefreshEnabled(pullToRefreshEnabled);
+            if (fragment instanceof TestFragmentExperiment) {
+                ((TestFragmentExperiment) fragment).setPullToRefreshEnabled(pullToRefreshEnabled);
             }
         }
     }
