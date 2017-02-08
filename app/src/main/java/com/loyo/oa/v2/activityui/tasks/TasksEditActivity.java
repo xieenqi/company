@@ -57,6 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import hk.ids.gws.android.sclick.SClick;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 @EActivity(R.layout.activity_tasks_edit) //本Activity的布局文件
 public class TasksEditActivity extends BaseActivity {
@@ -125,6 +127,7 @@ public class TasksEditActivity extends BaseActivity {
     private StringBuffer joinUserId = new StringBuffer();
     private boolean isState;
     private boolean isKind;
+    private CompositeSubscription subscriptions;
 
 
     @AfterViews
@@ -142,7 +145,7 @@ public class TasksEditActivity extends BaseActivity {
         userss = new ArrayList<>();
         depts = new ArrayList<>();
         member = new Members();
-
+        subscriptions = new CompositeSubscription();
         UpdateUI();
     }
 
@@ -418,11 +421,11 @@ public class TasksEditActivity extends BaseActivity {
             case R.id.layout_mycustomer:
 //                app.startActivityForResult(TasksEditActivity.this, SelfVisibleCustomerPickerActivity.class,
 //                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
-                Bundle b=new Bundle();
-                b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
-                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_HAVE_TAG,false);
-                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY,true);
-                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
+                Bundle b = new Bundle();
+                b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, 5);
+                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_HAVE_TAG, false);
+                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY, true);
+                b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT, true);
                 app.startActivityForResult(TasksEditActivity.this, CustomerSearchOrPickerActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
@@ -458,14 +461,13 @@ public class TasksEditActivity extends BaseActivity {
             map.put("remindtime", mTask.getRemindTime());
             map.put("reviewFlag", isState);
         }
-        TaskService.updateTask(mTask.getId(), map)
+        Subscription uploadSub = TaskService.updateTask(mTask.getId(), map)
                 .subscribe(new DefaultLoyoSubscriber<Task>(hud) {
                     @Override
                     public void onNext(final Task task) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                LogUtil.d("------------------爸爸不不不不不不------------------");
                                 task.setViewed(true);
                                 Intent intent = new Intent();
                                 intent.putExtra("data", task);
@@ -475,6 +477,7 @@ public class TasksEditActivity extends BaseActivity {
                         }, 2000);
                     }
                 });
+        subscriptions.add(uploadSub);
     }
 
     void setDeadLine() {
@@ -659,6 +662,12 @@ public class TasksEditActivity extends BaseActivity {
                 tv_toUsers.setText(joinName.toString());
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscriptions.unsubscribe();
     }
 
     @Override
