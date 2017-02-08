@@ -60,6 +60,7 @@ import java.util.List;
 
 /**
  * 【客户信息】 页面
+ * //TODO 写客户详情需求的时候注意，有一个customer的实体，怎嚒还定义来一套变量，没有细看，可以的话，删除掉。
  */
 @EActivity(R.layout.activity_customer_info)
 public class CustomerInfoActivity extends BaseFragmentActivity {
@@ -655,7 +656,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     public void onCustomerRushEvent(MyCustomerRushEvent event){
         if(MyCustomerRushEvent.EVENT_CODE_UPDATE==event.eventCode&& MyCustomerRushEvent.EVENT_SUB_CODE_LABEL== MyCustomerRushEvent.EVENT_SUB_CODE_LABEL){
             tv_labels.setText(appendTagItem(event.data.tags));
-            mCustomer.tags = mTagItems;
+            mCustomer.tags = event.data.tags;
+            mTagItems=event.data.tags;
         }
     }
 

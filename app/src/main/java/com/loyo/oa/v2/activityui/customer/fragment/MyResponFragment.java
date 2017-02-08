@@ -60,15 +60,5 @@ public class MyResponFragment  extends BaseCustomerFragment {
         params.put("order","asc");
     }
 
-    /**
-     * eventbus，数据改变的时候，更新列表。
-     */
-    @Subscribe
-    public void onMyCustomerListRushEvent(MyCustomerRushEvent event) {
-        if(MyCustomerRushEvent.EVENT_CODE_ADD==event.eventCode){
-            mPagination.getRecords().add(0,event.data);
-            adapter.notifyDataSetChanged();
-        }
-    }
 
 }

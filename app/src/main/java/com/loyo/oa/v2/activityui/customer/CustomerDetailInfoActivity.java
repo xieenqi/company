@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.customer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -663,13 +665,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mCustomer.extDatas= updateCus.extDatas;
                 mCustomer.regional= updateCus.regional;
                 initData();
+            }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
+                //更新label
+                mCustomer.tags=event.data.tags;
+                tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
             }
-        }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
-            //更新label
-            mCustomer.tags=event.data.tags;
-            tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
         }
-
     }
 
 
@@ -710,16 +711,22 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         switch (requestCode) {
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
                 /*如果修改了负责人，不是自己，则finish该页面*/
-                try {
-                    Bundle bundle = data.getExtras();
-                    boolean isCreator = bundle.getBoolean("isCreator");
-//                    if (!isCreator) {
-//                        AppBus.getInstance().post(new MyCustomerRushEvent());
+//                try {
+//                    boolean isCreator = data.getBooleanExtra("isCreator",true);
+//                    if(!isCreator){
+//                        //TODO 这地方，要重构，再源头直接发消息
+//                        MyCustomerRushEvent myCustomerRushEvent=new MyCustomerRushEvent();
+//                        myCustomerRushEvent.eventCode=MyCustomerRushEvent.EVENT_CODE_DEL;//投入公海，就是从前面的列表删除
+//                        AppBus.getInstance().post(myCustomerRushEvent);
 //                        finish();
 //                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
+////                    if (!isCreator) {
+////                        AppBus.getInstance().post(new MyCustomerRushEvent());
+////                        finish();
+////                    }
+//                } catch (NullPointerException e) {
+//                    e.printStackTrace();
+//                }
                 break;
             //丢公海回来
             case ExtraAndResult.REQUSET_COPY_PERSONS:
@@ -739,7 +746,10 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
      */
     @Override
     public void toPublicEmbl() {
-        isPutOcen = true;
+//        isPutOcen = true;
+        MyCustomerRushEvent myCustomerRushEvent=new MyCustomerRushEvent();
+        myCustomerRushEvent.eventCode=MyCustomerRushEvent.EVENT_CODE_DEL;//投入公海，就是从前面的列表删除
+        AppBus.getInstance().post(myCustomerRushEvent);
 //        AppBus.getInstance().post(new MyCustomerRushEvent());
         finish();
     }
@@ -749,6 +759,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
      */
     @Override
     public void deleteEmbl() {
+        MyCustomerRushEvent myCustomerRushEvent=new MyCustomerRushEvent();
+        myCustomerRushEvent.eventCode=MyCustomerRushEvent.EVENT_CODE_DEL;
+        AppBus.getInstance().post(myCustomerRushEvent);
 //        AppBus.getInstance().post(new MyCustomerRushEvent());
         finish();
     }

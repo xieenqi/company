@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.MyContactMailList;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
@@ -48,6 +50,8 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,13 +78,14 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     protected ArrayList<Tag> mTags;
     protected LoadingLayout ll_loading;
 
-    protected int clickPosition=-1;//记录在列表中，点击来哪条记录，方便在其他页面更新来以后，在这里回调。
+    protected int clickPosition = -1;//记录在列表中，点击来哪条记录，方便在其他页面更新来以后，在这里回调。
     //请求参数
     protected HashMap<String, Object> params = new HashMap<>();
 
     @Override
     public void onResume() {
         super.onResume();
+        clickPosition = -1;
 
     }
 
@@ -144,7 +149,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                 intent.putExtra("Id", mPagination.getRecords().get(position - 1).getId());
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                 startActivity(intent);
-                clickPosition=position;
+                clickPosition = position - 1;
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
@@ -155,7 +160,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     /**
      * 初始化数据
      */
-    protected void initDate(){
+    protected void initDate() {
         adapter = new MyCustomerAdapter(app, mPagination.getRecords());
         listView.setAdapter(adapter);
         mPagination.setFirstPage();
@@ -207,6 +212,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
             listView.getRefreshableView().setSelection(0);
         }
     }
+
     /**
      * 显示附近客户
      */
@@ -259,7 +265,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     protected abstract void getData();
 
     /**
-     *  初始化筛选参数
+     * 初始化筛选参数
      */
     protected abstract void initFilterParams();
 
@@ -302,7 +308,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     /**
      * 附近客户按钮被点击的时候。
      */
-    protected void onNearCustomerBtn(){
+    protected void onNearCustomerBtn() {
 
     }
 
@@ -338,5 +344,49 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
         mIntent.setClass(getActivity(), CustomerAddActivity_.class);
         startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+    }
+
+    /**
+     * 其他页面，修改数据，就通过EventBus，更新列表
+     *
+     * @param event
+     */
+    @Subscribe
+    public void onMyCustomerPushEvent(MyCustomerRushEvent event) {
+        Log.i("tttttttttt", "onMyCustomerPushEvent: 收到消息 clickPosition "+clickPosition);
+        switch (event.eventCode) {
+            case MyCustomerRushEvent.EVENT_CODE_ADD:
+                mPagination.getRecords().add(0, event.data);
+                adapter.notifyDataSetChanged();
+                break;
+            case MyCustomerRushEvent.EVENT_CODE_DEL:
+                if (clickPosition < 0) return;//说明没有点击的条目
+                mPagination.getRecords().remove(clickPosition);
+                adapter.notifyDataSetChanged();
+                break;
+            case MyCustomerRushEvent.EVENT_CODE_UPDATE:
+                if (clickPosition < 0) return;//说明没有点击的条目
+                //跟新，分两种，编辑来客户信息或者更新来标签
+                if (MyCustomerRushEvent.EVENT_SUB_CODE_INFO == event.subCode) {
+                    Customer updateCus=event.data;
+                    Customer mCustomer=mPagination.getRecords().get(clickPosition);
+                    mCustomer.name=updateCus.name;
+                    mCustomer.summary=updateCus.summary;
+                    mCustomer.owner= updateCus.owner;
+                    mCustomer.members= updateCus.members;
+                    mCustomer.tags= updateCus.tags;
+                    mCustomer.loc= updateCus.loc;
+                    mCustomer.position= updateCus.position;
+                    mCustomer.extDatas= updateCus.extDatas;
+                    mCustomer.regional= updateCus.regional;
+                    adapter.notifyDataSetChanged();
+                } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {
+                    Customer updateCus=event.data;
+                    Customer mCustomer=mPagination.getRecords().get(clickPosition);
+                    mCustomer.tags=updateCus.tags;
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+        }
     }
 }
