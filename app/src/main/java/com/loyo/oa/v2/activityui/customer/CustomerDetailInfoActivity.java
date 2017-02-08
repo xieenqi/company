@@ -666,7 +666,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             }
         }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
             //更新label
-
+            mCustomer.tags=event.data.tags;
+            tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
         }
 
     }

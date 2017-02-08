@@ -651,6 +651,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 更新Label
      * @param event
      */
+    @Subscribe
     public void onCustomerRushEvent(MyCustomerRushEvent event){
         if(MyCustomerRushEvent.EVENT_CODE_UPDATE==event.eventCode&& MyCustomerRushEvent.EVENT_SUB_CODE_LABEL== MyCustomerRushEvent.EVENT_SUB_CODE_LABEL){
             tv_labels.setText(appendTagItem(event.data.tags));
