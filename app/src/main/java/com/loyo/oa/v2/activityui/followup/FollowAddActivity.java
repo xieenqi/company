@@ -82,7 +82,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue;
+    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue, ll_customer_holder, ll_clue_holer,ll_contact_label,ll_contact_status;
     private EditText edt;
     private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text,
             tv_at_text, tv_clue_company, tv_clue_name;
@@ -111,10 +111,11 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dynamic_activities_add);
-        getIntentData();
+
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         initUI();
+        getIntentData();
         getTempSaleActivity();
     }
 
@@ -128,8 +129,12 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             if (action == ExtraAndResult.DYNAMIC_ADD_CULE) {
                 isCustom = false;
                 contactName = mClue.responsorName;
+                //显示跟进
+                ll_clue_holer.setVisibility(View.VISIBLE);
             } else {
                 isCustom = true;
+                //显示客户
+                ll_customer_holder.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -183,6 +188,14 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         ll_contact.setVisibility(isCustom ? View.VISIBLE : View.GONE);
         ll_clue_company.setVisibility(isCustom ? View.GONE : View.VISIBLE);
         ll_clue.setVisibility(isCustom ? View.GONE : View.VISIBLE);
+
+        ll_customer_holder = (LinearLayout) findViewById(R.id.ll_customer_holder);
+        ll_clue_holer = (LinearLayout) findViewById(R.id.ll_clue_holder);
+        //客户标签和状态
+        ll_contact_label = (LinearLayout) findViewById(R.id.ll_contact_label);
+        ll_contact_status = (LinearLayout) findViewById(R.id.ll_contact_status);
+
+
         Global.SetTouchView(img_title_left, layout_sale_action, layout_remain_time, img_title_right, ll_customer, ll_contact);
         if (null != mCustomer && isCustom) {
             getDefaultContact(mCustomer.contacts);
@@ -243,24 +256,6 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         mfmodule.setRecordClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                添加对安卓6.0的权限动态申请，避免直接提示没权限
-//                if (RecordUtils.permissionRecord()) {
-//                    if (ll_record.getChildCount() >= 3) {
-//                        Toast("最多只能添加3条语音");
-//                        return;
-//                    }
-//                    if ((boolean) v.getTag()) {
-//                        showInputKeyboard(edt);
-//                        mfmodule.setIsRecording(false);
-//                        v.setTag(false);
-//                    } else {
-//                        hideInputKeyboard(edt);
-//                        mfmodule.setIsRecording(true);
-//                        v.setTag(true);
-//                    }
-//                } else {
-//                    Toast("你没有配置录音或者储存权限");
-//                }
                 view = v;
                 if (PermissionTool.requestPermission(FollowAddActivity.this, new String[]{
                                 Manifest.permission.RECORD_AUDIO, //录音权限
@@ -327,10 +322,6 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 if (LocationUtilGD.permissionLocation(FollowAddActivity.this)) {
                     Bundle mBundle = new Bundle();
                     mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
-//                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
-//
-//                Bundle mBundle = new Bundle();
-//                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
                     app.startActivityForResult(FollowAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 }
             }
@@ -537,8 +528,8 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             /*选择客户*/
                 case R.id.ll_customer:
                     Bundle b = new Bundle();
-                    b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
-                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
+                    b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, 5);
+                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT, true);
                     app.startActivityForResult(FollowAddActivity.this, CustomerSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
