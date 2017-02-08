@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
+import com.loyo.oa.v2.activityui.clue.ClueManagerActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
@@ -323,6 +325,12 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 case HttpJpushNotification.JPUSH_FOLLOWUP_COMMENT://跟进的评论
                     intent.setClass(MainHomeActivity.this, FollowUpDetailsActivity.class);
                     intent.putExtra("id", MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case HttpJpushNotification.JPUSH_EDIT_CULE_RESPONSE:
+                    intent.setClass(MainHomeActivity.this, MainApp.jpushData.jumpType == 0 ? ClueDetailActivity.class : ClueManagerActivity.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
