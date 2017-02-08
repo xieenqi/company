@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.worksheet.WSOrderSelectActivity;
+import com.loyo.oa.v2.activityui.worksheet.WSOrderSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
@@ -153,19 +153,17 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
 
     public void selectOrder() {
         Intent mIntent = new Intent();
-        mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-        mIntent.setClass(getActivity(), WSOrderSelectActivity.class);
+        mIntent.setClass(getActivity(), WSOrderSearchOrPickerActivity.class);
         startActivityForResult(mIntent, ExtraAndResult.REQUEST_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case ExtraAndResult.REQUEST_CODE:
                 if (data != null) {
-                    WorksheetOrder order = (WorksheetOrder) data.getSerializableExtra(ExtraAndResult.EXTRA_OBJ);
+                    WorksheetOrder order = (WorksheetOrder) data.getSerializableExtra("data");
                     if (order != null) {
                         selectedOrder = order;
                         ((WorksheetAddActivity)getActivity()).selectedOrder = order;

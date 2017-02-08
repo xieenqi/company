@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <!-- 48 + 20 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/title_bg1"
+                android:layout_marginTop="48dp"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingBottom="10dp"
+                android:layout_gravity="bottom">
+                <TextView
+                    android:paddingTop="9dp"
+                    android:paddingBottom="9dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:textColor="#ffffff"
+                    android:textSize="16dp"
+                    android:text="恒东科技国际"/>
+                <TextView
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="26dp"
+                    android:textColor="#ffffff"
+                    android:textSize="14dp"
+                    android:text="状态：新建"/>
+                <TextView
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="26dp"
+                    android:textSize="14dp"
+                    android:textColor="#ffffff"
+                    android:text="标签：新建客户，目标客户，高价值客户"/>
+                <TextView
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="26dp"
+                    android:textSize="14dp"
+                    android:textColor="#ffffff"
+                    android:text="丢公海原因：新建21天无跟进动态且35天无客户拜访"/>
+            </LinearLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/title_bg1"
+                app:layout_collapseMode="pin" >
+                <FrameLayout android:layout_width="match_parent"
+                             android:layout_height="@dimen/view_h_title"
+                             android:background="@color/title_bg1">
+
+                    <TextView
+                        android:id="@+id/tv_title_1"
+                        style="@style/text_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="-20dp"
+                        android:gravity="center"
+                        android:text=""/>
+
+                    <LinearLayout
+                        android:id="@+id/img_title_left"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/back_left1"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="23dp"
+                            android:layout_marginRight="@dimen/dimen_8"
+                            android:gravity="center_vertical"
+                            android:text="返回"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:visibility="gone"/>
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/img_title_right"
+                        android:layout_width="39dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="@dimen/margin_side_edge"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/img_more"/>
+
+                    </RelativeLayout>
+
+                </FrameLayout>
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:tabMode="scrollable"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>
