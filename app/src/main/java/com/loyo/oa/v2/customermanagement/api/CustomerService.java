@@ -406,11 +406,13 @@ public class CustomerService {
 
     /* 获取客户状态列表*/
     public static Observable<List<CustomerStatusModel>> getCustomerStatus(String filterType) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("filterType", filterType);
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ICustomer.class)
-                        .getCustomerStatus(filterType)
+                        .getCustomerStatus(map)
                         .compose(RetrofitAdapterFactory.<List<CustomerStatusModel>>compatApplyCanBeEmptySchedulers());
 
     }

@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.contact;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,6 +52,7 @@ public class ContactsRoleSingleSelectActivity extends BaseSingleSelectActivity<C
 
     @Override
     protected boolean isDefault(ContactsRoleModel item) {
+        if(TextUtils.isEmpty(current)||TextUtils.isEmpty(item.id))return false;
         return current.equals(item.id);
     }
 }

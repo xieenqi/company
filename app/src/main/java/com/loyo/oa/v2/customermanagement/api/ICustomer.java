@@ -299,7 +299,7 @@ public interface ICustomer {
      * 参数说明：filterType string path true "0. 返回所有 1. 返回101（客户状态）   2. 返回除101之外的类型 （客户标签）
      */
     @GET("/tags")
-    Observable<List<CustomerStatusModel>> getCustomerStatus(@Path("filterType") String filterType);
+    Observable<List<CustomerStatusModel>> getCustomerStatus(@QueryMap Map<String, Object> map);
 
 
 }

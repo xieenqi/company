@@ -23,5 +23,10 @@ public class CustomerStatusModel implements Serializable {
         public Boolean canEdit;
         public Boolean canDelete;
         public Integer order;
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

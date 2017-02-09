@@ -178,7 +178,6 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
             @Override
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
-
                 if (menuIndex == 0) { // TimeFilterModel
                     MenuModel model = selectedModels.get(0);
                     String key = model.getKey();

@@ -97,7 +97,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             tv_at_text, tv_clue_company, tv_clue_name, tv_contact_role, tv_contact_label,tv_customer_status;
     private Customer mCustomer;
     private ClueListItem mClue;
-    private String tagItemIds, contactId, contactName = "无", contactRoleName, contactRoleId;
+    private String tagItemIds, contactId, contactName = "无", contactRoleName, contactRoleId="";
     private LinearLayout ll_customer, ll_contact;
     private ImageView iv_location_delete, iv_at_delete;
     private String content;
@@ -445,8 +445,8 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         if(hasEditConOrRole){
             map.put("isEnableCus", true);
             map.put("contactRoleId", contactRoleId);
-            map.put("statusId", contactRoleId);
-            map.put("tags", contactRoleId);
+            map.put("statusId", mCustomer.statusId);
+            map.put("tags", mCustomer.tags);
         }
 
         LogUtil.dee("新建跟进:" + MainApp.gson.toJson(map));
@@ -539,6 +539,10 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             switch (v.getId()) {
                 //选择联系人角色
                 case R.id.ll_contact_role:
+                    if(TextUtils.isEmpty(contactId)){
+                        Toast("请先选择联系人");
+                        return;
+                    }
                     Bundle bundle=new Bundle();
                     //设置默认值
                     bundle.putString(ContactsRoleSingleSelectActivity.EXTRA_CURRENT,contactRoleId);
@@ -547,8 +551,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 //客户状态
                 case R.id.ll_customer_status:
                     Bundle b=new Bundle();
-                    //设置默认值
-                    b.putString(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, mCustomer.statusId);
+                    b.putString(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, mCustomer.statusId);//设置默认值
                     app.startActivityForResult(FollowAddActivity.this, CustomerStatusSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_STATUS, b);
 
                     break;
@@ -725,11 +728,11 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 break;
             //客户状态
             case REQUEST_ACTIVITY_CODE_STATUS:
+                hasEditConOrRole = true;
                 CustomerStatusModel.CustomerStatusItemModel itemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
                 mCustomer.statusId=itemModel.id;
                 mCustomer.statusName=itemModel.name;
                 tv_customer_status.setText(itemModel.name);
-                hasEditConOrRole = true;
                 break;
             /*跟进方式 回调*/
             case CommonTagSelectActivity.REQUEST_TAGS:
