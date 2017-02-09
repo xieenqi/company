@@ -38,6 +38,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
 
     CustomerPagerAdapter adapter;
+    AttachmentsFragment attachmentsFragment;
     String customerId;
     Customer customer;
 
@@ -114,6 +115,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         this.customerStateText.setText("状态：");
         this.customerTagText.setText("标签：" + customer.displayTagString());
         this.dropReasonText.setText("丢公海原因：");
+        if (attachmentsFragment != null) {
+            attachmentsFragment.setUuid(customer.uuid);
+        }
     }
 
     public void getData(String id) {
@@ -147,7 +151,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new CustomerPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new AttachmentsFragment(), "附件 8");
+        attachmentsFragment = new AttachmentsFragment();
+        adapter.addFragment(attachmentsFragment, "附件 8");
 
         adapter.addFragment(new FollowupsFragment(), "跟进 1");
         adapter.addFragment(new ContactsFragment(), "联系人 2");

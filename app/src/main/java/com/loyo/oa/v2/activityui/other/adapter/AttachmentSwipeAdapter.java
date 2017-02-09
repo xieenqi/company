@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateFormatSet;
+import com.loyo.oa.common.utils.LoyoUIThread;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -32,8 +33,6 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -273,15 +272,10 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
     }
 
     public void refreshData() {
-        new Timer().schedule(new TimerTask() {
+        LoyoUIThread.runAfterDelay(new Runnable() {
             @Override
             public void run() {
-                ((Activity) mContext).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyDataSetChanged();
-                    }
-                });
+                notifyDataSetChanged();
             }
         }, 200);
     }
