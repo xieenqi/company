@@ -150,6 +150,8 @@ android {
         compile 'me.itangqi.waveloadingview:library:0.3.2'
         compile 'com.umeng.analytics:analytics:latest.integration'
         compile 'hk.ids.gws.android.sclick:library:1.0'
+        compile 'com.jakewharton:butterknife:8.5.1'
+        apt 'com.jakewharton:butterknife-compiler:8.5.1'
 
         //compile 'cn.fanrunqi:waveprogress:1.0.0'
         //compile 'com.lai.weavey:loadinglayout:1.2'//loading加载库

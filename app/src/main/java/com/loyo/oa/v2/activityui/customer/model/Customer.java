@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.customer.model;
 
 import android.support.annotation.IntDef;
+import android.text.TextUtils;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -153,6 +154,22 @@ public class Customer extends BaseBeans {
 
     public String getId() {
         return null == id ? "" : id;
+    }
+
+    public String displayTagString() {
+        StringBuffer buffer = new StringBuffer();
+        boolean needSeperate = false;
+        for (NewTag tag: tags) {
+            if (needSeperate) {
+                buffer.append("、");
+            }
+            buffer.append(tag.getItemName());
+            needSeperate = true;
+        }
+
+        String result = buffer.toString();
+
+        return TextUtils.isEmpty(result) ? "无" : result;
     }
 
     /**

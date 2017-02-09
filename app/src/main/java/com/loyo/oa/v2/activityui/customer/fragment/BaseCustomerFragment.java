@@ -29,7 +29,6 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.MyContactMailList;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
@@ -43,6 +42,7 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -147,8 +147,9 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent();
-                intent.putExtra("Id", mPagination.getRecords().get(position - 1).getId());
-                intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
+                intent.putExtra(CustomerDetailActivity.KEY_ID,
+                        mPagination.getRecords().get(position - 1).getId());
+                intent.setClass(mActivity, CustomerDetailActivity.class);
                 startActivity(intent);
                 clickPosition = position - 1;
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);

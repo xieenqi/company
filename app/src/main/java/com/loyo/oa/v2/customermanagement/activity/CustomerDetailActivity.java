@@ -4,41 +4,82 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapter;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.fragment.TestFragment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
-public class CustomerDetailActivity extends BaseFragmentActivity
-        implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    ViewGroup img_title_left, img_title_right;
-    TextView tv_title_1;
+public class CustomerDetailActivity extends BaseFragmentActivity
+        implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener
+{
+
+    public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
+
     CustomerPagerAdapter adapter;
+    String customerId;
+    Customer customer;
+
+    @BindView(R.id.img_title_left)  View img_title_left;
+    @BindView(R.id.img_title_right) View img_title_right;
+    @BindView(R.id.tv_title_1)      TextView tv_title_1;
+
+    @BindView(R.id.customer_basic_info) ViewGroup basicInfoView;
+    @BindView(R.id.customer_state)      ViewGroup customerStateView;
+    @BindView(R.id.customer_tag)        ViewGroup customerTagView;
+
+    @BindView(R.id.tv_customer_name)  TextView customerNameText;
+    @BindView(R.id.tv_customer_state) TextView customerStateText;
+    @BindView(R.id.tv_customer_tag)   TextView customerTagText;
+    @BindView(R.id.tv_drop_reason)    TextView dropReasonText;
+
+    @BindView(R.id.state_editable) ImageView stateEditableVew;
+    @BindView(R.id.tag_editable)   ImageView tagEditableVew;
+
+
+
+    @OnClick(R.id.img_title_left) void onBack() {
+        onBackPressed();
+    }
+    @OnClick(R.id.img_title_right) void onMore() {
+
+    }
+
+    @OnClick(R.id.customer_basic_info) void showInfo() {
+
+    }
+    @OnClick(R.id.customer_state) void editState() {
+
+    }
+    @OnClick(R.id.customer_tag) void editTag() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_detail);
-
-        img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
-        img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
-        tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
-
+        ButterKnife.bind(this);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-
-        img_title_left.setOnClickListener(this);
-        img_title_right.setOnClickListener(this);
-
+        basicInfoView.setOnTouchListener(Global.GetTouch());
+        customerStateView.setOnTouchListener(Global.GetTouch());
+        customerTagView.setOnTouchListener(Global.GetTouch());
         tv_title_1.setText("客户详情");
-
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
@@ -47,6 +88,44 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        this.loadIntentData();
+        this.getData(customerId);
+    }
+
+    void loadIntentData() {
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                customerId = bundle.getString(KEY_ID);
+            }
+        }
+    }
+
+    void loadCustomer() {
+        this.customerNameText.setText(customer.name);
+        this.customerStateText.setText("状态：");
+        this.customerTagText.setText("标签：" + customer.displayTagString());
+        this.dropReasonText.setText("丢公海原因：");
+    }
+
+    public void getData(String id) {
+        if (TextUtils.isEmpty(id)) {
+            return;
+        }
+        CustomerService.getCustomerDetailById(id)
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(Customer customer) {
+                        CustomerDetailActivity.this.customer = customer;
+                        CustomerDetailActivity.this.loadCustomer();
+                    }
+                });
     }
 
     /**
