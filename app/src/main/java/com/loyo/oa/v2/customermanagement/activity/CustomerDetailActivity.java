@@ -16,7 +16,14 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
-import com.loyo.oa.v2.customermanagement.fragment.TestFragment;
+import com.loyo.oa.v2.customermanagement.fragment.AttachmentsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.ContactsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.FollowupsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.OpptunitiesFragment;
+import com.loyo.oa.v2.customermanagement.fragment.OrdersFragment;
+import com.loyo.oa.v2.customermanagement.fragment.TasksFragment;
+import com.loyo.oa.v2.customermanagement.fragment.VisitsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.WorkflowsFragment;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
@@ -140,16 +147,18 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new CustomerPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new TestFragment(), "跟进 1");
-        adapter.addFragment(new TestFragment(), "联系人 2");
-        adapter.addFragment(new TestFragment(), "拜访 3");
+        adapter.addFragment(new AttachmentsFragment(), "附件 8");
 
-        adapter.addFragment(new TestFragment(), "机会 4");
-        adapter.addFragment(new TestFragment(), "订单 5");
-        adapter.addFragment(new TestFragment(), "任务 6");
+        adapter.addFragment(new FollowupsFragment(), "跟进 1");
+        adapter.addFragment(new ContactsFragment(), "联系人 2");
+        adapter.addFragment(new VisitsFragment(), "拜访 3");
 
-        adapter.addFragment(new TestFragment(), "审批 7");
-        adapter.addFragment(new TestFragment(), "附件 8");
+        adapter.addFragment(new OpptunitiesFragment(), "机会 4");
+        adapter.addFragment(new OrdersFragment(), "订单 5");
+        adapter.addFragment(new TasksFragment(), "任务 6");
+
+        adapter.addFragment(new WorkflowsFragment(), "审批 7");
+
         viewPager.setAdapter(adapter);
     }
 
