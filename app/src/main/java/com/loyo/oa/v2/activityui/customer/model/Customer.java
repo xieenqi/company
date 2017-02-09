@@ -143,6 +143,9 @@ public class Customer extends BaseBeans {
     public RecycleType recycleType;//丢公海类型 0.无 1.手动 2.自动
     public String recycleReason;//丢公海原因
 
+    public String statusId;//客户状态id
+    public String statusName;//客户状态
+
     @Override
     public String getOrderStr() {
         return null;

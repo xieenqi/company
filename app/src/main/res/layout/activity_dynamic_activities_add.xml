@@ -303,7 +303,7 @@
                     <include layout="@layout/include_solid_line_left" />
 
                     <LinearLayout
-                        android:id="@+id/ll_contact_status"
+                        android:id="@+id/ll_customer_status"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_h_title"
                         android:gravity="center_vertical">
@@ -318,7 +318,7 @@
                             android:textSize="15sp" />
 
                         <TextView
-                            android:id="@+id/tv_contact_status"
+                            android:id="@+id/tv_customer_status"
                             style="@style/text_item1"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"

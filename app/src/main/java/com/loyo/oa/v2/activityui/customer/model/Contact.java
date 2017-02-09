@@ -17,6 +17,8 @@ public class Contact implements Serializable {
     private String name;
     private String tel;
     private String birth;
+    private String contactRoleName;//联系人角色
+    private String contactRoleId;//联系人角色id
     private String qq;
     private String wx;
     private String wiretel;
@@ -27,6 +29,22 @@ public class Contact implements Serializable {
     public ArrayList<ExtraData> extDatas = new ArrayList<>();
     public ArrayList<String> telGroup = new ArrayList<>();
     public ArrayList<String> wiretelGroup = new ArrayList<>();
+
+    public String getContactRoleName() {
+        return contactRoleName;
+    }
+
+    public void setContactRoleName(String contactRoleName) {
+        this.contactRoleName = contactRoleName;
+    }
+
+    public String getContactRoleId() {
+        return contactRoleId;
+    }
+
+    public void setContactRoleId(String contactRoleId) {
+        this.contactRoleId = contactRoleId;
+    }
 
     public String getDeptName() {
         return deptName;
