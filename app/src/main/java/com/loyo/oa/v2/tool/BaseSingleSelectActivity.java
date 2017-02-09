@@ -25,6 +25,10 @@ import java.util.List;
  */
 
 public abstract class BaseSingleSelectActivity<T extends Serializable> extends BaseActivity{
+    //用来传入当前选中的参数
+    public static final String EXTRA_CURRENT="currentRoleId";
+    public String current="";
+
     protected TextView tvTitle;
     protected ListView listView;
     protected LoadingLayout loadingLayout;

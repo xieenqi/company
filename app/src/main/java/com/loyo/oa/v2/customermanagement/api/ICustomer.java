@@ -6,6 +6,7 @@ import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
+import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
 import com.loyo.oa.v2.activityui.customer.model.Industry;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
@@ -26,6 +27,7 @@ import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.http.Body;
@@ -291,6 +293,13 @@ public interface ICustomer {
      */
     @GET("/ipvoice/callCancel/{callLogId}")
     Observable<BaseResponse<String>> cancelCallBack(@Path("callLogId") String id);
+
+    /**
+     * 获取客户状态列表
+     * 参数说明：filterType string path true "0. 返回所有 1. 返回101（客户状态）   2. 返回除101之外的类型 （客户标签）
+     */
+    @GET("/tags")
+    Observable<List<CustomerStatusModel>> getCustomerStatus(@Path("filterType") String filterType);
 
 
 }

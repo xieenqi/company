@@ -39,11 +39,13 @@ import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerLabelCopyActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerStatusSingleSelectActivity;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.application.MainApp;
@@ -84,6 +86,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     private final static String REQUEST_AT_SELECT = "com.loyo.FollowAddActivity.REQUEST_AT_SELECT";
 
     private static final int REQUEST_ACTIVITY_CODE_ROLE = 0x100;
+    private static final int REQUEST_ACTIVITY_CODE_STATUS = 0x101;
 
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
@@ -536,10 +539,17 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             switch (v.getId()) {
                 //选择联系人角色
                 case R.id.ll_contact_role:
-                    app.startActivityForResult(FollowAddActivity.this, ContactsRoleSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_ROLE, null);
+                    Bundle bundle=new Bundle();
+                    //设置默认值
+                    bundle.putString(ContactsRoleSingleSelectActivity.EXTRA_CURRENT,contactRoleId);
+                    app.startActivityForResult(FollowAddActivity.this, ContactsRoleSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_ROLE, bundle);
                     break;
                 //客户状态
                 case R.id.ll_customer_status:
+                    Bundle b=new Bundle();
+                    //设置默认值
+                    b.putString(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, mCustomer.statusId);
+                    app.startActivityForResult(FollowAddActivity.this, CustomerStatusSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_STATUS, b);
 
                     break;
                 //客户标签
@@ -608,11 +618,11 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
 
             /*选择客户*/
                 case R.id.ll_customer:
-                    Bundle b = new Bundle();
-                    b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, 5);
-                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT, true);
+                    Bundle b2 = new Bundle();
+                    b2.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, 5);
+                    b2.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT, true);
                     app.startActivityForResult(FollowAddActivity.this, CustomerSearchOrPickerActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b2);
                     break;
             /*选择联系人*/
                 case R.id.ll_contact:
@@ -714,7 +724,11 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 tv_contact_role.setText(contactRoleName);//联系人角色
                 break;
             //客户状态
-            case R.id.ll_customer_status:
+            case REQUEST_ACTIVITY_CODE_STATUS:
+                CustomerStatusModel.CustomerStatusItemModel itemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
+                mCustomer.statusId=itemModel.id;
+                mCustomer.statusName=itemModel.name;
+                tv_customer_status.setText(itemModel.name);
                 hasEditConOrRole = true;
                 break;
             /*跟进方式 回调*/

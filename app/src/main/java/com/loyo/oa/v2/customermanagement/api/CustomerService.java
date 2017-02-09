@@ -6,6 +6,7 @@ import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
+import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
 import com.loyo.oa.v2.activityui.customer.model.Industry;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
@@ -28,6 +29,7 @@ import com.loyo.oa.v2.tool.Config_project;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.http.Body;
@@ -401,5 +403,17 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<BaseResponse<ArrayList<SaleStage>>>compatApplySchedulers());
 
     }
+
+    /* 获取客户状态列表*/
+    public static Observable<List<CustomerStatusModel>> getCustomerStatus(String filterType) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(ICustomer.class)
+                        .getCustomerStatus(filterType)
+                        .compose(RetrofitAdapterFactory.<List<CustomerStatusModel>>compatApplyCanBeEmptySchedulers());
+
+    }
+
 
 }
