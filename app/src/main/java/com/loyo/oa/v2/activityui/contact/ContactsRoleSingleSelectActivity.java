@@ -22,6 +22,14 @@ import java.util.List;
  */
 
 public class ContactsRoleSingleSelectActivity extends BaseSingleSelectActivity<ContactsRoleModel>{
+    public static final String EXTRA_CURRENTROLE="currentRoleId";
+    public String currentRoleId="";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        currentRoleId=getIntent().getStringExtra(EXTRA_CURRENTROLE);
+    }
 
     @Override
     protected void getData() {
@@ -40,5 +48,10 @@ public class ContactsRoleSingleSelectActivity extends BaseSingleSelectActivity<C
     @Override
     protected String getPageTitle() {
         return "联系人角色";
+    }
+
+    @Override
+    protected boolean isDefault(ContactsRoleModel item) {
+        return currentRoleId.equals(item.id);
     }
 }

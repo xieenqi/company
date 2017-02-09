@@ -49,11 +49,11 @@ public abstract class BaseSingleSelectActivity<T extends Serializable> extends B
                 selectPosition=position;
                 adaper.notifyDataSetChanged();
                 //返回数据
-                Intent intent=new Intent();
-                intent.putExtra("data", listData.get(position));
-                setResult(RESULT_OK,intent);
+                BaseSingleSelectActivity.this.onItemClick(listData.get(position));
                 finish();
             }
+
+
         });
         loadingLayout.setStatus(LoadingLayout.Loading);
         loadingLayout.setOnReloadListener(new LoadingLayout.OnReloadListener() {
@@ -72,6 +72,15 @@ public abstract class BaseSingleSelectActivity<T extends Serializable> extends B
         getData();
     }
 
+    /**
+     * 当条目被点击的时候,如果行为不一样，可以直接覆盖本方法
+     * @param data
+     */
+    protected void onItemClick(T data){
+        Intent intent=new Intent();
+        intent.putExtra("data",data);
+        setResult(RESULT_OK,intent);
+    }
     /**
      *加载数据
      */
