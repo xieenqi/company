@@ -162,7 +162,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         adapter.addFragment(new OrdersFragment(), "订单 5");
         adapter.addFragment(new TasksFragment(), "任务 6");
 
-        adapter.addFragment(new WorkFlowsFragment(), "审批 7");
+        WorkFlowsFragment workFlowsFragment = new WorkFlowsFragment();
+        workFlowsFragment.setCustomer(customer);
+        adapter.addFragment(workFlowsFragment, "审批 7");
 
         AttachmentsFragment attachmentsFragment = new AttachmentsFragment();
         attachmentsFragment.setUuid(customer.uuid);
