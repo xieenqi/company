@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -221,6 +222,8 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         tv_address.setText(sales.address);
         clue_source.setText(sales.source);
         clue_note.setText(sales.remark);
+        if (sales.remark.length() > 20)
+            clue_note.setGravity(Gravity.LEFT);
         clueStatus = sales.status;
         /* 分区4 */
         responsible_name.setText(sales.responsorName);
