@@ -228,7 +228,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
 
         } else if (null != mClue && !isCustom) {
             tv_clue_company.setText(mClue.companyName);
-            tv_clue_name.setText(mClue.responsorName);
+            tv_clue_name.setText(mClue.name);
         }
     }
 

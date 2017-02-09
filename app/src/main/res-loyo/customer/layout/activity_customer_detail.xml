@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <include layout="@layout/include_common_title_edit" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/title_bg1"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingBottom="10dp"
+        android:layout_gravity="bottom">
+        <TextView
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:textColor="#ffffff"
+            android:textSize="16dp"
+            android:text="恒东科技国际"/>
+        <TextView
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:textColor="#ffffff"
+            android:textSize="14dp"
+            android:text="状态：新建"/>
+        <TextView
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:textSize="14dp"
+            android:textColor="#ffffff"
+            android:text="标签：新建客户，目标客户，高价值客户"/>
+        <TextView
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:textSize="14dp"
+            android:textColor="#ffffff"
+            android:text="丢公海原因：新建21天无跟进动态且35天无客户拜访"/>
+    </LinearLayout>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:tabMode="scrollable"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</LinearLayout>

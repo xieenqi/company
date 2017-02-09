@@ -45,6 +45,7 @@ import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.umeng.analytics.MobclickAgent;
 
@@ -342,23 +343,10 @@ public class MainHomeActivity extends SlidingFragmentActivity {
      * 调用接口回传给服务器跟新系统消息的红点状态
      */
     private void refreshSystemMessageRed(String pusherCognate) {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
-//                refreshSystemMessageRed(pusherCognate, new Callback<Object>() {
-//                    @Override
-//                    public void success(Object o, Response response) {
-//                        LogUtil.d("系统消息跟新成功!!!");
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//
-//                    }
-//                });
-
         HomeService.refreshSystemMessageRed(pusherCognate).subscribe(new DefaultLoyoSubscriber<Object>() {
             @Override
             public void onNext(Object o) {
-
+                LogUtil.d("系统消息跟新成功!!!");
             }
         });
     }

@@ -204,7 +204,7 @@ public class AdapterHomeItem extends BaseAdapter {
                 public void onClick(View v) {
 
 //                    if (true) {
-//                        mIntent.setClass(activity, TestLoadingActivity.class);
+//                        mIntent.setClass(activity, CustomerDetailActivity.class);
 //                        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, wfinstanceCount);
 //                        activity.startActivity(mIntent);
 //                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
