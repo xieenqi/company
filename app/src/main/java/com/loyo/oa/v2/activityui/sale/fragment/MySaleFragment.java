@@ -54,6 +54,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
     private ArrayList<SaleStage> mSaleStages;
     private MySaleFrgmentPresenterImpl mPersenter;
     private LoadingLayout ll_loading;
+    private String stageId = "", sortType = "";
 
     @Nullable
     @Override
@@ -113,7 +114,6 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
                 String key = model.getKey();
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-                String stageId = "", sortType = "";
                 if (menuIndex == 0) { // SaleStage
                     stageId = key;
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.stageChanceMy);
@@ -153,7 +153,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
     @Override
     public void backToTop() {
-        if(null!=listView){
+        if (null != listView) {
             listView.getRefreshableView().setSelection(0);
         }
     }

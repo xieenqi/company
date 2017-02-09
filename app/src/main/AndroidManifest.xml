@@ -211,6 +211,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
+            android:name=".activityui.contact.ContactsRoleSingleSelectActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
             android:name=".activityui.project.ProjectManageActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
@@ -815,6 +820,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
         <activity
             android:name=".activityui.setting.RenewalMobileTwoActivty"
             android:launchMode="singleTop"
