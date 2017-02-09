@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -161,7 +162,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
         if (msgAudiomMenu == null) {
-            msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
+            msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid, this);
             layout_bottom_menu.addView(msgAudiomMenu);
         }
         Utils.btnSpcHideForListViewTest(getActivity(), listView.getRefreshableView(),
@@ -190,6 +191,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                         MenuModel model = selectedModels.get(0);
                         menuTimeKey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeFollow);
                         break;
 
                     /*筛选*/
@@ -208,6 +210,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                             typeId = "";
                             activityType = "";
                         }
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.filterFollow);
                         break;
                 }
                 initPageData();
@@ -293,7 +296,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Subscribe
     public void onFollowUpRushEvent(FollowUpRushEvent event) {
         msgAudiomMenu = null;
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid, this);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         listView.getRefreshableView().setSelection(0);
@@ -312,6 +315,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         layout_bottom_menu.setVisibility(View.VISIBLE);
         btn_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
+        UmengAnalytics.umengSend(mActivity, UmengAnalytics.replyFollow);
     }
 
     /**
@@ -323,7 +327,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         dialog.addSheetItem("删除评论", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                mPresenter.deleteComment(list,  position,id);
+                mPresenter.deleteComment(list, position, id);
             }
         });
         dialog.show();
@@ -335,11 +339,11 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void rushListData(ListView list, int position) {
         //删除一条评论
-        ListOrDetailsCommentAdapter adapter=((ListOrDetailsCommentAdapter)list.getAdapter());
+        ListOrDetailsCommentAdapter adapter = ((ListOrDetailsCommentAdapter) list.getAdapter());
         adapter.remove(position);
-        if(0==adapter.getCount()){
+        if (0 == adapter.getCount()) {
             //如果没有评论了，就隐藏显示评论的控件
-            ((ViewGroup)list.getParent()).setVisibility(View.GONE);
+            ((ViewGroup) list.getParent()).setVisibility(View.GONE);
         }
     }
 
@@ -376,7 +380,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         listView.onRefreshComplete();
         //判断，数据为空，就用ll_loading显示，否则使用toast提示
         @LoyoErrorChecker.CheckType
-        int type=mPagination.isEnpty()?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
+        int type = mPagination.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT : LoyoErrorChecker.TOAST;
         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
     }
 
@@ -411,6 +415,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
             case R.id.btn_add:
                 startActivityForResult(new Intent(getActivity(), FollowSelectActivity.class), Activity.RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.addFollow);
                 break;
         }
     }

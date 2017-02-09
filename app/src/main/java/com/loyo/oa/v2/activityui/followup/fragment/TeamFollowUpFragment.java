@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -56,6 +57,8 @@ import com.loyo.oa.v2.tool.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.loyo.oa.common.utils.UmengAnalytics.roleFollowTeam;
 
 
 /**
@@ -160,7 +163,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid, this);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         Utils.btnSpcHideForListView(getActivity(), listView.getRefreshableView(),
@@ -209,6 +212,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                         MenuModel model = selectedModels.get(0);
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeFollowTeam);
                     }
                     break;
 
@@ -225,6 +229,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                             method = "";
                             typeId = "";
                         }
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.filterFollowTeam);
                         break;
 
                     /*人员*/
@@ -240,6 +245,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                             userId = model.getKey();
                         }
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.roleFollowTeam);
                     }
                     break;
                 }
@@ -317,6 +323,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         commentPosition = position;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         msgAudiomMenu.commentEmbl();
+        UmengAnalytics.umengSend(mActivity, UmengAnalytics.replyFollowTeam);
     }
 
     /**
@@ -328,7 +335,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         dialog.addSheetItem("删除评论", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                mPresenter.deleteComment(adapter,position,id);
+                mPresenter.deleteComment(adapter, position, id);
             }
         });
         dialog.show();
@@ -340,13 +347,14 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void rushListData(ListView list, int position) {
         //删除一条评论
-        ListOrDetailsCommentAdapter adapter=((ListOrDetailsCommentAdapter)list.getAdapter());
+        ListOrDetailsCommentAdapter adapter = ((ListOrDetailsCommentAdapter) list.getAdapter());
         adapter.remove(position);
-        if(0==adapter.getCount()){
+        if (0 == adapter.getCount()) {
             //如果没有评论了，就隐藏显示评论的控件
-            ((ViewGroup)list.getParent()).setVisibility(View.GONE);
+            ((ViewGroup) list.getParent()).setVisibility(View.GONE);
         }
     }
+
     /**
      * 评论成功操作
      */
@@ -380,7 +388,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         listView.onRefreshComplete();
         //判断，数据为空，就用ll_loading显示，否则使用toast提示
         @LoyoErrorChecker.CheckType
-        int type=mPagination.isEnpty()?LoyoErrorChecker.LOADING_LAYOUT:LoyoErrorChecker.TOAST;
+        int type = mPagination.isEnpty() ? LoyoErrorChecker.LOADING_LAYOUT : LoyoErrorChecker.TOAST;
         LoyoErrorChecker.checkLoyoError(e, type, ll_loading);
     }
 

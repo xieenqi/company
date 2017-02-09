@@ -57,9 +57,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="@dimen/common_head_second_text_margin_vertical"
                             android:layout_marginLeft="@dimen/common_second_text_margin_horizontal"
                             android:layout_marginTop="@dimen/common_head_second_text_margin_vertical"
-                            android:layout_marginBottom="@dimen/common_head_second_text_margin_vertical"
                             android:layout_weight="1" />
                     </LinearLayout>
 
@@ -82,23 +82,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:text="公司名称" />
+
                         <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"/>
+                            android:layout_weight="1" />
+
                         <TextView
                             android:id="@+id/tv_section1_company_name"
                             style="@style/common_text_line_second"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="@dimen/common_head_second_text_margin_vertical"
                             android:layout_marginLeft="@dimen/clue_main_second_text_space"
                             android:layout_marginTop="@dimen/common_head_second_text_margin_vertical"
-                            android:layout_marginBottom="@dimen/common_head_second_text_margin_vertical"
-                            android:singleLine="false"
-                            android:layout_gravity="center_vertical"
-                            android:gravity="left" />
+                            android:gravity="left"
+                            android:singleLine="false" />
                     </LinearLayout>
-
 
 
                     <include layout="@layout/common_include_line_in_space" />
@@ -124,10 +125,10 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/common_second_text_margin_horizontal"
-                            android:layout_marginTop="@dimen/common_head_second_text_margin_vertical"
-                            android:layout_marginRight="@dimen/common_second_text_margin_horizontal"
                             android:layout_marginBottom="@dimen/common_head_second_text_margin_vertical"
+                            android:layout_marginLeft="@dimen/common_second_text_margin_horizontal"
+                            android:layout_marginRight="@dimen/common_second_text_margin_horizontal"
+                            android:layout_marginTop="@dimen/common_head_second_text_margin_vertical"
                             android:layout_weight="1" />
 
                         <ImageView
@@ -455,24 +456,23 @@
 
                         <TextView
                             style="@style/common_text_line_main"
-                            android:layout_width="wrap_content"
+                            android:layout_width="50dp"
                             android:layout_height="match_parent"
+                            android:gravity="top|center_vertical"
+                            android:paddingTop="15dp"
                             android:text="备注" />
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"/>
+
                         <TextView
                             android:id="@+id/tv_clue_note"
                             style="@style/common_text_line_second"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/clue_main_second_text_space"
-                            android:layout_marginTop="@dimen/common_head_second_text_margin_vertical"
-                            android:layout_marginBottom="@dimen/common_head_second_text_margin_vertical"
-                            android:singleLine="false"
                             android:layout_gravity="center_vertical"
-                            android:gravity="left" />
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:singleLine="false" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -576,11 +576,12 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:background="@color/common_activity_bg"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:background="@color/common_activity_bg" />
             </LinearLayout>
         </ScrollView>
     </com.library.module.widget.loading.LoadingLayout>
