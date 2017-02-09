@@ -156,7 +156,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         contactsFragment.setCustomer(customer);
         adapter.addFragment(contactsFragment, "联系人 2");
 
-        adapter.addFragment(new VisitsFragment(), "拜访 3");
+        VisitsFragment visitsFragment = new VisitsFragment();
+        visitsFragment.setCustomer(customer);
+        adapter.addFragment(visitsFragment, "拜访 3");
 
         adapter.addFragment(new OpptunitiesFragment(), "机会 4");
 
