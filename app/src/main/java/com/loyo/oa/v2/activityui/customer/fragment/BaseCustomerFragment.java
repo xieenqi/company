@@ -186,10 +186,25 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                     String[] keys = key.split(" ");
                     params.put("field", keys[0]);
                     params.put("order", keys[1]);
-                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomer);
+                    //友盟统计
+                    if(BaseCustomerFragment.this instanceof MyResponFragment){
+                        //我负责的
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomer);
+                    }else  if(BaseCustomerFragment.this instanceof MyMemberFragment){
+                        //我参与的
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomerJoin);
+
+                    }
                 } else if (menuIndex == 1) { // TagFilter
                     params.put("tagsParams", userInfo.toString());
-                    UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomer);
+                    //友盟统计
+                    if(BaseCustomerFragment.this instanceof MyResponFragment){
+                        //我负责的
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomer);
+                    }else if(BaseCustomerFragment.this instanceof MyMemberFragment){
+                        //我参与的
+                        UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomerJoin);
+                    }
                 }
                 ll_loading.setStatus(LoadingLayout.Loading);
                 mPagination.setFirstPage();
