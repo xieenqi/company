@@ -38,6 +38,8 @@ import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.contact.ContactsRoleSingleSelectActivity;
+import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -80,11 +82,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class SignInActivity extends BaseActivity
         implements SigninContract.View, UploadControllerCallback {
     private static final int RECORD_REQUEST = 0x10;//获取录音需要的权限
+    private static final int REQUEST_RESULT_ROLE = 0x10;//获取联系人角色
 
     private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address,
-            tv_at_text, tv_distance_deviation, tv_contact_name;
+            tv_at_text, tv_distance_deviation, tv_contact_name,tv_contact_role;
     private EditText edt_memo;
-    private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at, ll_contact;
+    private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at, ll_contact_holder, ll_contact_name, ll_contact_role;
     private ImageView iv_at_delete;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID(), customerId = "", customerName, customerAddress;
@@ -108,6 +111,7 @@ public class SignInActivity extends BaseActivity
     public String cityCode;
     public String message;
     public String region;//地区
+    private Contact contact;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -130,8 +134,12 @@ public class SignInActivity extends BaseActivity
     }
 
     void initUI() {
-        ll_contact = (ViewGroup) findViewById(R.id.ll_contact);
+        ll_contact_holder = (ViewGroup) findViewById(R.id.ll_contact_holder);
+        ll_contact_name = (ViewGroup) findViewById(R.id.ll_contact_name);
+        ll_contact_role = (ViewGroup) findViewById(R.id.ll_contact_role);
+
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
+        tv_contact_role = (TextView) findViewById(R.id.tv_contact_role);
         tv_customer_address = (TextView) findViewById(R.id.tv_customer_address);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(click);
@@ -151,7 +159,8 @@ public class SignInActivity extends BaseActivity
         tv_at_text = (TextView) findViewById(R.id.tv_at_text);
         tv_distance_deviation = (TextView) findViewById(R.id.tv_distance_deviation);
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
-        ll_contact.setOnClickListener(click);
+        ll_contact_name.setOnClickListener(click);
+        ll_contact_role.setOnClickListener(click);
         tv_address = (TextView) findViewById(R.id.tv_address);
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
@@ -161,16 +170,19 @@ public class SignInActivity extends BaseActivity
         if (null == mCustomer) {
             layout_customer_name.setOnTouchListener(Global.GetTouch());
             layout_customer_name.setOnClickListener(click);
-            ll_contact.setVisibility(View.GONE);
+//            ll_contact_holder.setVisibility(View.GONE);
         } else {
             findViewById(R.id.divider_customer_name).setVisibility(View.VISIBLE);
             layout_customer_name.setVisibility(View.VISIBLE);
             layout_customer_name.setEnabled(false);
             tv_customer_name.setText(customerName);
-            ll_contact.setVisibility(View.VISIBLE);
+            ll_contact_holder.setVisibility(View.VISIBLE);
             tv_customer_address.setVisibility(View.VISIBLE);
             tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
-            tv_contact_name.setText(presenter.getDefaultContact(mCustomer.contacts));
+            contact = presenter.getDefaultContact(mCustomer.contacts);
+            tv_contact_name.setText(contact.getName());
+            tv_contact_role.setText(contact.getContactRoleName());
+
             contactList = mCustomer.contacts;
         }
         controller = new UploadController(this, 9);
@@ -386,7 +398,7 @@ public class SignInActivity extends BaseActivity
                         Bundle b = new Bundle();
                         b.putDouble("lon", loPosition);
                         b.putDouble("lat", laPosition);
-                        app.startActivity(SignInActivity.this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT,false, b);
+                        app.startActivity(SignInActivity.this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                     }
                     break;
 
@@ -405,14 +417,26 @@ public class SignInActivity extends BaseActivity
                         app.startActivityForResult(SignInActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                     }
                     break;
-
-                case R.id.ll_contact://选择客户联系人
+                //选择客户联系人
+                case R.id.ll_contact_name:
                     Bundle bContact = new Bundle();
                     bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
                     bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
                     app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                     break;
+                //选择客户联系人角色
+                case R.id.ll_contact_role:
+                    if (null == contactList || contactList.size() <= 0) {
+                        Toast("请先选择联系人");
+                        return;
+                    }
+                    Bundle bb = new Bundle();
+                    bb.putSerializable(ContactsRoleSingleSelectActivity.EXTRA_CURRENT, contact.getContactRoleId());//当前选中的
+                    app.startActivityForResult(SignInActivity.this, ContactsRoleSingleSelectActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, REQUEST_RESULT_ROLE, bb);
+                    break;
+
                 case R.id.iv_at_delete://清除@的人员
                     ll_at.setVisibility(View.GONE);
                     atDepts.clear();
@@ -530,6 +554,14 @@ public class SignInActivity extends BaseActivity
             return;
         }
         switch (requestCode) {
+            //联系人角色
+            case REQUEST_RESULT_ROLE:
+                ContactsRoleModel contactsRoleModel=(ContactsRoleModel)data.getSerializableExtra("data");
+                if(null==contactsRoleModel||RESULT_OK!=resultCode)return;
+                contact.setContactRoleId(contactsRoleModel.id);
+                contact.setContactRoleName(contactsRoleModel.name);
+                tv_contact_role.setText(contactsRoleModel.name);
+                break;
             //地图微调，数据回到
             case MapModifyView.SERACH_MAP:
                 positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
@@ -564,9 +596,10 @@ public class SignInActivity extends BaseActivity
                 break;
              /* 选择客户联系人 回调*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
-                Contact contact = (Contact) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                contact = (Contact) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                 if (null != contact) {
                     tv_contact_name.setText(contact.getName());
+                    tv_contact_role.setText(contact.getContactRoleName());
                 }
                 break;
         }
@@ -578,29 +611,30 @@ public class SignInActivity extends BaseActivity
      */
     @Subscribe
     public void onSigninCustomerRushEvent(SigninCustomerRushEvent event) {
-        //如果是添加的客户，收到以后，转换成选择一个客户，然后再发送出去
-            customerId = event.data.id;
-            customerName = event.data.name;
-            contactList = event.data.contacts;
-            Location loc = event.data.position;
-            if (loc != null) {
-                customerAddress = loc.addr;
-            }
-            if (contactList != null && contactList.size() > 0) {
-                ll_contact.setVisibility(View.VISIBLE);
-                tv_contact_name.setText(presenter.getDefaultContact(contactList));
-            } else {
-                ll_contact.setVisibility(View.GONE);
-                tv_contact_name.setText("");
-            }
-            tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
-            edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
-            tv_customer_address.setVisibility(View.VISIBLE);
-            tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
-            distanceInfo(loc);
+        customerId = event.data.id;
+        customerName = event.data.name;
+        contactList = event.data.contacts;
+        Location loc = event.data.position;
+        if (loc != null) {
+            customerAddress = loc.addr;
+        }
+        if (contactList != null && contactList.size() > 0) {
+            ll_contact_holder.setVisibility(View.VISIBLE);
+            contact = presenter.getDefaultContact(contactList);
+            tv_contact_name.setText(contact.getName());
+            tv_contact_role.setText(contact.getContactRoleName());
+        } else {
+//            ll_contact_holder.setVisibility(View.GONE);
+            tv_contact_name.setText("");
+            tv_contact_role.setText("");
+        }
+        tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+        edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
+        tv_customer_address.setVisibility(View.VISIBLE);
+        tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
+        distanceInfo(loc);
 
     }
-
 
 
     private void distanceInfo(Location loc) {

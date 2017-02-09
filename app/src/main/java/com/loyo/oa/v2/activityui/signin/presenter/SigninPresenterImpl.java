@@ -101,15 +101,16 @@ public class SigninPresenterImpl implements SigninContract.Presenter {
     }
 
     @Override
-    public String getDefaultContact(ArrayList<Contact> data) {
+    public Contact getDefaultContact(ArrayList<Contact> data) {
         for (Contact ele : data) {
             if (!ele.isDefault()) {
                 continue;
             } else {
-                return ele.getName();
+                return ele;
             }
         }
-        return "";
+        Contact contact=new Contact();
+        return contact;
     }
 
     @Override

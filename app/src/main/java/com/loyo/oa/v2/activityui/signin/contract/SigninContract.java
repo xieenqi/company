@@ -53,7 +53,7 @@ public interface SigninContract {
 
         void deleteAttachmentSuccess(Attachment delAttachment);
 
-        String getDefaultContact(ArrayList<Contact> data);
+        Contact getDefaultContact(ArrayList<Contact> data);
 
         String getDeviationDistance(double la, double lo, double laPosition, double loPosition);
 

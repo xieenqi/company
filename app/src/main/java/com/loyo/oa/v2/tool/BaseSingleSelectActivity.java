@@ -53,8 +53,8 @@ public abstract class BaseSingleSelectActivity<T extends Serializable> extends B
                 selectPosition=position;
                 adaper.notifyDataSetChanged();
                 //返回数据
-                BaseSingleSelectActivity.this.onItemClick(listData.get(position));
-                finish();
+                onItemClicked(listData.get(position));
+
             }
 
 
@@ -80,10 +80,11 @@ public abstract class BaseSingleSelectActivity<T extends Serializable> extends B
      * 当条目被点击的时候,如果行为不一样，可以直接覆盖本方法
      * @param data
      */
-    protected void onItemClick(T data){
+    protected void onItemClicked(T data){
         Intent intent=new Intent();
         intent.putExtra("data",data);
         setResult(RESULT_OK,intent);
+        finish();
     }
     /**
      *加载数据
