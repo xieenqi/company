@@ -160,13 +160,17 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         visitsFragment.setCustomer(customer);
         adapter.addFragment(visitsFragment, "拜访 3");
 
-        adapter.addFragment(new OpptunitiesFragment(), "机会 4");
+        OpptunitiesFragment opptunitiesFragment = new OpptunitiesFragment();
+        opptunitiesFragment.setCustomer(customer);
+        adapter.addFragment(opptunitiesFragment, "机会 4");
 
         OrdersFragment ordersFragment = new OrdersFragment();
         ordersFragment.setCustomer(customer);
         adapter.addFragment(ordersFragment, "订单 5");
 
-        adapter.addFragment(new TasksFragment(), "任务 6");
+        TasksFragment tasksFragment = new TasksFragment();
+        tasksFragment.setCustomer(customer);
+        adapter.addFragment(tasksFragment, "任务 6");
 
         WorkFlowsFragment workFlowsFragment = new WorkFlowsFragment();
         workFlowsFragment.setCustomer(customer);
