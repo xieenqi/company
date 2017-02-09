@@ -143,6 +143,7 @@ public class Customer extends BaseBeans {
     public long recycledAt;//丢公海的时间
     public RecycleType recycleType;//丢公海类型 0.无 1.手动 2.自动
     public String recycleReason;//丢公海原因
+    public String recycleRemind; // 丢公海提醒
 
     public String statusId;//客户状态id
     public String statusName;//客户状态

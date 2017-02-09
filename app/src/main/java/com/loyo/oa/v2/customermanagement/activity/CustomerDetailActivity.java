@@ -12,7 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
@@ -25,6 +28,8 @@ import com.loyo.oa.v2.customermanagement.fragment.TasksFragment;
 import com.loyo.oa.v2.customermanagement.fragment.VisitsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.WorkFlowsFragment;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.permission.CustomerAction;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
 import butterknife.BindView;
@@ -40,6 +45,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     CustomerPagerAdapter adapter;
     String customerId;
     Customer customer;
+    boolean canEdit;
 
     @BindView(R.id.viewpager) ViewPager viewPager;
     @BindView(R.id.tabs)      TabLayout tabLayout;
@@ -59,6 +65,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     @BindView(R.id.state_editable) ImageView stateEditableVew;
     @BindView(R.id.tag_editable)   ImageView tagEditableVew;
+    @BindView(R.id.tv_recyleRemind) TextView recycleRemindText;
 
 
 
@@ -70,7 +77,12 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     }
 
     @OnClick(R.id.customer_basic_info) void showInfo() {
-
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("CustomerId", customer.getId());
+        bundle.putBoolean("canEdit", canEdit);
+        Class _class = CustomerInfoActivity_.class;
+        app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT,
+                FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO, bundle);
     }
     @OnClick(R.id.customer_state) void editState() {
 
@@ -105,10 +117,45 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     }
 
     void loadCustomer() {
+        canEdit = PermissionManager.getInstance().hasCustomerAuthority(
+                customer.relationState,
+                customer.state,
+                CustomerAction.EDIT);
+
         this.customerNameText.setText(customer.name);
-        this.customerStateText.setText("状态：");
+        this.customerStateText.setText("状态：" + customer.statusName);
         this.customerTagText.setText("标签：" + customer.displayTagString());
-        this.dropReasonText.setText("丢公海原因：");
+        if (customer.state == Customer.DumpedCustomer) {
+            dropReasonText.setVisibility(View.VISIBLE);
+            String recyleReason = customer.recycleReason;
+            if (TextUtils.isEmpty(recyleReason)) {
+                recyleReason = "无";
+            }
+            dropReasonText.setText("丢公海原因：" + recyleReason);
+        }
+        else {
+            dropReasonText.setVisibility(View.GONE);
+        }
+        if (TextUtils.isEmpty(customer.recycleRemind)) {
+            recycleRemindText.setVisibility(View.GONE);
+        }
+        else {
+            recycleRemindText.setVisibility(View.VISIBLE);
+            recycleRemindText.setText(customer.recycleRemind);
+        }
+        if (canEdit) {
+            stateEditableVew.setVisibility(View.VISIBLE);
+            tagEditableVew.setVisibility(View.VISIBLE);
+            customerStateView.setClickable(true);
+            customerTagView.setClickable(true);
+        }
+        else {
+            stateEditableVew.setVisibility(View.GONE);
+            tagEditableVew.setVisibility(View.GONE);
+            customerStateView.setClickable(false);
+            customerTagView.setClickable(false);
+        }
+
         if (viewPager != null) {
             setupViewPager(viewPager);
         }

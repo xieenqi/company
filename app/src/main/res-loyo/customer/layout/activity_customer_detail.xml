@@ -29,7 +29,7 @@
             android:textSize="16dp"/>
         <LinearLayout
             android:id="@+id/customer_state"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginRight="25dp"
@@ -55,7 +55,7 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/customer_tag"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginRight="25dp"
@@ -116,10 +116,11 @@
             android:src="@drawable/icon_warn" />
 
         <TextView
+            android:id="@+id/tv_recyleRemind"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:gravity="center"
-            android:text="3天内无跟进行为 或 4天内无订单丢公海"
+            android:visibility="gone"
             android:textColor="#C7A25D" />
     </LinearLayout>
     <LinearLayout
