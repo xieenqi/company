@@ -23,7 +23,7 @@ import com.loyo.oa.v2.customermanagement.fragment.OpptunitiesFragment;
 import com.loyo.oa.v2.customermanagement.fragment.OrdersFragment;
 import com.loyo.oa.v2.customermanagement.fragment.TasksFragment;
 import com.loyo.oa.v2.customermanagement.fragment.VisitsFragment;
-import com.loyo.oa.v2.customermanagement.fragment.WorkflowsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.WorkFlowsFragment;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
@@ -38,9 +38,11 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
 
     CustomerPagerAdapter adapter;
-    AttachmentsFragment attachmentsFragment;
     String customerId;
     Customer customer;
+
+    @BindView(R.id.viewpager) ViewPager viewPager;
+    @BindView(R.id.tabs)      TabLayout tabLayout;
 
     @BindView(R.id.img_title_left)  View img_title_left;
     @BindView(R.id.img_title_right) View img_title_right;
@@ -89,14 +91,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         customerTagView.setOnTouchListener(Global.GetTouch());
         tv_title_1.setText("客户详情");
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        if (viewPager != null) {
-            setupViewPager(viewPager);
-        }
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
         this.loadIntentData();
         this.getData(customerId);
     }
@@ -115,9 +109,10 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         this.customerStateText.setText("状态：");
         this.customerTagText.setText("标签：" + customer.displayTagString());
         this.dropReasonText.setText("丢公海原因：");
-        if (attachmentsFragment != null) {
-            attachmentsFragment.setUuid(customer.uuid);
+        if (viewPager != null) {
+            setupViewPager(viewPager);
         }
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     public void getData(String id) {
@@ -151,10 +146,12 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new CustomerPagerAdapter(getSupportFragmentManager());
-        attachmentsFragment = new AttachmentsFragment();
-        adapter.addFragment(attachmentsFragment, "附件 8");
 
-        adapter.addFragment(new FollowupsFragment(), "跟进 1");
+
+        FollowupsFragment followupsFragment = new FollowupsFragment();
+        followupsFragment.setCustomer(customer);
+        adapter.addFragment(followupsFragment, "跟进 1");
+
         adapter.addFragment(new ContactsFragment(), "联系人 2");
         adapter.addFragment(new VisitsFragment(), "拜访 3");
 
@@ -162,7 +159,11 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         adapter.addFragment(new OrdersFragment(), "订单 5");
         adapter.addFragment(new TasksFragment(), "任务 6");
 
-        adapter.addFragment(new WorkflowsFragment(), "审批 7");
+        adapter.addFragment(new WorkFlowsFragment(), "审批 7");
+
+        AttachmentsFragment attachmentsFragment = new AttachmentsFragment();
+        attachmentsFragment.setUuid(customer.uuid);
+        adapter.addFragment(attachmentsFragment, "附件 8");
 
         viewPager.setAdapter(adapter);
     }

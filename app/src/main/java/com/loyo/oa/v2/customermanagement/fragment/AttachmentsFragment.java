@@ -66,6 +66,7 @@ public class AttachmentsFragment extends BaseFragment implements UploadControlle
                     R.layout.fragment_attachments, container, false);
 
             ButterKnife.bind(this, view);
+            loadIntentData();
 
             controller = new UploadController(getActivity(), 9);
             controller.setObserver(this);
@@ -85,23 +86,20 @@ public class AttachmentsFragment extends BaseFragment implements UploadControlle
         return view;
     }
 
-//    void loadIntentData() {
-//        Bundle bundle = getArguments();
-//        if (bundle != null) {
-//            mUserList = (ArrayList<User> ) bundle.getSerializable("users");
-//            uuid = bundle.getString("uuid");
-//            bizType = bundle.getInt("bizType");
-//            isOver = bundle.getBoolean("isOver", false);
-//            canAdd = bundle.getBoolean("canAdd", false);
-//            fromPage = bundle.getInt("fromPage");
-//        }
-//    }
+    void loadIntentData() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mUserList = (ArrayList<User> ) bundle.getSerializable("users");
+            uuid = bundle.getString("uuid");
+            bizType = bundle.getInt("bizType");
+            isOver = bundle.getBoolean("isOver", false);
+            canAdd = bundle.getBoolean("canAdd", false);
+            fromPage = bundle.getInt("fromPage");
+        }
+    }
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
-        if (view != null) {
-            getAttachments();
-        }
     }
 
     /**

@@ -12,7 +12,7 @@ import com.loyo.oa.v2.tool.BaseFragment;
  * Created by EthanGong on 2017/2/9.
  */
 
-public class WorkflowsFragment extends BaseFragment {
+public class WorkFlowsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
