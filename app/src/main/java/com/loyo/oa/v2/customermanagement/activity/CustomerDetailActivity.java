@@ -4,49 +4,181 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapter;
-import com.loyo.oa.v2.customermanagement.fragment.TestFragment;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.customermanagement.fragment.AttachmentsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.ContactsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.FollowupsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.OpptunitiesFragment;
+import com.loyo.oa.v2.customermanagement.fragment.OrdersFragment;
+import com.loyo.oa.v2.customermanagement.fragment.TasksFragment;
+import com.loyo.oa.v2.customermanagement.fragment.VisitsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.WorkFlowsFragment;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.permission.CustomerAction;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
-public class CustomerDetailActivity extends BaseFragmentActivity
-        implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    ViewGroup img_title_left, img_title_right;
-    TextView tv_title_1;
+public class CustomerDetailActivity extends BaseFragmentActivity
+        implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener
+{
+
+    public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
+
     CustomerPagerAdapter adapter;
+    String customerId;
+    Customer customer;
+    boolean canEdit;
+
+    @BindView(R.id.viewpager) ViewPager viewPager;
+    @BindView(R.id.tabs)      TabLayout tabLayout;
+
+    @BindView(R.id.img_title_left)  View img_title_left;
+    @BindView(R.id.img_title_right) View img_title_right;
+    @BindView(R.id.tv_title_1)      TextView tv_title_1;
+
+    @BindView(R.id.customer_basic_info) ViewGroup basicInfoView;
+    @BindView(R.id.customer_state)      ViewGroup customerStateView;
+    @BindView(R.id.customer_tag)        ViewGroup customerTagView;
+
+    @BindView(R.id.tv_customer_name)  TextView customerNameText;
+    @BindView(R.id.tv_customer_state) TextView customerStateText;
+    @BindView(R.id.tv_customer_tag)   TextView customerTagText;
+    @BindView(R.id.tv_drop_reason)    TextView dropReasonText;
+
+    @BindView(R.id.state_editable) ImageView stateEditableVew;
+    @BindView(R.id.tag_editable)   ImageView tagEditableVew;
+    @BindView(R.id.tv_recyleRemind) TextView recycleRemindText;
+
+
+
+    @OnClick(R.id.img_title_left) void onBack() {
+        onBackPressed();
+    }
+    @OnClick(R.id.img_title_right) void onMore() {
+
+    }
+
+    @OnClick(R.id.customer_basic_info) void showInfo() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("CustomerId", customer.getId());
+        bundle.putBoolean("canEdit", canEdit);
+        Class _class = CustomerInfoActivity_.class;
+        app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT,
+                FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO, bundle);
+    }
+    @OnClick(R.id.customer_state) void editState() {
+
+    }
+    @OnClick(R.id.customer_tag) void editTag() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_detail);
-
-        img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
-        img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
-        tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
-
+        ButterKnife.bind(this);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-
-        img_title_left.setOnClickListener(this);
-        img_title_right.setOnClickListener(this);
-
+        basicInfoView.setOnTouchListener(Global.GetTouch());
+        customerStateView.setOnTouchListener(Global.GetTouch());
+        customerTagView.setOnTouchListener(Global.GetTouch());
         tv_title_1.setText("客户详情");
 
+        this.loadIntentData();
+        this.getData(customerId);
+    }
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+    void loadIntentData() {
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                customerId = bundle.getString(KEY_ID);
+            }
+        }
+    }
+
+    void loadCustomer() {
+        canEdit = PermissionManager.getInstance().hasCustomerAuthority(
+                customer.relationState,
+                customer.state,
+                CustomerAction.EDIT);
+
+        this.customerNameText.setText(customer.name);
+        this.customerStateText.setText("状态：" + customer.statusName);
+        this.customerTagText.setText("标签：" + customer.displayTagString());
+        if (customer.state == Customer.DumpedCustomer) {
+            dropReasonText.setVisibility(View.VISIBLE);
+            String recyleReason = customer.recycleReason;
+            if (TextUtils.isEmpty(recyleReason)) {
+                recyleReason = "无";
+            }
+            dropReasonText.setText("丢公海原因：" + recyleReason);
+        }
+        else {
+            dropReasonText.setVisibility(View.GONE);
+        }
+        if (TextUtils.isEmpty(customer.recycleRemind)) {
+            recycleRemindText.setVisibility(View.GONE);
+        }
+        else {
+            recycleRemindText.setVisibility(View.VISIBLE);
+            recycleRemindText.setText(customer.recycleRemind);
+        }
+        if (canEdit) {
+            stateEditableVew.setVisibility(View.VISIBLE);
+            tagEditableVew.setVisibility(View.VISIBLE);
+            customerStateView.setClickable(true);
+            customerTagView.setClickable(true);
+        }
+        else {
+            stateEditableVew.setVisibility(View.GONE);
+            tagEditableVew.setVisibility(View.GONE);
+            customerStateView.setClickable(false);
+            customerTagView.setClickable(false);
+        }
+
         if (viewPager != null) {
             setupViewPager(viewPager);
         }
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public void getData(String id) {
+        if (TextUtils.isEmpty(id)) {
+            return;
+        }
+        CustomerService.getCustomerDetailById(id)
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(Customer customer) {
+                        CustomerDetailActivity.this.customer = customer;
+                        CustomerDetailActivity.this.loadCustomer();
+                    }
+                });
     }
 
     /**
@@ -61,16 +193,40 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new CustomerPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new TestFragment(), "跟进 1");
-        adapter.addFragment(new TestFragment(), "联系人 2");
-        adapter.addFragment(new TestFragment(), "拜访 3");
 
-        adapter.addFragment(new TestFragment(), "机会 4");
-        adapter.addFragment(new TestFragment(), "订单 5");
-        adapter.addFragment(new TestFragment(), "任务 6");
 
-        adapter.addFragment(new TestFragment(), "审批 7");
-        adapter.addFragment(new TestFragment(), "附件 8");
+        FollowupsFragment followupsFragment = new FollowupsFragment();
+        followupsFragment.setCustomer(customer);
+        adapter.addFragment(followupsFragment, "跟进 1");
+
+        ContactsFragment contactsFragment = new ContactsFragment();
+        contactsFragment.setCustomer(customer);
+        adapter.addFragment(contactsFragment, "联系人 2");
+
+        VisitsFragment visitsFragment = new VisitsFragment();
+        visitsFragment.setCustomer(customer);
+        adapter.addFragment(visitsFragment, "拜访 3");
+
+        OpptunitiesFragment opptunitiesFragment = new OpptunitiesFragment();
+        opptunitiesFragment.setCustomer(customer);
+        adapter.addFragment(opptunitiesFragment, "机会 4");
+
+        OrdersFragment ordersFragment = new OrdersFragment();
+        ordersFragment.setCustomer(customer);
+        adapter.addFragment(ordersFragment, "订单 5");
+
+        TasksFragment tasksFragment = new TasksFragment();
+        tasksFragment.setCustomer(customer);
+        adapter.addFragment(tasksFragment, "任务 6");
+
+        WorkFlowsFragment workFlowsFragment = new WorkFlowsFragment();
+        workFlowsFragment.setCustomer(customer);
+        adapter.addFragment(workFlowsFragment, "审批 7");
+
+        AttachmentsFragment attachmentsFragment = new AttachmentsFragment();
+        attachmentsFragment.setUuid(customer.uuid);
+        adapter.addFragment(attachmentsFragment, "附件 8");
+
         viewPager.setAdapter(adapter);
     }
 

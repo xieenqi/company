@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.customer.model;
 
 import android.support.annotation.IntDef;
+import android.text.TextUtils;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -142,6 +143,7 @@ public class Customer extends BaseBeans {
     public long recycledAt;//丢公海的时间
     public RecycleType recycleType;//丢公海类型 0.无 1.手动 2.自动
     public String recycleReason;//丢公海原因
+    public String recycleRemind; // 丢公海提醒
 
     public String statusId;//客户状态id
     public String statusName;//客户状态
@@ -153,6 +155,22 @@ public class Customer extends BaseBeans {
 
     public String getId() {
         return null == id ? "" : id;
+    }
+
+    public String displayTagString() {
+        StringBuffer buffer = new StringBuffer();
+        boolean needSeperate = false;
+        for (NewTag tag: tags) {
+            if (needSeperate) {
+                buffer.append("、");
+            }
+            buffer.append(tag.getItemName());
+            needSeperate = true;
+        }
+
+        String result = buffer.toString();
+
+        return TextUtils.isEmpty(result) ? "无" : result;
     }
 
     /**
