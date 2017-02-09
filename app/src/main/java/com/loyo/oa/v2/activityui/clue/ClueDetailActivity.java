@@ -3,8 +3,8 @@ package com.loyo.oa.v2.activityui.clue;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -199,7 +199,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         /* 分区1 */
         section1_username.setText(sales.name);
         section1_company_name.setText(sales.companyName);
-        tv_status.setText("" + sales.getStatus());
+        tv_status.setText(sales.getStatus());
 
         /* 分区2 */
         if (sales.saleActivityCount <= 0      /* 没有拜访记录 */
@@ -223,7 +223,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         clue_source.setText(sales.source);
         clue_note.setText(sales.remark);
         if (sales.remark.length() > 20)
-            clue_note.setGravity(Gravity.LEFT);
+            clue_note.setGravity(Gravity.START);
         clueStatus = sales.status;
         /* 分区4 */
         responsible_name.setText(sales.responsorName);
@@ -339,7 +339,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
      * 拨打电话弹出框
      */
     public void paymentSet(final String phone, final int callType, final String name) {
-        boolean checkTag = false;
+        boolean checkTag;
         if (callType == 0) {
             checkTag = RegularCheck.isYunPhone(phone);
         } else {
@@ -384,7 +384,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
             @Override
             public void success() {
@@ -473,7 +473,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                if (null == data || null == data || data.sales == null) {
+                if (null == data || data.sales == null) {
                     Toast("数据不全不能转为客户");
                     return;
                 }
@@ -541,7 +541,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
      */
     void selectArea() {
         String[] cityValue = null;
-        if (data != null && data != null && data.sales != null
+        if (data != null && data.sales != null
                 && data.sales.region != null) {
             cityValue = data.sales.region.toArray();
         }
@@ -607,8 +607,6 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
     /**
      * 编辑线索 1 地区 2 线索来源
      * 编辑线索把全部的内容传一次  12-22
-     *
-     * @param function
      */
     private void editAreaAndSource(final int function) {
         HashMap<String, Object> map = new HashMap<>();
@@ -633,7 +631,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
                         super.onError(e);
                  /* 提交失败，更新UI至原来状态 */
                         if (1 == function
-                                && data != null && data != null && data.sales != null) {
+                                && data != null && data.sales != null) {
                             clue_region.setText(data.sales.region.salesleadDisplayText());
                         }
                     }
@@ -642,7 +640,7 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
                     public void onNext(Object o) {
                 /* 提交成功，更新本地model */
                         if (1 == function
-                                && data != null && data != null && data.sales != null) {
+                                && data != null && data.sales != null) {
                             data.sales.region = regional;
                             clue_region.setText(regional.salesleadDisplayText());
                         }
