@@ -34,10 +34,13 @@ import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.contact.ContactsRoleSingleSelectActivity;
+import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
@@ -57,6 +60,7 @@ import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -79,13 +83,15 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     private static final int RECORD_REQUEST = 0x10;//获取录音需要的权限
     private final static String REQUEST_AT_SELECT = "com.loyo.FollowAddActivity.REQUEST_AT_SELECT";
 
+    private static final int REQUEST_ACTIVITY_CODE_ROLE=0x100;
+
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue, ll_customer_holder, ll_clue_holer,ll_contact_label,ll_contact_status;
+    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue, ll_customer_holder, ll_clue_holer,ll_contact_label,ll_contact_status,ll_contact_role;
     private EditText edt;
     private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text,
-            tv_at_text, tv_clue_company, tv_clue_name;
+            tv_at_text, tv_clue_company, tv_clue_name,tv_contact_role,tv_contact_label;
     private Customer mCustomer;
     private ClueListItem mClue;
     private String tagItemIds, contactId, contactName = "无";
@@ -100,13 +106,14 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     private List<CommonIdName> atDepts = new ArrayList<>();//@的部门
     private List<String> atUserIds = new ArrayList<>();//@的人员
     private StaffMemberCollection collection;//选人返回的数据
-    private boolean isCustom, isDetail, isRecordRun;//是否是客户写跟进 否则就是是线索写跟进
+    private boolean isCustom, isRecordRun;//是否是客户写跟进 否则就是是线索写跟进
 
     private View view;//用来处理权限动态申请
     private MultiFunctionModule mfmodule;
 
     private long nextFollowUpTime = 0;//下次跟进时间
-
+    private ContactsRoleModel contactsRoleModel;//客户角色
+    private int action;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,9 +121,21 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
 
         controller = new UploadController(this, 9);
         controller.setObserver(this);
-        initUI();
         getIntentData();
         getTempSaleActivity();
+        initUI();
+        if (action == ExtraAndResult.DYNAMIC_ADD_CULE) {
+            isCustom = false;
+            contactName = mClue.responsorName;
+            //显示跟进
+            ll_clue_holer.setVisibility(View.VISIBLE);
+            initData();
+        } else {
+            isCustom = true;
+            //显示客户
+            ll_customer_holder.setVisibility(View.VISIBLE);
+            getData();
+        }
     }
 
     private void getIntentData() {
@@ -124,18 +143,8 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             Bundle bundle = getIntent().getExtras();
             mCustomer = (Customer) bundle.getSerializable(Customer.class.getName());
             mClue = (ClueListItem) bundle.getSerializable(ClueListItem.class.getName());
-            isDetail = bundle.getBoolean("isDetail");
-            int action = bundle.getInt(ExtraAndResult.DYNAMIC_ADD_ACTION, 0);
-            if (action == ExtraAndResult.DYNAMIC_ADD_CULE) {
-                isCustom = false;
-                contactName = mClue.responsorName;
-                //显示跟进
-                ll_clue_holer.setVisibility(View.VISIBLE);
-            } else {
-                isCustom = true;
-                //显示客户
-                ll_customer_holder.setVisibility(View.VISIBLE);
-            }
+            action = bundle.getInt(ExtraAndResult.DYNAMIC_ADD_ACTION, 0);
+
         }
     }
 
@@ -184,33 +193,43 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         iv_location_delete.setOnClickListener(click);
         iv_at_delete.setOnClickListener(click);
         ll_clue_company.setOnClickListener(click);
-        ll_customer.setVisibility(isCustom ? View.VISIBLE : View.GONE);
-        ll_contact.setVisibility(isCustom ? View.VISIBLE : View.GONE);
         ll_clue_company.setVisibility(isCustom ? View.GONE : View.VISIBLE);
         ll_clue.setVisibility(isCustom ? View.GONE : View.VISIBLE);
 
+        //联系人和线索的容器
         ll_customer_holder = (LinearLayout) findViewById(R.id.ll_customer_holder);
         ll_clue_holer = (LinearLayout) findViewById(R.id.ll_clue_holder);
         //客户标签和状态
         ll_contact_label = (LinearLayout) findViewById(R.id.ll_contact_label);
         ll_contact_status = (LinearLayout) findViewById(R.id.ll_contact_status);
-
+        tv_contact_label=(TextView) findViewById(R.id.tv_contact_label);
+        //联系人
+        ll_contact_role= (LinearLayout) findViewById(R.id.ll_contact_role);
+        tv_contact_role= (TextView) findViewById(R.id.tv_contact_role);
+        ll_contact_role.setOnClickListener(click);
 
         Global.SetTouchView(img_title_left, layout_sale_action, layout_remain_time, img_title_right, ll_customer, ll_contact);
-        if (null != mCustomer && isCustom) {
-            getDefaultContact(mCustomer.contacts);
-            tv_customer.setText(mCustomer.name);
-            if (isDetail)
-                ll_customer.setVisibility(View.GONE);
-        } else if (null != mClue && !isCustom) {
-            tv_clue_company.setText(mClue.companyName);
-            tv_clue_name.setText(mClue.responsorName);
-            if (isDetail)
-                ll_clue_company.setVisibility(View.GONE);
-        }
+
         controller.loadView(gridView);
         initMultiFunctionModule();
 
+    }
+
+    /**
+     * 显示数据
+     */
+    private void initData(){
+        if (null != mCustomer && isCustom) {
+            //设置默认联系人
+            getDefaultContact(mCustomer.contacts);
+            //设置客户名称
+            tv_customer.setText(mCustomer.name);
+            tv_contact_label.setText(Utils.getTagItems(mCustomer));
+
+        } else if (null != mClue && !isCustom) {
+            tv_clue_company.setText(mClue.companyName);
+            tv_clue_name.setText(mClue.responsorName);
+        }
     }
 
     @Override
@@ -245,6 +264,22 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             mfmodule.setIsRecording(true);
             v.setTag(true);
         }
+    }
+
+
+    /**
+     * 获取客户信息
+     */
+    private void getData(){
+        showLoading2("");
+        CustomerService.getCustomerDetailById(mCustomer.id)
+                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
+                    @Override
+                    public void onNext(Customer customer) {
+                        mCustomer=customer;
+                        initData();
+                    }
+                });
     }
 
     /**
@@ -433,6 +468,12 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
      * @param data
      */
     private void getDefaultContact(ArrayList<Contact> data) {
+        //先清除数据，在用现在的覆盖。
+        contactId = "";
+        contactName ="";
+        tv_contact_name.setText("");
+        tv_contact_role.setText("");
+
         for (Contact ele : data) {
             if (!ele.isDefault()) {
                 continue;
@@ -440,6 +481,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 contactId = ele.getId();
                 contactName = ele.getName();
                 tv_contact_name.setText(contactName);
+                tv_contact_role.setText("角色名字");
             }
         }
     }
@@ -472,7 +514,10 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         @Override
         public void onNoDoubleClick(View v) {
             switch (v.getId()) {
-
+                //选择联系人角色
+                case R.id.ll_contact_role:
+                    app.startActivityForResult(FollowAddActivity.this, ContactsRoleSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_ROLE, null);
+                    break;
             /*返回*/
                 case R.id.img_title_left:
                     app.finishActivity(FollowAddActivity.this, MainApp.ENTER_TYPE_LEFT, 0, null);
@@ -542,7 +587,6 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                     app.startActivityForResult(FollowAddActivity.this, FollowContactSelectActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                     break;
-
             /*选择图片*/
                 case R.id.layout_image:
                     PhotoPicker.builder()
@@ -622,7 +666,9 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             return;
         }
         switch (requestCode) {
+            case REQUEST_ACTIVITY_CODE_ROLE:
 
+                break;
             /*跟进方式 回调*/
             case CommonTagSelectActivity.REQUEST_TAGS:
                 ArrayList<CommonTag> tags = (ArrayList<CommonTag>) data.getSerializableExtra("data");
@@ -638,10 +684,9 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                     mCustomer = customer;
                     customerName = customer.name;
                     getDefaultContact(mCustomer.contacts);
+                    getData();
                 }
                 tv_customer.setText(customerName);
-                ll_contact.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
-//                ll_customer.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
                 break;
 
            /* 选择客户联系人 回调*/
@@ -653,7 +698,6 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 }
                 tv_contact_name.setText(contactName);
                 break;
-
             /*相册选择 回调*/
             case PhotoPicker.REQUEST_CODE:
                 if (data != null) {

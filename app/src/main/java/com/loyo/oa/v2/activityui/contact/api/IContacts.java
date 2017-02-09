@@ -1,12 +1,11 @@
-package com.loyo.oa.v2.contacts.api;
+package com.loyo.oa.v2.activityui.contact.api;
 
-import com.loyo.oa.v2.contacts.model.ContactsRoleModel;
+import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
 import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.List;
-import java.util.Map;
 
-import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import rx.Observable;
 
@@ -18,6 +17,6 @@ public interface IContacts {
     /**
      * 新建线索 表单传输
      */
-    @POST("/contactrole")
+    @GET("/contactrole")
     Observable<BaseResponse<List<ContactsRoleModel>>> getContactsRole();
 }

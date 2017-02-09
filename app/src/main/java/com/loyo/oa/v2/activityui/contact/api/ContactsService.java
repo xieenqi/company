@@ -1,8 +1,6 @@
-package com.loyo.oa.v2.contacts.api;
+package com.loyo.oa.v2.activityui.contact.api;
 
-import com.loyo.oa.v2.activityui.clue.api.IClue;
-import com.loyo.oa.v2.activityui.clue.model.SourcesData;
-import com.loyo.oa.v2.contacts.model.ContactsRoleModel;
+import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.Config_project;
