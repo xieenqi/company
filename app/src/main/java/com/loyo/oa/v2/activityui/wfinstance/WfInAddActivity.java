@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
@@ -212,9 +211,9 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
     /**
      * 监听器
      */
-    private NoDoubleClickListener onClick = new NoDoubleClickListener() {
+    private View.OnClickListener onClick = new View.OnClickListener() {
         @Override
-        public void onNoDoubleClick(View v) {
+        public void onClick(View v) {
             switch (v.getId()) {
                 //返回
                 case R.id.img_title_left:
@@ -231,7 +230,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
                     Bundle bundle2 = new Bundle();
                     bundle2.putInt(ProjectSearchOrPickerActivity.EXTRA_STATUS, 1);
                     bundle2.putBoolean(ProjectSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY, true);
-                    bundle2.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
+                    bundle2.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT, true);
                     app.startActivityForResult(WfInAddActivity.this, ProjectSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);
@@ -241,10 +240,10 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
 //                    app.startActivityForResult(WfInAddActivity.this, SelfVisibleCustomerPickerActivity.class,
 //                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
                     Bundle b = new Bundle();
-                    b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
-                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_HAVE_TAG,false);
-                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY,true);
-                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
+                    b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, 5);
+                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_HAVE_TAG, false);
+                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY, true);
+                    b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT, true);
 
                     app.startActivityForResult(WfInAddActivity.this, CustomerSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
@@ -360,11 +359,17 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
         if (isSave) {
             DBManager.Instance().putWfInstance(MainApp.gson.toJson(wfInstance));
         }
+        mPresenter.destory();
     }
 
     @Override
     public LoyoProgressHUD getHUD() {
         return hud;
+    }
+
+    @Override
+    public void isAdd(boolean add) {
+        img_title_right.setEnabled(add);
     }
 
     @Override

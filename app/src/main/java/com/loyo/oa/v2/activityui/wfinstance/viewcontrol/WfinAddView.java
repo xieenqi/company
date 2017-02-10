@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Created by yyy on 16/10/18.
  */
 
-public interface WfinAddView extends BaseView{
+public interface WfinAddView extends BaseView {
 
     /*设置时间格式处理*/
     void setStartendTimeEmbl();
@@ -27,6 +27,8 @@ public interface WfinAddView extends BaseView{
     void uploadSuccessEmbl(ArrayList<ImageInfo> pickPhots);
 
     LoyoProgressHUD getHUD();
+
+    void isAdd(boolean add);
 
 
 }

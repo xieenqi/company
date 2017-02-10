@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
@@ -79,6 +78,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
+import static com.loyo.oa.v2.customermanagement.api.CustomerService.addSaleactivity;
+
 /**
  * 【新建跟进】客户管理
  * <p/>
@@ -95,13 +99,13 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue, ll_customer_holder, ll_clue_holer, ll_customer_label, ll_customer_status, ll_contact_role,ll_customer_edit;
+    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue, ll_customer_holder, ll_clue_holer, ll_customer_label, ll_customer_status, ll_contact_role, ll_customer_edit;
     private EditText edt;
     private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text,
-            tv_at_text, tv_clue_company, tv_clue_name, tv_contact_role, tv_contact_label,tv_customer_status;
+            tv_at_text, tv_clue_company, tv_clue_name, tv_contact_role, tv_contact_label, tv_customer_status;
     private Customer mCustomer;
     private ClueListItem mClue;
-    private String tagItemIds, contactId, contactName = "无", contactRoleName, contactRoleId="";
+    private String tagItemIds, contactId, contactName = "无", contactRoleName, contactRoleId = "";
     private LinearLayout ll_customer, ll_contact;
     private ImageView iv_location_delete, iv_at_delete;
     private String content;
@@ -120,14 +124,14 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     private MultiFunctionModule mfmodule;
 
     private long nextFollowUpTime = 0;//下次跟进时间
-    private ContactsRoleModel contactsRoleModel;//客户角色
     private int action;
+    private CompositeSubscription subscriptions;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dynamic_activities_add);
-
+        subscriptions = new CompositeSubscription();
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         getIntentData();
@@ -153,6 +157,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                             Toast("网络异常，请重试");
                             finish();
                         }
+
                         @Override
                         public void onNext(MembersRoot membersRoot) {
                             PermissionManager.getInstance().loadCRMConfig(membersRoot);
@@ -303,7 +308,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
      * 获取客户信息
      */
     private void getData() {
-        if(!hud.isShowing())showLoading2("");
+        if (!hud.isShowing()) showLoading2("");
         CustomerService.getCustomerDetailById(mCustomer.id)
                 .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                     @Override
@@ -311,12 +316,12 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                         mCustomer = customer;
                         initData();
                         //判断参与人权限，决定更是否显示客户标签和客户状态
-                        if(PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,customer.state, CustomerAction.EDIT)){
+                        if (PermissionManager.getInstance().hasCustomerAuthority(customer.relationState, customer.state, CustomerAction.EDIT)) {
                             ll_customer_edit.setVisibility(View.VISIBLE);
-                        }else{
+                        } else {
                             ll_customer_edit.setVisibility(View.GONE);
                         }
-                        hasEditConOrRole=false;
+                        hasEditConOrRole = false;
                     }
                 });
     }
@@ -470,18 +475,25 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         map.put("atDepts", atDepts);
         map.put("atUserIds", atUserIds);
         //新添加
-        if(hasEditConOrRole){
+        if (hasEditConOrRole) {
             map.put("isEnableCus", true);
             map.put("contactRoleId", contactRoleId);
             map.put("statusId", mCustomer.statusId);
             map.put("tags", mCustomer.tags);
         }
-
+        img_title_right.setEnabled(false);
         LogUtil.dee("新建跟进:" + MainApp.gson.toJson(map));
-        CustomerService.addSaleactivity(map)
+        Subscription addInfo = CustomerService.addSaleactivity(map)
                 .subscribe(new DefaultLoyoSubscriber<SaleActivity>(hud) {
                     @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        img_title_right.setEnabled(true);
+                    }
+
+                    @Override
                     public void onNext(SaleActivity saleActivity) {
+                        img_title_right.setEnabled(true);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -489,9 +501,9 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                                 app.finishActivity(FollowAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                             }
                         }, 2000);
-
                     }
                 });
+        subscriptions.add(addInfo);
     }
 
     /**
@@ -499,13 +511,20 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
      */
     public void postAttaData() {
         buildAttachment();
-        AttachmentService.setAttachementData(attachment)
+        Subscription att = AttachmentService.setAttachementData(attachment)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        img_title_right.setEnabled(true);
+                    }
+
                     @Override
                     public void onNext(ArrayList<AttachmentForNew> news) {
                         commitDynamic();
                     }
                 });
+        subscriptions.add(att);
     }
 
     /**
@@ -561,31 +580,31 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     }
 
 
-    NoDoubleClickListener click = new NoDoubleClickListener() {
+    View.OnClickListener click = new View.OnClickListener() {
         @Override
-        public void onNoDoubleClick(View v) {
+        public void onClick(View v) {
             switch (v.getId()) {
                 //选择联系人角色
                 case R.id.ll_contact_role:
-                    if(TextUtils.isEmpty(contactId)){
+                    if (TextUtils.isEmpty(contactId)) {
                         Toast("请先选择联系人");
                         return;
                     }
-                    Bundle bundle=new Bundle();
+                    Bundle bundle = new Bundle();
                     //设置默认值
-                    bundle.putString(ContactsRoleSingleSelectActivity.EXTRA_CURRENT,contactRoleId);
+                    bundle.putString(ContactsRoleSingleSelectActivity.EXTRA_CURRENT, contactRoleId);
                     app.startActivityForResult(FollowAddActivity.this, ContactsRoleSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_ROLE, bundle);
                     break;
                 //客户状态
                 case R.id.ll_customer_status:
-                    Bundle b=new Bundle();
+                    Bundle b = new Bundle();
                     b.putString(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, mCustomer.statusId);//设置默认值
                     app.startActivityForResult(FollowAddActivity.this, CustomerStatusSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_STATUS, b);
 
                     break;
                 //客户标签
                 case R.id.ll_customer_label:
-                    Intent mIntent=new Intent();
+                    Intent mIntent = new Intent();
                     mIntent = new Intent(FollowAddActivity.this, CustomerLabelCopyActivity.class);
                     mIntent.putExtra("canEdit", true);
                     mIntent.putExtra("fromPage", 1);//这里表示，不直接提交数据，把数据返回
@@ -711,6 +730,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 DBManager.Instance().putSaleActivity(MainApp.gson.toJson(mSaleActivity), mCustomer.getId());
             }
         }
+        subscriptions.unsubscribe();
     }
 
     /**
@@ -758,8 +778,8 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             case REQUEST_ACTIVITY_CODE_STATUS:
                 hasEditConOrRole = true;
                 CustomerStatusModel.CustomerStatusItemModel itemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
-                mCustomer.statusId=itemModel.id;
-                mCustomer.statusName=itemModel.name;
+                mCustomer.statusId = itemModel.id;
+                mCustomer.statusName = itemModel.name;
                 tv_customer_status.setText(itemModel.name);
                 break;
             /*跟进方式 回调*/
@@ -836,14 +856,15 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
 
     /**
      * 客户标签
+     *
      * @param event
      */
     @Subscribe
-    public void onCustomerRushEvent(MyCustomerRushEvent event){
-        if(MyCustomerRushEvent.EVENT_CODE_UPDATE==event.eventCode&& MyCustomerRushEvent.EVENT_SUB_CODE_LABEL== MyCustomerRushEvent.EVENT_SUB_CODE_LABEL){
+    public void onCustomerRushEvent(MyCustomerRushEvent event) {
+        if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode && MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == MyCustomerRushEvent.EVENT_SUB_CODE_LABEL) {
             tv_contact_label.setText(Utils.getTagItems(event.data));
             mCustomer.tags = event.data.tags;
-            hasEditConOrRole=true;
+            hasEditConOrRole = true;
         }
     }
 

@@ -57,6 +57,8 @@ public interface SigninContract {
 
         String getDeviationDistance(double la, double lo, double laPosition, double loPosition);
 
+        void destory();
+
     }
 
     interface Model {
@@ -67,6 +69,8 @@ public interface SigninContract {
         void getAttachmentSend(String uuid);
 
         void deleteAttachmentSend(HashMap<String, Object> map, Attachment delAttachment);
+
+        void destory();
     }
 
 

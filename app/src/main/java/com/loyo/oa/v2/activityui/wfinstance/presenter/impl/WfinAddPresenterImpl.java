@@ -27,6 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import rx.subscriptions.CompositeSubscription;
+
+import static com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService.addWfInstance;
+
 /**
  * 【新建审批】Presenter
  * Created by yyy on 16/10/18.
@@ -50,7 +54,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     private PostBizExtData bizExtData;
     private List<WfinAddViewGroup> WfinObj = new ArrayList<WfinAddViewGroup>();
-
+    private CompositeSubscription subscriptions;
     private LoyoProgressHUD hud;
 
 
@@ -59,6 +63,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         this.crolView = crolView;
         this.mBizForm = mBizForm;
         this.mActivity = mActivity;
+        subscriptions = new CompositeSubscription();
     }
 
     /**
@@ -131,8 +136,8 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                     }
                 }
 
-                startTimelong= DateTool.getMinuteStamp(startTimeDate);
-                endTimelong= DateTool.getMinuteStamp(endTimeDate);
+                startTimelong = DateTool.getMinuteStamp(startTimeDate);
+                endTimelong = DateTool.getMinuteStamp(endTimeDate);
 
 
                 if (startTimelong >= endTimelong) {
@@ -148,7 +153,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
      * 新建审批请求
      */
     @Override
-    public void requestAddWfin(String title, String deptId,
+    public void requestAddWfin(final String title, String deptId,
                                ArrayList<HashMap<String, Object>> workflowValues,
                                String mTemplateId, String projectId,
                                String uuid, String memo,
@@ -177,15 +182,21 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                 map.put("customerName", customerName);
             }
         }
-
-        WfinstanceService.addWfInstance(map)
+        crolView.isAdd(false);
+        subscriptions.add(WfinstanceService.addWfInstance(map)
                 .subscribe(new DefaultLoyoSubscriber<WfInstance>(crolView.getHUD(), "新建审批成功") {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        crolView.isAdd(true);
+                    }
 
                     @Override
-            public void onNext(final WfInstance wfInstance) {
-                crolView.requestAddWfinSuccessEmbl(wfInstance);
-            }
-        });
+                    public void onNext(final WfInstance wfInstance) {
+                        crolView.requestAddWfinSuccessEmbl(wfInstance);
+                        crolView.isAdd(true);
+                    }
+                }));
     }
 
     /**
@@ -229,5 +240,10 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             isRequiredList.add(mBizForm.getFields().get(i).isRequired());
         }
+    }
+
+    @Override
+    public void destory() {
+        subscriptions.unsubscribe();
     }
 }

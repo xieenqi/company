@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
@@ -38,6 +37,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import rx.subscriptions.CompositeSubscription;
+
+import static com.loyo.oa.v2.worksheet.api.WorksheetService.addWorksheet;
+
 
 public class WorksheetAddStep2Fragment extends BaseFragment implements UploadControllerCallback {
     private View mView;
@@ -51,13 +54,14 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements UploadCon
     private String uuid;
     private int bizType = 29;
     private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
-
+    private CompositeSubscription subscriptions;
     WorksheetAddActivity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = (WorksheetAddActivity) getActivity();
+        subscriptions = new CompositeSubscription();
     }
 
     @Nullable
@@ -119,9 +123,9 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements UploadCon
         super.onDetach();
     }
 
-    NoDoubleClickListener click = new NoDoubleClickListener(5000) {
+    View.OnClickListener click = new View.OnClickListener() {
         @Override
-        public void onNoDoubleClick(View v) {
+        public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.img_title_left:
                     ((WorksheetAddActivity) getActivity()).previousStep();
@@ -165,7 +169,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements UploadCon
         String content = edt.getText().toString().trim();
         String orderId = mActivity.selectedOrder.id;
         String orderName = mActivity.selectedOrder.title;
-        String templateId = mActivity.selectedType.id;
+        final String templateId = mActivity.selectedType.id;
         final HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("title", title);
         map.put("orderId", orderId);
@@ -177,11 +181,18 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements UploadCon
         if (attachment != null && attachment.size() > 0) {
             map.put("uuid", uuid);
         }
-
-        WorksheetService.addWorksheet(map)
+        img_title_right.setEnabled(false);
+        subscriptions.add(WorksheetService.addWorksheet(map)
                 .subscribe(new DefaultLoyoSubscriber<Worksheet>(hud) {
                     @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        img_title_right.setEnabled(true);
+                    }
+
+                    @Override
                     public void onNext(final Worksheet worksheet) {
+                        img_title_right.setEnabled(true);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -193,10 +204,11 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements UploadCon
                                 }
                                 AppBus.getInstance().post(ws);
                                 app.finishActivity(getActivity(), MainApp.ENTER_TYPE_LEFT, 0, intent);
+                                subscriptions.unsubscribe();
                             }
                         }, 1000);
                     }
-                });
+                }));
     }
 
     private void buildAttachment() {
@@ -219,13 +231,19 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements UploadCon
      */
     public void postAttaData() {
         buildAttachment();
-        AttachmentService.setAttachementData(attachment)
+        subscriptions.add(AttachmentService.setAttachementData(attachment)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true/*dismissOnlyWhenError*/) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        img_title_right.setEnabled(true);
+                    }
+
                     @Override
                     public void onNext(ArrayList<AttachmentForNew> news) {
                         commitWorksheet();
                     }
-                });
+                }));
     }
 
     @Override

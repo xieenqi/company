@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.photo.PhotoCapture;
@@ -234,8 +233,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
                 if (NeedPhoto && controller.count() == 0) {
                     Toast("需要考勤照片，请拍照");
-                    return;
-                }else if (!SClick.check(SClick.BUTTON_CLICK, 5000)) {
                     return;
                 }
 

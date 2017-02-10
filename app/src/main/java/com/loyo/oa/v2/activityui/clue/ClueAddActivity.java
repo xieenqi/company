@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
-import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
@@ -26,9 +25,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.HashMap;
@@ -51,7 +48,7 @@ public class ClueAddActivity extends BaseActivity {
     private String clueId;
     private ClueDetailWrapper.ClueDetail editData;
     private boolean isEdit = false;
-    CompositeSubscription subscriptions;
+    private CompositeSubscription subscriptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +204,7 @@ public class ClueAddActivity extends BaseActivity {
      * 新建编辑 线索
      */
     private void addDataInfo() {
+        img_title_right.setEnabled(false);
         showCommitLoading();
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", et_name.getText().toString());
@@ -220,7 +218,14 @@ public class ClueAddActivity extends BaseActivity {
         if (!isEdit) {
             Subscription Sub = ClueService.addClue(map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "新建线索成功") {
                 @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                    img_title_right.setEnabled(true);
+                }
+
+                @Override
                 public void onNext(final ClueSales clueDetail) {
+                    img_title_right.setEnabled(true);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -235,6 +240,12 @@ public class ClueAddActivity extends BaseActivity {
             subscriptions.add(Sub);
         } else {
             Subscription Sub = ClueService.editClue(clueId, map).subscribe(new DefaultLoyoSubscriber<ClueSales>(hud, "编辑线索成功") {
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                    img_title_right.setEnabled(true);
+                }
+
                 @Override
                 public void onNext(ClueSales o) {
                     if (null != o) {

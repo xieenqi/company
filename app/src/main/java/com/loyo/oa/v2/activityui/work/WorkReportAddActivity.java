@@ -79,6 +79,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import hk.ids.gws.android.sclick.SClick;
+import rx.subscriptions.CompositeSubscription;
+
+import static com.loyo.oa.v2.activityui.work.api.WorkReportService.updateWorkReport;
 
 /**
  * 【工作报告】新建 编辑
@@ -178,6 +181,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     private StringBuffer joinUser;
     private String[] pastSevenDay = new String[7];
     private String[] pastThreeMonth = new String[3];
+    private CompositeSubscription subscriptions;
 
     private Handler mHandler = new Handler() {
         public void handleMessage(final Message msg) {
@@ -212,7 +216,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     void initViews() {
         super.setTitle("新建工作报告");
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
-
+        subscriptions = new CompositeSubscription();
         img_title_left.setOnTouchListener(touch);
         img_title_right.setOnTouchListener(touch);
         layout_del.setOnTouchListener(touch);
@@ -555,7 +559,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 mBundle = new Bundle();
                 mBundle.putInt(ExtraAndResult.EXTRA_STATUS, 1);
                 mBundle.putBoolean(ProjectSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY, true);
-                mBundle.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
+                mBundle.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT, true);
                 app.startActivityForResult(WorkReportAddActivity.this, ProjectSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
                 break;
         }
@@ -583,7 +587,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      * 编辑报告请求
      */
     public void updateReport(final HashMap map) {
-        WorkReportService.updateWorkReport(mWorkReport.getId(), map)
+        subscriptions.add(WorkReportService.updateWorkReport(mWorkReport.getId(), map)
                 .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud, "编辑报告成功") {
                     @Override
                     public void onNext(final WorkReport workReport) {
@@ -594,14 +598,14 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                             }
                         }, 1000);
                     }
-                });
+                }));
     }
 
     /**
      * 新建报告请求
      */
     public void creteReport(final HashMap map) {
-        WorkReportService.createWorkReport(map)
+        subscriptions.add(WorkReportService.createWorkReport(map)
                 .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud, "新建报告成功") {
                     @Override
                     public void onNext(final WorkReport workReport) {
@@ -612,9 +616,14 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                             }
                         }, 1000);
                     }
-                });
+                }));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscriptions.unsubscribe();
+    }
 
     /**
      * 处理服务器返回结果
@@ -950,13 +959,13 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             attachmentBatch.size = Integer.parseInt(task.size + "");
             attachment.add(attachmentBatch);
         }
-        AttachmentService.setAttachementData2(attachment)
+        subscriptions.add(AttachmentService.setAttachementData2(attachment)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
                     @Override
                     public void onNext(ArrayList<Attachment> news) {
                         requestCommitWork();
                     }
-                });
+                }));
     }
 
     @Override
