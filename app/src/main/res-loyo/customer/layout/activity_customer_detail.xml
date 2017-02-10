@@ -132,12 +132,24 @@
             android:layout_height="0.5dp"
             android:background="#eeeeee"
             />
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:background="@color/white"
-            android:layout_height="40dp"
-            app:tabMode="scrollable"/>
+            android:layout_height="40dp">
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
+                style="@style/AppTabLayout"
+                app:tabTextAppearance="@style/AppTabTextAppearance"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:layout_height="40dp"
+                app:tabMode="scrollable"/>
+            <ImageView
+                android:id="@+id/tab_mask"
+                android:layout_width="54dp"
+                android:layout_height="40dp"
+                android:src="@drawable/tab_mask"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
         <View
             android:layout_width="wrap_content"
             android:layout_height="0.5dp"

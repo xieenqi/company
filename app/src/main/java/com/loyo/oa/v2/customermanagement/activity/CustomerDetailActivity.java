@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -86,6 +87,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     @BindView(R.id.state_editable) ImageView stateEditableVew;
     @BindView(R.id.tag_editable)   ImageView tagEditableVew;
     @BindView(R.id.tv_recyleRemind) TextView recycleRemindText;
+
+    @BindView(R.id.tab_mask) ImageView tabMask;
 
 
 
@@ -297,6 +300,23 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 setupViewPager(viewPager);
             }
             tabLayout.setupWithViewPager(viewPager);
+            tabLayout.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                @Override
+                public void onScrollChanged() {
+                    if (tabLayout.getChildCount() > 0) {
+                        View view = tabLayout.getChildAt(tabLayout.getChildCount()-1);
+
+                        int diff = (view.getRight()-(tabLayout.getWidth()  +tabLayout.getScrollX()));
+                        if( diff == 0 )
+                        {
+                            tabMask.setVisibility(View.GONE);
+                        }
+                        else {
+                            tabMask.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            });
             viewPagerInited = true;
         }
     }
