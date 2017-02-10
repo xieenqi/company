@@ -73,6 +73,7 @@ import java.util.List;
 
 import hk.ids.gws.android.sclick.SClick;
 import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * 【新建 客户】 页面
@@ -195,6 +196,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     UploadController controller;
     LocationUtilGD locationGd;
+    private CompositeSubscription subscriptions;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -209,6 +211,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     @AfterViews
     void initUI() {
+        subscriptions = new CompositeSubscription();
         contactName = getIntent().getStringExtra(ExtraAndResult.EXTRA_NAME);
         contactPhone = getIntent().getStringExtra(ExtraAndResult.EXTRA_DATA);
 
@@ -718,6 +721,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     }
 
                 });
+        subscriptions.add(subscribe);
     }
 
     /**
@@ -731,7 +735,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             setResult(RESULT_OK);
         }
         MyCustomerRushEvent event = new MyCustomerRushEvent(retCustomer);
-        event.eventCode= MyCustomerRushEvent.EVENT_CODE_ADD;
+        event.eventCode = MyCustomerRushEvent.EVENT_CODE_ADD;
         AppBus.getInstance().post(event);
         isSave = false;//已经提交到服务器，不需要本地保存
         onBackPressed();
@@ -767,7 +771,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             DBManager.Instance().putCustomer(MainApp.gson.toJson(mCustomer));
         }
-
+        subscriptions.unsubscribe();
         locationGd.sotpLocation();
     }
 
@@ -884,13 +888,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             attachmentBatch.size = Integer.parseInt(task.size + "");
             attachment.add(attachmentBatch);
         }
-        AttachmentService.setAttachementData2(attachment)
+        subscriptions.add(AttachmentService.setAttachementData2(attachment)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
                     @Override
                     public void onNext(ArrayList<Attachment> news) {
                         requestCommitTask();
                     }
-                });
+                }));
     }
 
     @Override
