@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:weightSum="10"
+              android:layout_height="match_parent"
+              android:gravity="right"
+    android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/dim"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
+        android:orientation="vertical"
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:id="@+id/followup_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="请在以下时间完成 任意 跟进工作："
+                android:textColor="@color/text66"
+                android:textSize="14dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="@dimen/dimen_10"/>
+
+            <LinearLayout
+                android:id="@+id/followup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="@dimen/dimen_10">
+
+                <ImageView
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:layout_marginLeft="@dimen/dimen_14"
+                    android:gravity="center_vertical"
+                    android:alpha="0.5"
+                    android:src="@drawable/deadline_label_blue" />
+
+                <TextView
+                    android:id="@+id/tv_followup_deadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_19"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:text=""
+                    android:textColor="@color/text33"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_followup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_19"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:text="写跟进"
+                    android:textColor="#2C9DFC"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/visit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="@dimen/dimen_10">
+
+                <ImageView
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:layout_marginLeft="@dimen/dimen_14"
+                    android:gravity="center_vertical"
+                    android:alpha="0.5"
+                    android:src="@drawable/deadline_label_blue" />
+
+                <TextView
+                    android:id="@+id/tv_visit_deadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_19"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:text=""
+                    android:textColor="@color/text33"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_visit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_19"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:text="拜访客户"
+                    android:textColor="#2C9DFC"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="@dimen/dimen_10">
+
+                <ImageView
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:layout_marginLeft="@dimen/dimen_14"
+                    android:gravity="center_vertical"
+                    android:alpha="0.5"
+                    android:src="@drawable/deadline_label_blue" />
+
+                <TextView
+                    android:id="@+id/tv_call_deadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_19"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:text=""
+                    android:textColor="@color/text33"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_19"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:text="打电话"
+                    android:textColor="#2C9DFC"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/order_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_order_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="且在以下时间完成签约："
+                android:textColor="@color/text66"
+                android:textSize="14dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="@dimen/dimen_10"/>
+            <LinearLayout
+                android:id="@+id/order"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="@dimen/dimen_10">
+
+                <ImageView
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:layout_marginLeft="@dimen/dimen_14"
+                    android:gravity="center_vertical"
+                    android:alpha="0.5"
+                    android:src="@drawable/deadline_label_purple" />
+
+                <TextView
+                    android:id="@+id/tv_order_deadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_19"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:text=""
+                    android:textColor="@color/text33"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_19"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:text="新建订单"
+                    android:textColor="#2C9DFC"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="否则，客户会自动丢入公海哟！"
+            android:textColor="@color/text66"
+            android:textSize="14dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="@dimen/dimen_10"/>
+    </LinearLayout>
+
+</LinearLayout>

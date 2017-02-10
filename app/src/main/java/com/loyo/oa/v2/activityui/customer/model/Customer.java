@@ -140,6 +140,11 @@ public class Customer extends BaseBeans {
     public boolean activityRemind; //跟进行为丢公海提醒时间
     public boolean orderRemind;   //订单丢公海提醒时间
 
+    public long saleactRecycleAt; // 跟进丢公海
+    public long visitRecycleAt;   // 拜访丢公海
+    public long voiceRecycleAt;   // 电话跟进丢公海
+    public int conditionType;     // 条件类型： 1、全部（and）2、任意（or）
+
     public long recycledAt;//丢公海的时间
     public RecycleType recycleType;//丢公海类型 0.无 1.手动 2.自动
     public String recycleReason;//丢公海原因

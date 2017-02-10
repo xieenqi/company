@@ -3,6 +3,7 @@ package com.loyo.oa.v2.customermanagement.activity;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,12 +22,14 @@ import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.fragment.AttachmentsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.ContactsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.DropCustomerDeadlineFragment;
 import com.loyo.oa.v2.customermanagement.fragment.FollowupsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.OpptunitiesFragment;
 import com.loyo.oa.v2.customermanagement.fragment.OrdersFragment;
 import com.loyo.oa.v2.customermanagement.fragment.TasksFragment;
 import com.loyo.oa.v2.customermanagement.fragment.VisitsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.WorkFlowsFragment;
+import com.loyo.oa.v2.customermanagement.model.DropDeadlineModel;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -49,6 +52,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     @BindView(R.id.viewpager) ViewPager viewPager;
     @BindView(R.id.tabs)      TabLayout tabLayout;
+    @BindView(R.id.ll_warn)   ViewGroup warnView;
 
     @BindView(R.id.img_title_left)  View img_title_left;
     @BindView(R.id.img_title_right) View img_title_right;
@@ -88,7 +92,13 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     }
     @OnClick(R.id.customer_tag) void editTag() {
+    }
 
+    @OnClick(R.id.ll_warn) void onDropDeadline() {
+        FragmentManager fm = getSupportFragmentManager();
+        DropCustomerDeadlineFragment fragment =
+                DropCustomerDeadlineFragment.newInstance(DropDeadlineModel.getDeadlineModel(customer));
+        fragment.show(fm, "drop_deadline");
     }
 
     @Override
@@ -101,6 +111,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         basicInfoView.setOnTouchListener(Global.GetTouch());
         customerStateView.setOnTouchListener(Global.GetTouch());
         customerTagView.setOnTouchListener(Global.GetTouch());
+        warnView.setOnTouchListener(Global.GetTouch());
         tv_title_1.setText("客户详情");
 
         this.loadIntentData();
@@ -137,10 +148,10 @@ public class CustomerDetailActivity extends BaseFragmentActivity
             dropReasonText.setVisibility(View.GONE);
         }
         if (TextUtils.isEmpty(customer.recycleRemind)) {
-            recycleRemindText.setVisibility(View.GONE);
+            warnView.setVisibility(View.GONE);
         }
         else {
-            recycleRemindText.setVisibility(View.VISIBLE);
+            warnView.setVisibility(View.VISIBLE);
             recycleRemindText.setText(customer.recycleRemind);
         }
         if (canEdit) {
