@@ -95,7 +95,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue, ll_customer_holder, ll_clue_holer, ll_customer_label, ll_customer_status, ll_contact_role;
+    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue, ll_customer_holder, ll_clue_holer, ll_customer_label, ll_customer_status, ll_contact_role,ll_customer_edit;
     private EditText edt;
     private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text,
             tv_at_text, tv_clue_company, tv_clue_name, tv_contact_role, tv_contact_label,tv_customer_status;
@@ -225,6 +225,8 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         ll_customer_holder = (LinearLayout) findViewById(R.id.ll_customer_holder);
         ll_clue_holer = (LinearLayout) findViewById(R.id.ll_clue_holder);
         //客户标签和状态
+
+        ll_customer_edit = (LinearLayout) findViewById(R.id.ll_customer_edit);
         ll_customer_label = (LinearLayout) findViewById(R.id.ll_customer_label);
         ll_customer_status = (LinearLayout) findViewById(R.id.ll_customer_status);
         tv_contact_label = (TextView) findViewById(R.id.tv_contact_label);
@@ -310,13 +312,9 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                         initData();
                         //判断参与人权限，决定更是否显示客户标签和客户状态
                         if(PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,customer.state, CustomerAction.EDIT)){
-                            Log.i("ttttt", "onNext: 有权限");
-                            ll_customer_status.setVisibility(View.VISIBLE);
-                            ll_customer_label.setVisibility(View.VISIBLE);
+                            ll_customer_edit.setVisibility(View.VISIBLE);
                         }else{
-                            ll_customer_status.setVisibility(View.GONE);
-                            ll_customer_label.setVisibility(View.GONE);
-                            Log.i("ttttt", "onNext: 无权限");
+                            ll_customer_edit.setVisibility(View.GONE);
                         }
                         hasEditConOrRole=false;
                     }
