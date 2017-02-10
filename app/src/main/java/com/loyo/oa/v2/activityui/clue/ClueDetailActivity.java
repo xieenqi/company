@@ -431,6 +431,9 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
                                 case 50002:
                                     Toast("号码格式错误!");
                                     break;
+                                default:
+                                    Toast(callBackCallid.errmsg);
+                                    break;
                             }
                         } catch (NullPointerException e) {
                             e.printStackTrace();

@@ -291,7 +291,7 @@ public class ContactsFragment extends BaseFragment implements ContactViewGroup.O
                                     break;
 
                                 default:
-                                    Toast("网络连接失败:" + callBackCallid.errcode);
+                                    Toast(callBackCallid.errmsg);
                                     break;
                             }
                         } catch (NullPointerException e) {

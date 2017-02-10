@@ -361,6 +361,12 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
         Subscription taskSub = TaskService.create(map)
                 .subscribe(new DefaultLoyoSubscriber<Task>(hud) {
                     @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        img_title_right.setEnabled(true);
+                    }
+
+                    @Override
                     public void onNext(final Task task) {
                         new Handler().postDelayed(new Runnable() {
                             public void run() {
@@ -375,6 +381,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
                                 }
                             }
                         }, 2000);
+                        img_title_right.setEnabled(true);
                     }
                 });
         subscriptions.add(taskSub);
@@ -430,6 +437,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
                 }
                 //没有附件
                 showCommitLoading();
+                img_title_right.setEnabled(false);
                 if (controller.count() == 0) {
                     requestCommitTask();
                     //有附件
@@ -728,6 +736,12 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
         }
         Subscription attSub = AttachmentService.setAttachementData2(attachment)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        img_title_right.setEnabled(true);
+                    }
+
                     @Override
                     public void onNext(ArrayList<Attachment> news) {
                         requestCommitTask();
