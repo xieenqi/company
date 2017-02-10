@@ -12,15 +12,21 @@ import com.loyo.oa.v2.network.LoyoErrorChecker;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import rx.subscriptions.CompositeSubscription;
+
+import static com.loyo.oa.v2.customermanagement.api.CustomerService.getSigninUploadPhotoConfig;
+
 /**
  * Created by xeq on 2016/12/15
  */
 
 public class SigninModelImpl implements SigninContract.Model {
-    SigninContract.Presenter presenter;
+    private SigninContract.Presenter presenter;
+    private CompositeSubscription subscriptions;
 
     public SigninModelImpl(SigninContract.Presenter presenter) {
         this.presenter = presenter;
+        subscriptions = new CompositeSubscription();
     }
 
     /**
@@ -30,46 +36,51 @@ public class SigninModelImpl implements SigninContract.Model {
     public void isPhotoSend() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("key", "need_pictures_switcher");
-        CustomerService.getSigninUploadPhotoConfig(map)
+        subscriptions.add(CustomerService.getSigninUploadPhotoConfig(map)
                 .subscribe(new DefaultLoyoSubscriber<SigninPictures>(LoyoErrorChecker.SILENCE) {
                     @Override
                     public void onNext(SigninPictures signinPictures) {
                         presenter.isPhoto(signinPictures);
                     }
-                });
+                }));
     }
 
     @Override
     public void creatSigninSend(HashMap<String, Object> map) {
-        CustomerService.addSignIn(map)
+        subscriptions.add(CustomerService.addSignIn(map)
                 .subscribe(new DefaultLoyoSubscriber<LegWork>(presenter.getHUD()) {
                     @Override
                     public void onNext(LegWork legWork) {
                         presenter.creatSuccess(legWork);
                     }
-                });
+                }));
     }
 
     @Override
     public void getAttachmentSend(String uuid) {
-        AttachmentService.getAttachments(uuid)
+        subscriptions.add(AttachmentService.getAttachments(uuid)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>() {
                     @Override
                     public void onNext(ArrayList<Attachment> attachments) {
                         presenter.getAttachmentSuccess(attachments);
                     }
-                });
+                }));
     }
 
     @Override
     public void deleteAttachmentSend(HashMap<String, Object> map, final Attachment delAttachment) {
-        AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
+        subscriptions.add(AttachmentService.remove(String.valueOf(delAttachment.getId()), map)
                 .subscribe(new DefaultLoyoSubscriber<Object>() {
                     @Override
                     public void onNext(Object attachment) {
                         presenter.deleteAttachmentSuccess(delAttachment);
                     }
-                });
+                }));
+    }
+
+    @Override
+    public void destory() {
+        subscriptions.unsubscribe();
     }
 
 }

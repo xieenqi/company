@@ -109,7 +109,7 @@ public class SigninPresenterImpl implements SigninContract.Presenter {
                 return ele;
             }
         }
-        Contact contact=new Contact();
+        Contact contact = new Contact();
         return contact;
     }
 
@@ -129,5 +129,10 @@ public class SigninPresenterImpl implements SigninContract.Presenter {
 
         return distanceText;
     }//  104.073255,30.689493
+
+    @Override
+    public void destory() {
+        model.destory();
+    }
 
 }

@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.common.utils.UmengAnalytics;
@@ -75,6 +74,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import hk.ids.gws.android.sclick.SClick;
 
 
 /**
@@ -86,7 +86,7 @@ public class SignInActivity extends BaseActivity
     private static final int REQUEST_RESULT_ROLE = 0x10;//获取联系人角色
 
     private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address,
-            tv_at_text, tv_distance_deviation, tv_contact_name,tv_contact_role;
+            tv_at_text, tv_distance_deviation, tv_contact_name, tv_contact_role;
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at, ll_contact_holder, ll_contact_name, ll_contact_role;
     private ImageView iv_at_delete;
@@ -360,9 +360,9 @@ public class SignInActivity extends BaseActivity
         mfmodule.setPictureIcon(R.drawable.icon_picture_photo);
     }
 
-    NoDoubleClickListener click = new NoDoubleClickListener(4000) {
+    View.OnClickListener click = new View.OnClickListener() {
         @Override
-        public void onNoDoubleClick(View v) {
+        public void onClick(View v) {
             switch (v.getId()) {
 
                 case R.id.img_title_left:
@@ -427,8 +427,8 @@ public class SignInActivity extends BaseActivity
 //                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
 
                     Bundle bContact = new Bundle();
-                    bContact.putSerializable(FollowContactSingleSelectActivity.EXTRA_DATA,contactList);
-                    bContact.putString(FollowContactSingleSelectActivity.EXTRA_CURRENT,  null==contact?null:contact.getId());
+                    bContact.putSerializable(FollowContactSingleSelectActivity.EXTRA_DATA, contactList);
+                    bContact.putString(FollowContactSingleSelectActivity.EXTRA_CURRENT, null == contact ? null : contact.getId());
                     app.startActivityForResult(SignInActivity.this, FollowContactSingleSelectActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                     break;
@@ -513,6 +513,9 @@ public class SignInActivity extends BaseActivity
                 map.put("contactTpl", contactList.get(0).telGroup.get(0));
             }
         }
+        if (!SClick.check(SClick.BUTTON_CLICK, 5000)) {
+            return;
+        }
 
         LogUtil.d(" 新增拜访传递数据：" + MainApp.gson.toJson(map));
         presenter.creatSignin(map);
@@ -564,8 +567,8 @@ public class SignInActivity extends BaseActivity
         switch (requestCode) {
             //联系人角色
             case REQUEST_RESULT_ROLE:
-                ContactsRoleModel contactsRoleModel=(ContactsRoleModel)data.getSerializableExtra("data");
-                if(null==contactsRoleModel||RESULT_OK!=resultCode)return;
+                ContactsRoleModel contactsRoleModel = (ContactsRoleModel) data.getSerializableExtra("data");
+                if (null == contactsRoleModel || RESULT_OK != resultCode) return;
                 contact.setContactRoleId(contactsRoleModel.id);
                 contact.setContactRoleName(contactsRoleModel.name);
                 tv_contact_role.setText(contactsRoleModel.name);
@@ -670,6 +673,7 @@ public class SignInActivity extends BaseActivity
     protected void onDestroy() {
         AppBus.getInstance().unregister(this);
         super.onDestroy();
+        presenter.destory();
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
-import com.loyo.oa.common.click.NoDoubleClickListener;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.api.ClueService;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
@@ -26,9 +25,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.HashMap;
@@ -51,7 +48,7 @@ public class ClueAddActivity extends BaseActivity {
     private String clueId;
     private ClueDetailWrapper.ClueDetail editData;
     private boolean isEdit = false;
-    CompositeSubscription subscriptions;
+    private CompositeSubscription subscriptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
