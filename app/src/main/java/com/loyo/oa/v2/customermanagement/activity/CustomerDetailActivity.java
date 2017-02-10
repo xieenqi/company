@@ -1,22 +1,28 @@
 package com.loyo.oa.v2.customermanagement.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.LoseCommonCustomerReasonActivity;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.fragment.AttachmentsFragment;
@@ -29,17 +35,20 @@ import com.loyo.oa.v2.customermanagement.fragment.TasksFragment;
 import com.loyo.oa.v2.customermanagement.fragment.VisitsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.WorkFlowsFragment;
 import com.loyo.oa.v2.customermanagement.model.DropDeadlineModel;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
+import java.util.HashMap;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CustomerDetailActivity extends BaseFragmentActivity
-        implements View.OnClickListener
 {
 
     public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
@@ -75,8 +84,96 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     @OnClick(R.id.img_title_left) void onBack() {
         onBackPressed();
     }
-    @OnClick(R.id.img_title_right) void onMore() {
+    @OnClick(R.id.img_title_right) void onActionsheet() {
+        boolean canDelete = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                customer.state, CustomerAction.DELETE);
+        boolean canDump = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                customer.state, CustomerAction.DUMP);
 
+        if (!canDelete && !canDump) {
+            return;
+        }
+
+        ActionSheetDialog dialog = new ActionSheetDialog(this).builder();
+        if (canDump)
+            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    UmengAnalytics.umengSend(CustomerDetailActivity.this, UmengAnalytics.customerTopublic);
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("key", "cus_reason_switcher");
+                    showLoading2("");
+                    CustomerService.getSigninUploadPhotoConfig(map).subscribe(new DefaultLoyoSubscriber<SigninPictures>(hud, true) {
+                        @Override
+                        public void onNext(SigninPictures signinPictures) {
+                            if (signinPictures != null && signinPictures.value.equals("1")) {
+                                Intent intent = new Intent(CustomerDetailActivity.this, LoseCommonCustomerReasonActivity.class);
+                                intent.putExtra(ExtraAndResult.EXTRA_ID, customer.getId());
+                                startActivityForResult(intent, ExtraAndResult.REQUSET_COPY_PERSONS);
+                                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                            } else {
+                                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        dismissSweetAlert();
+                                    }
+                                }, new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        dismissSweetAlert();
+                                        CustomerService.dumpCustomer(customer.getId())
+                                                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
+                                                    @Override
+                                                    public void onNext(Customer customer) {
+                                                        MyCustomerRushEvent myCustomerRushEvent=new MyCustomerRushEvent();
+                                                        myCustomerRushEvent.eventCode=MyCustomerRushEvent.EVENT_CODE_DEL;//投入公海，就是从前面的列表删除
+                                                        AppBus.getInstance().post(myCustomerRushEvent);
+                                                        finish();
+                                                    }
+                                                });
+                                    }
+                                }, "提示", "确定将客户 \"" + customer.name + "\" 投入公海吗?");
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            super.onError(e);
+                        }
+                    });
+
+                }
+            });
+        if (canDelete)
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                            showLoading2("");
+                            CustomerService.deleteCustomer(customer.getId())
+                                    .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
+                                        @Override
+                                        public void onNext(Customer customer) {
+                                            MyCustomerRushEvent myCustomerRushEvent=new MyCustomerRushEvent();
+                                            myCustomerRushEvent.eventCode=MyCustomerRushEvent.EVENT_CODE_DEL;
+                                            AppBus.getInstance().post(myCustomerRushEvent);
+                                            finish();
+                                        }
+                                    });
+                        }
+                    }, "提示", "你确定要删除客户?");
+                    UmengAnalytics.umengSend(CustomerDetailActivity.this, UmengAnalytics.customerDelete);
+                }
+            });
+        dialog.show();
     }
 
     @OnClick(R.id.customer_basic_info) void showInfo() {
@@ -189,16 +286,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                         CustomerDetailActivity.this.loadCustomer();
                     }
                 });
-    }
-
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
-    @Override
-    public void onClick(View v) {
-        Log.v("tag", v.getId() + "");
     }
 
     private void setupViewPager(ViewPager viewPager) {
