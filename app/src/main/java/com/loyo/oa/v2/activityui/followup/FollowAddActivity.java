@@ -41,8 +41,8 @@ import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerLabelCopyActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerStatusSingleSelectActivity;
-import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
+import com.loyo.oa.v2.activityui.customer.FollowContactSingleSelectActivity;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -658,9 +658,9 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             /*选择联系人*/
                 case R.id.ll_contact:
                     Bundle bContact = new Bundle();
-                    bContact.putSerializable(ExtraAndResult.EXTRA_DATA, mCustomer.contacts);
-                    bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-                    app.startActivityForResult(FollowAddActivity.this, FollowContactSelectActivity.class,
+                    bContact.putSerializable(FollowContactSingleSelectActivity.EXTRA_DATA, mCustomer.contacts);
+                    bContact.putString(FollowContactSingleSelectActivity.EXTRA_CURRENT, contactId);
+                    app.startActivityForResult(FollowAddActivity.this, FollowContactSingleSelectActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                     break;
             /*选择图片*/
@@ -783,7 +783,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 break;
            /* 选择客户联系人 回调*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
-                Contact contact = (Contact) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                Contact contact = (Contact) data.getSerializableExtra("data");
                 if (null != contact) {
                     contactId = contact.getId();
                     contactName = contact.getName();

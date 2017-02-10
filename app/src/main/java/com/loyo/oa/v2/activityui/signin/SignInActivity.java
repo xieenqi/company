@@ -40,9 +40,10 @@ import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.contact.ContactsRoleSingleSelectActivity;
 import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
-import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
+import com.loyo.oa.v2.activityui.customer.FollowContactSingleSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninCustomerRushEvent;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
@@ -419,15 +420,21 @@ public class SignInActivity extends BaseActivity
                     break;
                 //选择客户联系人
                 case R.id.ll_contact_name:
+//                    Bundle bContact = new Bundle();
+//                    bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
+//                    bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
+//                    app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
+//                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
+
                     Bundle bContact = new Bundle();
-                    bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
-                    bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-                    app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
+                    bContact.putSerializable(FollowContactSingleSelectActivity.EXTRA_DATA,contactList);
+                    bContact.putString(FollowContactSingleSelectActivity.EXTRA_CURRENT,  null==contact?null:contact.getId());
+                    app.startActivityForResult(SignInActivity.this, FollowContactSingleSelectActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                     break;
                 //选择客户联系人角色
                 case R.id.ll_contact_role:
-                    if (null == contactList || contactList.size() <= 0) {
+                    if (null == contact) {
                         Toast("请先选择联系人");
                         return;
                     }
@@ -496,6 +503,7 @@ public class SignInActivity extends BaseActivity
         map.put("atUserIds", atUserIds);
         map.put("contactName", tv_contact_name.getText().toString());
         map.put("isCusPosition", isCusPosition);//是否把签到地址设为客户定位地址
+        map.put("contactRoleId", contact.getId());//用户角色id
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
@@ -596,7 +604,7 @@ public class SignInActivity extends BaseActivity
                 break;
              /* 选择客户联系人 回调*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
-                contact = (Contact) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                contact = (Contact) data.getSerializableExtra("data");
                 if (null != contact) {
                     tv_contact_name.setText(contact.getName());
                     tv_contact_role.setText(contact.getContactRoleName());

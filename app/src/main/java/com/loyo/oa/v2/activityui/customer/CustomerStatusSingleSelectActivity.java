@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+
 import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -15,11 +17,6 @@ import java.util.List;
 
 public class CustomerStatusSingleSelectActivity extends BaseSingleSelectActivity<CustomerStatusModel.CustomerStatusItemModel>{
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        current=getIntent().getStringExtra(EXTRA_CURRENT);
-    }
 
     @Override
     protected void getData() {

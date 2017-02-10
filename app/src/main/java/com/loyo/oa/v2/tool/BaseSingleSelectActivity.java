@@ -2,6 +2,7 @@ package com.loyo.oa.v2.tool;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,14 +22,17 @@ import java.util.List;
 
 /**
  * 单选条目的基类，比客户状态，用户标签等。注意，要复写item的model的toString（）方法。
+ * 通常，直接覆盖getData方法就可以了，如果是传入的参数，在getData里面，把数据放到success（）里面就OK了
+ * 使用方法，参考：ContactsRoleSingleSelectActivity
  * Created by jie on 17/2/8.
  */
 
 public abstract class BaseSingleSelectActivity<T extends Serializable> extends BaseActivity{
     //用来传入当前选中的参数
-    public static final String EXTRA_CURRENT="currentRoleId";
-    public String current="";
+    public static final String EXTRA_CURRENT="currentRoleId";//默认选中的id
+    public static final String EXTRA_DATA="extra_data";//通过传入数据
 
+    public String current="";
     protected TextView tvTitle;
     protected ListView listView;
     protected LoadingLayout loadingLayout;
@@ -39,6 +43,11 @@ public abstract class BaseSingleSelectActivity<T extends Serializable> extends B
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_single_select_activity);
+        Intent intent=getIntent();
+        if(null!=intent){
+            current=intent.getStringExtra(EXTRA_CURRENT);
+            listData= (List<T>) intent.getSerializableExtra(EXTRA_DATA);
+        }
         initView();
     }
     protected void initView(){
@@ -115,11 +124,21 @@ public abstract class BaseSingleSelectActivity<T extends Serializable> extends B
     protected void fail(Throwable e) {
         LoyoErrorChecker.checkLoyoError(e,  LoyoErrorChecker.LOADING_LAYOUT , loadingLayout);
     }
+
+    /**
+     * 传入数据，调用本方法
+     * @param data
+     */
     protected  void  success(List<T> data){
-        loadingLayout.setStatus(LoadingLayout.Success);
-        listData=data;
-        adaper=new MyAdaper();
-        listView.setAdapter(adaper);
+        //这里主要是未来判断为空的问题
+        if(null==data||data.size()<=0){
+            loadingLayout.setStatus(LoadingLayout.Empty);
+        }else{
+            loadingLayout.setStatus(LoadingLayout.Success);
+            listData=data;
+            adaper=new MyAdaper();
+            listView.setAdapter(adaper);
+        }
     }
 
     class MyAdaper extends BaseAdapter{
@@ -151,7 +170,7 @@ public abstract class BaseSingleSelectActivity<T extends Serializable> extends B
             viewHolder.textView.setText(getItem(position).toString());
             if(selectPosition==position){//点击选中了的
                 viewHolder.imageView.setVisibility(View.VISIBLE);
-            }else if(selectPosition==-1&&isDefault((T) getItem(position))){
+            }else if(selectPosition==-1&&!TextUtils.isEmpty(current)&&isDefault((T) getItem(position))){
                 //默认选中了的
                 viewHolder.imageView.setVisibility(View.VISIBLE);
             }else{
