@@ -42,7 +42,6 @@ import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
 import com.loyo.oa.v2.activityui.customer.FollowContactSingleSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninCustomerRushEvent;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
@@ -58,6 +57,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -89,13 +89,13 @@ public class SignInActivity extends BaseActivity
             tv_at_text, tv_distance_deviation, tv_contact_name, tv_contact_role;
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at, ll_contact_holder, ll_contact_name, ll_contact_role;
+    private ViewGroup layout_customer_name;
     private ImageView iv_at_delete;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-    private String uuid = StringUtil.getUUID(), customerId = "", customerName, customerAddress;
+    private String uuid = StringUtil.getUUID();
     private double laPosition, loPosition;
     boolean mLocationFlag = false;  //是否定位完成的标记
     private Customer mCustomer;
-    private ArrayList<Contact> contactList;
     private Animation animation;
     private boolean isPicture = false, isCusPosition = false, isLocation = false, isRecordRun = false;
     private PositionResultItem positionResultItem;
@@ -113,6 +113,7 @@ public class SignInActivity extends BaseActivity
     public String message;
     public String region;//地区
     private Contact contact;
+    private Location loc;//定位地址
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -120,25 +121,43 @@ public class SignInActivity extends BaseActivity
         setContentView(R.layout.activity_sign_in);
         super.setTitle("拜访签到");
         presenter = new SigninPresenterImpl(this);
+        animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
+        presenter.getIsPhoto();
         Intent intent = getIntent();
         if (null != intent && intent.hasExtra("data")) {
             mCustomer = (Customer) intent.getSerializableExtra("data");
-            customerId = mCustomer.getId();
-            customerName = mCustomer.name;
-            customerAddress = mCustomer.loc.addr;
         }
-        animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
-        presenter.getIsPhoto();
         initUI();
+        startLocation();
         LocationUtilGD.permissionLocation(this);
-        AppBus.getInstance().register(this);
+    }
+
+    /**
+     * 进来还是要先加载联系人数据，主要是为了加载联系人角色
+     */
+    public void getData(String customerId) {
+        showLoading2("");
+        CustomerService.getCustomerDetailById(customerId)
+                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
+                    @Override
+                    public void onError(Throwable e) {
+                        hud.dismiss();
+                        Toast("网络异常，请重试");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(Customer customer) {
+                        mCustomer = customer;
+                        initData();
+                    }
+                });
     }
 
     void initUI() {
         ll_contact_holder = (ViewGroup) findViewById(R.id.ll_contact_holder);
         ll_contact_name = (ViewGroup) findViewById(R.id.ll_contact_name);
         ll_contact_role = (ViewGroup) findViewById(R.id.ll_contact_role);
-
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
         tv_contact_role = (TextView) findViewById(R.id.tv_contact_role);
         tv_customer_address = (TextView) findViewById(R.id.tv_customer_address);
@@ -159,7 +178,7 @@ public class SignInActivity extends BaseActivity
         ll_at = (ViewGroup) findViewById(R.id.ll_at);
         tv_at_text = (TextView) findViewById(R.id.tv_at_text);
         tv_distance_deviation = (TextView) findViewById(R.id.tv_distance_deviation);
-        ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
+        layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
         ll_contact_name.setOnClickListener(click);
         ll_contact_role.setOnClickListener(click);
         tv_address = (TextView) findViewById(R.id.tv_address);
@@ -168,28 +187,35 @@ public class SignInActivity extends BaseActivity
         iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
         iv_at_delete.setOnClickListener(click);
         initMultiFunctionModule();
-        if (null == mCustomer) {
-            layout_customer_name.setOnTouchListener(Global.GetTouch());
-            layout_customer_name.setOnClickListener(click);
-//            ll_contact_holder.setVisibility(View.GONE);
-        } else {
-            findViewById(R.id.divider_customer_name).setVisibility(View.VISIBLE);
-            layout_customer_name.setVisibility(View.VISIBLE);
-            layout_customer_name.setEnabled(false);
-            tv_customer_name.setText(customerName);
-            ll_contact_holder.setVisibility(View.VISIBLE);
-            tv_customer_address.setVisibility(View.VISIBLE);
-            tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
-            contact = presenter.getDefaultContact(mCustomer.contacts);
-            tv_contact_name.setText(contact.getName());
-            tv_contact_role.setText(contact.getContactRoleName());
-
-            contactList = mCustomer.contacts;
-        }
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         controller.loadView(gridView);
-        startLocation();
+        if (null == mCustomer) {
+            //为空就可以选择客户，如果不为空，所以已经指定了客户，不允许修改
+            layout_customer_name.setOnTouchListener(Global.GetTouch());
+            layout_customer_name.setOnClickListener(click);
+        } else {
+            //选择了客户，直接加载数据
+            getData(mCustomer.getId());
+        }
+
+    }
+
+    private void initData() {
+//        findViewById(R.id.divider_customer_name).setVisibility(View.VISIBLE);
+        tv_customer_name.setText(mCustomer.name);
+        ll_contact_holder.setVisibility(View.VISIBLE);
+        tv_customer_address.setVisibility(View.VISIBLE);
+        tv_customer_address.setText((null == mCustomer.loc || TextUtils.isEmpty(mCustomer.loc.addr)) ? "未知地址" : mCustomer.loc.addr);
+        contact = presenter.getDefaultContact(mCustomer.contacts);
+        if (null != contact) {
+            tv_contact_name.setText(contact.getName());
+            tv_contact_role.setText(contact.getContactRoleName());
+        }
+        edt_memo.setText(TextUtils.isEmpty(mCustomer.name) ? "" : "我拜访了" + mCustomer.name);
+        //显示到客户的距离
+        distanceInfo();
+
     }
 
     void startLocation() {
@@ -202,11 +228,9 @@ public class SignInActivity extends BaseActivity
                 loPosition = longitude;
                 app.address = address;
                 tv_address.setText(address);
-
                 cityCode = app.cityCode;
                 message = app.message;
                 region = app.region;
-
                 LocationUtilGD.sotpLocation();
                 UMengTools.sendLocationInfo(address, longitude, latitude);
                 //此处是客户详情在定位成功过后再计算偏差
@@ -215,8 +239,7 @@ public class SignInActivity extends BaseActivity
                     for (Double ele : mCustomer.position.loc) {
                         locList.add(ele);
                     }
-                    Location loc = new Location(locList, mCustomer.position.addr);
-                    distanceInfo(loc);
+                    loc = new Location(locList, mCustomer.position.addr);
                 }
             }
 
@@ -329,11 +352,6 @@ public class SignInActivity extends BaseActivity
                 if (controller.count() >= 9) {
                     Toast("最多只能加9张图片");
                 } else {
-//                    PhotoPicker.builder()
-//                            .setPhotoCount(9-controller.count())
-//                            .setShowCamera(true)
-//                            .setPreviewEnabled(false)
-//                            .start(SignInActivity.this);
                     PhotoCapture.builder()
                             .start(SignInActivity.this);
                     UmengAnalytics.umengSend(SignInActivity.this, UmengAnalytics.addVisitPhoto);
@@ -370,6 +388,10 @@ public class SignInActivity extends BaseActivity
                     break;
 
                 case R.id.img_title_right:
+                    if (null == mCustomer) {
+                        Toast("请选择客户");
+                        return;
+                    }
                     if (!checkData()) {
                         return;
                     }
@@ -420,14 +442,12 @@ public class SignInActivity extends BaseActivity
                     break;
                 //选择客户联系人
                 case R.id.ll_contact_name:
-//                    Bundle bContact = new Bundle();
-//                    bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
-//                    bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-//                    app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
-//                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
-
+                    if (null == mCustomer) {
+                        Toast("请先选择客户");
+                        return;
+                    }
                     Bundle bContact = new Bundle();
-                    bContact.putSerializable(FollowContactSingleSelectActivity.EXTRA_DATA, contactList);
+                    bContact.putSerializable(FollowContactSingleSelectActivity.EXTRA_DATA, mCustomer.contacts);
                     bContact.putString(FollowContactSingleSelectActivity.EXTRA_CURRENT, null == contact ? null : contact.getId());
                     app.startActivityForResult(SignInActivity.this, FollowContactSingleSelectActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
@@ -455,7 +475,7 @@ public class SignInActivity extends BaseActivity
     };
 
     private boolean checkData() {
-        if (TextUtils.isEmpty(customerId)) {
+        if (TextUtils.isEmpty(mCustomer.getId())) {
             Toast("请选择客户");
             return false;
         }
@@ -497,20 +517,21 @@ public class SignInActivity extends BaseActivity
 //      map.put("address", mAddress.trim());//客户地址
         map.put("position", tv_address.getText().toString());//当前定位地址
         map.put("attachmentUUId", uuid);
-        map.put("customerId", customerId);
+        map.put("customerId", mCustomer.getId());
         map.put("audioInfo", audioInfo);
         map.put("atDepts", atDepts);
         map.put("atUserIds", atUserIds);
         map.put("contactName", tv_contact_name.getText().toString());
         map.put("isCusPosition", isCusPosition);//是否把签到地址设为客户定位地址
-        map.put("contactRoleId", contact.getId());//用户角色id
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
-
-        if (null != contactList && contactList.size() > 0) {
-            if (null != contactList.get(0).telGroup && contactList.get(0).telGroup.size() > 0) {
-                map.put("contactTpl", contactList.get(0).telGroup.get(0));
+        if (null != contact) {
+            map.put("contactRoleId", contact.getContactRoleId());//用户角色id
+        }
+        if (null != mCustomer && null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
+            if (null != mCustomer.contacts.get(0).telGroup && mCustomer.contacts.get(0).telGroup.size() > 0) {
+                map.put("contactTpl", mCustomer.contacts.get(0).telGroup.get(0));
             }
         }
         if (!SClick.check(SClick.BUTTON_CLICK, 5000)) {
@@ -580,6 +601,7 @@ public class SignInActivity extends BaseActivity
                     laPosition = positionResultItem.laPosition;
                     loPosition = positionResultItem.loPosition;
                     tv_address.setText(positionResultItem.address);
+                    distanceInfo();
                 }
                 break;
 
@@ -622,41 +644,36 @@ public class SignInActivity extends BaseActivity
      */
     @Subscribe
     public void onSigninCustomerRushEvent(SigninCustomerRushEvent event) {
-        customerId = event.data.id;
-        customerName = event.data.name;
-        contactList = event.data.contacts;
-        Location loc = event.data.position;
-        if (loc != null) {
-            customerAddress = loc.addr;
+        if (mCustomer == null) {
+            mCustomer = new Customer();
         }
-        if (contactList != null && contactList.size() > 0) {
-            ll_contact_holder.setVisibility(View.VISIBLE);
-            contact = presenter.getDefaultContact(contactList);
-            tv_contact_name.setText(contact.getName());
-            tv_contact_role.setText(contact.getContactRoleName());
-        } else {
-//            ll_contact_holder.setVisibility(View.GONE);
-            tv_contact_name.setText("");
-            tv_contact_role.setText("");
-        }
-        tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
-        edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
-        tv_customer_address.setVisibility(View.VISIBLE);
-        tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
-        distanceInfo(loc);
+        getData(event.data.id);
 
     }
 
 
-    private void distanceInfo(Location loc) {
-        if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
-            tv_distance_deviation.setText(presenter.getDeviationDistance(loc.loc.get(0), loc.loc.get(1), laPosition, loPosition));
-            tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
-            isLocation = true;
-        } else {
+    private void distanceInfo() {
+        //此处是客户详情在定位成功过后再计算偏差
+        if (0D == laPosition && 0D == loPosition) {
             tv_distance_deviation.setText("未知");
             tv_distance_deviation.setTextColor(Color.parseColor("#f5625a"));
             isLocation = false;
+        }
+        if (mCustomer != null && mCustomer.position != null && null != mCustomer.position.loc) {
+            List<Double> locList = new ArrayList<>();
+            for (Double ele : mCustomer.position.loc) {
+                locList.add(ele);
+            }
+            loc = new Location(locList, mCustomer.position.addr);
+            if (loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
+                tv_distance_deviation.setText(presenter.getDeviationDistance(loc.loc.get(0), loc.loc.get(1), laPosition, loPosition));
+                tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
+                isLocation = true;
+            } else {
+                tv_distance_deviation.setText("未知");
+                tv_distance_deviation.setTextColor(Color.parseColor("#f5625a"));
+                isLocation = false;
+            }
         }
     }
 
@@ -785,11 +802,6 @@ public class SignInActivity extends BaseActivity
 
     @Override
     public void onAddEvent(UploadController controller) {
-//        PhotoPicker.builder()
-//                .setPhotoCount(9-controller.count())
-//                .setShowCamera(true)
-//                .setPreviewEnabled(false)
-//                .start(this);
 
         PhotoCapture.builder()
                 .start(this);

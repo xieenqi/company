@@ -90,10 +90,10 @@ public class TeamCustomerFragment extends BaseCustomerFragment {
                     String value = model.getValue();
                     filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
                     if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
-                        params.put("departmentId",model.getKey());
+                        params.put("deptId",model.getKey());
                         params.put("userId","");
                     } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
-                        params.put("departmentId","");
+                        params.put("deptId","");
                         params.put("userId",model.getKey());
                     }
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.departmentCustomerTeam);

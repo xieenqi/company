@@ -49,7 +49,6 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
         super.onCreate(savedInstanceState);
         pControl = new SigninSelectCustomerPControl(this);
         initView();
-        AppBus.getInstance().register(this);
     }
 
     @Override
@@ -96,6 +95,7 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
 
             }
         });
+        ll_loading.setStatus(LoadingLayout.Loading);
         getPageData();
     }
 
@@ -106,6 +106,7 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
         if (lat == -1 || lon == -1) {
             Toast("没有有效的定位信息");
             onBackPressed();
+            return;
         }
         pControl.oneGetNearCustomer(lon, lat);
     }
