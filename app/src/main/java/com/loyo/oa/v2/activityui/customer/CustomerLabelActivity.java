@@ -29,6 +29,7 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 客户标签选择【标签】
@@ -103,7 +104,7 @@ public class CustomerLabelActivity extends BaseActivity {
                 }
             });
         }
-        CustomerService.getCustomerTags()
+        CustomerService.getCustomerTags(new HashMap<String, Object>())
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Tag>>() {
                     @Override
                     public void onNext(ArrayList<Tag> tagArrayList) {

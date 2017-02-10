@@ -86,7 +86,7 @@ public interface ICustomer {
      * 获取客户标签
      */
     @GET("/customer/tags")
-    Observable<ArrayList<Tag>> GetTags();
+    Observable<ArrayList<Tag>> GetTags(@QueryMap HashMap<String, Object> map);
 
     /**
      * 获取客户详情

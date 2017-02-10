@@ -260,12 +260,12 @@ public class CustomerService {
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
 
-    public static Observable<ArrayList<Tag>> getCustomerTags() {
+    public static Observable<ArrayList<Tag>> getCustomerTags(HashMap<String, Object> map) {
         return
                 RetrofitAdapterFactory.getInstance()
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ICustomer.class)
-                        .GetTags()
+                        .GetTags(map)
                         .compose(RetrofitAdapterFactory.<ArrayList<Tag>>compatApplySchedulers());
     }
 

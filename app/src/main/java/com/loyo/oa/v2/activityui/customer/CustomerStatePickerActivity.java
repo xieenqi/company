@@ -32,16 +32,21 @@ import java.util.HashMap;
 /**
  * 客户标签选择【标签】
  */
-public class CustomerLabelCopyActivity extends BaseActivity implements View.OnClickListener {
+public class CustomerStatePickerActivity extends BaseActivity implements View.OnClickListener {
+
+    public static final String KEY_UPDATE_TYPE = "com.loyo.CustomerLabelCopyActivity.KEY_UPDATE_TYPE";
+    public static final String UPDATE_TAG   = "com.loyo.CustomerLabelCopyActivity.UPDATE_TAG";
+    public static final String UPDATE_STATE = "com.loyo.CustomerLabelCopyActivity.UPDATE_STATE";
 
     private ViewGroup img_title_right;
     private ExpandableListView expand_listview_label;
     private ViewGroup img_title_left;
-    private ArrayList<TagItem> mTagItems;
+    private TagItem stateItem;
     private String mCustomerId;
     private ArrayList<Tag> tags = new ArrayList<>();
     private boolean canEdit;
     private int fromPage; /*0:详情 1:信息*/
+    private String updateType = UPDATE_TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +55,18 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         init();
     }
 
+    boolean isUpdateState() {
+        return UPDATE_STATE.equals(updateType);
+    }
+
+
     void init() {
 
-        mTagItems = (ArrayList<TagItem>) getIntent().getSerializableExtra("tagitems");
+        stateItem = (TagItem) getIntent().getSerializableExtra("state");
         mCustomerId = getIntent().getStringExtra("customerId");
         canEdit = getIntent().getBooleanExtra("canEdit", false);
         fromPage = getIntent().getIntExtra("fromPage", 0);
+        updateType = getIntent().getStringExtra(KEY_UPDATE_TYPE);
 
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -64,15 +75,16 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         img_title_right.setOnClickListener(this);
         img_title_left.setOnClickListener(this);
 
-        if (null == mTagItems) {
-            mTagItems = new ArrayList<>();
-        }
-
         if (!canEdit) {
             img_title_right.setVisibility(View.GONE);
         }
 
-        setTitle("标签");
+        if (isUpdateState()) {
+            setTitle("状态");
+        }
+        else {
+            setTitle("标签");
+        }
 
         expand_listview_label.setAdapter(adapter);
         expand_listview_label.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -87,34 +99,9 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
                 @Override
                 public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
                     TagItem tagItem = (TagItem) adapter.getChild(groupPosition, childPosition);
-                    if (tagItem.isChecked()) {
-                        tagItem.setIsChecked(false);
-                        for (int i = 0; i < mTagItems.size(); i++) {
-                            TagItem cacheItem = mTagItems.get(i);
-                            if (TextUtils.equals(cacheItem.getId(), tagItem.getId())) {
-                                mTagItems.remove(cacheItem);
-                                i--;
-                            }
-                        }
-                    } else {
-                        Tag tag = (Tag) adapter.getGroup(groupPosition);
-                        tagItem.setIsChecked(true);
-                        tagItem.setTagId(tag.getId());
-                        mTagItems.add(tagItem);
-                        for (TagItem item : tag.getItems()) {
-                            if (!TextUtils.equals(item.getId(), tagItem.getId())) {
-                                item.setIsChecked(false);
-                                //修复标签多选bug
-                                for (int i = 0; i < mTagItems.size(); i++) {
-                                    TagItem cacheItem = mTagItems.get(i);
-                                    if (TextUtils.equals(cacheItem.getId(), item.getId())) {
-                                        mTagItems.remove(cacheItem);
-                                        i--;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    stateItem.setIsChecked(false);
+                    tagItem.setIsChecked(true);
+                    stateItem = tagItem;
                     adapter.notifyDataSetChanged();
                     expand();
                     return false;
@@ -123,7 +110,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         }
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("filterType", 2);
+        map.put("filterType", 1);
         CustomerService.getCustomerTags(map)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Tag>>() {
                     @Override
@@ -169,11 +156,9 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
                 ArrayList<TagItem> items = tag.getItems();
                 for (TagItem item : items) {
                     item.setTagId(tag.getId());
-                    for (TagItem _item : mTagItems) {
-                        if (TextUtils.equals(item.getId(), _item.getId())) {
-                            item.setIsChecked(true);
-                            _item.setTagId(item.getTagId());
-                        }
+                    if (TextUtils.equals(item.getId(), stateItem.getId())) {
+                        item.setIsChecked(true);
+                        stateItem = item;
                     }
                 }
             }
@@ -203,7 +188,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         updateCus.tags = convertNewTags();
         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(updateCus);
         myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
-        myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_LABEL;
+        myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_STATE;
         myCustomerRushEvent.session = mCustomerId;
         AppBus.getInstance().post(myCustomerRushEvent);
     }
@@ -214,19 +199,17 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
      * @return
      */
     private ArrayList<NewTag> convertNewTags() {
-        if (null == mTagItems || mTagItems.isEmpty()) {
+        if (null == stateItem) {
             return new ArrayList<>();
         }
         ArrayList<NewTag> tags = new ArrayList<>();
-        for (int i = 0; i < mTagItems.size(); i++) {
-            TagItem item = mTagItems.get(i);
-            NewTag tag = new NewTag();
-            tag.setItemId(item.getId());
-            tag.setItemName(item.getName());
-            tag.settId(item.getTagId());
+        TagItem item = stateItem;
+        NewTag tag = new NewTag();
+        tag.setItemId(item.getId());
+        tag.setItemName(item.getName());
+        tag.settId(item.getTagId());
 
-            tags.add(tag);
-        }
+        tags.add(tag);
 
         return tags;
     }

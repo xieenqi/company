@@ -10,12 +10,13 @@ import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.tool.SharedUtil;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CustomerTageConfig {
 
     /* 从网络获取 */
     public static void getTage() {
-        CustomerService.getCustomerTags()
+        CustomerService.getCustomerTags(new HashMap<String, Object>())
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Tag>>(LoyoErrorChecker.SILENCE) {
                     @Override
                     public void onNext(ArrayList<Tag> tagArrayList) {

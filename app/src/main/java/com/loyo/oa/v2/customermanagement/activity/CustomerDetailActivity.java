@@ -14,9 +14,13 @@ import android.widget.TextView;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerLabelCopyActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerStatePickerActivity;
 import com.loyo.oa.v2.activityui.customer.LoseCommonCustomerReasonActivity;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.customer.model.NewTag;
+import com.loyo.oa.v2.activityui.customer.model.TagItem;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -40,6 +44,9 @@ import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 
@@ -57,6 +64,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     String customerId;
     Customer customer;
     boolean canEdit;
+    boolean viewPagerInited;
 
     @BindView(R.id.viewpager) ViewPager viewPager;
     @BindView(R.id.tabs)      TabLayout tabLayout;
@@ -111,6 +119,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                                 intent.putExtra(ExtraAndResult.EXTRA_ID, customer.getId());
                                 startActivityForResult(intent, ExtraAndResult.REQUSET_COPY_PERSONS);
                                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                                cancelLoading2();
                             } else {
                                 sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
@@ -185,9 +194,29 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO, bundle);
     }
     @OnClick(R.id.customer_state) void editState() {
-
+        Intent mIntent = new Intent(this, CustomerStatePickerActivity.class);
+        mIntent.putExtra("canEdit", canEdit);
+        mIntent.putExtra("fromPage", 0);
+        if (null != customer.statusId) {
+            TagItem item = new TagItem();
+            item.setName(customer.statusName);
+            item.setId(customer.statusId);
+            mIntent.putExtra("state", item);
+        }
+        mIntent.putExtra("customerId", customer.getId());
+        startActivity(mIntent);
+        UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
     }
     @OnClick(R.id.customer_tag) void editTag() {
+        Intent mIntent = new Intent(this, CustomerLabelCopyActivity.class);
+        mIntent.putExtra("canEdit", canEdit);
+        mIntent.putExtra("fromPage", 0);
+        if (null != customer.tags) {
+            mIntent.putExtra("tagitems", Utils.convertTagItems(customer.tags));
+        }
+        mIntent.putExtra("customerId", customer.getId());
+        startActivity(mIntent);
+        UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
     }
 
     @OnClick(R.id.ll_warn) void onDropDeadline() {
@@ -223,7 +252,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         }
     }
 
-    void loadCustomer() {
+    void loadCustomer(boolean needInitPager) {
         canEdit = PermissionManager.getInstance().hasCustomerAuthority(
                 customer.relationState,
                 customer.state,
@@ -263,10 +292,13 @@ public class CustomerDetailActivity extends BaseFragmentActivity
             customerTagView.setClickable(false);
         }
 
-        if (viewPager != null) {
-            setupViewPager(viewPager);
+        if (needInitPager) {
+            if (viewPager != null) {
+                setupViewPager(viewPager);
+            }
+            tabLayout.setupWithViewPager(viewPager);
+            viewPagerInited = true;
         }
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     public void getData(String id) {
@@ -283,7 +315,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                     @Override
                     public void onNext(Customer customer) {
                         CustomerDetailActivity.this.customer = customer;
-                        CustomerDetailActivity.this.loadCustomer();
+                        CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
                     }
                 });
     }
@@ -325,5 +357,40 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         adapter.addFragment(attachmentsFragment);
 
         viewPager.setAdapter(adapter);
+    }
+
+    @Subscribe
+    public void onMyCustomerPushEvent(MyCustomerRushEvent event) {
+        if (! customer.getId().equals(event.session)) {
+            // 不是这个客户的修改，直接退出
+            return;
+        }
+        if(MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode){
+            //更新客户信息
+            if(MyCustomerRushEvent.EVENT_SUB_CODE_INFO==event.subCode){
+                Customer updateCus=event.data;
+                customer.name    =updateCus.name;
+                customer.summary =updateCus.summary;
+                customer.owner   = updateCus.owner;
+                customer.members = updateCus.members;
+                customer.tags    = updateCus.tags;
+                customer.loc     = updateCus.loc;
+                customer.position = updateCus.position;
+                customer.extDatas = updateCus.extDatas;
+                customer.regional = updateCus.regional;
+                loadCustomer(false);
+            }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
+                //更新label
+                customer.tags = event.data.tags;
+                loadCustomer(false);
+            }
+            else if(MyCustomerRushEvent.EVENT_SUB_CODE_STATE == event.subCode){
+                //更新label
+                NewTag tag = event.data.tags.get(0);
+                customer.statusName = tag.itemName;
+                customer.statusId = tag.itemId;
+                loadCustomer(false);
+            }
+        }
     }
 }

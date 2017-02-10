@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.network.model.LoyoError;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,16 +28,16 @@ import java.util.List;
 
 public abstract class BaseSingleSelectActivity<T extends Serializable> extends BaseActivity{
     //用来传入当前选中的参数
-    public static final String EXTRA_CURRENT="currentRoleId";//默认选中的id
-    public static final String EXTRA_DATA="extra_data";//通过传入数据
+    public static final String EXTRA_CURRENT = "currentRoleId";//默认选中的id
+    public static final String EXTRA_DATA = "extra_data";//通过传入数据
 
-    public String current="";
+    public String current = "";
     protected TextView tvTitle;
     protected ListView listView;
     protected LoadingLayout loadingLayout;
     protected LinearLayout llBack;
     protected List<T> listData;
-    protected int selectPosition=-1;//选中的条目，默认为－1，没有选中的
+    protected int selectPosition = -1;//选中的条目，默认为－1，没有选中的
     protected MyAdaper adaper;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
