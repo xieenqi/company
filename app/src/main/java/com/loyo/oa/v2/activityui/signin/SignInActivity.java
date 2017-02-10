@@ -43,7 +43,6 @@ import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
 import com.loyo.oa.v2.activityui.customer.FollowContactSingleSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninCustomerRushEvent;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
@@ -59,8 +58,11 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.permission.CustomerAction;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -133,6 +135,22 @@ public class SignInActivity extends BaseActivity
         LocationUtilGD.permissionLocation(this);
         AppBus.getInstance().register(this);
     }
+
+    /**
+     * 进来还是要先加载数据，主要是为了加载联系人角色
+     */
+    public void getData(){
+        showLoading2("");
+        CustomerService.getCustomerDetailById(mCustomer.id)
+                .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
+                    @Override
+                    public void onNext(Customer customer) {
+                        mCustomer = customer;
+                    }
+                });
+    }
+
+
 
     void initUI() {
         ll_contact_holder = (ViewGroup) findViewById(R.id.ll_contact_holder);
