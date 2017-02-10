@@ -109,8 +109,7 @@ public class SigninPresenterImpl implements SigninContract.Presenter {
                 return ele;
             }
         }
-        Contact contact=new Contact();
-        return contact;
+        return null;
     }
 
     @Override

@@ -130,20 +130,20 @@ public class SignInActivity extends BaseActivity
         initUI();
         startLocation();
         LocationUtilGD.permissionLocation(this);
-        AppBus.getInstance().register(this);
     }
 
     /**
      * 进来还是要先加载联系人数据，主要是为了加载联系人角色
      */
-    public void getData() {
+    public void getData(String customerId) {
         showLoading2("");
-        CustomerService.getCustomerDetailById(mCustomer.getId())
+        CustomerService.getCustomerDetailById(customerId)
                 .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                     @Override
                     public void onError(Throwable e) {
                         hud.dismiss();
                         Toast("网络异常，请重试");
+                        e.printStackTrace();
                     }
                     @Override
                     public void onNext(Customer customer) {
@@ -195,7 +195,7 @@ public class SignInActivity extends BaseActivity
             layout_customer_name.setOnClickListener(click);
         }else{
             //选择了客户，直接加载数据
-            getData();
+            getData(mCustomer.getId());
         }
 
     }
@@ -207,8 +207,11 @@ public class SignInActivity extends BaseActivity
         tv_customer_address.setVisibility(View.VISIBLE);
         tv_customer_address.setText((null==mCustomer.loc||TextUtils.isEmpty(mCustomer.loc.addr)) ? "未知地址" : mCustomer.loc.addr);
         contact = presenter.getDefaultContact(mCustomer.contacts);
-        tv_contact_name.setText(contact.getName());
-        tv_contact_role.setText(contact.getContactRoleName());
+        if(null!=contact){
+            tv_contact_name.setText(contact.getName());
+            tv_contact_role.setText(contact.getContactRoleName());
+        }
+        edt_memo.setText(TextUtils.isEmpty(mCustomer.name) ? "" : "我拜访了" + mCustomer.name);
         //显示到客户的距离
         distanceInfo();
 
@@ -384,6 +387,10 @@ public class SignInActivity extends BaseActivity
                     break;
 
                 case R.id.img_title_right:
+                    if(null==mCustomer){
+                        Toast("请选择客户");
+                        return;
+                    }
                     if (!checkData()) {
                         return;
                     }
@@ -434,7 +441,10 @@ public class SignInActivity extends BaseActivity
                     break;
                 //选择客户联系人
                 case R.id.ll_contact_name:
-
+                    if(null==mCustomer){
+                        Toast("请先选择客户");
+                        return;
+                    }
                     Bundle bContact = new Bundle();
                     bContact.putSerializable(FollowContactSingleSelectActivity.EXTRA_DATA, mCustomer.contacts);
                     bContact.putString(FollowContactSingleSelectActivity.EXTRA_CURRENT, null == contact ? null : contact.getId());
@@ -512,11 +522,13 @@ public class SignInActivity extends BaseActivity
         map.put("atUserIds", atUserIds);
         map.put("contactName", tv_contact_name.getText().toString());
         map.put("isCusPosition", isCusPosition);//是否把签到地址设为客户定位地址
-        map.put("contactRoleId", contact.getContactRoleId());//用户角色id
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
-        if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
+        if(null!=contact){
+            map.put("contactRoleId", contact.getContactRoleId());//用户角色id
+        }
+        if (null!=mCustomer&&null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
             if (null != mCustomer.contacts.get(0).telGroup && mCustomer.contacts.get(0).telGroup.size() > 0) {
                 map.put("contactTpl", mCustomer.contacts.get(0).telGroup.get(0));
             }
@@ -630,10 +642,7 @@ public class SignInActivity extends BaseActivity
         if(mCustomer==null){
             mCustomer=new Customer();
         }
-        mCustomer.id=event.data.id;
-        tv_customer_name.setText(event.data.name+"");
-        edt_memo.setText(TextUtils.isEmpty(event.data.name) ? "" : "我拜访了" + event.data.name);
-        getData();
+        getData(event.data.id);
 
     }
 
@@ -672,11 +681,6 @@ public class SignInActivity extends BaseActivity
 
     }
 
-    @Override
-    protected void onDestroy() {
-        AppBus.getInstance().unregister(this);
-        super.onDestroy();
-    }
 
     @Override
     public boolean onKeyDown(final int keyCode, final KeyEvent event) {

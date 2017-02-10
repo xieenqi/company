@@ -49,7 +49,6 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
         super.onCreate(savedInstanceState);
         pControl = new SigninSelectCustomerPControl(this);
         initView();
-        AppBus.getInstance().register(this);
     }
 
     @Override
