@@ -172,7 +172,7 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
             });
         }
 
-        adapter=setAdapter();
+        adapter = new CommonSearchAdapter();
         listView.setAdapter(adapter);
         //如果可以为空，说明是选择器，就加载默认的数据
         if(loadDefaultData){
@@ -194,14 +194,6 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
             }
         });
     }
-    /**
-     * 如果item的条目不一样，可以覆盖这个方法，自定义adapter
-     */
-    public BaseAdapter setAdapter(){
-        adapter = new CommonSearchAdapter();
-        return adapter;
-    }
-
 
     /**
      * 搜索操作
@@ -311,13 +303,25 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
     }
 
     /**
-     * 绑定数据
+     * 绑定数据,使用默认试图的时候调用，如果覆盖了getView（）不会调用本方法。
      *
      * @param viewHolder 试图
      * @param data       数据
      */
     public void bindData(CommonSearchAdapter.SearchViewHolder viewHolder, T data){}
 
+
+    /**
+     * 当需要的试图，和默认的view不一样的时候，通过笨方法返回view，注意，需要自己实现布局复用和绑定数据
+     * @param i
+     * @param convertView
+     * @param viewGroup
+     * @param data 数据
+     * @return
+     */
+    public View getView(int i, View convertView, ViewGroup viewGroup, T data) {
+        return null;
+    }
     public class CommonSearchAdapter extends BaseAdapter {
 
         @Override
@@ -337,6 +341,10 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
 
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
+            //判断，是否在子类实现了自己的view
+            convertView=BaseSearchActivity.this.getView(i,convertView,viewGroup,getItem(i));
+            if(null!=convertView)return convertView;
+            //子类没有实现，就用默认的view，然后bindData
             SearchViewHolder viewHolder = null;
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_listview_common, null, false);

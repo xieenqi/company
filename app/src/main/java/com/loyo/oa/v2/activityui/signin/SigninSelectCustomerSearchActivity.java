@@ -45,12 +45,14 @@ public class SigninSelectCustomerSearchActivity extends BaseSearchActivity<Signi
             public void onNext(BaseBeanT<PaginationX<SigninSelectCustomer>> customerPaginationX) {
                 success(customerPaginationX.data);
             }
+
             @Override
             public void onError(Throwable e) {
                 fail(e);
             }
         });
     }
+
     @Override
     public void onListItemClick(View view, int position) {
         if (jumpNewPage) {
@@ -67,50 +69,27 @@ public class SigninSelectCustomerSearchActivity extends BaseSearchActivity<Signi
     }
 
     @Override
-    public BaseAdapter setAdapter() {
-        return new CommonSearchAdapter();
+    public View getView(int i, View convertView, ViewGroup viewGroup, SigninSelectCustomer data) {
+        Holder holder;
+        if (convertView == null) {
+            holder = new Holder();
+            convertView = LayoutInflater.from(SigninSelectCustomerSearchActivity.this).inflate(R.layout.item_signin_select_customer, null);
+            holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+            holder.tv_distance = (TextView) convertView.findViewById(R.id.tv_distance);
+            holder.tv_location = (TextView) convertView.findViewById(R.id.tv_location);
+            convertView.setTag(holder);
+        } else {
+            holder = (Holder) convertView.getTag();
+        }
+        holder.setContent(data);
+        return convertView;
     }
-
-    public class CommonSearchAdapter extends BaseAdapter {
-        @Override
-        public int getCount() {
-            return paginationX.getLoadedTotalRecords();
-        }
-
-        @Override
-        public Object getItem(final int i) {
-            return paginationX.getRecords().get(i);
-        }
-
-        @Override
-        public long getItemId(final int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Holder holder;
-            if (convertView == null) {
-                holder = new Holder();
-                convertView = LayoutInflater.from(SigninSelectCustomerSearchActivity.this).inflate(R.layout.item_signin_select_customer, null);
-                holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-                holder.tv_distance = (TextView) convertView.findViewById(R.id.tv_distance);
-                holder.tv_location = (TextView) convertView.findViewById(R.id.tv_location);
-                convertView.setTag(holder);
-            } else {
-                holder = (Holder) convertView.getTag();
-            }
-            holder.setContent(paginationX.getRecords().get(position));
-            return convertView;
-        }
-        class Holder {
-            TextView tv_name, tv_distance, tv_location;
-
-            public void setContent(SigninSelectCustomer item) {
-                tv_name.setText(item.name);
-                if (item.position != null) {
-                    tv_location.setText(item.position.addr);
-                }
+    class Holder {
+        TextView tv_name, tv_distance, tv_location;
+        public void setContent(SigninSelectCustomer item) {
+            tv_name.setText(item.name);
+            if (item.position != null) {
+                tv_location.setText(item.position.addr);
             }
         }
     }

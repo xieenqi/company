@@ -76,59 +76,28 @@ public class WSOrderSearchOrPickerActivity extends BaseSearchActivity<WorksheetO
     }
 
     @Override
-    public BaseAdapter setAdapter() {
-        return new OrderSearchAdapter();
+    public View getView(int i, View convertView, ViewGroup viewGroup, WorksheetOrder order) {
+        Holder holder = null;
+        if (convertView == null) {
+            holder = new Holder();
+            convertView = LayoutInflater.from(WSOrderSearchOrPickerActivity.this).inflate(R.layout.item_worksheet_order, null);
+            holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
+            holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+            holder.tv_money = (TextView) convertView.findViewById(R.id.tv_money);
+            holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
+            holder.tv_product = (TextView) convertView.findViewById(R.id.tv_product);
+            convertView.setTag(holder);
+        } else {
+            holder = (Holder) convertView.getTag();
+        }
+        holder.tv_title.setText(order.title);
+        holder.tv_money.setText(Utils.setValueDouble(order.dealMoney));
+        holder.tv_customer.setText(order.customerName);
+        holder.tv_product.setText(order.proName);
+        return convertView;
+
     }
-
-    public class OrderSearchAdapter extends BaseAdapter {
-
-
-        public void setAdapter() {
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return paginationX.getLoadedTotalRecords();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return paginationX.getRecords().get(position);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup viewGroup) {
-            WorksheetOrder order = paginationX.getRecords().get(position);
-            Holder holder = null;
-            if (convertView == null) {
-                holder = new Holder();
-                convertView = LayoutInflater.from(WSOrderSearchOrPickerActivity.this).inflate(R.layout.item_worksheet_order, null);
-                holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
-                holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-                holder.tv_money = (TextView) convertView.findViewById(R.id.tv_money);
-                holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
-                holder.tv_product = (TextView) convertView.findViewById(R.id.tv_product);
-                convertView.setTag(holder);
-            } else {
-                holder = (Holder) convertView.getTag();
-            }
-
-            holder.tv_title.setText(order.title);
-            holder.tv_money.setText(Utils.setValueDouble(order.dealMoney));
-            holder.tv_customer.setText(order.customerName);
-            holder.tv_product.setText(order.proName);
-            return convertView;
-        }
-
-        class Holder {
-            TextView tv_title, tv_name, tv_money, tv_customer, tv_product;
-        }
+    class Holder {
+        TextView tv_title, tv_name, tv_money, tv_customer, tv_product;
     }
-
 }

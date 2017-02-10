@@ -95,70 +95,41 @@ public class ClueSearchOrPickerActivity extends BaseSearchActivity<ClueListItem>
     }
 
     @Override
-    public BaseAdapter setAdapter() {
-        return new ClueSearchAdapter();
+    public View getView(int i, View convertView, ViewGroup viewGroup, ClueListItem clueListItem) {
+       Holder holder = null;
+        if (convertView == null) {
+            convertView = getLayoutInflater().inflate(R.layout.item_teamclue, null);
+            holder = new Holder();
+            holder.tv_company_name = (TextView) convertView.findViewById(R.id.tv_company_name);
+            holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
+            holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
+            holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+            holder.ll_responsible = (LinearLayout) convertView.findViewById(R.id.ll_responsible);
+            convertView.setTag(holder);
+        } else {
+            holder = (Holder) convertView.getTag();
+        }
+
+        holder.tv_name.setText(clueListItem.name);
+        holder.tv_company_name.setText(clueListItem.companyName);
+        holder.tv_customer.setText(clueListItem.name);
+        if (clueListItem.lastActAt != 0) {
+            holder.tv_time.setText(DateTool.getDateTimeFriendly(clueListItem.lastActAt));
+        } else {
+            holder.tv_time.setText("--");
+        }
+        holder.ll_responsible.setVisibility(responsibleVisiblity ? View.VISIBLE : View.GONE);
+        return convertView;
+
     }
 
-    public class ClueSearchAdapter extends BaseAdapter {
-
-
-        public void setAdapter() {
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return paginationX.getLoadedTotalRecords();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return 0;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup viewGroup) {
-            ClueListItem clueListItem = paginationX.getRecords().get(position);
-            Holder holder = null;
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_teamclue, null);
-                holder = new Holder();
-                holder.tv_company_name = (TextView) convertView.findViewById(R.id.tv_company_name);
-                holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
-                holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-                holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-                holder.ll_responsible = (LinearLayout) convertView.findViewById(R.id.ll_responsible);
-                convertView.setTag(holder);
-            } else {
-                holder = (Holder) convertView.getTag();
-            }
-
-            holder.tv_name.setText(clueListItem.name);
-            holder.tv_company_name.setText(clueListItem.companyName);
-            holder.tv_customer.setText(clueListItem.name);
-            if (clueListItem.lastActAt != 0) {
-                holder.tv_time.setText(DateTool.getDateTimeFriendly(clueListItem.lastActAt));
-            } else {
-                holder.tv_time.setText("--");
-            }
-            holder.ll_responsible.setVisibility(responsibleVisiblity ? View.VISIBLE : View.GONE);
-            return convertView;
-        }
-
-        class Holder {
-            TextView tv_company_name; /* 公司名称 */
-            TextView tv_customer;     /* 负责人 */
-            TextView tv_time;         /* 跟进时间 */
-            TextView tv_name;         /* 客户名称 */
-            LinearLayout ll_responsible;
-        }
+    class Holder {
+        TextView tv_company_name; /* 公司名称 */
+        TextView tv_customer;     /* 负责人 */
+        TextView tv_time;         /* 跟进时间 */
+        TextView tv_name;         /* 客户名称 */
+        LinearLayout ll_responsible;
     }
-
     /**
      * 新建跟进成功以后，关闭本页
      */

@@ -96,69 +96,39 @@ public class SaleSearchOrPickerActivity extends BaseSearchActivity<SaleRecord> {
     }
 
     @Override
-    public BaseAdapter setAdapter() {
-        return new CommonSearchAdapter();
+    public View getView(int i, View convertView, ViewGroup viewGroup, SaleRecord item) {
+        Holder holder = null;
+        if (convertView == null) {
+            convertView = getLayoutInflater().inflate(R.layout.item_saleteamlist, null);
+            holder = new Holder();
+            holder.creator = (TextView) convertView.findViewById(R.id.sale_teamlist_creator);
+            holder.state = (TextView) convertView.findViewById(R.id.sale_teamlist_state);
+            holder.guess = (TextView) convertView.findViewById(R.id.sale_teamlist_guess);
+            holder.money = (TextView) convertView.findViewById(R.id.sale_teamlist_money);
+            holder.title = (TextView) convertView.findViewById(R.id.sale_teamlist_title);
+            holder.ll_creator = (LinearLayout) convertView.findViewById(R.id.ll_creator);
+            convertView.setTag(holder);
+        } else {
+            holder = (Holder) convertView.getTag();
+        }
+        holder.setContent(item);
+        return convertView;
+
     }
+    class Holder {
+        TextView creator, state, guess, money, title;
+        LinearLayout ll_creator;
 
-    public class CommonSearchAdapter extends BaseAdapter {
-
-
-        public void setAdapter() {
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return paginationX.getLoadedTotalRecords();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return 0;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup viewGroup) {
-            SaleRecord item = paginationX.getRecords().get(position);
-           Holder holder = null;
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_saleteamlist, null);
-                holder = new Holder();
-                holder.creator = (TextView) convertView.findViewById(R.id.sale_teamlist_creator);
-                holder.state = (TextView) convertView.findViewById(R.id.sale_teamlist_state);
-                holder.guess = (TextView) convertView.findViewById(R.id.sale_teamlist_guess);
-                holder.money = (TextView) convertView.findViewById(R.id.sale_teamlist_money);
-                holder.title = (TextView) convertView.findViewById(R.id.sale_teamlist_title);
-                holder.ll_creator = (LinearLayout) convertView.findViewById(R.id.ll_creator);
-                convertView.setTag(holder);
-            } else {
-                holder = (Holder) convertView.getTag();
+        public void setContent(SaleRecord item) {
+            title.setText(item.getName());
+            money.setText(Utils.setValueDouble(item.getEstimatedAmount()) + "");
+            String stageName = "初步接洽";
+            if (!item.getStageNmae().isEmpty()) {
+                stageName = item.getStageNmae();
             }
-            holder.setContent(item);
-            return convertView;
-        }
-
-        class Holder {
-            TextView creator, state, guess, money, title;
-            LinearLayout ll_creator;
-
-            public void setContent(SaleRecord item) {
-                title.setText(item.getName());
-                money.setText(Utils.setValueDouble(item.getEstimatedAmount()) + "");
-                String stageName = "初步接洽";
-                if (!item.getStageNmae().isEmpty()) {
-                    stageName = item.getStageNmae();
-                }
-                state.setText(stageName + "(" + item.getProb() + "%)");
-                creator.setText(item.getCreateName());
-                ll_creator.setVisibility(type == MY_SALE_SEARCH ? View.GONE : View.VISIBLE);
-            }
+            state.setText(stageName + "(" + item.getProb() + "%)");
+            creator.setText(item.getCreateName());
+            ll_creator.setVisibility(type == MY_SALE_SEARCH ? View.GONE : View.VISIBLE);
         }
     }
-
 }
