@@ -14,6 +14,7 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
@@ -22,7 +23,6 @@ import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -38,7 +38,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by EthanGong on 2017/2/9.
  */
 
-public class AttachmentsFragment extends BaseFragment implements UploadControllerCallback {
+public class AttachmentsFragment extends CustomerChildFragment implements UploadControllerCallback {
 
     @BindView(R.id.listView_attachment) SwipeListView mListViewAttachment;
     @BindView(R.id.tv_upload) TextView tv_upload;
@@ -59,6 +59,10 @@ public class AttachmentsFragment extends BaseFragment implements UploadControlle
 
     private UploadController controller;
 
+    public AttachmentsFragment() {
+        this.title = "附件";
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
@@ -67,6 +71,7 @@ public class AttachmentsFragment extends BaseFragment implements UploadControlle
 
             ButterKnife.bind(this, view);
             loadIntentData();
+
 
             controller = new UploadController(getActivity(), 9);
             controller.setObserver(this);
@@ -100,6 +105,11 @@ public class AttachmentsFragment extends BaseFragment implements UploadControlle
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.uuid = customer.uuid;
+        this.totalCount = customer.counter.getFile();
     }
 
     /**

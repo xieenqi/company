@@ -34,7 +34,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -48,7 +47,7 @@ import java.util.HashMap;
  * Created by EthanGong on 2017/2/9.
  */
 
-public class FollowupsFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,
+public class FollowupsFragment extends CustomerChildFragment implements PullToRefreshBase.OnRefreshListener2,
         CustomerFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
 
@@ -82,11 +81,17 @@ public class FollowupsFragment extends BaseFragment implements PullToRefreshBase
     private PaginationX<FollowUpGroupModel> mPagination = new PaginationX<>(20);
     private int pageSize = 5;
 
+    public FollowupsFragment() {
+        this.title = "跟进";
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(
                     R.layout.fragment_followups, container, false);
+
+
 
             initView(view);
         }
@@ -138,6 +143,7 @@ public class FollowupsFragment extends BaseFragment implements PullToRefreshBase
 
     public void setCustomer(Customer customer) {
         mCustomer = customer;
+        this.totalCount = customer.saleActivityNum;
     }
 
     private void initView(View view) {

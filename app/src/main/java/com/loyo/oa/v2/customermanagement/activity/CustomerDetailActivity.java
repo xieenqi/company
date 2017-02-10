@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.customermanagement.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -24,7 +23,7 @@ import com.loyo.oa.v2.customermanagement.fragment.AttachmentsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.ContactsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.DropCustomerDeadlineFragment;
 import com.loyo.oa.v2.customermanagement.fragment.FollowupsFragment;
-import com.loyo.oa.v2.customermanagement.fragment.OpptunitiesFragment;
+import com.loyo.oa.v2.customermanagement.fragment.OpportunitiesFragment;
 import com.loyo.oa.v2.customermanagement.fragment.OrdersFragment;
 import com.loyo.oa.v2.customermanagement.fragment.TasksFragment;
 import com.loyo.oa.v2.customermanagement.fragment.VisitsFragment;
@@ -40,7 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CustomerDetailActivity extends BaseFragmentActivity
-        implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener
+        implements View.OnClickListener
 {
 
     public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
@@ -208,54 +207,36 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
         FollowupsFragment followupsFragment = new FollowupsFragment();
         followupsFragment.setCustomer(customer);
-        adapter.addFragment(followupsFragment, "跟进 1");
+        adapter.addFragment(followupsFragment);
 
         ContactsFragment contactsFragment = new ContactsFragment();
         contactsFragment.setCustomer(customer);
-        adapter.addFragment(contactsFragment, "联系人 2");
+        adapter.addFragment(contactsFragment);
 
         VisitsFragment visitsFragment = new VisitsFragment();
         visitsFragment.setCustomer(customer);
-        adapter.addFragment(visitsFragment, "拜访 3");
+        adapter.addFragment(visitsFragment);
 
-        OpptunitiesFragment opptunitiesFragment = new OpptunitiesFragment();
-        opptunitiesFragment.setCustomer(customer);
-        adapter.addFragment(opptunitiesFragment, "机会 4");
+        OpportunitiesFragment opportunitiesFragment = new OpportunitiesFragment();
+        opportunitiesFragment.setCustomer(customer);
+        adapter.addFragment(opportunitiesFragment);
 
         OrdersFragment ordersFragment = new OrdersFragment();
         ordersFragment.setCustomer(customer);
-        adapter.addFragment(ordersFragment, "订单 5");
+        adapter.addFragment(ordersFragment);
 
         TasksFragment tasksFragment = new TasksFragment();
         tasksFragment.setCustomer(customer);
-        adapter.addFragment(tasksFragment, "任务 6");
+        adapter.addFragment(tasksFragment);
 
         WorkFlowsFragment workFlowsFragment = new WorkFlowsFragment();
         workFlowsFragment.setCustomer(customer);
-        adapter.addFragment(workFlowsFragment, "审批 7");
+        adapter.addFragment(workFlowsFragment);
 
         AttachmentsFragment attachmentsFragment = new AttachmentsFragment();
-        attachmentsFragment.setUuid(customer.uuid);
-        adapter.addFragment(attachmentsFragment, "附件 8");
+        attachmentsFragment.setCustomer(customer);
+        adapter.addFragment(attachmentsFragment);
 
         viewPager.setAdapter(adapter);
-    }
-
-    /**
-     * Called when the {@link AppBarLayout}'s layout offset has been changed. This allows
-     * child views to implement custom behavior based on the offset (for instance pinning a
-     * view at a certain y value).
-     *
-     * @param appBarLayout   the {@link AppBarLayout} which offset has changed
-     * @param verticalOffset the vertical offset for the parent {@link AppBarLayout}, in px
-     */
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        if (verticalOffset >= 0) {
-            adapter.setPullToRefreshEnabled(true);
-        }
-        else {
-            adapter.setPullToRefreshEnabled(false);
-        }
     }
 }

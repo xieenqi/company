@@ -29,7 +29,6 @@ import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
-import com.loyo.oa.v2.tool.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +43,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by EthanGong on 2017/2/9.
  */
 
-public class TasksFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
+public class TasksFragment extends CustomerChildFragment implements PullToRefreshBase.OnRefreshListener2 {
 
     View view;
     @BindView(R.id.layout_add) ViewGroup layout_add;
@@ -59,6 +58,10 @@ public class TasksFragment extends BaseFragment implements PullToRefreshBase.OnR
     private CommonExpandableListAdapter adapter;
     private boolean isTopAdd;
     private boolean isChanged;
+
+    public TasksFragment() {
+        this.title = "任务";
+    }
 
     void initViews() {
         ll_loading.setStatus(LoadingLayout.Loading);
@@ -79,12 +82,14 @@ public class TasksFragment extends BaseFragment implements PullToRefreshBase.OnR
         canAdd = mCustomer != null && mCustomer.state == Customer.NormalCustomer &&
                 PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                         mCustomer.state, CustomerAction.TASK_ADD);
+        this.totalCount = customer.counter.getTask();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_tasks, container, false);
+
             ButterKnife.bind(this, view);
             initViews();
         }
