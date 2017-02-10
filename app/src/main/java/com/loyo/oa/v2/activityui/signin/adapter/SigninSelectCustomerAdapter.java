@@ -78,7 +78,7 @@ public class SigninSelectCustomerAdapter extends BaseAdapter {
             tv_name.setText(item.name);
             if (isLocationOk(item)) {
                 tv_location.setText(item.position.addr);
-                tv_distance.setText(distanceText(item.distance));
+                tv_distance.setText(distanceText(item.distance*1000));//把km－>m
             } else {
                 tv_location.setText("无定位");
                 tv_distance.setText("");
