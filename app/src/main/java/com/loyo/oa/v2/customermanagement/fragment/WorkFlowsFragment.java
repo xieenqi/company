@@ -29,7 +29,6 @@ import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ import java.util.List;
  * Created by EthanGong on 2017/2/9.
  */
 
-public class WorkFlowsFragment extends BaseFragment
+public class WorkFlowsFragment extends CustomerChildFragment
         implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2
 {
     View view;
@@ -50,7 +49,6 @@ public class WorkFlowsFragment extends BaseFragment
     private ViewGroup layout_add;
     private ArrayList<ApprovalItemModel> listData = new ArrayList<>();
     private String customerId, customerName;
-    Customer customer;
     private boolean canAdd;
     private int page = 1;
     private boolean isPullDown = true;
@@ -60,10 +58,15 @@ public class WorkFlowsFragment extends BaseFragment
     protected PullToRefreshExpandableListView mExpandableListView;
     protected ExpandableListView expandableListView;
 
+    public WorkFlowsFragment() {
+        this.title = "审批";
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_workflows, container, false);
+
             Bundle bundle = getArguments();
             if (bundle != null) {
                 canAdd = bundle.getBoolean("canAdd");
@@ -85,6 +88,7 @@ public class WorkFlowsFragment extends BaseFragment
                         customer.relationState,
                         customer.state,
                         CustomerAction.APPROVAL_ADD);
+        this.totalCount = customer.counter.workflow;
     }
 
     public void getPageData() {

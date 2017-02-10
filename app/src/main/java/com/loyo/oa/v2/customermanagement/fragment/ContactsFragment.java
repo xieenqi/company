@@ -27,7 +27,6 @@ import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -44,7 +43,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by EthanGong on 2017/2/9.
  */
 
-public class ContactsFragment extends BaseFragment implements ContactViewGroup.OnContactProcessCallback{
+public class ContactsFragment extends CustomerChildFragment implements ContactViewGroup.OnContactProcessCallback{
 
     View view;
 
@@ -57,7 +56,6 @@ public class ContactsFragment extends BaseFragment implements ContactViewGroup.O
 
     String customerId;
     boolean canEdit;
-    Customer customer;
 
     private Customer customerContact;
     private ArrayList<ContactLeftExtras> leftExtrases;
@@ -70,12 +68,17 @@ public class ContactsFragment extends BaseFragment implements ContactViewGroup.O
 
     private String phoneNum;//用来存储一下电话号码，用在动态授权上
 
+    public ContactsFragment() {
+        this.title = "联系人";
+    }
+
     public void setCustomer(Customer customer) {
         this.customer = customer;
         customerId = customer.getId();
         canEdit = customer != null &&
                 PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
                         customer.state, CustomerAction.CONTACT_ADD);
+        this.totalCount = customer.contacts.size();
     }
 
 
@@ -84,6 +87,7 @@ public class ContactsFragment extends BaseFragment implements ContactViewGroup.O
         if (view == null) {
             view = inflater.inflate(
                     R.layout.fragment_contacts, container, false);
+
             initViews(view);
         }
         return view;
@@ -291,7 +295,7 @@ public class ContactsFragment extends BaseFragment implements ContactViewGroup.O
                                     break;
 
                                 default:
-                                    Toast("网络连接失败:" + callBackCallid.errcode);
+                                    Toast(callBackCallid.errmsg);
                                     break;
                             }
                         } catch (NullPointerException e) {
