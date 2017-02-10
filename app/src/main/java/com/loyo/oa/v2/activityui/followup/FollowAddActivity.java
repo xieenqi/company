@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -40,12 +41,13 @@ import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerLabelCopyActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerStatusSingleSelectActivity;
-import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
+import com.loyo.oa.v2.activityui.customer.FollowContactSingleSelectActivity;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
+import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.application.MainApp;
@@ -63,6 +65,8 @@ import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.permission.CustomerAction;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -91,7 +95,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue, ll_customer_holder, ll_clue_holer, ll_contact_label, ll_customer_status, ll_contact_role;
+    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue, ll_customer_holder, ll_clue_holer, ll_customer_label, ll_customer_status, ll_contact_role,ll_customer_edit;
     private EditText edt;
     private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text,
             tv_at_text, tv_clue_company, tv_clue_name, tv_contact_role, tv_contact_label,tv_customer_status;
@@ -139,7 +143,23 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             isCustom = true;
             //显示客户
             ll_customer_holder.setVisibility(View.VISIBLE);
-            getData();
+            //加载参与人权限，只是进入页面的时候，加载一次。
+            showLoading2("");
+            CustomerService.getMembersRoot()
+                    .subscribe(new DefaultLoyoSubscriber<MembersRoot>() {
+                        @Override
+                        public void onError(Throwable e) {
+                            hud.dismiss();
+                            Toast("网络异常，请重试");
+                            finish();
+                        }
+                        @Override
+                        public void onNext(MembersRoot membersRoot) {
+                            PermissionManager.getInstance().loadCRMConfig(membersRoot);
+                            //参与人权限添加加载完了，再加载数据
+                            getData();
+                        }
+                    });
         }
     }
 
@@ -205,12 +225,14 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         ll_customer_holder = (LinearLayout) findViewById(R.id.ll_customer_holder);
         ll_clue_holer = (LinearLayout) findViewById(R.id.ll_clue_holder);
         //客户标签和状态
-        ll_contact_label = (LinearLayout) findViewById(R.id.ll_contact_label);
+
+        ll_customer_edit = (LinearLayout) findViewById(R.id.ll_customer_edit);
+        ll_customer_label = (LinearLayout) findViewById(R.id.ll_customer_label);
         ll_customer_status = (LinearLayout) findViewById(R.id.ll_customer_status);
         tv_contact_label = (TextView) findViewById(R.id.tv_contact_label);
         tv_customer_status = (TextView) findViewById(R.id.tv_customer_status);
         ll_customer_status.setOnClickListener(click);
-        ll_contact_label.setOnClickListener(click);
+        ll_customer_label.setOnClickListener(click);
 
         //联系人
         ll_contact_role = (LinearLayout) findViewById(R.id.ll_contact_role);
@@ -281,13 +303,19 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
      * 获取客户信息
      */
     private void getData() {
-        showLoading2("");
+        if(!hud.isShowing())showLoading2("");
         CustomerService.getCustomerDetailById(mCustomer.id)
                 .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                     @Override
                     public void onNext(Customer customer) {
                         mCustomer = customer;
                         initData();
+                        //判断参与人权限，决定更是否显示客户标签和客户状态
+                        if(PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,customer.state, CustomerAction.EDIT)){
+                            ll_customer_edit.setVisibility(View.VISIBLE);
+                        }else{
+                            ll_customer_edit.setVisibility(View.GONE);
+                        }
                         hasEditConOrRole=false;
                     }
                 });
@@ -556,7 +584,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
 
                     break;
                 //客户标签
-                case R.id.ll_contact_label:
+                case R.id.ll_customer_label:
                     Intent mIntent=new Intent();
                     mIntent = new Intent(FollowAddActivity.this, CustomerLabelCopyActivity.class);
                     mIntent.putExtra("canEdit", true);
@@ -630,9 +658,9 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             /*选择联系人*/
                 case R.id.ll_contact:
                     Bundle bContact = new Bundle();
-                    bContact.putSerializable(ExtraAndResult.EXTRA_DATA, mCustomer.contacts);
-                    bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-                    app.startActivityForResult(FollowAddActivity.this, FollowContactSelectActivity.class,
+                    bContact.putSerializable(FollowContactSingleSelectActivity.EXTRA_DATA, mCustomer.contacts);
+                    bContact.putString(FollowContactSingleSelectActivity.EXTRA_CURRENT, contactId);
+                    app.startActivityForResult(FollowAddActivity.this, FollowContactSingleSelectActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                     break;
             /*选择图片*/
@@ -755,7 +783,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 break;
            /* 选择客户联系人 回调*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
-                Contact contact = (Contact) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                Contact contact = (Contact) data.getSerializableExtra("data");
                 if (null != contact) {
                     contactId = contact.getId();
                     contactName = contact.getName();

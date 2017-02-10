@@ -29,7 +29,6 @@ import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
@@ -41,7 +40,7 @@ import java.util.List;
  * Created by EthanGong on 2017/2/9.
  */
 
-public class OrdersFragment extends BaseFragment
+public class OrdersFragment extends CustomerChildFragment
         implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2
 {
 
@@ -54,9 +53,12 @@ public class OrdersFragment extends BaseFragment
     private ArrayList<OrderListItem> listData = new ArrayList<>();
     private String customerId, customerName;
     private boolean canAdd;
-    Customer customer;
     private int page = 1;
     private boolean isPullDown = true;
+
+    public OrdersFragment() {
+        this.title = "订单";
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,6 +85,7 @@ public class OrdersFragment extends BaseFragment
                         customer.relationState,
                         customer.state,
                         CustomerAction.ORDER_ADD);
+        this.totalCount = customer.counter.order;
     }
 
     public void getPageData() {

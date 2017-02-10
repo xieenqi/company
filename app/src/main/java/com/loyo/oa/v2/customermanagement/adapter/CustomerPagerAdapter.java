@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.loyo.oa.v2.customermanagement.fragment.CustomerChildFragment;
 import com.loyo.oa.v2.customermanagement.fragment.TestFragmentExperiment;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class CustomerPagerAdapter extends FragmentPagerAdapter {
 
-    private final List<Fragment> mFragments = new ArrayList<>();
+    private final List<CustomerChildFragment> mFragments = new ArrayList<>();
     private final List<String> mFragmentTitles = new ArrayList<>();
     private boolean pullToRefreshEnabled;
 
@@ -23,9 +24,8 @@ public class CustomerPagerAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
-    public void addFragment(Fragment fragment, String title) {
+    public void addFragment(CustomerChildFragment fragment) {
         mFragments.add(fragment);
-        mFragmentTitles.add(title);
     }
 
     /**
@@ -48,7 +48,7 @@ public class CustomerPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mFragmentTitles.get(position);
+        return mFragments.get(position).getTitle();
     }
 
 

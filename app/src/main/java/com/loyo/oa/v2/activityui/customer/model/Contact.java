@@ -155,4 +155,9 @@ public class Contact implements Serializable {
     public int hashCode() {
         return super.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

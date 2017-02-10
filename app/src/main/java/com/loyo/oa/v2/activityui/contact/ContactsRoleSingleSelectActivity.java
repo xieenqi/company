@@ -1,18 +1,9 @@
 package com.loyo.oa.v2.activityui.contact;
 
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import com.library.module.widget.loading.LoadingLayout;
-import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.api.ContactsService;
 import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.model.BaseResponse;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseSingleSelectActivity;
 
 import java.util.List;
@@ -23,14 +14,6 @@ import java.util.List;
  */
 
 public class ContactsRoleSingleSelectActivity extends BaseSingleSelectActivity<ContactsRoleModel>{
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        current=getIntent().getStringExtra(EXTRA_CURRENT);
-    }
-
     @Override
     protected void getData() {
         ContactsService.getContactsRole().subscribe(new DefaultLoyoSubscriber<BaseResponse<List<ContactsRoleModel>>>() {
@@ -52,7 +35,6 @@ public class ContactsRoleSingleSelectActivity extends BaseSingleSelectActivity<C
 
     @Override
     protected boolean isDefault(ContactsRoleModel item) {
-        if(TextUtils.isEmpty(current)||TextUtils.isEmpty(item.id))return false;
         return current.equals(item.id);
     }
 }

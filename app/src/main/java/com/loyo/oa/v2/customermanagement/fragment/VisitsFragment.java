@@ -36,7 +36,6 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -50,7 +49,7 @@ import java.util.HashMap;
  * Created by EthanGong on 2017/2/9.
  */
 
-public class VisitsFragment extends BaseFragment
+public class VisitsFragment extends CustomerChildFragment
         implements PullToRefreshBase.OnRefreshListener2,
         CustomerSigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener
 {
@@ -84,10 +83,15 @@ public class VisitsFragment extends BaseFragment
     private SigninListFragPresenter mPresenter;
     private int pageSize = 5;
 
+    public VisitsFragment() {
+        this.title = "拜访";
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_visits, container, false);
+
             initView();
         }
         return view;
@@ -139,6 +143,7 @@ public class VisitsFragment extends BaseFragment
                         customer.relationState,
                         customer.state,
                         CustomerAction.APPROVAL_ADD);
+        this.totalCount = customer.counter.getVisit();
     }
 
     private void initView() {

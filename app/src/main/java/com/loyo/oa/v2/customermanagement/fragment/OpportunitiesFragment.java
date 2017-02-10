@@ -25,7 +25,6 @@ import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.ViewUtil;
 
@@ -38,7 +37,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by EthanGong on 2017/2/9.
  */
 
-public class OpptunitiesFragment extends BaseFragment
+public class OpportunitiesFragment extends CustomerChildFragment
         implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2
 {
 
@@ -51,17 +50,21 @@ public class OpptunitiesFragment extends BaseFragment
     private ArrayList<SaleRecord> listData = new ArrayList<>();
     private String customerId, customerName;
     private boolean canAdd;
-    Customer customer;
     private boolean isChanged;
     private boolean isTopAdd = true;
     public static final int VIEW_DEMANDS = 200;
     public static final int CREATE_DEMANDS = 300;
     private int page = 1;
 
+    public OpportunitiesFragment() {
+        this.title = "机会";
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_opptunities, container, false);
+
             Bundle bundle = getArguments();
             if (bundle != null) {
                 canAdd = bundle.getBoolean("canAdd");
@@ -88,6 +91,7 @@ public class OpptunitiesFragment extends BaseFragment
                         customer.relationState,
                         customer.state,
                         CustomerAction.SALE_OPPORTUNITY_ADD);
+        this.totalCount = customer.counter.getDemand();
     }
 
     void initUI() {
