@@ -182,11 +182,11 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     Toast("你拒绝了打电话权限，无法拨出电话");
                 }
             });
-        }else if(Utils.SEND_SMS_REQUEST==requestCode){
+        } else if (Utils.SEND_SMS_REQUEST == requestCode) {
             PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
                 @Override
                 public void success() {
-                     Utils.sendSms(CustomerContactManageActivity.this, phoneNum);
+                    Utils.sendSms(CustomerContactManageActivity.this, phoneNum);
                 }
 
                 @Override
@@ -221,7 +221,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
                 Contact contact = (Contact) data.getSerializableExtra("data");
                 customerContact.contacts.add(contact);
-                LogUtil.dee("contacts:"+MainApp.gson.toJson(customerContact.contacts));
+                LogUtil.dee("contacts:" + MainApp.gson.toJson(customerContact.contacts));
                 initData();
                 break;
 
@@ -254,13 +254,13 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         map.put("contactId", contactId);
         map.put("type", callType);
         map.put("mobile", callNum);
-        LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
+        LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));
         CustomerService.requestCallBack(map)
                 .subscribe(new DefaultLoyoSubscriber<CallBackCallid>(hud) {
                     @Override
                     public void onNext(CallBackCallid callBackCallid) {
-                        try{
-                            switch (callBackCallid.errcode){
+                        try {
+                            switch (callBackCallid.errcode) {
                                 case 0:
                                     Bundle mBundle = new Bundle();
                                     mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
@@ -281,7 +281,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                                     break;
 
                                 default:
-                                    Toast("网络连接失败:" + callBackCallid.errcode);
+                                    Toast(callBackCallid.errmsg);
                                     break;
                             }
                         } catch (NullPointerException e) {
