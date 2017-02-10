@@ -178,6 +178,9 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
         if(loadDefaultData){
             paginationX.setFirstPage();
             getPageData();
+            refreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+            ll_loading.setStatus(LoadingLayout.Loading);
+
         }
 
         refreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
