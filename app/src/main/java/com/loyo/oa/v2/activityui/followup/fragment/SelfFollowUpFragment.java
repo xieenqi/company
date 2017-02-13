@@ -203,7 +203,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                             MenuModel field2 = map.get("typeId");
                             MenuModel field3 = map.get("method");
                             activityType = field1.getKey();  //跟进类型
-                            typeId = field2.getKey();        //跟进方式
+                            typeId = field2.getKey();        //跟进行为
                             method = field3.getKey();        //跟进对象
                         } else {
                             method = "";

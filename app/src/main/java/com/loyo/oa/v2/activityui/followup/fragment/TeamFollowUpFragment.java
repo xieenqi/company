@@ -146,7 +146,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         });
 //        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
         mTags = FolloUpConfig.getFolloUpStageCache();
-        for (int i = 0; i < mTags.size(); i++) {//过滤掉跟进方式
+        for (int i = 0; i < mTags.size(); i++) {//过滤掉跟进行为
             if (mTags.get(i).fieldName.contains("activity")) {
                 mTags.remove(i);
             }

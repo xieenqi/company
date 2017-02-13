@@ -92,7 +92,7 @@ public class CommonTagSelectActivity extends BaseActivity {
                         }
                     });
 
-        } else if (type == SELECT_TYPE_SALE_ACTIVE_ACTION) {//跟进方式
+        } else if (type == SELECT_TYPE_SALE_ACTIVE_ACTION) {//跟进行为
             CustomerService.getSaleactivitytypes()
                     .subscribe(new DefaultLoyoSubscriber<ArrayList<CommonTag>>() {
                         @Override
@@ -114,7 +114,7 @@ public class CommonTagSelectActivity extends BaseActivity {
     void backWidthSelect() {
         Intent mIntent = new Intent();
         if (results.size() == 0 || null == results) {
-            Toast("请选择跟进方式!");
+            Toast("请选择跟进行为!");
         } else if (kind == ActionCode.SALE_DETAILS_STATE_EDIT) {
             mIntent.putExtra("data", results);
             mIntent.putExtra("mono", data);

@@ -131,7 +131,7 @@ public class WorksheetAddActivity extends BaseFragmentActivity {
         }
         switch (requestCode) {
 
-            /*跟进方式 回调*/
+            /*跟进行为 回调*/
             case CommonTagSelectActivity.REQUEST_TAGS:
                 break;
 

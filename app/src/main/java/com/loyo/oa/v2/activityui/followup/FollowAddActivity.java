@@ -636,10 +636,10 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                     selectRemainTime();
                     break;
 
-            /*跟进方式*/
+            /*跟进行为*/
                 case R.id.layout_sale_action:
                     Bundle loseBundle = new Bundle();
-                    loseBundle.putString("title", "跟进方式");
+                    loseBundle.putString("title", "跟进行为");
                     loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_SINGLE);
                     loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_SALE_ACTIVE_ACTION);
                     loseBundle.putString("tagName", tv_sale_action.getText().toString());
@@ -654,7 +654,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                         Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
                         return;
                     } else if (TextUtils.isEmpty(tagItemIds)) {
-                        Toast("请选择跟进方式");
+                        Toast("请选择跟进行为");
                         return;
                     } else if (isCustom) {
                         if (null == mCustomer || TextUtils.isEmpty(mCustomer.getId())) {
@@ -746,7 +746,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     }
 
     /**
-     * 获取跟进方式
+     * 获取跟进行为
      *
      * @param tags
      * @return
@@ -794,7 +794,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 mCustomer.statusName = itemModel.name;
                 tv_customer_status.setText(itemModel.name);
                 break;
-            /*跟进方式 回调*/
+            /*跟进行为 回调*/
             case CommonTagSelectActivity.REQUEST_TAGS:
                 ArrayList<CommonTag> tags = (ArrayList<CommonTag>) data.getSerializableExtra("data");
                 tv_sale_action.setText(getSaleTypes(tags));
