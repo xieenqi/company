@@ -151,7 +151,7 @@ public class TasksInfoActivity extends BaseActivity {
     public static TasksInfoActivity instance = null;
     public ArrayList<TextView> taskChildView = new ArrayList<>();
     public ArrayList<OrganizationalMember> childTastUsers = new ArrayList<>();
-//    public ArrayList<OrganizationalMember> requestDepts = new ArrayList<>();
+    //    public ArrayList<OrganizationalMember> requestDepts = new ArrayList<>();
 //    public ArrayList<User> aboutDepts = new ArrayList<>();
 //    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
     //    public ArrayList<Department> deptSource = Common.getLstDepartment();
@@ -206,7 +206,7 @@ public class TasksInfoActivity extends BaseActivity {
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
         layout_test_Add_area = (LinearLayout) findViewById(R.id.layout_test_Add_area);
         layout_task_testfather = (LinearLayout) findViewById(R.id.layout_task_testfather);
-        tv_status= (TextView) findViewById(R.id.tv_status);
+        tv_status = (TextView) findViewById(R.id.tv_status);
         v_split = findViewById(R.id.v_splite);
 
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -344,7 +344,7 @@ public class TasksInfoActivity extends BaseActivity {
 
             }
         }
-        if (null != mTask.getProject()&&!TextUtils.isEmpty(mTask.getProject().title)) {
+        if (null != mTask.getProject() && !TextUtils.isEmpty(mTask.getProject().title)) {
             beProjects = mTask.getProject().title;
             tv_task_project.setText("所属项目：" + beProjects);
         } else {
@@ -507,7 +507,7 @@ public class TasksInfoActivity extends BaseActivity {
 
             }
 
-            if ("1".equals(reviewer.status)) {
+            if (reviewer.status == 1) {
                 tv_task_status.setText("通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.green51));
                 tv_task_status.setVisibility(View.GONE);

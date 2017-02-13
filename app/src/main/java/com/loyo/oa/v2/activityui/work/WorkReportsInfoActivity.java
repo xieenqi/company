@@ -332,7 +332,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
-        if (("1").equals(mWorkReport.reviewer.status)) {
+        if (mWorkReport.reviewer.status == 1) {
             isOver = true;
         }
         Bundle bundle = new Bundle();
@@ -351,10 +351,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void clickDiscussion() {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mWorkReport.attachmentUUId);
-        bundle.putInt("status", Integer.parseInt(mWorkReport.reviewer.status));
+        bundle.putInt("status", mWorkReport.reviewer.status);
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("bizType", 1);
-        int status = Integer.parseInt(mWorkReport.reviewer.status);
+        int status = mWorkReport.reviewer.status;
         DiscussDetialActivity.startThisActivity(this, 1, mWorkReport.attachmentUUId, status, MSG_DISCUSSION);
         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }

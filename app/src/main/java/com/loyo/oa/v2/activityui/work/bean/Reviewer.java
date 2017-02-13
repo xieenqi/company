@@ -18,7 +18,7 @@ public class Reviewer implements Serializable {
     public long reviewedAt;//点评时间
     public int score;//点评分数 (启用 16-12-29)
     public String comment;//点评内容
-    public String status;
+    public int status;
     public String newScore;//新的点评分数
 
     public String id;
