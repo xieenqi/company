@@ -274,11 +274,9 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             tv_clue_company.setText(mClue.companyName);
             tv_clue_name.setText(mClue.name);
             iv_clue_select.setVisibility(View.GONE);
-            ll_clue_holer.setEnabled(false);
+            ll_clue_company.setEnabled(false);
             tv_clue_company.setPadding(tv_clue_company.getPaddingLeft(),tv_clue_company.getPaddingTop(),DensityUtil.dp2px(this,7),tv_clue_company.getPaddingBottom());
-
         }
-
     }
 
     @Override
@@ -717,6 +715,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                 case R.id.ll_clue_company:
                     Bundle bCule = new Bundle();
                     bCule.putSerializable(ClueSearchOrPickerActivity.EXTRA_TYPE, ClueType.MY_CLUE);
+                    bCule.putBoolean(ClueSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
                     app.startActivityForResult(FollowAddActivity.this, ClueSearchOrPickerActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, bCule);
                     break;
