@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/common_activity_con_bg"
+              android:orientation="vertical"
+              android:fitsSystemWindows="true">
+    <include layout="@layout/include_common_title_edit" />
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/scroll_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/view_h_title"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:gravity="center_vertical"
+                    android:text="姓名"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15" />
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    style="@style/edtText_normal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/suodesilei" />
+
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left" />
+
+            <LinearLayout
+                android:id="@+id/layout_phone1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/name_container">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_phone_name1"
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:gravity="center_vertical"
+                        android:text="手机"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp15" />
+
+                    <TextView
+                        android:id="@+id/tv_phone_val1"
+                        style="@style/edtText_normal"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/suodesilei"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/layout_send_sms1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:src="@drawable/icon_contacts_send_sms" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_phone_call1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:src="@drawable/icon_contacts_call" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_phone2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/layout_phone1"
+                android:visibility="gone">
+                <include layout="@layout/include_solid_line_left" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_phone_name2"
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:gravity="center_vertical"
+                        android:text="手机"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp15" />
+
+                    <TextView
+                        android:id="@+id/tv_phone_val2"
+                        style="@style/edtText_normal"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/suodesilei"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/layout_send_sms2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:src="@drawable/icon_contacts_send_sms" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_phone_call2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:src="@drawable/icon_contacts_call" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_phone3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/layout_phone2"
+                android:visibility="gone">
+                <include layout="@layout/include_solid_line_left" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_phone_name3"
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:gravity="center_vertical"
+                        android:text="手机"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp15" />
+
+                    <TextView
+                        android:id="@+id/tv_phone_val3"
+                        style="@style/edtText_normal"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/suodesilei"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/layout_send_sms3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:src="@drawable/icon_contacts_send_sms" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_phone_call3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:src="@drawable/icon_contacts_call" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_wiretel1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_phone3"
+                android:orientation="vertical">
+                <include layout="@layout/include_solid_line_left" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_wiletel_name1"
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:gravity="center_vertical"
+                        android:text="座机"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp15" />
+
+                    <TextView
+                        android:id="@+id/tv_wiletel_val1"
+                        style="@style/edtText_normal"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/suodesilei"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/layout_call_wiretel1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:src="@drawable/icon_contacts_call" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_wiretel2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/layout_wiretel1"
+                android:visibility="gone"
+                >
+                <include layout="@layout/include_solid_line_left" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_wiletel_name2"
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:gravity="center_vertical"
+                        android:text="座机"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp15" />
+
+                    <TextView
+                        android:id="@+id/tv_wiletel_val2"
+                        style="@style/edtText_normal"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/suodesilei"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/layout_call_wiretel2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:src="@drawable/icon_contacts_call" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_wiretel3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/layout_wiretel2"
+                android:visibility="gone"
+                >
+                <include layout="@layout/include_solid_line_left" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_wiletel_name3"
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:gravity="center_vertical"
+                        android:text="座机"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp15" />
+
+                    <TextView
+                        android:id="@+id/tv_wiletel_val3"
+                        style="@style/edtText_normal"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/suodesilei"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/layout_call_wiretel3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:src="@drawable/icon_contacts_call" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_depart"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_h_title"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:gravity="center_vertical"
+                    android:text="部门职务"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15" />
+
+                <TextView
+                    android:id="@+id/tv_depart"
+                    style="@style/edtText_normal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/suodesilei" />
+
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left" />
+
+            <LinearLayout
+                android:id="@+id/layout_qq"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_h_title"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_qq_label"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:gravity="center_vertical"
+                    android:text="QQ"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15" />
+
+                <TextView
+                    android:id="@+id/tv_qq"
+                    style="@style/edtText_normal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/suodesilei"
+                    />
+
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left" />
+
+            <LinearLayout
+                android:id="@+id/layout_birthday"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_h_title"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_birthday_label"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:gravity="center_vertical"
+                    android:text="生日"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15" />
+
+                <TextView
+                    android:id="@+id/tv_birthday"
+                    style="@style/edtText_normal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/suodesilei"
+                    />
+
+            </LinearLayout>
+
+
+            <include layout="@layout/include_solid_line_left" />
+
+            <LinearLayout
+                android:id="@+id/layout_wx"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_h_title"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_wx_label"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:gravity="center_vertical"
+                    android:text="微信"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15" />
+
+                <TextView
+                    android:id="@+id/tv_wx"
+                    style="@style/edtText_normal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/suodesilei"
+                    />
+
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left" />
+
+            <LinearLayout
+                android:id="@+id/layout_email"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_h_title"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_email_label"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:gravity="center_vertical"
+                    android:text="E-Mail"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15" />
+
+                <TextView
+                    android:id="@+id/tv_email"
+                    style="@style/edtText_normal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/suodesilei"
+                    />
+
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left" />
+
+            <LinearLayout
+                android:id="@+id/layout_memo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:minHeight="@dimen/view_h_title"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_memo_label"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:gravity="center_vertical"
+                    android:text="备注"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15" />
+
+                <TextView
+                    android:id="@+id/tv_memo"
+                    style="@style/edtText_normal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="@dimen/dimen_5"
+                    android:paddingTop="@dimen/dimen_5"
+                    android:textColor="@color/suodesilei"
+                    />
+
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
