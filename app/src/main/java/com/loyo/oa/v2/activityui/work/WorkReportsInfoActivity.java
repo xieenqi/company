@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -34,6 +32,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ListUtil;
@@ -162,7 +161,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             return;
         }
 
-        WorkReportService.getWorkReportDetail(workReportId,keyType).subscribe(new DefaultLoyoSubscriber<WorkReport>(ll_loading) {
+        WorkReportService.getWorkReportDetail(workReportId, keyType).subscribe(new DefaultLoyoSubscriber<WorkReport>(ll_loading) {
             @Override
             public void onNext(WorkReport _workReport) {
                 mWorkReport = _workReport;
@@ -270,7 +269,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             layout_score.setVisibility(View.VISIBLE);
             tv_status.setBackgroundResource(R.drawable.common_lable_green);
             tv_status.setText("已点评");
-            tv_reviewer_.setText("点评人：" +mWorkReport.reviewer.user.getName());
+            tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.user.getName());
             tv_review_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorkReport.reviewer.reviewedAt));
             btn_workreport_review.setVisibility(View.GONE);
             tv_work_score.setVisibility(mWorkReport.reviewer.newScore.contains("-") ? View.GONE : View.VISIBLE);
@@ -370,19 +369,19 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-                if (mWorkReport.isReviewed()) {
-                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-                    intent.putExtra("extra", "复制报告");
-                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
-                } else {//只有创建者才可以复制报告
-                    LogUtil.dll("报告详情，右上角按钮 else");
-                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-                    intent.putExtra("delete", true);
-                    intent.putExtra("edit", true);
-                    intent.putExtra("extra", "复制报告");
-                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
-                }
-
+//                if (mWorkReport.isReviewed()) {
+//                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+//                    intent.putExtra("extra", "复制报告");
+//                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+//                } else {//只有创建者才可以复制报告
+//                    LogUtil.dll("报告详情，右上角按钮 else");
+//                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+//                    intent.putExtra("delete", true);
+//                    intent.putExtra("edit", true);
+//                    intent.putExtra("extra", "复制报告");
+//                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+//                }
+                functionButton();
                 break;
             case R.id.btn_workreport_review:
                 reviewWorkreport();
@@ -391,6 +390,42 @@ public class WorkReportsInfoActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    /**
+     * 详见
+     * 右上角菜单
+     */
+    private void functionButton() {
+        ActionSheetDialog dialog = new ActionSheetDialog(WorkReportsInfoActivity.this).builder();
+        dialog.addSheetItem("复制报告", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("mWorkReport", mWorkReport);
+                bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
+                app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
+            }
+        });
+        if (!mWorkReport.isReviewed())
+            dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("mWorkReport", mWorkReport);
+                    bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
+                    app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
+                    isUpdate = true;
+                }
+            });
+        if (!mWorkReport.isReviewed())
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    delete_WorkReport();
+                }
+            });
+        dialog.show();
     }
 
     /**
@@ -457,25 +492,25 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 isUpdate = true;
                 break;
 
-            case MSG_DELETE_WORKREPORT:
-                     /*编辑回调*/
-                if (data.getBooleanExtra("edit", false)) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("mWorkReport", mWorkReport);
-                    bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
-                    app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                    isUpdate = true;
-                    /*复制回调*/
-                } else if ((data.getBooleanExtra("extra", false))) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("mWorkReport", mWorkReport);
-                    bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
-                    app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                    /*删除回调*/
-                } else if (data.getBooleanExtra("delete", false)) {
-                    delete_WorkReport();
-                }
-                break;
+//            case MSG_DELETE_WORKREPORT:
+//                     /*编辑回调*/
+//                if (data.getBooleanExtra("edit", false)) {
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("mWorkReport", mWorkReport);
+//                    bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
+//                    app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
+//                    isUpdate = true;
+//                    /*复制回调*/
+//                } else if ((data.getBooleanExtra("extra", false))) {
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("mWorkReport", mWorkReport);
+//                    bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
+//                    app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
+//                    /*删除回调*/
+//                } else if (data.getBooleanExtra("delete", false)) {
+//                    delete_WorkReport();
+//                }
+//                break;
 
             case MSG_ATTACHMENT:
                 try {
