@@ -2,28 +2,35 @@ package com.loyo.oa.v2.customermanagement.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.PermissionTool;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerContractAddActivity;
-import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
-import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.RegularCheck;
+import com.loyo.oa.v2.customermanagement.adapter.CustomerContactsListAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
+import com.loyo.oa.v2.customermanagement.cell.ContactCardCell;
+import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.ContactViewGroup;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -36,6 +43,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -43,12 +51,10 @@ import static android.app.Activity.RESULT_OK;
  * Created by EthanGong on 2017/2/9.
  */
 
-public class ContactsFragment extends CustomerChildFragment implements ContactViewGroup.OnContactProcessCallback{
+public class ContactsFragment extends CustomerChildFragment
+        implements ContactCardCell.OnContactCellActionListener {
 
     View view;
-
-    @BindView(R.id.layout_container)
-    LinearLayout layout_container;
     @BindView(R.id.layout_add)
     ViewGroup layout_add;
     @BindView(R.id.ll_loading)
@@ -56,17 +62,10 @@ public class ContactsFragment extends CustomerChildFragment implements ContactVi
 
     String customerId;
     boolean canEdit;
+    String callNum;
 
-    private Customer customerContact;
-    private ArrayList<ContactLeftExtras> leftExtrases;
-
-    private String contactId;
-    private String contactName;
-    private String callNum;
-    private String myCall;
-    private int callType;
-
-    private String phoneNum;//用来存储一下电话号码，用在动态授权上
+    CustomerContactsListAdapter adapter;
+    @BindView(R.id.contact_list_view) PullToRefreshRecyclerView2 listView;
 
     public ContactsFragment() {
         this.title = "联系人";
@@ -88,6 +87,8 @@ public class ContactsFragment extends CustomerChildFragment implements ContactVi
             view = inflater.inflate(
                     R.layout.fragment_contacts, container, false);
 
+            adapter = new CustomerContactsListAdapter(this);
+            adapter.addData(customer.contacts);
             initViews(view);
         }
         return view;
@@ -95,91 +96,13 @@ public class ContactsFragment extends CustomerChildFragment implements ContactVi
 
     void initViews(View view) {
         ButterKnife.bind(this, view);
-
-        ll_loading.setStatus(LoadingLayout.Loading);
-        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
-            @Override
-            public void onReload(View v) {
-                ll_loading.setStatus(LoadingLayout.Loading);
-                getContactsFields();
-            }
-        });
         layout_add.setVisibility(canEdit ? View.VISIBLE : View.GONE);
         layout_add.setOnTouchListener(Global.GetTouch());
-        getContactsFields();
-    }
 
-    /**
-     * 获取最新 左侧动态字段
-     */
-    private void getContactsFields() {
-        CustomerService.getContactsField()
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(ll_loading) {
-                    @Override
-                    public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
-                        leftExtrases = contactLeftExtrasArrayList;
-                        getData();
-                    }
-                });
-    }
-
-    /**
-     * 获取客户联系人列表
-     */
-    private void getData() {
-        CustomerService.getCustomerContacts(customerId)
-                .subscribe(new DefaultLoyoSubscriber<Customer>(ll_loading) {
-                    @Override
-                    public void onNext(Customer customer) {
-                        customerContact = customer;
-                        initData();
-                    }
-                });
-    }
-
-
-    /**
-     * 初始化数据
-     */
-    private void initData() {
-        if (null == customerContact.contacts || customerContact.contacts.size() == 0) {
-            ll_loading.setStatus(LoadingLayout.Empty);
-            return;
-        }
-        ll_loading.setStatus(LoadingLayout.Success);
-
-
-        layout_container.removeAllViews();
-        ArrayList<Contact> contactsCopy = new ArrayList<>();
-        contactsCopy.clear();
-
-        /*默认数据放在最前*/
-        for (Contact mContact : customerContact.contacts) {
-            if (mContact.isDefault()) {
-                contactsCopy.add(mContact);
-                break;
-            }
-        }
-        /*非默认联系人排后*/
-        for (Contact mContact : customerContact.contacts) {
-            if (!mContact.isDefault()) {
-                contactsCopy.add(mContact);
-            }
-        }
-
-        for (int i = 0; i < contactsCopy.size(); i++) {
-            Contact contact = contactsCopy.get(i);
-            ContactViewGroup contactViewGroup = new ContactViewGroup(getActivity(),
-                    customerContact, leftExtrases, contact, this);
-            contactViewGroup.bindView(i + 1, layout_container, canEdit);
-        }
-    }
-
-
-    @Override
-    public void setPhone(String phone) {
-        //用来保存刚才用户拨打的电话
-        this.phoneNum = phone;
+        listView.setMode(PullToRefreshBase.Mode.MANUAL_REFRESH_ONLY);
+        listView.getRefreshableView().setLayoutManager(new LinearLayoutManager(getContext()));
+        listView.getRefreshableView().setAdapter(adapter);
+        listView.setAdapter(adapter);
     }
 
     //用来处理打电话权限申请
@@ -189,7 +112,7 @@ public class ContactsFragment extends CustomerChildFragment implements ContactVi
             PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
                 @Override
                 public void success() {
-                    Utils.call(getActivity(), phoneNum);
+                    Utils.call(getActivity(), callNum);
                 }
 
                 @Override
@@ -201,7 +124,7 @@ public class ContactsFragment extends CustomerChildFragment implements ContactVi
             PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
                 @Override
                 public void success() {
-                    Utils.sendSms(getActivity(), phoneNum);
+                    Utils.sendSms(getActivity(), callNum);
                 }
 
                 @Override
@@ -212,14 +135,12 @@ public class ContactsFragment extends CustomerChildFragment implements ContactVi
         }
     }
 
-    @OnClick(R.id.layout_add)
-    void addNewContact() {
+    @OnClick(R.id.layout_add) void addNewContact() {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("customer", customerContact);
-
+        bundle.putSerializable("customer", customer);
         Intent intent = new Intent(getActivity(), CustomerContractAddActivity.class);
-        startActivityForResult(intent,
-                CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT);
     }
 
     @Override
@@ -233,38 +154,18 @@ public class ContactsFragment extends CustomerChildFragment implements ContactVi
 
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
                 Contact contact = (Contact) data.getSerializableExtra("data");
-                customerContact.contacts.add(contact);
-                LogUtil.dee("contacts:"+MainApp.gson.toJson(customerContact.contacts));
-                initData();
+                insertContact(contact);
                 break;
-
-            case CustomerInfoActivity.REQUEST_CUSTOMER_UPDATE_CONTRACT:
-                Contact contactUpdated = (Contact) data.getSerializableExtra("data");
-                if (contactUpdated == null) {
-                    return;
-                }
-
-                for (int i = 0; i < customerContact.contacts.size(); i++) {
-                    if (TextUtils.equals(contactUpdated.getId(), customerContact.contacts.get(i).getId())) {
-                        contactUpdated.setIsDefault(customerContact.contacts.get(i).isDefault());
-                        customerContact.contacts.set(i, contactUpdated);
-                        break;
-                    }
-                }
-                initData();
-                break;
-
             default:
                 break;
         }
     }
 
-
-    void requestClientInfo() {
+    void businessCallCheck(String customerId, final Contact contact, int callType, String callNum) {
         showLoading2("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("customerId", customerContact.getId());
-        map.put("contactId", contactId);
+        map.put("customerId", customerId);
+        map.put("contactId", contact.getId());
         map.put("type", callType);
         map.put("mobile", callNum);
         LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
@@ -277,7 +178,7 @@ public class ContactsFragment extends CustomerChildFragment implements ContactVi
                                 case 0:
                                     Bundle mBundle = new Bundle();
                                     mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
-                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
+                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, contact.getName());
                                     app.startActivity(getActivity(), CallPhoneBackActivity.class,
                                             MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                                     break;
@@ -307,89 +208,163 @@ public class ContactsFragment extends CustomerChildFragment implements ContactVi
     }
 
     /**
-     * 拨打商务电话回调
+     * ContactCardCell.OnContactCellActionListener
      */
+
     @Override
-    public void onCallBack(String callNum, String contactId, String contactName, @ContactViewGroup.CallPhoneType int callType, int phoneType) {
-        this.callNum = callNum;
-        this.contactId = contactId;
-        this.contactName = contactName;
-        this.callType = phoneType;
-        myCall = MainApp.user.mobile;
-        LogUtil.dee("我的号码:" + myCall);
-        LogUtil.dee("被叫号码:" + callNum);
-        LogUtil.dee("contactId:" + contactId);
-        LogUtil.dee("contactName:" + contactName);
-//
-        if (callType == ContactViewGroup.CallbackPhone) {
-            requestClientInfo();
+    public void onSMS(String phone) {
+        callNum = phone;
+        Utils.sendSms(getActivity(), phone);
+    }
+
+    @Override
+    public void onCallPhone(final Contact contact, final String phone) {
+        // 判断是否有绑定手机号
+        if (checkMobile()) {
+            callNum = phone;
+            boolean checkTag = RegularCheck.isYunPhone(phone);
+            final CallPhonePopView callPhonePopView = new CallPhonePopView(getActivity(), contact.getName(), checkTag);
+            callPhonePopView.show();
+            callPhonePopView.setCanceledOnTouchOutside(true);
+            /*商务电话-回拨*/
+            final String formattedPhone = phone.replaceAll(" +", "");
+            callPhonePopView.businessPhone(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    businessCallCheck(customer.getId(), contact, ContactViewGroup.CallbackPhone, formattedPhone);
+                    callPhonePopView.dismiss();
+                }
+            });
+            /*普通电话*/
+            callPhonePopView.commonlyPhone(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (RegularCheck.isMobilePhone(formattedPhone)) {
+                        Utils.call(getActivity(), formattedPhone);
+                    } else {
+                        Toast("电话号码格式不正确或为空!");
+                    }
+                    callPhonePopView.dismiss();
+                }
+            });
+            callPhonePopView.cancelPhone(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callPhonePopView.dismiss();
+                }
+            });
         }
     }
 
     @Override
-    public void onPhoneError() {
-        Toast("电话号码格式不正确或为空!");
+    public void onCallTel(final Contact contact, final String tel) {
+        // 判断是否有绑定手机号
+        if (checkMobile()) {
+            callNum = tel;
+            boolean checkTag = RegularCheck.isYunTell(tel);
+            final CallPhonePopView callPhonePopView = new CallPhonePopView(getActivity(), contact.getName(), checkTag);
+            callPhonePopView.show();
+            callPhonePopView.setCanceledOnTouchOutside(true);
+            /*商务电话-回拨*/
+            final String formattedPhone = tel.replaceAll(" +", "");
+            callPhonePopView.businessPhone(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    businessCallCheck(customer.getId(), contact, ContactViewGroup.CallbackPhone, formattedPhone);
+                    callPhonePopView.dismiss();
+                }
+            });
+            /*普通电话*/
+            callPhonePopView.commonlyPhone(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Utils.call(getActivity(), formattedPhone);
+                    callPhonePopView.dismiss();
+                }
+            });
+            callPhonePopView.cancelPhone(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callPhonePopView.dismiss();
+                }
+            });
+        }
     }
 
-
-    /**
-     * 删除联系人的回调 xnq
-     *
-     * @param contact
-     */
     @Override
-    public void onDel(final Contact contact) {
-        CustomerService.deleteContact(customerContact.getId(), contact.getId())
-                .subscribe(new DefaultLoyoSubscriber<Contact>() {
+    public void onSetDefaultContact(Contact contact, final int contactIndex) {
+        showCommitLoading();
+        CustomerService.setDefaultContact(customer.getId(), contact.getId())
+                .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
                     @Override
                     public void onNext(Contact contact1) {
-
-                        for (int i = 0; i < customerContact.contacts.size(); i++) {
-                            Contact newContact = customerContact.contacts.get(i);
-                            if (newContact.equals(contact)) {
-                                customerContact.contacts.remove(i);
-                                initData();
-                                break;
-                            }
-                        }
-                        refresh();
+                        updateDefaultContactAtIndex(contactIndex);
                     }
                 });
     }
 
-    private void refresh() {
-        onCreate(null);
-    }
-
-    /**
-     * 设置默认联系人的回调 xnq
-     *
-     * @param contact
-     */
     @Override
-    public void onSetDefault(final Contact contact) {
-        CustomerService.setDefaultContact(customerContact.getId(), contact.getId())
-                .subscribe(new DefaultLoyoSubscriber<Contact>() {
-                    @Override
-                    public void onNext(Contact contact1) {
-                        for (int i = 0; i < customerContact.contacts.size(); i++) {
-                            Contact newContact = customerContact.contacts.get(i);
-                            if (newContact.isDefault()) {
-                                newContact.setIsDefault(false);
-                                break;
-                            }
-                        }
-                        for (int i = 0; i < customerContact.contacts.size(); i++) {
-                            Contact newContact = customerContact.contacts.get(i);
-                            if (newContact.equals(contact)) {
-                                newContact.setIsDefault(true);
-                                customerContact.contacts.set(i, newContact);
-                                break;
-                            }
-                        }
-                        initData();
-                    }
-                });
+    public void onContactSelect(Contact contact, int contactIndex) {
+        Log.v("contact", contact.toString());
     }
 
+    private boolean checkMobile() {
+        if (null == MainApp.user.mobile || TextUtils.isEmpty(MainApp.user.mobile)) {
+            final SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(getActivity());
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                    MainApp.getMainApp().startActivity(getActivity(),
+                            EditUserMobileActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, false, null);
+                }
+            }, "提示", getActivity().getString(R.string.app_homeqq_message));
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void updateDefaultContactAtIndex(int index) {
+        ArrayList<Contact> contacts = customer.contacts;
+        if (contacts != null && contacts.size() > index) {
+            Contact defaultContact =  contacts.remove(index);
+            defaultContact.setIsDefault(true);
+            contacts.add(0, defaultContact);
+            for (int i = 1; i < contacts.size(); i++) {
+                contacts.get(i).setIsDefault(false);
+            }
+            customer.contacts = contacts;
+            adapter.loadData(contacts);
+        }
+
+    }
+
+    private void insertContact(Contact contact) {
+        if (contact == null) {
+            return;
+        }
+        ArrayList<Contact> contacts = customer.contacts;
+        if (contacts == null) {
+            contacts = new ArrayList<>();
+        }
+
+        if (contacts.size() > 0) {
+            contacts.add(1, contact);
+        }
+        else {
+            contact.setIsDefault(true);
+            contacts.add(contact);
+        }
+        customer.contacts = contacts;
+        adapter.loadData(contacts);
+    }
 }

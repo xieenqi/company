@@ -160,4 +160,29 @@ public class Contact implements Serializable {
     public String toString() {
         return name;
     }
+
+    /**
+     * Edited by Ethan On 2017-02-13
+     * 兼容老数据
+     */
+    private boolean transformed = false;
+    public void compatTransform() {
+        if (transformed) {
+            return;
+        }
+        if (this.telGroup == null) {
+            this.telGroup = new ArrayList<>();
+        }
+        if (this.telGroup.size() == 0 && !TextUtils.isEmpty(this.tel)) {
+            this.telGroup.add(this.tel);
+        }
+
+        if (this.wiretelGroup == null) {
+            this.wiretelGroup = new ArrayList<>();
+        }
+        if (this.wiretelGroup.size() == 0 && !TextUtils.isEmpty(this.wiretel)) {
+            this.wiretelGroup.add(this.wiretel);
+        }
+        transformed = true;
+    }
 }
