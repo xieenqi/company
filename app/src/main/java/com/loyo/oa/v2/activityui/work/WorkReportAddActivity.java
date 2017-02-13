@@ -249,9 +249,10 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             }
         });
         /*来自不同的业务 判断*/
-        if (type == TYPE_EDIT) {
+        if (type == TYPE_EDIT || type == TYPE_CREATE_FROM_COPY) {
             if (null != mWorkReport) {
-                super.setTitle("编辑工作报告");
+                if (type == TYPE_EDIT)
+                    super.setTitle("编辑工作报告");
                 uuid = mWorkReport.attachmentUUId;
                 dynList = mWorkReport.crmDatas;
                 crm_switch.setState(null == dynList ? false : true);
@@ -301,8 +302,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             getDefaultComment();
         } else if (type == TYPE_CREATE) {
             getDefaultComment();
-        } else {
-            rg.check(R.id.rb1);
         }
         initRetroDate();
         controller = new UploadController(this, 9);
@@ -314,6 +313,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      * 获取默认点评人
      */
     private void getDefaultComment() {
+        rg.check(R.id.rb1);
         WorkReportService.defaultComment().subscribe(new DefaultLoyoSubscriber<HttpDefaultComment>() {
             @Override
             public void onNext(HttpDefaultComment reviewer) {
