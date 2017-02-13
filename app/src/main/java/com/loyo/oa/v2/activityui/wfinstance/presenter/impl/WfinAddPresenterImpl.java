@@ -70,9 +70,11 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
      * 新建审批验证
      */
     @Override
-    public void addWfinVeri(String deptId) {
-
-        if (submitData.isEmpty()) {
+    public void addWfinVeri(String deptId, String title) {
+        if (TextUtils.isEmpty(title)) {
+            crolView.showMsg("请输入审批标题");
+            return;
+        } else if (submitData.isEmpty()) {
             crolView.showMsg("请输入审批内容");
             return;
         } else if (TextUtils.isEmpty(deptId)) {
