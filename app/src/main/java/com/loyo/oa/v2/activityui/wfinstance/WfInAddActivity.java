@@ -251,14 +251,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
 
                 //提交审批
                 case R.id.img_title_right:
-                    //没有附件
-                    showCommitLoading();
-                    if (controller.count() == 0) {
-                        mPresenter.addWfinVeri(deptId);
-                    } else {
-                        controller.startUpload();
-                        controller.notifyCompletionIfNeeded();
-                    }
+                    mPresenter.addWfinVeri(deptId,tv_title.getText().toString());
                     break;
 
                 //新增内容
@@ -408,12 +401,28 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
         mPresenter.addTypeData(wfinstance_data_container);
     }
 
+    ArrayList<HashMap<String, Object>> workflowValues;
+
     /**
      * 新建审批验证通过操作
      */
     @Override
     public void requestAddWfinVeriSuccess(ArrayList<HashMap<String, Object>> workflowValues) {
         LogUtil.dee("requestAddWfinVeriSuccess");
+        this.workflowValues = workflowValues;
+        showCommitLoading();
+        if (controller.count() == 0) {
+            sendData();
+        } else {
+            controller.startUpload();
+            controller.notifyCompletionIfNeeded();
+        }
+    }
+
+    /**
+     * 提交 数据到服务器
+     */
+    private void sendData() {
         mPresenter.requestAddWfin(tv_title.getText().toString(), deptId, workflowValues,
                 mTemplateId, projectId, uuid, edt_memo.getText().toString().trim(),
                 controller.count(), customerId, customerName);
@@ -452,7 +461,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
                     @Override
                     public void onNext(ArrayList<Attachment> news) {
-                        mPresenter.addWfinVeri(deptId);
+                      sendData();
                     }
                 });
     }
@@ -511,7 +520,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView, Upload
         if (taskList.size() > 0) {
             postAttaData();
         } else {
-            mPresenter.addWfinVeri(deptId);
+            sendData();
         }
     }
 }

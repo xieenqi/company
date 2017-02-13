@@ -12,7 +12,7 @@ import java.util.HashMap;
 public interface WfinAddPresenter {
 
     /*新建审批验证*/
-    void addWfinVeri(String deptId);
+    void addWfinVeri(String deptId,String title);
 
     /*新建审批请求*/
     void requestAddWfin(String title, String deptId, ArrayList<HashMap<String, Object>> workflowValues,

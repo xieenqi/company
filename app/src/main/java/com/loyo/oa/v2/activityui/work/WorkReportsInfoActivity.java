@@ -100,8 +100,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
     EditText edt_workReport_title;
     @ViewById
     EditText edt_content;
-    //    @ViewById
-//    RatingBar ratingBar_workReport;
     @ViewById
     ViewGroup no_dysndata_workreports;
     @ViewById
@@ -163,21 +161,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             finish();
             return;
         }
-//        app.getRestAdapter().create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
-//            @Override
-//            public void success(final WorkReport _workReport, final Response response) {
-//                HttpErrorCheck.checkResponse("报告信息：", response);
-//                mWorkReport = _workReport;
-//                updateUI(mWorkReport);
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error, ll_loading);
-////                finish();
-//            }
-//        });
 
         WorkReportService.getWorkReportDetail(workReportId,keyType).subscribe(new DefaultLoyoSubscriber<WorkReport>(ll_loading) {
             @Override
@@ -192,20 +175,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
      * 报告删除
      */
     void delete_WorkReport() {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).deleteWorkReport(workReportId, new RCallback<WorkReport>() {
-//            @Override
-//            public void success(final WorkReport workReport, final Response response) {
-//                Intent intent = new Intent();
-//                intent.putExtra("delete", mWorkReport);
-//                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
         WorkReportService.deleteWorkReport(workReportId).subscribe(new DefaultLoyoSubscriber<WorkReport>() {
             @Override
             public void onNext(WorkReport workReport) {
@@ -215,26 +184,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
         });
     }
-
-    /**
-     * 获取讨论内容，服务端已启用，暂注释
-     */
-/*    @Background
-    void getDiscussion() {
-        app.getRestAdapter().create(IWorkReport.class).getDiscussions(getId(), new RCallback<PaginationX<Discussion>>() {
-            @Override
-            public void success(PaginationX<Discussion> discussionPaginationX, Response response) {
-                mPageDiscussion = discussionPaginationX;
-                showDiscussion();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }*/
 
     void initUI() {
         super.setTitle("报告详情");
@@ -263,7 +212,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         }
         StringBuilder title = new StringBuilder(mWorkReport.creator.name + "提交 ");
         String reportDate = "";
-//        String date = app.df3.format(new Date(mWorkReport.createdAt * 1000));
         String date = DateTool.getDateTimeFriendly(mWorkReport.createdAt);
         String reportType = "";
         String crmName = "";
@@ -271,20 +219,16 @@ public class WorkReportsInfoActivity extends BaseActivity {
             case WorkReport.DAY:
                 reportType = " 日报";
                 crmName = "本日工作动态统计";
-//                reportDate = app.df4.format(new Date(mWorkReport.beginAt * 1000));
                 reportDate = DateTool.getDateFriendly(mWorkReport.beginAt);
                 break;
             case WorkReport.WEEK:
                 reportType = " 周报";
                 crmName = "本周工作动态统计";
-
-//                reportDate = app.df7.format(new Date(mWorkReport.beginAt * 1000)) + "-" + app.df7.format(new Date(mWorkReport.endAt * 1000));
                 reportDate = DateTool.getMonthDay(mWorkReport.beginAt) + "-" + DateTool.getMonthDay(mWorkReport.endAt);
                 break;
             case WorkReport.MONTH:
                 reportType = " 月报";
                 crmName = "本月工作动态统计";
-//                reportDate = app.df8.format(new Date(mWorkReport.beginAt * 1000));
                 reportDate = DateTool.getYearMonth(mWorkReport.beginAt);
                 break;
             default:
@@ -298,11 +242,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         tv_crm.setText(crmName);
         tv_discussion_count.setText("讨论 (" + mWorkReport.bizExtData.getDiscussCount() + ")");
-        //tv_attachment_count.setText("附件 (" + mWorkReport.bizExtData.getAttachmentCount() + ")");
 
         edt_workReport_title.setText(title.toString());
-//        webView_content.getSettings().setJavaScriptEnabled(true);
-//        webView_content.loadDataWithBaseURL(null, mWorkReport.getContent(), "text/html", "utf-8", null);
         /**
          * 工作动态统计
          */
@@ -330,11 +271,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
             tv_status.setBackgroundResource(R.drawable.common_lable_green);
             tv_status.setText("已点评");
             tv_reviewer_.setText("点评人：" +mWorkReport.reviewer.user.getName());
-
-//            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.reviewedAt + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             tv_review_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorkReport.reviewer.reviewedAt));
             btn_workreport_review.setVisibility(View.GONE);
-//            ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.score)).intValue() / 20);
             tv_work_score.setVisibility(mWorkReport.reviewer.newScore.contains("-") ? View.GONE : View.VISIBLE);
             tv_work_score.setText(mWorkReport.reviewer.newScore + "分");
             if (!StringUtil.isEmpty(mWorkReport.reviewer.comment)) {
