@@ -192,6 +192,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/view_h_title"
+                            android:paddingRight="4dp"
                             android:gravity="center_vertical">
 
                             <TextView
@@ -216,9 +217,9 @@
                                 android:textSize="15sp" />
 
                             <ImageView
+                                android:id="@+id/iv_customer_select"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginRight="4dp"
                                 android:scaleType="center"
                                 android:src="@drawable/right_arrow" />
 
@@ -400,6 +401,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/view_h_title"
+                            android:paddingRight="4dp"
                             android:gravity="center_vertical">
 
                             <TextView
@@ -424,9 +426,9 @@
                                 android:textSize="15sp" />
 
                             <ImageView
+                                android:id="@+id/iv_clue_select"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginRight="4dp"
                                 android:scaleType="center"
                                 android:src="@drawable/right_arrow" />
 
@@ -455,7 +457,7 @@
                             style="@style/text_item1"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_marginRight="@dimen/margin_other_view"
+                            android:layout_marginRight="7dp"
                             android:layout_weight="1"
                             android:gravity="right|center_vertical"
                             android:textColor="@color/title_bg1"

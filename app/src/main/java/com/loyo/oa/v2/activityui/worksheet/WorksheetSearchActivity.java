@@ -137,15 +137,18 @@ public class WorksheetSearchActivity extends BaseLoadingActivity implements Pull
                     groupsData.clear();
                     adapter.notifyDataSetChanged();
                     ll_loading.setStatus(LoadingLayout.Success);
+                    expandableListView.setMode(PullToRefreshBase.Mode.MANUAL_REFRESH_ONLY);
                 } else {
                     doSearch();
+                    expandableListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+
                 }
             }
         });
         edt_search.requestFocus();
 
         expandableListView = (PullToRefreshExpandableListView) findViewById(R.id.expandableListView);
-        expandableListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        expandableListView.setMode(PullToRefreshBase.Mode.MANUAL_REFRESH_ONLY);
         expandableListView.setOnRefreshListener(this);
 
         ExpandableListView innerListView = expandableListView.getRefreshableView();

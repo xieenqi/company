@@ -154,6 +154,7 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
     public void selectOrder() {
         Intent mIntent = new Intent();
         mIntent.setClass(getActivity(), WSOrderSearchOrPickerActivity.class);
+        mIntent.putExtra(WSOrderSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
         startActivityForResult(mIntent, ExtraAndResult.REQUEST_CODE);
     }
 

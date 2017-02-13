@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.common.type.LoyoBizType;
+import com.loyo.oa.common.utils.DensityUtil;
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
@@ -90,7 +91,7 @@ public class SignInActivity extends BaseActivity
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at, ll_contact_holder, ll_contact_name, ll_contact_role;
     private ViewGroup layout_customer_name;
-    private ImageView iv_at_delete;
+    private ImageView iv_at_delete,iv_customer_name;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private double laPosition, loPosition;
@@ -185,6 +186,7 @@ public class SignInActivity extends BaseActivity
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
+        iv_customer_name= (ImageView) findViewById(R.id.iv_customer_name);
         iv_at_delete.setOnClickListener(click);
         initMultiFunctionModule();
         controller = new UploadController(this, 9);
@@ -197,6 +199,9 @@ public class SignInActivity extends BaseActivity
         } else {
             //选择了客户，直接加载数据
             getData(mCustomer.getId());
+            iv_customer_name.setVisibility(View.GONE);
+            tv_customer_name.setPadding(tv_customer_name.getPaddingLeft(),tv_customer_name.getPaddingTop(), DensityUtil.dp2px(this,23),tv_customer_name.getPaddingBottom());
+
         }
 
     }

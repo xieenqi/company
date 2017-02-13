@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.type.LoyoBizType;
+import com.loyo.oa.common.utils.DensityUtil;
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
@@ -107,7 +108,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     private ClueListItem mClue;
     private String tagItemIds, contactId, contactName = "无", contactRoleName, contactRoleId = "";
     private LinearLayout ll_customer, ll_contact;
-    private ImageView iv_location_delete, iv_at_delete;
+    private ImageView iv_location_delete, iv_at_delete,iv_customer_select,iv_clue_select;
     private String content;
     private String uuid = StringUtil.getUUID();
     private List<String> mSelectPath;
@@ -236,6 +237,9 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         ll_customer_status = (LinearLayout) findViewById(R.id.ll_customer_status);
         tv_contact_label = (TextView) findViewById(R.id.tv_contact_label);
         tv_customer_status = (TextView) findViewById(R.id.tv_customer_status);
+        iv_customer_select = (ImageView) findViewById(R.id.iv_customer_select);
+        iv_clue_select = (ImageView) findViewById(R.id.iv_clue_select);
+
         ll_customer_status.setOnClickListener(click);
         ll_customer_label.setOnClickListener(click);
 
@@ -262,9 +266,17 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             tv_customer.setText(mCustomer.name);
             tv_contact_label.setText(Utils.getTagItems(mCustomer));
             tv_customer_status.setText(mCustomer.statusName);
+            //已经选定了客户,就不可以再选定客户
+            ll_customer.setEnabled(false);
+            ll_customer.setPadding(ll_customer.getPaddingLeft(),ll_customer.getPaddingTop(), DensityUtil.dp2px(this,7),ll_clue.getPaddingBottom());
+            iv_customer_select.setVisibility(View.GONE);
         } else if (null != mClue && !isCustom) {
             tv_clue_company.setText(mClue.companyName);
             tv_clue_name.setText(mClue.name);
+            iv_clue_select.setVisibility(View.GONE);
+            ll_clue_holer.setEnabled(false);
+            tv_clue_company.setPadding(tv_clue_company.getPaddingLeft(),tv_clue_company.getPaddingTop(),DensityUtil.dp2px(this,7),tv_clue_company.getPaddingBottom());
+
         }
 
     }

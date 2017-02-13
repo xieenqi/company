@@ -146,7 +146,14 @@ public abstract class BaseSearchActivity<T extends Serializable> extends BaseLoa
                     paginationX.getRecords().clear();
                     adapter.notifyDataSetChanged();
                     ll_loading.setStatus(LoadingLayout.Success);
-                    refreshListView.setMode(PullToRefreshBase.Mode.MANUAL_REFRESH_ONLY);
+                    if(loadDefaultData){
+                        //如果需要显示默认数据，删除了，以后，就请求第一页码的默认数据
+                        refreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                        paginationX.setFirstPage();
+                        getData();
+                    }else{
+                        refreshListView.setMode(PullToRefreshBase.Mode.MANUAL_REFRESH_ONLY);
+                    }
                 } else {
                     refreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
                     doSearch();
