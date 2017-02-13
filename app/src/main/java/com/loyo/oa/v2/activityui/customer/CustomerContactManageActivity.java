@@ -214,10 +214,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK || null == data) {
-            return;
-        }
-        switch (requestCode) {
+            if (resultCode != RESULT_OK || null == data) {
+                return;
+            }
+            switch (requestCode) {
 
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
                 Contact contact = (Contact) data.getSerializableExtra("data");

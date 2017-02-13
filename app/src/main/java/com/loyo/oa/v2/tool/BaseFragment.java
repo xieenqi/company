@@ -17,8 +17,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 
-import org.greenrobot.eventbus.Subscribe;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,10 +45,10 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         AppBus.getInstance().unregister(this);
     }
 
-    @Subscribe
-    public void onEvent(Object object) {
-
-    }
+//    @Subscribe
+//    public void onEvent(Object object) {
+//        Log.v("", "");
+//    }
 
     @Override
     public void onAttach(Activity activity) {

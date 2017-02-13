@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RegularCheck;
+import com.loyo.oa.v2.customermanagement.activity.ContactDetailActivity;
 import com.loyo.oa.v2.customermanagement.adapter.CustomerContactsListAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.cell.ContactCardCell;
@@ -80,6 +80,19 @@ public class ContactsFragment extends CustomerChildFragment
         this.totalCount = customer.contacts.size();
     }
 
+    private void getData() {
+        /* 拉取包含详细信息的联系人，用于联系人详情界面展示 */
+        CustomerService.getCustomerContacts(customerId)
+                .subscribe(new DefaultLoyoSubscriber<Customer>(ll_loading) {
+                    @Override
+                    public void onNext(Customer customer) {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        ContactsFragment.this.customer.contacts = customer.contacts;
+                        adapter.loadData(customer.contacts);
+                    }
+                });
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,19 +103,27 @@ public class ContactsFragment extends CustomerChildFragment
             adapter = new CustomerContactsListAdapter(this);
             adapter.addData(customer.contacts);
             initViews(view);
+            getData();
         }
         return view;
     }
 
     void initViews(View view) {
         ButterKnife.bind(this, view);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getData();
+            }
+        });
         layout_add.setVisibility(canEdit ? View.VISIBLE : View.GONE);
         layout_add.setOnTouchListener(Global.GetTouch());
 
         listView.setMode(PullToRefreshBase.Mode.MANUAL_REFRESH_ONLY);
         listView.getRefreshableView().setLayoutManager(new LinearLayoutManager(getContext()));
         listView.getRefreshableView().setAdapter(adapter);
-        listView.setAdapter(adapter);
     }
 
     //用来处理打电话权限申请
@@ -153,8 +174,29 @@ public class ContactsFragment extends CustomerChildFragment
         switch (requestCode) {
 
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
+            {
                 Contact contact = (Contact) data.getSerializableExtra("data");
                 insertContact(contact);
+            }
+                break;
+            case ContactDetailActivity.ContactDetailActivityRequestCode:
+            {
+                Contact contact = (Contact) data.getSerializableExtra("contact");
+                int action = data.getIntExtra("action", 0);
+                int index = data.getIntExtra("contactIndex", -1);
+                if (index > 0 && index < customer.contacts.size()) {
+                    if (action == ContactDetailActivity.CONTACT_DELETE) {
+                        customer.contacts.remove(index);
+                        adapter.loadData(customer.contacts);
+                    }
+                    else if (action == ContactDetailActivity.CONTACT_UPDATED) {
+                        customer.contacts.remove(index);
+                        customer.contacts.add(contact);
+                        adapter.loadData(customer.contacts);
+                    }
+                }
+
+            }
                 break;
             default:
                 break;
@@ -295,6 +337,9 @@ public class ContactsFragment extends CustomerChildFragment
 
     @Override
     public void onSetDefaultContact(Contact contact, final int contactIndex) {
+        if (!canEdit) {
+            return;
+        }
         showCommitLoading();
         CustomerService.setDefaultContact(customer.getId(), contact.getId())
                 .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
@@ -307,7 +352,13 @@ public class ContactsFragment extends CustomerChildFragment
 
     @Override
     public void onContactSelect(Contact contact, int contactIndex) {
-        Log.v("contact", contact.toString());
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("customer", customer);
+        bundle.putSerializable("contact", contact);
+        bundle.putSerializable("contactIndex", contactIndex);
+        Intent intent = new Intent(getActivity(), ContactDetailActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, ContactDetailActivity.ContactDetailActivityRequestCode);
     }
 
     private boolean checkMobile() {
@@ -358,7 +409,7 @@ public class ContactsFragment extends CustomerChildFragment
         }
 
         if (contacts.size() > 0) {
-            contacts.add(1, contact);
+            contacts.add(contact);
         }
         else {
             contact.setIsDefault(true);
@@ -367,4 +418,5 @@ public class ContactsFragment extends CustomerChildFragment
         customer.contacts = contacts;
         adapter.loadData(contacts);
     }
+
 }

@@ -544,6 +544,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
+            android:name=".customermanagement.activity.ContactDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
             android:name=".customermanagement.activity.CustomerDetailActivityExperiment"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />

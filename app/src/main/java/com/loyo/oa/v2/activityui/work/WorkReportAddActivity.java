@@ -20,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -35,13 +36,11 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.project.ProjectSearchOrPickerActivity;
-import com.loyo.oa.v2.activityui.wfinstance.WfInAddActivity;
 import com.loyo.oa.v2.activityui.work.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.activityui.work.bean.HttpDefaultComment;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
-import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
@@ -81,8 +80,6 @@ import java.util.List;
 import hk.ids.gws.android.sclick.SClick;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.loyo.oa.v2.activityui.work.api.WorkReportService.updateWorkReport;
-
 /**
  * 【工作报告】新建 编辑
  */
@@ -116,17 +113,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     @ViewById
     ViewGroup layout_crm, layout_reviewer, layout_mproject, layout_type;
     @ViewById
-    TextView wordcount;
-    @ViewById
-    TextView tv_crm;
-    @ViewById
-    TextView tv_project;
-    @ViewById
-    TextView tv_time, tv_toUser;
-    @ViewById
-    TextView tv_reviewer, tv_resignin;
-    @ViewById
-    ViewGroup layout_del;
+    TextView wordcount, tv_crm, tv_project, tv_time, tv_toUser, tv_reviewer, tv_resignin;
     @ViewById
     ImageView img_title_toUser;
     @ViewById(R.id.image_upload_grid_view)
@@ -135,59 +122,40 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     GridView gv_workreports;
     @ViewById
     ViewGroup no_dysndata_workreports;
+    @ViewById
+    RadioButton rb1, rb2, rb3;
 
     @Extra
     String projectId;
     @Extra
     String projectTitle;
-
     @Extra("mWorkReport")
     WorkReport mWorkReport;
     @Extra("type")
     int type;
 
-    private RadioButton rb1;
-    private RadioButton rb2;
-    private RadioButton rb3;
     private long beginAt, endAt;
     private boolean isDelayed = false;
     private int mSelectType = WorkReport.DAY;
     private int retroIndex = 1;//蛋疼的兼容原来的1序
-    private int bizType = 1;
-    //    private int uploadSize;
-//    private int uploadNum;
     private String currentValue;
     private String content;
-
     private WeeksDialog weeksDialog = null;
-    private workReportAddgridViewAdapter workGridViewAdapter;
-
     UploadController controller;
-
-    //    private ArrayList<Attachment> lstData_Attachment = null;
-    private ArrayList<OrganizationalMember> users = new ArrayList<>();
-    private ArrayList<OrganizationalMember> depts = new ArrayList<>();
-    //    private List<String> mSelectPath;
-//    private ArrayList<ImageInfo> pickPhotsResult;
-//    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
     private Members members = new Members();
-
     private ArrayList<WorkReportDyn> dynList;
-    private StringBuffer joinUserId;
-    private StringBuffer joinName;
-    private PostBizExtData bizExtData;
-    private StringBuffer joinUser;
+    private StringBuilder joinUserId;
+    private StringBuilder joinName;
     private String[] pastSevenDay = new String[7];
     private String[] pastThreeMonth = new String[3];
     private CompositeSubscription subscriptions;
 
     private Handler mHandler = new Handler() {
-        public void handleMessage(final Message msg) {
-
+        @Override
+        public void dispatchMessage(Message msg) {
             switch (msg.what) {
-
                 //刷新动态数据UI
                 case UPDATE_SUCCESS:
                     if (null == dynList || dynList.size() == 0) {
@@ -196,11 +164,10 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                     } else {
                         no_dysndata_workreports.setVisibility(View.GONE);
                         gv_workreports.setVisibility(View.VISIBLE);
-                        workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
+                        workReportAddgridViewAdapter workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
                         gv_workreports.setAdapter(workGridViewAdapter);
                     }
                     break;
-
                 //周报数据回调
                 case WEEK_RESULT:
                     beginAt = weeksDialog.GetBeginandEndAt()[0];
@@ -219,7 +186,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         subscriptions = new CompositeSubscription();
         img_title_left.setOnTouchListener(touch);
         img_title_right.setOnTouchListener(touch);
-        layout_del.setOnTouchListener(touch);
         layout_reviewer.setOnTouchListener(touch);
         tv_resignin.setOnTouchListener(touch);
         layout_mproject.setOnTouchListener(touch);
@@ -251,11 +217,17 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         /*来自不同的业务 判断*/
         if (type == TYPE_EDIT || type == TYPE_CREATE_FROM_COPY) {
             if (null != mWorkReport) {
-                if (type == TYPE_EDIT)
+                if (type == TYPE_EDIT) {
                     super.setTitle("编辑工作报告");
+                    tv_resignin.setVisibility(View.GONE);
+                    rb1.setEnabled(false);
+                    rb2.setEnabled(false);
+                    rb3.setEnabled(false);
+                    gridView.setVisibility(View.GONE);
+                }
                 uuid = mWorkReport.attachmentUUId;
                 dynList = mWorkReport.crmDatas;
-                crm_switch.setState(null == dynList ? false : true);
+                crm_switch.setState(null != dynList);
                 mHandler.sendEmptyMessage(UPDATE_SUCCESS);
                 layout_crm.setVisibility(View.VISIBLE);
                 try {
@@ -265,7 +237,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-
                 switch (mWorkReport.type) {
                     case WorkReport.DAY:
                         rg.check(R.id.rb1);
@@ -279,7 +250,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                     default:
                         break;
                 }
-
                 OrganizationalMember reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer
                         .user ? mWorkReport.reviewer.user : null;
                 tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
@@ -289,14 +259,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 if (null != mWorkReport.ProjectInfo) {
                     tv_project.setText(mWorkReport.ProjectInfo.title);
                 }
-                //附件暂时不能做
             }
-        } else if (type == TYPE_EDIT) {
-            tv_resignin.setVisibility(View.GONE);
-            rb1.setEnabled(false);
-            rb2.setEnabled(false);
-            rb3.setEnabled(false);
-            gridView.setVisibility(View.GONE);
         } else if (type == TYPE_PROJECT) {
             projectAddWorkReport();
             getDefaultComment();
@@ -326,7 +289,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         });
     }
 
-
     /**
      * 项目 过来创建 工作报告
      */
@@ -337,29 +299,28 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         }
     }
 
-    /**
+    /*
      * 获取传过来 的menber信息
+     * StringBuilder 的性能高于StringBuffer
      *
-     * @return
      */
     private String getMenberText() {
-
-        joinUser = new StringBuffer();
-        joinUserId = new StringBuffer();
-
-        for (int i = 0; i < mWorkReport.members.getAllData().size(); i++) {
-            joinUser.append(mWorkReport.members.getAllData().get(i).getName() + ",");
-            joinUserId.append(mWorkReport.members.getAllData().get(i).getId() + ",");
-
+        StringBuilder joinUser = new StringBuilder();
+        joinUserId = new StringBuilder();
+        int length = mWorkReport.members.getAllData().size();
+        for (int i = 0; i < length; i++) {
+            joinUser.append(mWorkReport.members.getAllData().get(i).getName());
+            joinUserId.append(mWorkReport.members.getAllData().get(i).getId());
+            if (i < length - 1) {
+                joinUser.append(",");
+                joinUserId.append(",");
+            }
         }
         return joinUser.toString();
-
     }
 
     /**
      * 切换统计开关
-     *
-     * @param b
      */
     private void crmSwitch(final boolean b) {
         long beginTime, endTime;
@@ -419,7 +380,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         tv_crm.setText("本日工作动态统计");
         beginAt = com.loyo.oa.common.utils.DateTool.getCurrentDayBeginMillis();
         endAt = com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis();
-//        tv_time.setText(app.df4.format(beginAt));
         tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(beginAt / 1000));
         mSelectType = WorkReport.DAY;
     }
@@ -456,15 +416,12 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         beginAt = com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis();//DateTool.getBeginAt_ofMonth()
         endAt = com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis();
         DateTool.calendar = Calendar.getInstance();
-        int year = DateTool.calendar.get(Calendar.YEAR);
-        int month = DateTool.calendar.get(Calendar.MONTH);
-//        tv_time.setText(year + "." + String.format("%02d", (month + 1)));
         tv_time.setText(com.loyo.oa.common.utils.DateTool.getYearMonth(System.currentTimeMillis() / 1000));
         mSelectType = WorkReport.MONTH;
 
     }
 
-    @Click({R.id.tv_resignin, R.id.img_title_left, R.id.img_title_right, R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_del, R.id.layout_mproject})
+    @Click({R.id.tv_resignin, R.id.img_title_left, R.id.img_title_right, R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_mproject})
     void onClick(final View v) {
         Bundle mBundle;
         switch (v.getId()) {
@@ -541,14 +498,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 startActivity(intent);
             }
             break;
-
-            case R.id.layout_del:
-                users.clear();
-                depts.clear();
-                tv_toUser.setText("");
-                layout_del.setVisibility(View.GONE);
-                img_title_toUser.setVisibility(View.VISIBLE);
-                break;
 
             /*选择项目归档*/
             case R.id.layout_mproject:
@@ -639,12 +588,10 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      * 补签显示数据初始化
      */
     public void initRetroDate() {
-
         /*过去7天*/
         for (int i = 0; i < 7; i++) {
             Calendar cl = Calendar.getInstance();
             cl.add(Calendar.DAY_OF_MONTH, -(i + 1));
-//            String time = app.df4.format(cl.getTime());
             String time = com.loyo.oa.common.utils.DateTool.getDateFriendly(cl.getTimeInMillis() / 1000);
             pastSevenDay[i] = time;
         }
@@ -659,7 +606,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 case 0:
                     cl = Calendar.getInstance();
                     cl.add(Calendar.DAY_OF_MONTH, -30);
-//                    month = app.df15.format(cl.getTime());
                     month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
@@ -667,7 +613,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 case 1:
                     cl = Calendar.getInstance();
                     cl.add(Calendar.DAY_OF_MONTH, -60);
-//                    month = app.df15.format(cl.getTime());
                     month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
@@ -675,7 +620,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 case 2:
                     cl = Calendar.getInstance();
                     cl.add(Calendar.DAY_OF_MONTH, -90);
-//                    month = app.df15.format(cl.getTime());
                     month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
@@ -691,7 +635,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         SingleRowWheelView wv = (SingleRowWheelView) outerView.findViewById(R.id.wheel_view_wv);
         wv.setOffset(2);//为了界面好看，故意将index多加2条，因此取item下标时，要-2
         wv.setItems(Arrays.asList(arrlst));
-        //wv.setSeletion(3);
         //TODO 为什么要用监听改变的方式,不懂,用户点击了以后,不滑动,不会调用,不会改成默认值。后面改一下,直接获取选中的就可以了 ——Mr.Jie
         wv.setOnWheelViewListener(new SingleRowWheelView.OnWheelViewListener() {
             @Override
@@ -773,7 +716,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      * 提交报告
      */
     private void requestCommitWork() {
-        bizExtData = new PostBizExtData();
+        PostBizExtData bizExtData = new PostBizExtData();
         if (type == TYPE_EDIT) {
             bizExtData.setAttachmentCount(mWorkReport.bizExtData.getAttachmentCount());
         } else {
@@ -831,8 +774,8 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             members = Compat.convertStaffCollectionToMembers(collection);
-            joinName = new StringBuffer();
-            joinUserId = new StringBuffer();
+            joinName = new StringBuilder();
+            joinUserId = new StringBuilder();
             if (members == null || (members.users.size() == 0 && members.depts.size() == 0)) {
                 tv_toUser.setText("无抄送人");
                 joinUserId.reverse();
@@ -910,8 +853,8 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             //用户选择, 抄送人
             case FinalVariables.REQUEST_ALL_SELECT:
                 members = (Members) data.getSerializableExtra("data");
-                joinName = new StringBuffer();
-                joinUserId = new StringBuffer();
+                joinName = new StringBuilder();
+                joinUserId = new StringBuilder();
                 if (members.users.size() == 0 && members.depts.size() == 0) {
                     tv_toUser.setText("无抄送人");
                     joinUserId.reverse();
@@ -949,7 +892,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = uuid;
-            attachmentBatch.bizType = bizType;
+            attachmentBatch.bizType = LoyoBizType.WorkReport.getCode();
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");
