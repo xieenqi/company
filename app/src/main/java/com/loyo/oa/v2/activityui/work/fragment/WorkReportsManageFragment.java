@@ -9,6 +9,7 @@ import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.activityui.work.WorkReportAddActivity;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsSearchActivity;
@@ -60,9 +61,9 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
     public void addNewItem() {
         Intent intent = new Intent();
         intent.setClass(mActivity, WorkReportAddActivity_.class);
+        intent.putExtra("type", WorkReportAddActivity.TYPE_CREATE);
         startActivityForResult(intent, REQUEST_CREATE);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-
     }
 
     /**

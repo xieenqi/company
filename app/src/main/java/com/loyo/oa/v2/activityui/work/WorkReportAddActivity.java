@@ -248,67 +248,63 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 crmSwitch(false);
             }
         });
-
-        if (null != mWorkReport) {
-            if (type == TYPE_EDIT) {
+        /*来自不同的业务 判断*/
+        if (type == TYPE_EDIT) {
+            if (null != mWorkReport) {
                 super.setTitle("编辑工作报告");
                 uuid = mWorkReport.attachmentUUId;
                 dynList = mWorkReport.crmDatas;
                 crm_switch.setState(null == dynList ? false : true);
                 mHandler.sendEmptyMessage(UPDATE_SUCCESS);
                 layout_crm.setVisibility(View.VISIBLE);
+                try {
+                    mReviewer = mWorkReport.reviewer;
+                    members = mWorkReport.members;
+                    projectId = mWorkReport.ProjectInfo.getId();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+                switch (mWorkReport.type) {
+                    case WorkReport.DAY:
+                        rg.check(R.id.rb1);
+                        break;
+                    case WorkReport.WEEK:
+                        rg.check(R.id.rb2);
+                        break;
+                    case WorkReport.MONTH:
+                        rg.check(R.id.rb3);
+                        break;
+                    default:
+                        break;
+                }
+
+                OrganizationalMember reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer
+                        .user ? mWorkReport.reviewer.user : null;
+                tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
+                tv_toUser.setText(getMenberText());
+                edt_content.setText(mWorkReport.content);
+
+                if (null != mWorkReport.ProjectInfo) {
+                    tv_project.setText(mWorkReport.ProjectInfo.title);
+                }
+                //附件暂时不能做
             }
-
-            try {
-                mReviewer = mWorkReport.reviewer;
-                members = mWorkReport.members;
-                projectId = mWorkReport.ProjectInfo.getId();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-
-            switch (mWorkReport.type) {
-                case WorkReport.DAY:
-                    rg.check(R.id.rb1);
-                    break;
-                case WorkReport.WEEK:
-                    rg.check(R.id.rb2);
-                    break;
-                case WorkReport.MONTH:
-                    rg.check(R.id.rb3);
-                    break;
-                default:
-                    break;
-            }
-
-            OrganizationalMember reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer
-                    .user ? mWorkReport.reviewer.user : null;
-            tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
-            tv_toUser.setText(getMenberText());
-            edt_content.setText(mWorkReport.content);
-
-            if (null != mWorkReport.ProjectInfo) {
-                tv_project.setText(mWorkReport.ProjectInfo.title);
-            }
-            //附件暂时不能做
-        } else {
-            rg.check(R.id.rb1);
-        }
-
-        /*来自不同的业务 判断*/
-        if (type == TYPE_EDIT) {
+        } else if (type == TYPE_EDIT) {
             tv_resignin.setVisibility(View.GONE);
             rb1.setEnabled(false);
             rb2.setEnabled(false);
             rb3.setEnabled(false);
-            //getEditAttachments();
             gridView.setVisibility(View.GONE);
-
         } else if (type == TYPE_PROJECT) {
             projectAddWorkReport();
+            getDefaultComment();
+        } else if (type == TYPE_CREATE) {
+            getDefaultComment();
+        } else {
+            rg.check(R.id.rb1);
         }
         initRetroDate();
-        getDefaultComment();
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         controller.loadView(gridView);
