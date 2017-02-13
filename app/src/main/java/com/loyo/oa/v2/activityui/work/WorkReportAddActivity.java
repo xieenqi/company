@@ -20,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.loyo.oa.common.type.LoyoBizType;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -114,8 +115,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     @ViewById
     TextView wordcount, tv_crm, tv_project, tv_time, tv_toUser, tv_reviewer, tv_resignin;
     @ViewById
-    ViewGroup layout_del;
-    @ViewById
     ImageView img_title_toUser;
     @ViewById(R.id.image_upload_grid_view)
     ImageUploadGridView gridView;
@@ -139,14 +138,10 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     private boolean isDelayed = false;
     private int mSelectType = WorkReport.DAY;
     private int retroIndex = 1;//蛋疼的兼容原来的1序
-    private int bizType = 1;
     private String currentValue;
     private String content;
     private WeeksDialog weeksDialog = null;
-    private workReportAddgridViewAdapter workGridViewAdapter;
     UploadController controller;
-    private ArrayList<OrganizationalMember> users = new ArrayList<>();
-    private ArrayList<OrganizationalMember> depts = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
     private Members members = new Members();
@@ -154,7 +149,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     private StringBuffer joinUserId;
     private StringBuffer joinName;
     private PostBizExtData bizExtData;
-    private StringBuffer joinUser;
     private String[] pastSevenDay = new String[7];
     private String[] pastThreeMonth = new String[3];
     private CompositeSubscription subscriptions;
@@ -172,7 +166,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                     } else {
                         no_dysndata_workreports.setVisibility(View.GONE);
                         gv_workreports.setVisibility(View.VISIBLE);
-                        workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
+                        workReportAddgridViewAdapter workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
                         gv_workreports.setAdapter(workGridViewAdapter);
                     }
                     break;
@@ -195,7 +189,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         subscriptions = new CompositeSubscription();
         img_title_left.setOnTouchListener(touch);
         img_title_right.setOnTouchListener(touch);
-        layout_del.setOnTouchListener(touch);
         layout_reviewer.setOnTouchListener(touch);
         tv_resignin.setOnTouchListener(touch);
         layout_mproject.setOnTouchListener(touch);
@@ -318,7 +311,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      * @return
      */
     private String getMenberText() {
-        joinUser = new StringBuffer();
+        StringBuffer joinUser = new StringBuffer();
         joinUserId = new StringBuffer();
         for (int i = 0; i < mWorkReport.members.getAllData().size(); i++) {
             joinUser.append(mWorkReport.members.getAllData().get(i).getName() + ",");
@@ -431,7 +424,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
 
     }
 
-    @Click({R.id.tv_resignin, R.id.img_title_left, R.id.img_title_right, R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_del, R.id.layout_mproject})
+    @Click({R.id.tv_resignin, R.id.img_title_left, R.id.img_title_right, R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_mproject})
     void onClick(final View v) {
         Bundle mBundle;
         switch (v.getId()) {
@@ -508,14 +501,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 startActivity(intent);
             }
             break;
-
-            case R.id.layout_del:
-                users.clear();
-                depts.clear();
-                tv_toUser.setText("");
-                layout_del.setVisibility(View.GONE);
-                img_title_toUser.setVisibility(View.VISIBLE);
-                break;
 
             /*选择项目归档*/
             case R.id.layout_mproject:
@@ -910,7 +895,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = uuid;
-            attachmentBatch.bizType = bizType;
+            attachmentBatch.bizType = LoyoBizType.WorkReport.getCode();
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");
