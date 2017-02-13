@@ -124,7 +124,6 @@ public class ContactsFragment extends CustomerChildFragment
         listView.setMode(PullToRefreshBase.Mode.MANUAL_REFRESH_ONLY);
         listView.getRefreshableView().setLayoutManager(new LinearLayoutManager(getContext()));
         listView.getRefreshableView().setAdapter(adapter);
-        listView.setAdapter(adapter);
     }
 
     //用来处理打电话权限申请
