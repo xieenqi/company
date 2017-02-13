@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
+import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.Locate;
 import com.loyo.oa.v2.activityui.customer.model.Member;
@@ -70,14 +71,16 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     public static final int REQUEST_CUSTOMER_UPDATE_CONTRACT = 7;
     //    public static final int REQUEST_CUSTOMER_FOLLOW = 8;
     public static final int REQUEST_CUSTOMER_EDIT_BASEINFO = 9;
+    private static final int REQUEST_ACTIVITY_CODE_STATUS = 10;
+
 
     @ViewById
     ViewGroup img_title_left, layout_Extra, img_title_right, layout_customer_district, layout_customer_label,
-            layout_customer_responser, layout_customer_join_users, ll_common;
+            layout_customer_responser, layout_customer_join_users, ll_common, layout_customer_status;
     @ViewById(R.id.layout_customer_optional_info)
     LinearLayout containerOp, layout_rushpackger;
     @ViewById
-    EditText tv_address, tv_customer_name, edt_customer_memo, edt_address_details;
+    EditText tv_address, tv_customer_name, edt_customer_memo, edt_address_details, edt_customer_weburl;
     @ViewById
     TextView tv_customer_creator, tv_customer_responser, tv_customer_join_users, tv_customer_create_at,
             tv_labels, tv_district, tv_common_persion, tv_common_type, tv_common_reason, tv_customer_recycledAt;
@@ -85,6 +88,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     ImageView img_go_where, img_refresh_address, img_del_join_users;
     @ViewById
     LoadingLayout ll_loading;
+
+    @ViewById
+    TextView tv_common_lose,tv_customer_status;
 
     Customer mCustomer;
     @Extra("CustomerId")
@@ -136,6 +142,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         layout_customer_join_users.setOnTouchListener(Global.GetTouch());
         img_del_join_users.setOnTouchListener(Global.GetTouch());
         layout_customer_district.setOnTouchListener(Global.GetTouch());
+        Global.SetTouchView(layout_customer_status);
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
         getCustomer();
     }
@@ -363,6 +370,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             mTagItems = mCustomer.tags;
             setTag();
         }
+        //网址
+        edt_customer_weburl.setText(mCustomer.webSite);
+        //客户状态
+        tv_customer_status.setText(mCustomer.statusName);
+
         /* 公海客户特殊操作 */
         if (mCustomer.state == Customer.DumpedCustomer) {
             layout_Extra.setVisibility(View.GONE);
@@ -373,6 +385,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             tv_common_reason.setText(TextUtils.isEmpty(mCustomer.recycleReason) ? "--" : mCustomer.recycleReason);
             if (mCustomer.recycleReason.length() > 15)
                 tv_common_reason.setGravity(Gravity.LEFT | Gravity.CENTER);
+            tv_common_lose.setText(mCustomer.RecycleName);
         } else {
             layout_Extra.setVisibility(View.VISIBLE);
             ll_common.setVisibility(View.GONE);
@@ -397,6 +410,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         layout_customer_district.setEnabled(canEdit);
         img_refresh_address.setEnabled(canEdit);
         layout_customer_label.setEnabled(canEdit);
+        layout_customer_status.setEnabled(canEdit);
+        edt_customer_weburl.setEnabled(canEdit);
 
         containerOp.setClickable(canEdit);
         containerOp.setEnabled(canEdit);
@@ -487,7 +502,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_label,
             R.id.img_refresh_address, R.id.img_go_where, R.id.img_del_join_users,
-            R.id.layout_customer_responser, R.id.layout_customer_join_users, R.id.layout_customer_district})
+            R.id.layout_customer_responser, R.id.layout_customer_join_users, R.id.layout_customer_district,
+            R.id.layout_customer_status})
     void onClick(final View v) {
         Intent mIntent;
         switch (v.getId()) {
@@ -503,7 +519,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 }
 
                 break;
+            //客户状态
+            case R.id.layout_customer_status:
 
+                Bundle b = new Bundle();
+                b.putString(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, mCustomer.statusId);//设置默认值
+                app.startActivityForResult(this, CustomerStatusSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_STATUS, b);
+
+                break;
+            //客户标签
             case R.id.layout_customer_label:
                 mIntent = new Intent(CustomerInfoActivity.this, CustomerLabelCopyActivity.class);
                 mIntent.putExtra("canEdit", canEdit);
@@ -612,6 +636,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         map.put("position", mLocate);
         map.put("extDatas", extDatas);
         map.put("regional", regional);
+        map.put("statusId", mCustomer.statusId);//状态
+        String url = edt_customer_weburl.getText()+"";
+        //输入的有内容，才提交
+        if(url.length()>8){
+            map.put("webSite", edt_customer_weburl.getText());
+        }
 
         showCommitLoading();
         CustomerService.updateCustomer(mCustomer.getId(), map)
@@ -619,19 +649,19 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onNext(final Customer customer) {
                         //通过eventBus，把修改以后的数据发送出去，刷新详情，列表的数据
-                        Customer updateCus=new Customer();
-                        updateCus.name=customerName;
-                        updateCus.summary=summary;
-                        updateCus.owner=owner;
-                        updateCus.members=members;
-                        updateCus.tags=mTagItems;
-                        updateCus.loc=adrDetailsData;
-                        updateCus.position=mLocate;
-                        updateCus.extDatas=extDatas;
-                        updateCus.regional=regional;
-                        MyCustomerRushEvent myCustomerRushEvent =new MyCustomerRushEvent(updateCus);
-                        myCustomerRushEvent.eventCode= MyCustomerRushEvent.EVENT_CODE_UPDATE;
-                        myCustomerRushEvent.subCode= MyCustomerRushEvent.EVENT_SUB_CODE_INFO;
+                        Customer updateCus = new Customer();
+                        updateCus.name = customerName;
+                        updateCus.summary = summary;
+                        updateCus.owner = owner;
+                        updateCus.members = members;
+                        updateCus.tags = mTagItems;
+                        updateCus.loc = adrDetailsData;
+                        updateCus.position = mLocate;
+                        updateCus.extDatas = extDatas;
+                        updateCus.regional = regional;
+                        MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(updateCus);
+                        myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                        myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_INFO;
                         AppBus.getInstance().post(myCustomerRushEvent);
                         finish();
                     }
@@ -650,14 +680,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     /**
      * 更新Label
+     *
      * @param event
      */
     @Subscribe
-    public void onCustomerRushEvent(MyCustomerRushEvent event){
-        if(MyCustomerRushEvent.EVENT_CODE_UPDATE==event.eventCode&& MyCustomerRushEvent.EVENT_SUB_CODE_LABEL== MyCustomerRushEvent.EVENT_SUB_CODE_LABEL){
+    public void onCustomerRushEvent(MyCustomerRushEvent event) {
+        if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode && MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == MyCustomerRushEvent.EVENT_SUB_CODE_LABEL) {
             tv_labels.setText(appendTagItem(event.data.tags));
             mCustomer.tags = event.data.tags;
-            mTagItems=event.data.tags;
+            mTagItems = event.data.tags;
         }
     }
 
@@ -733,6 +764,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
         switch (requestCode) {
 
+            //客户状态
+            case  REQUEST_ACTIVITY_CODE_STATUS:
+                CustomerStatusModel.CustomerStatusItemModel itemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
+                mCustomer.statusId = itemModel.id;
+                mCustomer.statusName = itemModel.name;
+                tv_customer_status.setText(itemModel.name);
+                break;
             /**
              * 地图微调，数据回调
              * */

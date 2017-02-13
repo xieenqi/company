@@ -152,6 +152,8 @@ public class Customer extends BaseBeans {
 
     public String statusId;//客户状态id
     public String statusName;//客户状态
+    public String webSite;//网址
+    public String RecycleName;//丢公海人
 
     @Override
     public String getOrderStr() {
