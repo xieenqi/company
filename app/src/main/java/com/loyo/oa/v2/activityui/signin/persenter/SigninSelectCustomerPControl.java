@@ -63,13 +63,19 @@ public class SigninSelectCustomerPControl implements SigninSelectCustomerPersent
             @Override
             public void onNext(BaseBeanT<ArrayList<SigninSelectCustomer>> result) {
                 vControl.getDataComplete();
-                if(null==result.data){
+                if(null==result.data||result.data.size()<=0){
                     if(paginationX.isEnpty()){
                         vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
                     }else{
-                        vControl.showMsg("没有更多数据了!");
+                        vControl.showMsg("没有更多数据了");
                     }
                     return;
+                }
+                if(paginationX.getPageIndex()==0){
+                    //刷新要清空原来的。
+                    paginationX.getRecords().clear();
+                }else{
+                    //加载的不是第一页
                 }
                 paginationX.getRecords().addAll(result.data);
                 if(paginationX.isEnpty()){
