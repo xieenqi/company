@@ -146,18 +146,16 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     private Reviewer mReviewer;
     private Members members = new Members();
     private ArrayList<WorkReportDyn> dynList;
-    private StringBuffer joinUserId;
-    private StringBuffer joinName;
-    private PostBizExtData bizExtData;
+    private StringBuilder joinUserId;
+    private StringBuilder joinName;
     private String[] pastSevenDay = new String[7];
     private String[] pastThreeMonth = new String[3];
     private CompositeSubscription subscriptions;
 
     private Handler mHandler = new Handler() {
-        public void handleMessage(final Message msg) {
-
+        @Override
+        public void dispatchMessage(Message msg) {
             switch (msg.what) {
-
                 //刷新动态数据UI
                 case UPDATE_SUCCESS:
                     if (null == dynList || dynList.size() == 0) {
@@ -170,7 +168,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                         gv_workreports.setAdapter(workGridViewAdapter);
                     }
                     break;
-
                 //周报数据回调
                 case WEEK_RESULT:
                     beginAt = weeksDialog.GetBeginandEndAt()[0];
@@ -220,11 +217,17 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         /*来自不同的业务 判断*/
         if (type == TYPE_EDIT || type == TYPE_CREATE_FROM_COPY) {
             if (null != mWorkReport) {
-                if (type == TYPE_EDIT)
+                if (type == TYPE_EDIT) {
                     super.setTitle("编辑工作报告");
+                    tv_resignin.setVisibility(View.GONE);
+                    rb1.setEnabled(false);
+                    rb2.setEnabled(false);
+                    rb3.setEnabled(false);
+                    gridView.setVisibility(View.GONE);
+                }
                 uuid = mWorkReport.attachmentUUId;
                 dynList = mWorkReport.crmDatas;
-                crm_switch.setState(null == dynList ? false : true);
+                crm_switch.setState(null != dynList);
                 mHandler.sendEmptyMessage(UPDATE_SUCCESS);
                 layout_crm.setVisibility(View.VISIBLE);
                 try {
@@ -234,7 +237,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-
                 switch (mWorkReport.type) {
                     case WorkReport.DAY:
                         rg.check(R.id.rb1);
@@ -248,7 +250,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                     default:
                         break;
                 }
-
                 OrganizationalMember reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer
                         .user ? mWorkReport.reviewer.user : null;
                 tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
@@ -258,14 +259,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
                 if (null != mWorkReport.ProjectInfo) {
                     tv_project.setText(mWorkReport.ProjectInfo.title);
                 }
-                //附件暂时不能做
             }
-        } else if (type == TYPE_EDIT) {
-            tv_resignin.setVisibility(View.GONE);
-            rb1.setEnabled(false);
-            rb2.setEnabled(false);
-            rb3.setEnabled(false);
-            gridView.setVisibility(View.GONE);
         } else if (type == TYPE_PROJECT) {
             projectAddWorkReport();
             getDefaultComment();
@@ -305,25 +299,28 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         }
     }
 
-    /**
+    /*
      * 获取传过来 的menber信息
+     * StringBuilder 的性能高于StringBuffer
      *
-     * @return
      */
     private String getMenberText() {
-        StringBuffer joinUser = new StringBuffer();
-        joinUserId = new StringBuffer();
-        for (int i = 0; i < mWorkReport.members.getAllData().size(); i++) {
-            joinUser.append(mWorkReport.members.getAllData().get(i).getName() + ",");
-            joinUserId.append(mWorkReport.members.getAllData().get(i).getId() + ",");
+        StringBuilder joinUser = new StringBuilder();
+        joinUserId = new StringBuilder();
+        int length = mWorkReport.members.getAllData().size();
+        for (int i = 0; i < length; i++) {
+            joinUser.append(mWorkReport.members.getAllData().get(i).getName());
+            joinUserId.append(mWorkReport.members.getAllData().get(i).getId());
+            if (i < length - 1) {
+                joinUser.append(",");
+                joinUserId.append(",");
+            }
         }
         return joinUser.toString();
     }
 
     /**
      * 切换统计开关
-     *
-     * @param b
      */
     private void crmSwitch(final boolean b) {
         long beginTime, endTime;
@@ -719,7 +716,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      * 提交报告
      */
     private void requestCommitWork() {
-        bizExtData = new PostBizExtData();
+        PostBizExtData bizExtData = new PostBizExtData();
         if (type == TYPE_EDIT) {
             bizExtData.setAttachmentCount(mWorkReport.bizExtData.getAttachmentCount());
         } else {
@@ -777,8 +774,8 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             members = Compat.convertStaffCollectionToMembers(collection);
-            joinName = new StringBuffer();
-            joinUserId = new StringBuffer();
+            joinName = new StringBuilder();
+            joinUserId = new StringBuilder();
             if (members == null || (members.users.size() == 0 && members.depts.size() == 0)) {
                 tv_toUser.setText("无抄送人");
                 joinUserId.reverse();
@@ -856,8 +853,8 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             //用户选择, 抄送人
             case FinalVariables.REQUEST_ALL_SELECT:
                 members = (Members) data.getSerializableExtra("data");
-                joinName = new StringBuffer();
-                joinUserId = new StringBuffer();
+                joinName = new StringBuilder();
+                joinUserId = new StringBuilder();
                 if (members.users.size() == 0 && members.depts.size() == 0) {
                     tv_toUser.setText("无抄送人");
                     joinUserId.reverse();
