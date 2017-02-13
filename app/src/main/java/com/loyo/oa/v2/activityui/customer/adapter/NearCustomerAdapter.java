@@ -96,19 +96,7 @@ public class NearCustomerAdapter extends BaseAdapter {
             tv_content1.setText("标签：" + tagItems);
 
             if (null != customer.distance) {
-                String distance;
-                if (customer.distance.contains("km")) {
-                    tv_content4.setText(df.format(Double.parseDouble(customer.distance.replace("km", ""))) + "km");
-                } else if (customer.distance.contains("m")) {
-                    double disa = Float.parseFloat(customer.distance.replace("m", ""));
-                    if (disa <= 100) {
-                        distance = "<0.1km";
-                    } else {
-                        double disb = Math.round((disa / 1000) * 10) / 10;
-                        distance = disb + "km";
-                    }
-                    tv_content4.setText(distance);
-                }
+                tv_content4.setText(customer.distance);
             } else {
                 tv_content4.setText("无距离数据");
             }
@@ -130,7 +118,12 @@ public class NearCustomerAdapter extends BaseAdapter {
             tv_content1.setText("标签：" + tagItems);
             String ownerName = customer.owner!=null?customer.owner.getRealname():"无";
             tv_content2.setText("负责人：" + ownerName);
-            tv_content4.setText("距离：" + customer.distance);
+            if (null != customer.distance) {
+                tv_content4.setText(customer.distance);
+            } else {
+                tv_content4.setText("无距离数据");
+            }
+
             if (isNear && customer.winCount != 0) {
                 imgWin.setVisibility(View.VISIBLE);
             }
@@ -149,21 +142,11 @@ public class NearCustomerAdapter extends BaseAdapter {
             tv_content1.setText("地址：" + customer.position!=null?customer.position.addr:"无定位");
 
             if (null != customer.distance) {
-                String distance;
-                if (customer.distance.contains("km")) {
-                    tv_content4.setText(df.format(Double.parseDouble(customer.distance.replace("km", ""))) + "km");
-                } else if (customer.distance.contains("m")) {
-                    double disa = Float.parseFloat(customer.distance.replace("m", ""));
-                    if (disa <= 100) {
-                        distance = "<0.1km";
-                    } else {
-                        distance = df.format(disa / 1000) + "km";
-                    }
-                    tv_content4.setText(distance);
-                }
+                tv_content4.setText(customer.distance);
             } else {
                 tv_content4.setText("无距离数据");
             }
+
         }
 
         /*导航按钮*/
