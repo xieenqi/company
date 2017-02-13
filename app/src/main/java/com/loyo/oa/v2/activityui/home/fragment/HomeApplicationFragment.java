@@ -43,6 +43,7 @@ import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
+import com.loyo.oa.v2.activityui.work.WorkReportAddActivity;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.application.MainApp;
@@ -155,7 +156,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     break;
                 //提交报告
                 case BaseActivity.WORK_ADD:
-                    startActivityForResult(new Intent(getActivity(), WorkReportAddActivity_.class), Activity.RESULT_FIRST_USER);
+                    Intent intent = new Intent(getActivity(), WorkReportAddActivity_.class);
+                    intent.putExtra("type", WorkReportAddActivity.TYPE_CREATE);
+                    startActivityForResult(intent, Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartReport);
                     break;

@@ -201,7 +201,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     void addNewContact() {
         Bundle bundle = new Bundle();
         bundle.putSerializable("customer", customerContact);
-        app.startActivityForResult(this, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT, bundle);
+        app.startActivityForResult(this, CustomerContractAddActivity.class,
+                MainApp.ENTER_TYPE_RIGHT, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT, bundle);
     }
 
     @Click(R.id.layout_back)
