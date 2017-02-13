@@ -100,8 +100,7 @@ public class CustomerInfoExtraData extends LinearLayout {
 
                 }
                 try {
-//                    tv_content.setText(DateTool.timet(customerExtra.getVal(), DateTool.DATE_FORMATE_SPLITE_BY_POINT));
-                    tv_content.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.parseLong(customerExtra.getVal())));
+                    if(null!=customerExtra.getVal())tv_content.setText(DateTool.getDateTimeFriendly(Long.parseLong(customerExtra.getVal())));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     tv_content.setText(customerExtra.getVal());

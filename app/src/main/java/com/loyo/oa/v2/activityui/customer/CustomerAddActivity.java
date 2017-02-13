@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +86,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
     public static final int REQUEST_CUSTOMER_SERACH = 7;
     public static final int TYPE_CLUE_TO_CUSTOMER = 1223;//线索转为客户
+    public static final int TYPE_NEW_CUSTOMER_FROM_CONTACT = 1224;//新建客户，但是来自通讯录导入
 
     @ViewById
     ViewGroup img_title_left;
@@ -167,8 +169,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private String uuid;
     private String tagItemIds;
     private String myAddress;
-    private String contactName = "";
-    private String contactPhone = "";
 
     private String customer_name;
     private String customerAddress;
@@ -212,8 +212,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @AfterViews
     void initUI() {
         subscriptions = new CompositeSubscription();
-        contactName = getIntent().getStringExtra(ExtraAndResult.EXTRA_NAME);
-        contactPhone = getIntent().getStringExtra(ExtraAndResult.EXTRA_DATA);
 
         tv_phone_name1 = (TextView) findViewById(R.id.tv_phone_name1);
         tv_phone_name2 = (TextView) findViewById(R.id.tv_phone_name2);
@@ -257,8 +255,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         iv_call_insert2.setOnTouchListener(Global.GetTouch());
 
         edit_address_details = (EditText) findViewById(R.id.edit_address_details);
-        super.setTitle(actionType == TYPE_CLUE_TO_CUSTOMER ? "线索转换客户" : "新建客户");
-        getTempCustomer();
+
         requestJurisdiction();
         if (app.latitude != -1 && app.longitude != -1) {
             laPosition = app.latitude;
@@ -267,12 +264,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         edt_contract_tel1.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
         edt_contract_telnum1.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
 
-        if (!TextUtils.isEmpty(contactName)) {
-            edt_contract.setText(contactName);
-        }
-        if (!TextUtils.isEmpty(contactPhone)) {
-            edt_contract_tel1.setText(contactPhone.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", ""));
-        }
+
+
         LocationUtilGD.permissionLocation(this);
 
         controller = new UploadController(this, 9);
@@ -280,11 +273,25 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         controller.loadView(gridView);
         /*线索转为客户*/
         if (actionType == TYPE_CLUE_TO_CUSTOMER && clueSales != null) {
+            super.setTitle("线索转换客户");
             edt_name.setText(clueSales.companyName);
             edit_address_details.setText(clueSales.address);
             edt_contract.setText(clueSales.name);
             edt_contract_tel1.setText(clueSales.cellphone);
             edt_contract_telnum1.setText(clueSales.tel);
+        }else if(actionType == TYPE_NEW_CUSTOMER_FROM_CONTACT && clueSales != null){
+            //来自通讯录导入
+            super.setTitle("新建客户");
+            if(null!=clueSales.name){
+                edt_contract.setText(clueSales.name);
+            }
+            if(null!=clueSales.tel){
+                edt_contract_tel1.setText(clueSales.tel.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", ""));
+            }
+        }else{
+            super.setTitle("新建客户");
+            getTempCustomer();
+
         }
         startLocation();
     }
@@ -356,10 +363,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         containerRe.addView(new CustomerInfoExtraData(mContext, RextDatasModel, ismy, R.color.text33, 0));
     }
 
+    /**
+     * 加载上次编辑，没有提交的信息
+     */
     void getTempCustomer() {
         Customer customer = DBManager.Instance().getCustomer();
         if (customer == null) return;
-
+        Toast("已显示之前未提交的数据");
         edt_name.setText(customer.name);
         ArrayList<Contact> contacts = customer.contacts;
         if (contacts != null && contacts.size() > 0) {
@@ -770,6 +780,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             mCustomer.creator = null;
 
             DBManager.Instance().putCustomer(MainApp.gson.toJson(mCustomer));
+
         }
         subscriptions.unsubscribe();
         locationGd.sotpLocation();

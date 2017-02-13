@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.model.ClueSales;
 import com.loyo.oa.v2.activityui.customer.adapter.MyContactInfoListAdapter;
 import com.loyo.oa.v2.activityui.customer.event.ContactMaillistRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.MyContactInfo;
@@ -85,31 +87,6 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
      * 初始化
      */
     private void initUI() {
-
-//        if (PackageManager.PERMISSION_GRANTED ==
-//                getPackageManager().checkPermission("android.permission.READ_CONTACTS", "com.loyo.oa.v2")
-//                && PackageManager.PERMISSION_GRANTED ==
-//                getPackageManager().checkPermission("android.permission.WRITE_CONTACTS", "com.loyo.oa.v2")) {
-//        } else {
-//            final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
-//            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-//                @Override
-//                public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                    sDialog.sweetAlertDialog.dismiss();
-//                    finish();
-//                }
-//            }, new SweetAlertDialog.OnSweetClickListener() {
-//                @Override
-//                public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                    sDialog.sweetAlertDialog.dismiss();
-//                    Utils.doSeting(MyContactMailList.this);
-//                    finish();
-//                }
-//            },"提示","需要使用通讯录读写权限\n请在”设置”>“应用”>“权限”中配置权限");
-//            return;
-//        }
-
-
 
         pageForm = getIntent().getIntExtra(ExtraAndResult.EXTRA_NAME,0);
         isEdit   = getIntent().getBooleanExtra(ExtraAndResult.EXTRA_OBJ,false);
@@ -185,8 +162,11 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
                 /*来自新建客户*/
                 else if(pageForm == 2){
                     Bundle mBundle = new Bundle();
-                    mBundle.putString(ExtraAndResult.EXTRA_NAME, contactInfoList.get(position).getName());
-                    mBundle.putString(ExtraAndResult.EXTRA_DATA, contactInfoList.get(position).getPhono());
+                    ClueSales clueSales=new ClueSales();
+                    clueSales.name = contactInfoList.get(position).getName();
+                    clueSales.tel  = contactInfoList.get(position).getPhono();
+                    mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, clueSales);
+                    mBundle.putInt(ExtraAndResult.EXTRA_TYPE, CustomerAddActivity.TYPE_NEW_CUSTOMER_FROM_CONTACT);
                     app.startActivity(MyContactMailList.this, CustomerAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, mBundle);
                 }
 
