@@ -34,7 +34,6 @@ import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
 import com.loyo.oa.v2.activityui.other.ViewHolder;
-import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
@@ -78,7 +77,6 @@ import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.loyo.oa.v2.R.id.image_upload_grid_view;
-import static rx.internal.util.ScalarSynchronousObservable.create;
 
 /**
  * 【创建任务】 页面
@@ -150,9 +148,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
     String customerName;
 
     UploadController controller;
-
     private AlertDialog dialog_Product;
-    private ImageGridViewAdapter imageGridViewAdapter;
     private OrganizationalMember newUser;
     private CornBody cornBody;
     private StringBuffer strBuf;
@@ -164,25 +160,15 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
     private int remindTime;
     private int mRemind = 0;
     private int bizType = 2;
-    private int uploadSize;
-    private int uploadNum;
     private boolean isCopy;
     private boolean isState = true;
     private boolean isKind;//true:重复 //截止
-
-    private static final int ID_PASTE = android.R.id.paste;
-
-
     private String title;
     private String content;
     private StringBuffer joinName;
     private StringBuffer joinUserId;
     private String uuid = StringUtil.getUUID();
-    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
-    private List<String> mSelectPath;
-    private ArrayList<ImageInfo> pickPhotsResult;
     private CompositeSubscription subscriptions;
-
 
     @AfterViews
     void initUI() {
@@ -675,47 +661,6 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
         newUser = user.toShortUser();
         tv_responsiblePerson.setText(newUser.getName());
     }
-
-//    /**
-//     * 批量上传附件
-//     */
-//    private void newUploadAttachement() {
-//        try {
-//            uploadSize = 0;
-//            uploadNum = pickPhots.size();
-//            for (ImageInfo item : pickPhots) {
-//                Uri uri = Uri.parse(item.path);
-//                File newFile = Global.scal(this, uri);
-//                if (newFile != null && newFile.length() > 0) {
-//                    if (newFile.exists()) {
-//                        TypedFile typedFile = new TypedFile("image/*", newFile);
-//                        LogUtil.dee("typeFile:" + typedFile);
-//                        TypedString typedUuid = new TypedString(uuid);
-//                        AttachmentService.newUpload(typedUuid, bizType, typedFile)
-//                                .subscriber(new DefaultLoyoSubscriber<Attachment>(hud, true) {
-//
-//                                    @Override
-//                                    public void onError(Throwable e) {
-//                                        super.onError(e);
-//                                        img_title_right.setEnabled(true);
-//                                    }
-//
-//                                    @Override
-//                                    public void onNext(Attachment attachment) {
-//                                        uploadSize++;
-//                                        if (uploadSize == uploadNum) {
-//                                            requestCommitTask();
-//                                        }
-//                                    }
-//                                });
-//                    }
-//                }
-//            }
-//        } catch (Exception ex) {
-//            Global.ProcException(ex);
-//            Toast("图片过大");
-//        }
-//    }
 
     /**
      * 上传附件信息
