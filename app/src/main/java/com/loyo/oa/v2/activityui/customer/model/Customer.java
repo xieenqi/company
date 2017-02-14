@@ -1,7 +1,11 @@
 package com.loyo.oa.v2.activityui.customer.model;
 
+import android.graphics.Color;
 import android.support.annotation.IntDef;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -137,8 +141,10 @@ public class Customer extends BaseBeans {
 
     public long activityRecycleAt;//跟进行为丢公海时间
     public long orderRecycleAt;   //订单丢公海时间
-    public boolean activityRemind; //跟进行为丢公海提醒时间
-    public boolean orderRemind;   //订单丢公海提醒时间
+    public boolean activityRemind; //跟进行为丢公海提醒飘红
+    public boolean orderRemind;   //订单丢公海提醒飘红
+    public String activityRecycleRemind; // 拜访丢公海提醒文字
+    public String orderRecycleRemind; // 订单丢公海提醒文字
 
     public long saleactRecycleAt; // 跟进丢公海
     public long visitRecycleAt;   // 拜访丢公海
@@ -148,7 +154,6 @@ public class Customer extends BaseBeans {
     public long recycledAt;//丢公海的时间
     public RecycleType recycleType;//丢公海类型 0.无 1.手动 2.自动
     public String recycleReason;//丢公海原因
-    public String recycleRemind; // 丢公海提醒
 
     public String statusId;//客户状态id
     public String statusName;//客户状态
@@ -178,6 +183,54 @@ public class Customer extends BaseBeans {
         String result = buffer.toString();
 
         return TextUtils.isEmpty(result) ? "无" : result;
+    }
+
+    public SpannableStringBuilder getFormattedDropRemind() {
+        if (activityRecycleAt <= 0 && orderRecycleAt <= 0) {
+            SpannableStringBuilder builder = new SpannableStringBuilder("");
+            return builder;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        boolean hasActivityRemind = false;
+        boolean hasOrderRemind = false;
+        if (activityRecycleAt > 0 && !TextUtils.isEmpty(activityRecycleRemind)) {
+            sb.append(activityRecycleRemind);
+            hasActivityRemind = true;
+        }
+        if (orderRecycleAt > 0 && !TextUtils.isEmpty(orderRecycleRemind)) {
+            if (hasActivityRemind) {
+                sb.append(" 或 ");
+            }
+            sb.append(orderRecycleRemind);
+            hasOrderRemind = true;
+        }
+
+        String compoundRemind = sb.toString();
+
+        SpannableStringBuilder builder = new SpannableStringBuilder(compoundRemind);
+        try {
+            if (hasActivityRemind && activityRemind) {
+                ForegroundColorSpan redSpan = new ForegroundColorSpan(Color.parseColor("#f5625a"));
+                builder.setSpan(redSpan, 0, activityRecycleRemind.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        catch (Exception e) {}
+        try {
+            if (hasOrderRemind && orderRemind) {
+                ForegroundColorSpan redSpan2 = new ForegroundColorSpan(Color.parseColor("#f5625a"));
+                builder.setSpan(redSpan2, compoundRemind.length() - orderRecycleRemind.length(),
+                        compoundRemind.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        catch (Exception e) {}
+        return builder;
+    }
+
+    public boolean hasDropRemind() {
+        return activityRecycleAt > 0 || orderRecycleAt > 0;
     }
 
     /**

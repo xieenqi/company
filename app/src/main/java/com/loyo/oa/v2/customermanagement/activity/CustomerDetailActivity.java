@@ -266,21 +266,22 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         this.customerTagText.setText("标签：" + customer.displayTagString());
         if (customer.state == Customer.DumpedCustomer) {
             dropReasonText.setVisibility(View.VISIBLE);
-            String recyleReason = customer.recycleReason;
-            if (TextUtils.isEmpty(recyleReason)) {
-                recyleReason = "无";
+            String recycleReason = customer.recycleReason;
+            if (TextUtils.isEmpty(recycleReason)) {
+                recycleReason = "无";
             }
-            dropReasonText.setText("丢公海原因：" + recyleReason);
+            dropReasonText.setText("丢公海原因：" + recycleReason);
         }
         else {
             dropReasonText.setVisibility(View.GONE);
         }
-        if (TextUtils.isEmpty(customer.recycleRemind)) {
-            warnView.setVisibility(View.GONE);
+        if (customer.hasDropRemind()) {
+            warnView.setVisibility(View.VISIBLE);
+            recycleRemindText.setText(customer.getFormattedDropRemind());
         }
         else {
-            warnView.setVisibility(View.VISIBLE);
-            recycleRemindText.setText(customer.recycleRemind);
+            warnView.setVisibility(View.GONE);
+
         }
         if (canEdit) {
             stateEditableVew.setVisibility(View.VISIBLE);
