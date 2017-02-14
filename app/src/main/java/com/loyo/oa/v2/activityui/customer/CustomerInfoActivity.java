@@ -61,15 +61,12 @@ import java.util.List;
 
 /**
  * 【客户信息】 页面
- * //TODO 写客户详情需求的时候注意，有一个customer的实体，怎嚒还定义来一套变量，没有细看，可以的话，删除掉。
  */
 @EActivity(R.layout.activity_customer_info)
 public class CustomerInfoActivity extends BaseFragmentActivity {
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
-    //    public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
     public static final int REQUEST_CUSTOMER_UPDATE_CONTRACT = 7;
-    //    public static final int REQUEST_CUSTOMER_FOLLOW = 8;
     public static final int REQUEST_CUSTOMER_EDIT_BASEINFO = 9;
     private static final int REQUEST_ACTIVITY_CODE_STATUS = 10;
 
@@ -90,25 +87,18 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     LoadingLayout ll_loading;
 
     @ViewById
-    TextView tv_common_lose,tv_customer_status;
+    TextView tv_common_lose, tv_customer_status;
 
     Customer mCustomer;
     @Extra("CustomerId")
     String mCustomerId;
     @Extra("canEdit")
     boolean canEdit;
-    private String addres;
-    private Bundle mBundle;
-    private ArrayList<NewTag> mTagItems = new ArrayList<>();
-    private Locate mLocate = new Locate();
-    private User owner = new User();
-    private ArrayList<Member> members = new ArrayList<>();
     private Members cusMembers = new Members();
-    private CustomerRegional regional = new CustomerRegional();
     private StringBuffer mManagerIds = new StringBuffer();
     private StringBuffer mManagerNames = new StringBuffer();
     private ArrayList<CustomerExtraData> mCustomerExtraDatas;
-    private PositionResultItem positionResultItem;
+    private PositionResultItem positionResultItem;//地图，回调的地址
     private LinearLayout containerRe;
 
     private double laPosition;//当前位置的经纬度
@@ -208,7 +198,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-//                        finish();
                     }
 
                     @Override
@@ -235,9 +224,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             public void onClick(final View view) {
                 String[] cityArr = selectCityView.getResult();
                 tv_district.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2]);
-                regional.province = cityArr[0];
-                regional.city = cityArr[1];
-                regional.county = cityArr[2];
+                if (null == mCustomer.regional) {
+                    mCustomer.regional = new CustomerRegional();
+                }
+                mCustomer.regional.province = cityArr[0];
+                mCustomer.regional.city = cityArr[1];
+                mCustomer.regional.county = cityArr[2];
                 selectCityView.dismiss();
             }
         });
@@ -247,10 +239,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 初始化动态字段
      */
     private void initExtra(final boolean editable) {
-
+        if (null == mCustomer.extDatas) return;
         extDatas = new ArrayList<>();
         extDatas.addAll(mCustomer.extDatas);
-
         /*动态字段 数据转换*/
         if (null != extDatas && !extDatas.isEmpty()) {
             for (ExtraData extraData : extDatas) {
@@ -281,6 +272,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     }
 
     void initData() {
+        if (mCustomer == null) {
+            return;
+        }
+
         this.canEdit = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.EDIT);
         boolean canChangeResponser = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
@@ -291,89 +286,56 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         updateUiWithEditAuth(canEdit);
         updateUiWithResponserAuth(canChangeResponser);
         updateUiWithMemberAuth(canChangeMember);
-
         initExtra(canEdit);
 
-
-        if (mCustomer == null) {
-            return;
-        }
-
-        if (null != mCustomer.members) {
-            members = mCustomer.members;
-        }
-
-        if (null != mCustomer.position) {
-            mLocate = mCustomer.position;
-        }
-
-        if (null != mCustomer.owner) {
-            owner = mCustomer.owner;
-        }
-
-        if (null != mCustomer.regional) {
-            regional = mCustomer.regional;
-        }
-
-        try {
-            if (null != mCustomer.position && mCustomer.position.loc.length > 1) {
-                laPosition = mCustomer.position.loc[1];
-                loPosition = mCustomer.position.loc[0];
-                addres = mCustomer.position.addr;
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+        //客户名字
         tv_customer_name.setText(mCustomer.name);
-
-        if (null != mCustomer && null != mCustomer.position && !TextUtils.isEmpty(mCustomer.position.addr)) {
-            tv_address.setText(mCustomer.position.addr);
-        } else {
-            Intent intent = new Intent();
-            Bundle bundle = intent.getExtras();
-            try {
-                tv_address.setText(bundle.getString("CustomerAddress"));
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (!TextUtils.isEmpty(mCustomer.loc.addr)) {
-            edt_address_details.setText(mCustomer.loc.addr);
-        }
-
-        try {
-            tv_customer_creator.setText(mCustomer.creator.getName());
-        } catch (NullPointerException e) {
-            tv_customer_creator.setText("无");
-            e.printStackTrace();
-        }
-
-        String responser = (null == mCustomer.owner || null == mCustomer.owner) ? "" : mCustomer.owner.name;
-        tv_customer_responser.setText(responser);
-        if (members.size() != 0) {
-            if (canChangeMember) {
-                img_del_join_users.setVisibility(View.VISIBLE);//删除参与人按钮
-            }
-            tv_customer_join_users.setText(Utils.getMembers(members));
-        } else {
-            tv_customer_join_users.setText("无参与人");
-        }
-        if (regional.province != null) {
-            tv_district.setText(regional.province + " " + regional.city + " " + regional.county + " ");
-        }
+        //客户介绍
         edt_customer_memo.setText(mCustomer.summary);
-//        tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.createdAt * 1000)));
+        //创建时间
         tv_customer_create_at.setText(DateTool.getDateTimeFriendly(mCustomer.createdAt));
-
-        if (mCustomer.tags != null && mCustomer.tags.size() > 0) {
-            mTagItems = mCustomer.tags;
-            setTag();
-        }
         //网址
         edt_customer_weburl.setText(mCustomer.webSite);
         //客户状态
         tv_customer_status.setText(mCustomer.statusName);
+        //客户详细地址
+        edt_address_details.setText(mCustomer.loc.addr);
+
+        if (null != mCustomer.position) {
+            if (null != mCustomer.position.loc && mCustomer.position.loc.length > 1) {
+                laPosition = mCustomer.position.loc[1];
+                loPosition = mCustomer.position.loc[0];
+            }
+            if (!TextUtils.isEmpty(mCustomer.position.addr)) {
+                tv_address.setText(mCustomer.position.addr);
+            }
+        }
+        if (null != mCustomer.creator && !TextUtils.isEmpty(mCustomer.creator.getName())) {
+            tv_customer_creator.setText(mCustomer.creator.getName());
+        } else {
+            tv_customer_creator.setText("无");
+        }
+
+
+        String responser = (null == mCustomer.owner || null == mCustomer.owner) ? "" : mCustomer.owner.name;
+        tv_customer_responser.setText(responser);
+        if (mCustomer.members.size() != 0) {
+            if (canChangeMember) {
+                img_del_join_users.setVisibility(View.VISIBLE);//删除参与人按钮
+            }
+            tv_customer_join_users.setText(Utils.getMembers(mCustomer.members));
+        } else {
+            tv_customer_join_users.setText("无参与人");
+        }
+        if (mCustomer.regional.province != null) {
+            tv_district.setText(mCustomer.regional.province + " " + mCustomer.regional.city + " " + mCustomer.regional.county + " ");
+        }
+
+        //设置标签
+        if (mCustomer.tags != null && mCustomer.tags.size() > 0) {
+            setTag();
+        }
+
 
         /* 公海客户特殊操作 */
         if (mCustomer.state == Customer.DumpedCustomer) {
@@ -385,7 +347,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             tv_common_reason.setText(TextUtils.isEmpty(mCustomer.recycleReason) ? "--" : mCustomer.recycleReason);
             if (mCustomer.recycleReason.length() > 15)
                 tv_common_reason.setGravity(Gravity.LEFT | Gravity.CENTER);
-            tv_common_lose.setText(mCustomer.recycleName);
+            tv_common_lose.setText(TextUtils.isEmpty(mCustomer.recycleName)?"--":mCustomer.recycleName);
         } else {
             layout_Extra.setVisibility(View.VISIBLE);
             ll_common.setVisibility(View.GONE);
@@ -394,7 +356,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     @UiThread
     void setTag() {
-        String tag = appendTagItem(mTagItems);
+        String tag = appendTagItem(mCustomer.tags);
         if (!TextUtils.isEmpty(tag)) {
             tv_labels.setText(tag);
         }
@@ -412,26 +374,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         layout_customer_label.setEnabled(canEdit);
         layout_customer_status.setEnabled(canEdit);
         edt_customer_weburl.setEnabled(canEdit);
-
         containerOp.setClickable(canEdit);
         containerOp.setEnabled(canEdit);
-
         if (canEdit) {
+            tv_customer_status.setTextColor(getResources().getColor(R.color.title_bg1));
             tv_address.setTextColor(getResources().getColor(R.color.text33));
             tv_district.setTextColor(getResources().getColor(R.color.title_bg1));
             tv_labels.setTextColor(getResources().getColor(R.color.title_bg1));
         } else {
+            tv_customer_status.setTextColor(getResources().getColor(R.color.md_grey_500));
             tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
             tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
             tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
         }
-//        layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-//                LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
 
     }
 
     void updateUiWithResponserAuth(boolean canChangeResponser) {
-
         layout_customer_responser.setEnabled(canChangeResponser);
         if (canChangeResponser) {
             tv_customer_responser.setTextColor(getResources().getColor(R.color.title_bg1));
@@ -442,7 +401,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     }
 
     void updateUiWithMemberAuth(boolean canChangeMember) {
-
         layout_customer_join_users.setEnabled(canChangeMember);
         if (canChangeMember) {
             tv_customer_join_users.setTextColor(getResources().getColor(R.color.title_bg1));
@@ -459,11 +417,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
-        if (owner != null) {
+        if (mCustomer.owner != null) {
             OrganizationalMember ownerUser = new OrganizationalMember();
-            ownerUser.setAvatar(owner.getAvatar());
-            ownerUser.setId(owner.getId());
-            ownerUser.setName(owner.getName());
+            ownerUser.setAvatar(mCustomer.owner.getAvatar());
+            ownerUser.setId(mCustomer.owner.getId());
+            ownerUser.setName(mCustomer.owner.getName());
             StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(ownerUser);
             bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
         }
@@ -532,8 +490,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 mIntent = new Intent(CustomerInfoActivity.this, CustomerLabelCopyActivity.class);
                 mIntent.putExtra("canEdit", canEdit);
                 mIntent.putExtra("fromPage", 1);
-                if (null != mTagItems) {
-                    mIntent.putExtra("tagitems", Utils.convertTagItems(mTagItems));
+                if (null != mCustomer.tags) {
+                    mIntent.putExtra("tagitems", Utils.convertTagItems(mCustomer.tags));
                     mIntent.putExtra("customerId", mCustomer.getId());
                 }
                 startActivity(mIntent);
@@ -541,7 +499,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
             /*刷新地理位置*/
             case R.id.img_refresh_address:
-                mBundle = new Bundle();
+                Bundle mBundle = new Bundle();
                 mBundle.putInt("page", MapModifyView.CUSTOMER_DETAILS_PAGE);
                 if (null != mCustomer.position && mCustomer.position.validatedLocation()) {
                     mBundle.putDoubleArray("loc", mCustomer.position.loc);
@@ -551,12 +509,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 break;
             /*路径规划*/
             case R.id.img_go_where:
-                Utils.goWhere(this, laPosition, loPosition, addres);
+                Utils.goWhere(this, laPosition, loPosition, mCustomer.position.addr);
                 break;
             /*清除参与人*/
             case R.id.img_del_join_users:
                 mManagerIds = null;
-                members.clear();
+                mCustomer.members.clear();
                 tv_customer_join_users.setText("");
                 img_del_join_users.setVisibility(View.GONE);
                 break;
@@ -567,7 +525,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             /*选参与人*/
             case R.id.layout_customer_join_users: {
                 Members selectedMembers = new Members();
-                for (Member m : members) {
+                for (Member m : mCustomer.members) {
                     selectedMembers.users.add(m.getUser());
                 }
 
@@ -599,16 +557,16 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      */
     private void updateCustomer() {
         final Locate adrDetailsData = new Locate();
-        final String customerName = tv_customer_name.getText().toString().trim();
-        String customerAddress = tv_address.getText().toString().trim();
-        final String summary = edt_customer_memo.getText().toString().trim();
+        mCustomer.name = tv_customer_name.getText().toString().trim();
+        mCustomer.position.addr = tv_address.getText().toString().trim();
+        mCustomer.summary = edt_customer_memo.getText().toString().trim();
         String addressDetails = edt_address_details.getText().toString().trim();
 
-        if (TextUtils.isEmpty(customerName)) {
+        if (TextUtils.isEmpty(mCustomer.name)) {
             Toast("客户姓名不能为空");
             return;
         }
-        if (TextUtils.isEmpty(customerAddress) && cusLocation) {
+        if (TextUtils.isEmpty(mCustomer.position.addr) && cusLocation) {
             Toast("客户地址不能为空");
             return;
         }
@@ -616,7 +574,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             Toast("客户详细地址不能为空");
             return;
         }
-        if (TextUtils.isEmpty(summary) && cusBrief) {
+        if (TextUtils.isEmpty(mCustomer.summary) && cusBrief) {
             Toast("客户简介不能为空");
             return;
         }
@@ -624,22 +582,20 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             adrDetailsData.addr = addressDetails;
         }
 
-
-        mLocate.addr = customerAddress;
         final HashMap<String, Object> map = new HashMap<>();
-        map.put("name", customerName);
-        map.put("summary", summary);
-        map.put("owner", owner);
-        map.put("members", members);
-        map.put("tags", mTagItems);
+        map.put("name", mCustomer.name);
+        map.put("summary", mCustomer.summary);
+        map.put("owner", mCustomer.owner);
+        map.put("members", mCustomer.members);
+        map.put("tags", mCustomer.tags);
         map.put("loc", adrDetailsData);
-        map.put("position", mLocate);
+        map.put("position", mCustomer.position);
         map.put("extDatas", extDatas);
-        map.put("regional", regional);
+        map.put("regional", mCustomer.regional);
         map.put("statusId", mCustomer.statusId);//状态
-        String url = edt_customer_weburl.getText()+"";
+        String url = edt_customer_weburl.getText() + "";
         //输入的有内容，才提交
-        if(url.length()>8){
+        if (url.length() > 8) {
             map.put("webSite", url);
         }
 
@@ -650,15 +606,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     public void onNext(final Customer customer) {
                         //通过eventBus，把修改以后的数据发送出去，刷新详情，列表的数据
                         Customer updateCus = new Customer();
-                        updateCus.name = customerName;
-                        updateCus.summary = summary;
-                        updateCus.owner = owner;
-                        updateCus.members = members;
-                        updateCus.tags = mTagItems;
+                        updateCus.name = mCustomer.name;
+                        updateCus.summary = mCustomer.summary;
+                        updateCus.owner = mCustomer.owner;
+                        updateCus.members = mCustomer.members;
+                        updateCus.tags = mCustomer.tags;
                         updateCus.loc = adrDetailsData;
-                        updateCus.position = mLocate;
+                        updateCus.position = mCustomer.position;
                         updateCus.extDatas = extDatas;
-                        updateCus.regional = regional;
+                        updateCus.regional = mCustomer.regional;
                         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(updateCus);
                         myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
                         myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_INFO;
@@ -685,10 +641,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      */
     @Subscribe
     public void onCustomerRushEvent(MyCustomerRushEvent event) {
-        if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode &&event.subCode == MyCustomerRushEvent.EVENT_SUB_CODE_LABEL) {
-            tv_labels.setText(appendTagItem(event.data.tags));
+        if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode && event.subCode == MyCustomerRushEvent.EVENT_SUB_CODE_LABEL) {
             mCustomer.tags = event.data.tags;
-            mTagItems = event.data.tags;
+            setTag();
         }
     }
 
@@ -703,9 +658,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             if (user == null) {
                 return;
             } else {
-                owner.id = user.getId();
-                owner.name = user.getName();
-                owner.avatar = user.getAvatar();
+                mCustomer.owner.id = user.getId();
+                mCustomer.owner.name = user.getName();
+                mCustomer.owner.avatar = user.getAvatar();
                 tv_customer_responser.setText(user.getName());
             }
         } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
@@ -717,9 +672,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             cusMembers = selectedMembers;
             mManagerNames = new StringBuffer();
             mManagerIds = new StringBuffer();
-
             /*判断当前负责人用owner对象*/
-            if (members != null) {
+            if (mCustomer.members != null) {
                 if (cusMembers.depts.size() > 0) {
                     for (OrganizationalMember newUser : cusMembers.depts) {
                         if (!mCustomer.owner.id.equals(newUser.getId())) {
@@ -744,8 +698,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     mManagerNames.deleteCharAt(mManagerNames.length() - 1);
                 }
             }
-            members = Utils.convert2Members(mManagerIds.toString(), mManagerNames.toString());
-            if (members.size() != 0) {
+            mCustomer.members = Utils.convert2Members(mManagerIds.toString(), mManagerNames.toString());
+            if (mCustomer.members.size() != 0) {
                 img_del_join_users.setVisibility(View.VISIBLE);
                 tv_customer_join_users.setText(mManagerNames);
             } else {
@@ -765,7 +719,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         switch (requestCode) {
 
             //客户状态
-            case  REQUEST_ACTIVITY_CODE_STATUS:
+            case REQUEST_ACTIVITY_CODE_STATUS:
                 CustomerStatusModel.CustomerStatusItemModel itemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
                 mCustomer.statusId = itemModel.id;
                 mCustomer.statusName = itemModel.name;
@@ -781,8 +735,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     laPosition = positionResultItem.laPosition;
                     loPosition = positionResultItem.loPosition;
                     tv_address.setText(positionResultItem.address);
-                    mLocate.addr = positionResultItem.address;
-                    mLocate.setLoc(new double[]{loPosition, laPosition});
+                    mCustomer.position.addr = positionResultItem.address;
+                    mCustomer.position.setLoc(new double[]{loPosition, laPosition});
                 }
 
                 break;
@@ -792,9 +746,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
              * */
             case FinalVariables.REQUEST_ONLY:
                 OrganizationalMember nu = (OrganizationalMember) data.getSerializableExtra("data");
-                owner.id = nu.getId();
-                owner.name = nu.getName();
-                owner.avatar = nu.getAvatar();
+                mCustomer.owner.id = nu.getId();
+                mCustomer.owner.name = nu.getName();
+                mCustomer.owner.avatar = nu.getAvatar();
                 tv_customer_responser.setText(nu.getName());
                 break;
 
@@ -807,7 +761,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 mManagerNames = new StringBuffer();
                 mManagerIds = new StringBuffer();
 
-                if (members != null) {
+                if (mCustomer.members != null) {
                     if (null != cusMembers.depts) {
                         for (OrganizationalMember newUser : cusMembers.depts) {
                             if (!MainApp.user.id.equals(newUser.getId())) {
@@ -833,8 +787,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     }
                 }
 
-                members = Utils.convert2Members(mManagerIds.toString(), mManagerNames.toString());
-                if (members.size() != 0) {
+                mCustomer.members = Utils.convert2Members(mManagerIds.toString(), mManagerNames.toString());
+                if (mCustomer.members.size() != 0) {
                     img_del_join_users.setVisibility(View.VISIBLE);
                     tv_customer_join_users.setText(mManagerNames);
                 } else {
@@ -849,9 +803,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 break;
             case REQUEST_CUSTOMER_LABEL:
                 Bundle bundle = data.getExtras();
-                mTagItems = (ArrayList<NewTag>) bundle.getSerializable("data");
-                tv_labels.setText(appendTagItem(mTagItems));
-                mCustomer.tags = mTagItems;
+                mCustomer.tags = (ArrayList<NewTag>) bundle.getSerializable("data");
+                tv_labels.setText(appendTagItem(mCustomer.tags));
                 break;
             default:
 
