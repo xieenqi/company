@@ -133,6 +133,8 @@ public class OpportunitiesFragment extends CustomerChildFragment
             @Override
             public void onNext(PaginationX<SaleRecord> resultData) {
                 listView_demands.onRefreshComplete();
+                OpportunitiesFragment.this.totalCount = resultData.totalRecords;
+                notifyTotalCountChange();
                 if (null != resultData && !(resultData.getRecords().size() < 0)) {
                     if (isTopAdd) {
                         listData.clear();

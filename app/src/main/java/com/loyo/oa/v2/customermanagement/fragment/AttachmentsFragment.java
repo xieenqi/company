@@ -144,6 +144,8 @@ public class AttachmentsFragment extends CustomerChildFragment
                             ll_loading.setStatus(LoadingLayout.Success);
                         }
                         listView.onRefreshComplete();
+                        AttachmentsFragment.this.totalCount = attachments.size();
+                        notifyTotalCountChange();
                         mListAttachment = attachments;
                         adapter.loadData(mListAttachment);
                     }

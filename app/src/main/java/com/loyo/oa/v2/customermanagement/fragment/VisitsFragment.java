@@ -323,6 +323,8 @@ public class VisitsFragment extends CustomerChildFragment
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewGroupModel>> paginationX) {
         listView.onRefreshComplete();
+        VisitsFragment.this.totalCount = paginationX.data.totalRecords;
+        notifyTotalCountChange();
         if (isPullOrDown) {
             listModel.clear();
         }
