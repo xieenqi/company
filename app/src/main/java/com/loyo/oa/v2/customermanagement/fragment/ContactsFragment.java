@@ -98,7 +98,12 @@ public class ContactsFragment extends CustomerChildFragment
                 .subscribe(new DefaultLoyoSubscriber<Customer>(ll_loading) {
                     @Override
                     public void onNext(Customer customer) {
-                        ll_loading.setStatus(LoadingLayout.Success);
+                        if (customer.contacts.size() == 0) {
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        }
+                        else {
+                            ll_loading.setStatus(LoadingLayout.Success);
+                        }
                         ContactsFragment.this.customer.contacts = customer.contacts;
                         adapter.loadData(customer.contacts);
                     }
