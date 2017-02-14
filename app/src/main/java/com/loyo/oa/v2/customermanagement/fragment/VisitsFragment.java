@@ -364,14 +364,25 @@ public class VisitsFragment extends CustomerChildFragment
 
             /*新建*/
             case R.id.layout_add:
-                if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
-                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
-                } else {
-                    Bundle b = new Bundle();
-                    b.putSerializable("data", mCustomer);
-                    app.startActivityForResult(getActivity(), SignInActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_CREATE_LEGWORK, b);
-                }
+                onAddVisit();
                 break;
+        }
+    }
+
+    public void onAddVisit() {
+        canAdd = mCustomer != null &&
+                PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                        mCustomer.state, CustomerAction.VISIT);
+        if (!canAdd) {
+            sweetAlertDialogView.alertIcon("提示", "你没有拜访权限");
+        }
+        else if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
+            sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+        } else {
+            Bundle b = new Bundle();
+            b.putSerializable("data", mCustomer);
+            app.startActivityForResult(getActivity(), SignInActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                    FinalVariables.REQUEST_CREATE_LEGWORK, b);
         }
     }
 

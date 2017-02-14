@@ -42,23 +42,13 @@ public class WorkReportReviewActivity extends BaseActivity {
     TextView tv_title_1;
     @ViewById
     EditText edt_content, et_score;
-    //    @ViewById RatingBar ratingBar_workReport;
     @Extra
     String mWorkReportId;
-    private String sorce;
 
     @AfterViews
     void initViews() {
         img_title_left.setOnTouchListener(Global.GetTouch());
         tv_title_1.setText("报告点评");
-
-//        ratingBar_workReport.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-//            @Override
-//            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-//                LogUtil.d("分数 ：" + v);
-//                score = v;
-//            }
-//        });
         et_score.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
         et_score.addTextChangedListener(OrderCommon.getTextWatcher());
     }
@@ -71,21 +61,19 @@ public class WorkReportReviewActivity extends BaseActivity {
             Toast("点评内容不能为空!");
             return;
         }
-        sorce = et_score.getText().toString();
-
+        String sorce = et_score.getText().toString();
         HashMap<String, Object> map = new HashMap<>();
         map.put("newScore", TextUtils.isEmpty(sorce) ? "-1" : sorce);
         map.put("comment", content);
         showLoading2("");
-
-        WorkReportService.reviewWorkReport(mWorkReportId,map)
+        WorkReportService.reviewWorkReport(mWorkReportId, map)
                 .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud) {
-            @Override
-            public void onNext(WorkReport workReport) {
-                setResult(RESULT_OK);
-                back();
-            }
-        });
+                    @Override
+                    public void onNext(WorkReport workReport) {
+                        setResult(RESULT_OK);
+                        back();
+                    }
+                });
     }
 
     @Click(R.id.img_title_left)
