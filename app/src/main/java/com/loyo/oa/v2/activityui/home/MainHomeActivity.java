@@ -10,11 +10,9 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
-import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.ClueManagerActivity;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
@@ -40,6 +38,7 @@ import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -284,8 +283,8 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     break;
                 case HttpJpushNotification.JPUSH_CUSTOMER://客户详情
                     if (MainApp.jpushData.jumpType == HttpJpushNotification.JumpType.NUONE.getValue()) {
-                        intent.setClass(MainHomeActivity.this, CustomerDetailInfoActivity_.class);
-                        intent.putExtra("Id", MainApp.jpushData.buzzId);
+                        intent.setClass(MainHomeActivity.this, CustomerDetailActivity.class);
+                        intent.putExtra(CustomerDetailActivity.KEY_ID, MainApp.jpushData.buzzId);
 //                        intent.putExtra(ExtraAndResult.EXTRA_TYPE, 1);//默认我的客户
                         startActivity(intent);
                     } else {

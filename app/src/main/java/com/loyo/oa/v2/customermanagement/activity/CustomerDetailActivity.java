@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.LoyoUIThread;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity_;
@@ -57,6 +58,7 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CustomerDetailActivity extends BaseFragmentActivity
+    implements DropCustomerDeadlineFragment.CustomerDeadlineActionListener
 {
 
     public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
@@ -66,6 +68,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     Customer customer;
     boolean canEdit;
     boolean viewPagerInited;
+    FollowupsFragment followupsFragment;
+    VisitsFragment visitsFragment;
+    OrdersFragment ordersFragment;
 
     @BindView(R.id.viewpager) ViewPager viewPager;
     @BindView(R.id.tabs)      TabLayout tabLayout;
@@ -225,7 +230,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     @OnClick(R.id.ll_warn) void onDropDeadline() {
         FragmentManager fm = getSupportFragmentManager();
         DropCustomerDeadlineFragment fragment =
-                DropCustomerDeadlineFragment.newInstance(DropDeadlineModel.getDeadlineModel(customer));
+                DropCustomerDeadlineFragment.newInstance(DropDeadlineModel.getDeadlineModel(customer),
+                        this);
         fragment.show(fm, "drop_deadline");
     }
 
@@ -266,21 +272,22 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         this.customerTagText.setText("标签：" + customer.displayTagString());
         if (customer.state == Customer.DumpedCustomer) {
             dropReasonText.setVisibility(View.VISIBLE);
-            String recyleReason = customer.recycleReason;
-            if (TextUtils.isEmpty(recyleReason)) {
-                recyleReason = "无";
+            String recycleReason = customer.recycleReason;
+            if (TextUtils.isEmpty(recycleReason)) {
+                recycleReason = "无";
             }
-            dropReasonText.setText("丢公海原因：" + recyleReason);
+            dropReasonText.setText("丢公海原因：" + recycleReason);
         }
         else {
             dropReasonText.setVisibility(View.GONE);
         }
-        if (TextUtils.isEmpty(customer.recycleRemind)) {
-            warnView.setVisibility(View.GONE);
+        if (customer.hasDropRemind()) {
+            warnView.setVisibility(View.VISIBLE);
+            recycleRemindText.setText(customer.getFormattedDropRemind());
         }
         else {
-            warnView.setVisibility(View.VISIBLE);
-            recycleRemindText.setText(customer.recycleRemind);
+            warnView.setVisibility(View.GONE);
+
         }
         if (canEdit) {
             stateEditableVew.setVisibility(View.VISIBLE);
@@ -343,8 +350,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     private void setupViewPager(ViewPager viewPager) {
         adapter = new CustomerPagerAdapter(getSupportFragmentManager());
 
-
-        FollowupsFragment followupsFragment = new FollowupsFragment();
+        followupsFragment = new FollowupsFragment();
         followupsFragment.setCustomer(customer);
         adapter.addFragment(followupsFragment);
 
@@ -352,7 +358,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         contactsFragment.setCustomer(customer);
         adapter.addFragment(contactsFragment);
 
-        VisitsFragment visitsFragment = new VisitsFragment();
+        visitsFragment = new VisitsFragment();
         visitsFragment.setCustomer(customer);
         adapter.addFragment(visitsFragment);
 
@@ -360,7 +366,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         opportunitiesFragment.setCustomer(customer);
         adapter.addFragment(opportunitiesFragment);
 
-        OrdersFragment ordersFragment = new OrdersFragment();
+        ordersFragment = new OrdersFragment();
         ordersFragment.setCustomer(customer);
         adapter.addFragment(ordersFragment);
 
@@ -412,5 +418,58 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 loadCustomer(false);
             }
         }
+    }
+
+
+    void selectPageAtIndex(int index) {
+        tabLayout.setScrollPosition(index, 0f, true);
+        viewPager.setCurrentItem(index);
+    }
+
+    /**
+     * DropCustomerDeadlineFragment.CustomerDeadlineActionListener
+     */
+    @Override
+    public void onAddFollowup() {
+        selectPageAtIndex(0/* 跟进 */);
+        LoyoUIThread.runAfterDelay(new Runnable() {
+            @Override
+            public void run() {
+                if (CustomerDetailActivity.this.followupsFragment != null) {
+                    followupsFragment.onAddFollowup();
+                }
+            }
+        }, 300 /* 完成加载页面和动画时间 */);
+    }
+
+    @Override
+    public void onAddVisit() {
+        selectPageAtIndex(2/* 拜访 */);
+        LoyoUIThread.runAfterDelay(new Runnable() {
+            @Override
+            public void run() {
+                if (CustomerDetailActivity.this.visitsFragment != null) {
+                    visitsFragment.onAddVisit();
+                }
+            }
+        }, 300 /* 完成加载页面和动画时间 */);
+    }
+
+    @Override
+    public void onAddCall() {
+        selectPageAtIndex(1/* 联系人 */);
+    }
+
+    @Override
+    public void onAddOrder() {
+        selectPageAtIndex(4/* 订单 */);
+        LoyoUIThread.runAfterDelay(new Runnable() {
+            @Override
+            public void run() {
+                if (CustomerDetailActivity.this.ordersFragment != null) {
+                    ordersFragment.onAddOrder();
+                }
+            }
+        }, 300 /* 完成加载页面和动画时间 */);
     }
 }

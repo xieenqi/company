@@ -13,12 +13,11 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.NearCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -29,8 +28,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import rx.internal.util.unsafe.MpmcArrayQueue;
 
 /**
  * 【附近客户】列表 我的附近  我团队的附近
@@ -172,8 +169,8 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                         Toast("你没有查看权限");
                     } else {
                         Intent intent = new Intent();
-                        intent.putExtra("Id", mPagination.getRecords().get(position - 1).getId());
-                        intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
+                        intent.putExtra(CustomerDetailActivity.KEY_ID, mPagination.getRecords().get(position - 1).getId());
+                        intent.setClass(mActivity, CustomerDetailActivity.class);
                         startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
                         mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     }

@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.customer;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,10 +21,10 @@ import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyMemberFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.TeamCustomerFragment;
-import com.loyo.oa.v2.activityui.project.ProjectDescriptionActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -283,7 +282,8 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                 Bundle b = new Bundle();
                 b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, type);
                 b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_JUMP_NEW_PAGE,true);
-                b.putSerializable(CustomerSearchOrPickerActivity.EXTRA_JUMP_PAGE_CLASS, CustomerDetailInfoActivity_.class);
+                b.putSerializable(CustomerSearchOrPickerActivity.EXTRA_JUMP_PAGE_CLASS,
+                        CustomerDetailActivity.class);
                 app.startActivity(this, CustomerSearchOrPickerActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
 
 

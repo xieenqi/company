@@ -16,14 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
@@ -31,11 +29,11 @@ import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
-import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
@@ -328,8 +326,8 @@ public class FollowUpListAdapter extends BaseAdapter {
                 }
 
                 Intent intent = new Intent();
-                intent.putExtra("Id", model.customerId);
-                intent.setClass(mContext, CustomerDetailInfoActivity_.class);
+                intent.putExtra(CustomerDetailActivity.KEY_ID, model.customerId);
+                intent.setClass(mContext, CustomerDetailActivity.class);
                 mContext.startActivity(intent);
             }
         });

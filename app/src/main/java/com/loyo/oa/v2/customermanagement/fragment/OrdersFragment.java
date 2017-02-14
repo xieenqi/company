@@ -134,28 +134,38 @@ public class OrdersFragment extends CustomerChildFragment
 
     @Override
     public void onClick(View v) {
-        Bundle bundle;
+
         switch (v.getId()) {
             case R.id.layout_add:
-
-                if (!PermissionManager.getInstance()
-                        .hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
-                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
-
-                } else {
-                    if (customerId == null) {
-                        break;
-                    }
-                    bundle = new Bundle();
-                    bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
-                    bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
-                    bundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
-                    app.startActivityForResult(getActivity(), OrderAddActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, 200, bundle);
-                }
+                onAddOrder();
                 break;
         }
 
+    }
+
+    public void onAddOrder() {
+        canAdd = customer != null &&
+                PermissionManager.getInstance().hasCustomerAuthority(
+                        customer.relationState,
+                        customer.state,
+                        CustomerAction.ORDER_ADD);
+        if (!canAdd) {
+            sweetAlertDialogView.alertIcon("提示", "你没有添加客户相关订单权限");
+        }
+        else if (!PermissionManager.getInstance()
+                .hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
+            sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+        } else {
+            if (customerId != null) {
+                Bundle bundle;
+                bundle = new Bundle();
+                bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
+                bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
+                bundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
+                app.startActivityForResult(getActivity(), OrderAddActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, 200, bundle);
+            }
+        }
     }
 
     @Override
