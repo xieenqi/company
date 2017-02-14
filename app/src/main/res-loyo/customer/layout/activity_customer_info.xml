@@ -130,6 +130,42 @@
                     <include layout="@layout/include_solid_line_left" />
 
                     <LinearLayout
+                        android:id="@+id/layout_customer_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_h_title"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/dimen_4">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:minWidth="@dimen/dimen_80"
+                            android:text="状态"
+                            android:id="@+id/textView" />
+
+                        <TextView
+                            android:id="@+id/tv_customer_status"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical"
+                            android:textColor="@color/title_bg1" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="center"
+                            android:src="@drawable/right_arrow" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+
+                    <LinearLayout
                         android:id="@+id/layout_customer_label"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_h_title"
@@ -144,7 +180,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:minWidth="@dimen/dimen_80"
-                            android:text="标        签" />
+                            android:text="标签" />
 
                         <TextView
                             android:id="@+id/tv_labels"
@@ -164,6 +200,39 @@
                     </LinearLayout>
 
                     <include layout="@layout/include_solid_line_left" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_customer_weburl"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_h_title"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/dimen_4">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:minWidth="@dimen/dimen_80"
+                            android:text="网址" />
+
+                        <EditText
+                            android:id="@+id/edt_customer_weburl"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:text="https://"
+                            android:paddingRight="23dp"
+                            android:gravity="right|center_vertical"
+                            android:textColor="#666666" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+
 
                     <LinearLayout
                         android:id="@+id/layout_customer_required_info"
@@ -205,7 +274,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:minWidth="@dimen/dimen_80"
-                        android:text="地        区" />
+                        android:text="地区" />
 
                     <TextView
                         android:id="@+id/tv_district"
@@ -341,6 +410,34 @@
 
                         <TextView
                             android:id="@+id/tv_common_persion"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:gravity="right|center"
+                            android:textColor="@color/text99" />
+                    </LinearLayout>
+                    <include layout="@layout/include_solid_line_left" />
+                    <LinearLayout
+                        android:id="@+id/ll_customer_lose"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/margin_other_view">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="@dimen/dimen_80"
+                            android:text="丢公海人"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            tools:layout_editor_absoluteY="4445dp" />
+
+                        <TextView
+                            android:id="@+id/tv_common_lose"
                             style="@style/text_item2"
                             android:layout_width="0dp"
                             android:layout_height="48dp"

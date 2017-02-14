@@ -37,6 +37,7 @@ import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
+import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
 import com.loyo.oa.v2.activityui.customer.model.HttpAddCustomer;
@@ -67,6 +68,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,12 +81,16 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * 【新建 客户】 页面
  */
+ //TODO 写客户详情需求的时候注意，有一个customer的实体，怎嚒还定义来一套变量，没有细看，可以的话，删除掉。
+//    TODO 明明使用的注解框架，这嚒用findViewByID,最好统一
+
 @EActivity(R.layout.activity_customer_add)
 public class CustomerAddActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
     public static final int REQUEST_CUSTOMER_SERACH = 7;
+    private static final int REQUEST_ACTIVITY_CODE_STATUS = 8;//resule code
     public static final int TYPE_CLUE_TO_CUSTOMER = 1223;//线索转为客户
     public static final int TYPE_NEW_CUSTOMER_FROM_CONTACT = 1224;//新建客户，但是来自通讯录导入
 
@@ -117,6 +123,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     int actionType;
     @Extra(ExtraAndResult.EXTRA_DATA)
     ClueSales clueSales;//线索转为客户的数据
+
+
+    @ViewById
+    LinearLayout layout_customer_status, layout_customer_label;
+
+    @ViewById
+    TextView tv_status;//客户状态
+    @ViewById
+    EditText edt_customer_weburl;
 
     private TextView tv_phone_name1;
     private TextView tv_phone_name2;
@@ -253,9 +268,14 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         iv_phone_insert2.setOnTouchListener(Global.GetTouch());
         iv_call_insert1.setOnTouchListener(Global.GetTouch());
         iv_call_insert2.setOnTouchListener(Global.GetTouch());
+        layout_customer_status.setOnTouchListener(Global.GetTouch());
+        layout_customer_label.setOnTouchListener(Global.GetTouch());
+
+        if(null==mCustomer){
+            mCustomer=new Customer();
+        }
 
         edit_address_details = (EditText) findViewById(R.id.edit_address_details);
-
         requestJurisdiction();
         if (app.latitude != -1 && app.longitude != -1) {
             laPosition = app.latitude;
@@ -263,7 +283,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
         edt_contract_tel1.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
         edt_contract_telnum1.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
-
 
 
         LocationUtilGD.permissionLocation(this);
@@ -279,16 +298,16 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             edt_contract.setText(clueSales.name);
             edt_contract_tel1.setText(clueSales.cellphone);
             edt_contract_telnum1.setText(clueSales.tel);
-        }else if(actionType == TYPE_NEW_CUSTOMER_FROM_CONTACT && clueSales != null){
+        } else if (actionType == TYPE_NEW_CUSTOMER_FROM_CONTACT && clueSales != null) {
             //来自通讯录导入
             super.setTitle("新建客户");
-            if(null!=clueSales.name){
+            if (null != clueSales.name) {
                 edt_contract.setText(clueSales.name);
             }
-            if(null!=clueSales.tel){
+            if (null != clueSales.tel) {
                 edt_contract_tel1.setText(clueSales.tel.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", ""));
             }
-        }else{
+        } else {
             super.setTitle("新建客户");
             getTempCustomer();
 
@@ -387,7 +406,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
             R.id.layout_customer_label, R.id.img_refresh_address, R.id.iv_phone_insert1,
             R.id.iv_phone_insert2, R.id.iv_call_insert1, R.id.iv_call_insert2, R.id.tv_gscx, R.id.layout_more,
-            R.id.layout_customer_district})
+            R.id.layout_customer_district, R.id.layout_customer_status})
     public void onClick(final View v) {
         switch (v.getId()) {
 
@@ -528,12 +547,65 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*选择标签*/
             case R.id.layout_customer_label:
-                Bundle bundle2 = new Bundle();
-                if (tags != null) {
-                    bundle2.putSerializable("tags", tags);
+
+
+                Intent mIntent = new Intent(this, CustomerLabelCopyActivity.class);
+                mIntent.putExtra("canEdit", true);
+                mIntent.putExtra("fromPage", 1);
+                mIntent.putExtra("customerId","-1");
+                if (null != tags) {
+                    mIntent.putExtra("tagitems", Utils.convertTagItems(tags));
                 }
-                app.startActivityForResult((Activity) mContext, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
+                startActivity(mIntent);
+
                 break;
+            /*选择状态*/
+            case R.id.layout_customer_status:
+                Bundle b = new Bundle();
+                b.putString(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, null==mCustomer?"":mCustomer.statusId);//设置默认值
+                app.startActivityForResult(this, CustomerStatusSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_STATUS, b);
+                break;
+        }
+    }
+    /**
+     * 更新Label
+     *
+     * @param event
+     */
+    @Subscribe
+    public void onCustomerRushEvent(MyCustomerRushEvent event) {
+        if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode &&
+                event.subCode == MyCustomerRushEvent.EVENT_SUB_CODE_LABEL
+                &&"-1".equals(event.session)) {
+            tags = event.data.tags;
+            StringBuffer sb = null;
+            StringBuffer sbItemId = null;
+            StringBuffer sbTId = null;
+            for (NewTag tag : tags) {
+                if (sb == null) {
+                    sb = new StringBuffer();
+                    sb.append(String.valueOf(tag.getItemName()));
+                    sbItemId = new StringBuffer();
+                    sbItemId.append(String.valueOf(tag.getItemId()));
+                    sbTId = new StringBuffer();
+                    sbTId.append(String.valueOf(tag.gettId()));
+                } else {
+                    sb.append("、");
+                    sb.append(String.valueOf(tag.getItemName()));
+                    sbItemId.append(",");
+                    sbItemId.append(String.valueOf(tag.getItemId()));
+                    sbTId.append(",");
+                    sbTId.append(String.valueOf(tag.gettId()));
+                }
+            }
+            if (sbItemId != null) {
+                tagItemIds = sbItemId.toString();
+                tv_labels.setText(sb.toString());
+            } else{
+                tagItemIds="";
+                tv_labels.setText("");
+            }
+
         }
     }
 
@@ -701,11 +773,14 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("extDatas", extDatas);
         map.put("summary", memo);
         map.put("regional", regional);
+        map.put("statusId", mCustomer.statusId);//状态
+        //网址输入的有内容，才提交
+        String url = edt_customer_weburl.getText()+"";
+        if(url.length()>8){
+            map.put("webSite",url);
+        }
         if (actionType == TYPE_CLUE_TO_CUSTOMER && clueSales != null)
             map.put("salesleadId", clueSales.id);
-
-        LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
-
         Subscription subscribe = CustomerService.addNewCustomer(map)
                 .subscribe(new DefaultLoyoSubscriber<CustomerWrapper>(hud) {
                     @Override
@@ -810,6 +885,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 Bundle bundle1 = data.getExtras();
                 edt_name.setText(bundle1.getString("name"));
 
+                break;
+            //客户状态
+            case REQUEST_ACTIVITY_CODE_STATUS:
+                CustomerStatusModel.CustomerStatusItemModel itemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
+                mCustomer.statusId = itemModel.id;
+                mCustomer.statusName = itemModel.name;
+                tv_status.setText(itemModel.name);
                 break;
 
             case REQUEST_CUSTOMER_LABEL:
