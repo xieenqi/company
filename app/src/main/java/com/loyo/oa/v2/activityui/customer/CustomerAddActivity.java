@@ -773,7 +773,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("extDatas", extDatas);
         map.put("summary", memo);
         map.put("regional", regional);
-        map.put("statusId", mCustomer.statusId);//状态
+        if(null!=mCustomer.statusId){
+            map.put("statusId", mCustomer.statusId);//状态
+        }
         //网址输入的有内容，才提交
         String url = edt_customer_weburl.getText()+"";
         if(url.length()>8){

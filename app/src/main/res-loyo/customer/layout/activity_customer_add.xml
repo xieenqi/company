@@ -539,6 +539,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
+                        android:text="新建客户"
                         android:textColor="@color/suodesilei" />
 
                     <ImageView
@@ -610,7 +611,7 @@
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:text="https://"
+                        android:text=""
                         android:paddingRight="23dp"
                         android:gravity="right|center_vertical"
                         android:textColor="#666666" />

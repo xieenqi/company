@@ -35,7 +35,7 @@
             android:layout_centerInParent="true"
             android:drawablePadding="@dimen/dimen_3"
             android:gravity="center"
-            android:text="附件上传"
+            android:text="上传附件"
             android:textColor="@color/title_bg1" />
     </RelativeLayout>
 

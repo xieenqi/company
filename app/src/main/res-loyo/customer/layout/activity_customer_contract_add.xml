@@ -409,6 +409,49 @@
                 </LinearLayout>
                 <include layout="@layout/include_solid_line_left" />
             </LinearLayout>
+            <!--角色-->
+            <LinearLayout
+                android:id="@+id/ll_contact_role"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_48"
+                android:background="@color/white"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:gravity="center_vertical"
+                    android:minWidth="80dp"
+                    android:text="角色"
+                    android:textSize="15sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/tv_contact_role"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toLeftOf="@+id/img_right_arrow"
+                        android:background="@null"
+                        android:gravity="center_vertical|left"
+                        android:maxLength="24"
+                        android:paddingLeft="14dp"
+                        android:paddingRight="4dp"
+                        android:singleLine="true"
+                        android:textColor="@color/text33"
+                        android:textColorHighlight="@color/suodesilei"
+                        android:textSize="@dimen/text_sp15" />
+                    <ImageView
+                        android:id="@+id/img_right_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/right_arrow" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/layout_contact_extra_info"

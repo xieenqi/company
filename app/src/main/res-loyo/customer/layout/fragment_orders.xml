@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:text="新增购买意向"
+                android:text="新建订单"
                 android:textColor="@color/title_bg1"
                 android:textSize="15sp" />
         </LinearLayout>
