@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 
 import java.lang.reflect.Type;
 
@@ -219,11 +220,11 @@ public enum SystemMessageItemType {
         }
 
         public Class<?> getItemClass() {
-            return CustomerDetailInfoActivity_.class;
+            return CustomerDetailActivity.class;
         }
 
         public String getExtraName() {
-            return "Id";
+            return CustomerDetailActivity.KEY_ID;
         }
     },
     /*客户详情*/

@@ -23,6 +23,7 @@ import com.loyo.oa.v2.activityui.customer.adapter.CustomerRepeatAdapter;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -200,8 +201,8 @@ public class CustomerRepeat extends BaseActivity implements CustomerRepeatAdapte
     public void pickEmbl(String id) {
         serachRepate(edt_search.getText().toString().trim());
         Intent intent = new Intent();
-        intent.putExtra("Id", id);
-        intent.setClass(this, CustomerDetailInfoActivity_.class);
+        intent.putExtra(CustomerDetailActivity.KEY_ID, id);
+        intent.setClass(this, CustomerDetailActivity.class);
         startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }

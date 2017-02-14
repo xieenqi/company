@@ -17,7 +17,6 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
@@ -31,6 +30,7 @@ import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.order.api.OrderService;
@@ -224,8 +224,8 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                     return;
                 }
                 Intent intent = new Intent();
-                intent.putExtra("Id", mData.customerId);
-                intent.setClass(OrderDetailActivity.this, CustomerDetailInfoActivity_.class);
+                intent.putExtra(CustomerDetailActivity.KEY_ID, mData.customerId);
+                intent.setClass(OrderDetailActivity.this, CustomerDetailActivity.class);
                 startActivityForResult(intent, 2);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
