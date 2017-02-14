@@ -96,7 +96,7 @@ public class TeamCustomerAdapter extends BaseAdapter {
         tv_content2.setText("负责人：" + responser);
         tv_content3.setText("跟进时间：" + lastActivityAt);
 
-        CommonMethod.commonCustomerRecycleTime(customer, layout_4, tv_content41, tv_content42);
+        CommonMethod.commonCustomerRecycleTime(customer, layout_4, tv_content41);
         return convertView;
     }
 }
