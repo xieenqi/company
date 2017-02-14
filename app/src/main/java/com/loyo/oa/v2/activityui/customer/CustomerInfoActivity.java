@@ -385,7 +385,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             tv_common_reason.setText(TextUtils.isEmpty(mCustomer.recycleReason) ? "--" : mCustomer.recycleReason);
             if (mCustomer.recycleReason.length() > 15)
                 tv_common_reason.setGravity(Gravity.LEFT | Gravity.CENTER);
-            tv_common_lose.setText(mCustomer.RecycleName);
+            tv_common_lose.setText(mCustomer.recycleName);
         } else {
             layout_Extra.setVisibility(View.VISIBLE);
             ll_common.setVisibility(View.GONE);
@@ -640,7 +640,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         String url = edt_customer_weburl.getText()+"";
         //输入的有内容，才提交
         if(url.length()>8){
-            map.put("webSite", edt_customer_weburl.getText());
+            map.put("webSite", url);
         }
 
         showCommitLoading();
