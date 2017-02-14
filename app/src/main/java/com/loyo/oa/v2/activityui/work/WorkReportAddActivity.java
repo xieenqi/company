@@ -111,7 +111,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     @ViewById
     RadioGroup rg;//工作 动态
     @ViewById
-    ViewGroup layout_crm, layout_reviewer, layout_mproject, layout_type;
+    ViewGroup layout_crm, layout_reviewer, layout_mproject;
     @ViewById
     TextView wordcount, tv_crm, tv_project, tv_time, tv_toUser, tv_reviewer, tv_resignin;
     @ViewById
@@ -146,8 +146,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     private Reviewer mReviewer;
     private Members members = new Members();
     private ArrayList<WorkReportDyn> dynList;
-    private StringBuilder joinUserId;
-    private StringBuilder joinName;
     private String[] pastSevenDay = new String[7];
     private String[] pastThreeMonth = new String[3];
     private CompositeSubscription subscriptions;
@@ -306,14 +304,11 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      */
     private String getMenberText() {
         StringBuilder joinUser = new StringBuilder();
-        joinUserId = new StringBuilder();
         int length = mWorkReport.members.getAllData().size();
         for (int i = 0; i < length; i++) {
             joinUser.append(mWorkReport.members.getAllData().get(i).getName());
-            joinUserId.append(mWorkReport.members.getAllData().get(i).getId());
             if (i < length - 1) {
                 joinUser.append(",");
-                joinUserId.append(",");
             }
         }
         return joinUser.toString();
@@ -388,7 +383,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      * 周报checkbox
      */
     @CheckedChange(R.id.rb2)
-    void weekClick(final CompoundButton button, final boolean b) {
+    void weekClick(boolean b) {
         if (!b) {
             return;
         }
@@ -405,7 +400,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      * 月报checkbox
      */
     @CheckedChange(R.id.rb3)
-    void monthClick(final CompoundButton button, final boolean b) {
+    void monthClick(final boolean b) {
         if (!b) {
             return;
         }
@@ -531,7 +526,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     /**
      * 编辑报告请求
      */
-    public void updateReport(final HashMap map) {
+    public void updateReport(HashMap<String, Object> map) {
         subscriptions.add(WorkReportService.updateWorkReport(mWorkReport.getId(), map)
                 .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud, "编辑报告成功") {
                     @Override
@@ -549,7 +544,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
     /**
      * 新建报告请求
      */
-    public void creteReport(final HashMap map) {
+    public void creteReport(HashMap<String, Object> map) {
         subscriptions.add(WorkReportService.createWorkReport(map)
                 .subscribe(new DefaultLoyoSubscriber<WorkReport>(hud, "新建报告成功") {
                     @Override
@@ -572,8 +567,6 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
 
     /**
      * 处理服务器返回结果
-     *
-     * @param workReport
      */
     private void dealResult(final WorkReport workReport) {
         if (workReport != null) {
@@ -774,22 +767,20 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             members = Compat.convertStaffCollectionToMembers(collection);
-            joinName = new StringBuilder();
-            joinUserId = new StringBuilder();
+            StringBuilder joinName = new StringBuilder();
             if (members == null || (members.users.size() == 0 && members.depts.size() == 0)) {
                 tv_toUser.setText("无抄送人");
-                joinUserId.reverse();
             } else {
                 if (null != members.depts) {
                     for (OrganizationalMember newUser : members.depts) {
-                        joinName.append(newUser.getName() + ",");
-                        joinUserId.append(newUser.getId() + ",");
+                        joinName.append(newUser.getName());
+                        joinName.append(",");
                     }
                 }
                 if (null != members.users) {
                     for (OrganizationalMember newUser : members.users) {
-                        joinName.append(newUser.getName() + ",");
-                        joinUserId.append(newUser.getId() + ",");
+                        joinName.append(newUser.getName());
+                        joinName.append(",");
                     }
                 }
                 if (!TextUtils.isEmpty(joinName)) {
@@ -853,22 +844,20 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             //用户选择, 抄送人
             case FinalVariables.REQUEST_ALL_SELECT:
                 members = (Members) data.getSerializableExtra("data");
-                joinName = new StringBuilder();
-                joinUserId = new StringBuilder();
+                StringBuilder joinName = new StringBuilder();
                 if (members.users.size() == 0 && members.depts.size() == 0) {
                     tv_toUser.setText("无抄送人");
-                    joinUserId.reverse();
                 } else {
                     if (null != members.depts) {
                         for (OrganizationalMember newUser : members.depts) {
-                            joinName.append(newUser.getName() + ",");
-                            joinUserId.append(newUser.getId() + ",");
+                            joinName.append(newUser.getName());
+                            joinName.append(",");
                         }
                     }
                     if (null != members.users) {
                         for (OrganizationalMember newUser : members.users) {
-                            joinName.append(newUser.getName() + ",");
-                            joinUserId.append(newUser.getId() + ",");
+                            joinName.append(newUser.getName());
+                            joinName.append(",");
                         }
                     }
                     if (!TextUtils.isEmpty(joinName)) {
@@ -887,7 +876,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
      */
     public void postAttaData() {
         ArrayList<UploadTask> list = controller.getTaskList();
-        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();

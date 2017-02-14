@@ -42,7 +42,6 @@ public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_renewal_mobile_two);
-//        setTouchView(NO_SCROLL);
         initUI();
     }
 
@@ -52,7 +51,6 @@ public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClic
         iv_submit = (ImageView) findViewById(R.id.iv_submit);
         tv_title.setText("更换手机号");
         iv_submit.setImageResource(R.drawable.right_submit1);
-//        btn_confirm = (Button) findViewById(R.id.btn_confirm);
         btn_get_code = (Button) findViewById(R.id.btn_get_code);
         et_account = (EditText) findViewById(R.id.et_account);
         et_code = (EditText) findViewById(R.id.et_code);
@@ -81,7 +79,7 @@ public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClic
      */
     private void verifyPhone(final String tel) {
         showLoading2("");
-        SettingService.verifyPhone(tel).subscribe(new DefaultLoyoSubscriber<Object>() {
+        SettingService.verifyPhone(tel).subscribe(new DefaultLoyoSubscriber<Object>(hud) {
             @Override
             public void onNext(Object o) {
                 SettingService.getVerifyCode(tel).subscribe(new DefaultLoyoSubscriber<Object>(hud) {
@@ -126,7 +124,7 @@ public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClic
         SettingService.modifyMobile(map).subscribe(new DefaultLoyoSubscriber<BaseBean>(hud) {
             @Override
             public void onNext(BaseBean o) {
-                if(o.errcode==0){
+                if (o.errcode == 0) {
                     MenuFragment.callback.onExit(RenewalMobileTwoActivty.this);
                 }
             }
