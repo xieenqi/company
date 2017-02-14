@@ -118,11 +118,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
     public WorkReport mWorkReport;
     public PaginationX<Discussion> mPageDiscussion;
     private boolean isOver = false;
-    private workReportAddgridViewAdapter workGridViewAdapter;
 
     private ArrayList<WorkReportDyn> dynList;
     private Handler mHandler = new Handler() {
-        public void handleMessage(final Message msg) {
+        public void handleMessage(Message msg) {
             if (msg.what == UPDATE_SUCCESS) {
                 if (null == dynList || dynList.size() == 0) {
                     no_dysndata_workreports.setVisibility(View.VISIBLE);
@@ -130,7 +129,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 } else {
                     no_dysndata_workreports.setVisibility(View.GONE);
                     info_gridview_workreports.setVisibility(View.VISIBLE);
-                    workGridViewAdapter = new workReportAddgridViewAdapter(getApplicationContext(), dynList);
+                    workReportAddgridViewAdapter workGridViewAdapter = new workReportAddgridViewAdapter(getApplicationContext(), dynList);
                     info_gridview_workreports.setAdapter(workGridViewAdapter);
                 }
             }
@@ -473,7 +472,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
      * 判断是否是创建人
      */
     public boolean isCreater() {
-        return mWorkReport.creator.getId().equals(MainApp.user.getId()) ? true : false;
+        return mWorkReport.creator.getId().equals(MainApp.user.getId());
     }
 
 
