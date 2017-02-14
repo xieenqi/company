@@ -12,7 +12,6 @@ import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity;
-import com.loyo.oa.v2.activityui.customer.CustomerContractAddActivity;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
@@ -22,6 +21,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RegularCheck;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.cell.ContactCardCell;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
@@ -95,6 +95,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
     @BindView(R.id.tv_email)TextView tv_email;
     @BindView(R.id.tv_memo)TextView tv_memo;
     @BindView(R.id.tv_depart)TextView tv_depart;
+    @BindView(R.id.tv_contact_role)TextView tv_contact_role;
 
     @OnClick(R.id.img_title_left) void onBack() {
         if (contactUpdated) {
@@ -117,6 +118,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("customer", customer);
                 bundle.putSerializable("contract", contact);
+                bundle.putSerializable(CustomerContractAddActivity.EXTRA_TYPE, CustomerContractAddActivity.EXTRA_TYPE_EDIT);
                 Intent intent = new Intent(ContactDetailActivity.this, CustomerContractAddActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT);
@@ -258,6 +260,8 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         tv_memo.setText(contact.getMemo());
         tv_birthday.setText(contact.getBirthStr());
         tv_depart.setText(contact.deptName);
+        //联系人角色
+        tv_contact_role.setText(TextUtils.isEmpty(contact.getContactRoleName())?"":contact.getContactRoleName());
         for (int i = 0; i < 3; i++) {
             if (i < contact.telGroup.size()) {
                 phoneContainers.get(i).setVisibility(View.VISIBLE);
@@ -334,8 +338,8 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         switch (requestCode) {
 
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
-                Contact contact = (Contact) data.getSerializableExtra("data");
-                this.contact = contact;
+                contactUpdated=true;
+                contact = (Contact) data.getSerializableExtra("data");
                 this.loadContact();
                 contactUpdated = true;
                 break;

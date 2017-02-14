@@ -427,7 +427,35 @@
                 </LinearLayout>
 
             </LinearLayout>
+            <include layout="@layout/include_solid_line_left" />
+            <!--角色-->
+            <LinearLayout
+                android:id="@+id/ll_contact_role"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_48"
+                android:background="@color/white"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:gravity="center_vertical"
+                    android:text="角色"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15" />
+
+                <TextView
+                    android:id="@+id/tv_contact_role"
+                    style="@style/edtText_normal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/suodesilei" />
+            </LinearLayout>
+            <include layout="@layout/include_solid_line_left" />
             <LinearLayout
                 android:id="@+id/layout_depart"
                 android:layout_width="match_parent"
