@@ -137,7 +137,12 @@ public class AttachmentsFragment extends CustomerChildFragment
                     }
                     @Override
                     public void onNext(ArrayList<Attachment> attachments) {
-                        ll_loading.setStatus(LoadingLayout.Success);
+                        if (attachments == null || attachments.size() == 0) {
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        }
+                        else {
+                            ll_loading.setStatus(LoadingLayout.Success);
+                        }
                         listView.onRefreshComplete();
                         mListAttachment = attachments;
                         adapter.loadData(mListAttachment);

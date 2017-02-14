@@ -12,15 +12,15 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.loyo.oa.audio.player.AudioPlayerView;
+
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
@@ -38,6 +38,7 @@ import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
@@ -50,7 +51,9 @@ import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.HashMap;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
@@ -457,8 +460,8 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
                 }
 
                 Intent intent = new Intent();
-                intent.putExtra("Id", mSigninDelModel.customerId);
-                intent.setClass(mContext, CustomerDetailInfoActivity_.class);
+                intent.putExtra(CustomerDetailActivity.KEY_ID, mSigninDelModel.customerId);
+                intent.setClass(mContext, CustomerDetailActivity.class);
                 mContext.startActivity(intent);
             }
         });

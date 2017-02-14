@@ -20,7 +20,6 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
@@ -42,6 +41,7 @@ import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.customview.ListView_inScrollView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -321,8 +321,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     @Override
                     public void onClick() {
                         Intent intent = new Intent();
-                        intent.putExtra("Id", order.customerId);
-                        intent.setClass(WfinstanceInfoActivity.this, CustomerDetailInfoActivity_.class);
+                        intent.putExtra(CustomerDetailActivity.KEY_ID, order.customerId);
+                        intent.setClass(WfinstanceInfoActivity.this, CustomerDetailActivity.class);
                         startActivity(intent);
                         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     }
@@ -868,8 +868,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
             {
                 if (mWfInstance != null && mWfInstance.customerId != null) {
                     Intent intent2 = new Intent();
-                    intent2.putExtra("Id", mWfInstance.customerId);
-                    intent2.setClass(this, CustomerDetailInfoActivity_.class);
+                    intent2.putExtra(CustomerDetailActivity.KEY_ID, mWfInstance.customerId);
+                    intent2.setClass(this, CustomerDetailActivity.class);
                     startActivity(intent2);
                     overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }

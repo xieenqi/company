@@ -11,13 +11,13 @@ import android.widget.TextView;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorkSheetListNestingAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetCommon;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -216,8 +216,8 @@ public class WorksheetInfoActivity extends BaseLoadingActivity implements View.O
                 return;
             }
                 mBundle = new Bundle();
-                mBundle.putString("Id", mWorksheetInfo.customerId);
-                app.startActivity(this, CustomerDetailInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                mBundle.putString(CustomerDetailActivity.KEY_ID, mWorksheetInfo.customerId);
+                app.startActivity(this, CustomerDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 break;
         }
     }

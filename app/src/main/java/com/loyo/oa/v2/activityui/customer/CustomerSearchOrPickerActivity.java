@@ -11,6 +11,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.customermanagement.api.ICustomer;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -32,7 +33,7 @@ public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer>
     //可传入参数定义
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_HAVE_TAG = "haveTag";
-    public static final String EXTRA_PICKER_ID = "Id";
+    public static final String EXTRA_PICKER_ID = CustomerDetailActivity.KEY_ID;
 
     private int type = 0;
     private boolean haveTag = true;
