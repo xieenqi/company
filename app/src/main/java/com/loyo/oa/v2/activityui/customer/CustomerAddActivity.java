@@ -68,6 +68,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -546,11 +547,17 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*选择标签*/
             case R.id.layout_customer_label:
-                Bundle bundle2 = new Bundle();
-                if (tags != null) {
-                    bundle2.putSerializable("tagitems", Utils.convertTagItems(tags));
+
+
+                Intent mIntent = new Intent(this, CustomerLabelCopyActivity.class);
+                mIntent.putExtra("canEdit", true);
+                mIntent.putExtra("fromPage", 1);
+                mIntent.putExtra("customerId","-1");
+                if (null != tags) {
+                    mIntent.putExtra("tagitems", Utils.convertTagItems(tags));
                 }
-                app.startActivityForResult((Activity) mContext, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
+                startActivity(mIntent);
+
                 break;
             /*选择状态*/
             case R.id.layout_customer_status:
@@ -558,6 +565,47 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 b.putString(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, null==mCustomer?"":mCustomer.statusId);//设置默认值
                 app.startActivityForResult(this, CustomerStatusSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_STATUS, b);
                 break;
+        }
+    }
+    /**
+     * 更新Label
+     *
+     * @param event
+     */
+    @Subscribe
+    public void onCustomerRushEvent(MyCustomerRushEvent event) {
+        if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode &&
+                event.subCode == MyCustomerRushEvent.EVENT_SUB_CODE_LABEL
+                &&"-1".equals(event.session)) {
+            tags = event.data.tags;
+            StringBuffer sb = null;
+            StringBuffer sbItemId = null;
+            StringBuffer sbTId = null;
+            for (NewTag tag : tags) {
+                if (sb == null) {
+                    sb = new StringBuffer();
+                    sb.append(String.valueOf(tag.getItemName()));
+                    sbItemId = new StringBuffer();
+                    sbItemId.append(String.valueOf(tag.getItemId()));
+                    sbTId = new StringBuffer();
+                    sbTId.append(String.valueOf(tag.gettId()));
+                } else {
+                    sb.append("、");
+                    sb.append(String.valueOf(tag.getItemName()));
+                    sbItemId.append(",");
+                    sbItemId.append(String.valueOf(tag.getItemId()));
+                    sbTId.append(",");
+                    sbTId.append(String.valueOf(tag.gettId()));
+                }
+            }
+            if (sbItemId != null) {
+                tagItemIds = sbItemId.toString();
+                tv_labels.setText(sb.toString());
+            } else{
+                tagItemIds="";
+                tv_labels.setText("");
+            }
+
         }
     }
 
@@ -729,12 +777,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         //网址输入的有内容，才提交
         String url = edt_customer_weburl.getText()+"";
         if(url.length()>8){
-            map.put("webSite", edt_customer_weburl.getText());
+            map.put("webSite",url);
         }
         if (actionType == TYPE_CLUE_TO_CUSTOMER && clueSales != null)
             map.put("salesleadId", clueSales.id);
-        LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
-
         Subscription subscribe = CustomerService.addNewCustomer(map)
                 .subscribe(new DefaultLoyoSubscriber<CustomerWrapper>(hud) {
                     @Override

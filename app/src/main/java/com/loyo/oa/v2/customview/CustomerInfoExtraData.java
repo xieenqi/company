@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -100,7 +101,7 @@ public class CustomerInfoExtraData extends LinearLayout {
 
                 }
                 try {
-                    if(null!=customerExtra.getVal())tv_content.setText(DateTool.getDateTimeFriendly(Long.parseLong(customerExtra.getVal())));
+                    if(!TextUtils.isEmpty(customerExtra.getVal()))tv_content.setText(DateTool.getDateTimeFriendly(Long.parseLong(customerExtra.getVal())));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     tv_content.setText(customerExtra.getVal());
