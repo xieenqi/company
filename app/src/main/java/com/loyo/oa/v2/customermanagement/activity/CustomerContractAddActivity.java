@@ -448,13 +448,14 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 maps.put("telGroup", telGroup);
                 maps.put("wiretelGroup", wiretelGroup);
                 maps.put("extDatas", requestContactParam);
-                maps.put("contactRoleId", mContact.getContactRoleId());
+                if(null!=mContact){
+                    maps.put("contactRoleId", mContact.getContactRoleId());
+                }
 
-                LogUtil.dee("添加联系人发送map：" + MainApp.gson.toJson(maps));
                 if (mCustomer == null) {
                     return;
                 }
-                if (mContact == null) {
+                if (type==EXTRA_TYPE_ADD) {
                         /*新建联系人*/
                     CustomerService.addContact(mCustomer.getId(), maps)
                             .subscribe(new DefaultLoyoSubscriber<Contact>() {

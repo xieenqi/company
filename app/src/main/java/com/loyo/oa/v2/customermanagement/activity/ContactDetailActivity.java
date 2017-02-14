@@ -24,7 +24,6 @@ import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.cell.ContactCardCell;
-import com.loyo.oa.v2.customermanagement.event.MyContactPushEvent;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.ContactListExtra;
@@ -339,12 +338,8 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         switch (requestCode) {
 
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
-                Contact contact = (Contact) data.getSerializableExtra("data");
-                this.contact = contact;
-                //发送消息，更新客户详情页面的联系人数据
-                MyContactPushEvent myContactPushEvent=new MyContactPushEvent();
-                myContactPushEvent.data=contact;
-                AppBus.getInstance().post(myContactPushEvent);
+                contactUpdated=true;
+                contact = (Contact) data.getSerializableExtra("data");
                 this.loadContact();
                 contactUpdated = true;
                 break;

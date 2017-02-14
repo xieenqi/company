@@ -29,7 +29,6 @@ import com.loyo.oa.v2.customermanagement.activity.CustomerContractAddActivity;
 import com.loyo.oa.v2.customermanagement.adapter.CustomerContactsListAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.cell.ContactCardCell;
-import com.loyo.oa.v2.customermanagement.event.MyContactPushEvent;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
@@ -442,26 +441,5 @@ public class ContactsFragment extends CustomerChildFragment
     }
 
 
-    /**
-     * 更新联系人数据
-     */
-    @Subscribe
-    public void onMyContactPushEvent(MyContactPushEvent event) {
-        switch (event.eventCode){
-            case MyContactPushEvent.EVENT_CODE_UPDATE:
-                if(customer.contacts==null)return;
-                for (int i = 0; i <customer.contacts.size(); i++) {
-                    if(customer.contacts.get(i).getId().equals(event.data.getId())){
-                        customer.contacts.remove(i);
-                        customer.contacts.add(i,event.data);
-                    }
-                }
-                break;
-            case MyContactPushEvent.EVENT_CODE_ADD:
-
-                break;
-        }
-
-    }
 
 }
