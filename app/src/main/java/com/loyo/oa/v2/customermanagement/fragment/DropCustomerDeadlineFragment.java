@@ -15,6 +15,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.model.DropDeadlineModel;
 
+import java.lang.ref.WeakReference;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -26,6 +28,13 @@ import static com.loyo.oa.v2.R.id.followup;
  */
 
 public class DropCustomerDeadlineFragment extends DialogFragment {
+
+    public interface CustomerDeadlineActionListener {
+        void onAddFollowup();
+        void onAddVisit();
+        void onAddCall();
+        void onAddOrder();
+    }
 
     @BindView(R.id.tv_title) TextView titleText;
     @BindView(R.id.tv_order_title) TextView orderTitleText;
@@ -56,31 +65,47 @@ public class DropCustomerDeadlineFragment extends DialogFragment {
     }
 
     @OnClick(R.id.tv_followup) void onFollowup() {
-
+        if (listenerRef != null && listenerRef.get() != null) {
+            dismiss();
+            listenerRef.get().onAddFollowup();
+        }
     }
 
     @OnClick(R.id.tv_visit) void onVisit() {
-
+        if (listenerRef != null && listenerRef.get() != null) {
+            dismiss();
+            listenerRef.get().onAddVisit();
+        }
     }
 
     @OnClick(R.id.tv_call) void onCall() {
-
+        if (listenerRef != null && listenerRef.get() != null) {
+            dismiss();
+            listenerRef.get().onAddCall();
+        }
     }
 
     @OnClick(R.id.tv_order) void onOrder() {
-
+        if (listenerRef != null && listenerRef.get() != null) {
+            dismiss();
+            listenerRef.get().onAddOrder();
+        }
     }
 
     DropDeadlineModel model;
+    WeakReference<CustomerDeadlineActionListener> listenerRef;
 
 
 
     public DropCustomerDeadlineFragment() {}
 
-    public static DropCustomerDeadlineFragment newInstance(DropDeadlineModel model) {
+    public static DropCustomerDeadlineFragment newInstance(DropDeadlineModel model, CustomerDeadlineActionListener listener) {
         DropCustomerDeadlineFragment fragment = new DropCustomerDeadlineFragment();
         fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
         fragment.model = model;
+        if (listener != null) {
+            fragment.listenerRef = new WeakReference<>(listener);
+        }
         return fragment;
     }
 

@@ -217,13 +217,25 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
         switch (v.getId()) {
             /*新建*/
             case R.id.layout_add:
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(Customer.class.getName(), mCustomer);
-                bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
-                bundle.putBoolean("isDetail", true);
-                app.startActivityForResult(getActivity(), FollowAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
-                UmengAnalytics.umengSend(getActivity(), UmengAnalytics.customerCheckFollowAddFollow);
+                onAddFollowup();
                 break;
+        }
+    }
+
+    public void onAddFollowup() {
+        canAdd = mCustomer != null && mCustomer.state == Customer.NormalCustomer &&
+                PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                        mCustomer.state, CustomerAction.FOLLOWUP_ADD);
+        if (!canAdd) {
+            sweetAlertDialogView.alertIcon("提示", "你没有写跟进权限");
+        }
+        else {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Customer.class.getName(), mCustomer);
+            bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+            bundle.putBoolean("isDetail", true);
+            app.startActivityForResult(getActivity(), FollowAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+            UmengAnalytics.umengSend(getActivity(), UmengAnalytics.customerCheckFollowAddFollow);
         }
     }
 
