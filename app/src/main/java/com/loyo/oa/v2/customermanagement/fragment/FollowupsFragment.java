@@ -234,7 +234,8 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
             bundle.putSerializable(Customer.class.getName(), mCustomer);
             bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
             bundle.putBoolean("isDetail", true);
-            app.startActivityForResult(getActivity(), FollowAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+            app.startActivityForResult(getActivity(), FollowAddActivity.class,
+                    MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
             UmengAnalytics.umengSend(getActivity(), UmengAnalytics.customerCheckFollowAddFollow);
         }
     }
@@ -365,6 +366,8 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
             listModel.clear();
         }
         mPagination = paginationX;
+        this.totalCount = paginationX.totalRecords;
+        notifyTotalCountChange();
         listModel.addAll(paginationX.getRecords());
         String dateIndex = "";
         for (int i = 0; i < listModel.size(); i++) {

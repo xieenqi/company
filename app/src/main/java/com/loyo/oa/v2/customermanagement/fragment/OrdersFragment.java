@@ -199,6 +199,8 @@ public class OrdersFragment extends CustomerChildFragment
                     public void onNext(PaginationX<OrderListItem> orderListItemPaginationX) {
                         listView_demands.onRefreshComplete();
                         ll_loading.setStatus(LoadingLayout.Success);
+                        OrdersFragment.this.totalCount = orderListItemPaginationX.totalRecords;
+                        notifyTotalCountChange();
                         if (! PaginationX.isEmpty(orderListItemPaginationX)) {
                             if (!isPullDown) {
                                 listData.addAll(orderListItemPaginationX.records);

@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.DensityUtil;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
@@ -52,6 +54,7 @@ public class CustomerInfoExtraData extends LinearLayout {
         bindView(edit, valueColor, valueSize);
     }
 
+
     public ArrayList<ExtraData> getExtras() {
         return extras;
     }
@@ -83,6 +86,7 @@ public class CustomerInfoExtraData extends LinearLayout {
 
             TextView tv_tag = (TextView) extra.findViewById(R.id.tv_tag);
             final EditText tv_content = (EditText) extra.findViewById(R.id.et_content);
+            ImageView ivArrow = (ImageView) extra.findViewById(R.id.img_right_arrow);
 
             tv_content.setEnabled(edit);
             if (valueSize != 0) {
@@ -101,7 +105,8 @@ public class CustomerInfoExtraData extends LinearLayout {
 
                 }
                 try {
-                    if(!TextUtils.isEmpty(customerExtra.getVal()))tv_content.setText(DateTool.getDateTimeFriendly(Long.parseLong(customerExtra.getVal())));
+                    if (!TextUtils.isEmpty(customerExtra.getVal()))
+                        tv_content.setText(DateTool.getDateTimeFriendly(Long.parseLong(customerExtra.getVal())));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     tv_content.setText(customerExtra.getVal());
@@ -151,7 +156,7 @@ public class CustomerInfoExtraData extends LinearLayout {
             } else if ("string".equals(properties.getType())) {
                 LogUtil.dll("string");
                 LogUtil.dll("string enable:" + properties.isEnabled());
-                extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
+                ivArrow.setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
 //                tv_content.setOnClickListener(null);
@@ -164,7 +169,7 @@ public class CustomerInfoExtraData extends LinearLayout {
             } else if ("int".equals(properties.getType())) {
                 LogUtil.dll("int");
                 LogUtil.dll("int enable:" + properties.isEnabled());
-                extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
+                ivArrow.setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
 //                tv_content.setOnClickListener(null);
@@ -177,7 +182,7 @@ public class CustomerInfoExtraData extends LinearLayout {
             } else if ("double".equals(properties.getType())) {
                 LogUtil.dll("double");
                 LogUtil.dll("double enable:" + properties.isEnabled());
-                extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
+                ivArrow.setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
 //                tv_content.setOnClickListener(null);
@@ -187,6 +192,14 @@ public class CustomerInfoExtraData extends LinearLayout {
                 if (properties.isRequired()) {
                     tv_content.setHint("必填");
                 }
+            }
+            //必须放在最后，覆盖前面的
+            if(edit){
+                tv_content.setTextColor(getResources().getColor(R.color.text66));
+            }else{
+                tv_content.setTextColor(getResources().getColor(R.color.text99));
+                tv_content.setPadding(tv_content.getPaddingLeft(),tv_content.getPaddingTop(), DensityUtil.dp2px(mContext,14),tv_content.getPaddingBottom());
+                ivArrow.setVisibility(View.GONE);
             }
         }
     }
@@ -263,8 +276,8 @@ public class CustomerInfoExtraData extends LinearLayout {
 //                        String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
 //                        textView.setText(str);
 //                        extra.setVal(str);
-                        long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day,hour,min,0);
-                        String str= DateTool.getDateTimeFriendly(time);
+                        long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day, hour, min, 0);
+                        String str = DateTool.getDateTimeFriendly(time);
                         extra.setVal(str);
                         textView.setText(str);
                     }

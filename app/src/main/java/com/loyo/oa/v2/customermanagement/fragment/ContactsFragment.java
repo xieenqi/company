@@ -187,6 +187,8 @@ public class ContactsFragment extends CustomerChildFragment
             {
                 Contact contact = (Contact) data.getSerializableExtra("data");
                 insertContact(contact);
+                this.totalCount = this.totalCount + 1;
+                notifyTotalCountChange();
             }
                 break;
             case ContactDetailActivity.ContactDetailActivityRequestCode:
@@ -198,6 +200,11 @@ public class ContactsFragment extends CustomerChildFragment
                     if (action == ContactDetailActivity.CONTACT_DELETE) {
                         customer.contacts.remove(index);
                         adapter.loadData(customer.contacts);
+                        this.totalCount = this.totalCount - 1;
+                        if (this.totalCount < 0) {
+                            this.totalCount = 0;
+                        }
+                        notifyTotalCountChange();
                     }
                     else if (action == ContactDetailActivity.CONTACT_UPDATED) {
                         customer.contacts.remove(index);

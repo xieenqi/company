@@ -33,6 +33,7 @@ import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.fragment.AttachmentsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.ContactsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.CustomerChildFragment;
 import com.loyo.oa.v2.customermanagement.fragment.DropCustomerDeadlineFragment;
 import com.loyo.oa.v2.customermanagement.fragment.FollowupsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.OpportunitiesFragment;
@@ -58,7 +59,8 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CustomerDetailActivity extends BaseFragmentActivity
-    implements DropCustomerDeadlineFragment.CustomerDeadlineActionListener
+    implements DropCustomerDeadlineFragment.CustomerDeadlineActionListener,
+        CustomerChildFragment.OnTotalCountChangeListener
 {
 
     public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
@@ -352,34 +354,50 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
         followupsFragment = new FollowupsFragment();
         followupsFragment.setCustomer(customer);
+        followupsFragment.index = 0;
+        followupsFragment.setListener(this);
         adapter.addFragment(followupsFragment);
 
         ContactsFragment contactsFragment = new ContactsFragment();
         contactsFragment.setCustomer(customer);
+        contactsFragment.index = 1;
+        contactsFragment.setListener(this);
         adapter.addFragment(contactsFragment);
 
         visitsFragment = new VisitsFragment();
         visitsFragment.setCustomer(customer);
+        visitsFragment.index = 2;
+        visitsFragment.setListener(this);
         adapter.addFragment(visitsFragment);
 
         OpportunitiesFragment opportunitiesFragment = new OpportunitiesFragment();
         opportunitiesFragment.setCustomer(customer);
+        opportunitiesFragment.index = 3;
+        opportunitiesFragment.setListener(this);
         adapter.addFragment(opportunitiesFragment);
 
         ordersFragment = new OrdersFragment();
         ordersFragment.setCustomer(customer);
+        ordersFragment.index = 4;
+        ordersFragment.setListener(this);
         adapter.addFragment(ordersFragment);
 
         TasksFragment tasksFragment = new TasksFragment();
         tasksFragment.setCustomer(customer);
+        tasksFragment.index = 5;
+        tasksFragment.setListener(this);
         adapter.addFragment(tasksFragment);
 
         WorkFlowsFragment workFlowsFragment = new WorkFlowsFragment();
         workFlowsFragment.setCustomer(customer);
+        workFlowsFragment.index = 6;
+        workFlowsFragment.setListener(this);
         adapter.addFragment(workFlowsFragment);
 
         AttachmentsFragment attachmentsFragment = new AttachmentsFragment();
         attachmentsFragment.setCustomer(customer);
+        attachmentsFragment.index = 7;
+        attachmentsFragment.setListener(this);
         adapter.addFragment(attachmentsFragment);
 
         viewPager.setAdapter(adapter);
@@ -471,5 +489,16 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 }
             }
         }, 300 /* 完成加载页面和动画时间 */);
+    }
+
+    /**
+     * CustomerChildFragment.OnTotalCountChangeListener
+     */
+    @Override
+    public void onTotalCountChange(CustomerChildFragment fragment, int index) {
+        TabLayout.Tab tab = tabLayout.getTabAt(index);
+        if (tab != null) {
+            tab.setText(fragment.getTitle());
+        }
     }
 }

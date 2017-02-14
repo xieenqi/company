@@ -32,6 +32,7 @@ import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,7 +118,7 @@ public class AttachmentsFragment extends CustomerChildFragment
         layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
         layout_add.setOnTouchListener(Global.GetTouch());
 
-        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        listView.setMode(PullToRefreshBase.Mode.MANUAL_REFRESH_ONLY);
         listView.getRefreshableView().setLayoutManager(new LinearLayoutManager(getContext()));
         listView.getRefreshableView().setAdapter(adapter);
         listView.setOnRefreshListener(this);
@@ -143,7 +144,11 @@ public class AttachmentsFragment extends CustomerChildFragment
                         else {
                             ll_loading.setStatus(LoadingLayout.Success);
                         }
+                        AttachmentsFragment.this.totalCount = attachments.size();
+                        notifyTotalCountChange();
                         listView.onRefreshComplete();
+                        AttachmentsFragment.this.totalCount = attachments.size();
+                        notifyTotalCountChange();
                         mListAttachment = attachments;
                         adapter.loadData(mListAttachment);
                     }
@@ -181,6 +186,29 @@ public class AttachmentsFragment extends CustomerChildFragment
                     }
                 }
 
+                break;
+            /*附件删除回调*/
+            case PhotoPreview.REQUEST_CODE:
+                if (data != null) {
+                    final int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0 && index < mListAttachment.size()) {
+                        HashMap<String, Object> map = new HashMap<String, Object>();
+                        map.put("bizType", bizType);
+                        map.put("uuid", uuid);
+                        Attachment attachment = mListAttachment.get(index);
+                        showLoading2("");
+                        AttachmentService.remove(attachment.getId(), map)
+                                .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
+                                    @Override
+                                    public void onNext(Object object) {
+                                        mListAttachment.remove(index);
+                                        AttachmentsFragment.this.totalCount = AttachmentsFragment.this.totalCount - 1;
+                                        notifyTotalCountChange();
+                                        adapter.loadData(mListAttachment);
+                                    }
+                                });
+                    }
+                }
                 break;
 
             default:
@@ -262,7 +290,7 @@ public class AttachmentsFragment extends CustomerChildFragment
         PhotoPreview.builder()
                 .setPhotos(selectedPhotos)
                 .setCurrentItem(index)
-                .setShowDeleteButton(false)
+                .setShowDeleteButton(canAdd)
                 .start(this.getActivity(), this);
     }
 

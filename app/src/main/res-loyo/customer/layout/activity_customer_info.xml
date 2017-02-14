@@ -157,6 +157,7 @@
                             android:textColor="@color/title_bg1" />
 
                         <ImageView
+                            android:id="@+id/iv_customer_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:scaleType="center"
@@ -192,7 +193,7 @@
                             android:textColor="@color/title_bg1" />
 
                         <ImageView
-                            android:id="@+id/img_title_right_toUser"
+                            android:id="@+id/iv_labels"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:scaleType="center"
@@ -226,7 +227,7 @@
                             android:layout_weight="1"
                             android:background="@null"
                             android:text="https://"
-                            android:paddingRight="23dp"
+                            android:paddingRight="27dp"
                             android:gravity="right|center_vertical"
                             android:textColor="#666666" />
                     </LinearLayout>
@@ -286,6 +287,7 @@
                         android:textColor="@color/title_bg1" />
 
                     <ImageView
+                        android:id="@+id/iv_district"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="center"
@@ -325,7 +327,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:minWidth="@dimen/dimen_80"
-                            android:text="负  责  人" />
+                            android:text="负责人" />
 
                         <TextView
                             android:id="@+id/tv_customer_responser"
@@ -360,7 +362,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:minWidth="@dimen/dimen_60"
-                            android:text="参  与  人" />
+                            android:text="参与人" />
 
                         <TextView
                             android:id="@+id/tv_customer_join_users"
@@ -559,7 +561,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:minWidth="@dimen/dimen_80"
-                            android:text="创  建  人" />
+                            android:text="创建人" />
 
                         <TextView
                             android:id="@+id/tv_customer_creator"

@@ -202,6 +202,8 @@ public class WorkFlowsFragment extends CustomerChildFragment
                     @Override
                     public void onNext(PaginationX<ApprovalItemModel> x) {
                         mExpandableListView.onRefreshComplete();
+                        WorkFlowsFragment.this.totalCount = x.totalRecords;
+                        notifyTotalCountChange();
                         if (isPullDown) {
                             listData.clear();
                             groupsData.clear();
