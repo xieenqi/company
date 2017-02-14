@@ -327,7 +327,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:minWidth="@dimen/dimen_80"
-                            android:text="负  责  人" />
+                            android:text="负责人" />
 
                         <TextView
                             android:id="@+id/tv_customer_responser"
@@ -362,7 +362,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:minWidth="@dimen/dimen_60"
-                            android:text="参  与  人" />
+                            android:text="参与人" />
 
                         <TextView
                             android:id="@+id/tv_customer_join_users"
@@ -561,7 +561,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:minWidth="@dimen/dimen_80"
-                            android:text="创  建  人" />
+                            android:text="创建人" />
 
                         <TextView
                             android:id="@+id/tv_customer_creator"
