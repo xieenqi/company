@@ -19,7 +19,7 @@ public class CommonMethod {
 
     public static void commonCustomerRecycleTime(Customer customer, ViewGroup layout, TextView tView1) {
         SpannableStringBuilder tt = customer.getFormattedDropRemind();
-        if (tt != null) {
+        if (customer.hasDropRemind()) {
             layout.setVisibility(View.VISIBLE);
             tView1.setVisibility(View.VISIBLE);
             tView1.setText(tt);
