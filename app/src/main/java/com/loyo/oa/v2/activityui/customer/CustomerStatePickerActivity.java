@@ -34,10 +34,6 @@ import java.util.HashMap;
  */
 public class CustomerStatePickerActivity extends BaseActivity implements View.OnClickListener {
 
-    public static final String KEY_UPDATE_TYPE = "com.loyo.CustomerLabelCopyActivity.KEY_UPDATE_TYPE";
-    public static final String UPDATE_TAG   = "com.loyo.CustomerLabelCopyActivity.UPDATE_TAG";
-    public static final String UPDATE_STATE = "com.loyo.CustomerLabelCopyActivity.UPDATE_STATE";
-
     private ViewGroup img_title_right;
     private ExpandableListView expand_listview_label;
     private ViewGroup img_title_left;
@@ -46,7 +42,6 @@ public class CustomerStatePickerActivity extends BaseActivity implements View.On
     private ArrayList<Tag> tags = new ArrayList<>();
     private boolean canEdit;
     private int fromPage; /*0:详情 1:信息*/
-    private String updateType = UPDATE_TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +50,12 @@ public class CustomerStatePickerActivity extends BaseActivity implements View.On
         init();
     }
 
-    boolean isUpdateState() {
-        return UPDATE_STATE.equals(updateType);
-    }
-
-
     void init() {
 
         stateItem = (TagItem) getIntent().getSerializableExtra("state");
         mCustomerId = getIntent().getStringExtra("customerId");
         canEdit = getIntent().getBooleanExtra("canEdit", false);
         fromPage = getIntent().getIntExtra("fromPage", 0);
-        updateType = getIntent().getStringExtra(KEY_UPDATE_TYPE);
 
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -79,12 +68,7 @@ public class CustomerStatePickerActivity extends BaseActivity implements View.On
             img_title_right.setVisibility(View.GONE);
         }
 
-        if (isUpdateState()) {
-            setTitle("状态");
-        }
-        else {
-            setTitle("标签");
-        }
+        setTitle("客户状态");
 
         expand_listview_label.setAdapter(adapter);
         expand_listview_label.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -283,6 +267,7 @@ public class CustomerStatePickerActivity extends BaseActivity implements View.On
             if (tag != null && tag.getName() != null) {
                 item_info_Group.tv_title.setText(tag.getName());
             }
+            convertView.setVisibility(View.GONE);
 
             return convertView;
         }
