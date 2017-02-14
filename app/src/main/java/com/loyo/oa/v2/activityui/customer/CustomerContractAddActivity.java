@@ -11,11 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.contact.ContactsRoleSingleSelectActivity;
+import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
 import com.loyo.oa.v2.activityui.customer.event.ContactMaillistRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.ContactRequestParam;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
@@ -37,6 +40,7 @@ import java.util.HashMap;
 
 public class CustomerContractAddActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final int REQUEST_ACTIVITY_CODE_ROLE = 1;//选择联系人角色
     public ViewGroup img_title_left;
     public ViewGroup img_title_right;
     public Customer mCustomer;
@@ -53,6 +57,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
     private TextView tv_call_name1;
     private TextView tv_call_name2;
     private TextView tv_call_name3;
+    private TextView tv_contact_role;
 
     private EditText edt_contract_tel1;
     private EditText edt_contract_tel2;
@@ -80,6 +85,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
     private ArrayList<String> wiretelGroup;
     private ArrayList<String> telGroup;
+    private ContactsRoleModel contactsRoleModel;//联系人角色
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -108,6 +114,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         tv_call_name1 = (TextView) findViewById(R.id.tv_call_name1);
         tv_call_name2 = (TextView) findViewById(R.id.tv_call_name2);
         tv_call_name3 = (TextView) findViewById(R.id.tv_call_name3);
+        tv_contact_role = (TextView) findViewById(R.id.tv_contact_role);
 
         edt_contract_tel1 = (EditText) findViewById(R.id.edt_contract_tel1);
         edt_contract_tel2 = (EditText) findViewById(R.id.edt_contract_tel2);
@@ -142,6 +149,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         iv_call_insert1.setOnClickListener(this);
         iv_call_insert2.setOnClickListener(this);
         img_maillist_contact.setOnClickListener(this);
+        //角色点击事件
+        findViewById(R.id.ll_contact_role).setOnClickListener(this);
 
         img_title_right.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
         getContactsFields();
@@ -149,12 +158,12 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
     /**
      * 如果为编辑状态,绑定电话,座机,与姓名数据
-     * */
-    void bindEditData(){
+     */
+    void bindEditData() {
         et_name.setText(mContact.getName());
 
         /*绑定电话数据*/
-        if(null != mContact.telGroup){
+        if (null != mContact.telGroup) {
             switch (mContact.telGroup.size()) {
 
                 case 1:
@@ -187,7 +196,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         }
 
         /*绑定座机数据*/
-        if(null != mContact.wiretelGroup){
+        if (null != mContact.wiretelGroup) {
             switch (mContact.wiretelGroup.size()) {
 
                 case 1:
@@ -224,7 +233,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      * 绑定数据
      */
     void bindData() {
-        if(null != mContact){
+        if (null != mContact) {
             bindEditData();
         }
         layout_contact_extra_info.addView(new ContactAddforExtraData(mContext, mContact, mContactLeftExtras, true, 0));
@@ -232,11 +241,11 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
     /**
      * 通讯录导入回调
-     * */
+     */
     @Subscribe
-    public void onContactMaillistRushEvent(ContactMaillistRushEvent event){
+    public void onContactMaillistRushEvent(ContactMaillistRushEvent event) {
 
-        String name  = event.bundle.getString(ExtraAndResult.EXTRA_NAME);
+        String name = event.bundle.getString(ExtraAndResult.EXTRA_NAME);
         String phone = event.bundle.getString(ExtraAndResult.EXTRA_DATA);
 
         et_name.setText(name);
@@ -246,28 +255,47 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
     /**
      * 获取手机号 电话号
-     * */
-    public void getTelNum(EditText editText,ArrayList<String> arrayList){
-        if(!TextUtils.isEmpty(editText.getText().toString())){
+     */
+    public void getTelNum(EditText editText, ArrayList<String> arrayList) {
+        if (!TextUtils.isEmpty(editText.getText().toString())) {
             arrayList.add(editText.getText().toString());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (RESULT_OK != resultCode) return;
+        switch (requestCode) {
+            case REQUEST_ACTIVITY_CODE_ROLE:
+                contactsRoleModel = (ContactsRoleModel) data.getSerializableExtra("data");
+                if (null != contactsRoleModel) {
+                    tv_contact_role.setText(contactsRoleModel.name);//联系人角色
+                }
+                break;
         }
     }
 
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-
+            /*选择角色*/
+            case R.id.ll_contact_role:
+                Bundle bundle = new Bundle();
+                //设置默认值
+                bundle.putString(ContactsRoleSingleSelectActivity.EXTRA_CURRENT, null==contactsRoleModel?"":contactsRoleModel.id);
+                app.startActivityForResult(this, ContactsRoleSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_ROLE, bundle);
+                break;
             /*通讯录导入*/
             case R.id.img_maillist_contact:
                 boolean isEdit = false;
-                if(!TextUtils.isEmpty(et_name.getText().toString())
-                        || !TextUtils.isEmpty(edt_contract_tel1.getText().toString())){
+                if (!TextUtils.isEmpty(et_name.getText().toString())
+                        || !TextUtils.isEmpty(edt_contract_tel1.getText().toString())) {
                     isEdit = true;
                 }
                 Intent mIntent = new Intent();
                 mIntent.setClass(CustomerContractAddActivity.this, MyContactMailList.class);
-                mIntent.putExtra(ExtraAndResult.EXTRA_NAME,1);
-                mIntent.putExtra(ExtraAndResult.EXTRA_OBJ,isEdit);
+                mIntent.putExtra(ExtraAndResult.EXTRA_NAME, 1);
+                mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, isEdit);
                 startActivity(mIntent);
                 break;
 
@@ -313,8 +341,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
                 /**姓名,手机,座机view写死,非空判断单独处理*/
                 for (ContactLeftExtras contactLeftExtras : mContactLeftExtras) {
-                    if(contactLeftExtras.fieldName.equals("name") && contactLeftExtras.required){
-                        if(TextUtils.isEmpty(name)){
+                    if (contactLeftExtras.fieldName.equals("name") && contactLeftExtras.required) {
+                        if (TextUtils.isEmpty(name)) {
                             Toast("姓名不能为空");
                             return;
                         }
@@ -325,9 +353,9 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                     if (contactLeftExtras.required && TextUtils.isEmpty(contactLeftExtras.val)) {
                         if (contactLeftExtras.fieldName.equals("name")) {
                             continue;
-                        }else if (contactLeftExtras.fieldName.equals("wiretel")) {
+                        } else if (contactLeftExtras.fieldName.equals("wiretel")) {
                             continue;
-                        }else if (contactLeftExtras.fieldName.equals("tel")) {
+                        } else if (contactLeftExtras.fieldName.equals("tel")) {
                             continue;
                         }
                         Toast(contactLeftExtras.label + "不能为空");
@@ -402,12 +430,12 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 wiretelGroup = new ArrayList<>();
                 telGroup = new ArrayList<>();
 
-                getTelNum(edt_contract_tel1,telGroup);
-                getTelNum(edt_contract_tel2,telGroup);
-                getTelNum(edt_contract_tel3,telGroup);
-                getTelNum(edt_contract_telnum1,wiretelGroup);
-                getTelNum(edt_contract_telnum2,wiretelGroup);
-                getTelNum(edt_contract_telnum3,wiretelGroup);
+                getTelNum(edt_contract_tel1, telGroup);
+                getTelNum(edt_contract_tel2, telGroup);
+                getTelNum(edt_contract_tel3, telGroup);
+                getTelNum(edt_contract_telnum1, wiretelGroup);
+                getTelNum(edt_contract_telnum2, wiretelGroup);
+                getTelNum(edt_contract_telnum3, wiretelGroup);
 
                 maps.put("name", name);
                 maps.put("telGroup", telGroup);
@@ -417,7 +445,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 LogUtil.dee("添加联系人发送map：" + MainApp.gson.toJson(maps));
 
                 if (mCustomer == null) {
-                   return;
+                    return;
                 }
                 if (mContact == null) {
                         /*新建联系人*/
