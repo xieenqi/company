@@ -55,17 +55,29 @@ public class ContactsFragment extends CustomerChildFragment
         implements ContactCardCell.OnContactCellActionListener {
 
     View view;
-    @BindView(R.id.layout_add)
-    ViewGroup layout_add;
-    @BindView(R.id.ll_loading)
-    LoadingLayout ll_loading;
-
     String customerId;
     boolean canEdit;
     String callNum;
 
     CustomerContactsListAdapter adapter;
-    @BindView(R.id.contact_list_view) PullToRefreshRecyclerView2 listView;
+
+    @BindView(R.id.contact_add) ViewGroup layout_add;
+    @BindView(R.id.contact_loading) LoadingLayout ll_loading;
+
+    /**
+     * Crash fix, not set id to work around
+     * java.lang.IllegalArgumentException: Wrong state class, expecting View State but
+     * received class android.support.v7.widget.RecyclerView$SavedState instead
+     */
+    //@BindView(R.id.contact_list_view)
+    PullToRefreshRecyclerView2 listView;
+    @OnClick(R.id.contact_add) void addNewContact() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("customer", customer);
+        Intent intent = new Intent(getActivity(), CustomerContractAddActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT);
+    }
 
     public ContactsFragment() {
         this.title = "联系人";
@@ -110,6 +122,7 @@ public class ContactsFragment extends CustomerChildFragment
 
     void initViews(View view) {
         ButterKnife.bind(this, view);
+        listView = (PullToRefreshRecyclerView2) view.findViewWithTag("contact_list");
         ll_loading.setStatus(LoadingLayout.Loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
@@ -154,14 +167,6 @@ public class ContactsFragment extends CustomerChildFragment
                 }
             });
         }
-    }
-
-    @OnClick(R.id.layout_add) void addNewContact() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("customer", customer);
-        Intent intent = new Intent(getActivity(), CustomerContractAddActivity.class);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT);
     }
 
     @Override

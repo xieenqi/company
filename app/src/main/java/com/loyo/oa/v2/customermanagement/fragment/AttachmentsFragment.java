@@ -47,7 +47,13 @@ public class AttachmentsFragment extends CustomerChildFragment
         implements UploadControllerCallback, AttachmentCell.OnAttachmentCellListener,
         PullToRefreshBase.OnRefreshListener2 {
 
-    @BindView(R.id.file_list_view) PullToRefreshRecyclerView2 listView;
+    /**
+     * Crash fix, not set id to work around
+     * java.lang.IllegalArgumentException: Wrong state class, expecting View State but
+     * received class android.support.v7.widget.RecyclerView$SavedState instead
+     */
+    //@BindView(R.id.file_list_view)
+    PullToRefreshRecyclerView2 listView;
     @BindView(R.id.file_add) ViewGroup layout_add;
     @BindView(R.id.file_loading) LoadingLayout ll_loading;
 
@@ -99,6 +105,7 @@ public class AttachmentsFragment extends CustomerChildFragment
 
     void initViews(View view) {
         ButterKnife.bind(this, view);
+        listView = (PullToRefreshRecyclerView2) view.findViewWithTag("file_list");
         ll_loading.setStatus(LoadingLayout.Loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
