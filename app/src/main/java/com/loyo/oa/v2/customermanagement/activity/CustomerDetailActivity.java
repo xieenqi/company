@@ -21,6 +21,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerStatePickerActivity;
 import com.loyo.oa.v2.activityui.customer.LoseCommonCustomerReasonActivity;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.TagItem;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
@@ -44,6 +45,7 @@ import com.loyo.oa.v2.customermanagement.fragment.WorkFlowsFragment;
 import com.loyo.oa.v2.customermanagement.model.DropDeadlineModel;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.network.LoyoErrorChecker;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -257,6 +259,13 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         tv_title_1.setText("客户详情");
 
         this.loadIntentData();
+        CustomerService.getMembersRoot()
+                .subscribe(new DefaultLoyoSubscriber<MembersRoot>(LoyoErrorChecker.SILENCE) {
+                    @Override
+                    public void onNext(MembersRoot membersRoot) {
+                        PermissionManager.getInstance().loadCRMConfig(membersRoot);
+                    }
+                });
         this.getData(customerId);
     }
 
