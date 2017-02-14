@@ -12,7 +12,7 @@ import java.lang.ref.WeakReference;
 public class CustomerChildFragment extends BaseFragment {
 
     public interface OnTotalCountChangeListener {
-        void onTotalCountChange(int index, int totalCount, String title);
+        void onTotalCountChange(CustomerChildFragment fragment, int index);
     }
     public int index;
     WeakReference<OnTotalCountChangeListener> listenerRef;
@@ -38,7 +38,7 @@ public class CustomerChildFragment extends BaseFragment {
 
     void notifyTotalCountChange() {
         if (listenerRef != null && listenerRef.get() != null) {
-            listenerRef.get().onTotalCountChange(index, totalCount, title);
+            listenerRef.get().onTotalCountChange(this, index);
         }
     }
 }

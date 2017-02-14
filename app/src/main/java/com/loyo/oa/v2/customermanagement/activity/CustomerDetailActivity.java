@@ -495,10 +495,10 @@ public class CustomerDetailActivity extends BaseFragmentActivity
      * CustomerChildFragment.OnTotalCountChangeListener
      */
     @Override
-    public void onTotalCountChange(int index, int totalCount, String title) {
+    public void onTotalCountChange(CustomerChildFragment fragment, int index) {
         TabLayout.Tab tab = tabLayout.getTabAt(index);
         if (tab != null) {
-            tab.setText(title + " " + totalCount);
+            tab.setText(fragment.getTitle());
         }
     }
 }
