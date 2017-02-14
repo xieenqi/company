@@ -439,7 +439,7 @@
 
         <ImageView
             android:id="@+id/default_contact_view"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="44dp"
             android:src="@drawable/icon_default_sel"
             android:layout_alignParentRight="true"

@@ -39,7 +39,7 @@
             android:drawableLeft="@drawable/icon_common_add"
             android:drawablePadding="@dimen/dimen_3"
             android:gravity="center"
-            android:text="新增联系人"
+            android:text="新建联系人"
             android:textColor="@color/title_bg1" />
     </RelativeLayout>
 

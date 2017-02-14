@@ -49,7 +49,7 @@
                 android:drawableLeft="@drawable/icon_common_add"
                 android:drawablePadding="@dimen/dimen_5"
                 android:gravity="center"
-                android:text="新增拜访签到"
+                android:text="拜访"
                 android:textColor="@color/title_bg1"
                 android:textSize="15sp" />
         </LinearLayout>

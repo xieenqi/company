@@ -48,7 +48,6 @@ public class ContactCardCell extends RecyclerView.ViewHolder {
     @BindView(R.id.layout_wiretel2) ViewGroup telContainer2;
     @BindView(R.id.layout_wiretel3) ViewGroup telContainer3;
 
-
     @BindView(R.id.tv_phone_val1)   TextView phoneText1;
     @BindView(R.id.tv_phone_val2)   TextView phoneText2;
     @BindView(R.id.tv_phone_val3)   TextView phoneText3;

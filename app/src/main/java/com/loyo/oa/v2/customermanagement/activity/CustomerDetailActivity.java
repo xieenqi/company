@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.LoyoUIThread;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
@@ -84,6 +85,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     @BindView(R.id.img_title_right) View img_title_right;
     @BindView(R.id.tv_title_1)      TextView tv_title_1;
 
+    @BindView(R.id.ll_loading) LoadingLayout ll_loading;
+
     @BindView(R.id.customer_basic_info) ViewGroup basicInfoView;
     @BindView(R.id.customer_state)      ViewGroup customerStateView;
     @BindView(R.id.customer_tag)        ViewGroup customerTagView;
@@ -98,6 +101,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     @BindView(R.id.tv_recyleRemind) TextView recycleRemindText;
 
     @BindView(R.id.tab_mask) ImageView tabMask;
+    @BindView(R.id.customer_pick) ViewGroup customerPick;
 
 
 
@@ -200,6 +204,24 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         dialog.show();
     }
 
+    @OnClick(R.id.customer_pick) void onPickCustomer() {
+        final String id = customer.getId();
+        CustomerService.pickInCustomer(id)
+                .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                    @Override
+                    public void onNext(Customer customer) {
+                        ll_loading.setStatus(LoadingLayout.Loading);
+                        getData(id);
+                        Toast("挑入客户成功");
+                        //通知列表页面删除
+                        MyCustomerRushEvent myCustomerRushEvent =new MyCustomerRushEvent();
+                        myCustomerRushEvent.eventCode= MyCustomerRushEvent.EVENT_CODE_DEL;
+                        AppBus.getInstance().post(myCustomerRushEvent);
+                    }
+                });
+        UmengAnalytics.umengSend(CustomerDetailActivity.this, UmengAnalytics.frompublicPublicDetail);
+    }
+
     @OnClick(R.id.customer_basic_info) void showInfo() {
         if (customer == null) {
             return;
@@ -257,6 +279,14 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         customerTagView.setOnTouchListener(Global.GetTouch());
         warnView.setOnTouchListener(Global.GetTouch());
         tv_title_1.setText("客户详情");
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new com.library.module.widget.loading.LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(com.library.module.widget.loading.LoadingLayout.Loading);
+                getData(customerId);
+            }
+        });
 
         this.loadIntentData();
         CustomerService.getMembersRoot()
@@ -288,6 +318,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.state, CustomerAction.DELETE);
         boolean canDump = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
                 customer.state, CustomerAction.DUMP);
+        boolean canPickIn = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                customer.state, CustomerAction.PICK_IN);
+        boolean needPickIn = canPickIn && customer.state == Customer.DumpedCustomer;
 
         if (!canDelete && !canDump) {
             img_title_right.setVisibility(View.INVISIBLE);
@@ -296,6 +329,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
             img_title_right.setVisibility(View.VISIBLE);
         }
 
+        customerPick.setVisibility(needPickIn?View.VISIBLE:View.GONE);
+
+        customerId = customer.getId();
         this.customerNameText.setText(customer.name);
         this.customerStateText.setText("状态：" + customer.statusName);
         this.customerTagText.setText("标签：" + customer.displayTagString());
@@ -362,7 +398,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
             return;
         }
         CustomerService.getCustomerDetailById(id)
-                .subscribe(new DefaultLoyoSubscriber<Customer>() {
+                .subscribe(new DefaultLoyoSubscriber<Customer>(ll_loading) {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
@@ -370,6 +406,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
                     @Override
                     public void onNext(Customer customer) {
+                        ll_loading.setStatus(LoadingLayout.Success);
                         CustomerDetailActivity.this.customer = customer;
                         CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
                     }

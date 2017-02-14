@@ -248,7 +248,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_attachment.setOnTouchListener(Global.GetTouch());
         layout_approval.setOnTouchListener(Global.GetTouch());
         if (mCustomer.state != Customer.DumpedCustomer)
-            CommonMethod.commonCustomerRecycleTime(mCustomer, layout_4, tv_content41, tv_content42);
+            CommonMethod.commonCustomerRecycleTime(mCustomer, layout_4, tv_content41);
 
         tv_content43.setVisibility(mCustomer.state == Customer.DumpedCustomer ? View.VISIBLE : View.GONE);
         if (mCustomer.state == Customer.DumpedCustomer)

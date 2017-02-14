@@ -106,7 +106,6 @@ public class OrdersFragment extends CustomerChildFragment
         });
         layout_add = (ViewGroup) view.findViewById(R.id.layout_add);
         tv_add = (TextView) view.findViewById(R.id.tv_add);
-        tv_add.setText("新增订单");
         layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
         layout_add.setOnClickListener(this);
         layout_add.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
