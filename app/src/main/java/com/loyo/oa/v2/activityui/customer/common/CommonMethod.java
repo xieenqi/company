@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.customer.common;
 
 import android.graphics.Color;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,8 @@ import com.loyo.oa.v2.tool.Utils;
 public class CommonMethod {
 
     public static void commonCustomerRecycleTime(Customer customer, ViewGroup layout, TextView tView1) {
-        String tt = customer.getFormattedDropRemind().toString();
-        if (!TextUtils.isEmpty(tt)) {
+        SpannableStringBuilder tt = customer.getFormattedDropRemind();
+        if (tt != null) {
             layout.setVisibility(View.VISIBLE);
             tView1.setVisibility(View.VISIBLE);
             tView1.setText(tt);
