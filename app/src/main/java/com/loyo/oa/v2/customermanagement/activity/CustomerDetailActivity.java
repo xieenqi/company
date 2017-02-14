@@ -103,6 +103,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         onBackPressed();
     }
     @OnClick(R.id.img_title_right) void onActionsheet() {
+        if (customer == null) {
+            return;
+        }
         boolean canDelete = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
                 customer.state, CustomerAction.DELETE);
         boolean canDump = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
@@ -196,6 +199,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     }
 
     @OnClick(R.id.customer_basic_info) void showInfo() {
+        if (customer == null) {
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putSerializable("CustomerId", customer.getId());
         bundle.putBoolean("canEdit", canEdit);
@@ -268,6 +274,18 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.relationState,
                 customer.state,
                 CustomerAction.EDIT);
+
+        boolean canDelete = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                customer.state, CustomerAction.DELETE);
+        boolean canDump = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                customer.state, CustomerAction.DUMP);
+
+        if (!canDelete && !canDump) {
+            img_title_right.setVisibility(View.INVISIBLE);
+        }
+        else {
+            img_title_right.setVisibility(View.VISIBLE);
+        }
 
         this.customerNameText.setText(customer.name);
         this.customerStateText.setText("状态：" + customer.statusName);

@@ -83,9 +83,11 @@
             android:id="@+id/tv_drop_reason"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
+            android:layout_marginRight="@dimen/dimen_14"
             android:layout_width="match_parent"
             android:layout_height="26dp"
             android:textSize="14dp"
+            android:ellipsize="end"
             android:textColor="#ffffff"
             android:layout_below="@+id/customer_tag"
             android:visibility="gone"/>
@@ -121,6 +123,8 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:gravity="center"
+            android:ellipsize="end"
+            android:layout_marginRight="@dimen/dimen_14"
             android:textColor="#C7A25D" />
     </LinearLayout>
     <LinearLayout
