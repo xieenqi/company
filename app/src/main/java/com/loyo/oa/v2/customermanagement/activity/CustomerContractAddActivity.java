@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.customer;
+package com.loyo.oa.v2.customermanagement.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,12 +13,12 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactsRoleSingleSelectActivity;
 import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
+import com.loyo.oa.v2.activityui.customer.MyContactMailList;
 import com.loyo.oa.v2.activityui.customer.event.ContactMaillistRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.ContactRequestParam;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
@@ -39,6 +39,10 @@ import java.util.HashMap;
  */
 
 public class CustomerContractAddActivity extends BaseActivity implements View.OnClickListener {
+    public static final int EXTRA_TYPE_EDIT = 1;//编辑联系人
+    public static final int EXTRA_TYPE_ADD  = 2;//添加联系人
+    public static final String   EXTRA_TYPE = "EXTRA_TYPE";
+    private int type;
 
     private static final int REQUEST_ACTIVITY_CODE_ROLE = 1;//选择联系人角色
     public ViewGroup img_title_left;
@@ -85,7 +89,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
     private ArrayList<String> wiretelGroup;
     private ArrayList<String> telGroup;
-    private ContactsRoleModel contactsRoleModel;//联系人角色
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -95,6 +98,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         if (getIntent() != null && getIntent().getExtras() != null) {
             mCustomer = (Customer) getIntent().getExtras().getSerializable("customer");
             mContact = (Contact) getIntent().getExtras().getSerializable("contract");
+            type=getIntent().getIntExtra(EXTRA_TYPE,EXTRA_TYPE_ADD);
             if (null != mContact)
                 super.setTitle("编辑联系人");
         }
@@ -161,6 +165,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      */
     void bindEditData() {
         et_name.setText(mContact.getName());
+        tv_contact_role.setText(mContact.getContactRoleName());
 
         /*绑定电话数据*/
         if (null != mContact.telGroup) {
@@ -202,7 +207,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 case 1:
                     edt_contract_telnum1.setText(mContact.wiretelGroup.get(0));
                     break;
-
                 case 2:
                     iv_call_insert1.setVisibility(View.INVISIBLE);
                     ll_call_layout2.setVisibility(View.VISIBLE);
@@ -233,7 +237,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      * 绑定数据
      */
     void bindData() {
-        if (null != mContact) {
+        if (null != mContact&&EXTRA_TYPE_EDIT==type) {
             bindEditData();
         }
         layout_contact_extra_info.addView(new ContactAddforExtraData(mContext, mContact, mContactLeftExtras, true, 0));
@@ -247,7 +251,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
         String name = event.bundle.getString(ExtraAndResult.EXTRA_NAME);
         String phone = event.bundle.getString(ExtraAndResult.EXTRA_DATA);
-
         et_name.setText(name);
         edt_contract_tel1.setText(phone.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", ""));
 
@@ -267,8 +270,11 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         if (RESULT_OK != resultCode) return;
         switch (requestCode) {
             case REQUEST_ACTIVITY_CODE_ROLE:
-                contactsRoleModel = (ContactsRoleModel) data.getSerializableExtra("data");
+                ContactsRoleModel contactsRoleModel = (ContactsRoleModel) data.getSerializableExtra("data");
                 if (null != contactsRoleModel) {
+                    mContact=new Contact();
+                    mContact.setContactRoleId(contactsRoleModel.id);
+                    mContact.setContactRoleName(contactsRoleModel.name);
                     tv_contact_role.setText(contactsRoleModel.name);//联系人角色
                 }
                 break;
@@ -282,7 +288,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             case R.id.ll_contact_role:
                 Bundle bundle = new Bundle();
                 //设置默认值
-                bundle.putString(ContactsRoleSingleSelectActivity.EXTRA_CURRENT, null==contactsRoleModel?"":contactsRoleModel.id);
+                bundle.putString(ContactsRoleSingleSelectActivity.EXTRA_CURRENT, null==mContact?"":mContact.getContactRoleId());
                 app.startActivityForResult(this, ContactsRoleSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_ROLE, bundle);
                 break;
             /*通讯录导入*/
@@ -437,13 +443,14 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 getTelNum(edt_contract_telnum2, wiretelGroup);
                 getTelNum(edt_contract_telnum3, wiretelGroup);
 
+
                 maps.put("name", name);
                 maps.put("telGroup", telGroup);
                 maps.put("wiretelGroup", wiretelGroup);
                 maps.put("extDatas", requestContactParam);
+                maps.put("contactRoleId", mContact.getContactRoleId());
 
                 LogUtil.dee("添加联系人发送map：" + MainApp.gson.toJson(maps));
-
                 if (mCustomer == null) {
                     return;
                 }
@@ -494,5 +501,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         Intent intent = new Intent();
         intent.putExtra("data", mContact);
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+
     }
 }

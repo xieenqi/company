@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customermanagement.activity.CustomerContractAddActivity;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
@@ -201,6 +202,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     void addNewContact() {
         Bundle bundle = new Bundle();
         bundle.putSerializable("customer", customerContact);
+        bundle.putSerializable(CustomerContractAddActivity.EXTRA_TYPE, CustomerContractAddActivity.EXTRA_TYPE_ADD);
         app.startActivityForResult(this, CustomerContractAddActivity.class,
                 MainApp.ENTER_TYPE_RIGHT, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT, bundle);
     }

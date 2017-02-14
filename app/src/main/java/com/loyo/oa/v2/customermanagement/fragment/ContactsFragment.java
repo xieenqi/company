@@ -15,7 +15,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity;
-import com.loyo.oa.v2.activityui.customer.CustomerContractAddActivity;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -25,9 +25,11 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.customermanagement.activity.ContactDetailActivity;
+import com.loyo.oa.v2.customermanagement.activity.CustomerContractAddActivity;
 import com.loyo.oa.v2.customermanagement.adapter.CustomerContactsListAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.cell.ContactCardCell;
+import com.loyo.oa.v2.customermanagement.event.MyContactPushEvent;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
@@ -36,6 +38,8 @@ import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,6 +78,7 @@ public class ContactsFragment extends CustomerChildFragment
     @OnClick(R.id.contact_add) void addNewContact() {
         Bundle bundle = new Bundle();
         bundle.putSerializable("customer", customer);
+        bundle.putSerializable(CustomerContractAddActivity.EXTRA_TYPE, CustomerContractAddActivity.EXTRA_TYPE_ADD);
         Intent intent = new Intent(getActivity(), CustomerContractAddActivity.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT);
@@ -434,6 +439,29 @@ public class ContactsFragment extends CustomerChildFragment
         }
         customer.contacts = contacts;
         adapter.loadData(contacts);
+    }
+
+
+    /**
+     * 更新联系人数据
+     */
+    @Subscribe
+    public void onMyContactPushEvent(MyContactPushEvent event) {
+        switch (event.eventCode){
+            case MyContactPushEvent.EVENT_CODE_UPDATE:
+                if(customer.contacts==null)return;
+                for (int i = 0; i <customer.contacts.size(); i++) {
+                    if(customer.contacts.get(i).getId().equals(event.data.getId())){
+                        customer.contacts.remove(i);
+                        customer.contacts.add(i,event.data);
+                    }
+                }
+                break;
+            case MyContactPushEvent.EVENT_CODE_ADD:
+
+                break;
+        }
+
     }
 
 }

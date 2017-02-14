@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerContactManageActivity;
-import com.loyo.oa.v2.activityui.customer.CustomerContractAddActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
@@ -22,6 +21,7 @@ import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.RegularCheck;
+import com.loyo.oa.v2.customermanagement.activity.CustomerContractAddActivity;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.lang.annotation.Retention;
@@ -405,6 +405,7 @@ public class ContactViewGroup extends LinearLayout {
                     Bundle b = new Bundle();
                     b.putSerializable("customer", mCustomer);
                     b.putSerializable("contract", mContact);
+                    b.putSerializable(com.loyo.oa.v2.customermanagement.activity.CustomerContractAddActivity.EXTRA_TYPE, com.loyo.oa.v2.customermanagement.activity.CustomerContractAddActivity.EXTRA_TYPE_EDIT);
                     app.startActivityForResult((CustomerContactManageActivity) context, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT,
                             CustomerInfoActivity.REQUEST_CUSTOMER_UPDATE_CONTRACT, b);
                 }
