@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.DensityUtil;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -329,6 +330,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         }
         if (mCustomer.regional.province != null) {
             tv_district.setText(mCustomer.regional.province + " " + mCustomer.regional.city + " " + mCustomer.regional.county + " ");
+
         }
 
         //设置标签
@@ -376,16 +378,30 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         edt_customer_weburl.setEnabled(canEdit);
         containerOp.setClickable(canEdit);
         containerOp.setEnabled(canEdit);
+        edt_address_details.setEnabled(canEdit);
         if (canEdit) {
             tv_customer_status.setTextColor(getResources().getColor(R.color.title_bg1));
             tv_address.setTextColor(getResources().getColor(R.color.text33));
+            edt_customer_memo.setTextColor(getResources().getColor(R.color.text66));
             tv_district.setTextColor(getResources().getColor(R.color.title_bg1));
             tv_labels.setTextColor(getResources().getColor(R.color.title_bg1));
+            edt_customer_weburl.setTextColor(getResources().getColor(R.color.text66));
+            tv_district.setTextColor(getResources().getColor(R.color.text66));
         } else {
             tv_customer_status.setTextColor(getResources().getColor(R.color.md_grey_500));
             tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
             tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
             tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
+            edt_customer_weburl.setTextColor(getResources().getColor(R.color.md_grey_500));
+            edt_customer_memo.setTextColor(getResources().getColor(R.color.md_grey_500));
+            edt_customer_memo.setHint("");
+            findViewById(R.id.iv_district).setVisibility(View.GONE);
+            findViewById(R.id.iv_labels).setVisibility(View.GONE);
+            findViewById(R.id.iv_customer_status).setVisibility(View.GONE);
+            tv_labels.setPadding(tv_labels.getPaddingLeft(),tv_labels.getPaddingTop(), DensityUtil.dp2px(mContext,14),tv_labels.getPaddingBottom());
+            tv_customer_status.setPadding(tv_labels.getPaddingLeft(),tv_labels.getPaddingTop(), DensityUtil.dp2px(mContext,14),tv_labels.getPaddingBottom());
+            edt_customer_weburl.setPadding(tv_labels.getPaddingLeft(),tv_labels.getPaddingTop(), DensityUtil.dp2px(mContext,14),tv_labels.getPaddingBottom());
+
         }
 
     }
