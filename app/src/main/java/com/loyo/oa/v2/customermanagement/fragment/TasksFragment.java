@@ -184,6 +184,8 @@ public class TasksFragment extends CustomerChildFragment implements PullToRefres
                     public void onNext(PaginationX<TaskRecord> x) {
                         taskPaginationX = x;
                         lv.onRefreshComplete();
+                        TasksFragment.this.totalCount = x.totalRecords;
+                        notifyTotalCountChange();
                         if (isTopAdd) {
                             tasks.clear();
                         }

@@ -365,6 +365,8 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
             listModel.clear();
         }
         mPagination = paginationX;
+        this.totalCount = paginationX.totalRecords;
+        notifyTotalCountChange();
         listModel.addAll(paginationX.getRecords());
         String dateIndex = "";
         for (int i = 0; i < listModel.size(); i++) {
