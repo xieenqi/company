@@ -332,13 +332,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         this.getData(customerId);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LoadingLayout.getConfig().setNoNetworkImage(R.drawable.define_nonetwork).
-                setAllTipTextSize(16).setReloadButtonTextSize(16);
-    }
-
     void loadIntentData() {
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
@@ -421,11 +414,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                         } else {
                             tabMask.setVisibility(View.VISIBLE);
                         }
-                        if (tabLayout.getScrollX() == 0) {
-                            tabMaskLeft.setVisibility(View.GONE);
-                        } else {
-                            tabMaskLeft.setVisibility(View.VISIBLE);
-                        }
                     }
                 }
             });
@@ -451,8 +439,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                     @Override
                     public void onNext(Customer customer) {
                         ll_loading.setStatus(LoadingLayout.Success);
-                        LoadingLayout.getConfig().setNoNetworkImage(R.drawable.define_nonetwork2).
-                                setAllTipTextSize(14).setReloadButtonTextSize(14);
                         CustomerDetailActivity.this.customer = customer;
                         CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
                     }
@@ -513,7 +499,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         viewPager.setAdapter(adapter);
     }
 
-    // ExtraAndResult.REQUSET_COPY_PERSONS
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
