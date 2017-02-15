@@ -756,6 +756,7 @@ public class SignInActivity extends BaseActivity
                     myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
                     myCustomerRushEvent.subCode   = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
                     myCustomerRushEvent.session   =mCustomer.getId();
+                    myCustomerRushEvent.request   ="note";
                     AppBus.getInstance().post(myCustomerRushEvent);
                     //更新签到
                     AppBus.getInstance().post(new SigninRushEvent());

@@ -369,7 +369,6 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
      */
     @Subscribe
     public void onMyCustomerPushEvent(MyCustomerRushEvent event) {
-        Log.i("tttttttttt", "onMyCustomerPushEvent: 收到消息 clickPosition "+clickPosition);
         switch (event.eventCode) {
             case MyCustomerRushEvent.EVENT_CODE_ADD:
                 mPagination.getRecords().add(0, event.data);
@@ -395,7 +394,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                     mCustomer.extDatas= updateCus.extDatas;
                     mCustomer.regional= updateCus.regional;
                     adapter.notifyDataSetChanged();
-                } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {//更新标签
+                } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode||MyCustomerRushEvent.EVENT_SUB_CODE_LTC ==event.subCode) {//更新标签
                     if(!"note".equals(event.request+""))return;
                     Customer updateCus=event.data;
                     Customer mCustomer=mPagination.getRecords().get(clickPosition);
