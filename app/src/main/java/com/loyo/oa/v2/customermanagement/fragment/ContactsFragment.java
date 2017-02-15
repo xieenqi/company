@@ -192,6 +192,7 @@ public class ContactsFragment extends CustomerChildFragment
                 Contact contact = (Contact) data.getSerializableExtra("data");
                 insertContact(contact);
                 this.totalCount = this.totalCount + 1;
+                ll_loading.setStatus(LoadingLayout.Success);
                 notifyTotalCountChange();
                 break;
             }
@@ -207,6 +208,8 @@ public class ContactsFragment extends CustomerChildFragment
                         this.totalCount = this.totalCount - 1;
                         if (this.totalCount < 0) {
                             this.totalCount = 0;
+                            ll_loading.setStatus(LoadingLayout.Empty);
+
                         }
                         notifyTotalCountChange();
                     }
