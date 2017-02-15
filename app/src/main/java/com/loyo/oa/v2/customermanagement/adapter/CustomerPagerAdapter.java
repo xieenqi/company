@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CustomerPagerAdapter extends FragmentPagerAdapter {
 
-    private final List<CustomerChildFragment> mFragments = new ArrayList<>();
+    public final List<CustomerChildFragment> mFragments = new ArrayList<>();
     private final List<String> mFragmentTitles = new ArrayList<>();
     private boolean pullToRefreshEnabled;
 

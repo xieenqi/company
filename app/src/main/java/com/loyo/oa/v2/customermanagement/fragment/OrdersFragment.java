@@ -88,6 +88,22 @@ public class OrdersFragment extends CustomerChildFragment
         this.totalCount = customer.counter.order;
     }
 
+    public void reloadWithCustomer(Customer customer) {
+        this.customer = customer;
+        customerId = customer.getId();
+        customerName = customer.name;
+        canAdd = customer != null &&
+                PermissionManager.getInstance().hasCustomerAuthority(
+                        customer.relationState,
+                        customer.state,
+                        CustomerAction.ORDER_ADD);
+        this.totalCount = customer.counter.order;
+        if (view == null) {
+            return;
+        }
+        layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
+    }
+
     public void getPageData() {
         isPullDown = true;
         page = 1;

@@ -114,6 +114,8 @@
                         android:layout_below="@+id/customer_tag"
                         android:layout_marginRight="@dimen/dimen_14"
                         android:ellipsize="end"
+                        android:singleLine="true"
+                        android:maxLines="1"
                         android:paddingBottom="4dp"
                         android:paddingTop="4dp"
                         android:textColor="#ffffff"
