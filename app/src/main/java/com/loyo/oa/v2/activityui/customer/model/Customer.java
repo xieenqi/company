@@ -172,7 +172,7 @@ public class Customer extends BaseBeans {
     public String displayTagString() {
         StringBuffer buffer = new StringBuffer();
         boolean needSeperate = false;
-        for (NewTag tag: tags) {
+        for (NewTag tag : tags) {
             if (needSeperate) {
                 buffer.append("、");
             }
@@ -205,7 +205,7 @@ public class Customer extends BaseBeans {
             sb.append(orderRecycleRemind);
             hasOrderRemind = true;
         }
-
+        sb.append("丢公海");
         String compoundRemind = sb.toString();
 
         SpannableStringBuilder builder = new SpannableStringBuilder(compoundRemind);
@@ -215,17 +215,17 @@ public class Customer extends BaseBeans {
                 builder.setSpan(redSpan, 0, activityRecycleRemind.length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
         try {
             if (hasOrderRemind && orderRemind) {
                 ForegroundColorSpan redSpan2 = new ForegroundColorSpan(Color.parseColor("#f5625a"));
-                builder.setSpan(redSpan2, compoundRemind.length() - orderRecycleRemind.length(),
+                builder.setSpan(redSpan2, compoundRemind.length() - orderRecycleRemind.length() - 3,
                         compoundRemind.length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
         return builder;
     }
 
