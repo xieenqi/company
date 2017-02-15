@@ -65,7 +65,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:gravity="center_vertical"
-                    android:text="手机"
+                    android:text="手机1"
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15" />
 
@@ -139,7 +139,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:gravity="center_vertical"
-                    android:text="手机"
+                    android:text="手机2"
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15" />
 
@@ -214,7 +214,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:gravity="center_vertical"
-                    android:text="手机"
+                    android:text="手机3"
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15" />
 
@@ -288,7 +288,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:gravity="center_vertical"
-                    android:text="座机"
+                    android:text="座机1"
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15" />
 
@@ -342,7 +342,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:gravity="center_vertical"
-                    android:text="座机"
+                    android:text="座机2"
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15" />
 
@@ -396,7 +396,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:gravity="center_vertical"
-                    android:text="座机"
+                    android:text="座机3"
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15" />
 
