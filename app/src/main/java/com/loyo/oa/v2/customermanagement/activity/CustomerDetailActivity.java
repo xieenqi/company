@@ -100,7 +100,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     @BindView(R.id.tag_editable)   ImageView tagEditableVew;
     @BindView(R.id.tv_recyleRemind) TextView recycleRemindText;
 
-    @BindView(R.id.tab_mask) ImageView tabMask;
+    @BindView(R.id.tab_mask)      ImageView tabMask;
+    @BindView(R.id.tab_mask_left) ImageView tabMaskLeft;
     @BindView(R.id.customer_pick) ViewGroup customerPick;
 
 
@@ -378,13 +379,19 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                     if (tabLayout.getChildCount() > 0) {
                         View view = tabLayout.getChildAt(tabLayout.getChildCount()-1);
 
-                        int diff = (view.getRight()-(tabLayout.getWidth()  +tabLayout.getScrollX()));
+                        int diff = (view.getRight() - (tabLayout.getWidth() + tabLayout.getScrollX()));
                         if( diff == 0 )
                         {
                             tabMask.setVisibility(View.GONE);
                         }
                         else {
                             tabMask.setVisibility(View.VISIBLE);
+                        }
+                        if (tabLayout.getScrollX() == 0) {
+                            tabMaskLeft.setVisibility(View.GONE);
+                        }
+                        else {
+                            tabMaskLeft.setVisibility(View.VISIBLE);
                         }
                     }
                 }
