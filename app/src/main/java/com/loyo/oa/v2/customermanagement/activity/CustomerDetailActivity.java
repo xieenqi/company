@@ -516,23 +516,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         viewPager.setAdapter(adapter);
     }
 
-    // ExtraAndResult.REQUSET_COPY_PERSONS
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-        switch (requestCode) {
-
-            case ExtraAndResult.REQUSET_COPY_PERSONS:
-                onBackPressed();
-                break;
-            default:
-                break;
-        }
-    }
 
     @Subscribe
     public void onMyCustomerPushEvent(MyCustomerRushEvent event) {
@@ -675,6 +659,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(RESULT_OK!=resultCode)return;
         switch (requestCode){
+            case ExtraAndResult.REQUSET_COPY_PERSONS:
+                onBackPressed();
+                break;
             //修改状态
             case EXTRA_CUSTOMER_EDIT_STATUS:
                 //TODO 这里有没有直接修改客户状态的接口呀，这样写，太难受了。
