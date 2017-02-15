@@ -99,12 +99,6 @@ public class LoadingLayout extends FrameLayout {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        System.out.println("宽：" + widthMeasureSpec + "---" + "高：" + heightMeasureSpec);
-    }
-
-    @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         if (getChildCount() > 1) {
