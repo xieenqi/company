@@ -216,7 +216,7 @@ public class ContactsFragment extends CustomerChildFragment
                         customer.contacts.remove(index);
                         adapter.loadData(customer.contacts);
                         this.totalCount = this.totalCount - 1;
-                        if (this.totalCount < 0) {
+                        if (this.totalCount <= 0) {
                             this.totalCount = 0;
                             ll_loading.setStatus(LoadingLayout.Empty);
 
@@ -225,7 +225,7 @@ public class ContactsFragment extends CustomerChildFragment
                     }
                     else if (action == ContactDetailActivity.CONTACT_UPDATED) {
                         customer.contacts.remove(index);
-                        customer.contacts.add(contact);
+                        customer.contacts.add(index,contact);
                         adapter.loadData(customer.contacts);
                     }
                 }

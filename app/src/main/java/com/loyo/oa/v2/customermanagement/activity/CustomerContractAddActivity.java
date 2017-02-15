@@ -466,6 +466,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                                 }
                             });
                 } else {
+                    //编辑的时候，传入是不是默认字段
+                    maps.put("isDefault", mContact.isDefault());
                         /*修改联系人*/
                     CustomerService.updateContact(mCustomer.getId(), mContact.getId(), maps)
                             .subscribe(new DefaultLoyoSubscriber<Contact>() {
