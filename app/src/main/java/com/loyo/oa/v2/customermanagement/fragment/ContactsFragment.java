@@ -215,7 +215,7 @@ public class ContactsFragment extends CustomerChildFragment
                     }
                     else if (action == ContactDetailActivity.CONTACT_UPDATED) {
                         customer.contacts.remove(index);
-                        customer.contacts.add(contact);
+                        customer.contacts.add(index,contact);
                         adapter.loadData(customer.contacts);
                     }
                 }
