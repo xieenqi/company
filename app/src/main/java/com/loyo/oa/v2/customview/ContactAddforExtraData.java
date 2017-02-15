@@ -97,6 +97,8 @@ public class ContactAddforExtraData extends LinearLayout {
                 continue;
             } else if (customerExtra.fieldName.equals("tel")) {
                 continue;
+            } else if (customerExtra.fieldName.equals("role")) {//过滤角色
+                continue;
             }
 
             final View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_extra, null, false);

@@ -272,7 +272,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             case REQUEST_ACTIVITY_CODE_ROLE:
                 ContactsRoleModel contactsRoleModel = (ContactsRoleModel) data.getSerializableExtra("data");
                 if (null != contactsRoleModel) {
-                    mContact=new Contact();
+                    if(null==mContact)mContact=new Contact();
                     mContact.setContactRoleId(contactsRoleModel.id);
                     mContact.setContactRoleName(contactsRoleModel.name);
                     tv_contact_role.setText(contactsRoleModel.name);//联系人角色
