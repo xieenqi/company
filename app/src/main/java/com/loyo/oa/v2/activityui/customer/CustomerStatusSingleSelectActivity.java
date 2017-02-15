@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.customer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -18,12 +19,26 @@ import java.util.List;
 public class CustomerStatusSingleSelectActivity extends BaseSingleSelectActivity<CustomerStatusModel.CustomerStatusItemModel>{
 
 
+    private String tid;
+    /**
+     * 当条目被点击的时候,如果行为不一样，可以直接覆盖本方法
+     * @param data
+     */
+    protected void onItemClicked(CustomerStatusModel.CustomerStatusItemModel data){
+        Intent intent=new Intent();
+        intent.putExtra("data",data);
+        intent.putExtra("tid",tid+"");
+        setResult(RESULT_OK,intent);
+        finish();
+    }
+
     @Override
     protected void getData() {
         CustomerService.getCustomerStatus("1").subscribe(new DefaultLoyoSubscriber<List<CustomerStatusModel>>() {
             @Override
             public void onNext(List<CustomerStatusModel> customerStatusModels) {
                 if(customerStatusModels.size()>0){
+                    tid=customerStatusModels.get(0).id;
                     success(customerStatusModels.get(0).items);
                 }
             }

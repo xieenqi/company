@@ -60,6 +60,7 @@ import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -669,8 +670,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 CustomerStatusModel.CustomerStatusItemModel customerStatusItemModel= (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
                 customer.statusId=customerStatusItemModel.id;
                 customer.statusName=customerStatusItemModel.name;
+                String tid = data.getStringExtra("tid");
                 showLoading2("");
-                CustomerService.setCusLabel(customer.id, convertNewTags())
+                CustomerService.setCusLabel(customer.id, convertNewTags(tid))
                         .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
                             @Override
                             public void onNext(Contact contact) {
@@ -693,12 +695,12 @@ public class CustomerDetailActivity extends BaseFragmentActivity
      *
      * @return
      */
-    private ArrayList<NewTag> convertNewTags() {
+    private ArrayList<NewTag> convertNewTags(String tid) {
         ArrayList<NewTag> tags = new ArrayList<>();
         NewTag tag = new NewTag();
         tag.setItemId(customer.statusId);
         tag.setItemName(customer.statusName);
-        tag.settId(customer.getId());
+        tag.settId(tid);
         tags.add(tag);
         return tags;
     }
