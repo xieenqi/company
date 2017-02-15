@@ -473,6 +473,7 @@
                     android:id="@+id/layout_remain_time"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_48"
+                    android:paddingRight="@dimen/dimen_4"
                     android:background="@color/white"
                     android:orientation="horizontal">
 

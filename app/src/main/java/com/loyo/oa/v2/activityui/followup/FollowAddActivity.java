@@ -264,7 +264,14 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             getDefaultContact(mCustomer.contacts);
             //设置客户名称
             tv_customer.setText(mCustomer.name);
-            tv_contact_label.setText(Utils.getTagItems(mCustomer));
+            String label=Utils.getTagItems(mCustomer);
+            if("无".equals(label)){
+                tv_contact_label.setText("");
+                tv_contact_label.setHint("无");
+
+            }else{
+                tv_contact_label.setText(label);
+            }
             tv_customer_status.setText(mCustomer.statusName);
             //已经选定了客户,就不可以再选定客户
             ll_customer.setEnabled(false);
