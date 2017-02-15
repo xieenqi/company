@@ -28,7 +28,7 @@
             android:id="@+id/iv_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/img_check1"
+            android:src="@drawable/icon_sex_select_sure"
             android:visibility="gone"
             />
     </LinearLayout>
