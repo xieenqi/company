@@ -148,6 +148,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<CustomerExtraData>>() {
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                     }
 
                     @Override
@@ -328,7 +329,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         } else {
             tv_customer_join_users.setText("无参与人");
         }
-        if (mCustomer.regional.province != null) {
+        if (null!=mCustomer.regional) {
             tv_district.setText(mCustomer.regional.province + " " + mCustomer.regional.city + " " + mCustomer.regional.county + " ");
 
         }
