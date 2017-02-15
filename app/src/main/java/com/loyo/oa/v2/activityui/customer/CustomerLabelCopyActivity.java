@@ -191,20 +191,21 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
                 .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
                     @Override
                     public void onNext(Contact contact) {
-                        sendLabelChangeChange();
+                        sendLabelChangeChange(true);
                         finish();
                     }
                 });
     }
 
     //设置成功以后，再发送消息，更新本地UI
-    private void sendLabelChangeChange() {
+    private void sendLabelChangeChange(boolean note) {
         Customer updateCus = new Customer();
         updateCus.tags = convertNewTags();
         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(updateCus);
         myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
         myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_LABEL;
         myCustomerRushEvent.session = mCustomerId;
+        if(note)myCustomerRushEvent.request="note";
         AppBus.getInstance().post(myCustomerRushEvent);
     }
 
@@ -241,7 +242,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         }
         /*客户信息*/
         else {
-            sendLabelChangeChange();
+            sendLabelChangeChange(false);
             finish();
         }
     }

@@ -622,19 +622,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onNext(final Customer customer) {
                         //通过eventBus，把修改以后的数据发送出去，刷新详情，列表的数据
-                        Customer updateCus = new Customer();
-                        updateCus.name = mCustomer.name;
-                        updateCus.summary = mCustomer.summary;
-                        updateCus.owner = mCustomer.owner;
-                        updateCus.members = mCustomer.members;
-                        updateCus.tags = mCustomer.tags;
-                        updateCus.loc = adrDetailsData;
-                        updateCus.position = mCustomer.position;
-                        updateCus.extDatas = extDatas;
-                        updateCus.regional = mCustomer.regional;
-                        MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(updateCus);
+//                        Customer updateCus  = new Customer();
+//                        updateCus.name      = mCustomer.name;
+//                        updateCus.summary   = mCustomer.summary;
+//                        updateCus.owner     = mCustomer.owner;
+//                        updateCus.members   = mCustomer.members;
+//                        updateCus.tags      = mCustomer.tags;
+//                        updateCus.loc       = adrDetailsData;
+//                        updateCus.position  = mCustomer.position;
+//                        updateCus.extDatas  = extDatas;
+//                        updateCus.regional  = mCustomer.regional;
+//                        updateCus.contacts  = mCustomer.contacts;
+//                        updateCus.statusId  = mCustomer.statusId;
+//                        updateCus.statusName  = mCustomer.statusName;
+                        MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(mCustomer);
                         myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
-                        myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_INFO;
+                        myCustomerRushEvent.subCode   = MyCustomerRushEvent.EVENT_SUB_CODE_INFO;
+                        myCustomerRushEvent.session   = mCustomer.getId();
                         AppBus.getInstance().post(myCustomerRushEvent);
                         finish();
                     }

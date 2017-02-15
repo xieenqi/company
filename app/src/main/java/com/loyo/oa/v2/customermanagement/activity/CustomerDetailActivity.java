@@ -17,10 +17,12 @@ import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerLabelCopyActivity;
-import com.loyo.oa.v2.activityui.customer.CustomerStatePickerActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerStatusSingleSelectActivity;
 import com.loyo.oa.v2.activityui.customer.LoseCommonCustomerReasonActivity;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.TagItem;
@@ -58,6 +60,7 @@ import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -70,6 +73,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         CustomerChildFragment.OnTotalCountChangeListener {
 
     public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
+    public static final int EXTRA_CUSTOMER_EDIT_STATUS = 1;//标签改变
 
     CustomerPagerAdapter adapter;
     String customerId;
@@ -261,20 +265,19 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT,
                 FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO, bundle);
     }
-
-    @OnClick(R.id.customer_state)
-    void editState() {
-        Intent mIntent = new Intent(this, CustomerStatePickerActivity.class);
-        mIntent.putExtra("canEdit", canEdit);
-        mIntent.putExtra("fromPage", 0);
-        if (null != customer.statusId) {
-            TagItem item = new TagItem();
-            item.setName(customer.statusName);
-            item.setId(customer.statusId);
-            mIntent.putExtra("state", item);
-        }
-        mIntent.putExtra("customerId", customer.getId());
-        startActivity(mIntent);
+    @OnClick(R.id.customer_state) void editState() {
+        Intent mIntent = new Intent(this, CustomerStatusSingleSelectActivity.class);
+//        mIntent.putExtra("canEdit", canEdit);
+//        mIntent.putExtra("fromPage", 0);
+//        if (null != customer.statusId) {
+//            TagItem item = new TagItem();
+//            item.setName(customer.statusName);
+//            item.setId(customer.statusId);
+//            mIntent.putExtra("state", item);
+//        }
+//        mIntent.putExtra("customerId", customer.getId());
+        mIntent.putExtra(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, customer.statusId);
+        startActivityForResult(mIntent,EXTRA_CUSTOMER_EDIT_STATUS);
         UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
     }
 
@@ -539,28 +542,35 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         }
         if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode) {
             //更新客户信息
-            if (MyCustomerRushEvent.EVENT_SUB_CODE_INFO == event.subCode) {
-                Customer updateCus = event.data;
-                customer.name = updateCus.name;
-                customer.summary = updateCus.summary;
-                customer.owner = updateCus.owner;
-                customer.members = updateCus.members;
-                customer.tags = updateCus.tags;
-                customer.loc = updateCus.loc;
-                customer.position = updateCus.position;
-                customer.extDatas = updateCus.extDatas;
-                customer.regional = updateCus.regional;
+            if(MyCustomerRushEvent.EVENT_SUB_CODE_INFO==event.subCode){
+                Customer updateCus  = event.data;
+                customer.name       = updateCus.name;
+                customer.summary    = updateCus.summary;
+                customer.owner      = updateCus.owner;
+                customer.members    = updateCus.members;
+                customer.tags       = updateCus.tags;
+                customer.loc        = updateCus.loc;
+                customer.position   = updateCus.position;
+                customer.extDatas   = updateCus.extDatas;
+                customer.regional   = updateCus.regional;
+                customer.statusId   = updateCus.statusId;
+                customer.statusName = updateCus.statusName;
                 loadCustomer(false);
-            } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {
-                //更新label
+            }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
+                if(!"note".equals(event.request+""))return;
+                //更新label 
                 customer.tags = event.data.tags;
                 loadCustomer(false);
-            } else if (MyCustomerRushEvent.EVENT_SUB_CODE_STATE == event.subCode) {
+            }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LTC == event.subCode){
+                Customer updateCus=event.data;
                 //更新label
-                NewTag tag = event.data.tags.get(0);
-                customer.statusName = tag.itemName;
-                customer.statusId = tag.itemId;
+                customer.statusName = updateCus.statusName;
+                customer.statusId   = updateCus.statusId;
+                customer.tags       = updateCus.tags;
+                customer.contacts   = updateCus.contacts;
+                ((CustomerChildFragment)adapter.getItem(1)).reloadWithCustomer(customer);//更新联系人
                 loadCustomer(false);
+
             }
         }
     }
@@ -659,5 +669,50 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         if (tab != null) {
             tab.setText(fragment.getTitle());
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(RESULT_OK!=resultCode)return;
+        switch (requestCode){
+            //修改状态
+            case EXTRA_CUSTOMER_EDIT_STATUS:
+                //TODO 这里有没有直接修改客户状态的接口呀，这样写，太难受了。
+
+                CustomerStatusModel.CustomerStatusItemModel customerStatusItemModel= (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
+                customer.statusId=customerStatusItemModel.id;
+                customer.statusName=customerStatusItemModel.name;
+                showLoading2("");
+                CustomerService.setCusLabel(customer.id, convertNewTags())
+                        .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
+                            @Override
+                            public void onNext(Contact contact) {
+
+                            }
+                        });
+                loadCustomer(false);
+                //更新列表数据
+                MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(customer);
+                myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_STATE;
+                myCustomerRushEvent.session = customer.getId();
+                AppBus.getInstance().post(myCustomerRushEvent);
+                break;
+        }
+    }
+
+    /**
+     * 构建新
+     *
+     * @return
+     */
+    private ArrayList<NewTag> convertNewTags() {
+        ArrayList<NewTag> tags = new ArrayList<>();
+        NewTag tag = new NewTag();
+        tag.setItemId(customer.statusId);
+        tag.setItemName(customer.statusName);
+        tag.settId(customer.getId());
+        tags.add(tag);
+        return tags;
     }
 }

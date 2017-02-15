@@ -396,6 +396,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                     mCustomer.regional= updateCus.regional;
                     adapter.notifyDataSetChanged();
                 } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {//更新标签
+                    if(!"note".equals(event.request+""))return;
                     Customer updateCus=event.data;
                     Customer mCustomer=mPagination.getRecords().get(clickPosition);
                     mCustomer.tags=updateCus.tags;

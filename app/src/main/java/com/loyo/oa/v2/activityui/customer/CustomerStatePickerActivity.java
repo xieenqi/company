@@ -169,7 +169,9 @@ public class CustomerStatePickerActivity extends BaseActivity implements View.On
     //设置成功以后，再发送消息，更新本地UI
     private void sendLabelChangeChange() {
         Customer updateCus = new Customer();
-        updateCus.tags = convertNewTags();
+        updateCus.statusId = convertNewTags().get(0).getItemId();
+        updateCus.statusName = convertNewTags().get(0).getItemName();
+
         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(updateCus);
         myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
         myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_STATE;
