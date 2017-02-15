@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.customview;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
@@ -92,16 +95,19 @@ public class ContactListExtra extends LinearLayout {
                  * 说   明: 创建时发送时间戳，获取也是时间戳，但是之前服务器数据存在2015-2-3这种时间格式数据，所以这里判断一下。
                  * 解析格式: yyyy-MM-dd HH:mm
                  * */
-                if("long".equals(contactLeftExtras.type)){
+                if("long".equals(contactLeftExtras.type)&&!TextUtils.isEmpty(contactLeftExtras.val)){
                     try{
-//                        tv_content.setText(DateTool.timet(contactLeftExtras.val, DateTool.DATE_FORMATE_SPLITE_BY_POINT));
-                        tv_content.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.parseLong(contactLeftExtras.val)));
+                        tv_content.setText(DateTool.getDateTimeFriendly(Long.parseLong(contactLeftExtras.val)));
                     }catch (NumberFormatException e){
                         e.printStackTrace();
                         tv_content.setText(contactLeftExtras.val);
                     }
                 } else {
                     tv_content.setText(contactLeftExtras.val);
+                }
+                //当字段不可编辑的时候，取消右边的箭头
+                if(!edit){
+                    extra.findViewById(R.id.img_right_arrow).setVisibility(INVISIBLE);
                 }
                 addView(extra);
             }

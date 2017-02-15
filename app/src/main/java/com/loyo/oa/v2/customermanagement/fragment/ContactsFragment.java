@@ -193,14 +193,14 @@ public class ContactsFragment extends CustomerChildFragment
                 insertContact(contact);
                 this.totalCount = this.totalCount + 1;
                 notifyTotalCountChange();
-            }
                 break;
+            }
             case ContactDetailActivity.ContactDetailActivityRequestCode:
             {
                 Contact contact = (Contact) data.getSerializableExtra("contact");
                 int action = data.getIntExtra("action", 0);
                 int index = data.getIntExtra("contactIndex", -1);
-                if (index > 0 && index < customer.contacts.size()) {
+                if (index >= 0 && index < customer.contacts.size()) {
                     if (action == ContactDetailActivity.CONTACT_DELETE) {
                         customer.contacts.remove(index);
                         adapter.loadData(customer.contacts);

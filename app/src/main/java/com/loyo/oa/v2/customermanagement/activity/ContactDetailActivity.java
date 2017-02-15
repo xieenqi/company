@@ -107,9 +107,15 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
                     MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
         }
         else {
-            onBackPressed();
+            super.onBackPressed();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        onBack();
+    }
+
     @OnClick(R.id.img_title_right) void onActionsheet() {
         ActionSheetDialog dialog = new ActionSheetDialog(this).builder();
         dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
@@ -338,7 +344,6 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         switch (requestCode) {
 
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
-                contactUpdated=true;
                 contact = (Contact) data.getSerializableExtra("data");
                 this.loadContact();
                 contactUpdated = true;
