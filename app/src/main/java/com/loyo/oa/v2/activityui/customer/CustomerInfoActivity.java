@@ -349,7 +349,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             tv_common_reason.setText(TextUtils.isEmpty(mCustomer.recycleReason) ? "--" : mCustomer.recycleReason);
             if (mCustomer.recycleReason.length() > 15)
                 tv_common_reason.setGravity(Gravity.LEFT | Gravity.CENTER);
-            tv_common_lose.setText(TextUtils.isEmpty(mCustomer.recycleName)?"--":mCustomer.recycleName);
+            tv_common_lose.setText(mCustomer.getRecycleName());
         } else {
             layout_Extra.setVisibility(View.VISIBLE);
             ll_common.setVisibility(View.GONE);
