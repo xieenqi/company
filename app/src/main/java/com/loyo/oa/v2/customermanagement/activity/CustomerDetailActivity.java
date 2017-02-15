@@ -66,9 +66,8 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CustomerDetailActivity extends BaseFragmentActivity
-    implements DropCustomerDeadlineFragment.CustomerDeadlineActionListener,
-        CustomerChildFragment.OnTotalCountChangeListener
-{
+        implements DropCustomerDeadlineFragment.CustomerDeadlineActionListener,
+        CustomerChildFragment.OnTotalCountChangeListener {
 
     public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
 
@@ -81,39 +80,61 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     VisitsFragment visitsFragment;
     OrdersFragment ordersFragment;
 
-    @BindView(R.id.viewpager) ViewPager viewPager;
-    @BindView(R.id.tabs)      TabLayout tabLayout;
-    @BindView(R.id.ll_warn)   ViewGroup warnView;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.ll_warn)
+    ViewGroup warnView;
 
-    @BindView(R.id.img_title_left)  View img_title_left;
-    @BindView(R.id.img_title_right) View img_title_right;
-    @BindView(R.id.tv_title_1)      TextView tv_title_1;
+    @BindView(R.id.img_title_left)
+    View img_title_left;
+    @BindView(R.id.img_title_right)
+    View img_title_right;
+    @BindView(R.id.tv_title_1)
+    TextView tv_title_1;
 
-    @BindView(R.id.ll_loading) LoadingLayout ll_loading;
+    @BindView(R.id.ll_loading)
+    LoadingLayout ll_loading;
 
-    @BindView(R.id.customer_basic_info) ViewGroup basicInfoView;
-    @BindView(R.id.customer_state)      ViewGroup customerStateView;
-    @BindView(R.id.customer_tag)        ViewGroup customerTagView;
+    @BindView(R.id.customer_basic_info)
+    ViewGroup basicInfoView;
+    @BindView(R.id.customer_state)
+    ViewGroup customerStateView;
+    @BindView(R.id.customer_tag)
+    ViewGroup customerTagView;
 
-    @BindView(R.id.tv_customer_name)  TextView customerNameText;
-    @BindView(R.id.tv_customer_state) TextView customerStateText;
-    @BindView(R.id.tv_customer_tag)   TextView customerTagText;
-    @BindView(R.id.tv_drop_reason)    TextView dropReasonText;
+    @BindView(R.id.tv_customer_name)
+    TextView customerNameText;
+    @BindView(R.id.tv_customer_state)
+    TextView customerStateText;
+    @BindView(R.id.tv_customer_tag)
+    TextView customerTagText;
+    @BindView(R.id.tv_drop_reason)
+    TextView dropReasonText;
 
-    @BindView(R.id.state_editable) ImageView stateEditableVew;
-    @BindView(R.id.tag_editable)   ImageView tagEditableVew;
-    @BindView(R.id.tv_recyleRemind) TextView recycleRemindText;
+    @BindView(R.id.state_editable)
+    ImageView stateEditableVew;
+    @BindView(R.id.tag_editable)
+    ImageView tagEditableVew;
+    @BindView(R.id.tv_recyleRemind)
+    TextView recycleRemindText;
 
-    @BindView(R.id.tab_mask)      ImageView tabMask;
-    @BindView(R.id.tab_mask_left) ImageView tabMaskLeft;
-    @BindView(R.id.customer_pick) ViewGroup customerPick;
+    @BindView(R.id.tab_mask)
+    ImageView tabMask;
+    @BindView(R.id.tab_mask_left)
+    ImageView tabMaskLeft;
+    @BindView(R.id.customer_pick)
+    ViewGroup customerPick;
 
 
-
-    @OnClick(R.id.img_title_left) void onBack() {
+    @OnClick(R.id.img_title_left)
+    void onBack() {
         onBackPressed();
     }
-    @OnClick(R.id.img_title_right) void onActionsheet() {
+
+    @OnClick(R.id.img_title_right)
+    void onActionsheet() {
         if (customer == null) {
             return;
         }
@@ -158,8 +179,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                                                 .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                                                     @Override
                                                     public void onNext(Customer customer) {
-                                                        MyCustomerRushEvent myCustomerRushEvent=new MyCustomerRushEvent();
-                                                        myCustomerRushEvent.eventCode=MyCustomerRushEvent.EVENT_CODE_DEL;//投入公海，就是从前面的列表删除
+                                                        MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent();
+                                                        myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_DEL;//投入公海，就是从前面的列表删除
                                                         AppBus.getInstance().post(myCustomerRushEvent);
                                                         finish();
                                                     }
@@ -195,8 +216,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                                     .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                                         @Override
                                         public void onNext(Customer customer) {
-                                            MyCustomerRushEvent myCustomerRushEvent=new MyCustomerRushEvent();
-                                            myCustomerRushEvent.eventCode=MyCustomerRushEvent.EVENT_CODE_DEL;
+                                            MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent();
+                                            myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_DEL;
                                             AppBus.getInstance().post(myCustomerRushEvent);
                                             onBackPressed();
                                         }
@@ -209,7 +230,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         dialog.show();
     }
 
-    @OnClick(R.id.customer_pick) void onPickCustomer() {
+    @OnClick(R.id.customer_pick)
+    void onPickCustomer() {
         final String id = customer.getId();
         CustomerService.pickInCustomer(id)
                 .subscribe(new DefaultLoyoSubscriber<Customer>() {
@@ -219,15 +241,16 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                         getData(id);
                         Toast("挑入客户成功");
                         //通知列表页面删除
-                        MyCustomerRushEvent myCustomerRushEvent =new MyCustomerRushEvent();
-                        myCustomerRushEvent.eventCode= MyCustomerRushEvent.EVENT_CODE_DEL;
+                        MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent();
+                        myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_DEL;
                         AppBus.getInstance().post(myCustomerRushEvent);
                     }
                 });
         UmengAnalytics.umengSend(CustomerDetailActivity.this, UmengAnalytics.frompublicPublicDetail);
     }
 
-    @OnClick(R.id.customer_basic_info) void showInfo() {
+    @OnClick(R.id.customer_basic_info)
+    void showInfo() {
         if (customer == null) {
             return;
         }
@@ -238,7 +261,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT,
                 FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO, bundle);
     }
-    @OnClick(R.id.customer_state) void editState() {
+
+    @OnClick(R.id.customer_state)
+    void editState() {
         Intent mIntent = new Intent(this, CustomerStatePickerActivity.class);
         mIntent.putExtra("canEdit", canEdit);
         mIntent.putExtra("fromPage", 0);
@@ -252,7 +277,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         startActivity(mIntent);
         UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
     }
-    @OnClick(R.id.customer_tag) void editTag() {
+
+    @OnClick(R.id.customer_tag)
+    void editTag() {
         Intent mIntent = new Intent(this, CustomerLabelCopyActivity.class);
         mIntent.putExtra("canEdit", canEdit);
         mIntent.putExtra("fromPage", 0);
@@ -264,7 +291,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
     }
 
-    @OnClick(R.id.ll_warn) void onDropDeadline() {
+    @OnClick(R.id.ll_warn)
+    void onDropDeadline() {
         FragmentManager fm = getSupportFragmentManager();
         DropCustomerDeadlineFragment fragment =
                 DropCustomerDeadlineFragment.newInstance(DropDeadlineModel.getDeadlineModel(customer),
@@ -304,6 +332,13 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         this.getData(customerId);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LoadingLayout.getConfig().setNoNetworkImage(R.drawable.define_nonetwork).
+                setAllTipTextSize(16).setReloadButtonTextSize(16);
+    }
+
     void loadIntentData() {
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
@@ -330,12 +365,11 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
         if (!canDelete && !canDump) {
             img_title_right.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             img_title_right.setVisibility(View.VISIBLE);
         }
 
-        customerPick.setVisibility(needPickIn?View.VISIBLE:View.GONE);
+        customerPick.setVisibility(needPickIn ? View.VISIBLE : View.GONE);
 
         customerId = customer.getId();
         this.customerNameText.setText(customer.name);
@@ -348,15 +382,13 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 recycleReason = "无";
             }
             dropReasonText.setText("丢公海原因：" + recycleReason);
-        }
-        else {
+        } else {
             dropReasonText.setVisibility(View.GONE);
         }
         if (customer.hasDropRemind()) {
             warnView.setVisibility(View.VISIBLE);
             recycleRemindText.setText(customer.getFormattedDropRemind());
-        }
-        else {
+        } else {
             warnView.setVisibility(View.GONE);
 
         }
@@ -365,8 +397,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
             tagEditableVew.setVisibility(View.VISIBLE);
             customerStateView.setClickable(true);
             customerTagView.setClickable(true);
-        }
-        else {
+        } else {
             stateEditableVew.setVisibility(View.GONE);
             tagEditableVew.setVisibility(View.GONE);
             customerStateView.setClickable(false);
@@ -382,29 +413,25 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 @Override
                 public void onScrollChanged() {
                     if (tabLayout.getChildCount() > 0) {
-                        View view = tabLayout.getChildAt(tabLayout.getChildCount()-1);
+                        View view = tabLayout.getChildAt(tabLayout.getChildCount() - 1);
 
                         int diff = (view.getRight() - (tabLayout.getWidth() + tabLayout.getScrollX()));
-                        if( diff == 0 )
-                        {
+                        if (diff == 0) {
                             tabMask.setVisibility(View.GONE);
-                        }
-                        else {
+                        } else {
                             tabMask.setVisibility(View.VISIBLE);
                         }
                         if (tabLayout.getScrollX() == 0) {
                             tabMaskLeft.setVisibility(View.GONE);
-                        }
-                        else {
+                        } else {
                             tabMaskLeft.setVisibility(View.VISIBLE);
                         }
                     }
                 }
             });
             viewPagerInited = true;
-        }
-        else {
-            for (CustomerChildFragment fragment :adapter.mFragments) {
+        } else {
+            for (CustomerChildFragment fragment : adapter.mFragments) {
                 fragment.reloadWithCustomer(customer);
             }
         }
@@ -424,6 +451,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                     @Override
                     public void onNext(Customer customer) {
                         ll_loading.setStatus(LoadingLayout.Success);
+                        LoadingLayout.getConfig().setNoNetworkImage(R.drawable.define_nonetwork2).
+                                setAllTipTextSize(14).setReloadButtonTextSize(14);
                         CustomerDetailActivity.this.customer = customer;
                         CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
                     }
@@ -504,30 +533,29 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     @Subscribe
     public void onMyCustomerPushEvent(MyCustomerRushEvent event) {
-        if (! customer.getId().equals(event.session)) {
+        if (!customer.getId().equals(event.session)) {
             // 不是这个客户的修改，直接退出
             return;
         }
-        if(MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode){
+        if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode) {
             //更新客户信息
-            if(MyCustomerRushEvent.EVENT_SUB_CODE_INFO==event.subCode){
-                Customer updateCus=event.data;
-                customer.name    =updateCus.name;
-                customer.summary =updateCus.summary;
-                customer.owner   = updateCus.owner;
+            if (MyCustomerRushEvent.EVENT_SUB_CODE_INFO == event.subCode) {
+                Customer updateCus = event.data;
+                customer.name = updateCus.name;
+                customer.summary = updateCus.summary;
+                customer.owner = updateCus.owner;
                 customer.members = updateCus.members;
-                customer.tags    = updateCus.tags;
-                customer.loc     = updateCus.loc;
+                customer.tags = updateCus.tags;
+                customer.loc = updateCus.loc;
                 customer.position = updateCus.position;
                 customer.extDatas = updateCus.extDatas;
                 customer.regional = updateCus.regional;
                 loadCustomer(false);
-            }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
+            } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {
                 //更新label
                 customer.tags = event.data.tags;
                 loadCustomer(false);
-            }
-            else if(MyCustomerRushEvent.EVENT_SUB_CODE_STATE == event.subCode){
+            } else if (MyCustomerRushEvent.EVENT_SUB_CODE_STATE == event.subCode) {
                 //更新label
                 NewTag tag = event.data.tags.get(0);
                 customer.statusName = tag.itemName;
@@ -555,8 +583,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                             customer.state, CustomerAction.FOLLOWUP_ADD);
             if (!canAdd) {
                 sweetAlertDialogView.alertIcon("提示", "你没有写跟进权限");
-            }
-            else {
+            } else {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Customer.class.getName(), customer);
                 bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
@@ -578,8 +605,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                             customer.state, CustomerAction.VISIT);
             if (!canAdd) {
                 sweetAlertDialogView.alertIcon("提示", "你没有拜访权限");
-            }
-            else if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
+            } else if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
                 sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
             } else {
                 Bundle b = new Bundle();
@@ -607,8 +633,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                             CustomerAction.ORDER_ADD);
             if (!canAdd) {
                 sweetAlertDialogView.alertIcon("提示", "你没有添加客户相关订单权限");
-            }
-            else if (!PermissionManager.getInstance()
+            } else if (!PermissionManager.getInstance()
                     .hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
                 sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
             } else {
