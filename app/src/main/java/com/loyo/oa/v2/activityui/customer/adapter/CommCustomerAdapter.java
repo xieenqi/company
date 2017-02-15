@@ -44,7 +44,7 @@ public class CommCustomerAdapter extends BaseAdapter {
         inflater = LayoutInflater.from(mContext);
     }
 
-    public void permissionTest(ImageView img) {
+    private void permissionTest(ImageView img) {
         /* 客户挑入权限 */
         if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_PICKING)) {
             img.setVisibility(View.VISIBLE);
@@ -69,7 +69,6 @@ public class CommCustomerAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final Customer customer = mCustomers.get(position);
-        final String id = customer.getId();
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_common_customer, null, false);
         }
@@ -77,25 +76,23 @@ public class CommCustomerAdapter extends BaseAdapter {
         TextView tv_title = ViewHolder.get(convertView, R.id.tv_title);
         TextView tv_content1 = ViewHolder.get(convertView, R.id.tv_content1);
         TextView tv_content2 = ViewHolder.get(convertView, R.id.tv_content2);
-        TextView tv_content3 = ViewHolder.get(convertView, R.id.tv_content3);
-        TextView tv_content4 = ViewHolder.get(convertView, R.id.tv_distance);
+//        TextView tv_content3 = ViewHolder.get(convertView, R.id.tv_content3);
+//        TextView tv_content4 = ViewHolder.get(convertView, R.id.tv_distance);
 
         ImageView img1 = ViewHolder.get(convertView, R.id.img_1);
         ImageView img2 = ViewHolder.get(convertView, R.id.img_2);
         ImageView img3 = ViewHolder.get(convertView, R.id.img_3);
-        ImageView imgWin = ViewHolder.get(convertView, R.id.iv_win);
         ImageView img_public = ViewHolder.get(convertView, R.id.img_public);
         ImageView img_go_where = ViewHolder.get(convertView, R.id.img_go_where);
 
 
-        ViewGroup layout1 = ViewHolder.get(convertView, R.id.layout_1);
+//        ViewGroup layout1 = ViewHolder.get(convertView, R.id.layout_1);
         ViewGroup layout2 = ViewHolder.get(convertView, R.id.layout_2);
         ViewGroup layout3 = ViewHolder.get(convertView, R.id.layout_3);
         ViewGroup layout_go_where = ViewHolder.get(convertView, R.id.layout_go_where);
 
         tv_title.setText(customer.name);
         String tagItems = Utils.getTagItems(customer);
-//        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
         String recycledAt = customer.recycledAt != 0 ? DateTool.getDateTimeFriendly(customer.recycledAt) : "--";
         img_public.setVisibility(View.INVISIBLE);
         permissionTest(img_public);

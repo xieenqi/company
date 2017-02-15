@@ -61,12 +61,10 @@ public class TeamCustomerAdapter extends BaseAdapter {
         TextView tv_content3 = ViewHolder.get(convertView, R.id.tv_content3);
 //        TextView tv_content4 = ViewHolder.get(convertView, R.id.tv_distance);
         TextView tv_content41 = ViewHolder.get(convertView, R.id.tv_content41);
-        TextView tv_content42 = ViewHolder.get(convertView, R.id.tv_content42);
 
         ImageView img1 = ViewHolder.get(convertView, R.id.img_1);
         ImageView img2 = ViewHolder.get(convertView, R.id.img_2);
         ImageView img3 = ViewHolder.get(convertView, R.id.img_3);
-        ImageView imgWin = ViewHolder.get(convertView, R.id.iv_win);
         ImageView img_public = ViewHolder.get(convertView, R.id.img_public);
 //        ImageView img_go_where = ViewHolder.get(convertView, R.id.img_go_where);
 
@@ -79,7 +77,6 @@ public class TeamCustomerAdapter extends BaseAdapter {
 
         tv_title.setText(customer.name);
         String tagItems = Utils.getTagItems(customer);
-//        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
         String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
 
         img_public.setVisibility(View.GONE);

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/main_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/customer_pick"
         android:orientation="vertical">
+
         <include layout="@layout/include_common_title_edit" />
 
         <com.library.module.widget.loading.LoadingLayout
@@ -23,102 +24,113 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             app:isFirstVisible="true">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <RelativeLayout
                     android:id="@+id/customer_basic_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
                     android:background="@color/title_bg1"
                     android:orientation="vertical"
-                    android:paddingLeft="16dp"
                     android:paddingBottom="10dp"
-                    android:layout_gravity="bottom">
+                    android:paddingLeft="16dp">
+
                     <TextView
                         android:id="@+id/tv_customer_name"
-                        android:paddingTop="9dp"
-                        android:paddingBottom="9dp"
                         android:layout_width="match_parent"
                         android:layout_height="38dp"
+                        android:paddingBottom="9dp"
+                        android:paddingTop="9dp"
                         android:textColor="#ffffff"
-                        android:textSize="16dp"/>
+                        android:textSize="16dp" />
+
                     <LinearLayout
                         android:id="@+id/customer_state"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginRight="25dp"
                         android:layout_below="@+id/tv_customer_name"
-                        android:layout_gravity="center_vertical">
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="25dp"
+                        android:orientation="horizontal">
+
                         <TextView
                             android:id="@+id/tv_customer_state"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
                             android:layout_width="wrap_content"
                             android:layout_height="26dp"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp"
                             android:textColor="#ffffff"
-                            android:textSize="14dp"/>
+                            android:textSize="14dp" />
+
                         <ImageView
                             android:id="@+id/state_editable"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:layout_marginLeft="3dp"
                             android:layout_width="16dp"
                             android:layout_height="24dp"
+                            android:layout_marginLeft="3dp"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp"
                             android:src="@drawable/icon_editable"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/customer_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginRight="25dp"
+                        android:layout_below="@+id/customer_state"
                         android:layout_gravity="center_vertical"
-                        android:layout_below="@+id/customer_state">
+                        android:layout_marginRight="25dp"
+                        android:orientation="horizontal">
+
                         <TextView
                             android:id="@+id/tv_customer_tag"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
                             android:layout_width="wrap_content"
                             android:layout_height="26dp"
-                            android:textSize="14dp"
-                            android:textColor="#ffffff"/>
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp"
+                            android:textColor="#ffffff"
+                            android:textSize="14dp" />
+
                         <ImageView
                             android:id="@+id/tag_editable"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:layout_marginLeft="3dp"
                             android:layout_width="16dp"
                             android:layout_height="24dp"
+                            android:layout_marginLeft="3dp"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp"
                             android:src="@drawable/icon_editable"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
                     </LinearLayout>
+
                     <TextView
                         android:id="@+id/tv_drop_reason"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:layout_marginRight="@dimen/dimen_14"
                         android:layout_width="match_parent"
                         android:layout_height="26dp"
-                        android:textSize="14dp"
-                        android:ellipsize="end"
-                        android:textColor="#ffffff"
                         android:layout_below="@+id/customer_tag"
-                        android:visibility="gone"/>
+                        android:layout_marginRight="@dimen/dimen_14"
+                        android:ellipsize="end"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:textColor="#ffffff"
+                        android:textSize="14dp"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/img_right_arrow1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/right_arrow"/>
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/img_right_arrow_bold" />
 
                 </RelativeLayout>
+
                 <LinearLayout
                     android:id="@+id/ll_warn"
                     android:layout_width="match_parent"
@@ -131,63 +143,69 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/dimen_5"
                         android:layout_marginLeft="@dimen/margin_other_view"
+                        android:layout_marginRight="@dimen/dimen_5"
                         android:src="@drawable/icon_warn" />
 
                     <TextView
                         android:id="@+id/tv_recyleRemind"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:gravity="center"
-                        android:ellipsize="end"
                         android:layout_marginRight="@dimen/dimen_14"
+                        android:ellipsize="end"
+                        android:gravity="center"
                         android:textColor="#C7A25D" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="0.5dp"
-                        android:background="#eeeeee"
-                        />
+                        android:background="#eeeeee" />
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="40dp">
+
                         <android.support.design.widget.TabLayout
                             android:id="@+id/tabs"
                             style="@style/AppTabLayout"
-                            app:tabTextAppearance="@style/AppTabTextAppearance"
                             android:layout_width="match_parent"
-                            android:background="@color/white"
                             android:layout_height="40dp"
-                            app:tabMode="scrollable"/>
+                            android:background="@color/white"
+                            app:tabMode="scrollable"
+                            app:tabTextAppearance="@style/AppTabTextAppearance" />
+
                         <ImageView
                             android:id="@+id/tab_mask_left"
                             android:layout_width="54dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/tab_mask_left"
                             android:layout_alignParentLeft="true"
-                            android:visibility="gone"/>
+                            android:src="@drawable/tab_mask_left"
+                            android:visibility="gone" />
+
                         <ImageView
                             android:id="@+id/tab_mask"
                             android:layout_width="54dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/tab_mask"
-                            android:layout_alignParentRight="true"/>
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/tab_mask" />
                     </RelativeLayout>
+
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="0.5dp"
-                        android:background="#eeeeee"
-                        />
+                        android:background="#eeeeee" />
                 </LinearLayout>
+
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewpager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
         </com.library.module.widget.loading.LoadingLayout>
@@ -200,14 +218,28 @@
         android:layout_alignParentBottom="true"
         android:background="@color/common_activity_con_bg"
         android:visibility="gone">
-        <include layout="@layout/common_include_line_full_space"/>
-        <TextView
+
+        <include layout="@layout/common_include_line_full_space" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/view_h_title"
-            android:layout_centerInParent="true"
-            android:drawablePadding="@dimen/dimen_3"
-            android:gravity="center"
-            android:text="挑入"
-            android:textColor="@color/title_bg1" />
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_pick" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/view_h_title"
+                android:layout_marginLeft="8dp"
+                android:drawablePadding="@dimen/dimen_3"
+                android:gravity="center"
+                android:text="挑入"
+                android:textColor="@color/title_bg1" />
+        </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

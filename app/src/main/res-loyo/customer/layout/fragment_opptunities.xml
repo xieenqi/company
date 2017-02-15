@@ -24,7 +24,7 @@
     <RelativeLayout
         android:id="@+id/layout_add"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_45"
+        android:layout_height="@dimen/dimen_48"
         android:layout_alignParentBottom="true"
         android:background="@color/common_activity_con_bg">
 

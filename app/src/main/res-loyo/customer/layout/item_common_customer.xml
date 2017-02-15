@@ -19,36 +19,21 @@
             android:paddingBottom="@dimen/dimen_10"
             android:paddingTop="@dimen/dimen_10">
 
-            <LinearLayout
+
+            <TextView
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dimen_2"
                 android:layout_marginLeft="@dimen/margin_side_edge"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="left|center"
-                    android:maxEms="13"
-                    android:singleLine="true"
-                    android:text="title"
-                    android:textColor="@color/text33"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:id="@+id/iv_win"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dimen_8"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/icon_win"
-                    android:visibility="gone" />
-            </LinearLayout>
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="left|center"
+                android:maxEms="13"
+                android:singleLine="true"
+                android:text="title"
+                android:textColor="@color/text33"
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:id="@+id/layout_1"
@@ -152,35 +137,20 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_customer_remind" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tv_content41"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_4"
                     android:layout_marginLeft="@dimen/dimen_6"
-                    android:orientation="vertical">
+                    android:gravity="left|center"
+                    android:maxLines="1"
+                    android:text="无跟进丢公海"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/tv_content41"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dimen_4"
-                        android:gravity="left|center"
-                        android:maxLines="1"
-                        android:text="无跟进丢公海"
-                        android:textColor="@color/text99"
-                        android:textSize="13sp"
-                        android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/tv_content42"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left|center"
-                        android:maxLines="1"
-                        android:text="无订单丢"
-                        android:textColor="@color/text99"
-                        android:textSize="13sp"
-                        android:visibility="gone" />
-                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

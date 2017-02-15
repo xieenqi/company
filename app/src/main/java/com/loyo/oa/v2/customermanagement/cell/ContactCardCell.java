@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.customermanagement.cell;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,7 +134,8 @@ public class ContactCardCell extends RecyclerView.ViewHolder {
         contact.compatTransform();
         this.contact = contact;
         this.contactIndex = contactIndex;
-        nameText.setText(contact.getName());
+        nameText.setText(contact.getName() +
+                (TextUtils.isEmpty(contact.getContactRoleName())?"":"-"+contact.getContactRoleName()));
         actionView.setImageResource(contact.isDefault()?
                 R.drawable.icon_default_sel:R.drawable.icon_default);
         for (int i = 0; i < 3; i++) {
