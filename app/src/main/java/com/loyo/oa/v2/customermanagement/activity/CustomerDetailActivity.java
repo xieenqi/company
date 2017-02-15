@@ -198,7 +198,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                                             MyCustomerRushEvent myCustomerRushEvent=new MyCustomerRushEvent();
                                             myCustomerRushEvent.eventCode=MyCustomerRushEvent.EVENT_CODE_DEL;
                                             AppBus.getInstance().post(myCustomerRushEvent);
-                                            finish();
+                                            onBackPressed();
                                         }
                                     });
                         }
@@ -318,6 +318,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.relationState,
                 customer.state,
                 CustomerAction.EDIT);
+
 
         boolean canDelete = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
                 customer.state, CustomerAction.DELETE);
@@ -481,6 +482,24 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         adapter.addFragment(attachmentsFragment);
 
         viewPager.setAdapter(adapter);
+    }
+
+    // ExtraAndResult.REQUSET_COPY_PERSONS
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        switch (requestCode) {
+
+            case ExtraAndResult.REQUSET_COPY_PERSONS:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
     }
 
     @Subscribe
