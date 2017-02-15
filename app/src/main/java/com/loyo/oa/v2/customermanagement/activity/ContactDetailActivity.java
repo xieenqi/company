@@ -345,7 +345,9 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         switch (requestCode) {
 
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
+                boolean isDefault = contact.isDefault();
                 contact = (Contact) data.getSerializableExtra("data");
+                contact.setIsDefault(isDefault);
                 this.loadContact();
                 contactUpdated = true;
                 break;
