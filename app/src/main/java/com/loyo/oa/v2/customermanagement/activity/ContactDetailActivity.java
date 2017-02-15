@@ -71,6 +71,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
     @BindView(R.id.tv_title_1)      TextView tv_title_1;
 
     @BindView(R.id.scroll_container) LinearLayout scrollContainer;
+    @BindView(R.id.contact_extra_holder) LinearLayout contact_extra_holder;
 
     @BindView(R.id.layout_phone1) ViewGroup phoneContainer1;
     @BindView(R.id.layout_phone2) ViewGroup phoneContainer2;
@@ -302,7 +303,8 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
 
     private void loadExtra() {
         //添加动态字段
-        scrollContainer.addView(new ContactListExtra(this, contact.getExtDatas(), leftExtrases, false, 14));
+        contact_extra_holder.removeAllViews();
+        contact_extra_holder.addView(new ContactListExtra(this, contact.getExtDatas(), leftExtrases, false, 14));
     }
 
     //用来处理打电话权限申请
