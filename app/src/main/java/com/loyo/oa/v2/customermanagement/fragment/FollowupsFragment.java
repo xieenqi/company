@@ -285,6 +285,9 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
     @Subscribe
     public void onFollowUpRushEvent(FollowUpRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
+        if (view == null) {
+            return;
+        }
         msgAudiomMenu = null;
         msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
         layout_bottom_menu.removeAllViews();

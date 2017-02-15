@@ -32,23 +32,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="180dp"
+                    android:id="@+id/tv_name"
+                    android:layout_width="match_parent"
                     android:layout_height="19dp"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:gravity="center_vertical"
-                    android:text="姓名"
+                    android:text=""
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp14" />
-
-                <TextView
-                    android:id="@+id/tv_name"
-                    style="@style/edtText_normal"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/suodesilei" />
 
             </LinearLayout>
             <include layout="@layout/include_solid_line" />
