@@ -247,6 +247,9 @@ public class VisitsFragment extends CustomerChildFragment
     @Subscribe
     public void onSigninNewRushEvent(SigninRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
+        if (view == null) {
+            return;
+        }
         msgAudiomMenu = null;
         msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
         layout_bottom_menu.removeAllViews();

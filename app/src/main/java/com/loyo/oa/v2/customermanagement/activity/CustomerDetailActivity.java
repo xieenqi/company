@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
-import com.loyo.oa.common.utils.LoyoUIThread;
 import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity_;
@@ -25,6 +24,10 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.TagItem;
+import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
+import com.loyo.oa.v2.activityui.order.OrderAddActivity;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
+import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -47,6 +50,7 @@ import com.loyo.oa.v2.customermanagement.model.DropDeadlineModel;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -520,28 +524,47 @@ public class CustomerDetailActivity extends BaseFragmentActivity
      */
     @Override
     public void onAddFollowup() {
-        selectPageAtIndex(0/* 跟进 */);
-        LoyoUIThread.runAfterDelay(new Runnable() {
-            @Override
-            public void run() {
-                if (CustomerDetailActivity.this.followupsFragment != null) {
-                    followupsFragment.onAddFollowup();
-                }
+        //selectPageAtIndex(0/* 跟进 */);
+        if (CustomerDetailActivity.this.followupsFragment != null) {
+            boolean canAdd = customer != null && customer.state == Customer.NormalCustomer &&
+                    PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                            customer.state, CustomerAction.FOLLOWUP_ADD);
+            if (!canAdd) {
+                sweetAlertDialogView.alertIcon("提示", "你没有写跟进权限");
             }
-        }, 300 /* 完成加载页面和动画时间 */);
+            else {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Customer.class.getName(), customer);
+                bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+                bundle.putBoolean("isDetail", true);
+                app.startActivityForResult(CustomerDetailActivity.this, FollowAddActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, FollowupsFragment.ACTIVITIES_ADD, bundle);
+                UmengAnalytics.umengSend(CustomerDetailActivity.this, UmengAnalytics.customerCheckFollowAddFollow);
+            }
+        }
     }
 
     @Override
     public void onAddVisit() {
-        selectPageAtIndex(2/* 拜访 */);
-        LoyoUIThread.runAfterDelay(new Runnable() {
-            @Override
-            public void run() {
-                if (CustomerDetailActivity.this.visitsFragment != null) {
-                    visitsFragment.onAddVisit();
-                }
+        //selectPageAtIndex(2/* 拜访 */);
+        if (CustomerDetailActivity.this.visitsFragment != null) {
+            boolean
+                    canAdd = customer != null &&
+                    PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                            customer.state, CustomerAction.VISIT);
+            if (!canAdd) {
+                sweetAlertDialogView.alertIcon("提示", "你没有拜访权限");
             }
-        }, 300 /* 完成加载页面和动画时间 */);
+            else if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
+                sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+            } else {
+                Bundle b = new Bundle();
+                b.putSerializable("data", customer);
+                app.startActivityForResult(CustomerDetailActivity.this,
+                        SignInActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                        FinalVariables.REQUEST_CREATE_LEGWORK, b);
+            }
+        }
     }
 
     @Override
@@ -551,15 +574,31 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     @Override
     public void onAddOrder() {
-        selectPageAtIndex(4/* 订单 */);
-        LoyoUIThread.runAfterDelay(new Runnable() {
-            @Override
-            public void run() {
-                if (CustomerDetailActivity.this.ordersFragment != null) {
-                    ordersFragment.onAddOrder();
+        //selectPageAtIndex(4/* 订单 */);
+        if (CustomerDetailActivity.this.ordersFragment != null) {
+            boolean canAdd = customer != null &&
+                    PermissionManager.getInstance().hasCustomerAuthority(
+                            customer.relationState,
+                            customer.state,
+                            CustomerAction.ORDER_ADD);
+            if (!canAdd) {
+                sweetAlertDialogView.alertIcon("提示", "你没有添加客户相关订单权限");
+            }
+            else if (!PermissionManager.getInstance()
+                    .hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
+                sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+            } else {
+                if (customerId != null) {
+                    Bundle bundle;
+                    bundle = new Bundle();
+                    bundle.putString(ExtraAndResult.EXTRA_NAME, customer.name);
+                    bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
+                    bundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
+                    app.startActivityForResult(CustomerDetailActivity.this, OrderAddActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, 200, bundle);
                 }
             }
-        }, 300 /* 完成加载页面和动画时间 */);
+        }
     }
 
     /**
