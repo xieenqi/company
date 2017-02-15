@@ -30,6 +30,10 @@ public class CustomerChildFragment extends BaseFragment {
         this.customer = customer;
     }
 
+    public void reloadWithCustomer(Customer customer) {
+
+    }
+
     public void setListener(OnTotalCountChangeListener listener) {
         if (listener != null) {
             listenerRef = new WeakReference<>(listener);

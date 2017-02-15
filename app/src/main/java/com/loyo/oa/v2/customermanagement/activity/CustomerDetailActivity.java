@@ -402,6 +402,11 @@ public class CustomerDetailActivity extends BaseFragmentActivity
             });
             viewPagerInited = true;
         }
+        else {
+            for (CustomerChildFragment fragment :adapter.mFragments) {
+                fragment.reloadWithCustomer(customer);
+            }
+        }
     }
 
     public void getData(String id) {

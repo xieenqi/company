@@ -94,6 +94,22 @@ public class OpportunitiesFragment extends CustomerChildFragment
         this.totalCount = customer.counter.getDemand();
     }
 
+    public void reloadWithCustomer(Customer customer) {
+        this.customer = customer;
+        customerId = customer.getId();
+        customerName = customer.name;
+        canAdd = customer != null &&
+                PermissionManager.getInstance().hasCustomerAuthority(
+                        customer.relationState,
+                        customer.state,
+                        CustomerAction.SALE_OPPORTUNITY_ADD);
+        this.totalCount = customer.counter.getDemand();
+        if (view == null) {
+            return;
+        }
+        layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
+    }
+
     void initUI() {
         ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
         ll_loading.setStatus(LoadingLayout.Loading);

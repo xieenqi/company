@@ -85,6 +85,18 @@ public class TasksFragment extends CustomerChildFragment implements PullToRefres
         this.totalCount = customer.counter.getTask();
     }
 
+    public void reloadWithCustomer(Customer customer) {
+        mCustomer = customer;
+        canAdd = mCustomer != null && mCustomer.state == Customer.NormalCustomer &&
+                PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                        mCustomer.state, CustomerAction.TASK_ADD);
+        this.totalCount = customer.counter.getTask();
+        if (view == null) {
+            return;
+        }
+        layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {

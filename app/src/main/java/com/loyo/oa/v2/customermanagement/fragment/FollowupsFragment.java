@@ -146,6 +146,23 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
         this.totalCount = customer.saleActivityNum;
     }
 
+    public void reloadWithCustomer(Customer customer) {
+        mCustomer = customer;
+        this.totalCount = customer.saleActivityNum;
+        canAdd = mCustomer != null && mCustomer.state == Customer.NormalCustomer &&
+                PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                        mCustomer.state, CustomerAction.FOLLOWUP_ADD);
+        if (view == null) {
+            return;
+        }
+        if (!canAdd) {
+            layout_add.setVisibility(View.GONE);
+        }
+        else {
+            layout_add.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void initView(View view) {
         Bundle bundle = getArguments();
         if (bundle != null) {

@@ -91,6 +91,21 @@ public class WorkFlowsFragment extends CustomerChildFragment
         this.totalCount = customer.counter.workflow;
     }
 
+    public void reloadWithCustomer(Customer customer) {
+        this.customer = customer;
+        customerId = customer.getId();
+        customerName = customer.name;
+        canAdd = customer != null &&
+                PermissionManager.getInstance().hasCustomerAuthority(
+                        customer.relationState,
+                        customer.state,
+                        CustomerAction.APPROVAL_ADD);
+        if (view == null) {
+            return;
+        }
+        layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
+    }
+
     public void getPageData() {
         isPullDown = true;
         page = 1;
