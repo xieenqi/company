@@ -71,6 +71,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
     @BindView(R.id.tv_title_1)      TextView tv_title_1;
 
     @BindView(R.id.scroll_container) LinearLayout scrollContainer;
+    @BindView(R.id.contact_extra_holder) LinearLayout contact_extra_holder;
 
     @BindView(R.id.layout_phone1) ViewGroup phoneContainer1;
     @BindView(R.id.layout_phone2) ViewGroup phoneContainer2;
@@ -273,18 +274,29 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
             if (i < contact.telGroup.size()) {
                 phoneContainers.get(i).setVisibility(View.VISIBLE);
                 phoneTexts.get(i).setText(contact.telGroup.get(i));
+                ((TextView)findViewById(R.id.tv_phone_name1)).setText("手机"+i);
             }
             else {
                 phoneContainers.get(i).setVisibility(i == 0?View.VISIBLE:View.GONE);
+            }
+            //一个手机号码，就不显示序号
+            if(0==i&&contact.telGroup.size()<=1){
+                ((TextView)findViewById(R.id.tv_phone_name1)).setText("手机");
             }
 
             if (i < contact.wiretelGroup.size()) {
                 telContainers.get(i).setVisibility(View.VISIBLE);
                 telTexts.get(i).setText(contact.wiretelGroup.get(i));
+                ((TextView)findViewById(R.id.tv_wiletel_name1)).setText("座机"+i);
             }
             else {
                 telContainers.get(i).setVisibility(i == 0?View.VISIBLE:View.GONE);
             }
+            //一个座机号码，就不显示序号
+            if(0==i&&contact.wiretelGroup.size()<=1){
+                ((TextView)findViewById(R.id.tv_wiletel_name1)).setText("座机");
+            }
+
         }
         getContactsFields();
     }
@@ -302,7 +314,8 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
 
     private void loadExtra() {
         //添加动态字段
-        scrollContainer.addView(new ContactListExtra(this, contact.getExtDatas(), leftExtrases, false, 14));
+        contact_extra_holder.removeAllViews();
+        contact_extra_holder.addView(new ContactListExtra(this, contact.getExtDatas(), leftExtrases, false, 14));
     }
 
     //用来处理打电话权限申请
