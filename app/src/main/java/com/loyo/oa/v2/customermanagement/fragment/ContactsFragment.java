@@ -103,6 +103,9 @@ public class ContactsFragment extends CustomerChildFragment
         if (view == null) {
             return;
         }
+        // 更新联系人
+        adapter.loadData(customer.contacts);
+        adapter.notifyDataSetChanged();
         layout_add.setVisibility(canEdit ? View.VISIBLE : View.GONE);
     }
 
