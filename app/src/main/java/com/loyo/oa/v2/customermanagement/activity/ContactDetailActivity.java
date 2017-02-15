@@ -21,7 +21,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RegularCheck;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.cell.ContactCardCell;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
@@ -130,36 +129,38 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
                 startActivityForResult(intent, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT);
             }
         });
-        dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
-            @Override
-            public void onClick(int which) {
-                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        dismissSweetAlert();
-                    }
-                }, new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        dismissSweetAlert();
-                        showLoading2("");
-                        CustomerService.deleteContact(customer.getId(), contact.getId())
-                                .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
-                                    @Override
-                                    public void onNext(Contact contact1) {
+        if (! contact.isDefault() ) {
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                            showLoading2("");
+                            CustomerService.deleteContact(customer.getId(), contact.getId())
+                                    .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
+                                        @Override
+                                        public void onNext(Contact contact1) {
 
-                                        Intent intent = new Intent();
-                                        intent.putExtra("contact", contact1);
-                                        intent.putExtra("contactIndex", contactIndex);
-                                        intent.putExtra("action", CONTACT_DELETE);
-                                        app.finishActivity(ContactDetailActivity.this,
-                                                MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-                                    }
-                                });
-                    }
-                }, "提示", "你确定要删除联系人?");
-            }
-        });
+                                            Intent intent = new Intent();
+                                            intent.putExtra("contact", contact1);
+                                            intent.putExtra("contactIndex", contactIndex);
+                                            intent.putExtra("action", CONTACT_DELETE);
+                                            app.finishActivity(ContactDetailActivity.this,
+                                                    MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                                        }
+                                    });
+                        }
+                    }, "提示", "你确定要删除联系人?");
+                }
+            });
+        }
         dialog.show();
     }
 
@@ -344,7 +345,9 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         switch (requestCode) {
 
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
+                boolean isDefault = contact.isDefault();
                 contact = (Contact) data.getSerializableExtra("data");
+                contact.setIsDefault(isDefault);
                 this.loadContact();
                 contactUpdated = true;
                 break;

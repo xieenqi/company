@@ -104,6 +104,18 @@ public class AttachmentsFragment extends CustomerChildFragment
                         customer.state, CustomerAction.ATTACHMENT_ADD);
     }
 
+    public void reloadWithCustomer(Customer customer) {
+        this.uuid = customer.uuid;
+        this.totalCount = customer.counter.getFile();
+        this.canAdd = customer != null &&
+                PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                        customer.state, CustomerAction.ATTACHMENT_ADD);
+        if (view == null) {
+            return;
+        }
+        layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
+    }
+
     void initViews(View view) {
         ButterKnife.bind(this, view);
         listView = (PullToRefreshRecyclerView2) view.findViewWithTag("file_list");

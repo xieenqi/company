@@ -94,6 +94,22 @@ public class OpportunitiesFragment extends CustomerChildFragment
         this.totalCount = customer.counter.getDemand();
     }
 
+    public void reloadWithCustomer(Customer customer) {
+        this.customer = customer;
+        customerId = customer.getId();
+        customerName = customer.name;
+        canAdd = customer != null &&
+                PermissionManager.getInstance().hasCustomerAuthority(
+                        customer.relationState,
+                        customer.state,
+                        CustomerAction.SALE_OPPORTUNITY_ADD);
+        this.totalCount = customer.counter.getDemand();
+        if (view == null) {
+            return;
+        }
+        layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
+    }
+
     void initUI() {
         ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
         ll_loading.setStatus(LoadingLayout.Loading);
@@ -106,7 +122,6 @@ public class OpportunitiesFragment extends CustomerChildFragment
         });
         layout_add = (ViewGroup) view.findViewById(R.id.layout_add);
         tv_add = (TextView) view.findViewById(R.id.tv_add);
-        tv_add.setText("新增销售机会");
         layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
         layout_add.setOnClickListener(this);
         layout_add.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());

@@ -130,7 +130,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(followUpListModel.avatar, holder.iv_heading);
         holder.tv_name.setText(followUpListModel.creatorName);
         holder.tv_contact.setText(TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
-        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(followUpListModel.createAt));
+        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getHourMinute(followUpListModel.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# " + followUpListModel.typeName);
 
         /** 电话录音设置 */

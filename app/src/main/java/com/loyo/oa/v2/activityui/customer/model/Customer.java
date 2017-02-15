@@ -24,6 +24,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import static com.loyo.oa.v2.activityui.customer.model.Customer.RecycleType.AUTOMATIC;
+import static com.loyo.oa.v2.activityui.customer.model.Customer.RecycleType.MANUAL;
+
 /**
  * com.loyo.oa.v2.beans
  * 描述 :新版客户
@@ -205,7 +208,9 @@ public class Customer extends BaseBeans {
             sb.append(orderRecycleRemind);
             hasOrderRemind = true;
         }
-        sb.append("丢公海");
+        if (hasActivityRemind || hasOrderRemind) {
+            sb.append("丢公海");
+        }
         String compoundRemind = sb.toString();
 
         SpannableStringBuilder builder = new SpannableStringBuilder(compoundRemind);
@@ -221,7 +226,7 @@ public class Customer extends BaseBeans {
             if (hasOrderRemind && orderRemind) {
                 ForegroundColorSpan redSpan2 = new ForegroundColorSpan(Color.parseColor("#f5625a"));
                 builder.setSpan(redSpan2, compoundRemind.length() - orderRecycleRemind.length() - 3,
-                        compoundRemind.length(),
+                        compoundRemind.length() - 3,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         } catch (Exception e) {
@@ -262,5 +267,14 @@ public class Customer extends BaseBeans {
     @IntDef({RelationResponsible, RelationParticipated, RelationInvolved})
     @Retention(RetentionPolicy.SOURCE)
     public @interface RelationState {
+    }
+
+    public String getRecycleName() {
+        if (recycleType == MANUAL) {
+            return recycleName;
+        }else if(recycleType == AUTOMATIC){
+            return "系统";
+        }
+        return "--";
     }
 }

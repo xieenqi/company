@@ -15,7 +15,6 @@ import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -37,8 +36,6 @@ import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +91,19 @@ public class ContactsFragment extends CustomerChildFragment
                 PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
                         customer.state, CustomerAction.CONTACT_ADD);
         this.totalCount = customer.contacts.size();
+    }
+
+    public void reloadWithCustomer(Customer customer) {
+        this.customer = customer;
+        customerId = customer.getId();
+        canEdit = customer != null &&
+                PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                        customer.state, CustomerAction.CONTACT_ADD);
+        this.totalCount = customer.contacts.size();
+        if (view == null) {
+            return;
+        }
+        layout_add.setVisibility(canEdit ? View.VISIBLE : View.GONE);
     }
 
     private void getData() {

@@ -146,6 +146,20 @@ public class VisitsFragment extends CustomerChildFragment
         this.totalCount = customer.counter.getVisit();
     }
 
+    public void reloadWithCustomer(Customer customer) {
+        mCustomer = customer;
+        canAdd = customer != null &&
+                PermissionManager.getInstance().hasCustomerAuthority(
+                        customer.relationState,
+                        customer.state,
+                        CustomerAction.APPROVAL_ADD);
+        this.totalCount = customer.counter.getVisit();
+        if (view == null) {
+            return;
+        }
+        layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
+    }
+
     private void initView() {
 
         if (mCustomer == null) {

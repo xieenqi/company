@@ -47,7 +47,9 @@
                         android:paddingBottom="9dp"
                         android:paddingTop="9dp"
                         android:textColor="#ffffff"
-                        android:textSize="16dp" />
+                        android:textSize="16dp"
+                        android:singleLine="true"
+                        android:maxLines="1"/>
 
                     <LinearLayout
                         android:id="@+id/customer_state"
@@ -65,7 +67,9 @@
                             android:paddingBottom="4dp"
                             android:paddingTop="4dp"
                             android:textColor="#ffffff"
-                            android:textSize="14dp" />
+                            android:textSize="14dp"
+                            android:singleLine="true"
+                            android:maxLines="1"/>
 
                         <ImageView
                             android:id="@+id/state_editable"
@@ -94,7 +98,9 @@
                             android:paddingBottom="4dp"
                             android:paddingTop="4dp"
                             android:textColor="#ffffff"
-                            android:textSize="14dp" />
+                            android:textSize="14dp"
+                            android:singleLine="true"
+                            android:maxLines="1"/>
 
                         <ImageView
                             android:id="@+id/tag_editable"
@@ -114,6 +120,8 @@
                         android:layout_below="@+id/customer_tag"
                         android:layout_marginRight="@dimen/dimen_14"
                         android:ellipsize="end"
+                        android:singleLine="true"
+                        android:maxLines="1"
                         android:paddingBottom="4dp"
                         android:paddingTop="4dp"
                         android:textColor="#ffffff"
