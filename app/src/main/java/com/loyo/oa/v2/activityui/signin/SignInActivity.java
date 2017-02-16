@@ -92,7 +92,7 @@ public class SignInActivity extends BaseActivity
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at, ll_contact_holder, ll_contact_name, ll_contact_role;
     private ViewGroup layout_customer_name;
-    private ImageView iv_at_delete,iv_customer_name;
+    private ImageView iv_at_delete, iv_customer_name;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private double laPosition, loPosition;
@@ -101,7 +101,6 @@ public class SignInActivity extends BaseActivity
     private Animation animation;
     private boolean isPicture = false, isCusPosition = false, isLocation = false, isRecordRun = false;
     private PositionResultItem positionResultItem;
-    private int pcitureNumber;//记录上传了多少张图
     private StaffMemberCollection collection;//选人返回的数据
     private ArrayList<Record> audioInfo = new ArrayList<>();//录音数据
     private List<CommonIdName> atDepts = new ArrayList<>();//@的部门
@@ -122,6 +121,7 @@ public class SignInActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         super.setTitle("拜访签到");
+        LocationUtilGD.permissionLocation(this);
         presenter = new SigninPresenterImpl(this);
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         presenter.getIsPhoto();
@@ -131,7 +131,6 @@ public class SignInActivity extends BaseActivity
         }
         initUI();
         startLocation();
-        LocationUtilGD.permissionLocation(this);
     }
 
     /**
@@ -187,7 +186,7 @@ public class SignInActivity extends BaseActivity
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
-        iv_customer_name= (ImageView) findViewById(R.id.iv_customer_name);
+        iv_customer_name = (ImageView) findViewById(R.id.iv_customer_name);
         iv_at_delete.setOnClickListener(click);
         initMultiFunctionModule();
         controller = new UploadController(this, 9);
@@ -199,9 +198,8 @@ public class SignInActivity extends BaseActivity
             layout_customer_name.setOnClickListener(click);
         } else {
             //选择了客户，直接加载数据
-            getData(mCustomer.getId());
             iv_customer_name.setVisibility(View.GONE);
-            tv_customer_name.setPadding(tv_customer_name.getPaddingLeft(),tv_customer_name.getPaddingTop(), DensityUtil.dp2px(this,23),tv_customer_name.getPaddingBottom());
+            tv_customer_name.setPadding(tv_customer_name.getPaddingLeft(), tv_customer_name.getPaddingTop(), DensityUtil.dp2px(this, 23), tv_customer_name.getPaddingBottom());
 
         }
 
@@ -219,6 +217,14 @@ public class SignInActivity extends BaseActivity
             tv_contact_role.setText(contact.getContactRoleName());
         }
         edt_memo.setText(TextUtils.isEmpty(mCustomer.name) ? "" : "我拜访了" + mCustomer.name);
+        //此处是客户详情在定位成功过后再计算偏差
+        if (mCustomer != null && mCustomer.position != null) {
+            List<Double> locList = new ArrayList<>();
+            for (Double ele : mCustomer.position.loc) {
+                locList.add(ele);
+            }
+            loc = new Location(locList, mCustomer.position.addr);
+        }
         //显示到客户的距离
         distanceInfo();
 
@@ -239,14 +245,7 @@ public class SignInActivity extends BaseActivity
                 region = app.region;
                 LocationUtilGD.sotpLocation();
                 UMengTools.sendLocationInfo(address, longitude, latitude);
-                //此处是客户详情在定位成功过后再计算偏差
-                if (mCustomer != null && mCustomer.position != null) {
-                    List<Double> locList = new ArrayList<>();
-                    for (Double ele : mCustomer.position.loc) {
-                        locList.add(ele);
-                    }
-                    loc = new Location(locList, mCustomer.position.addr);
-                }
+                getData(mCustomer.getId());
             }
 
             @Override
@@ -650,11 +649,10 @@ public class SignInActivity extends BaseActivity
      */
     @Subscribe
     public void onSigninCustomerRushEvent(SigninCustomerRushEvent event) {
-        if (mCustomer == null) {
-            mCustomer = new Customer();
-        }
-        getData(event.data.id);
-
+        //TODO  此处 临时处理 后期统一客户数据传递
+        mCustomer = new Customer();
+        mCustomer.id = event.data.id;
+        startLocation();
     }
 
 
@@ -754,9 +752,9 @@ public class SignInActivity extends BaseActivity
                     //更新客户状态信息
                     MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(mCustomer);
                     myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
-                    myCustomerRushEvent.subCode   = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
-                    myCustomerRushEvent.session   =mCustomer.getId();
-                    myCustomerRushEvent.request   ="note";
+                    myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
+                    myCustomerRushEvent.session = mCustomer.getId();
+                    myCustomerRushEvent.request = "note";
                     AppBus.getInstance().post(myCustomerRushEvent);
                     //更新签到
                     AppBus.getInstance().post(new SigninRushEvent());
@@ -769,7 +767,6 @@ public class SignInActivity extends BaseActivity
     @Override
     public void uploadAttachmentSuccessUI() {
         getAttachments();
-        pcitureNumber++;
     }
 
     @Override
@@ -781,7 +778,6 @@ public class SignInActivity extends BaseActivity
     public void deleteAttachmentSuccessUI(Attachment delAttachment) {
         Toast("删除附件成功!");
         lstData_Attachment.remove(delAttachment);
-        pcitureNumber--;
     }
 
     /**
