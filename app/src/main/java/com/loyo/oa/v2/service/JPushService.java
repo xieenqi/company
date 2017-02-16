@@ -46,48 +46,37 @@ public class JPushService extends BroadcastReceiver {
             LogUtil.d(" 激光推送RegistrationId： " + regId);
             //send the Registration Id to your server...
 
-        } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
+        }
+        /*【自定义消息】 处理*/
+        else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
             TrackRule.InitTrackRule();//收到推送启动一次定位服务 避免服务kill掉
             Log.d(TAG, "[MyReceiver] 接收到推送下来的【自定义消息】: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
-            //processCustomMessage(context, bundle);
             String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);
             LogUtil.d("【自定义msg】键值数据： " + msg);
             HttpJpushNotification pushMsgData = MainApp.gson.fromJson(msg, HttpJpushNotification.class);
-            /**
-             * 轨迹改变 收到推送重新获取轨迹规则
-             * 同时刷新token
-             */
-            if (7 == pushMsgData.silentType) {
-//                TrackRule.InitTrackRule();
-            } else if (8 == pushMsgData.silentType || 9 == pushMsgData.silentType) {//更新8组织架构与9个人信息
+
+            if (8 == pushMsgData.silentType || 9 == pushMsgData.silentType) {//更新8组织架构与9个人信息
                 if (!getUserInfo(pushMsgData))
                     pushMsgData.silentType = 8;//更改别人的信息制动转成 更新8组织架构
                 LogUtil.d("更新数据激光推送：更新8组织架构与9个人信息 ");
                 TrackRule.initUserData(MainApp.getMainApp());
-
-            } else if (10 == pushMsgData.silentType) {//动态字段
-
-            } else if (11 == pushMsgData.silentType) {//客户标签
-
-            } else if (12 == pushMsgData.silentType) {//审批类别
-
             }
-
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
             int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
-
-        } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-            TrackRule.InitTrackRule();//收到推送启动一次定位服务 避免服务kill掉
-            Log.d(TAG, "[MyReceiver] 用户点击打开了【通知】");//buzzType 1，任务 2，报告 3，审批 4.项目 5.通知公告
-
+        }
+        /*【用户点击打开了通知】 处理*/
+        else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
+            /*收到推送启动一次定位服务 避免服务kill掉*/
+            TrackRule.InitTrackRule();
+            Log.d(TAG, "[MyReceiver] 用户点击打开了【通知】");
             String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);
             LogUtil.d(" 激光推送传递过来的数据： " + msg);
             HttpJpushNotification pushData = MainApp.gson.fromJson(msg, HttpJpushNotification.class);
             LogUtil.d(" 键值数据： " + pushData);
-            // 打开自定义的Activity
-            MainApp.jpushData = pushData;// 给这个创建一个对象就可以了可以到相应的页面
+            /* 打开自定义的Activity*/
+            MainApp.jpushData = pushData;
             ExitActivity.getInstance().finishAllActivity();
             Intent in = new Intent();
             in.setClass(context, MainHomeActivity.class);
@@ -101,7 +90,6 @@ public class JPushService extends BroadcastReceiver {
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
             //在这里根据 JPushInterface.EXTRA_EXTRA 的内容处理代码，比如打开新的Activity， 打开一个网页等..
-
         } else if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent.getAction())) {
             boolean connected = intent.getBooleanExtra(JPushInterface.EXTRA_CONNECTION_CHANGE, false);
             Log.w(TAG, "[MyReceiver]" + intent.getAction() + " connected state change to " + connected);
