@@ -81,7 +81,7 @@ public interface ICustomer {
      * @param map
      */
     @PUT("/customer/{id}")
-    Observable<Customer> updateCustomer(@Path("id") String id, @Body HashMap<String, Object> map);
+    Observable<BaseResponse<Customer>> updateCustomer(@Path("id") String id, @Body HashMap<String, Object> map);
 
     /**
      * 获取客户标签

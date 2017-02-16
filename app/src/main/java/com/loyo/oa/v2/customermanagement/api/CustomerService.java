@@ -267,7 +267,7 @@ public class CustomerService {
                         .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
                         .create(ICustomer.class)
                         .updateCustomer(id, map)
-                        .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
+                        .compose(RetrofitAdapterFactory.<Customer>applySchedulers());
     }
 
     public static Observable<ArrayList<Tag>> getCustomerTags(HashMap<String, Object> map) {
