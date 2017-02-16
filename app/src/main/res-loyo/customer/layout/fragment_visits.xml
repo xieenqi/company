@@ -11,7 +11,7 @@
                                                      app:isFirstVisible="true">
 
         <com.loyo.oa.pulltorefresh.PullToRefreshListView
-            android:id="@+id/listView_legworks"
+            android:tag="listView_visit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_bottom"

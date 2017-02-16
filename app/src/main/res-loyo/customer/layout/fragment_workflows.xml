@@ -11,7 +11,7 @@
                                                      app:isFirstVisible="true">
 
         <com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView
-            android:id="@+id/expandableListView"
+            android:tag="expandableListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="false"

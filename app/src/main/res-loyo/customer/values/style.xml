@@ -9,6 +9,11 @@
         <item name="android:windowExitAnimation">@anim/slide_to_right</item>
     </style>
 
+    <style name="LoyoSheetAnimation">
+        <item name="android:windowEnterAnimation">@anim/pop_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/dismiss_to_bottom</item>
+    </style>
+
     <style name="AppTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabMaxWidth">100dp</item>
         <item name="tabIndicatorColor">#4CABFB</item>

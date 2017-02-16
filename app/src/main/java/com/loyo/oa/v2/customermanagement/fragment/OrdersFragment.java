@@ -125,7 +125,7 @@ public class OrdersFragment extends CustomerChildFragment
         layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
         layout_add.setOnClickListener(this);
         layout_add.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
-        listView_demands = (PullToRefreshListView) view.findViewById(R.id.listView_demands);
+        listView_demands = (PullToRefreshListView) view.findViewWithTag("listView_demands");
         listAdapter = new CustomerOrderAdapter(getActivity());
         listView_demands.setAdapter(listAdapter);
         listView_demands.setMode(PullToRefreshBase.Mode.BOTH);

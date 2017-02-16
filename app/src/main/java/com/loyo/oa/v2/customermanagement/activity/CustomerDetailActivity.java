@@ -25,7 +25,6 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
-import com.loyo.oa.v2.activityui.customer.model.TagItem;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
@@ -61,7 +60,6 @@ import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -271,15 +269,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     @OnClick(R.id.customer_state)
     void editState() {
         Intent mIntent = new Intent(this, CustomerStatusSingleSelectActivity.class);
-//        mIntent.putExtra("canEdit", canEdit);
-//        mIntent.putExtra("fromPage", 0);
-//        if (null != customer.statusId) {
-//            TagItem item = new TagItem();
-//            item.setName(customer.statusName);
-//            item.setId(customer.statusId);
-//            mIntent.putExtra("state", item);
-//        }
-//        mIntent.putExtra("customerId", customer.getId());
         mIntent.putExtra(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, customer.statusId);
         startActivityForResult(mIntent, EXTRA_CUSTOMER_EDIT_STATUS);
         UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
@@ -349,6 +338,23 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     }
 
     void loadCustomer(boolean needInitPager) {
+        //判断有没有查看权限
+        if (!PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                customer.state, CustomerAction.PREVIEW)) {
+            //在列表页面，删除刚才点击那一条
+            MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent();
+            myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_DEL;
+            AppBus.getInstance().post(myCustomerRushEvent);
+            sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    dismissSweetAlert();
+                    finish();
+                }
+            }, "提示", "你已没有此客户查看权限");
+            return;
+        }
+
         canEdit = PermissionManager.getInstance().hasCustomerAuthority(
                 customer.relationState,
                 customer.state,
@@ -533,18 +539,20 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode) {
             //更新客户信息
             if (MyCustomerRushEvent.EVENT_SUB_CODE_INFO == event.subCode) {
-                Customer updateCus = event.data;
-                customer.name = updateCus.name;
-                customer.summary = updateCus.summary;
-                customer.owner = updateCus.owner;
-                customer.members = updateCus.members;
-                customer.tags = updateCus.tags;
-                customer.loc = updateCus.loc;
-                customer.position = updateCus.position;
-                customer.extDatas = updateCus.extDatas;
-                customer.regional = updateCus.regional;
-                customer.statusId = updateCus.statusId;
-                customer.statusName = updateCus.statusName;
+                Customer updateCus     = event.data;
+                customer.name          = updateCus.name;
+                customer.summary       = updateCus.summary;
+                customer.owner         = updateCus.owner;
+                customer.members       = updateCus.members;
+                customer.tags          = updateCus.tags;
+                customer.loc           = updateCus.loc;
+                customer.position      = updateCus.position;
+                customer.extDatas      = updateCus.extDatas;
+                customer.regional      = updateCus.regional;
+                customer.statusId      = updateCus.statusId;
+                customer.statusName    = updateCus.statusName;
+                customer.state         = updateCus.state;
+                customer.relationState = updateCus.relationState;
                 loadCustomer(false);
             } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {
                 if (!"note".equals(event.request + "")) return;
@@ -555,11 +563,12 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 Customer updateCus = event.data;
                 //更新label
                 customer.statusName = updateCus.statusName;
-                customer.statusId = updateCus.statusId;
-                customer.tags = updateCus.tags;
-                customer.contacts = updateCus.contacts;
-                ((CustomerChildFragment) adapter.getItem(1)).reloadWithCustomer(customer);//更新联系人
+                customer.statusId   = updateCus.statusId;
+                customer.tags       = updateCus.tags;
+                customer.contacts   = updateCus.contacts;
+                ((CustomerChildFragment)adapter.getItem(1)).reloadWithCustomer(customer);//更新联系人
                 loadCustomer(false);
+                refreshDropRemind();
 
             }
         }
@@ -672,7 +681,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                         .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
                             @Override
                             public void onNext(Contact contact) {
-
+                                refreshDropRemind();
                             }
                         });
                 loadCustomer(false);

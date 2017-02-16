@@ -621,20 +621,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                     @Override
                     public void onNext(final Customer customer) {
-                        //通过eventBus，把修改以后的数据发送出去，刷新详情，列表的数据
-//                        Customer updateCus  = new Customer();
-//                        updateCus.name      = mCustomer.name;
-//                        updateCus.summary   = mCustomer.summary;
-//                        updateCus.owner     = mCustomer.owner;
-//                        updateCus.members   = mCustomer.members;
-//                        updateCus.tags      = mCustomer.tags;
-//                        updateCus.loc       = adrDetailsData;
-//                        updateCus.position  = mCustomer.position;
-//                        updateCus.extDatas  = extDatas;
-//                        updateCus.regional  = mCustomer.regional;
-//                        updateCus.contacts  = mCustomer.contacts;
-//                        updateCus.statusId  = mCustomer.statusId;
-//                        updateCus.statusName  = mCustomer.statusName;
+                        //权限 要用最新的，这里只覆盖可能变化的属性，不用customer替代，主要是怕服务端没有完全返回数据
+                        mCustomer.state         = customer.state;
+                        mCustomer.relationState = customer.relationState;
                         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(mCustomer);
                         myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
                         myCustomerRushEvent.subCode   = MyCustomerRushEvent.EVENT_SUB_CODE_INFO;

@@ -130,7 +130,6 @@ public class DropCustomerDeadlineFragment extends DialogFragment {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow()
                 .getAttributes().windowAnimations = R.style.DialogAnimation;
-
     }
 
     public void onResume() {
