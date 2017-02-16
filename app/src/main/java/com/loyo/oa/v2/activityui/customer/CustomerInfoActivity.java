@@ -112,7 +112,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     private ArrayList<ExtraData> opextDatasModel = new ArrayList<>(); //非必填动态数据
     private ArrayList<ExtraData> reextDatasModel = new ArrayList<>(); //必填动态数据
 
-    private String beforeOwnerId="";//修改之前，负责人的id
+    private String beforeOwnerId = "";//修改之前，负责人的id
+
     @AfterViews
     void initUI() {
         ll_loading.setStatus(LoadingLayout.Loading);
@@ -206,7 +207,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onNext(Customer customer) {
                         mCustomer = customer;
-                        beforeOwnerId=mCustomer.owner.id;
+                        beforeOwnerId = mCustomer.owner.id;
                         getExtraData();
                     }
                 });
@@ -313,6 +314,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             if (!TextUtils.isEmpty(mCustomer.position.addr)) {
                 tv_address.setText(mCustomer.position.addr);
             }
+        } else {
+            mCustomer.position = new Locate();
         }
         if (null != mCustomer.creator && !TextUtils.isEmpty(mCustomer.creator.getName())) {
             tv_customer_creator.setText(mCustomer.creator.getName());
@@ -331,7 +334,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         } else {
             tv_customer_join_users.setText("无参与人");
         }
-        if (null!=mCustomer.regional) {
+        if (null != mCustomer.regional) {
             tv_district.setText(mCustomer.regional.province + " " + mCustomer.regional.city + " " + mCustomer.regional.county + " ");
 
         }
@@ -401,9 +404,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             findViewById(R.id.iv_district).setVisibility(View.GONE);
             findViewById(R.id.iv_labels).setVisibility(View.GONE);
             findViewById(R.id.iv_customer_status).setVisibility(View.GONE);
-            tv_labels.setPadding(tv_labels.getPaddingLeft(),tv_labels.getPaddingTop(), DensityUtil.dp2px(mContext,14),tv_labels.getPaddingBottom());
-            tv_customer_status.setPadding(tv_labels.getPaddingLeft(),tv_labels.getPaddingTop(), DensityUtil.dp2px(mContext,14),tv_labels.getPaddingBottom());
-            edt_customer_weburl.setPadding(tv_labels.getPaddingLeft(),tv_labels.getPaddingTop(), DensityUtil.dp2px(mContext,14),tv_labels.getPaddingBottom());
+            tv_labels.setPadding(tv_labels.getPaddingLeft(), tv_labels.getPaddingTop(), DensityUtil.dp2px(mContext, 14), tv_labels.getPaddingBottom());
+            tv_customer_status.setPadding(tv_labels.getPaddingLeft(), tv_labels.getPaddingTop(), DensityUtil.dp2px(mContext, 14), tv_labels.getPaddingBottom());
+            edt_customer_weburl.setPadding(tv_labels.getPaddingLeft(), tv_labels.getPaddingTop(), DensityUtil.dp2px(mContext, 14), tv_labels.getPaddingBottom());
 
         }
 
@@ -577,7 +580,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     private void updateCustomer() {
         final Locate adrDetailsData = new Locate();
         mCustomer.name = tv_customer_name.getText().toString().trim();
-        mCustomer.position.addr = tv_address.getText().toString().trim();
         mCustomer.summary = edt_customer_memo.getText().toString().trim();
         String addressDetails = edt_address_details.getText().toString().trim();
 
@@ -624,18 +626,18 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onNext(final Customer customer) {
                         //权限 要用最新的，这里只覆盖可能变化的属性，不用customer替代，主要是怕服务端没有完全返回数据，主要是更新前面的客户详情的数据
-                        mCustomer.state         = customer.state;
+                        mCustomer.state = customer.state;
                         mCustomer.relationState = customer.relationState;
                         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(mCustomer);
                         myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
-                        myCustomerRushEvent.subCode   = MyCustomerRushEvent.EVENT_SUB_CODE_INFO;
-                        myCustomerRushEvent.session   = mCustomer.getId();
+                        myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_INFO;
+                        myCustomerRushEvent.session = mCustomer.getId();
                         AppBus.getInstance().post(myCustomerRushEvent);
                         //如果修改了客户负责人,负责人不是自己，那就要从客户列表中删除
-                        if(!beforeOwnerId.equals(mCustomer.owner.id)){
+                        if (!beforeOwnerId.equals(mCustomer.owner.id)) {
                             MyCustomerRushEvent delListViewItemEvent = new MyCustomerRushEvent(mCustomer);
                             delListViewItemEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_DEL;
-                            delListViewItemEvent.session   = mCustomer.getId();
+                            delListViewItemEvent.session = mCustomer.getId();
                             AppBus.getInstance().post(delListViewItemEvent);
                         }
                         finish();
