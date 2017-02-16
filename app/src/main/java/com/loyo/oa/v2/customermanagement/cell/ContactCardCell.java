@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.application.MainApp;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -142,7 +143,8 @@ public class ContactCardCell extends RecyclerView.ViewHolder {
             if (i < contact.telGroup.size()) {
                 phoneContainers.get(i).setVisibility(View.VISIBLE);
                 phoneTexts.get(i).setText(contact.telGroup.get(i));
-                ((TextView)itemView.findViewById(R.id.tv_phone_name1)).setText("手机"+i);
+                ((TextView)itemView.findViewById(MainApp.getMainApp().getResources().getIdentifier("tv_phone_name"+(i+1),"id",MainApp.getMainApp().getPackageName()))).setText("手机"+(i+1));
+
             }
             else {
                 phoneContainers.get(i).setVisibility(i == 0?View.VISIBLE:View.GONE);
@@ -155,7 +157,8 @@ public class ContactCardCell extends RecyclerView.ViewHolder {
             if (i < contact.wiretelGroup.size()) {
                 telContainers.get(i).setVisibility(View.VISIBLE);
                 telTexts.get(i).setText(contact.wiretelGroup.get(i));
-                ((TextView)itemView.findViewById(R.id.tv_wiletel_name1)).setText("座机"+i);
+                ((TextView)itemView.findViewById(MainApp.getMainApp().getResources().getIdentifier("tv_wiletel_name"+(i+1),"id",MainApp.getMainApp().getPackageName()))).setText("座机"+(i+1));
+
             }
             else {
                 telContainers.get(i).setVisibility(i == 0?View.VISIBLE:View.GONE);

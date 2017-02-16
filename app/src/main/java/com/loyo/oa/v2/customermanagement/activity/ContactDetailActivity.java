@@ -274,7 +274,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
             if (i < contact.telGroup.size()) {
                 phoneContainers.get(i).setVisibility(View.VISIBLE);
                 phoneTexts.get(i).setText(contact.telGroup.get(i));
-                ((TextView)findViewById(R.id.tv_phone_name1)).setText("手机"+i);
+                ((TextView)findViewById(getResources().getIdentifier("tv_phone_name"+(i+1),"id",getPackageName()))).setText("手机"+(i+1));
             }
             else {
                 phoneContainers.get(i).setVisibility(i == 0?View.VISIBLE:View.GONE);
@@ -287,7 +287,8 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
             if (i < contact.wiretelGroup.size()) {
                 telContainers.get(i).setVisibility(View.VISIBLE);
                 telTexts.get(i).setText(contact.wiretelGroup.get(i));
-                ((TextView)findViewById(R.id.tv_wiletel_name1)).setText("座机"+i);
+                ((TextView)findViewById(getResources().getIdentifier("tv_wiletel_name"+(i+1),"id",getPackageName()))).setText("座机"+(i+1));
+
             }
             else {
                 telContainers.get(i).setVisibility(i == 0?View.VISIBLE:View.GONE);

@@ -137,6 +137,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         layout_customer_district.setOnTouchListener(Global.GetTouch());
         Global.SetTouchView(layout_customer_status);
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
+        img_title_right.setEnabled(false);//禁用，加载完成数据以后，才可以点击
         getCustomer();
     }
 
@@ -288,6 +289,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         boolean canChangeMember = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.PARTICIPATED_PERSON_CHANGE);
 
+        img_title_right.setEnabled(true);//数据加载完了，可以提交
         updateUiWithEditAuth(canEdit);
         updateUiWithResponserAuth(canChangeResponser);
         updateUiWithMemberAuth(canChangeMember);
