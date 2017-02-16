@@ -25,7 +25,6 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
-import com.loyo.oa.v2.activityui.customer.model.TagItem;
 import com.loyo.oa.v2.activityui.followup.FollowAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
@@ -61,7 +60,6 @@ import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -579,6 +577,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.contacts   = updateCus.contacts;
                 ((CustomerChildFragment)adapter.getItem(1)).reloadWithCustomer(customer);//更新联系人
                 loadCustomer(false);
+                refreshDropRemind();
 
             }
         }
@@ -691,7 +690,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                         .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
                             @Override
                             public void onNext(Contact contact) {
-
+                                refreshDropRemind();
                             }
                         });
                 loadCustomer(false);
