@@ -453,6 +453,12 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                         ll_loading.setStatus(LoadingLayout.Success);
                         CustomerDetailActivity.this.customer = customer;
                         CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
+                        //更新列表丢公海提醒数据
+                        MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(CustomerDetailActivity.this.customer);
+                        myCustomerRushEvent.eventCode           = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                        myCustomerRushEvent.subCode             = MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER;
+                        myCustomerRushEvent.session             = customer.getId();
+                        AppBus.getInstance().post(myCustomerRushEvent);
                     }
                 });
     }
@@ -461,18 +467,25 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         if (customer == null || TextUtils.isEmpty(customer.getId())) {
             return;
         }
-        showLoading2("");
-        CustomerService.getCustomerDropRemindById(customer.getId())
-                .subscribe(new DefaultLoyoSubscriber<DropRemind>(hud) {
-                    @Override
-                    public void onNext(DropRemind dropRemind) {
-                        CustomerDetailActivity.this.customer.activityRemind = dropRemind.activityRemind;
-                        CustomerDetailActivity.this.customer.orderRemind = dropRemind.orderRemind;
-                        CustomerDetailActivity.this.customer.activityRecycleRemind = dropRemind.activityRecycleRemind;
-                        CustomerDetailActivity.this.customer.orderRecycleRemind = dropRemind.orderRecycleRemind;
-                        CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
-                    }
-                });
+        ll_loading.setStatus(LoadingLayout.Success);
+        getData(customer.getId());
+//        CustomerService.getCustomerDropRemindById(customer.getId())
+//                .subscribe(new DefaultLoyoSubscriber<DropRemind>(hud) {
+//                    @Override
+//                    public void onNext(DropRemind dropRemind) {
+//                        CustomerDetailActivity.this.customer.activityRemind = dropRemind.activityRemind;
+//                        CustomerDetailActivity.this.customer.orderRemind = dropRemind.orderRemind;
+//                        CustomerDetailActivity.this.customer.activityRecycleRemind = dropRemind.activityRecycleRemind;
+//                        CustomerDetailActivity.this.customer.orderRecycleRemind = dropRemind.orderRecycleRemind;
+//                        //更新列表丢公海提醒数据
+//                        MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(CustomerDetailActivity.this.customer);
+//                        myCustomerRushEvent.eventCode           = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+//                        myCustomerRushEvent.subCode             = MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER;
+//                        myCustomerRushEvent.session             = customer.getId();
+//                        AppBus.getInstance().post(myCustomerRushEvent);
+//                        CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
+//                    }
+//                });
     }
 
     private void setupViewPager(ViewPager viewPager) {

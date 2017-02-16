@@ -405,7 +405,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                     mCustomer.extDatas = updateCus.extDatas;
                     mCustomer.regional = updateCus.regional;
                     adapter.notifyDataSetChanged();
-                } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode || MyCustomerRushEvent.EVENT_SUB_CODE_LTC == event.subCode) {//更新标签
+                } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode  ) {//更新标签
                     if (!"note".equals(event.request + "")) return;
                     Customer updateCus = event.data;
                     Customer mCustomer = mPagination.getRecords().get(clickPosition);
@@ -414,6 +414,13 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                 } else if (MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER == event.subCode) {//更新写跟进，拜访，添加订单以后的丢公海时间，数据来自详情页
                     mPagination.getRecords().remove(clickPosition);
                     mPagination.getRecords().add(clickPosition, event.data);
+                    adapter.notifyDataSetChanged();
+                }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LTC == event.subCode){
+                    if (!"note".equals(event.request + "")) return;
+                    Customer updateCus  = event.data;
+                    Customer mCustomer  = mPagination.getRecords().get(clickPosition);
+                    mCustomer.tags      = updateCus.tags;
+                    mCustomer.lastActAt = updateCus.lastActAt;
                     adapter.notifyDataSetChanged();
                 }
                 break;

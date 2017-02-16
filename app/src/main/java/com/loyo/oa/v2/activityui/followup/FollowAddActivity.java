@@ -530,11 +530,12 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                                 if (null != mCustomer && isCustom){
                                     //更新客户状态信息
                                     updateContact();
+                                    mCustomer.lastActAt                     = System.currentTimeMillis()/1000;//跟进时间
                                     MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(mCustomer);
-                                    myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
-                                    myCustomerRushEvent.subCode   = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
-                                    myCustomerRushEvent.session   =mCustomer.getId();
-                                    myCustomerRushEvent.request   ="note";
+                                    myCustomerRushEvent.eventCode           = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                                    myCustomerRushEvent.subCode             = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
+                                    myCustomerRushEvent.session             = mCustomer.getId();
+                                    myCustomerRushEvent.request             = "note";
                                     AppBus.getInstance().post(myCustomerRushEvent);
                                 }
                                 //更新跟进
