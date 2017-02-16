@@ -269,15 +269,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     @OnClick(R.id.customer_state)
     void editState() {
         Intent mIntent = new Intent(this, CustomerStatusSingleSelectActivity.class);
-//        mIntent.putExtra("canEdit", canEdit);
-//        mIntent.putExtra("fromPage", 0);
-//        if (null != customer.statusId) {
-//            TagItem item = new TagItem();
-//            item.setName(customer.statusName);
-//            item.setId(customer.statusId);
-//            mIntent.putExtra("state", item);
-//        }
-//        mIntent.putExtra("customerId", customer.getId());
         mIntent.putExtra(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, customer.statusId);
         startActivityForResult(mIntent, EXTRA_CUSTOMER_EDIT_STATUS);
         UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);

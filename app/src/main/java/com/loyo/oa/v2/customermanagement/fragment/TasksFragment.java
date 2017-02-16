@@ -48,7 +48,7 @@ public class TasksFragment extends CustomerChildFragment implements PullToRefres
     View view;
     @BindView(R.id.layout_add) ViewGroup layout_add;
     @BindView(R.id.ll_loading) LoadingLayout ll_loading;
-    @BindView(R.id.listView_tasks) PullToRefreshExpandableListView lv;
+    PullToRefreshExpandableListView lv;
     Customer mCustomer;
     boolean canAdd;
 
@@ -64,6 +64,7 @@ public class TasksFragment extends CustomerChildFragment implements PullToRefres
     }
 
     void initViews() {
+        lv = (PullToRefreshExpandableListView)view.findViewWithTag("listView_tasks");
         ll_loading.setStatus(LoadingLayout.Loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override

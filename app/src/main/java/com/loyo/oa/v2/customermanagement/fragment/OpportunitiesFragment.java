@@ -125,7 +125,7 @@ public class OpportunitiesFragment extends CustomerChildFragment
         layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
         layout_add.setOnClickListener(this);
         layout_add.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
-        listView_demands = (PullToRefreshListView) view.findViewById(R.id.listView_demands);
+        listView_demands = (PullToRefreshListView) view.findViewWithTag("listView_opportunity");
     }
 
     @Override

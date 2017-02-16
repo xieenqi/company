@@ -129,7 +129,7 @@ public class WorkFlowsFragment extends CustomerChildFragment
         layout_add.setOnClickListener(this);
         layout_add.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
 
-        mExpandableListView = (PullToRefreshExpandableListView)view.findViewById(R.id.expandableListView);
+        mExpandableListView = (PullToRefreshExpandableListView)view.findViewWithTag("expandableListView");
         mExpandableListView.setOnRefreshListener(this);
         setupExpandableListView(
                 new ExpandableListView.OnGroupClickListener() {

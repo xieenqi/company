@@ -179,7 +179,7 @@ public class VisitsFragment extends CustomerChildFragment
         audioPlayer = new AudioPlayerView(getActivity());
         //audioPlayer.onInit();
         layout_add = (ViewGroup) view.findViewById(R.id.layout_add);
-        listView = (PullToRefreshListView) view.findViewById(R.id.listView_legworks);
+        listView = (PullToRefreshListView) view.findViewWithTag("listView_visit");
 
         layout_bottom_voice = (LinearLayout) view.findViewById(R.id.layout_bottom_voice);
         layout_bottom_menu = (LinearLayout) view.findViewById(R.id.layout_bottom_menu);
