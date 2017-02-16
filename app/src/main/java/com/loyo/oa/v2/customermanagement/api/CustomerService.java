@@ -23,6 +23,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.customermanagement.model.CustomerWrapper;
+import com.loyo.oa.v2.customermanagement.model.DropRemind;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
 import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.tool.Config_project;
@@ -203,6 +204,15 @@ public class CustomerService {
                         .create(ICustomer.class)
                         .getCustomerById(id)
                         .compose(RetrofitAdapterFactory.<Customer>applySchedulers());
+    }
+
+    public static Observable<DropRemind> getCustomerDropRemindById(String id) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(ICustomer.class)
+                        .getCustomerDropRemind(id)
+                        .compose(RetrofitAdapterFactory.<DropRemind>applySchedulers());
     }
 
     public static Observable<MembersRoot> getMembersRoot() {

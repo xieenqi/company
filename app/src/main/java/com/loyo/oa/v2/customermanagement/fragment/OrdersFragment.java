@@ -189,6 +189,7 @@ public class OrdersFragment extends CustomerChildFragment
         isPullDown = true;
         page = 1;
         getData();
+        notifyDropRemindRefresh();
     }
 
     /**

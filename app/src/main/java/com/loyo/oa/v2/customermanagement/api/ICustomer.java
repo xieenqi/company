@@ -23,6 +23,7 @@ import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.customermanagement.model.CustomerWrapper;
+import com.loyo.oa.v2.customermanagement.model.DropRemind;
 import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.ArrayList;
@@ -99,6 +100,9 @@ public interface ICustomer {
      */
     @GET("/customer/new/{id}")
     Observable<BaseResponse<Customer>> getCustomerById(@Path("id") String id);
+
+    @GET("/customer/{id}/recycle_remind")
+    Observable<BaseResponse<DropRemind>> getCustomerDropRemind(@Path("id") String id);
 
     @GET("/properties/")
     Observable<ArrayList<CustomerExtraData>> getDynamic(@QueryMap HashMap<String, Object> map);

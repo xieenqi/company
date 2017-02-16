@@ -47,6 +47,7 @@ import com.loyo.oa.v2.customermanagement.fragment.TasksFragment;
 import com.loyo.oa.v2.customermanagement.fragment.VisitsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.WorkFlowsFragment;
 import com.loyo.oa.v2.customermanagement.model.DropDeadlineModel;
+import com.loyo.oa.v2.customermanagement.model.DropRemind;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -347,7 +348,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.state,
                 CustomerAction.EDIT);
 
-
         boolean canDelete = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
                 customer.state, CustomerAction.DELETE);
         boolean canDump = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
@@ -440,6 +440,24 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                     public void onNext(Customer customer) {
                         ll_loading.setStatus(LoadingLayout.Success);
                         CustomerDetailActivity.this.customer = customer;
+                        CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
+                    }
+                });
+    }
+
+    public void refreshDropRemind() {
+        if (customer == null || TextUtils.isEmpty(customer.getId())) {
+            return;
+        }
+        showLoading2("");
+        CustomerService.getCustomerDropRemindById(customer.getId())
+                .subscribe(new DefaultLoyoSubscriber<DropRemind>(hud) {
+                    @Override
+                    public void onNext(DropRemind dropRemind) {
+                        CustomerDetailActivity.this.customer.activityRemind = dropRemind.activityRemind;
+                        CustomerDetailActivity.this.customer.orderRemind = dropRemind.orderRemind;
+                        CustomerDetailActivity.this.customer.activityRecycleRemind = dropRemind.activityRecycleRemind;
+                        CustomerDetailActivity.this.customer.orderRecycleRemind = dropRemind.orderRecycleRemind;
                         CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
                     }
                 });
@@ -644,5 +662,10 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         if (tab != null) {
             tab.setText(fragment.getTitle());
         }
+    }
+
+    @Override
+    public void onDropRemindRefresh(CustomerChildFragment fragment) {
+        refreshDropRemind();
     }
 }
