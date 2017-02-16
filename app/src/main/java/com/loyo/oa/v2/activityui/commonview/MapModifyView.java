@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
@@ -37,6 +38,7 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -197,7 +199,7 @@ public class MapModifyView extends BaseActivity
 
             //来自客户详情
             case CUSTOMER_DETAILS_PAGE:
-                if (null != locCustomer && locCustomer.length != 0) {
+                if (null != locCustomer && locCustomer.length != 0 && locCustomer[0] != 0.0 && locCustomer[1] != 0.0) {
                     setHeaderItem(locCustomer[1], locCustomer[0], defaultAddress, defaultAddress);
                     locationMapCenter(locCustomer[1], locCustomer[0]);
                     doSearchQuery(defaultAddress, locCustomer[1], locCustomer[0]);

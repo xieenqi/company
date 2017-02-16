@@ -731,7 +731,10 @@ public class Utils {
      * @param toLng
      */
     public static void goWhere(final Context context, final double toLat, final double toLng, final String addres) {
-
+        if (TextUtils.isEmpty(addres) || toLat == 0 || toLng == 0) {
+            Global.Toast("无效地址,无法规划路径");
+            return;
+        }
         new LocationUtilGD(context, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
