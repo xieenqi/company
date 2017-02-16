@@ -41,6 +41,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.contact.ContactsRoleSingleSelectActivity;
 import com.loyo.oa.v2.activityui.contact.model.ContactsRoleModel;
 import com.loyo.oa.v2.activityui.customer.FollowContactSingleSelectActivity;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
@@ -750,6 +751,14 @@ public class SignInActivity extends BaseActivity
             @Override
             public void run() {
                 if (!TextUtils.isEmpty(legWork.getId())) {
+                    //更新客户状态信息
+                    MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(mCustomer);
+                    myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                    myCustomerRushEvent.subCode   = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
+                    myCustomerRushEvent.session   =mCustomer.getId();
+                    myCustomerRushEvent.request   ="note";
+                    AppBus.getInstance().post(myCustomerRushEvent);
+                    //更新签到
                     AppBus.getInstance().post(new SigninRushEvent());
                     onBackPressed();
                 }

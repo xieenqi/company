@@ -497,6 +497,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             map.put("contactRoleId", contactRoleId);
             map.put("statusId", mCustomer.statusId);
             map.put("tags", mCustomer.tags);
+
         }
         img_title_right.setEnabled(false);
         LogUtil.dee("新建跟进:" + MainApp.gson.toJson(map));
@@ -514,6 +515,17 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                if (null != mCustomer && isCustom){
+                                    //更新客户状态信息
+                                    updateContact();
+                                    MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(mCustomer);
+                                    myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                                    myCustomerRushEvent.subCode   = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
+                                    myCustomerRushEvent.session   =mCustomer.getId();
+                                    myCustomerRushEvent.request   ="note";
+                                    AppBus.getInstance().post(myCustomerRushEvent);
+                                }
+                                //更新跟进
                                 AppBus.getInstance().post(new FollowUpRushEvent());
                                 app.finishActivity(FollowAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                             }
@@ -523,6 +535,19 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         subscriptions.add(addInfo);
     }
 
+
+    /**
+     * 更新对应的联系人的角色，为了回带数据，保证数据一致性
+     */
+    private void updateContact(){
+        if(null==mCustomer)return;
+        for (Contact c :mCustomer.contacts) {
+            if(c.getId().equals(contactId)){
+                c.setContactRoleId(contactRoleId);
+                c.setContactRoleName(contactRoleName);
+            }
+        }
+    }
     /**
      * 上传附件信息
      */

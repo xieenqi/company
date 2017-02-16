@@ -665,6 +665,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mCustomer.regional= updateCus.regional;
                 initData();
             }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
+                if(!"note".equals(event.request+""))return;
                 //更新label
                 mCustomer.tags=event.data.tags;
                 tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
