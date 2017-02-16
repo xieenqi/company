@@ -45,6 +45,7 @@
                         android:hint="客户名称(必填)"
                         android:maxLength="50"
                         android:paddingLeft="@dimen/margin_other_view"
+                        android:focusable="true"
                         android:paddingRight="@dimen/margin_other_view"
                         android:textColor="@color/text33"
                         android:textColorHint="@color/text99"

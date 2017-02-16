@@ -467,7 +467,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         if (customer == null || TextUtils.isEmpty(customer.getId())) {
             return;
         }
-        ll_loading.setStatus(LoadingLayout.Success);
+        ll_loading.setStatus(LoadingLayout.Loading);
         getData(customer.getId());
 //        CustomerService.getCustomerDropRemindById(customer.getId())
 //                .subscribe(new DefaultLoyoSubscriber<DropRemind>(hud) {
