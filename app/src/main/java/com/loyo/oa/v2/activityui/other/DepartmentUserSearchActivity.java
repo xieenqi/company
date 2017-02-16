@@ -91,7 +91,7 @@ public class DepartmentUserSearchActivity extends BaseActivity {
                 DBUser user = resultData.get((int) id);
                 if (type == 1) {
                     Bundle b = new Bundle();
-                    b.putSerializable("userId", user.id!=null?user.id:"");
+                    b.putSerializable("userId", user.id != null ? user.id : "");
                     MainApp.getMainApp().startActivity(DepartmentUserSearchActivity.this, ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 } else {
                     Intent intent = new Intent();
@@ -155,18 +155,16 @@ public class DepartmentUserSearchActivity extends BaseActivity {
             } else if (u.simplePinyin != null && u.simplePinyin.startsWith(key)) {
                 resultData.add(u);
                 continue;
-            }
-            else if (u.shortDeptNames != null && u.shortDeptNames.contains(key)) {
+            } else if (u.shortDeptNames != null && u.shortDeptNames.contains(key)) {
                 resultData.add(u);
                 continue;
             }
         }
 
-        if (resultData.size() > 0) {
-            adapter.notifyDataSetChanged();
-        } else {
+        if (resultData.size() <= 0) {
             Global.Toast("未搜索到此联系人!");
         }
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -220,7 +218,7 @@ public class DepartmentUserSearchActivity extends BaseActivity {
 //            }
 //
 //            tv_position.setText(deptName + " | " + workName);
-            tv_position.setText(user.shortDeptNames!=null?user.shortDeptNames:"");
+            tv_position.setText(user.shortDeptNames != null ? user.shortDeptNames : "");
             catalog.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(user.avatar)) {
                 ImageLoader.getInstance().displayImage(user.avatar, img);

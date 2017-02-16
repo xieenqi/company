@@ -267,7 +267,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT,
                 FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO, bundle);
     }
-    @OnClick(R.id.customer_state) void editState() {
+
+    @OnClick(R.id.customer_state)
+    void editState() {
         Intent mIntent = new Intent(this, CustomerStatusSingleSelectActivity.class);
 //        mIntent.putExtra("canEdit", canEdit);
 //        mIntent.putExtra("fromPage", 0);
@@ -279,7 +281,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 //        }
 //        mIntent.putExtra("customerId", customer.getId());
         mIntent.putExtra(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, customer.statusId);
-        startActivityForResult(mIntent,EXTRA_CUSTOMER_EDIT_STATUS);
+        startActivityForResult(mIntent, EXTRA_CUSTOMER_EDIT_STATUS);
         UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
     }
 
@@ -318,10 +320,10 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         warnView.setOnTouchListener(Global.GetTouch());
         tv_title_1.setText("客户详情");
         ll_loading.setStatus(LoadingLayout.Loading);
-        ll_loading.setOnReloadListener(new com.library.module.widget.loading.LoadingLayout.OnReloadListener() {
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
             public void onReload(View v) {
-                ll_loading.setStatus(com.library.module.widget.loading.LoadingLayout.Loading);
+                ll_loading.setStatus(LoadingLayout.Loading);
                 getData(customerId);
             }
         });
@@ -522,7 +524,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     }
 
 
-
     @Subscribe
     public void onMyCustomerPushEvent(MyCustomerRushEvent event) {
         if (!customer.getId().equals(event.session)) {
@@ -531,33 +532,33 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         }
         if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode) {
             //更新客户信息
-            if(MyCustomerRushEvent.EVENT_SUB_CODE_INFO==event.subCode){
-                Customer updateCus  = event.data;
-                customer.name       = updateCus.name;
-                customer.summary    = updateCus.summary;
-                customer.owner      = updateCus.owner;
-                customer.members    = updateCus.members;
-                customer.tags       = updateCus.tags;
-                customer.loc        = updateCus.loc;
-                customer.position   = updateCus.position;
-                customer.extDatas   = updateCus.extDatas;
-                customer.regional   = updateCus.regional;
-                customer.statusId   = updateCus.statusId;
+            if (MyCustomerRushEvent.EVENT_SUB_CODE_INFO == event.subCode) {
+                Customer updateCus = event.data;
+                customer.name = updateCus.name;
+                customer.summary = updateCus.summary;
+                customer.owner = updateCus.owner;
+                customer.members = updateCus.members;
+                customer.tags = updateCus.tags;
+                customer.loc = updateCus.loc;
+                customer.position = updateCus.position;
+                customer.extDatas = updateCus.extDatas;
+                customer.regional = updateCus.regional;
+                customer.statusId = updateCus.statusId;
                 customer.statusName = updateCus.statusName;
                 loadCustomer(false);
-            }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
-                if(!"note".equals(event.request+""))return;
+            } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {
+                if (!"note".equals(event.request + "")) return;
                 //更新label 
                 customer.tags = event.data.tags;
                 loadCustomer(false);
-            }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LTC == event.subCode){
-                Customer updateCus=event.data;
+            } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LTC == event.subCode) {
+                Customer updateCus = event.data;
                 //更新label
                 customer.statusName = updateCus.statusName;
-                customer.statusId   = updateCus.statusId;
-                customer.tags       = updateCus.tags;
-                customer.contacts   = updateCus.contacts;
-                ((CustomerChildFragment)adapter.getItem(1)).reloadWithCustomer(customer);//更新联系人
+                customer.statusId = updateCus.statusId;
+                customer.tags = updateCus.tags;
+                customer.contacts = updateCus.contacts;
+                ((CustomerChildFragment) adapter.getItem(1)).reloadWithCustomer(customer);//更新联系人
                 loadCustomer(false);
 
             }
@@ -650,12 +651,11 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(RESULT_OK!=resultCode)return;
-        switch (requestCode){
+        if (RESULT_OK != resultCode) return;
+        switch (requestCode) {
             case ExtraAndResult.REQUSET_COPY_PERSONS:
                 onBackPressed();
                 break;
@@ -663,9 +663,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
             case EXTRA_CUSTOMER_EDIT_STATUS:
                 //TODO 这里有没有直接修改客户状态的接口呀，这样写，太难受了。
 
-                CustomerStatusModel.CustomerStatusItemModel customerStatusItemModel= (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
-                customer.statusId=customerStatusItemModel.id;
-                customer.statusName=customerStatusItemModel.name;
+                CustomerStatusModel.CustomerStatusItemModel customerStatusItemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
+                customer.statusId = customerStatusItemModel.id;
+                customer.statusName = customerStatusItemModel.name;
                 String tid = data.getStringExtra("tid");
                 showLoading2("");
                 CustomerService.setCusLabel(customer.id, convertNewTags(tid))
