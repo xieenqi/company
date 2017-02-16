@@ -13,6 +13,7 @@ public class CustomerChildFragment extends BaseFragment {
 
     public interface OnTotalCountChangeListener {
         void onTotalCountChange(CustomerChildFragment fragment, int index);
+        void onDropRemindRefresh(CustomerChildFragment fragment);
     }
     public int index;
     WeakReference<OnTotalCountChangeListener> listenerRef;
@@ -43,6 +44,12 @@ public class CustomerChildFragment extends BaseFragment {
     void notifyTotalCountChange() {
         if (listenerRef != null && listenerRef.get() != null) {
             listenerRef.get().onTotalCountChange(this, index);
+        }
+    }
+
+    void notifyDropRemindRefresh() {
+        if (listenerRef != null && listenerRef.get() != null) {
+            listenerRef.get().onDropRemindRefresh(this);
         }
     }
 }
