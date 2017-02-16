@@ -10,12 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.sale.SaleStageActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.model.BaseResponse;
@@ -84,6 +86,9 @@ public class LoseCommonCustomerReasonActivity extends BaseActivity implements Vi
                         .subscribe(new DefaultLoyoSubscriber<BaseResponse<Object>>(hud) {
                             @Override
                             public void onNext(BaseResponse<Object> customer) {
+                                MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent();
+                                myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_DEL;//投入公海，就是从前面的列表删除
+                                AppBus.getInstance().post(myCustomerRushEvent);
                                 setResult(RESULT_OK);
                                 onBackPressed();
                             }

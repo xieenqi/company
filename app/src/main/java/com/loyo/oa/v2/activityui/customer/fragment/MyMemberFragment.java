@@ -61,26 +61,27 @@ public class MyMemberFragment extends BaseCustomerFragment {
 
     }
 
-    /**
-     * 新建回调，直接把新添加的那一条，放在列表最前面
-     */
-    @Subscribe
-    public void onMyCustomerListRushEvent(MyCustomerRushEvent event) {
-        if (MyCustomerRushEvent.EVENT_CODE_ADD == event.eventCode) {
-            mPagination.getRecords().add(0, event.data);
-            adapter.notifyDataSetChanged();
-        }
-//        memberCallback.comeBackHeadPage();
-    }
-
-    /**
-     * 编辑回调 刷新列表
-     */
-    @Subscribe
-    public void onEditCustomerRushEvent(EditCustomerRushEvent event) {
-//TODO 暂时不刷新数据，后面考虑，直接通过Event直接把编辑以后的数据push过来。
+//    /**
+//     * 新建回调，直接把新添加的那一条，放在列表最前面
+//     */
+//    @Subscribe
+//    public void onMyCustomerListRushEvent(MyCustomerRushEvent event) {
+//        if (MyCustomerRushEvent.EVENT_CODE_ADD == event.eventCode) {
+//            mPagination.getRecords().add(0, event.data);
+//            adapter.notifyDataSetChanged();
+//        } else if (MyCustomerRushEvent.EVENT_CODE_DEL == event.eventCode) {
+//
+//        }
+//    }
+//
+//    /**
+//     * 编辑回调 刷新列表
+//     */
+//    @Subscribe
+//    public void onEditCustomerRushEvent(EditCustomerRushEvent event) {
+////TODO 暂时不刷新数据，后面考虑，直接通过Event直接把编辑以后的数据push过来。
 //        getData();
-    }
+//    }
 
 
 }
