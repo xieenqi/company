@@ -122,8 +122,8 @@ public class CustomerInfoExtraData extends LinearLayout {
                 AlertDialog dialog_follow = initDialog_Wheel_one(tv_content, customerExtra);
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_list(dialog_follow, i));
-                tv_content.setFocusable(false);
-                tv_content.setFocusableInTouchMode(false);
+//                tv_content.setFocusable(false);
+//                tv_content.setFocusableInTouchMode(false);
 //                tv_content.setOnFocusChangeListener(null);
                 tv_content.setOnClickListener(new OnClickListener() {
                     @Override
@@ -140,8 +140,8 @@ public class CustomerInfoExtraData extends LinearLayout {
                 LogUtil.dll("long enable:" + properties.isEnabled());
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra));
-                tv_content.setFocusable(false);
-                tv_content.setFocusableInTouchMode(false);
+//                tv_content.setFocusable(false);
+//                tv_content.setFocusableInTouchMode(false);
 //                tv_content.setOnFocusChangeListener(null);
                 tv_content.setOnClickListener(new OnClickListener() {
                     @Override
@@ -157,11 +157,11 @@ public class CustomerInfoExtraData extends LinearLayout {
                 LogUtil.dll("string");
                 LogUtil.dll("string enable:" + properties.isEnabled());
                 ivArrow.setVisibility(View.INVISIBLE);
-                tv_content.setFocusableInTouchMode(true);
-                tv_content.setFocusable(true);
+//                tv_content.setFocusableInTouchMode(true);
+//                tv_content.setFocusable(true);
 //                tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
-                tv_content.requestFocus();
+//                tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
                 if (properties.isRequired()) {
                     tv_content.setHint("必填");
@@ -170,11 +170,11 @@ public class CustomerInfoExtraData extends LinearLayout {
                 LogUtil.dll("int");
                 LogUtil.dll("int enable:" + properties.isEnabled());
                 ivArrow.setVisibility(View.INVISIBLE);
-                tv_content.setFocusableInTouchMode(true);
-                tv_content.setFocusable(true);
+//                tv_content.setFocusableInTouchMode(true);
+//                tv_content.setFocusable(true);
 //                tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
-                tv_content.requestFocus();
+//                tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER);
                 if (properties.isRequired()) {
                     tv_content.setHint("必填");
@@ -183,11 +183,11 @@ public class CustomerInfoExtraData extends LinearLayout {
                 LogUtil.dll("double");
                 LogUtil.dll("double enable:" + properties.isEnabled());
                 ivArrow.setVisibility(View.INVISIBLE);
-                tv_content.setFocusableInTouchMode(true);
-                tv_content.setFocusable(true);
+//                tv_content.setFocusableInTouchMode(true);
+//                tv_content.setFocusable(true);
 //                tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
-                tv_content.requestFocus();
+//                tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 if (properties.isRequired()) {
                     tv_content.setHint("必填");
