@@ -112,6 +112,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     private ArrayList<ExtraData> opextDatasModel = new ArrayList<>(); //非必填动态数据
     private ArrayList<ExtraData> reextDatasModel = new ArrayList<>(); //必填动态数据
 
+    private String beforeOwnerId="";//修改之前，负责人的id
     @AfterViews
     void initUI() {
         ll_loading.setStatus(LoadingLayout.Loading);
@@ -205,6 +206,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void onNext(Customer customer) {
                         mCustomer = customer;
+                        beforeOwnerId=mCustomer.owner.id;
                         getExtraData();
                     }
                 });
@@ -621,7 +623,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 .subscribe(new DefaultLoyoSubscriber<Customer>(hud) {
                     @Override
                     public void onNext(final Customer customer) {
-                        //权限 要用最新的，这里只覆盖可能变化的属性，不用customer替代，主要是怕服务端没有完全返回数据
+                        //权限 要用最新的，这里只覆盖可能变化的属性，不用customer替代，主要是怕服务端没有完全返回数据，主要是更新前面的客户详情的数据
                         mCustomer.state         = customer.state;
                         mCustomer.relationState = customer.relationState;
                         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(mCustomer);
@@ -629,6 +631,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         myCustomerRushEvent.subCode   = MyCustomerRushEvent.EVENT_SUB_CODE_INFO;
                         myCustomerRushEvent.session   = mCustomer.getId();
                         AppBus.getInstance().post(myCustomerRushEvent);
+                        //如果修改了客户负责人,负责人不是自己，那就要从客户列表中删除
+                        if(!beforeOwnerId.equals(mCustomer.owner.id)){
+                            MyCustomerRushEvent delListViewItemEvent = new MyCustomerRushEvent(mCustomer);
+                            delListViewItemEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_DEL;
+                            delListViewItemEvent.session   = mCustomer.getId();
+                            AppBus.getInstance().post(delListViewItemEvent);
+                        }
                         finish();
                     }
                 });
