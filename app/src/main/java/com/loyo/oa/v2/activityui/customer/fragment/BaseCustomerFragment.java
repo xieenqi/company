@@ -87,7 +87,6 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
         super.onResume();
         //这里必须要清除，不然，可能会造成处理不该处理的通知。
         clickPosition = -1;
-
     }
 
     @SuppressLint("InflateParams")

@@ -96,8 +96,30 @@ public class CommCustomerFragment extends BaseCustomerFragment {
      */
     @Subscribe
     public void onMyCustomerListRushEvent(MyCustomerRushEvent event) {
-        mPagination.setFirstPage();
-        getData();
+        switch (event.eventCode) {
+            case MyCustomerRushEvent.EVENT_CODE_ADD:
+                mPagination.getRecords().add(0, event.data);
+                adapter.notifyDataSetChanged();
+                //数据有变动，重新判断
+                if (mPagination.isEnpty()) {
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                } else {
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
+                break;
+            case MyCustomerRushEvent.EVENT_CODE_DEL:
+                if (clickPosition < 0) return;//说明没有点击的条目
+                mPagination.getRecords().remove(clickPosition);
+                adapter.notifyDataSetChanged();
+                //数据有变动，重新判断
+                if (mPagination.isEnpty()) {
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                } else {
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
+                break;
+
+        }
     }
 
 }

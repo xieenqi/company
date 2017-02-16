@@ -490,8 +490,15 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      * 获取联系人的动态字段
      */
     private void getContactsFields() {
+        showLoading2("");
         CustomerService.getContactsField()
-                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>() {
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast("服务器或者网络异常");
+                        finish();
+                    }
+
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         mContactLeftExtras = contactLeftExtrasArrayList;
