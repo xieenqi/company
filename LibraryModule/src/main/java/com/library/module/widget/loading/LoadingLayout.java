@@ -89,7 +89,7 @@ public class LoadingLayout extends FrameLayout {
     /**
      * 用来在java代码中实例化的时候，调用做初始化工作
      */
-    public void init(){
+    public void init() {
         onFinishInflate();
     }
 

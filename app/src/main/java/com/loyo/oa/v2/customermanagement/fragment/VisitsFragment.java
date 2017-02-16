@@ -269,6 +269,7 @@ public class VisitsFragment extends CustomerChildFragment
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         onPullDownToRefresh(listView);
+        notifyDropRemindRefresh();
     }
 
     /**

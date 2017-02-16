@@ -189,7 +189,7 @@ public class Customer extends BaseBeans {
     }
 
     public SpannableStringBuilder getFormattedDropRemind() {
-        if (activityRecycleAt <= 0 && orderRecycleAt <= 0) {
+        if (!hasDropRemind()) {
             SpannableStringBuilder builder = new SpannableStringBuilder("");
             return builder;
         }
@@ -197,11 +197,11 @@ public class Customer extends BaseBeans {
         StringBuilder sb = new StringBuilder();
         boolean hasActivityRemind = false;
         boolean hasOrderRemind = false;
-        if (activityRecycleAt > 0 && !TextUtils.isEmpty(activityRecycleRemind)) {
+        if (!TextUtils.isEmpty(activityRecycleRemind)) {
             sb.append(activityRecycleRemind);
             hasActivityRemind = true;
         }
-        if (orderRecycleAt > 0 && !TextUtils.isEmpty(orderRecycleRemind)) {
+        if (!TextUtils.isEmpty(orderRecycleRemind)) {
             if (hasActivityRemind) {
                 sb.append(" 或 ");
             }
@@ -235,7 +235,7 @@ public class Customer extends BaseBeans {
     }
 
     public boolean hasDropRemind() {
-        return activityRecycleAt > 0 || orderRecycleAt > 0;
+        return !TextUtils.isEmpty(activityRecycleRemind) || !TextUtils.isEmpty(orderRecycleRemind) ;
     }
 
     /**

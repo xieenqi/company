@@ -49,6 +49,7 @@ import com.loyo.oa.v2.customermanagement.fragment.TasksFragment;
 import com.loyo.oa.v2.customermanagement.fragment.VisitsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.WorkFlowsFragment;
 import com.loyo.oa.v2.customermanagement.model.DropDeadlineModel;
+import com.loyo.oa.v2.customermanagement.model.DropRemind;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -336,13 +337,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         this.getData(customerId);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LoadingLayout.getConfig().setNoNetworkImage(R.drawable.define_nonetwork).
-                setAllTipTextSize(16).setReloadButtonTextSize(16);
-    }
-
     void loadIntentData() {
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
@@ -357,7 +351,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.relationState,
                 customer.state,
                 CustomerAction.EDIT);
-
 
         boolean canDelete = PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
                 customer.state, CustomerAction.DELETE);
@@ -425,11 +418,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                         } else {
                             tabMask.setVisibility(View.VISIBLE);
                         }
-                        if (tabLayout.getScrollX() == 0) {
-                            tabMaskLeft.setVisibility(View.GONE);
-                        } else {
-                            tabMaskLeft.setVisibility(View.VISIBLE);
-                        }
                     }
                 }
             });
@@ -455,9 +443,25 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                     @Override
                     public void onNext(Customer customer) {
                         ll_loading.setStatus(LoadingLayout.Success);
-                        LoadingLayout.getConfig().setNoNetworkImage(R.drawable.define_nonetwork2).
-                                setAllTipTextSize(14).setReloadButtonTextSize(14);
                         CustomerDetailActivity.this.customer = customer;
+                        CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
+                    }
+                });
+    }
+
+    public void refreshDropRemind() {
+        if (customer == null || TextUtils.isEmpty(customer.getId())) {
+            return;
+        }
+        showLoading2("");
+        CustomerService.getCustomerDropRemindById(customer.getId())
+                .subscribe(new DefaultLoyoSubscriber<DropRemind>(hud) {
+                    @Override
+                    public void onNext(DropRemind dropRemind) {
+                        CustomerDetailActivity.this.customer.activityRemind = dropRemind.activityRemind;
+                        CustomerDetailActivity.this.customer.orderRemind = dropRemind.orderRemind;
+                        CustomerDetailActivity.this.customer.activityRecycleRemind = dropRemind.activityRecycleRemind;
+                        CustomerDetailActivity.this.customer.orderRecycleRemind = dropRemind.orderRecycleRemind;
                         CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
                     }
                 });
@@ -645,16 +649,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         }
     }
 
-    /**
-     * CustomerChildFragment.OnTotalCountChangeListener
-     */
-    @Override
-    public void onTotalCountChange(CustomerChildFragment fragment, int index) {
-        TabLayout.Tab tab = tabLayout.getTabAt(index);
-        if (tab != null) {
-            tab.setText(fragment.getTitle());
-        }
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -704,5 +699,21 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         tag.settId(tid);
         tags.add(tag);
         return tags;
+    }
+
+    /**
+     * CustomerChildFragment.OnTotalCountChangeListener
+     */
+    @Override
+    public void onTotalCountChange(CustomerChildFragment fragment, int index) {
+        TabLayout.Tab tab = tabLayout.getTabAt(index);
+        if (tab != null) {
+            tab.setText(fragment.getTitle());
+        }
+    }
+
+    @Override
+    public void onDropRemindRefresh(CustomerChildFragment fragment) {
+        refreshDropRemind();
     }
 }

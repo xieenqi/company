@@ -310,6 +310,7 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         onPullDownToRefresh(listView);
+        notifyDropRemindRefresh();
     }
 
     /**
