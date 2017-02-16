@@ -51,6 +51,4 @@ public class HttpJpushNotification implements Serializable {
     /*线索修改负责人*/
     public static final int JPUSH_EDIT_CULE_RESPONSE = 29;
 
-
 }
-//{"operationType":"discuss","buzzId":"56a1c8a6526f152ed6000001","buzzType":1,"uuid":"e891057a-4b88-4b11-87dd-cfa99ed1a0f1"}
