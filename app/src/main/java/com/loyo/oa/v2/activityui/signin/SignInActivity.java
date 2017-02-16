@@ -44,6 +44,7 @@ import com.loyo.oa.v2.activityui.customer.FollowContactSingleSelectActivity;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninCustomerRushEvent;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
@@ -92,7 +93,7 @@ public class SignInActivity extends BaseActivity
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at, ll_contact_holder, ll_contact_name, ll_contact_role;
     private ViewGroup layout_customer_name;
-    private ImageView iv_at_delete,iv_customer_name;
+    private ImageView iv_at_delete, iv_customer_name;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private double laPosition, loPosition;
@@ -187,7 +188,7 @@ public class SignInActivity extends BaseActivity
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
-        iv_customer_name= (ImageView) findViewById(R.id.iv_customer_name);
+        iv_customer_name = (ImageView) findViewById(R.id.iv_customer_name);
         iv_at_delete.setOnClickListener(click);
         initMultiFunctionModule();
         controller = new UploadController(this, 9);
@@ -201,7 +202,7 @@ public class SignInActivity extends BaseActivity
             //选择了客户，直接加载数据
             getData(mCustomer.getId());
             iv_customer_name.setVisibility(View.GONE);
-            tv_customer_name.setPadding(tv_customer_name.getPaddingLeft(),tv_customer_name.getPaddingTop(), DensityUtil.dp2px(this,23),tv_customer_name.getPaddingBottom());
+            tv_customer_name.setPadding(tv_customer_name.getPaddingLeft(), tv_customer_name.getPaddingTop(), DensityUtil.dp2px(this, 23), tv_customer_name.getPaddingBottom());
 
         }
 
@@ -310,13 +311,25 @@ public class SignInActivity extends BaseActivity
                     return;
                 }
                 view = v;
-                if (PermissionTool.requestPermission(SignInActivity.this, new String[]{
-                                Manifest.permission.RECORD_AUDIO, //录音权限
-                                Manifest.permission.READ_PHONE_STATE,//读取设备权限
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,//写入外存权限
-                                Manifest.permission.READ_EXTERNAL_STORAGE}//读取外存权限
-                        , "麦克风或者存储权限被禁用", RECORD_REQUEST)) {
-                    startRecord(v);
+                //这里是为了，兼容蛋疼的小米系统，在小米系统（android6.0+）不能同时申请，不同类型的权限，有的权限有超时拒绝
+                //类似存储权限，默认会返回授权，在使用的时候，再授权
+                CellInfo cellInfo = Utils.getCellInfo();
+                if (null != cellInfo && null!=cellInfo.getLoyoAgent()&&cellInfo.getLoyoAgent().toLowerCase().contains("xiaomi")) {
+                    if (PermissionTool.requestPermission(SignInActivity.this, new String[]{
+                                    Manifest.permission.RECORD_AUDIO //录音权限
+                            }
+                            , "麦克风或者存储权限被禁用", RECORD_REQUEST)) {
+                        startRecord(v);
+                    }
+                } else {
+                    if (PermissionTool.requestPermission(SignInActivity.this, new String[]{
+                                    Manifest.permission.RECORD_AUDIO, //录音权限
+                                    Manifest.permission.READ_PHONE_STATE,//读取设备权限
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,//写入外存权限
+                                    Manifest.permission.READ_EXTERNAL_STORAGE}//读取外存权限
+                            , "麦克风或者存储权限被禁用", RECORD_REQUEST)) {
+                        startRecord(v);
+                    }
                 }
 
             }
@@ -754,9 +767,9 @@ public class SignInActivity extends BaseActivity
                     //更新客户状态信息
                     MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(mCustomer);
                     myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
-                    myCustomerRushEvent.subCode   = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
-                    myCustomerRushEvent.session   =mCustomer.getId();
-                    myCustomerRushEvent.request   ="note";
+                    myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
+                    myCustomerRushEvent.session = mCustomer.getId();
+                    myCustomerRushEvent.request = "note";
                     AppBus.getInstance().post(myCustomerRushEvent);
                     //更新签到
                     AppBus.getInstance().post(new SigninRushEvent());
