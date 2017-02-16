@@ -317,7 +317,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
-                    android:text="下次跟进时间: "
+                    android:text="下次跟进: "
                     android:textColor="@color/text99"
                     android:textSize="@dimen/text_sp13"
                     />

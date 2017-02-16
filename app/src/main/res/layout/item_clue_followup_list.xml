@@ -268,7 +268,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
-                    android:text="下次跟进时间: "
+                    android:text="下次跟进: "
                     android:textColor="@color/text99" />
 
                 <TextView
@@ -343,8 +343,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
+
                 <include layout="@layout/include_solid_line_left" />
             </LinearLayout>
         </LinearLayout>
