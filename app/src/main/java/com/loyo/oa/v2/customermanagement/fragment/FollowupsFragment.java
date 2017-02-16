@@ -1,6 +1,9 @@
 package com.loyo.oa.v2.customermanagement.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -340,6 +343,7 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
         msgAudiomMenu.commentEmbl();
         this.parent = parent;
         this.child = child;
+//        showInput();
     }
 
     /**
@@ -463,5 +467,15 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
             lastView = textView;
         }
         playVoiceSize++;
+    }
+
+    void showInput() {
+
+        Activity activity = getActivity();
+        if (activity instanceof FragmentActivity) {
+            FragmentManager fm = ((FragmentActivity)activity).getSupportFragmentManager();
+            MultiMediaInputFragment fragment = MultiMediaInputFragment.newInstance();
+            fragment.show(fm, "input");
+        }
     }
 }
