@@ -188,10 +188,10 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                     params.put("field", keys[0]);
                     params.put("order", keys[1]);
                     //友盟统计
-                    if(BaseCustomerFragment.this instanceof MyResponFragment){
+                    if (BaseCustomerFragment.this instanceof MyResponFragment) {
                         //我负责的
                         UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomer);
-                    }else  if(BaseCustomerFragment.this instanceof MyMemberFragment){
+                    } else if (BaseCustomerFragment.this instanceof MyMemberFragment) {
                         //我参与的
                         UmengAnalytics.umengSend(mActivity, UmengAnalytics.timeCustomerJoin);
 
@@ -199,10 +199,10 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                 } else if (menuIndex == 1) { // TagFilter
                     params.put("tagsParams", userInfo.toString());
                     //友盟统计
-                    if(BaseCustomerFragment.this instanceof MyResponFragment){
+                    if (BaseCustomerFragment.this instanceof MyResponFragment) {
                         //我负责的
                         UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomer);
-                    }else if(BaseCustomerFragment.this instanceof MyMemberFragment){
+                    } else if (BaseCustomerFragment.this instanceof MyMemberFragment) {
                         //我参与的
                         UmengAnalytics.umengSend(mActivity, UmengAnalytics.tagCustomerJoin);
                     }
@@ -373,39 +373,52 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
             case MyCustomerRushEvent.EVENT_CODE_ADD:
                 mPagination.getRecords().add(0, event.data);
                 adapter.notifyDataSetChanged();
+                //数据有变动，重新判断
+                if (mPagination.isEnpty()) {
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                } else {
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
                 break;
             case MyCustomerRushEvent.EVENT_CODE_DEL:
                 if (clickPosition < 0) return;//说明没有点击的条目
                 mPagination.getRecords().remove(clickPosition);
                 adapter.notifyDataSetChanged();
+                //数据有变动，重新判断
+                if (mPagination.isEnpty()) {
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                } else {
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
                 break;
             case MyCustomerRushEvent.EVENT_CODE_UPDATE:
                 if (clickPosition < 0) return;//说明没有点击的条目
                 if (MyCustomerRushEvent.EVENT_SUB_CODE_INFO == event.subCode) {//更新客户信息，在客户信息被编辑的时候
-                    Customer updateCus=event.data;
-                    Customer mCustomer=mPagination.getRecords().get(clickPosition);
-                    mCustomer.name=updateCus.name;
-                    mCustomer.summary=updateCus.summary;
-                    mCustomer.owner= updateCus.owner;
-                    mCustomer.members= updateCus.members;
-                    mCustomer.tags= updateCus.tags;
-                    mCustomer.loc= updateCus.loc;
-                    mCustomer.position= updateCus.position;
-                    mCustomer.extDatas= updateCus.extDatas;
-                    mCustomer.regional= updateCus.regional;
+                    Customer updateCus = event.data;
+                    Customer mCustomer = mPagination.getRecords().get(clickPosition);
+                    mCustomer.name = updateCus.name;
+                    mCustomer.summary = updateCus.summary;
+                    mCustomer.owner = updateCus.owner;
+                    mCustomer.members = updateCus.members;
+                    mCustomer.tags = updateCus.tags;
+                    mCustomer.loc = updateCus.loc;
+                    mCustomer.position = updateCus.position;
+                    mCustomer.extDatas = updateCus.extDatas;
+                    mCustomer.regional = updateCus.regional;
                     adapter.notifyDataSetChanged();
-                } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode||MyCustomerRushEvent.EVENT_SUB_CODE_LTC ==event.subCode) {//更新标签
-                    if(!"note".equals(event.request+""))return;
-                    Customer updateCus=event.data;
-                    Customer mCustomer=mPagination.getRecords().get(clickPosition);
-                    mCustomer.tags=updateCus.tags;
+                } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode || MyCustomerRushEvent.EVENT_SUB_CODE_LTC == event.subCode) {//更新标签
+                    if (!"note".equals(event.request + "")) return;
+                    Customer updateCus = event.data;
+                    Customer mCustomer = mPagination.getRecords().get(clickPosition);
+                    mCustomer.tags = updateCus.tags;
                     adapter.notifyDataSetChanged();
-                }else if(MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER==event.subCode){//更新写跟进，拜访，添加订单以后的丢公海时间，数据来自详情页
+                } else if (MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER == event.subCode) {//更新写跟进，拜访，添加订单以后的丢公海时间，数据来自详情页
                     mPagination.getRecords().remove(clickPosition);
-                    mPagination.getRecords().add(clickPosition,event.data);
+                    mPagination.getRecords().add(clickPosition, event.data);
                     adapter.notifyDataSetChanged();
                 }
                 break;
         }
+
     }
 }

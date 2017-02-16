@@ -347,6 +347,23 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     }
 
     void loadCustomer(boolean needInitPager) {
+        //判断有没有查看权限
+        if (!PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
+                customer.state, CustomerAction.PREVIEW)) {
+            //在列表页面，删除刚才点击那一条
+            MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent();
+            myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_DEL;
+            AppBus.getInstance().post(myCustomerRushEvent);
+            sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    dismissSweetAlert();
+                    finish();
+                }
+            }, "提示", "你已没有此客户查看权限");
+            return;
+        }
+
         canEdit = PermissionManager.getInstance().hasCustomerAuthority(
                 customer.relationState,
                 customer.state,
@@ -532,18 +549,20 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode) {
             //更新客户信息
             if(MyCustomerRushEvent.EVENT_SUB_CODE_INFO==event.subCode){
-                Customer updateCus  = event.data;
-                customer.name       = updateCus.name;
-                customer.summary    = updateCus.summary;
-                customer.owner      = updateCus.owner;
-                customer.members    = updateCus.members;
-                customer.tags       = updateCus.tags;
-                customer.loc        = updateCus.loc;
-                customer.position   = updateCus.position;
-                customer.extDatas   = updateCus.extDatas;
-                customer.regional   = updateCus.regional;
-                customer.statusId   = updateCus.statusId;
-                customer.statusName = updateCus.statusName;
+                Customer updateCus     = event.data;
+                customer.name          = updateCus.name;
+                customer.summary       = updateCus.summary;
+                customer.owner         = updateCus.owner;
+                customer.members       = updateCus.members;
+                customer.tags          = updateCus.tags;
+                customer.loc           = updateCus.loc;
+                customer.position      = updateCus.position;
+                customer.extDatas      = updateCus.extDatas;
+                customer.regional      = updateCus.regional;
+                customer.statusId      = updateCus.statusId;
+                customer.statusName    = updateCus.statusName;
+                customer.state         = updateCus.state;
+                customer.relationState = updateCus.relationState;
                 loadCustomer(false);
             }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
                 if(!"note".equals(event.request+""))return;

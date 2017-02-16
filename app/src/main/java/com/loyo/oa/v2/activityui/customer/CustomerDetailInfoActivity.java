@@ -63,6 +63,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * 描述 :【客户详情】 界面
  * 作者 : ykb
  * 时间 : 15/9/24.
+ * //TODO 本页已经无用，可以删除
  */
 @EActivity(R.layout.activity_customer_detail_info_new)
 public class CustomerDetailInfoActivity extends BaseActivity implements CustomerDetailinfoView {
@@ -198,13 +199,17 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
         if (!PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.PREVIEW)) {
+            //在列表页面，删除刚才点击那一条
+            MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent();
+            myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_DEL;
+            AppBus.getInstance().post(myCustomerRushEvent);
             sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                     dismissSweetAlert();
                     finish();
                 }
-            }, "提示", "你无此功能权限");
+            }, "提示", "你已没有此客户查看权限");
             return;
         }
 
@@ -663,6 +668,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mCustomer.position= updateCus.position;
                 mCustomer.extDatas= updateCus.extDatas;
                 mCustomer.regional= updateCus.regional;
+                mCustomer.state= updateCus.state;
+                mCustomer.relationState= updateCus.relationState;
                 initData();
             }else if(MyCustomerRushEvent.EVENT_SUB_CODE_LABEL==event.subCode){
                 if(!"note".equals(event.request+""))return;
