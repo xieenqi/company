@@ -13,9 +13,12 @@ import android.os.Environment;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.common.utils.PermissionTool;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
+import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -213,16 +216,39 @@ public class RecordUtils {
      * 用户是否配置 录音权限     * @return
      */
     public static boolean permissionRecord(Object activityOrFragment) {
-        if(PermissionTool.requestPermission(activityOrFragment,new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE},"你没有配置录音或者储存权限",1)){
-            return true;
-        }
+//        if(PermissionTool.requestPermission(activityOrFragment,new String[]{Manifest.permission.RECORD_AUDIO,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                ,Manifest.permission.READ_PHONE_STATE},"你没有配置录音或者储存权限",1)){
+//            return true;
+//        }
 //        if (PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")
 //                && PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
 //                && PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.READ_PHONE_STATE", "com.loyo.oa.v2")
 //                ) {
 //            return true;
 //        }
+        //这里是为了，兼容蛋疼的小米系统，在小米系统（android6.0+）不能同时申请，不同类型的权限，有的权限有超时拒绝
+        //类似存储权限，默认会返回授权，在使用的时候，再授权
+        CellInfo cellInfo = Utils.getCellInfo();
+        if (null != cellInfo && null!=cellInfo.getLoyoAgent()&&cellInfo.getLoyoAgent().toLowerCase().contains("xiaomi")) {
+            if (PermissionTool.requestPermission(activityOrFragment, new String[]{
+                            Manifest.permission.RECORD_AUDIO //录音权限
+                    }
+                    , "麦克风或者存储权限被禁用", 1)) {
+                return true;
+            }
+        } else {
+            if (PermissionTool.requestPermission(activityOrFragment, new String[]{
+                            Manifest.permission.RECORD_AUDIO, //录音权限
+                            Manifest.permission.READ_PHONE_STATE,//读取设备权限
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,//写入外存权限
+                            Manifest.permission.READ_EXTERNAL_STORAGE}//读取外存权限
+                    , "麦克风或者存储权限被禁用", 1)) {
+                return true;
+            }
+        }
         return false;
+
     }
 
     /**

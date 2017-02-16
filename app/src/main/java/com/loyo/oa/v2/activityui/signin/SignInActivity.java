@@ -44,6 +44,7 @@ import com.loyo.oa.v2.activityui.customer.FollowContactSingleSelectActivity;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninCustomerRushEvent;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
@@ -309,13 +310,25 @@ public class SignInActivity extends BaseActivity
                     return;
                 }
                 view = v;
-                if (PermissionTool.requestPermission(SignInActivity.this, new String[]{
-                                Manifest.permission.RECORD_AUDIO, //录音权限
-                                Manifest.permission.READ_PHONE_STATE,//读取设备权限
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,//写入外存权限
-                                Manifest.permission.READ_EXTERNAL_STORAGE}//读取外存权限
-                        , "麦克风或者存储权限被禁用", RECORD_REQUEST)) {
-                    startRecord(v);
+                //这里是为了，兼容蛋疼的小米系统，在小米系统（android6.0+）不能同时申请，不同类型的权限，有的权限有超时拒绝
+                //类似存储权限，默认会返回授权，在使用的时候，再授权
+                CellInfo cellInfo = Utils.getCellInfo();
+                if (null != cellInfo && null!=cellInfo.getLoyoAgent()&&cellInfo.getLoyoAgent().toLowerCase().contains("xiaomi")) {
+                    if (PermissionTool.requestPermission(SignInActivity.this, new String[]{
+                                    Manifest.permission.RECORD_AUDIO //录音权限
+                            }
+                            , "麦克风或者存储权限被禁用", RECORD_REQUEST)) {
+                        startRecord(v);
+                    }
+                } else {
+                    if (PermissionTool.requestPermission(SignInActivity.this, new String[]{
+                                    Manifest.permission.RECORD_AUDIO, //录音权限
+                                    Manifest.permission.READ_PHONE_STATE,//读取设备权限
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,//写入外存权限
+                                    Manifest.permission.READ_EXTERNAL_STORAGE}//读取外存权限
+                            , "麦克风或者存储权限被禁用", RECORD_REQUEST)) {
+                        startRecord(v);
+                    }
                 }
 
             }
