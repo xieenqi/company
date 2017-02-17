@@ -1,10 +1,19 @@
 #!/bin/sh
 basepath=$(cd `dirname $0`; pwd)
-if [ $# -ne 1 ]
+ff=app/build/outputs/apk/app-debug.apk
+if
+[ $# -ne 1 ]
+[ ! -f $ff ];
 then
 	echo "输入1个上传文件地址"
+	exit
 else
-	filepath="$basepath/$1"
+    filepath="$basepath/$1"
+    if
+    [ $# -ne 1 ]
+    then
+    filepath=$ff
+    fi
 	if [ ! -f $filepath ]; then
    		echo "文件不存在！"
 	else
