@@ -15,13 +15,13 @@ android {
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
     }
-    android.applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def time = new Date().format('yyyy-MM-dd HH:mm:ss')
-            def file = output.outputFile
-            output.outputFile = new File(file.parent, file.name.replace(".apk", "-" +time+"-v"+ defaultConfig.versionName + ".apk"))
-        }
-    }
+//    android.applicationVariants.all { variant ->
+//        variant.outputs.each { output ->
+//            def time = new Date().format('yyyy-MM-dd_HH-mm-ss')
+//            def file = output.outputFile
+//            output.outputFile = new File(file.parent, file.name.replace(".apk", "-" +time+"-v"+ defaultConfig.versionName + ".apk"))
+//        }
+//    }
 
     dexOptions {
         javaMaxHeapSize "4g"
