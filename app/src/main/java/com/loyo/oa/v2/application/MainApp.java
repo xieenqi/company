@@ -773,18 +773,21 @@ public class MainApp extends Application {
     @Override
     public void onTerminate() {
         // 程序终止的时候执行
+        LogUtil.d("程序终止的时候执行");
         super.onTerminate();
     }
 
     @Override
     public void onLowMemory() {
         // 低内存的时候执行
+        LogUtil.d("低内存的时候执行");
         super.onLowMemory();
     }
 
     @Override
     public void onTrimMemory(int level) {
         // 程序在内存清理的时候执行
+        LogUtil.d("程序在内存清理的时候执行");
         super.onTrimMemory(level);
     }
 }
