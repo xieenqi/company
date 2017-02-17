@@ -262,9 +262,6 @@ public class MainApp extends Application {
      */
     public void stopAnim(TextView textView) {
         LogUtil.dee("stopAnim");
-        if (textView == null) {
-            return;
-        }
         animationDrawable = (AnimationDrawable) textView.getBackground();
         if (animationDrawable.isRunning()) {
             animationDrawable.stop();

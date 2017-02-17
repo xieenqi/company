@@ -149,7 +149,8 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
     }
 
     // 初始化
-    public void onInit(){
+    public void onInit(TextView nowsView){
+        this.nowsView = nowsView;
         if (callbackHandler != null) {
             callbackHandler.onInit(musicProgress);
         }
@@ -163,7 +164,6 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
             isOnPlay = false;
             MainApp.getMainApp().startAnim(nowsView);*/
             restView(nowsView);
-            this.nowsView = nowsView;
             layout_audioplayer.setVisibility(View.VISIBLE);
             layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
             tv_audio_endtime.setText(com.loyo.oa.common.utils.DateTool.int2time((int) audioModel.length * 1000));

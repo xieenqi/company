@@ -426,7 +426,7 @@ public class VisitsFragment extends CustomerChildFragment
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        audioPlayer.onInit();
+        audioPlayer.onInit(textView);
         if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
