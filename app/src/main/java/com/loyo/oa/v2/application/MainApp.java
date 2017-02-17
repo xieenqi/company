@@ -262,6 +262,9 @@ public class MainApp extends Application {
      */
     public void stopAnim(TextView textView) {
         LogUtil.dee("stopAnim");
+        if (textView == null) {
+            return;
+        }
         animationDrawable = (AnimationDrawable) textView.getBackground();
         if (animationDrawable.isRunning()) {
             animationDrawable.stop();
@@ -271,7 +274,7 @@ public class MainApp extends Application {
 
     /**
      * 设置APP语言，地区等
-     * */
+     */
     public void switchLanguage() {
         Locale.setDefault(Locale.CHINA);
         Resources resources = getResources();// 获得res资源对象
@@ -323,7 +326,6 @@ public class MainApp extends Application {
         DBManager.init(this);
         OrganizationManager.init(this);
     }
-
 
 
     /**
@@ -668,11 +670,11 @@ public class MainApp extends Application {
 
     /**
      * 全局复制粘贴
-     * */
-    public void setTextSelection(final TextView textView, final EditText editText, final Activity mActivity){
+     */
+    public void setTextSelection(final TextView textView, final EditText editText, final Activity mActivity) {
 
         // 小于5.0不调用方法
-        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return;
         }
 
@@ -681,7 +683,7 @@ public class MainApp extends Application {
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 LogUtil.dee("onPrepareActionMode");
                 MenuInflater menuInflater = mode.getMenuInflater();
-                menuInflater.inflate(R.menu.selectionmenu,menu);
+                menuInflater.inflate(R.menu.selectionmenu, menu);
                 return true;
             }
 
@@ -701,7 +703,7 @@ public class MainApp extends Application {
                 switch (item.getItemId()) {
 
                     case R.id.copy:
-                        if(null != textView){
+                        if (null != textView) {
                             int min = 0;
                             int max = textView.getText().length();
                             if (textView.isFocused()) {
@@ -715,7 +717,7 @@ public class MainApp extends Application {
                             cmb.setPrimaryClip(ClipData.newPlainText("paste_content", textView.getText().subSequence(min, max)));
                         }
 
-                        if(null != editText){
+                        if (null != editText) {
                             int min = 0;
                             int max = editText.getText().length();
                             if (editText.isFocused()) {
@@ -751,10 +753,10 @@ public class MainApp extends Application {
             }
         };
 
-        if(null != textView)
-        textView.setCustomSelectionActionModeCallback(callback2);
-        if(null != editText)
-        editText.setCustomSelectionActionModeCallback(callback2);
+        if (null != textView)
+            textView.setCustomSelectionActionModeCallback(callback2);
+        if (null != editText)
+            editText.setCustomSelectionActionModeCallback(callback2);
 /*        editText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -771,18 +773,21 @@ public class MainApp extends Application {
     @Override
     public void onTerminate() {
         // 程序终止的时候执行
+        LogUtil.d("程序终止的时候执行");
         super.onTerminate();
     }
 
     @Override
     public void onLowMemory() {
         // 低内存的时候执行
+        LogUtil.d("低内存的时候执行");
         super.onLowMemory();
     }
 
     @Override
     public void onTrimMemory(int level) {
         // 程序在内存清理的时候执行
+        LogUtil.d("程序在内存清理的时候执行");
         super.onTrimMemory(level);
     }
 }
