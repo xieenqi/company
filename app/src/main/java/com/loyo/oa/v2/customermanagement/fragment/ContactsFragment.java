@@ -29,7 +29,6 @@ import com.loyo.oa.v2.customermanagement.adapter.CustomerContactsListAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.cell.ContactCardCell;
 import com.loyo.oa.v2.customview.CallPhonePopView;
-import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.permission.CustomerAction;
@@ -310,7 +309,7 @@ public class ContactsFragment extends CustomerChildFragment
             callPhonePopView.businessPhone(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    businessCallCheck(customer.getId(), contact, ContactViewGroup.CallbackPhone, formattedPhone);
+                    businessCallCheck(customer.getId(), contact, 0/* 手机 */, formattedPhone);
                     callPhonePopView.dismiss();
                 }
             });
@@ -350,7 +349,7 @@ public class ContactsFragment extends CustomerChildFragment
             callPhonePopView.businessPhone(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    businessCallCheck(customer.getId(), contact, ContactViewGroup.CallbackPhone, formattedPhone);
+                    businessCallCheck(customer.getId(), contact, 1/* 座机 */, formattedPhone);
                     callPhonePopView.dismiss();
                 }
             });

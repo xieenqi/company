@@ -26,7 +26,6 @@ import com.loyo.oa.v2.customermanagement.cell.ContactCardCell;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.ContactListExtra;
-import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -440,7 +439,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
             callPhonePopView.businessPhone(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    businessCallCheck(customer.getId(), contact, ContactViewGroup.CallbackPhone, formattedPhone);
+                    businessCallCheck(customer.getId(), contact, 0 /* 手机 */, formattedPhone);
                     callPhonePopView.dismiss();
                 }
             });
@@ -480,7 +479,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
             callPhonePopView.businessPhone(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    businessCallCheck(customer.getId(), contact, ContactViewGroup.CallbackPhone, formattedPhone);
+                    businessCallCheck(customer.getId(), contact, 1 /* 座机 */, formattedPhone);
                     callPhonePopView.dismiss();
                 }
             });
