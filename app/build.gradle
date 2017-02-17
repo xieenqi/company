@@ -17,7 +17,7 @@ android {
     }
 //    android.applicationVariants.all { variant ->
 //        variant.outputs.each { output ->
-//            def time = new Date().format('MMdd_hh')
+//            def time = new Date().format('yyyy-MM-dd_HH-mm-ss')
 //            def file = output.outputFile
 //            output.outputFile = new File(file.parent, file.name.replace(".apk", "-" +time+"-v"+ defaultConfig.versionName + ".apk"))
 //        }

@@ -246,8 +246,9 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         for (int i = 0; i < customers.size(); i++) {
             Customer customer = customers.get(i);
             if (customer.loc != null && customer.loc.loc != null && customer.loc.loc.length > 1) {
-                double lat = customer.loc.loc[1];
-                double lng = customer.loc.loc[0];
+                Double lat = customer.loc.loc[1];
+                Double lng = customer.loc.loc[0];
+                if(null==lat||null==lng)continue;
                 aMap.addMarker(new MarkerOptions().anchor(0.8f, 0.8f).icon(customerType == 1 ? (i < isMySize ? markMy : markCompany) : markTeam)
                         .position(new LatLng(lat, lng)).title(customer.name)
                         .snippet(customer.loc.addr).draggable(true));
