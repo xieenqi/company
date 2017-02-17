@@ -8,7 +8,7 @@ else
 	if [ ! -f $filepath ]; then
    		echo "文件不存在！"
 	else
-		echo -n "请输入升级或者修复bug描述: "
+		echo  "请输入升级或者修复bug描述: "
 		read descripe # request host
     	curl  --form "file=@$filepath" --form "des=$descripe"  http://fasttest.dingliqc.com:3000/upload/api
     fi
