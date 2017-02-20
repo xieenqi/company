@@ -24,8 +24,9 @@ public class CustomerPagerAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
-    public void addFragment(CustomerChildFragment fragment) {
+    public CustomerChildFragment addFragment(CustomerChildFragment fragment) {
         mFragments.add(fragment);
+        return fragment;
     }
 
     /**

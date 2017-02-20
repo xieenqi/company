@@ -56,8 +56,8 @@ public class OrdersFragment extends CustomerChildFragment
     private int page = 1;
     private boolean isPullDown = true;
 
-    public OrdersFragment() {
-        this.title = "订单";
+    public OrdersFragment(Customer customer, int index, OnTotalCountChangeListener listener, String title) {
+        super(customer, index, listener, title);
     }
 
     @Override

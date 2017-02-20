@@ -69,8 +69,8 @@ public class AttachmentsFragment extends CustomerChildFragment
 
     private UploadController controller;
 
-    public AttachmentsFragment() {
-        this.title = "附件";
+    public AttachmentsFragment(Customer customer, int index, OnTotalCountChangeListener listener, String title) {
+        super(customer, index, listener, title);
     }
 
     @Override

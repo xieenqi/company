@@ -39,6 +39,7 @@ import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapter;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customermanagement.fragment.AttachmentsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.ContactsFragment;
+import com.loyo.oa.v2.customermanagement.fragment.CustomerBasicInfoHeader;
 import com.loyo.oa.v2.customermanagement.fragment.CustomerChildFragment;
 import com.loyo.oa.v2.customermanagement.fragment.DropCustomerDeadlineFragment;
 import com.loyo.oa.v2.customermanagement.fragment.FollowupsFragment;
@@ -48,7 +49,6 @@ import com.loyo.oa.v2.customermanagement.fragment.TasksFragment;
 import com.loyo.oa.v2.customermanagement.fragment.VisitsFragment;
 import com.loyo.oa.v2.customermanagement.fragment.WorkFlowsFragment;
 import com.loyo.oa.v2.customermanagement.model.DropDeadlineModel;
-import com.loyo.oa.v2.customermanagement.model.DropRemind;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
@@ -70,7 +70,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CustomerDetailActivity extends BaseFragmentActivity
         implements DropCustomerDeadlineFragment.CustomerDeadlineActionListener,
-        CustomerChildFragment.OnTotalCountChangeListener {
+        CustomerChildFragment.OnTotalCountChangeListener, CustomerBasicInfoHeader.CustomerBasicInfoHeaderListener{
 
     public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
     public static final int EXTRA_CUSTOMER_EDIT_STATUS = 1;//标签改变
@@ -83,13 +83,12 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     FollowupsFragment followupsFragment;
     VisitsFragment visitsFragment;
     OrdersFragment ordersFragment;
+    CustomerBasicInfoHeader headerFragment;
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
     @BindView(R.id.tabs)
     TabLayout tabLayout;
-    @BindView(R.id.ll_warn)
-    ViewGroup warnView;
 
     @BindView(R.id.img_title_left)
     View img_title_left;
@@ -101,28 +100,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     @BindView(R.id.ll_loading)
     LoadingLayout ll_loading;
 
-    @BindView(R.id.customer_basic_info)
-    ViewGroup basicInfoView;
-    @BindView(R.id.customer_state)
-    ViewGroup customerStateView;
-    @BindView(R.id.customer_tag)
-    ViewGroup customerTagView;
-
-    @BindView(R.id.tv_customer_name)
-    TextView customerNameText;
-    @BindView(R.id.tv_customer_state)
-    TextView customerStateText;
-    @BindView(R.id.tv_customer_tag)
-    TextView customerTagText;
-    @BindView(R.id.tv_drop_reason)
-    TextView dropReasonText;
-
-    @BindView(R.id.state_editable)
-    ImageView stateEditableVew;
-    @BindView(R.id.tag_editable)
-    ImageView tagEditableVew;
-    @BindView(R.id.tv_recyleRemind)
-    TextView recycleRemindText;
+    @BindView(R.id.basic_info_container) ViewGroup basicInfoContainer;
 
     @BindView(R.id.tab_mask)
     ImageView tabMask;
@@ -253,60 +231,25 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         UmengAnalytics.umengSend(CustomerDetailActivity.this, UmengAnalytics.frompublicPublicDetail);
     }
 
-    @OnClick(R.id.customer_basic_info)
-    void showInfo() {
-        if (customer == null) {
-            return;
-        }
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("CustomerId", customer.getId());
-        bundle.putBoolean("canEdit", canEdit);
-        Class _class = CustomerInfoActivity_.class;
-        app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT,
-                FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO, bundle);
-    }
-
-    @OnClick(R.id.customer_state)
-    void editState() {
-        Intent mIntent = new Intent(this, CustomerStatusSingleSelectActivity.class);
-        mIntent.putExtra(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, customer.statusId);
-        startActivityForResult(mIntent, EXTRA_CUSTOMER_EDIT_STATUS);
-        UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
-    }
-
-    @OnClick(R.id.customer_tag)
-    void editTag() {
-        Intent mIntent = new Intent(this, CustomerLabelCopyActivity.class);
-        mIntent.putExtra("canEdit", canEdit);
-        mIntent.putExtra("fromPage", 0);
-        if (null != customer.tags) {
-            mIntent.putExtra("tagitems", Utils.convertTagItems(customer.tags));
-        }
-        mIntent.putExtra("customerId", customer.getId());
-        startActivity(mIntent);
-        UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
-    }
-
-    @OnClick(R.id.ll_warn)
-    void onDropDeadline() {
-        FragmentManager fm = getSupportFragmentManager();
-        DropCustomerDeadlineFragment fragment =
-                DropCustomerDeadlineFragment.newInstance(DropDeadlineModel.getDeadlineModel(customer),
-                        this);
-        fragment.show(fm, "drop_deadline");
-    }
+    /**
+     * 加载页面和数据
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_detail);
         ButterKnife.bind(this);
+        headerFragment = new CustomerBasicInfoHeader();
+        headerFragment.setListenerRef(this);
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .add(R.id.basic_info_container, headerFragment)
+                .commit();
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-        basicInfoView.setOnTouchListener(Global.GetTouch());
-        customerStateView.setOnTouchListener(Global.GetTouch());
-        customerTagView.setOnTouchListener(Global.GetTouch());
-        warnView.setOnTouchListener(Global.GetTouch());
+
         tv_title_1.setText("客户详情");
         ll_loading.setStatus(LoadingLayout.Loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
@@ -377,37 +320,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         customerPick.setVisibility(needPickIn ? View.VISIBLE : View.GONE);
 
         customerId = customer.getId();
-        this.customerNameText.setText(customer.name);
-        this.customerStateText.setText("状态：" + customer.statusName);
-        this.customerTagText.setText("标签：" + customer.displayTagString());
-        if (customer.state == Customer.DumpedCustomer) {
-            dropReasonText.setVisibility(View.VISIBLE);
-            String recycleReason = customer.recycleReason;
-            if (TextUtils.isEmpty(recycleReason)) {
-                recycleReason = "无";
-            }
-            dropReasonText.setText("丢公海原因：" + recycleReason);
-        } else {
-            dropReasonText.setVisibility(View.GONE);
-        }
-        if (customer.hasDropRemind()) {
-            warnView.setVisibility(View.VISIBLE);
-            recycleRemindText.setText(customer.getFormattedDropRemind());
-        } else {
-            warnView.setVisibility(View.GONE);
 
-        }
-        if (canEdit) {
-            stateEditableVew.setVisibility(View.VISIBLE);
-            tagEditableVew.setVisibility(View.VISIBLE);
-            customerStateView.setClickable(true);
-            customerTagView.setClickable(true);
-        } else {
-            stateEditableVew.setVisibility(View.GONE);
-            tagEditableVew.setVisibility(View.GONE);
-            customerStateView.setClickable(false);
-            customerTagView.setClickable(false);
-        }
+        headerFragment.setCustomer(customer);
+        headerFragment.loadCustomer();
 
         if (needInitPager) {
             if (viewPager != null) {
@@ -490,58 +405,23 @@ public class CustomerDetailActivity extends BaseFragmentActivity
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new CustomerPagerAdapter(getSupportFragmentManager());
-
-        followupsFragment = new FollowupsFragment();
-        followupsFragment.setCustomer(customer);
-        followupsFragment.index = 0;
-        followupsFragment.setListener(this);
-        adapter.addFragment(followupsFragment);
-
-        ContactsFragment contactsFragment = new ContactsFragment();
-        contactsFragment.setCustomer(customer);
-        contactsFragment.index = 1;
-        contactsFragment.setListener(this);
-        adapter.addFragment(contactsFragment);
-
-        visitsFragment = new VisitsFragment();
-        visitsFragment.setCustomer(customer);
-        visitsFragment.index = 2;
-        visitsFragment.setListener(this);
-        adapter.addFragment(visitsFragment);
-
-        OpportunitiesFragment opportunitiesFragment = new OpportunitiesFragment();
-        opportunitiesFragment.setCustomer(customer);
-        opportunitiesFragment.index = 3;
-        opportunitiesFragment.setListener(this);
-        adapter.addFragment(opportunitiesFragment);
-
-        ordersFragment = new OrdersFragment();
-        ordersFragment.setCustomer(customer);
-        ordersFragment.index = 4;
-        ordersFragment.setListener(this);
-        adapter.addFragment(ordersFragment);
-
-        TasksFragment tasksFragment = new TasksFragment();
-        tasksFragment.setCustomer(customer);
-        tasksFragment.index = 5;
-        tasksFragment.setListener(this);
-        adapter.addFragment(tasksFragment);
-
-        WorkFlowsFragment workFlowsFragment = new WorkFlowsFragment();
-        workFlowsFragment.setCustomer(customer);
-        workFlowsFragment.index = 6;
-        workFlowsFragment.setListener(this);
-        adapter.addFragment(workFlowsFragment);
-
-        AttachmentsFragment attachmentsFragment = new AttachmentsFragment();
-        attachmentsFragment.setCustomer(customer);
-        attachmentsFragment.index = 7;
-        attachmentsFragment.setListener(this);
-        adapter.addFragment(attachmentsFragment);
-
+        followupsFragment =
+                (FollowupsFragment)adapter.addFragment(new FollowupsFragment(customer, 0, this, "跟进"));
+        adapter.addFragment(new ContactsFragment(customer, 1, this, "联系人"));
+        visitsFragment =
+                (VisitsFragment)adapter.addFragment(new VisitsFragment(customer, 2, this, "拜访"));
+        adapter.addFragment(new OpportunitiesFragment(customer, 3, this, "机会"));
+        ordersFragment =
+                (OrdersFragment)adapter.addFragment(new OrdersFragment(customer, 4, this, "订单"));
+        adapter.addFragment(new TasksFragment(customer, 5, this, "任务"));
+        adapter.addFragment(new WorkFlowsFragment(customer, 6, this, "审批"));
+        adapter.addFragment(new AttachmentsFragment(customer, 7, this, "附件"));
         viewPager.setAdapter(adapter);
     }
 
+    /**
+     * Event & ActivityResult
+     */
 
     @Subscribe
     public void onMyCustomerPushEvent(MyCustomerRushEvent event) {
@@ -587,15 +467,104 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (RESULT_OK != resultCode) return;
+        switch (requestCode) {
+            case ExtraAndResult.REQUSET_COPY_PERSONS:
+                onBackPressed();
+                break;
+            //修改状态
+            case EXTRA_CUSTOMER_EDIT_STATUS:
+                //TODO 这里有没有直接修改客户状态的接口呀，这样写，太难受了。
 
-    void selectPageAtIndex(int index) {
-        tabLayout.setScrollPosition(index, 0f, true);
-        viewPager.setCurrentItem(index);
+                CustomerStatusModel.CustomerStatusItemModel customerStatusItemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
+                customer.statusId = customerStatusItemModel.id;
+                customer.statusName = customerStatusItemModel.name;
+                String tid = data.getStringExtra("tid");
+                showLoading2("");
+                CustomerService.setCusLabel(customer.id, convertNewTags(tid))
+                        .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
+                            @Override
+                            public void onNext(Contact contact) {
+                                refreshDropRemind();
+                            }
+                        });
+                loadCustomer(false);
+                //更新列表数据
+                MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(customer);
+                myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_STATE;
+                myCustomerRushEvent.session = customer.getId();
+                AppBus.getInstance().post(myCustomerRushEvent);
+                break;
+        }
+    }
+
+    private ArrayList<NewTag> convertNewTags(String tid) {
+        ArrayList<NewTag> tags = new ArrayList<>();
+        NewTag tag = new NewTag();
+        tag.setItemId(customer.statusId);
+        tag.setItemName(customer.statusName);
+        tag.settId(tid);
+        tags.add(tag);
+        return tags;
     }
 
     /**
+     * 基本信息头部事件回调
+     * CustomerBasicInfoHeader.CustomerBasicInfoHeaderListener
+     */
+
+    @Override
+    public void onShowInfo() {
+        if (customer == null) {
+            return;
+        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("CustomerId", customer.getId());
+        bundle.putBoolean("canEdit", canEdit);
+        Class _class = CustomerInfoActivity_.class;
+        app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT,
+                FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO, bundle);
+    }
+
+    @Override
+    public void onEditState() {
+        Intent mIntent = new Intent(this, CustomerStatusSingleSelectActivity.class);
+        mIntent.putExtra(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, customer.statusId);
+        startActivityForResult(mIntent, EXTRA_CUSTOMER_EDIT_STATUS);
+        UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
+    }
+
+    @Override
+    public void onEditTag() {
+        Intent mIntent = new Intent(this, CustomerLabelCopyActivity.class);
+        mIntent.putExtra("canEdit", canEdit);
+        mIntent.putExtra("fromPage", 0);
+        if (null != customer.tags) {
+            mIntent.putExtra("tagitems", Utils.convertTagItems(customer.tags));
+        }
+        mIntent.putExtra("customerId", customer.getId());
+        startActivity(mIntent);
+        UmengAnalytics.umengSend(this, UmengAnalytics.customerEditTag);
+    }
+
+    @Override
+    public void onDropDeadline() {
+        FragmentManager fm = getSupportFragmentManager();
+        DropCustomerDeadlineFragment fragment =
+                DropCustomerDeadlineFragment.newInstance(DropDeadlineModel.getDeadlineModel(customer),
+                        this);
+        fragment.show(fm, "drop_deadline");
+    }
+
+    /**
+     * 丢公海详细界面事件回调
      * DropCustomerDeadlineFragment.CustomerDeadlineActionListener
      */
+
     @Override
     public void onAddFollowup() {
         //selectPageAtIndex(0/* 跟进 */);
@@ -672,60 +641,16 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         }
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (RESULT_OK != resultCode) return;
-        switch (requestCode) {
-            case ExtraAndResult.REQUSET_COPY_PERSONS:
-                onBackPressed();
-                break;
-            //修改状态
-            case EXTRA_CUSTOMER_EDIT_STATUS:
-                //TODO 这里有没有直接修改客户状态的接口呀，这样写，太难受了。
-
-                CustomerStatusModel.CustomerStatusItemModel customerStatusItemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
-                customer.statusId = customerStatusItemModel.id;
-                customer.statusName = customerStatusItemModel.name;
-                String tid = data.getStringExtra("tid");
-                showLoading2("");
-                CustomerService.setCusLabel(customer.id, convertNewTags(tid))
-                        .subscribe(new DefaultLoyoSubscriber<Contact>(hud) {
-                            @Override
-                            public void onNext(Contact contact) {
-                                refreshDropRemind();
-                            }
-                        });
-                loadCustomer(false);
-                //更新列表数据
-                MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(customer);
-                myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
-                myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_STATE;
-                myCustomerRushEvent.session = customer.getId();
-                AppBus.getInstance().post(myCustomerRushEvent);
-                break;
-        }
+    private void selectPageAtIndex(int index) {
+        tabLayout.setScrollPosition(index, 0f, true);
+        viewPager.setCurrentItem(index);
     }
 
     /**
-     * 构建新
-     *
-     * @return
-     */
-    private ArrayList<NewTag> convertNewTags(String tid) {
-        ArrayList<NewTag> tags = new ArrayList<>();
-        NewTag tag = new NewTag();
-        tag.setItemId(customer.statusId);
-        tag.setItemName(customer.statusName);
-        tag.settId(tid);
-        tags.add(tag);
-        return tags;
-    }
-
-    /**
+     * 子页面数据更新回调
      * CustomerChildFragment.OnTotalCountChangeListener
      */
+    
     @Override
     public void onTotalCountChange(CustomerChildFragment fragment, int index) {
         TabLayout.Tab tab = tabLayout.getTabAt(index);

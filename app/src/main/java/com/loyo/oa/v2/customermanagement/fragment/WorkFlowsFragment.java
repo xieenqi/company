@@ -58,8 +58,8 @@ public class WorkFlowsFragment extends CustomerChildFragment
     protected PullToRefreshExpandableListView mExpandableListView;
     protected ExpandableListView expandableListView;
 
-    public WorkFlowsFragment() {
-        this.title = "审批";
+    public WorkFlowsFragment(Customer customer, int index, OnTotalCountChangeListener listener, String title) {
+        super(customer, index, listener, title);
     }
 
     @Override
