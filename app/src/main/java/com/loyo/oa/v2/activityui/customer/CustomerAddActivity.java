@@ -298,8 +298,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         customer = DBManager.Instance().getCustomer();
         if (customer == null){
             customer = new Customer();
+        }else{
+            Toast("已显示之前未提交的数据");
         }
-        Toast("已显示之前未提交的数据");
         edt_name.setText(customer.name);
         if (null != customer.position) edit_address_details.setText(customer.position.addr);
         if (null != customer.loc) et_address.setText(customer.loc.addr);
