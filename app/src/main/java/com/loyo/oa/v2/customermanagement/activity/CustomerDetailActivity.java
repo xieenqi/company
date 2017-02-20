@@ -280,7 +280,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         }
     }
 
-    void loadCustomer(boolean needInitPager) {
+    void loadCustomer() {
         //判断有没有查看权限
         if (!PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
                 customer.state, CustomerAction.PREVIEW)) {
@@ -324,7 +324,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         headerFragment.setCustomer(customer);
         headerFragment.loadCustomer();
 
-        if (needInitPager) {
+        if (!viewPagerInited) {
             if (viewPager != null) {
                 setupViewPager(viewPager);
             }
@@ -367,7 +367,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                     public void onNext(Customer customer) {
                         ll_loading.setStatus(LoadingLayout.Success);
                         CustomerDetailActivity.this.customer = customer;
-                        CustomerDetailActivity.this.loadCustomer(!viewPagerInited);
+                        CustomerDetailActivity.this.loadCustomer();
                         //更新列表丢公海提醒数据
                         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(CustomerDetailActivity.this.customer);
                         myCustomerRushEvent.eventCode           = MyCustomerRushEvent.EVENT_CODE_UPDATE;
@@ -446,12 +446,12 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.statusName    = updateCus.statusName;
                 customer.state         = updateCus.state;
                 customer.relationState = updateCus.relationState;
-                loadCustomer(false);
+                loadCustomer();
             } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {
                 if (!"note".equals(event.request + "")) return;
                 //更新label 
                 customer.tags = event.data.tags;
-                loadCustomer(false);
+                loadCustomer();
             } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LTC == event.subCode) {
                 Customer updateCus = event.data;
                 //更新label
@@ -460,7 +460,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.tags       = updateCus.tags;
                 customer.contacts   = updateCus.contacts;
                 ((CustomerChildFragment)adapter.getItem(1)).reloadWithCustomer(customer);//更新联系人
-                loadCustomer(false);
+                loadCustomer();
                 refreshDropRemind();
 
             }
@@ -491,7 +491,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                                 refreshDropRemind();
                             }
                         });
-                loadCustomer(false);
+                loadCustomer();
                 //更新列表数据
                 MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(customer);
                 myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
