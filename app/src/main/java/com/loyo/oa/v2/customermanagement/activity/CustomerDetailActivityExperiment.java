@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapter;
+import com.loyo.oa.v2.customermanagement.adapter.CustomerPagerAdapterExperiment;
+import com.loyo.oa.v2.customermanagement.fragment.TestFragmentExperiment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
 public class CustomerDetailActivityExperiment extends BaseFragmentActivity
@@ -20,13 +21,13 @@ public class CustomerDetailActivityExperiment extends BaseFragmentActivity
     ViewGroup img_title_left, img_title_right;
     TextView tv_title_1;
     AppBarLayout appBarLayout;
-    CustomerPagerAdapter adapter;
+    CustomerPagerAdapterExperiment adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_detail);
-
+        setContentView(R.layout.activity_customer_detail_experiment);
+        //ButterKnife.bind(this);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
@@ -65,17 +66,17 @@ public class CustomerDetailActivityExperiment extends BaseFragmentActivity
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        adapter = new CustomerPagerAdapter(getSupportFragmentManager());
-//        adapter.addFragment(new TestFragmentExperiment(), "跟进 1");
-//        adapter.addFragment(new TestFragmentExperiment(), "联系人 2");
-//        adapter.addFragment(new TestFragmentExperiment(), "拜访 3");
-//
-//        adapter.addFragment(new TestFragmentExperiment(), "机会 4");
-//        adapter.addFragment(new TestFragmentExperiment(), "订单 5");
-//        adapter.addFragment(new TestFragmentExperiment(), "任务 6");
-//
-//        adapter.addFragment(new TestFragmentExperiment(), "审批 7");
-//        adapter.addFragment(new TestFragmentExperiment(), "附件 8");
+        adapter = new CustomerPagerAdapterExperiment(getSupportFragmentManager());
+        adapter.addFragment(new TestFragmentExperiment(), "跟进 1");
+        adapter.addFragment(new TestFragmentExperiment(), "联系人 2");
+        adapter.addFragment(new TestFragmentExperiment(), "拜访 3");
+
+        adapter.addFragment(new TestFragmentExperiment(), "机会 4");
+        adapter.addFragment(new TestFragmentExperiment(), "订单 5");
+        adapter.addFragment(new TestFragmentExperiment(), "任务 6");
+
+        adapter.addFragment(new TestFragmentExperiment(), "审批 7");
+        adapter.addFragment(new TestFragmentExperiment(), "附件 8");
         viewPager.setAdapter(adapter);
     }
 

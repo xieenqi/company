@@ -23,6 +23,13 @@ public class CustomerChildFragment extends BaseFragment {
     String title = "";
     Customer customer;
 
+    public CustomerChildFragment(Customer customer, int index, OnTotalCountChangeListener listener, String title) {
+        setCustomer(customer);
+        this.index = index;
+        setListener(listener);
+        this.title = title;
+    }
+
     public String getTitle() {
         return String.format("%s %d", title, totalCount);
     }

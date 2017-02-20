@@ -56,8 +56,8 @@ public class OpportunitiesFragment extends CustomerChildFragment
     public static final int CREATE_DEMANDS = 300;
     private int page = 1;
 
-    public OpportunitiesFragment() {
-        this.title = "机会";
+    public OpportunitiesFragment(Customer customer, int index, OnTotalCountChangeListener listener, String title) {
+        super(customer, index, listener, title);
     }
 
     @Override

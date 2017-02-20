@@ -83,8 +83,8 @@ public class VisitsFragment extends CustomerChildFragment
     private SigninListFragPresenter mPresenter;
     private int pageSize = 5;
 
-    public VisitsFragment() {
-        this.title = "拜访";
+    public VisitsFragment(Customer customer, int index, OnTotalCountChangeListener listener, String title) {
+        super(customer, index, listener, title);
     }
 
     @Override
