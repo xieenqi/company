@@ -806,7 +806,7 @@ public class SignInActivity extends BaseActivity
      */
     public void postAttaData() {
         ArrayList<UploadTask> list = controller.getTaskList();
-        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             UploadTask task = list.get(i);
             AttachmentBatch attachmentBatch = new AttachmentBatch();

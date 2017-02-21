@@ -20,6 +20,8 @@ import com.loyo.oa.v2.network.LoyoErrorChecker;
 
 import java.util.List;
 
+import static com.loyo.oa.v2.activityui.setting.bean.SystemMessageItemType.MOVE_SUPER_USER;
+
 /**
  * Created by xeq on 16/11/7.
  */
@@ -101,10 +103,10 @@ public class AdapterSystemMessage extends BaseAdapter {
 
         public void openItem(SystemMessageItem item) {
             Intent intent = new Intent();
-            if (item.bizzType.getValue() == 24) {
+            if (item.bizzType == MOVE_SUPER_USER) {
                 return;//系统消息不做调转
             }  //此处特殊处理 客户 批量改 参与人、负责人 、掉入公海
-            else if (item.bizzType.getValue() == SystemMessageItemType.MSG_CUSTOMER.getValue()
+            else if (item.bizzType == SystemMessageItemType.MSG_CUSTOMER
                     && item.jumpType != 0) {
                 intent.setClass(context, CustomerManagerActivity.class);
                 intent.putExtra(ExtraAndResult.EXTRA_TYPE, item.jumpType);
