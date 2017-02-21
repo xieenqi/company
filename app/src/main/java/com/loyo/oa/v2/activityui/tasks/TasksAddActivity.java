@@ -56,7 +56,6 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.task.api.TaskService;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -71,7 +70,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -197,11 +195,6 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 
         Resources res = mContext.getResources();
         Configuration config = res.getConfiguration();
-        String locale = config.locale.getCountry();
-        LogUtil.dee("方法1:" + locale);
-        LogUtil.dee("方法2:" + Locale.getDefault().toString());
-        LogUtil.dee("方法3:" + Locale.getDefault().getLanguage());
-
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         controller.loadView(gridView);

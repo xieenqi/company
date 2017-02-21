@@ -116,8 +116,8 @@ public class Customer extends BaseBeans {
 
     public String id;
     public String name;
-    public Locate loc;
-    public Locate position;
+    public Locate loc;//客户详细地址，一般是人可以手动输入的地址
+    public Locate position;//客户位置，一般是定位得到的
     public long createdAt;
     public ArrayList<ExtraData> extDatas = new ArrayList<>();
     public boolean lock;
@@ -133,7 +133,7 @@ public class Customer extends BaseBeans {
 
     public String distance;
     public String lastAct;
-    public String summary;
+    public String summary;//客户介绍
     public String uuid;
     public Industry industry;
     public int winCount;

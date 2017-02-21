@@ -84,8 +84,8 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
     private PaginationX<FollowUpGroupModel> mPagination = new PaginationX<>(20);
     private int pageSize = 5;
 
-    public FollowupsFragment() {
-        this.title = "跟进";
+    public FollowupsFragment(Customer customer, int index, OnTotalCountChangeListener listener, String title) {
+        super(customer, index, listener, title);
     }
 
     @Override

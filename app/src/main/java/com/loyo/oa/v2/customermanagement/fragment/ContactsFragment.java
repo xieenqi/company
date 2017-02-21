@@ -79,8 +79,11 @@ public class ContactsFragment extends CustomerChildFragment
         startActivityForResult(intent, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT);
     }
 
-    public ContactsFragment() {
-        this.title = "联系人";
+//    public ContactsFragment() {
+//        this.title = "联系人";
+//    }
+    public ContactsFragment(Customer customer, int index, OnTotalCountChangeListener listener, String title) {
+        super(customer, index, listener, title);
     }
 
     public void setCustomer(Customer customer) {

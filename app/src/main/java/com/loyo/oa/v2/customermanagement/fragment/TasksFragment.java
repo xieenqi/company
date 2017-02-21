@@ -59,8 +59,8 @@ public class TasksFragment extends CustomerChildFragment implements PullToRefres
     private boolean isTopAdd;
     private boolean isChanged;
 
-    public TasksFragment() {
-        this.title = "任务";
+    public TasksFragment(Customer customer, int index, OnTotalCountChangeListener listener, String title) {
+        super(customer, index, listener, title);
     }
 
     void initViews() {

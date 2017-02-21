@@ -95,7 +95,9 @@ public class CustomerInfoExtraData extends LinearLayout {
             }
             //tv_content.setTextColor(valueColor);
             tv_tag.setText(properties.getLabel());
-
+            if(!TextUtils.isEmpty(customerExtra.getVal())){
+                tv_content.setText(customerExtra.getVal());
+            }
             /**
              * 说   明: 创建时发送时间戳，获取也是时间戳，但是之前服务器数据存在2015-2-3这种时间格式数据，所以这里判断一下。
              * 解析格式: yyyy-MM-dd HH:mm

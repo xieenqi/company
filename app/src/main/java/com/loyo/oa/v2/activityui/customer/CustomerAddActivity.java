@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -40,9 +37,9 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
-import com.loyo.oa.v2.activityui.customer.model.HttpAddCustomer;
+import com.loyo.oa.v2.activityui.customer.model.HttpLoc;
+import com.loyo.oa.v2.activityui.customer.model.Locate;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
-import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
@@ -56,9 +53,7 @@ import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
@@ -81,8 +76,6 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * 【新建 客户】 页面
  */
- //TODO 写客户详情需求的时候注意，有一个customer的实体，怎嚒还定义来一套变量，没有细看，可以的话，删除掉。
-//    TODO 明明使用的注解框架，这嚒用findViewByID,最好统一
 
 @EActivity(R.layout.activity_customer_add)
 public class CustomerAddActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
@@ -133,67 +126,32 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @ViewById
     EditText edt_customer_weburl;
 
-    private TextView tv_phone_name1;
-    private TextView tv_phone_name2;
-    private TextView tv_phone_name3;
+    //手机
+    @ViewById
+    TextView tv_phone_name1, tv_phone_name2, tv_phone_name3;
 
-    private TextView tv_call_name1;
-    private TextView tv_call_name2;
-    private TextView tv_call_name3;
-    private TextView tv_district;
+    //座机
+    @ViewById
+    TextView tv_call_name1, tv_call_name2, tv_call_name3;
 
-    private EditText edt_contract_tel1;
-    private EditText edt_contract_tel2;
-    private EditText edt_contract_tel3;
-    private EditText edt_content;
+    @ViewById
+    TextView tv_district;
+    @ViewById
+    EditText edt_contract_tel1, edt_contract_tel2, edt_contract_tel3, edt_contract_telnum1, edt_contract_telnum2, edt_contract_telnum3, edt_content;
 
-    private EditText edt_contract_telnum1;
-    private EditText edt_contract_telnum2;
-    private EditText edt_contract_telnum3;
+    @ViewById
+    ImageView iv_phone_insert1, iv_phone_insert2, iv_call_insert1, iv_call_insert2;
 
-    private ImageView iv_phone_insert1;
-    private ImageView iv_phone_insert2;
-    private ImageView iv_phone_insert3;
+    @ViewById
+    LinearLayout ll_phone_layout2, ll_phone_layout3, ll_call_layout2, ll_call_layout3, layout_more, layout_customer_optional_info, layout_customer_required_info;
 
-    private ImageView iv_call_insert1;
-    private ImageView iv_call_insert2;
-    private ImageView iv_call_insert3;
-
-    private LinearLayout ll_phone_layout2;
-    private LinearLayout ll_phone_layout3;
-    private LinearLayout ll_call_layout2;
-    private LinearLayout ll_call_layout3;
-    private LinearLayout layout_more;
-    private LinearLayout containerOp; //选填动态字段容器
-    private LinearLayout containerRe; //必填动态字段容器
-    private LinearLayout ll_district;
-
-    private CustomerRegional regional = new CustomerRegional();
     private EditText edit_address_details;
-    private ImageGridViewAdapter imageGridViewAdapter;
     private ArrayList<Contact> mContacts = new ArrayList<>();
-    private ArrayList<NewTag> tags;
     private Bundle mBundle;
-    private List<String> mSelectPath;
-    private ArrayList<ImageInfo> pickPhotsResult;
-    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
-    private ArrayList<ExtraData> extDatas; //动态字段总汇
     private ArrayList<ExtraData> RextDatasModel;  //必填
     private ArrayList<ExtraData> OpextDatasModel; //选填
 
     private String uuid;
-    private String tagItemIds;
-    private String myAddress;
-
-    private String customer_name;
-    private String customerAddress;
-    private String customerContract;
-    private String customerContractTel;
-    private String customerWrietele;
-    private String cusotmerDetalisAddress;
-    private String memo;
-    private double laPosition;//当前位置的经纬度
-    private double loPosition;
 
     private boolean cusMemo = false; //简介权限
     private boolean cusGuys = false;  //联系人权限
@@ -202,9 +160,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private boolean cusLocation = false;//定位权限
     private boolean cusDetialAdress = false;//客户的详细地址
     private boolean isSave = true;
-    private Customer mCustomer;
-    private ArrayList<String> telGroup;
-    private ArrayList<String> wiretelGroup;
 
     private ArrayList<ContactLeftExtras> mCustomerExtraDatas;
     private PositionResultItem positionResultItem;
@@ -213,80 +168,18 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     LocationUtilGD locationGd;
     private CompositeSubscription subscriptions;
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void dispatchMessage(final Message msg) {
-            if (msg.what == 0x01) {
-                et_address.setText(myAddress);
-                if (TextUtils.isEmpty(edit_address_details.getText().toString()))
-                    edit_address_details.setText(myAddress);
-            }
-        }
-    };
+    private Customer customer = new Customer();//新建的客户
 
     @AfterViews
     void initUI() {
         subscriptions = new CompositeSubscription();
-
-        tv_phone_name1 = (TextView) findViewById(R.id.tv_phone_name1);
-        tv_phone_name2 = (TextView) findViewById(R.id.tv_phone_name2);
-        tv_phone_name3 = (TextView) findViewById(R.id.tv_phone_name3);
-
-        tv_call_name1 = (TextView) findViewById(R.id.tv_call_name1);
-        tv_call_name2 = (TextView) findViewById(R.id.tv_call_name2);
-        tv_call_name3 = (TextView) findViewById(R.id.tv_call_name3);
-        tv_district = (TextView) findViewById(R.id.tv_district);
-
-        edt_contract_tel1 = (EditText) findViewById(R.id.edt_contract_tel1);
-        edt_contract_tel2 = (EditText) findViewById(R.id.edt_contract_tel2);
-        edt_contract_tel3 = (EditText) findViewById(R.id.edt_contract_tel3);
-
-        edt_contract_telnum1 = (EditText) findViewById(R.id.edt_contract_telnum1);
-        edt_contract_telnum2 = (EditText) findViewById(R.id.edt_contract_telnum2);
-        edt_contract_telnum3 = (EditText) findViewById(R.id.edt_contract_telnum3);
-        edt_content = (EditText) findViewById(R.id.edt_content);
-
-        iv_phone_insert1 = (ImageView) findViewById(R.id.iv_phone_insert1);
-        iv_phone_insert2 = (ImageView) findViewById(R.id.iv_phone_insert2);
-
-        iv_call_insert1 = (ImageView) findViewById(R.id.iv_call_insert1);
-        iv_call_insert2 = (ImageView) findViewById(R.id.iv_call_insert2);
-
-        ll_phone_layout2 = (LinearLayout) findViewById(R.id.ll_phone_layout2);
-        ll_phone_layout3 = (LinearLayout) findViewById(R.id.ll_phone_layout3);
-        ll_call_layout2 = (LinearLayout) findViewById(R.id.ll_call_layout2);
-        ll_call_layout3 = (LinearLayout) findViewById(R.id.ll_call_layout3);
-        layout_more = (LinearLayout) findViewById(R.id.layout_more);
-        containerOp = (LinearLayout) findViewById(R.id.layout_customer_optional_info);
-        containerRe = (LinearLayout) findViewById(R.id.layout_customer_required_info);
-        ll_district = (LinearLayout) findViewById(R.id.layout_customer_district);
-
-        layout_more.setOnTouchListener(Global.GetTouch());
-        img_title_left.setOnTouchListener(Global.GetTouch());
-        img_title_right.setOnTouchListener(Global.GetTouch());
-        iv_phone_insert1.setOnTouchListener(Global.GetTouch());
-        iv_phone_insert2.setOnTouchListener(Global.GetTouch());
-        iv_call_insert1.setOnTouchListener(Global.GetTouch());
-        iv_call_insert2.setOnTouchListener(Global.GetTouch());
-        layout_customer_status.setOnTouchListener(Global.GetTouch());
-        layout_customer_label.setOnTouchListener(Global.GetTouch());
-
-        if(null==mCustomer){
-            mCustomer=new Customer();
-        }
-
+        Global.SetTouchView(layout_more, img_title_left, img_title_right, iv_phone_insert1, iv_phone_insert2,
+                iv_call_insert1, iv_call_insert2, layout_customer_status, layout_customer_label);
         edit_address_details = (EditText) findViewById(R.id.edit_address_details);
-        requestJurisdiction();
-        if (app.latitude != -1 && app.longitude != -1) {
-            laPosition = app.latitude;
-            loPosition = app.longitude;
-        }
+
         edt_contract_tel1.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
         edt_contract_telnum1.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
-
-
         LocationUtilGD.permissionLocation(this);
-
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         controller.loadView(gridView);
@@ -310,8 +203,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         } else {
             super.setTitle("新建客户");
             getTempCustomer();
-
         }
+        requestJurisdiction();
         startLocation();
     }
 
@@ -319,13 +212,22 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 获取定位
      */
     void startLocation() {
-        et_address.setText(app.address);
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
                 UMengTools.sendLocationInfo(address, longitude, latitude);
-                myAddress = address;
-                mHandler.sendEmptyMessage(0x01);
+                et_address.setText(address);
+                if (TextUtils.isEmpty(edit_address_details.getText().toString())) {
+                    edit_address_details.setText(address);
+                }
+                app.address = address;//缓存最新的地址
+                app.longitude = longitude;
+                app.latitude = latitude;
+                Locate postition = new Locate();
+                customer.position = postition;
+                customer.position.addr = address;
+                customer.position.loc[0] = longitude;
+                customer.position.loc[1] = latitude;
                 LocationUtilGD.sotpLocation();
             }
 
@@ -346,58 +248,113 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             layout_more.setVisibility(View.GONE);
             return;
         }
-
-        extDatas = new ArrayList<>();
         RextDatasModel = new ArrayList<>();
         OpextDatasModel = new ArrayList<>();
         ExtraData extraData;
         ExtraProperties properties;
 
-        for (ContactLeftExtras contactLeftExtras : mCustomerExtraDatas) {
-            extraData = new ExtraData();
-            properties = new ExtraProperties();
-            if (!contactLeftExtras.isSystem && contactLeftExtras.enabled) {
-                properties.setEnabled(contactLeftExtras.enabled);
-                properties.setRequired(contactLeftExtras.required);
-                properties.setLabel(contactLeftExtras.label);
-                properties.setType(contactLeftExtras.type);
-                properties.setIsList(contactLeftExtras.isList);
-                properties.setDefVal(contactLeftExtras.defVal);
-                properties.setName(contactLeftExtras.name);
-                extraData.setProperties(properties);
-                extDatas.add(extraData);
+        //说明没有保存的有缓存
+        if (customer.extDatas.size() <= 0) {
+            for (ContactLeftExtras contactLeftExtras : mCustomerExtraDatas) {
+                extraData = new ExtraData();
+                properties = new ExtraProperties();
+                if (!contactLeftExtras.isSystem && contactLeftExtras.enabled) {
+                    properties.setEnabled(contactLeftExtras.enabled);
+                    properties.setRequired(contactLeftExtras.required);
+                    properties.setLabel(contactLeftExtras.label);
+                    properties.setType(contactLeftExtras.type);
+                    properties.setIsList(contactLeftExtras.isList);
+                    properties.setDefVal(contactLeftExtras.defVal);
+                    properties.setName(contactLeftExtras.name);
+                    extraData.setProperties(properties);
+                    customer.extDatas.add(extraData);
+                }
             }
         }
 
+
         /*分离必填与非必填字段*/
-        for (ExtraData ext : extDatas) {
+        for (ExtraData ext : customer.extDatas) {
             if (ext.getProperties().isRequired()) {
                 RextDatasModel.add(ext);
             } else {
                 OpextDatasModel.add(ext);
+                //显示更多信息
+                if (!TextUtils.isEmpty(ext.getVal())) {
+                    layout_more.setVisibility(View.GONE);
+                    layout_customer_optional_info.setVisibility(View.VISIBLE);
+                }
             }
         }
 
-        containerOp.addView(new CustomerInfoExtraData(mContext, OpextDatasModel, ismy, R.color.text33, 0));
-        containerRe.addView(new CustomerInfoExtraData(mContext, RextDatasModel, ismy, R.color.text33, 0));
+        layout_customer_optional_info.addView(new CustomerInfoExtraData(mContext, OpextDatasModel, ismy, R.color.text33, 0));
+        layout_customer_required_info.addView(new CustomerInfoExtraData(mContext, RextDatasModel, ismy, R.color.text33, 0));
     }
 
     /**
      * 加载上次编辑，没有提交的信息
      */
     void getTempCustomer() {
-        Customer customer = DBManager.Instance().getCustomer();
-        if (customer == null) return;
-        Toast("已显示之前未提交的数据");
+        customer = DBManager.Instance().getCustomer();
+        if (customer == null){
+            customer = new Customer();
+        }else{
+            Toast("已显示之前未提交的数据");
+        }
         edt_name.setText(customer.name);
-        ArrayList<Contact> contacts = customer.contacts;
-        if (contacts != null && contacts.size() > 0) {
-            for (Contact c : contacts) {
-                if (c.isDefault()) {
-                    edt_contract.setText(c.getName());
-                    edt_contract_tel1.setText(c.getTel());
-                } else {
-                    setContract(c);
+        if (null != customer.position) edit_address_details.setText(customer.position.addr);
+        if (null != customer.loc) et_address.setText(customer.loc.addr);
+        if (!TextUtils.isEmpty(customer.statusName)) tv_status.setText(customer.statusName);
+        if (null != customer.tags) tv_labels.setText(customer.displayTagString());
+        if (!TextUtils.isEmpty(customer.webSite)) edt_customer_weburl.setText(customer.webSite);
+        if (!TextUtils.isEmpty(customer.summary)) edt_content.setText(customer.summary);
+        if (null != customer.regional) {
+            tv_district.setText(customer.regional.province + " " + customer.regional.city + " " + customer.regional.county);
+            layout_more.setVisibility(View.GONE);
+            layout_customer_optional_info.setVisibility(View.VISIBLE);
+        }
+        //恢复联系人和电话号码
+        if (null != customer.contacts && customer.contacts.size() > 0) {
+            Contact contact = customer.contacts.get(0);
+            edt_contract.setText(contact.getName());
+            for (int i = 0; i < contact.telGroup.size(); i++) {
+                switch (i) {
+                    case 0:
+                        edt_contract_tel1.setText(contact.telGroup.get(i));
+                        break;
+                    case 1:
+                        edt_contract_tel2.setText(contact.telGroup.get(i));
+                        tv_phone_name1.setText("手机1    ");
+                        tv_phone_name2.setText("手机2    ");
+                        iv_phone_insert1.setVisibility(View.INVISIBLE);
+                        ll_phone_layout2.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        edt_contract_tel3.setText(contact.telGroup.get(i));
+                        tv_phone_name3.setText("手机3    ");
+                        iv_phone_insert2.setVisibility(View.INVISIBLE);
+                        ll_phone_layout3.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+            for (int i = 0; i < contact.wiretelGroup.size(); i++) {
+                switch (i) {
+                    case 0:
+                        edt_contract_telnum1.setText(contact.wiretelGroup.get(i));
+                        break;
+                    case 1:
+                        edt_contract_telnum2.setText(contact.wiretelGroup.get(i));
+                        tv_call_name1.setText("座机1    ");
+                        tv_call_name2.setText("座机2    ");
+                        iv_call_insert1.setVisibility(View.INVISIBLE);
+                        ll_call_layout2.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        edt_contract_telnum3.setText(contact.wiretelGroup.get(i));
+                        tv_call_name3.setText("座机3    ");
+                        iv_call_insert2.setVisibility(View.INVISIBLE);
+                        ll_call_layout3.setVisibility(View.VISIBLE);
+                        break;
                 }
             }
         }
@@ -413,7 +370,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             /*更多信息*/
             case R.id.layout_more:
                 layout_more.setVisibility(View.GONE);
-                containerOp.setVisibility(View.VISIBLE);
+                layout_customer_optional_info.setVisibility(View.VISIBLE);
                 break;
 
             /*手机添加1*/
@@ -498,33 +455,36 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 }
 
                 uuid = StringUtil.getUUID();
-                customer_name = edt_name.getText().toString().trim();
-                customerAddress = et_address.getText().toString().trim();
-                customerContract = edt_contract.getText().toString().trim();
-                customerContractTel = edt_contract_tel1.getText().toString().trim();
-                customerWrietele = edt_contract_telnum1.getText().toString().trim();
-                cusotmerDetalisAddress = edit_address_details.getText().toString().trim();
-                memo = edt_content.getText().toString().trim();
-
-                if (customer_name.isEmpty()) {
+                customer.name = edt_name.getText().toString().trim();
+                Locate loc = new Locate();
+                customer.loc = loc;
+                customer.loc.addr = edit_address_details.getText().toString().trim();
+                customer.summary = edt_content.getText().toString().trim();
+                //联系人
+                Contact firstContact = new Contact();
+                firstContact.setName(edt_contract.getText().toString().trim());
+                firstContact.setTel(edt_contract_telnum1.getText().toString().trim());
+                firstContact.setWiretel(edt_contract_telnum1.getText().toString().trim());
+                customer.contacts.add(firstContact);
+                if (customer.name.isEmpty()) {
                     Toast("请输入客户名称!");
                     return;
-                } else if (customerAddress.isEmpty() && cusLocation) {
+                } else if (null != customer.position && TextUtils.isEmpty(customer.position.addr) && cusLocation) {
                     Toast("请输入的客户地址!");
                     return;
-                } else if (cusotmerDetalisAddress.isEmpty() && cusDetialAdress) {
+                } else if (null != customer.loc && TextUtils.isEmpty(customer.loc.addr) && cusDetialAdress) {
                     Toast("请输入的客户详细地址!");
                     return;
-                } else if (TextUtils.isEmpty(customerContractTel) && cusPhone) {
+                } else if (TextUtils.isEmpty(firstContact.getTel()) && cusPhone) {
                     Toast("请输入客户手机号码!");
                     return;
-                } else if (TextUtils.isEmpty(customerWrietele) && cusMobile) {
+                } else if (TextUtils.isEmpty(firstContact.getWiretel()) && cusMobile) {
                     Toast("请输入客户座机号码!");
                     return;
-                } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
+                } else if (TextUtils.isEmpty(firstContact.getName()) && cusGuys) {
                     Toast("请输入联系人姓名!");
                     return;
-                } else if (TextUtils.isEmpty(memo) && cusMemo) {
+                } else if (TextUtils.isEmpty(customer.summary) && cusMemo) {
                     Toast("请填写客户简介!");
                     return;
                 } else if (!testDynamicword()) {
@@ -541,32 +501,28 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     controller.startUpload();
                     controller.notifyCompletionIfNeeded();
                 }
-
-
                 break;
 
             /*选择标签*/
             case R.id.layout_customer_label:
-
-
                 Intent mIntent = new Intent(this, CustomerLabelCopyActivity.class);
                 mIntent.putExtra("canEdit", true);
                 mIntent.putExtra("fromPage", 1);
-                mIntent.putExtra("customerId","-1");
-                if (null != tags) {
-                    mIntent.putExtra("tagitems", Utils.convertTagItems(tags));
+                mIntent.putExtra("customerId", "-1");
+                if (null != customer.tags) {
+                    mIntent.putExtra("tagitems", Utils.convertTagItems(customer.tags));
                 }
                 startActivity(mIntent);
-
                 break;
             /*选择状态*/
             case R.id.layout_customer_status:
                 Bundle b = new Bundle();
-                b.putString(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, null==mCustomer?"":mCustomer.statusId);//设置默认值
+                b.putString(CustomerStatusSingleSelectActivity.EXTRA_CURRENT, customer.statusId);//设置默认值
                 app.startActivityForResult(this, CustomerStatusSingleSelectActivity.class, app.ENTER_TYPE_RIGHT, REQUEST_ACTIVITY_CODE_STATUS, b);
                 break;
         }
     }
+
     /**
      * 更新Label
      *
@@ -576,35 +532,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     public void onCustomerRushEvent(MyCustomerRushEvent event) {
         if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode &&
                 event.subCode == MyCustomerRushEvent.EVENT_SUB_CODE_LABEL
-                &&"-1".equals(event.session)) {
-            tags = event.data.tags;
-            StringBuffer sb = null;
-            StringBuffer sbItemId = null;
-            StringBuffer sbTId = null;
-            for (NewTag tag : tags) {
-                if (sb == null) {
-                    sb = new StringBuffer();
-                    sb.append(String.valueOf(tag.getItemName()));
-                    sbItemId = new StringBuffer();
-                    sbItemId.append(String.valueOf(tag.getItemId()));
-                    sbTId = new StringBuffer();
-                    sbTId.append(String.valueOf(tag.gettId()));
-                } else {
-                    sb.append("、");
-                    sb.append(String.valueOf(tag.getItemName()));
-                    sbItemId.append(",");
-                    sbItemId.append(String.valueOf(tag.getItemId()));
-                    sbTId.append(",");
-                    sbTId.append(String.valueOf(tag.gettId()));
-                }
-            }
-            if (sbItemId != null) {
-                tagItemIds = sbItemId.toString();
-                tv_labels.setText(sb.toString());
-            } else{
-                tagItemIds="";
-                tv_labels.setText("");
-            }
+                && "-1".equals(event.session)) {
+            customer.tags = event.data.tags;
+            tv_labels.setText(customer.displayTagString());
 
         }
     }
@@ -625,24 +555,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             public void onClick(final View view) {
                 String[] cityArr = selectCityView.getResult();
                 tv_district.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2]);
-                regional.province = cityArr[0];
-                regional.city = cityArr[1];
-                regional.county = cityArr[2];
+                customer.regional = new CustomerRegional();
+                customer.regional.province = cityArr[0];
+                customer.regional.city = cityArr[1];
+                customer.regional.county = cityArr[2];
                 selectCityView.dismiss();
             }
         });
-    }
-
-    void setContract(final Contact c) {
-        if (c == null) return;
-        mContacts.add(c);
-        layout_newContract.setVisibility(View.VISIBLE);
-        View view = LayoutInflater.from(this).inflate(R.layout.item_customer_new_contract, null, false);
-        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
-        TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
-        tv_name.setText(c.getName());
-        tv_phone.setText(c.getTel());
-        layout_newContract.addView(view);
     }
 
     /**
@@ -654,7 +573,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("bizType", 100);
         CustomerService.getAddCustomerJur(map)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
-
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
@@ -686,6 +604,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             }
                         }
                         initExtra(true);
+
                     }
                 });
     }
@@ -701,24 +620,19 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      */
 
     private boolean testDynamicword() {
-        extDatas.clear();
-        extDatas.addAll(RextDatasModel);
-        extDatas.addAll(OpextDatasModel);
-
-        LogUtil.dee("extDatas:" + MainApp.gson.toJson(extDatas));
-
-        if (extDatas != null) {
-            for (ExtraData ext : extDatas) {
-                try {
-                    if (ext.getProperties().isRequired() && ext.getProperties().isEnabled()) {
-                        if (ext.getVal().isEmpty() || null == ext.getVal()) {
-                            return false;
-                        }
+        customer.extDatas.clear();
+        customer.extDatas.addAll(RextDatasModel);
+        customer.extDatas.addAll(OpextDatasModel);
+        for (ExtraData ext : customer.extDatas) {
+            try {
+                if (ext.getProperties().isRequired() && ext.getProperties().isEnabled()) {
+                    if (ext.getVal().isEmpty() || null == ext.getVal()) {
+                        return false;
                     }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    return false;
                 }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                return false;
             }
         }
         return true;
@@ -729,58 +643,43 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 新建客户请求
      */
     public void requestCommitTask() {
-
-        HttpAddCustomer positionData = new HttpAddCustomer();
-        positionData.loc.addr = customerAddress;
-        positionData.loc.loc.add(loPosition);
-        positionData.loc.loc.add(laPosition);
-        if (tags != null && tags.size() > 0) {
-            for (NewTag tag : tags) {
-                NewTag newtag = new NewTag();
-                newtag.tId = tag.tId;
-                newtag.itemId = tag.itemId;
-                newtag.itemName = tag.itemName;
-                positionData.tags.add(newtag);
-            }
-        }
-
-        HttpAddCustomer locData = new HttpAddCustomer();
-        locData.loc.addr = cusotmerDetalisAddress;
-
-        telGroup = new ArrayList<>();
-        wiretelGroup = new ArrayList<>();
-
-        getTelNum(edt_contract_tel1, telGroup);
-        getTelNum(edt_contract_tel2, telGroup);
-        getTelNum(edt_contract_tel3, telGroup);
-        getTelNum(edt_contract_telnum1, wiretelGroup);
-        getTelNum(edt_contract_telnum2, wiretelGroup);
-        getTelNum(edt_contract_telnum3, wiretelGroup);
+        //获取联系人号码
+        Contact contact = customer.contacts.get(0);
+        contact.telGroup.clear();//清除验证数据的时候的输入
+        contact.wiretelGroup.clear();//清除验证数据的时候的输入
+        getTelNum(edt_contract_tel1, contact.telGroup);
+        getTelNum(edt_contract_tel2, contact.telGroup);
+        getTelNum(edt_contract_tel3, contact.telGroup);
+        getTelNum(edt_contract_telnum1, contact.wiretelGroup);
+        getTelNum(edt_contract_telnum2, contact.wiretelGroup);
+        getTelNum(edt_contract_telnum3, contact.wiretelGroup);
 
         HashMap<String, Object> map = new HashMap<>();
         if (controller.count() > 0) {
             map.put("attachmentCount", controller.count());
             map.put("uuid", uuid);
         }
+        //因为数据格式的原因，把保存在customer的数据，转换一个格式然后再提交
+        HttpLoc position = new HttpLoc();
+        position.addr = customer.position.addr;
+        position.loc.add(customer.position.loc[0]);
+        position.loc.add(customer.position.loc[1]);
 
-        map.put("position", positionData.loc); //定位数据
-        map.put("loc", locData.loc);           //地址详情数据
-        map.put("name", customer_name);
-        map.put("pname", customerContract);
-        map.put("tags", positionData.tags);
-        map.put("telGroup", telGroup);
-        map.put("wiretelGroup", wiretelGroup);
-        map.put("extDatas", extDatas);
-        map.put("summary", memo);
-        map.put("regional", regional);
-        if(null!=mCustomer.statusId){
-            map.put("statusId", mCustomer.statusId);//状态
+        map.put("position", position); //定位数据
+        map.put("loc", customer.loc);//地址详情数据
+        map.put("name", customer.name);
+        map.put("pname", contact.getName());
+        map.put("tags", customer.tags);
+        map.put("telGroup", contact.telGroup);
+        map.put("wiretelGroup", contact.wiretelGroup);
+        map.put("extDatas", customer.extDatas);
+        map.put("summary", customer.summary);
+        map.put("regional", customer.regional);
+        if (!TextUtils.isEmpty(customer.statusId)) {
+            map.put("statusId", customer.statusId);//选中的有statusId，就提交不然，服务器给来默认值的
         }
-        //网址输入的有内容，才提交
-        String url = edt_customer_weburl.getText()+"";
-        if(url.length()>8){
-            map.put("webSite",url);
-        }
+        customer.webSite = edt_customer_weburl.getText() + "";
+        map.put("webSite", customer.webSite);
         if (actionType == TYPE_CLUE_TO_CUSTOMER && clueSales != null)
             map.put("salesleadId", clueSales.id);
         Subscription subscribe = CustomerService.addNewCustomer(map)
@@ -788,6 +687,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onNext(final CustomerWrapper customer) {
                         if (customer.errcode != 0) {
+                            //删除本地缓存
+                            DBManager.Instance().deleteCustomer();
                             hud.dismiss();
                             showCommitLoading();
                             LoyoUIThread.runAfterDelay(new Runnable() {
@@ -832,32 +733,26 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         DBManager.Instance().deleteCustomer();
         if (isSave) {
-            mCustomer = new Customer();
-            mCustomer.name = (edt_name.getText().toString().trim());
-
-            ArrayList<Contact> contacts = new ArrayList<>();
-
-            if (mContacts != null && mContacts.size() > 0) {
-                contacts.addAll(mContacts);
-            }
-
-            Contact defaultContact = new Contact();
-            defaultContact.setName(edt_contract.getText().toString());
-            defaultContact.setTel(edt_contract_tel1.getText().toString());
-            defaultContact.setIsDefault(true);
-            contacts.add(0, defaultContact);
-            mCustomer.contacts = contacts;
-
-            mCustomer.owner = null;
-            mCustomer.members = null;
-            mCustomer.tags = null;
-            mCustomer.creator = null;
-
-            DBManager.Instance().putCustomer(MainApp.gson.toJson(mCustomer));
-
+            customer.name = edt_name.getText().toString().trim();
+            Locate loc = new Locate();
+            customer.loc = loc;
+            customer.loc.addr = edit_address_details.getText().toString().trim();
+            customer.summary = edt_content.getText().toString().trim();
+            customer.webSite = edt_customer_weburl.getText() + "";
+            //获取联系人号码
+            Contact contact = new Contact();
+            contact.setName(edt_contract.getText().toString());
+            getTelNum(edt_contract_tel1, contact.telGroup);
+            getTelNum(edt_contract_tel2, contact.telGroup);
+            getTelNum(edt_contract_tel3, contact.telGroup);
+            getTelNum(edt_contract_telnum1, contact.wiretelGroup);
+            getTelNum(edt_contract_telnum2, contact.wiretelGroup);
+            getTelNum(edt_contract_telnum3, contact.wiretelGroup);
+            customer.contacts.clear();//先吧原来的清空
+            customer.contacts.add(contact);
+            DBManager.Instance().putCustomer(MainApp.gson.toJson(customer));
         }
         subscriptions.unsubscribe();
         locationGd.sotpLocation();
@@ -866,17 +761,19 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (null == data) {
             return;
         }
-
         switch (requestCode) {
+            //地址微调
             case MapModifyView.SERACH_MAP:
                 positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
                 if (null != positionResultItem) {
-                    laPosition = positionResultItem.laPosition;
-                    loPosition = positionResultItem.loPosition;
+                    if (null == customer.position) {
+                        customer.position = new Locate();
+                    }
+                    customer.position.loc[0] = positionResultItem.laPosition;
+                    customer.position.loc[1] = positionResultItem.loPosition;
                     et_address.setText(positionResultItem.address);
                     edit_address_details.setText(positionResultItem.address);
                 }
@@ -891,53 +788,18 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             //客户状态
             case REQUEST_ACTIVITY_CODE_STATUS:
                 CustomerStatusModel.CustomerStatusItemModel itemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
-                mCustomer.statusId = itemModel.id;
-                mCustomer.statusName = itemModel.name;
+                customer.statusId = itemModel.id;
+                customer.statusName = itemModel.name;
                 tv_status.setText(itemModel.name);
                 break;
 
             case REQUEST_CUSTOMER_LABEL:
                 Bundle bundle = data.getExtras();
-                tags = (ArrayList<NewTag>) bundle.getSerializable("data");
-                StringBuffer sb = null;
-                StringBuffer sbItemId = null;
-                StringBuffer sbTId = null;
-                for (NewTag tag : tags) {
-                    if (sb == null) {
-                        sb = new StringBuffer();
-                        sb.append(String.valueOf(tag.getItemName()));
-
-                        sbItemId = new StringBuffer();
-                        sbItemId.append(String.valueOf(tag.getItemId()));
-
-                        sbTId = new StringBuffer();
-                        sbTId.append(String.valueOf(tag.gettId()));
-
-                    } else {
-                        sb.append("、");
-                        sb.append(String.valueOf(tag.getItemName()));
-
-                        sbItemId.append(",");
-                        sbItemId.append(String.valueOf(tag.getItemId()));
-
-                        sbTId.append(",");
-                        sbTId.append(String.valueOf(tag.gettId()));
-                    }
-                }
-
-                if (sbItemId != null) {
-                    tagItemIds = sbItemId.toString();
-                    tv_labels.setText(sb.toString());
-                } else
-                    tv_labels.setText("");
+                customer.tags = (ArrayList<NewTag>) bundle.getSerializable("data");
+                tv_labels.setText(customer.displayTagString());
                 break;
 
-            case REQUEST_CUSTOMER_NEW_CONTRACT:
 
-                Contact contact = (Contact) data.getSerializableExtra("data");
-                setContract(contact);
-
-                break;
 
             /*相册选择 回调*/
             case PhotoPicker.REQUEST_CODE:
