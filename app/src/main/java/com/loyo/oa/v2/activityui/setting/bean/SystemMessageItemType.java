@@ -11,7 +11,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.ClueManagerActivity;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
@@ -234,11 +233,11 @@ public enum SystemMessageItemType {
         }
 
         public Class<?> getItemClass() {
-            return CustomerDetailInfoActivity_.class;
+            return CustomerDetailActivity.class;
         }
 
         public String getExtraName() {
-            return "Id";
+            return CustomerDetailActivity.KEY_ID;
         }
     },
     /*线索相关*/
