@@ -232,6 +232,15 @@ public enum SystemMessageItemType {
             return R.drawable.icon_sys_custom;
         }
 
+        //此处特殊处理 区分公海客户图标
+        public int getIcon(int messageType) {
+            if (messageType == 1) {
+                return R.drawable.icon_sys_custom_public;
+            } else {
+                return getIcon();
+            }
+        }
+
         public Class<?> getItemClass() {
             return CustomerDetailActivity.class;
         }
@@ -392,6 +401,10 @@ public enum SystemMessageItemType {
 
     public Class<?> getItemClass(int jumpType) {
         return getItemClass();
+    }
+
+    public int getIcon(int messageType) {
+        return getIcon();
     }
 
     /**

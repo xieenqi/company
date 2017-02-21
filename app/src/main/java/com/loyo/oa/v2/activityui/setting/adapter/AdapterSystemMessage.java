@@ -20,6 +20,7 @@ import com.loyo.oa.v2.network.LoyoErrorChecker;
 
 import java.util.List;
 
+import static com.loyo.oa.v2.R.id.item;
 import static com.loyo.oa.v2.activityui.setting.bean.SystemMessageItemType.MOVE_SUPER_USER;
 
 /**
@@ -90,14 +91,8 @@ public class AdapterSystemMessage extends BaseAdapter {
         public void setContent(SystemMessageItem item) {
             tv_title.setText(item.title);
             tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(item.createdAt));
-            if (item.bizzType != null) {
-                //此处特殊处理 区分公海客户图标
-                if (item.bizzType.getValue() == SystemMessageItemType.MSG_CUSTOMER.getValue() && item.messageType == 1) {
-                    iv_icon.setImageResource(R.drawable.icon_sys_custom_public);
-                } else {
-                    iv_icon.setImageResource(item.bizzType.getIcon());
-                }
-            }
+            if (item.bizzType != null)
+                iv_icon.setImageResource(item.bizzType.getIcon(item.messageType));
             view_ack.setVisibility(item.viewedAt == 0 ? View.VISIBLE : View.GONE);
         }
 
