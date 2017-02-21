@@ -50,7 +50,14 @@ public class SigninModelImpl implements SigninContract.Model {
         subscriptions.add(CustomerService.addSignIn(map)
                 .subscribe(new DefaultLoyoSubscriber<LegWork>(presenter.getHUD()) {
                     @Override
+                    public void onError(Throwable e) {
+                        presenter.isSubmitEableView(true);
+                        super.onError(e);
+                    }
+
+                    @Override
                     public void onNext(LegWork legWork) {
+                        presenter.isSubmitEableView(true);
                         presenter.creatSuccess(legWork);
                     }
                 }));

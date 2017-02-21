@@ -313,7 +313,7 @@ public class SignInActivity extends BaseActivity
                 //这里是为了，兼容蛋疼的小米系统，在小米系统（android6.0+）不能同时申请，不同类型的权限，有的权限有超时拒绝
                 //类似存储权限，默认会返回授权，在使用的时候，再授权
                 CellInfo cellInfo = Utils.getCellInfo();
-                if (null != cellInfo && null!=cellInfo.getLoyoAgent()&&cellInfo.getLoyoAgent().toLowerCase().contains("xiaomi")) {
+                if (null != cellInfo && null != cellInfo.getLoyoAgent() && cellInfo.getLoyoAgent().toLowerCase().contains("xiaomi")) {
                     if (PermissionTool.requestPermission(SignInActivity.this, new String[]{
                                     Manifest.permission.RECORD_AUDIO //录音权限
                             }
@@ -518,6 +518,7 @@ public class SignInActivity extends BaseActivity
 
     private void sendSigninData() {
         showCommitLoading();
+        isSubmitEable(false);
         if (controller.count() == 0) {
             addSignIn();
         } else {
@@ -758,17 +759,18 @@ public class SignInActivity extends BaseActivity
 
     @Override
     public void creatSuccessUI(final LegWork legWork) {
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (!TextUtils.isEmpty(legWork.getId())) {
                     //更新客户状态信息
-                    mCustomer.lastActAt                     = System.currentTimeMillis()/1000;//跟进时间
+                    mCustomer.lastActAt = System.currentTimeMillis() / 1000;//跟进时间
                     MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(mCustomer);
-                    myCustomerRushEvent.eventCode           = MyCustomerRushEvent.EVENT_CODE_UPDATE;
-                    myCustomerRushEvent.subCode             = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
-                    myCustomerRushEvent.session             = mCustomer.getId();
-                    myCustomerRushEvent.request             = "note";
+                    myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                    myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_LTC;
+                    myCustomerRushEvent.session = mCustomer.getId();
+                    myCustomerRushEvent.request = "note";
                     AppBus.getInstance().post(myCustomerRushEvent);
                     //更新签到
                     AppBus.getInstance().post(new SigninRushEvent());
@@ -794,6 +796,11 @@ public class SignInActivity extends BaseActivity
         lstData_Attachment.remove(delAttachment);
     }
 
+    @Override
+    public void isSubmitEable(boolean eable) {
+        img_title_right.setEnabled(eable);
+    }
+
     /**
      * 上传附件信息
      */
@@ -812,6 +819,12 @@ public class SignInActivity extends BaseActivity
         }
         AttachmentService.setAttachementData2(attachment)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<Attachment>>(hud, true) {
+                    @Override
+                    public void onError(Throwable e) {
+                        isSubmitEable(true);
+                        super.onError(e);
+                    }
+
                     @Override
                     public void onNext(ArrayList<Attachment> news) {
                         addSignIn();

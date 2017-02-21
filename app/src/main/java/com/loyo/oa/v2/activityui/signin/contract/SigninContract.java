@@ -29,6 +29,8 @@ public interface SigninContract {
         void getAttachmentSuccessUI(ArrayList<Attachment> attachments);
 
         void deleteAttachmentSuccessUI(Attachment delAttachment);
+
+        void isSubmitEable(boolean eable);
     }
 
     interface Presenter extends BasePersenter {
@@ -58,6 +60,8 @@ public interface SigninContract {
         String getDeviationDistance(double la, double lo, double laPosition, double loPosition);
 
         void destory();
+
+        void isSubmitEableView(boolean eable);
 
     }
 

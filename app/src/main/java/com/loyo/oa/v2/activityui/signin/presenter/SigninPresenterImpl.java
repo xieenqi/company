@@ -134,4 +134,9 @@ public class SigninPresenterImpl implements SigninContract.Presenter {
         model.destory();
     }
 
+    @Override
+    public void isSubmitEableView(boolean eable) {
+        view.isSubmitEable(eable);
+    }
+
 }
