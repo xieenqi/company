@@ -234,6 +234,21 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void OnLocationGDFailed() {
                 Toast(R.string.LOCATION_FAILED);
+                //定位失败，如果有app缓存位置 就用app的缓存位置,没有就不填
+                if(!TextUtils.isEmpty(app.address)){
+                    Locate postition = new Locate();
+                    customer.position = postition;
+                    customer.position.addr = app.address;
+                    customer.position.loc[0] = app.longitude;
+                    customer.position.loc[1] = app.latitude;
+                    et_address.setText(app.address);
+                    if (TextUtils.isEmpty(edit_address_details.getText().toString())) {
+                        edit_address_details.setText(app.address);
+                    }
+                }else{
+                    et_address.setText("");
+                    et_address.setHint("定位失败");
+                }
                 LocationUtilGD.sotpLocation();
             }
         });
@@ -302,8 +317,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             Toast("已显示之前未提交的数据");
         }
         edt_name.setText(customer.name);
-        if (null != customer.position) edit_address_details.setText(customer.position.addr);
-        if (null != customer.loc) et_address.setText(customer.loc.addr);
+//        if (null != customer.position) edit_address_details.setText(customer.position.addr);
+        if (null != customer.loc) edit_address_details.setText(customer.loc.addr);
         if (!TextUtils.isEmpty(customer.statusName)) tv_status.setText(customer.statusName);
         if (null != customer.tags) tv_labels.setText(customer.displayTagString());
         if (!TextUtils.isEmpty(customer.webSite)) edt_customer_weburl.setText(customer.webSite);
@@ -465,6 +480,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 firstContact.setName(edt_contract.getText().toString().trim());
                 firstContact.setTel(edt_contract_telnum1.getText().toString().trim());
                 firstContact.setWiretel(edt_contract_telnum1.getText().toString().trim());
+                customer.contacts.clear();//清空原来的
                 customer.contacts.add(firstContact);
                 if (customer.name.isEmpty()) {
                     Toast("请输入客户名称!");
@@ -659,13 +675,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             map.put("attachmentCount", controller.count());
             map.put("uuid", uuid);
         }
-        //因为数据格式的原因，把保存在customer的数据，转换一个格式然后再提交
-        HttpLoc position = new HttpLoc();
-        position.addr = customer.position.addr;
-        position.loc.add(customer.position.loc[0]);
-        position.loc.add(customer.position.loc[1]);
+        if(null!=customer.position){
+            //因为数据格式的原因，把保存在customer的数据，转换一个格式然后再提交
+            HttpLoc position = new HttpLoc();
+            position.addr = customer.position.addr;
+            position.loc.add(customer.position.loc[0]);
+            position.loc.add(customer.position.loc[1]);
+            map.put("position", position); //定位数据
+        }
 
-        map.put("position", position); //定位数据
         map.put("loc", customer.loc);//地址详情数据
         map.put("name", customer.name);
         map.put("pname", contact.getName());
@@ -772,10 +790,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     if (null == customer.position) {
                         customer.position = new Locate();
                     }
-                    customer.position.loc[0] = positionResultItem.laPosition;
-                    customer.position.loc[1] = positionResultItem.loPosition;
+                    customer.position.loc[1] = positionResultItem.laPosition;
+                    customer.position.loc[0] = positionResultItem.loPosition;
                     et_address.setText(positionResultItem.address);
-                    edit_address_details.setText(positionResultItem.address);
+                    if(!TextUtils.isEmpty(positionResultItem.address))edit_address_details.setText(positionResultItem.address);
                 }
                 break;
 
@@ -798,8 +816,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 customer.tags = (ArrayList<NewTag>) bundle.getSerializable("data");
                 tv_labels.setText(customer.displayTagString());
                 break;
-
-
 
             /*相册选择 回调*/
             case PhotoPicker.REQUEST_CODE:

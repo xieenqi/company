@@ -133,6 +133,7 @@ public class CustomerInfoExtraData extends LinearLayout {
                         extra.performClick();
                     }
                 });
+                tv_content.setFocusable(false);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
                 if (properties.isRequired()) {
                     tv_content.setHint("必填");
