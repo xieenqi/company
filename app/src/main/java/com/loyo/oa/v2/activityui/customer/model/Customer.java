@@ -177,14 +177,14 @@ public class Customer extends BaseBeans {
 
 //    设置标签，必须通过setter，不然，会造成字符串的不一样
     public void setTags(ArrayList<NewTag> tags) {
-        tagsString = displayTagString();
         this.tags  = tags;
+        makeTagString();
     }
 
-    public String displayTagString() {
-        //兼容，如果已经存在拼接好的标签，就不再去拼接，直接用
-        if(!TextUtils.isEmpty(tagsString))return tagsString;
-
+    /**
+     * 生成标签字符串
+     */
+    private void makeTagString(){
         StringBuffer buffer = new StringBuffer();
         boolean needSeperate = false;
         String tagId="";
@@ -220,7 +220,14 @@ public class Customer extends BaseBeans {
 
         String result = buffer.toString();
 
-        return TextUtils.isEmpty(result) ? "无" : result;
+        tagsString= TextUtils.isEmpty(result) ? "无" : result;
+    }
+    public String displayTagString() {
+        //兼容，如果已经存在拼接好的标签，就不再去拼接，直接用
+        if(TextUtils.isEmpty(tagsString)){
+            makeTagString();
+        }
+        return tagsString;
     }
 
     public SpannableStringBuilder getFormattedDropRemind() {
