@@ -60,7 +60,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * 【侧边栏】fragment
  */
 public class MenuFragment extends BaseFragment {
-    private static final int REQUEST_WRITE=0x1;// 申请sd写权限
     private GestureDetector gesture; //手势识别
     private float minDistance = 120;//手势滑动最小距离
     private float minVelocity = 200;//手势滑动最小速度
@@ -236,12 +235,7 @@ public class MenuFragment extends BaseFragment {
                 break;
             //检查更新
             case R.id.ll_version:
-                /**
-                 * 判断sd卡读写权限，检查升级
-                 */
-                if(PermissionTool.requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE,"需要使用储存权限",REQUEST_WRITE)){
-                    toUpdate();
-                }
+                toUpdate();
                 break;
             //设置
             case R.id.ll_setting:
@@ -255,27 +249,12 @@ public class MenuFragment extends BaseFragment {
     /**
      * 升级检测
      */
-    private void toUpdate(){
+    private void toUpdate() {
         mIntentCheckUpdate = new Intent(getActivity(), CheckUpdateService.class);
         mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
         getActivity().startService(mIntentCheckUpdate);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(REQUEST_WRITE==requestCode){
-            PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
-                @Override
-                public void success() {
-                    toUpdate();
-                }
-                @Override
-                public void fail() {
-                    Toast("你拒绝了所需权限，不能完成操作");
-                }
-            });
-        }
-    }
 
     /**
      * 获取个人资料
