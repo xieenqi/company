@@ -634,6 +634,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".order.activity.OrderAddOrEditActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
             android:name=".activityui.order.TerminateOrderCommitActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

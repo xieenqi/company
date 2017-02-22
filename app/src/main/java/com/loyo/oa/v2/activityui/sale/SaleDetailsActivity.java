@@ -231,7 +231,7 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
             tvStatus.setVisibility(View.VISIBLE);
             switch (mSaleDetails.wfState) {
                 case 1:
-                    tvStatus.setBackgroundResource(R.drawable.common_lable_blue);
+                    tvStatus.setBackgroundResource(R.drawable.common_label_blue);
                     tvStatus.setText("待审核");
                     break;
                 case 2:
