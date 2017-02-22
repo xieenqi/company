@@ -480,6 +480,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 firstContact.setName(edt_contract.getText().toString().trim());
                 firstContact.setTel(edt_contract_telnum1.getText().toString().trim());
                 firstContact.setWiretel(edt_contract_telnum1.getText().toString().trim());
+                customer.contacts.clear();//清空原来的
                 customer.contacts.add(firstContact);
                 if (customer.name.isEmpty()) {
                     Toast("请输入客户名称!");
