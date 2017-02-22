@@ -134,6 +134,35 @@ public class UmengAnalytics {
     public static String typeWorkOrder = "type_work_order";                         //筛选-类型-我负责的工单中
     public static String typeWorkOrderTeam = "type_work_order_team";                //筛选-类型-团队工单中
 
+    /*二次埋点 */
+    public static String tasksPhotoButton = "tasks_photo_button";                   //新建任务_添加照片_按钮
+    public static String tasksAddprincipalButton = "tasks_addprincipal_button";     //新建任务_添加负责人_按钮
+    public static String tasksAddparticipantButton = "tasks_addparticipant_button"; //新建任务_添加参与人_按钮
+    public static String tasksRepetitionButton = "tasks_repetition_button";         //新建任务_选择重复方式
+    public static String tasksDeadlineButton = "tasks_deadline_button";             //新建任务_选择截止时间
+    public static String tasksRemindButton = "tasks_remind_button";                 //新建任务_选择提醒时间_按钮
+    public static String tasksApproveButton = "tasks_approve_button";               //新建任务_选中/取消 是否审核
+    public static String tasksProjectButton = "tasks_project_button";               //新建任务_选择归属项目
+    public static String tasksCustomerButton = "tasks_customer_button";             //新建任务_选择关联客户
+    public static String tasksAddsubtaskButton = "tasks_addsubtask_button";         //任务详情_添加子任务_按钮
+    public static String tasksCopyButton = "tasks_copy_button";                     //任务详情_复制本任务_按钮（右上角)
+    public static String customerCallButton = "customer_call_button";               //客户详情_打电话/座机_按钮（不同打电话的button不作区分)
+    public static String customerAddcontacts = "customer_addcontacts";              //客户详情_联系人_新建联系人
+    public static String customerSetcontactsdefault = "customer_setcontactsdefault";//客户详情_联系人_设为默认联系人
+    public static String customerContactsCal = "customer_contacts_cal";             //客户详情_联系人_打电话/座机
+    public static String customerContactsDetailCall = "customer_contacts_detail_call";//客户详情_联系人_联系人详情_打电话/座机
+    public static String customerContactsDetailMessage = "customer_contacts_detail_message";//客户详情_联系人_联系人详情_发短信,
+    public static String customerOrderAdd = "customer_order_add";                   //客户详情_订单_新建订单
+    public static String customerAttachmentAdd = "customer_attachment_add";         //客户详情_附件_添加附件
+    public static String customerTaskAdd = "customer_task_add";                     //客户详情_任务_新建任务
+    public static String customerApproveAdd = "customer_approve_add";               //客户详情_审批_添加审批
+    public static String customerTipsAddfollow = "customer_tips_addfollow";         //客户详情_丢公海提示条_写跟进
+    public static String customerTipsAddvisit = "customer_tips_addvisit";           //客户详情_丢公海提示条_拜访
+    public static String customerTipsCall = "customer_tips_call";                   //客户详情_丢公海提示条_打电话
+    public static String customerTipsAddorder = "customer_tips_addorder";           //客户详情_丢公海提示条_新建订单
+    public static String orderEdit = "order_edit";                                  //订单详情_编辑订单（右上角）
+    public static String orderCopy = "order_copy";                                  //订单详情_复制订单（右上角）
+
     public static void umengSend(Context mContext, String eventId) {
         if (!Config_project.isRelease) {
             return;

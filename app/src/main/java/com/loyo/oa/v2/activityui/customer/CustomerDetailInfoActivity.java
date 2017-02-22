@@ -362,7 +362,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mIntent.putExtra("data", mCustomer);
                 startActivity(mIntent);
                 needToRefresh=true;
-                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerVisit);
+//                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerVisit);
                 break;
 
             /*快捷跟进*/
@@ -373,7 +373,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 startActivity(mIntent);
                 needToRefresh=true;
-                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerAddFollow);
+//                UmengAnalytics.umengSend(CustomerDetailInfoActivity.this, UmengAnalytics.customerAddFollow);
                 break;
 
             /*返回*/

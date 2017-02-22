@@ -19,6 +19,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerFollowUpGroupAdapter;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
@@ -95,7 +96,6 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
                     R.layout.fragment_followups, container, false);
 
 
-
             initView(view);
         }
 
@@ -160,8 +160,7 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
         }
         if (!canAdd) {
             layout_add.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             layout_add.setVisibility(View.VISIBLE);
         }
     }
@@ -199,7 +198,7 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
             }
         });
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid, this);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         canAdd = mCustomer != null && mCustomer.state == Customer.NormalCustomer &&
@@ -238,6 +237,7 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
             /*新建*/
             case R.id.layout_add:
                 onAddFollowup();
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.customerAddFollow);
                 break;
         }
     }
@@ -248,8 +248,7 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
                         mCustomer.state, CustomerAction.FOLLOWUP_ADD);
         if (!canAdd) {
             sweetAlertDialogView.alertIcon("提示", "你没有写跟进权限");
-        }
-        else {
+        } else {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Customer.class.getName(), mCustomer);
             bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
@@ -309,7 +308,7 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
             return;
         }
         msgAudiomMenu = null;
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid, this);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         onPullDownToRefresh(listView);
@@ -473,7 +472,7 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
 
         Activity activity = getActivity();
         if (activity instanceof FragmentActivity) {
-            FragmentManager fm = ((FragmentActivity)activity).getSupportFragmentManager();
+            FragmentManager fm = ((FragmentActivity) activity).getSupportFragmentManager();
             MultiMediaInputFragment fragment = MultiMediaInputFragment.newInstance();
             fragment.show(fm, "input");
         }

@@ -394,6 +394,10 @@ public enum SystemMessageItemType {
      */
     public abstract int getIcon();
 
+    public int getIcon(int messageType) {
+        return getIcon();
+    }
+
     /**
      * 获取跳转的class对象
      */
@@ -401,10 +405,6 @@ public enum SystemMessageItemType {
 
     public Class<?> getItemClass(int jumpType) {
         return getItemClass();
-    }
-
-    public int getIcon(int messageType) {
-        return getIcon();
     }
 
     /**

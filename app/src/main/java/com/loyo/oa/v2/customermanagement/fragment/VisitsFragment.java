@@ -11,10 +11,12 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.audio.player.AudioPlayerView;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewGroupAdapter;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
@@ -51,8 +53,7 @@ import java.util.HashMap;
 
 public class VisitsFragment extends CustomerChildFragment
         implements PullToRefreshBase.OnRefreshListener2,
-        CustomerSigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener
-{
+        CustomerSigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     View view;
     public LoadingLayout ll_loading;
@@ -188,7 +189,7 @@ public class VisitsFragment extends CustomerChildFragment
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid, this);
         layout_bottom_menu.addView(msgAudiomMenu);
         canAdd = mCustomer != null &&
                 PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
@@ -265,7 +266,7 @@ public class VisitsFragment extends CustomerChildFragment
             return;
         }
         msgAudiomMenu = null;
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid,this);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid, this);
         layout_bottom_menu.removeAllViews();
         layout_bottom_menu.addView(msgAudiomMenu);
         onPullDownToRefresh(listView);
@@ -385,6 +386,7 @@ public class VisitsFragment extends CustomerChildFragment
             /*新建*/
             case R.id.layout_add:
                 onAddVisit();
+                UmengAnalytics.umengSend(mActivity, UmengAnalytics.customerVisit);
                 break;
         }
     }
@@ -395,8 +397,7 @@ public class VisitsFragment extends CustomerChildFragment
                         mCustomer.state, CustomerAction.VISIT);
         if (!canAdd) {
             sweetAlertDialogView.alertIcon("提示", "你没有拜访权限");
-        }
-        else if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
+        } else if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
             sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
         } else {
             Bundle b = new Bundle();
