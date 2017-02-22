@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.PermissionTool;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity;
@@ -43,16 +44,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.loyo.oa.common.utils.UmengAnalytics.customerContactsDetailCall;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerContactsDetailMessage;
+
 /**
  * Created by EthanGong on 2017/2/13.
  */
 
-public class ContactDetailActivity extends BaseActivity implements ContactCardCell.OnContactCellActionListener{
+public class ContactDetailActivity extends BaseActivity implements ContactCardCell.OnContactCellActionListener {
 
 
-    public static final int  ContactDetailActivityRequestCode = 10;
-    public static final int  CONTACT_DELETE = 11;
-    public static final int  CONTACT_UPDATED = 12;
+    public static final int ContactDetailActivityRequestCode = 10;
+    public static final int CONTACT_DELETE = 11;
+    public static final int CONTACT_UPDATED = 12;
     private Contact contact;
     private Customer customer;
     private int contactIndex;
@@ -65,38 +69,64 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
     private ArrayList<TextView> telTexts;
     String callNum;
 
-    @BindView(R.id.img_title_left) View img_title_left;
-    @BindView(R.id.img_title_right) View img_title_right;
-    @BindView(R.id.tv_title_1)      TextView tv_title_1;
+    @BindView(R.id.img_title_left)
+    View img_title_left;
+    @BindView(R.id.img_title_right)
+    View img_title_right;
+    @BindView(R.id.tv_title_1)
+    TextView tv_title_1;
 
-    @BindView(R.id.scroll_container) LinearLayout scrollContainer;
-    @BindView(R.id.contact_extra_holder) LinearLayout contact_extra_holder;
+    @BindView(R.id.scroll_container)
+    LinearLayout scrollContainer;
+    @BindView(R.id.contact_extra_holder)
+    LinearLayout contact_extra_holder;
 
-    @BindView(R.id.layout_phone1) ViewGroup phoneContainer1;
-    @BindView(R.id.layout_phone2) ViewGroup phoneContainer2;
-    @BindView(R.id.layout_phone3) ViewGroup phoneContainer3;
-    @BindView(R.id.layout_wiretel1) ViewGroup telContainer1;
-    @BindView(R.id.layout_wiretel2) ViewGroup telContainer2;
-    @BindView(R.id.layout_wiretel3) ViewGroup telContainer3;
+    @BindView(R.id.layout_phone1)
+    ViewGroup phoneContainer1;
+    @BindView(R.id.layout_phone2)
+    ViewGroup phoneContainer2;
+    @BindView(R.id.layout_phone3)
+    ViewGroup phoneContainer3;
+    @BindView(R.id.layout_wiretel1)
+    ViewGroup telContainer1;
+    @BindView(R.id.layout_wiretel2)
+    ViewGroup telContainer2;
+    @BindView(R.id.layout_wiretel3)
+    ViewGroup telContainer3;
 
 
-    @BindView(R.id.tv_phone_val1)   TextView phoneText1;
-    @BindView(R.id.tv_phone_val2)   TextView phoneText2;
-    @BindView(R.id.tv_phone_val3)   TextView phoneText3;
-    @BindView(R.id.tv_wiletel_val1) TextView telText1;
-    @BindView(R.id.tv_wiletel_val2) TextView telText2;
-    @BindView(R.id.tv_wiletel_val3) TextView telText3;
+    @BindView(R.id.tv_phone_val1)
+    TextView phoneText1;
+    @BindView(R.id.tv_phone_val2)
+    TextView phoneText2;
+    @BindView(R.id.tv_phone_val3)
+    TextView phoneText3;
+    @BindView(R.id.tv_wiletel_val1)
+    TextView telText1;
+    @BindView(R.id.tv_wiletel_val2)
+    TextView telText2;
+    @BindView(R.id.tv_wiletel_val3)
+    TextView telText3;
 
-    @BindView(R.id.tv_name)TextView tv_name;
-    @BindView(R.id.tv_qq)TextView tv_qq;
-    @BindView(R.id.tv_birthday)TextView tv_birthday;
-    @BindView(R.id.tv_wx)TextView tv_wx;
-    @BindView(R.id.tv_email)TextView tv_email;
-    @BindView(R.id.tv_memo)TextView tv_memo;
-    @BindView(R.id.tv_depart)TextView tv_depart;
-    @BindView(R.id.tv_contact_role)TextView tv_contact_role;
+    @BindView(R.id.tv_name)
+    TextView tv_name;
+    @BindView(R.id.tv_qq)
+    TextView tv_qq;
+    @BindView(R.id.tv_birthday)
+    TextView tv_birthday;
+    @BindView(R.id.tv_wx)
+    TextView tv_wx;
+    @BindView(R.id.tv_email)
+    TextView tv_email;
+    @BindView(R.id.tv_memo)
+    TextView tv_memo;
+    @BindView(R.id.tv_depart)
+    TextView tv_depart;
+    @BindView(R.id.tv_contact_role)
+    TextView tv_contact_role;
 
-    @OnClick(R.id.img_title_left) void onBack() {
+    @OnClick(R.id.img_title_left)
+    void onBack() {
         if (contactUpdated) {
             Intent intent = new Intent();
             intent.putExtra("contact", contact);
@@ -104,8 +134,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
             intent.putExtra("action", CONTACT_UPDATED);
             app.finishActivity(ContactDetailActivity.this,
                     MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -115,7 +144,8 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         onBack();
     }
 
-    @OnClick(R.id.img_title_right) void onActionsheet() {
+    @OnClick(R.id.img_title_right)
+    void onActionsheet() {
         ActionSheetDialog dialog = new ActionSheetDialog(this).builder();
         dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
@@ -129,7 +159,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
                 startActivityForResult(intent, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT);
             }
         });
-        if (! contact.isDefault() ) {
+        if (!contact.isDefault()) {
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
@@ -164,49 +194,73 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         dialog.show();
     }
 
-    @OnClick(R.id.layout_send_sms1) void onSMS1() {
+    @OnClick(R.id.layout_send_sms1)
+    void onSMS1() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerContactsDetailMessage);
         if (contact.telGroup.size() > 0) {
             onSMS(contact.telGroup.get(0));
         }
     }
-    @OnClick(R.id.layout_send_sms2) void onSMS2() {
+
+    @OnClick(R.id.layout_send_sms2)
+    void onSMS2() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerContactsDetailMessage);
         if (contact.telGroup.size() > 1) {
             onSMS(contact.telGroup.get(1));
         }
     }
-    @OnClick(R.id.layout_send_sms3) void onSMS3() {
+
+    @OnClick(R.id.layout_send_sms3)
+    void onSMS3() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerContactsDetailMessage);
         if (contact.telGroup.size() > 2) {
             onSMS(contact.telGroup.get(2));
         }
     }
 
-    @OnClick(R.id.layout_phone_call1) void onPhoneCall1() {
+    @OnClick(R.id.layout_phone_call1)
+    void onPhoneCall1() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerContactsDetailCall);
         if (contact.telGroup.size() > 0) {
             onCallPhone(contact, contact.telGroup.get(0));
         }
     }
-    @OnClick(R.id.layout_phone_call2) void onPhoneCall2() {
+
+    @OnClick(R.id.layout_phone_call2)
+    void onPhoneCall2() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerContactsDetailCall);
         if (contact.telGroup.size() > 1) {
             onCallPhone(contact, contact.telGroup.get(1));
         }
     }
-    @OnClick(R.id.layout_phone_call3) void onPhoneCall3() {
+
+    @OnClick(R.id.layout_phone_call3)
+    void onPhoneCall3() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerContactsDetailCall);
         if (contact.telGroup.size() > 2) {
             onCallPhone(contact, contact.telGroup.get(2));
         }
     }
 
-    @OnClick(R.id.layout_call_wiretel1) void onTelCall1() {
+    @OnClick(R.id.layout_call_wiretel1)
+    void onTelCall1() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerContactsDetailCall);
         if (contact.wiretelGroup.size() > 0) {
             onCallTel(contact, contact.wiretelGroup.get(0));
         }
     }
-    @OnClick(R.id.layout_call_wiretel2) void onTelCall2() {
+
+    @OnClick(R.id.layout_call_wiretel2)
+    void onTelCall2() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerContactsDetailCall);
         if (contact.wiretelGroup.size() > 1) {
             onCallTel(contact, contact.wiretelGroup.get(1));
         }
     }
-    @OnClick(R.id.layout_call_wiretel3) void onTelCall3() {
+
+    @OnClick(R.id.layout_call_wiretel3)
+    void onTelCall3() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerContactsDetailCall);
         if (contact.wiretelGroup.size() > 2) {
             onCallTel(contact, contact.wiretelGroup.get(2));
         }
@@ -256,7 +310,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         canEdit = customer != null &&
                 PermissionManager.getInstance().hasCustomerAuthority(customer.relationState,
                         customer.state, CustomerAction.CONTACT_ADD);
-        img_title_right.setVisibility(canEdit?View.VISIBLE : View.INVISIBLE);
+        img_title_right.setVisibility(canEdit ? View.VISIBLE : View.INVISIBLE);
     }
 
     void loadContact() {
@@ -268,33 +322,31 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         tv_birthday.setText(contact.getBirthStr());
         tv_depart.setText(contact.deptName);
         //联系人角色
-        tv_contact_role.setText(TextUtils.isEmpty(contact.getContactRoleName())?"":contact.getContactRoleName());
+        tv_contact_role.setText(TextUtils.isEmpty(contact.getContactRoleName()) ? "" : contact.getContactRoleName());
         for (int i = 0; i < 3; i++) {
             if (i < contact.telGroup.size()) {
                 phoneContainers.get(i).setVisibility(View.VISIBLE);
                 phoneTexts.get(i).setText(contact.telGroup.get(i));
-                ((TextView)findViewById(getResources().getIdentifier("tv_phone_name"+(i+1),"id",getPackageName()))).setText("手机"+(i+1));
-            }
-            else {
-                phoneContainers.get(i).setVisibility(i == 0?View.VISIBLE:View.GONE);
+                ((TextView) findViewById(getResources().getIdentifier("tv_phone_name" + (i + 1), "id", getPackageName()))).setText("手机" + (i + 1));
+            } else {
+                phoneContainers.get(i).setVisibility(i == 0 ? View.VISIBLE : View.GONE);
             }
             //一个手机号码，就不显示序号
-            if(0==i&&contact.telGroup.size()<=1){
-                ((TextView)findViewById(R.id.tv_phone_name1)).setText("手机");
+            if (0 == i && contact.telGroup.size() <= 1) {
+                ((TextView) findViewById(R.id.tv_phone_name1)).setText("手机");
             }
 
             if (i < contact.wiretelGroup.size()) {
                 telContainers.get(i).setVisibility(View.VISIBLE);
                 telTexts.get(i).setText(contact.wiretelGroup.get(i));
-                ((TextView)findViewById(getResources().getIdentifier("tv_wiletel_name"+(i+1),"id",getPackageName()))).setText("座机"+(i+1));
+                ((TextView) findViewById(getResources().getIdentifier("tv_wiletel_name" + (i + 1), "id", getPackageName()))).setText("座机" + (i + 1));
 
-            }
-            else {
-                telContainers.get(i).setVisibility(i == 0?View.VISIBLE:View.GONE);
+            } else {
+                telContainers.get(i).setVisibility(i == 0 ? View.VISIBLE : View.GONE);
             }
             //一个座机号码，就不显示序号
-            if(0==i&&contact.wiretelGroup.size()<=1){
-                ((TextView)findViewById(R.id.tv_wiletel_name1)).setText("座机");
+            if (0 == i && contact.wiretelGroup.size() <= 1) {
+                ((TextView) findViewById(R.id.tv_wiletel_name1)).setText("座机");
             }
 
         }
@@ -333,7 +385,7 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
                     Toast("你拒绝了打电话权限，无法拨出电话");
                 }
             });
-        }else if(Utils.SEND_SMS_REQUEST==requestCode){
+        } else if (Utils.SEND_SMS_REQUEST == requestCode) {
             PermissionTool.requestPermissionsResult(permissions, grantResults, new PermissionTool.PermissionsResultCallBack() {
                 @Override
                 public void success() {
@@ -376,13 +428,13 @@ public class ContactDetailActivity extends BaseActivity implements ContactCardCe
         map.put("contactId", contact.getId());
         map.put("type", callType);
         map.put("mobile", callNum);
-        LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
+        LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));
         CustomerService.requestCallBack(map)
                 .subscribe(new DefaultLoyoSubscriber<CallBackCallid>(hud) {
                     @Override
                     public void onNext(CallBackCallid callBackCallid) {
-                        try{
-                            switch (callBackCallid.errcode){
+                        try {
+                            switch (callBackCallid.errcode) {
                                 case 0:
                                     Bundle mBundle = new Bundle();
                                     mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);

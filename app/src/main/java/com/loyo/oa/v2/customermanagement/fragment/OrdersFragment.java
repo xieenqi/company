@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -35,6 +36,9 @@ import com.loyo.oa.v2.tool.ViewUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.loyo.oa.common.utils.UmengAnalytics.customerContactsDetailCall;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerOrderAdd;
 
 /**
  * Created by EthanGong on 2017/2/9.
@@ -159,6 +163,7 @@ public class OrdersFragment extends CustomerChildFragment
     }
 
     public void onAddOrder() {
+        UmengAnalytics.umengSend(mActivity,customerOrderAdd);
         canAdd = customer != null &&
                 PermissionManager.getInstance().hasCustomerAuthority(
                         customer.relationState,

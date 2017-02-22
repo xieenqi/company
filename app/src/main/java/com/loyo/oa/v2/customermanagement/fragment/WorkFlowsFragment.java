@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
@@ -35,6 +36,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.loyo.oa.common.utils.UmengAnalytics.customerApproveAdd;
 
 /**
  * Created by EthanGong on 2017/2/9.
@@ -164,7 +167,7 @@ public class WorkFlowsFragment extends CustomerChildFragment
         Bundle bundle;
         switch (v.getId()) {
             case R.id.layout_add:
-
+                UmengAnalytics.umengSend(mActivity,customerApproveAdd);
                 if (!PermissionManager.getInstance()
                         .hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");

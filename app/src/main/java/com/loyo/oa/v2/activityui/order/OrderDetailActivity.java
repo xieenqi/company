@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -48,6 +49,9 @@ import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.loyo.oa.common.utils.UmengAnalytics.orderCopy;
+import static com.loyo.oa.common.utils.UmengAnalytics.orderEdit;
+
 /**
  * 【订单详情】页面
  */
@@ -55,9 +59,9 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
 
     private final static String ORDER_RESPONSDER_REQUEST = "com.loyo.OrderDetailActivity.ORDER_RESPONSDER_REQUEST";
     private LinearLayout img_title_left, ll_extra, ll_product,
-                         ll_record, ll_enclosure, ll_plan,
-                         ll_wflayout, ll_responsible, ll_wf_terminate;
-    private ImageView    img_responsible;
+            ll_record, ll_enclosure, ll_plan,
+            ll_wflayout, ll_responsible, ll_wf_terminate;
+    private ImageView img_responsible;
     private RelativeLayout img_title_right;
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
             tv_record, tv_record_value, tv_enclosure, tv_responsible_name, tv_creator_name,
@@ -109,7 +113,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             switch (msg.what) {
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
                     if (attachmentSize != 0) {
-                        tv_enclosure.setText("附件（"+ attachmentSize + "）");
+                        tv_enclosure.setText("附件（" + attachmentSize + "）");
                     }
                     break;
             }
@@ -193,13 +197,13 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
         tv_worksheet = (TextView) findViewById(R.id.tv_worksheet);
 
         ll_responsible = (LinearLayout) findViewById(R.id.ll_responsible);
-        img_responsible = (ImageView)findViewById(R.id.img_responsible_arrow);
+        img_responsible = (ImageView) findViewById(R.id.img_responsible_arrow);
 
-        tv_start_time = (TextView)findViewById(R.id.tv_start_time);
-        tv_end_time = (TextView)findViewById(R.id.tv_end_time);
+        tv_start_time = (TextView) findViewById(R.id.tv_start_time);
+        tv_end_time = (TextView) findViewById(R.id.tv_end_time);
 
-        tv_wf_terminate_name = (TextView)findViewById(R.id.tv_wf_terminate_name);
-        ll_wf_terminate = (LinearLayout)findViewById(R.id.ll_wf_terminate);
+        tv_wf_terminate_name = (TextView) findViewById(R.id.tv_wf_terminate_name);
+        ll_wf_terminate = (LinearLayout) findViewById(R.id.ll_wf_terminate);
         ll_wf_terminate.setOnClickListener(this);
 
     }
@@ -263,8 +267,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 Bundle mBundle = new Bundle();
                 if (mData.paymentRecords != null) {
                     mBundle.putSerializable("data", mData.paymentRecords);
-                }
-                else {
+                } else {
                     mBundle.putSerializable(OrderEstimateListActivity.KEY_GET_DATA, true);
                 }
                 mBundle.putString("price", tv_money.getText().toString());
@@ -280,11 +283,11 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             case R.id.ll_enclosure://附件
                 mBundle = new Bundle();
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
-                if(2 == mData.status){
+                if (2 == mData.status) {
                     //订单没有通过,可以编辑附件
                     mBundle.putBoolean("isOver", false);
                     mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
-                }else{
+                } else {
                     mBundle.putBoolean("isOver", true);
                     mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
                 }
@@ -310,8 +313,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 mBundle.putInt(ExtraAndResult.EXTRA_ID, mData.status);
                 app.startActivityForResult(this, OrderWorksheetsActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
-            case R.id.ll_responsible:
-            {
+            case R.id.ll_responsible: {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
                 bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, ORDER_RESPONSDER_REQUEST);
@@ -344,31 +346,30 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
 
     private void bindData() {
         isDelete = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_DELETE);
-        isEdit   = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_EDIT);
-        isCopy   = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_COPY);
-        isStop   = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_TERMINATE);
+        isEdit = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_EDIT);
+        isCopy = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_COPY);
+        isStop = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_TERMINATE);
         capitalReturningPlanCRUD
-                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_CAPITAL_RETURN_PLAN_CRUD);
+                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_CAPITAL_RETURN_PLAN_CRUD);
         capitalReturningRecordCRUD
-                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_CAPITAL_RETURN_RECORD_CRUD);
+                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_CAPITAL_RETURN_RECORD_CRUD);
 
         responsibleChange
-                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_RESPONSIBLE_PERSON_CHANGE);
+                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_RESPONSIBLE_PERSON_CHANGE);
         worksheetAdd
-                 = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_WORKSHEET_ADD);
+                = OrderPermission.getInstance().hasOrderAuthority(mData.relationState, mData.status, OrderAction.ORDER_WORKSHEET_ADD);
 
-        isStop   = isStop && ! mData.hasTerminate();
+        isStop = isStop && !mData.hasTerminate();
 
         img_title_right.setVisibility(
-                (isDelete || isEdit || isCopy || isStop) ? View.VISIBLE:View.GONE
+                (isDelete || isEdit || isCopy || isStop) ? View.VISIBLE : View.GONE
         );
 
         if (responsibleChange) {
             ll_responsible.setOnClickListener(this);
             tv_responsible_name.setTextColor(getResources().getColor(R.color.text33));
             img_responsible.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             ll_responsible.setOnClickListener(null);
             tv_responsible_name.setTextColor(getResources().getColor(R.color.text99));
             img_responsible.setVisibility(View.GONE);
@@ -380,11 +381,12 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
         tv_product.setText(mData.proName);
         tv_responsible_name.setText(mData.directorName);
         tv_creator_name.setText(mData.creatorName);
-        tv_plan.setText("回款计划（"+ mData.planNum + "）");
-        tv_record.setText("回款记录（"+ mData.recordNum + "）");
-        tv_record_value.setText("¥" + mData.backMoney + "（"+ mData.ratePayment + "%)");
-        tv_worksheet.setText("工单" + "（"+ mData.worksheetNum + "）");
-        if(attachmentSize==0)tv_enclosure.setText("附件（"+ mData.attachmentCount + "）");//避免上传附件回来,把原来的数值抹掉了
+        tv_plan.setText("回款计划（" + mData.planNum + "）");
+        tv_record.setText("回款记录（" + mData.recordNum + "）");
+        tv_record_value.setText("¥" + mData.backMoney + "（" + mData.ratePayment + "%)");
+        tv_worksheet.setText("工单" + "（" + mData.worksheetNum + "）");
+        if (attachmentSize == 0)
+            tv_enclosure.setText("附件（" + mData.attachmentCount + "）");//避免上传附件回来,把原来的数值抹掉了
 //        tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         tv_creator_time.setText(DateTool.getDateTimeFriendly(mData.createdAt));
         tv_start_time.setText(DateTool.getDateTimeFriendly(mData.startAt));
@@ -398,8 +400,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
         if (!TextUtils.isEmpty(mData.unExpectedWfId)) {//是否关联审批
             ll_wf_terminate.setVisibility(View.VISIBLE);
             tv_wf_terminate_name.setText(mData.getTerminateWfDisplayTitle());
-        }
-        else {
+        } else {
             ll_wf_terminate.setVisibility(View.GONE);
         }
 
@@ -424,6 +425,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
+                    UmengAnalytics.umengSend(OrderDetailActivity.this, orderEdit);
                     mBundle = new Bundle();
                     mBundle.putInt("fromPage", ORDER_EDIT);
                     mBundle.putSerializable("data", mData);
@@ -438,7 +440,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             dialog.addSheetItem("复制订单", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-
+                    UmengAnalytics.umengSend(OrderDetailActivity.this, orderCopy);
 
                     sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
@@ -510,8 +512,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
             mBundle.putString(TerminateOrderCommitActivity.KEY_ORDER_ID, mData.id);
             app.startActivityForResult(OrderDetailActivity.this, TerminateOrderCommitActivity.class,
                     MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
-        }
-        else {
+        } else {
             sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -566,7 +567,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 }
                 boolean hasChangedData = data.getBooleanExtra(OrderEstimateListActivity.RET_HAS_CHANGED_DATA, false);
                 if (hasChangedData) {
-                    ArrayList<EstimateAdd> capitalReturningList = (ArrayList<EstimateAdd>)data.getSerializableExtra("data");
+                    ArrayList<EstimateAdd> capitalReturningList = (ArrayList<EstimateAdd>) data.getSerializableExtra("data");
                     if (capitalReturningList != null) {
                         mData.paymentRecords = capitalReturningList;
                     }

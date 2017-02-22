@@ -11,7 +11,9 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.model.DropDeadlineModel;
 
@@ -21,6 +23,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.loyo.oa.common.utils.UmengAnalytics.customerTipsAddfollow;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerTipsAddorder;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerTipsAddvisit;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerTipsCall;
 import static com.loyo.oa.v2.R.id.followup;
 
 /**
@@ -31,61 +37,90 @@ public class DropCustomerDeadlineFragment extends DialogFragment {
 
     public interface CustomerDeadlineActionListener {
         void onAddFollowup();
+
         void onAddVisit();
+
         void onAddCall();
+
         void onAddOrder();
     }
 
-    @BindView(R.id.tv_title) TextView titleText;
-    @BindView(R.id.tv_order_title) TextView orderTitleText;
+    @BindView(R.id.tv_title)
+    TextView titleText;
+    @BindView(R.id.tv_order_title)
+    TextView orderTitleText;
 
-    @BindView(R.id.dim)                LinearLayout dimContainer;
-    @BindView(R.id.followup_container) LinearLayout followupContainer;
-    @BindView(R.id.order_container)    LinearLayout orderContainer;
+    @BindView(R.id.dim)
+    LinearLayout dimContainer;
+    @BindView(R.id.followup_container)
+    LinearLayout followupContainer;
+    @BindView(R.id.order_container)
+    LinearLayout orderContainer;
 
-    @BindView(followup) LinearLayout followupView;
-    @BindView(R.id.visit)    LinearLayout visitView;
-    @BindView(R.id.call)     LinearLayout callView;
-    @BindView(R.id.order)    LinearLayout orderView;
+    @BindView(followup)
+    LinearLayout followupView;
+    @BindView(R.id.visit)
+    LinearLayout visitView;
+    @BindView(R.id.call)
+    LinearLayout callView;
+    @BindView(R.id.order)
+    LinearLayout orderView;
 
-    @BindView(R.id.tv_followup_deadline) TextView followupDeadlineText;
-    @BindView(R.id.tv_followup) TextView followupDeadline;
+    @BindView(R.id.tv_followup_deadline)
+    TextView followupDeadlineText;
+    @BindView(R.id.tv_followup)
+    TextView followupDeadline;
 
-    @BindView(R.id.tv_visit_deadline) TextView visitDeadlineText;
-    @BindView(R.id.tv_visit) TextView visitDeadline;
+    @BindView(R.id.tv_visit_deadline)
+    TextView visitDeadlineText;
+    @BindView(R.id.tv_visit)
+    TextView visitDeadline;
 
-    @BindView(R.id.tv_call_deadline) TextView callDeadlineText;
-    @BindView(R.id.tv_call) TextView callDeadline;
+    @BindView(R.id.tv_call_deadline)
+    TextView callDeadlineText;
+    @BindView(R.id.tv_call)
+    TextView callDeadline;
 
-    @BindView(R.id.tv_order_deadline) TextView orderDeadlineText;
-    @BindView(R.id.tv_order) TextView orderDeadline;
+    @BindView(R.id.tv_order_deadline)
+    TextView orderDeadlineText;
+    @BindView(R.id.tv_order)
+    TextView orderDeadline;
 
-    @OnClick(R.id.dim) void onClose() {
+    @OnClick(R.id.dim)
+    void onClose() {
         dismiss();
     }
 
-    @OnClick(R.id.tv_followup) void onFollowup() {
+    @OnClick(R.id.tv_followup)
+    void onFollowup() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerTipsAddfollow);
         if (listenerRef != null && listenerRef.get() != null) {
             dismiss();
             listenerRef.get().onAddFollowup();
         }
     }
 
-    @OnClick(R.id.tv_visit) void onVisit() {
+    @OnClick(R.id.tv_visit)
+    void onVisit() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerTipsAddvisit);
         if (listenerRef != null && listenerRef.get() != null) {
             dismiss();
             listenerRef.get().onAddVisit();
         }
     }
 
-    @OnClick(R.id.tv_call) void onCall() {
+    @OnClick(R.id.tv_call)
+    void onCall() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerTipsCall);
         if (listenerRef != null && listenerRef.get() != null) {
             dismiss();
             listenerRef.get().onAddCall();
         }
     }
 
-    @OnClick(R.id.tv_order) void onOrder() {
+    @OnClick(R.id.tv_order)
+    void onOrder() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerTipsAddorder);
         if (listenerRef != null && listenerRef.get() != null) {
             dismiss();
             listenerRef.get().onAddOrder();
@@ -96,8 +131,8 @@ public class DropCustomerDeadlineFragment extends DialogFragment {
     WeakReference<CustomerDeadlineActionListener> listenerRef;
 
 
-
-    public DropCustomerDeadlineFragment() {}
+    public DropCustomerDeadlineFragment() {
+    }
 
     public static DropCustomerDeadlineFragment newInstance(DropDeadlineModel model, CustomerDeadlineActionListener listener) {
         DropCustomerDeadlineFragment fragment = new DropCustomerDeadlineFragment();
@@ -143,42 +178,36 @@ public class DropCustomerDeadlineFragment extends DialogFragment {
     }
 
     void loadData() {
-        titleText.setText("请在以下时间完成“"+ model.getConditionString() +"”跟进工作：");
+        titleText.setText("请在以下时间完成“" + model.getConditionString() + "”跟进工作：");
         if (model.activityRecycleAt > 0) {
             followupContainer.setVisibility(View.VISIBLE);
             orderTitleText.setText("且在以下时间完成签约：");
             if (model.saleactRecycleAt > 0) {
                 followupView.setVisibility(View.VISIBLE);
                 followupDeadlineText.setText(DropDeadlineModel.formatDateTimeString(model.saleactRecycleAt));
-            }
-            else {
+            } else {
                 followupView.setVisibility(View.GONE);
             }
             if (model.visitRecycleAt > 0) {
                 visitView.setVisibility(View.VISIBLE);
                 visitDeadlineText.setText(DropDeadlineModel.formatDateTimeString(model.visitRecycleAt));
-            }
-            else {
+            } else {
                 visitView.setVisibility(View.GONE);
             }
             if (model.voiceRecycleAt > 0) {
                 callView.setVisibility(View.VISIBLE);
                 callDeadlineText.setText(DropDeadlineModel.formatDateTimeString(model.voiceRecycleAt));
-            }
-            else {
+            } else {
                 callView.setVisibility(View.GONE);
             }
-        }
-        else {
+        } else {
             followupContainer.setVisibility(View.GONE);
             orderTitleText.setText("请在以下时间完成签约：");
         }
         if (model.orderRecycleAt > 0) {
             orderContainer.setVisibility(View.VISIBLE);
             orderDeadlineText.setText(DropDeadlineModel.formatDateTimeString(model.orderRecycleAt));
-        }
-        else
-        {
+        } else {
             orderContainer.setVisibility(View.GONE);
         }
     }

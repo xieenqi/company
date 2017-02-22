@@ -9,6 +9,7 @@ import android.widget.ExpandableListView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateFormatSet;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
@@ -38,6 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerTaskAdd;
 
 /**
  * Created by EthanGong on 2017/2/9.
@@ -121,6 +123,7 @@ public class TasksFragment extends CustomerChildFragment implements PullToRefres
      */
     @OnClick(R.id.layout_add)
     void createNewTask() {
+        UmengAnalytics.umengSend(mActivity,customerTaskAdd);
         if (!PermissionManager.getInstance().hasPermission(BusinessOperation.TASK)) {
             sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
         } else {
