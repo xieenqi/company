@@ -141,7 +141,7 @@ public class UmengAnalytics {
     public static String tasksRepetitionButton = "tasks_repetition_button";         //新建任务_选择重复方式
     public static String tasksDeadlineButton = "tasks_deadline_button";             //新建任务_选择截止时间
     public static String tasksRemindButton = "tasks_remind_button";                 //新建任务_选择提醒时间_按钮
-    public static String tasksApproveButton = "tasks_approve_button";               //新建任务_选中/取消 是否审核
+    public static String tasksApproveButton = "tasks_approve_button";               //新建任务_选中/取消 是否审核(点击一次算一次)
     public static String tasksProjectButton = "tasks_project_button";               //新建任务_选择归属项目
     public static String tasksCustomerButton = "tasks_customer_button";             //新建任务_选择关联客户
     public static String tasksAddsubtaskButton = "tasks_addsubtask_button";         //任务详情_添加子任务_按钮
