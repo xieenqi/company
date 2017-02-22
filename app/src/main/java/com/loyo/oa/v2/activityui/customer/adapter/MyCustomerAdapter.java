@@ -96,7 +96,6 @@ public class MyCustomerAdapter extends BaseAdapter {
         ViewGroup layout_go_where = ViewHolder.get(convertView, R.id.layout_go_where);
 
         tv_title.setText(customer.name);
-        String tagItems = Utils.getTagItems(customer);
         String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
 
         img_public.setVisibility(View.GONE);
@@ -107,7 +106,7 @@ public class MyCustomerAdapter extends BaseAdapter {
         img1.setImageResource(R.drawable.icon_customer_tag);
         img2.setImageResource(R.drawable.icon_customer_follow_time);
 
-        tv_content1.setText("标签：" + tagItems);
+        tv_content1.setText("标签：" + customer.displayTagString());
         tv_content2.setText("跟进时间：" + lastActivityAt);
         if (!(mContext instanceof FollowSelectActivity))
             CommonMethod.commonCustomerRecycleTime(customer, layout_4, tv_content41);

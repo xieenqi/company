@@ -215,17 +215,17 @@ public class TeamCustomerFragment extends BaseCustomerFragment {
                     mCustomer.summary = updateCus.summary;
                     mCustomer.owner = updateCus.owner;
                     mCustomer.members = updateCus.members;
-                    mCustomer.tags = updateCus.tags;
                     mCustomer.loc = updateCus.loc;
                     mCustomer.position = updateCus.position;
                     mCustomer.extDatas = updateCus.extDatas;
                     mCustomer.regional = updateCus.regional;
+                    mCustomer.setTags(updateCus.tags);
                     adapter.notifyDataSetChanged();
                 } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode || MyCustomerRushEvent.EVENT_SUB_CODE_LTC == event.subCode) {//更新标签
                     if (!"note".equals(event.request + "")) return;
                     Customer updateCus = event.data;
                     Customer mCustomer = mPagination.getRecords().get(clickPosition);
-                    mCustomer.tags = updateCus.tags;
+                    mCustomer.setTags(updateCus.tags);
                     adapter.notifyDataSetChanged();
                 } else if (MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER == event.subCode) {//更新写跟进，拜访，添加订单以后的丢公海时间，数据来自详情页
                     mPagination.getRecords().remove(clickPosition);

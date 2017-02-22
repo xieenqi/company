@@ -23,6 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static com.loyo.oa.v2.activityui.customer.model.Customer.RecycleType.AUTOMATIC;
 import static com.loyo.oa.v2.activityui.customer.model.Customer.RecycleType.MANUAL;
@@ -128,6 +129,7 @@ public class Customer extends BaseBeans {
     public CustomerRegional regional;
     public Counter counter;
     public ArrayList<Member> members = new ArrayList<>();
+    //不能直接设置，要通过setter设置
     public ArrayList<NewTag> tags = new ArrayList<>();
     public ArrayList<Contact> contacts = new ArrayList<>();
 
@@ -163,6 +165,7 @@ public class Customer extends BaseBeans {
     public String webSite;//网址
     public String recycleName;//丢公海人
 
+    public String tagsString;//标签字符串
     @Override
     public String getOrderStr() {
         return null;
@@ -172,12 +175,44 @@ public class Customer extends BaseBeans {
         return null == id ? "" : id;
     }
 
-    public String displayTagString() {
+//    设置标签，必须通过setter，不然，会造成字符串的不一样
+    public void setTags(ArrayList<NewTag> tags) {
+        this.tags  = tags;
+        makeTagString();
+    }
+
+    /**
+     * 生成标签字符串
+     */
+    private void makeTagString(){
         StringBuffer buffer = new StringBuffer();
         boolean needSeperate = false;
+        String tagId="";
+        //以下代码是兼容没有tid的情况
+        for (NewTag tag : tags) {
+            if(TextUtils.isEmpty(tag.gettId())){
+                needSeperate=true;
+                break;
+            }
+        }
+        if(!needSeperate){
+            Collections.sort(tags);//先排序，再链接成字符串，保证一个分组的tag在一起
+        }
+        needSeperate=false;
+        //兼容没有tid结束
         for (NewTag tag : tags) {
             if (needSeperate) {
-                buffer.append("、");
+                //判断是不是一个分组
+                if(TextUtils.isEmpty(tag.tId)//兼容没有tid的情况
+                        ||!tag.tId.equals(tagId)){
+                    //一个分组
+                    buffer.append("、");
+                    tagId=tag.gettId();
+                }else{
+                    buffer.append("/");
+                }
+            }else{
+                tagId=tag.gettId();
             }
             buffer.append(tag.getItemName());
             needSeperate = true;
@@ -185,7 +220,14 @@ public class Customer extends BaseBeans {
 
         String result = buffer.toString();
 
-        return TextUtils.isEmpty(result) ? "无" : result;
+        tagsString= TextUtils.isEmpty(result) ? "无" : result;
+    }
+    public String displayTagString() {
+        //兼容，如果已经存在拼接好的标签，就不再去拼接，直接用
+        if(TextUtils.isEmpty(tagsString)){
+            makeTagString();
+        }
+        return tagsString;
     }
 
     public SpannableStringBuilder getFormattedDropRemind() {

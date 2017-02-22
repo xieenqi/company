@@ -266,7 +266,7 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
             getDefaultContact(mCustomer.contacts);
             //设置客户名称
             tv_customer.setText(mCustomer.name);
-            String label=Utils.getTagItems(mCustomer);
+            String label=mCustomer.displayTagString();
             if("无".equals(label)){
                 tv_contact_label.setText("");
                 tv_contact_label.setHint("无");
@@ -918,8 +918,8 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
     @Subscribe
     public void onCustomerRushEvent(MyCustomerRushEvent event) {
         if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode && MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == MyCustomerRushEvent.EVENT_SUB_CODE_LABEL) {
-            tv_contact_label.setText(Utils.getTagItems(event.data));
-            mCustomer.tags = event.data.tags;
+            mCustomer.setTags(event.data.tags);
+            tv_contact_label.setText(mCustomer.displayTagString());
             hasEditConOrRole = true;
         }
     }

@@ -55,14 +55,13 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/customer_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/customer_state"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal">
+            android:layout_marginRight="25dp">
 
             <TextView
                 android:id="@+id/tv_customer_tag"
@@ -72,7 +71,9 @@
                 android:paddingTop="4dp"
                 android:textColor="#ffffff"
                 android:textSize="14dp"
+                android:text="标签："
                 android:singleLine="true"
+                android:paddingRight="19dp"
                 android:maxLines="1"/>
 
             <ImageView
@@ -82,9 +83,10 @@
                 android:layout_marginLeft="3dp"
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
+                android:layout_gravity="right"
                 android:src="@drawable/icon_editable"
                 android:visibility="gone" />
-        </LinearLayout>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tv_drop_reason"

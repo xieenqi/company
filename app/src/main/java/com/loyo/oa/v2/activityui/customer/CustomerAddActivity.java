@@ -549,7 +549,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode &&
                 event.subCode == MyCustomerRushEvent.EVENT_SUB_CODE_LABEL
                 && "-1".equals(event.session)) {
-            customer.tags = event.data.tags;
+            customer.setTags(event.data.tags);
             tv_labels.setText(customer.displayTagString());
 
         }
@@ -813,7 +813,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             case REQUEST_CUSTOMER_LABEL:
                 Bundle bundle = data.getExtras();
-                customer.tags = (ArrayList<NewTag>) bundle.getSerializable("data");
+                ArrayList<NewTag> tempTags=(ArrayList<NewTag>) bundle.getSerializable("data");
+                customer.setTags(tempTags);
                 tv_labels.setText(customer.displayTagString());
                 break;
 

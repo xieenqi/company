@@ -76,7 +76,7 @@ public class TeamCustomerAdapter extends BaseAdapter {
         ViewGroup layout_go_where = ViewHolder.get(convertView, R.id.layout_go_where);
 
         tv_title.setText(customer.name);
-        String tagItems = Utils.getTagItems(customer);
+//        String tagItems = Utils.getTagItems(customer);
         String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
 
         img_public.setVisibility(View.GONE);
@@ -89,7 +89,7 @@ public class TeamCustomerAdapter extends BaseAdapter {
         img3.setImageResource(R.drawable.icon_customer_follow_time);
 
         String responser = null == customer.owner || null == customer.owner ? "" : customer.owner.name;
-        tv_content1.setText("标签：" + tagItems);
+        tv_content1.setText("标签：" + customer.displayTagString());
         tv_content2.setText("负责人：" + responser);
         tv_content3.setText("跟进时间：" + lastActivityAt);
 

@@ -27,6 +27,7 @@ import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -101,19 +102,19 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
                         tagItem.setIsChecked(true);
                         tagItem.setTagId(tag.getId());
                         mTagItems.add(tagItem);
-                        for (TagItem item : tag.getItems()) {
-                            if (!TextUtils.equals(item.getId(), tagItem.getId())) {
-                                item.setIsChecked(false);
-                                //修复标签多选bug
-                                for (int i = 0; i < mTagItems.size(); i++) {
-                                    TagItem cacheItem = mTagItems.get(i);
-                                    if (TextUtils.equals(cacheItem.getId(), item.getId())) {
-                                        mTagItems.remove(cacheItem);
-                                        i--;
-                                    }
-                                }
-                            }
-                        }
+//                        for (TagItem item : tag.getItems()) {
+//                            if (!TextUtils.equals(item.getId(), tagItem.getId())) {
+//                                item.setIsChecked(false);
+//                                //修复标签多选bug
+//                                for (int i = 0; i < mTagItems.size(); i++) {
+//                                    TagItem cacheItem = mTagItems.get(i);
+//                                    if (TextUtils.equals(cacheItem.getId(), item.getId())) {
+//                                        mTagItems.remove(cacheItem);
+//                                        i--;
+//                                    }
+//                                }
+//                            }
+//                        }
                     }
                     adapter.notifyDataSetChanged();
                     expand();
@@ -200,7 +201,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
     //设置成功以后，再发送消息，更新本地UI
     private void sendLabelChangeChange(boolean note) {
         Customer updateCus = new Customer();
-        updateCus.tags = convertNewTags();
+        updateCus.setTags(convertNewTags());
         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(updateCus);
         myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
         myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_LABEL;
@@ -225,10 +226,10 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
             tag.setItemId(item.getId());
             tag.setItemName(item.getName());
             tag.settId(item.getTagId());
-
             tags.add(tag);
         }
-
+        //先对标签排序，保证一组的标签，在一起,方便拼接字符串
+        Collections.sort(tags);
         return tags;
     }
 

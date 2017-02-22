@@ -81,7 +81,6 @@ public class NearCustomerAdapter extends BaseAdapter {
         ViewGroup layout_go_where = ViewHolder.get(convertView, R.id.layout_go_where);
 
         tv_title.setText(customer.name);
-        String tagItems = Utils.getTagItems(customer);
 //        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
         String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
 
@@ -93,7 +92,7 @@ public class NearCustomerAdapter extends BaseAdapter {
             layout3.setVisibility(View.GONE);
 
             img1.setImageResource(R.drawable.icon_customer_tag);
-            tv_content1.setText("标签：" + tagItems);
+            tv_content1.setText("标签：" + customer.displayTagString());
 
             if (null != customer.distance) {
                 tv_content4.setText(customer.distance);
@@ -115,7 +114,7 @@ public class NearCustomerAdapter extends BaseAdapter {
             img1.setImageResource(R.drawable.icon_customer_tag);
             img2.setImageResource(R.drawable.icon_customer_responder);
 
-            tv_content1.setText("标签：" + tagItems);
+            tv_content1.setText("标签：" + customer.displayTagString());
             String ownerName = customer.owner!=null?customer.owner.getRealname():"无";
             tv_content2.setText("负责人：" + ownerName);
             if (null != customer.distance) {
