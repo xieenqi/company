@@ -23,6 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static com.loyo.oa.v2.activityui.customer.model.Customer.RecycleType.AUTOMATIC;
 import static com.loyo.oa.v2.activityui.customer.model.Customer.RecycleType.MANUAL;
@@ -176,10 +177,12 @@ public class Customer extends BaseBeans {
         StringBuffer buffer = new StringBuffer();
         boolean needSeperate = false;
         String tagId="";
+        Collections.sort(tags);//先排序，再链接成字符串，保证一个分组的tag在一起
         for (NewTag tag : tags) {
             if (needSeperate) {
                 //判断是不是一个分组
-                if(!tag.tId.equals(tagId)){
+                if(TextUtils.isEmpty(tag.tId)//兼容没有tid的情况
+                        ||!tag.tId.equals(tagId)){
                     //一个分组
                     buffer.append("、");
                 }else{

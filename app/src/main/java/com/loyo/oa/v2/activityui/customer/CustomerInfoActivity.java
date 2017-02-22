@@ -366,10 +366,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     @UiThread
     void setTag() {
-        String tag = appendTagItem(mCustomer.tags);
-        if (!TextUtils.isEmpty(tag)) {
-            tv_labels.setText(tag);
-        }
+        tv_labels.setText(mCustomer.displayTagString());
     }
 
     void updateUiWithEditAuth(boolean canEdit) {
@@ -827,34 +824,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             case REQUEST_CUSTOMER_LABEL:
                 Bundle bundle = data.getExtras();
                 mCustomer.tags = (ArrayList<NewTag>) bundle.getSerializable("data");
-                tv_labels.setText(appendTagItem(mCustomer.tags));
+                tv_labels.setText(mCustomer.displayTagString());
                 break;
             default:
 
                 break;
         }
-    }
-
-    /**
-     * 拼接mTagItems.getItemName, 如果mTagitems为空，返回“”；
-     *
-     * @param tagList
-     * @return
-     */
-    private String appendTagItem(final List<NewTag> tagList) {
-        StringBuffer sb = null;
-
-        for (NewTag item : tagList) {
-            if (sb == null) {
-                sb = new StringBuffer();
-                sb.append(String.valueOf(item.getItemName()));
-            } else {
-                sb.append("/");
-                sb.append(String.valueOf(item.getItemName()));
-            }
-        }
-
-        return null == sb ? "" : sb.toString();
     }
 
 }
