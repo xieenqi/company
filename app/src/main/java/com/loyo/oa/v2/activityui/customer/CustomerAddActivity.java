@@ -247,6 +247,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     }
                 }else{
                     et_address.setText("");
+                    et_address.setHint("定位失败");
                 }
                 LocationUtilGD.sotpLocation();
             }
@@ -316,8 +317,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             Toast("已显示之前未提交的数据");
         }
         edt_name.setText(customer.name);
-        if (null != customer.position) edit_address_details.setText(customer.position.addr);
-        if (null != customer.loc) et_address.setText(customer.loc.addr);
+//        if (null != customer.position) edit_address_details.setText(customer.position.addr);
+        if (null != customer.loc) edit_address_details.setText(customer.loc.addr);
         if (!TextUtils.isEmpty(customer.statusName)) tv_status.setText(customer.statusName);
         if (null != customer.tags) tv_labels.setText(customer.displayTagString());
         if (!TextUtils.isEmpty(customer.webSite)) edt_customer_weburl.setText(customer.webSite);
@@ -786,10 +787,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     if (null == customer.position) {
                         customer.position = new Locate();
                     }
-                    customer.position.loc[0] = positionResultItem.laPosition;
-                    customer.position.loc[1] = positionResultItem.loPosition;
+                    customer.position.loc[1] = positionResultItem.laPosition;
+                    customer.position.loc[0] = positionResultItem.loPosition;
                     et_address.setText(positionResultItem.address);
-                    edit_address_details.setText(positionResultItem.address);
+                    if(!TextUtils.isEmpty(positionResultItem.address))edit_address_details.setText(positionResultItem.address);
                 }
                 break;
 
