@@ -674,13 +674,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             map.put("attachmentCount", controller.count());
             map.put("uuid", uuid);
         }
-        //因为数据格式的原因，把保存在customer的数据，转换一个格式然后再提交
-        HttpLoc position = new HttpLoc();
-        position.addr = customer.position.addr;
-        position.loc.add(customer.position.loc[0]);
-        position.loc.add(customer.position.loc[1]);
+        if(null!=customer.position){
+            //因为数据格式的原因，把保存在customer的数据，转换一个格式然后再提交
+            HttpLoc position = new HttpLoc();
+            position.addr = customer.position.addr;
+            position.loc.add(customer.position.loc[0]);
+            position.loc.add(customer.position.loc[1]);
+            map.put("position", position); //定位数据
+        }
 
-        map.put("position", position); //定位数据
         map.put("loc", customer.loc);//地址详情数据
         map.put("name", customer.name);
         map.put("pname", contact.getName());
