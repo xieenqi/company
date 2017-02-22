@@ -57,23 +57,6 @@ public class TagItem  implements Serializable,Comparable<TagItem>{
         this.name = name;
     }
 
-//    public Boolean getIsDefault() {
-//        return isDefault;
-//    }
-//
-//    public void setIsDefault(Boolean isDefault) {
-//        this.isDefault = isDefault;
-//    }
-
-//    public Boolean getEnable() {
-//        return enable;
-//    }
-//
-//    public void setEnable(Boolean enable) {
-//        this.enable = enable;
-//    }
-
-
     @Override
     public int compareTo(TagItem tagItem)
     {

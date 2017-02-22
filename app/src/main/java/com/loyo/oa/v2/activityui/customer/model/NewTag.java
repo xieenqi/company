@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.customer.model;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * 作者 : ykb
  * 时间 : 15/9/30.
  */
-public class NewTag implements Serializable {
+public class NewTag implements Serializable ,Comparable<NewTag> {
 
     public String tId;
     public String itemId;
@@ -36,6 +38,11 @@ public class NewTag implements Serializable {
 
     public void settId(String tId) {
         this.tId = tId;
+    }
+    @Override
+    public int compareTo(NewTag tag)
+    {
+        return tId.compareTo(tag.gettId());
     }
 
 }

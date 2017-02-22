@@ -175,9 +175,18 @@ public class Customer extends BaseBeans {
     public String displayTagString() {
         StringBuffer buffer = new StringBuffer();
         boolean needSeperate = false;
+        String tagId="";
         for (NewTag tag : tags) {
             if (needSeperate) {
-                buffer.append("、");
+                //判断是不是一个分组
+                if(!tag.tId.equals(tagId)){
+                    //一个分组
+                    buffer.append("、");
+                }else{
+                    buffer.append("/");
+                }
+            }else{
+                tagId=tag.gettId();
             }
             buffer.append(tag.getItemName());
             needSeperate = true;
