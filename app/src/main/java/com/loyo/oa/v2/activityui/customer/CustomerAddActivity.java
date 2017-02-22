@@ -234,6 +234,20 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void OnLocationGDFailed() {
                 Toast(R.string.LOCATION_FAILED);
+                //定位失败，如果有app缓存位置 就用app的缓存位置,没有就不填
+                if(!TextUtils.isEmpty(app.address)){
+                    Locate postition = new Locate();
+                    customer.position = postition;
+                    customer.position.addr = app.address;
+                    customer.position.loc[0] = app.longitude;
+                    customer.position.loc[1] = app.latitude;
+                    et_address.setText(app.address);
+                    if (TextUtils.isEmpty(edit_address_details.getText().toString())) {
+                        edit_address_details.setText(app.address);
+                    }
+                }else{
+                    et_address.setText("");
+                }
                 LocationUtilGD.sotpLocation();
             }
         });
@@ -798,8 +812,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 customer.tags = (ArrayList<NewTag>) bundle.getSerializable("data");
                 tv_labels.setText(customer.displayTagString());
                 break;
-
-
 
             /*相册选择 回调*/
             case PhotoPicker.REQUEST_CODE:
