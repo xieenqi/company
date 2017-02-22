@@ -700,28 +700,28 @@ public class Utils {
         }
     }
 
-    /**
-     * 获取客户标签
-     *
-     * @param customer
-     * @return
-     */
-    public static String getTagItems(Customer customer) {
-        if (null == customer || null == customer.tags || customer.tags.isEmpty()) {
-            return "无";
-        }
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < customer.tags.size(); i++) {
-            String tag = !TextUtils.isEmpty(customer.tags.get(i).getItemName()) ? customer.tags.get(i).getItemName() : "";
-            if (!TextUtils.isEmpty(tag)) {
-                if (i != customer.tags.size() - 1) {
-                    tag = tag.concat("、");
-                }
-                builder.append(tag);
-            }
-        }
-        return builder.toString();
-    }
+//    /**
+//     * 获取客户标签
+//     *
+//     * @param customer
+//     * @return
+//     */
+//    public static String getTagItems(Customer customer) {
+//        if (null == customer || null == customer.tags || customer.tags.isEmpty()) {
+//            return "无";
+//        }
+//        StringBuilder builder = new StringBuilder();
+//        for (int i = 0; i < customer.tags.size(); i++) {
+//            String tag = !TextUtils.isEmpty(customer.tags.get(i).getItemName()) ? customer.tags.get(i).getItemName() : "";
+//            if (!TextUtils.isEmpty(tag)) {
+//                if (i != customer.tags.size() - 1) {
+//                    tag = tag.concat("、");
+//                }
+//                builder.append(tag);
+//            }
+//        }
+//        return builder.toString();
+//    }
 
     /**
      * 打开路径规划（地图app或浏览器里的地图）

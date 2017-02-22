@@ -437,7 +437,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.summary       = updateCus.summary;
                 customer.owner         = updateCus.owner;
                 customer.members       = updateCus.members;
-                customer.tags          = updateCus.tags;
                 customer.loc           = updateCus.loc;
                 customer.position      = updateCus.position;
                 customer.extDatas      = updateCus.extDatas;
@@ -446,19 +445,21 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.statusName    = updateCus.statusName;
                 customer.state         = updateCus.state;
                 customer.relationState = updateCus.relationState;
+                customer.setTags(updateCus.tags);
+
                 loadCustomer();
             } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {
                 if (!"note".equals(event.request + "")) return;
                 //更新label 
-                customer.tags = event.data.tags;
+                customer.setTags(event.data.tags);
                 loadCustomer();
             } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LTC == event.subCode) {
                 Customer updateCus = event.data;
                 //更新label
                 customer.statusName = updateCus.statusName;
                 customer.statusId   = updateCus.statusId;
-                customer.tags       = updateCus.tags;
                 customer.contacts   = updateCus.contacts;
+                customer.setTags(updateCus.tags);
                 ((CustomerChildFragment)adapter.getItem(1)).reloadWithCustomer(customer);//更新联系人
                 loadCustomer();
                 refreshDropRemind();

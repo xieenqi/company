@@ -662,7 +662,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     @Subscribe
     public void onCustomerRushEvent(MyCustomerRushEvent event) {
         if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode && event.subCode == MyCustomerRushEvent.EVENT_SUB_CODE_LABEL) {
-            mCustomer.tags = event.data.tags;
+            mCustomer.setTags(event.data.tags);
             setTag();
         }
     }
@@ -823,7 +823,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 break;
             case REQUEST_CUSTOMER_LABEL:
                 Bundle bundle = data.getExtras();
-                mCustomer.tags = (ArrayList<NewTag>) bundle.getSerializable("data");
+                ArrayList<NewTag> tempTags = (ArrayList<NewTag>) bundle.getSerializable("data");
+                mCustomer.setTags(tempTags);
                 tv_labels.setText(mCustomer.displayTagString());
                 break;
             default:

@@ -399,17 +399,18 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                     mCustomer.summary = updateCus.summary;
                     mCustomer.owner = updateCus.owner;
                     mCustomer.members = updateCus.members;
-                    mCustomer.tags = updateCus.tags;
                     mCustomer.loc = updateCus.loc;
                     mCustomer.position = updateCus.position;
                     mCustomer.extDatas = updateCus.extDatas;
                     mCustomer.regional = updateCus.regional;
+                    mCustomer.setTags(updateCus.tags);
+
                     adapter.notifyDataSetChanged();
                 } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode  ) {//更新标签
                     if (!"note".equals(event.request + "")) return;
                     Customer updateCus = event.data;
                     Customer mCustomer = mPagination.getRecords().get(clickPosition);
-                    mCustomer.tags = updateCus.tags;
+                    mCustomer.setTags(updateCus.tags);
                     adapter.notifyDataSetChanged();
                 } else if (MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER == event.subCode) {//更新写跟进，拜访，添加订单以后的丢公海时间，数据来自详情页
                     mPagination.getRecords().remove(clickPosition);
@@ -419,7 +420,7 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
                     if (!"note".equals(event.request + "")) return;
                     Customer updateCus  = event.data;
                     Customer mCustomer  = mPagination.getRecords().get(clickPosition);
-                    mCustomer.tags      = updateCus.tags;
+                    mCustomer.setTags(updateCus.tags);
                     mCustomer.lastActAt = updateCus.lastActAt;
                     adapter.notifyDataSetChanged();
                 }

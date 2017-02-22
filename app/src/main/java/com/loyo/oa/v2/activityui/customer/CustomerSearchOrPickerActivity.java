@@ -67,7 +67,7 @@ public class CustomerSearchOrPickerActivity extends BaseSearchActivity<Customer>
     public void bindData(CommonSearchAdapter.SearchViewHolder viewHolder, Customer data) {
         viewHolder.time.setText("跟进时间：" + DateTool.getDateTimeFriendly(data.lastActAt));
         viewHolder.title.setText(data.name);
-        viewHolder.content.setText("标签:" + Utils.getTagItems(data));
+        viewHolder.content.setText("标签:" + data.displayTagString());
         viewHolder.content.setVisibility(haveTag?View.VISIBLE:View.GONE);
     }
 

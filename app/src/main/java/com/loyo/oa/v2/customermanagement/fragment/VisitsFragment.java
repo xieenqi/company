@@ -16,7 +16,6 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewGroupAdapter;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;

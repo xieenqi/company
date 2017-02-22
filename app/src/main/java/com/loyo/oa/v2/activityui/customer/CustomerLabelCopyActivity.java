@@ -201,7 +201,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
     //设置成功以后，再发送消息，更新本地UI
     private void sendLabelChangeChange(boolean note) {
         Customer updateCus = new Customer();
-        updateCus.tags = convertNewTags();
+        updateCus.setTags(convertNewTags());
         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(updateCus);
         myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
         myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_LABEL;

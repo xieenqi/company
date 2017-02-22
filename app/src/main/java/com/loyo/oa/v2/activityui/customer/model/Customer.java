@@ -129,6 +129,7 @@ public class Customer extends BaseBeans {
     public CustomerRegional regional;
     public Counter counter;
     public ArrayList<Member> members = new ArrayList<>();
+    //不能直接设置，要通过setter设置
     public ArrayList<NewTag> tags = new ArrayList<>();
     public ArrayList<Contact> contacts = new ArrayList<>();
 
@@ -164,6 +165,7 @@ public class Customer extends BaseBeans {
     public String webSite;//网址
     public String recycleName;//丢公海人
 
+    public String tagsString;//标签字符串
     @Override
     public String getOrderStr() {
         return null;
@@ -173,11 +175,31 @@ public class Customer extends BaseBeans {
         return null == id ? "" : id;
     }
 
+//    设置标签，必须通过setter，不然，会造成字符串的不一样
+    public void setTags(ArrayList<NewTag> tags) {
+        tagsString = displayTagString();
+        this.tags  = tags;
+    }
+
     public String displayTagString() {
+        //兼容，如果已经存在拼接好的标签，就不再去拼接，直接用
+        if(!TextUtils.isEmpty(tagsString))return tagsString;
+
         StringBuffer buffer = new StringBuffer();
         boolean needSeperate = false;
         String tagId="";
-        Collections.sort(tags);//先排序，再链接成字符串，保证一个分组的tag在一起
+        //以下代码是兼容没有tid的情况
+        for (NewTag tag : tags) {
+            if(TextUtils.isEmpty(tag.gettId())){
+                needSeperate=true;
+                break;
+            }
+        }
+        if(!needSeperate){
+            Collections.sort(tags);//先排序，再链接成字符串，保证一个分组的tag在一起
+        }
+        needSeperate=false;
+        //兼容没有tid结束
         for (NewTag tag : tags) {
             if (needSeperate) {
                 //判断是不是一个分组
@@ -185,6 +207,7 @@ public class Customer extends BaseBeans {
                         ||!tag.tId.equals(tagId)){
                     //一个分组
                     buffer.append("、");
+                    tagId=tag.gettId();
                 }else{
                     buffer.append("/");
                 }

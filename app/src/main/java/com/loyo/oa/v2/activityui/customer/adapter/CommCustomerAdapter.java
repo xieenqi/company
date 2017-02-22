@@ -92,7 +92,6 @@ public class CommCustomerAdapter extends BaseAdapter {
         ViewGroup layout_go_where = ViewHolder.get(convertView, R.id.layout_go_where);
 
         tv_title.setText(customer.name);
-        String tagItems = Utils.getTagItems(customer);
         String recycledAt = customer.recycledAt != 0 ? DateTool.getDateTimeFriendly(customer.recycledAt) : "--";
         img_public.setVisibility(View.INVISIBLE);
         permissionTest(img_public);
@@ -101,7 +100,7 @@ public class CommCustomerAdapter extends BaseAdapter {
         layout3.setVisibility(View.GONE);
         img1.setImageResource(R.drawable.icon_customer_tag);
         img2.setImageResource(R.drawable.icon_customer_follow_time);
-        tv_content1.setText("标签：" + tagItems);
+        tv_content1.setText("标签：" + customer.displayTagString());
         tv_content2.setText("丢公海时间：" + recycledAt);
 
 
