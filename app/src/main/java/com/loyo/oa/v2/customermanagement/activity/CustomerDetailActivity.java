@@ -20,6 +20,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerLabelCopyActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerStatusSingleSelectActivity;
 import com.loyo.oa.v2.activityui.customer.LoseCommonCustomerReasonActivity;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerRushEvent;
+import com.loyo.oa.v2.activityui.customer.event.RefreshCustomerEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerStatusModel;
@@ -56,6 +57,7 @@ import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -68,9 +70,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static android.R.attr.data;
+
 public class CustomerDetailActivity extends BaseFragmentActivity
         implements DropCustomerDeadlineFragment.CustomerDeadlineActionListener,
-        CustomerChildFragment.OnTotalCountChangeListener, CustomerBasicInfoHeader.CustomerBasicInfoHeaderListener{
+        CustomerChildFragment.OnTotalCountChangeListener, CustomerBasicInfoHeader.CustomerBasicInfoHeaderListener {
 
     public static final String KEY_ID = "com.loyo.CustomerDetailActivity.KEY_ID";
     public static final int EXTRA_CUSTOMER_EDIT_STATUS = 1;//标签改变
@@ -100,7 +104,8 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     @BindView(R.id.ll_loading)
     LoadingLayout ll_loading;
 
-    @BindView(R.id.basic_info_container) ViewGroup basicInfoContainer;
+    @BindView(R.id.basic_info_container)
+    ViewGroup basicInfoContainer;
 
     @BindView(R.id.tab_mask)
     ImageView tabMask;
@@ -370,9 +375,9 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                         CustomerDetailActivity.this.loadCustomer();
                         //更新列表丢公海提醒数据
                         MyCustomerRushEvent myCustomerRushEvent = new MyCustomerRushEvent(CustomerDetailActivity.this.customer);
-                        myCustomerRushEvent.eventCode           = MyCustomerRushEvent.EVENT_CODE_UPDATE;
-                        myCustomerRushEvent.subCode             = MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER;
-                        myCustomerRushEvent.session             = customer.getId();
+                        myCustomerRushEvent.eventCode = MyCustomerRushEvent.EVENT_CODE_UPDATE;
+                        myCustomerRushEvent.subCode = MyCustomerRushEvent.EVENT_SUB_CODE_RECYCLER;
+                        myCustomerRushEvent.session = customer.getId();
                         AppBus.getInstance().post(myCustomerRushEvent);
                     }
                 });
@@ -406,13 +411,13 @@ public class CustomerDetailActivity extends BaseFragmentActivity
     private void setupViewPager(ViewPager viewPager) {
         adapter = new CustomerPagerAdapter(getSupportFragmentManager());
         followupsFragment =
-                (FollowupsFragment)adapter.addFragment(new FollowupsFragment(customer, 0, this, "跟进"));
+                (FollowupsFragment) adapter.addFragment(new FollowupsFragment(customer, 0, this, "跟进"));
         adapter.addFragment(new ContactsFragment(customer, 1, this, "联系人"));
         visitsFragment =
-                (VisitsFragment)adapter.addFragment(new VisitsFragment(customer, 2, this, "拜访"));
+                (VisitsFragment) adapter.addFragment(new VisitsFragment(customer, 2, this, "拜访"));
         adapter.addFragment(new OpportunitiesFragment(customer, 3, this, "机会"));
         ordersFragment =
-                (OrdersFragment)adapter.addFragment(new OrdersFragment(customer, 4, this, "订单"));
+                (OrdersFragment) adapter.addFragment(new OrdersFragment(customer, 4, this, "订单"));
         adapter.addFragment(new TasksFragment(customer, 5, this, "任务"));
         adapter.addFragment(new WorkFlowsFragment(customer, 6, this, "审批"));
         adapter.addFragment(new AttachmentsFragment(customer, 7, this, "附件"));
@@ -432,18 +437,18 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         if (MyCustomerRushEvent.EVENT_CODE_UPDATE == event.eventCode) {
             //更新客户信息
             if (MyCustomerRushEvent.EVENT_SUB_CODE_INFO == event.subCode) {
-                Customer updateCus     = event.data;
-                customer.name          = updateCus.name;
-                customer.summary       = updateCus.summary;
-                customer.owner         = updateCus.owner;
-                customer.members       = updateCus.members;
-                customer.loc           = updateCus.loc;
-                customer.position      = updateCus.position;
-                customer.extDatas      = updateCus.extDatas;
-                customer.regional      = updateCus.regional;
-                customer.statusId      = updateCus.statusId;
-                customer.statusName    = updateCus.statusName;
-                customer.state         = updateCus.state;
+                Customer updateCus = event.data;
+                customer.name = updateCus.name;
+                customer.summary = updateCus.summary;
+                customer.owner = updateCus.owner;
+                customer.members = updateCus.members;
+                customer.loc = updateCus.loc;
+                customer.position = updateCus.position;
+                customer.extDatas = updateCus.extDatas;
+                customer.regional = updateCus.regional;
+                customer.statusId = updateCus.statusId;
+                customer.statusName = updateCus.statusName;
+                customer.state = updateCus.state;
                 customer.relationState = updateCus.relationState;
                 customer.setTags(updateCus.tags);
 
@@ -457,14 +462,26 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 Customer updateCus = event.data;
                 //更新label
                 customer.statusName = updateCus.statusName;
-                customer.statusId   = updateCus.statusId;
-                customer.contacts   = updateCus.contacts;
+                customer.statusId = updateCus.statusId;
+                customer.contacts = updateCus.contacts;
                 customer.setTags(updateCus.tags);
-                ((CustomerChildFragment)adapter.getItem(1)).reloadWithCustomer(customer);//更新联系人
+                ((CustomerChildFragment) adapter.getItem(1)).reloadWithCustomer(customer);//更新联系人
                 loadCustomer();
                 refreshDropRemind();
 
             }
+        }
+    }
+
+    @Subscribe
+    public void onPushEvent(RefreshCustomerEvent event) {
+        /*生成商务电话录音 推送过来 拉起数据*/
+        if (customer != null && customer.id.equals(event.data)) {
+            viewPagerInited = false;
+            getData(event.data);
+            LogUtil.d("开始刷新数据！！！！！");
+        } else {
+            LogUtil.d("开始刷新数据！！！！！数据不符合要求");
         }
     }
 
@@ -651,7 +668,7 @@ public class CustomerDetailActivity extends BaseFragmentActivity
      * 子页面数据更新回调
      * CustomerChildFragment.OnTotalCountChangeListener
      */
-    
+
     @Override
     public void onTotalCountChange(CustomerChildFragment fragment, int index) {
         TabLayout.Tab tab = tabLayout.getTabAt(index);
