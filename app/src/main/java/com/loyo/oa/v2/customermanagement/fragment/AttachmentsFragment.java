@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.library.module.widget.loading.LoadingLayout;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
@@ -39,6 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerAttachmentAdd;
 
 /**
  * Created by EthanGong on 2017/2/9.
@@ -172,6 +174,7 @@ public class AttachmentsFragment extends CustomerChildFragment
      */
     @OnClick(R.id.file_add)
     void addAttachment() {
+        UmengAnalytics.umengSend(mActivity,customerAttachmentAdd);
         PhotoPicker.builder()
                 .setPhotoCount(9)
                 .setShowCamera(true)

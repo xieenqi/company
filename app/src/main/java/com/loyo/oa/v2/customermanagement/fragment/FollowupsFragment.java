@@ -46,6 +46,8 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.loyo.oa.common.utils.UmengAnalytics.customerAddFollow;
+
 /**
  * Created by EthanGong on 2017/2/9.
  */
@@ -236,7 +238,7 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
             /*新建*/
             case R.id.layout_add:
                 onAddFollowup();
-                UmengAnalytics.umengSend(mActivity, UmengAnalytics.customerAddFollow);
+                UmengAnalytics.umengSend(mActivity, customerAddFollow);
                 break;
         }
     }

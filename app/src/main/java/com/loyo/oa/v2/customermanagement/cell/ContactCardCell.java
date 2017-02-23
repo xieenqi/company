@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.application.MainApp;
@@ -19,6 +20,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.loyo.oa.common.utils.UmengAnalytics.customerAddcontacts;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerCallButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerSetcontactsdefault;
+
 /**
  * Created by EthanGong on 2017/2/13.
  */
@@ -27,9 +32,13 @@ public class ContactCardCell extends RecyclerView.ViewHolder {
 
     public interface OnContactCellActionListener {
         void onSMS(String phone);
+
         void onCallPhone(Contact contact, String phone);
+
         void onCallTel(Contact contact, String tel);
+
         void onSetDefaultContact(Contact contact, int contactIndex);
+
         void onContactSelect(Contact contact, int contactIndex);
     }
 
@@ -41,78 +50,116 @@ public class ContactCardCell extends RecyclerView.ViewHolder {
     private int contactIndex;
     public WeakReference<OnContactCellActionListener> listenerRef;
 
-    @BindView(R.id.tv_name) TextView nameText;
-    @BindView(R.id.default_contact_view) ImageView actionView;
-    @BindView(R.id.layout_phone1) ViewGroup phoneContainer1;
-    @BindView(R.id.layout_phone2) ViewGroup phoneContainer2;
-    @BindView(R.id.layout_phone3) ViewGroup phoneContainer3;
-    @BindView(R.id.layout_wiretel1) ViewGroup telContainer1;
-    @BindView(R.id.layout_wiretel2) ViewGroup telContainer2;
-    @BindView(R.id.layout_wiretel3) ViewGroup telContainer3;
+    @BindView(R.id.tv_name)
+    TextView nameText;
+    @BindView(R.id.default_contact_view)
+    ImageView actionView;
+    @BindView(R.id.layout_phone1)
+    ViewGroup phoneContainer1;
+    @BindView(R.id.layout_phone2)
+    ViewGroup phoneContainer2;
+    @BindView(R.id.layout_phone3)
+    ViewGroup phoneContainer3;
+    @BindView(R.id.layout_wiretel1)
+    ViewGroup telContainer1;
+    @BindView(R.id.layout_wiretel2)
+    ViewGroup telContainer2;
+    @BindView(R.id.layout_wiretel3)
+    ViewGroup telContainer3;
 
-    @BindView(R.id.tv_phone_val1)   TextView phoneText1;
-    @BindView(R.id.tv_phone_val2)   TextView phoneText2;
-    @BindView(R.id.tv_phone_val3)   TextView phoneText3;
-    @BindView(R.id.tv_wiletel_val1) TextView telText1;
-    @BindView(R.id.tv_wiletel_val2) TextView telText2;
-    @BindView(R.id.tv_wiletel_val3) TextView telText3;
+    @BindView(R.id.tv_phone_val1)
+    TextView phoneText1;
+    @BindView(R.id.tv_phone_val2)
+    TextView phoneText2;
+    @BindView(R.id.tv_phone_val3)
+    TextView phoneText3;
+    @BindView(R.id.tv_wiletel_val1)
+    TextView telText1;
+    @BindView(R.id.tv_wiletel_val2)
+    TextView telText2;
+    @BindView(R.id.tv_wiletel_val3)
+    TextView telText3;
 
-    @OnClick(R.id.contact_card) void onSelect() {
+    @OnClick(R.id.contact_card)
+    void onSelect() {
         if (getListener() != null) {
             getListener().onContactSelect(contact, contactIndex);
         }
     }
 
-    @OnClick(R.id.default_contact_view) void setDefaultContact() {
+    @OnClick(R.id.default_contact_view)
+    void setDefaultContact() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerSetcontactsdefault);
         if (getListener() != null) {
             getListener().onSetDefaultContact(contact, contactIndex);
         }
     }
 
-    @OnClick(R.id.layout_send_sms1) void onSMS1() {
+    @OnClick(R.id.layout_send_sms1)
+    void onSMS1() {
         if (getListener() != null && contact.telGroup.size() > 0) {
             getListener().onSMS(contact.telGroup.get(0));
         }
     }
-    @OnClick(R.id.layout_send_sms2) void onSMS2() {
+
+    @OnClick(R.id.layout_send_sms2)
+    void onSMS2() {
         if (getListener() != null && contact.telGroup.size() > 1) {
             getListener().onSMS(contact.telGroup.get(1));
         }
     }
-    @OnClick(R.id.layout_send_sms3) void onSMS3() {
+
+    @OnClick(R.id.layout_send_sms3)
+    void onSMS3() {
         if (getListener() != null && contact.telGroup.size() > 2) {
             getListener().onSMS(contact.telGroup.get(2));
         }
     }
 
-    @OnClick(R.id.layout_phone_call1) void onPhoneCall1() {
+    @OnClick(R.id.layout_phone_call1)
+    void onPhoneCall1() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerCallButton);
         if (getListener() != null && contact.telGroup.size() > 0) {
             getListener().onCallPhone(contact, contact.telGroup.get(0));
         }
     }
-    @OnClick(R.id.layout_phone_call2) void onPhoneCall2() {
+
+    @OnClick(R.id.layout_phone_call2)
+    void onPhoneCall2() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerCallButton);
         if (getListener() != null && contact.telGroup.size() > 1) {
             getListener().onCallPhone(contact, contact.telGroup.get(1));
         }
     }
-    @OnClick(R.id.layout_phone_call3) void onPhoneCall3() {
+
+    @OnClick(R.id.layout_phone_call3)
+    void onPhoneCall3() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerCallButton);
         if (getListener() != null && contact.telGroup.size() > 2) {
             getListener().onCallPhone(contact, contact.telGroup.get(2));
         }
     }
 
-    @OnClick(R.id.layout_call_wiretel1) void onTelCall1() {
+    @OnClick(R.id.layout_call_wiretel1)
+    void onTelCall1() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerCallButton);
         if (getListener() != null && contact.wiretelGroup.size() > 0) {
             getListener().onCallTel(contact, contact.wiretelGroup.get(0));
         }
     }
-    @OnClick(R.id.layout_call_wiretel2) void onTelCall2() {
+
+    @OnClick(R.id.layout_call_wiretel2)
+    void onTelCall2() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerCallButton);
         if (getListener() != null && contact.wiretelGroup.size() > 1) {
             getListener().onCallTel(contact, contact.wiretelGroup.get(1));
         }
     }
-    @OnClick(R.id.layout_call_wiretel3) void onTelCall3() {
-        if (getListener() != null  && contact.wiretelGroup.size() > 2) {
+
+    @OnClick(R.id.layout_call_wiretel3)
+    void onTelCall3() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerCallButton);
+        if (getListener() != null && contact.wiretelGroup.size() > 2) {
             getListener().onCallTel(contact, contact.wiretelGroup.get(2));
         }
     }
@@ -136,36 +183,34 @@ public class ContactCardCell extends RecyclerView.ViewHolder {
         this.contact = contact;
         this.contactIndex = contactIndex;
         nameText.setText(contact.getName() +
-                (TextUtils.isEmpty(contact.getContactRoleName())?"":"-"+contact.getContactRoleName()));
-        actionView.setImageResource(contact.isDefault()?
-                R.drawable.icon_default_sel:R.drawable.icon_default);
+                (TextUtils.isEmpty(contact.getContactRoleName()) ? "" : "-" + contact.getContactRoleName()));
+        actionView.setImageResource(contact.isDefault() ?
+                R.drawable.icon_default_sel : R.drawable.icon_default);
         for (int i = 0; i < 3; i++) {
             if (i < contact.telGroup.size()) {
                 phoneContainers.get(i).setVisibility(View.VISIBLE);
                 phoneTexts.get(i).setText(contact.telGroup.get(i));
-                ((TextView)itemView.findViewById(MainApp.getMainApp().getResources().getIdentifier("tv_phone_name"+(i+1),"id",MainApp.getMainApp().getPackageName()))).setText("手机"+(i+1));
+                ((TextView) itemView.findViewById(MainApp.getMainApp().getResources().getIdentifier("tv_phone_name" + (i + 1), "id", MainApp.getMainApp().getPackageName()))).setText("手机" + (i + 1));
 
-            }
-            else {
-                phoneContainers.get(i).setVisibility(i == 0?View.VISIBLE:View.GONE);
+            } else {
+                phoneContainers.get(i).setVisibility(i == 0 ? View.VISIBLE : View.GONE);
             }
             //一个手机号码，就不显示序号
-            if(0==i&&contact.telGroup.size()<=1){
-                ((TextView)itemView.findViewById(R.id.tv_phone_name1)).setText("手机");
+            if (0 == i && contact.telGroup.size() <= 1) {
+                ((TextView) itemView.findViewById(R.id.tv_phone_name1)).setText("手机");
             }
 
             if (i < contact.wiretelGroup.size()) {
                 telContainers.get(i).setVisibility(View.VISIBLE);
                 telTexts.get(i).setText(contact.wiretelGroup.get(i));
-                ((TextView)itemView.findViewById(MainApp.getMainApp().getResources().getIdentifier("tv_wiletel_name"+(i+1),"id",MainApp.getMainApp().getPackageName()))).setText("座机"+(i+1));
+                ((TextView) itemView.findViewById(MainApp.getMainApp().getResources().getIdentifier("tv_wiletel_name" + (i + 1), "id", MainApp.getMainApp().getPackageName()))).setText("座机" + (i + 1));
 
-            }
-            else {
-                telContainers.get(i).setVisibility(i == 0?View.VISIBLE:View.GONE);
+            } else {
+                telContainers.get(i).setVisibility(i == 0 ? View.VISIBLE : View.GONE);
             }
             //一个手机号码，就不显示序号
-            if(0==i&&contact.wiretelGroup.size()<=1){
-                ((TextView)itemView.findViewById(R.id.tv_wiletel_name1)).setText("座机");
+            if (0 == i && contact.wiretelGroup.size() <= 1) {
+                ((TextView) itemView.findViewById(R.id.tv_wiletel_name1)).setText("座机");
             }
         }
 

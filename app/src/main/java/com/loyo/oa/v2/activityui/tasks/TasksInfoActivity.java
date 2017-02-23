@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -63,6 +64,10 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksAddsubtaskButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksCopyButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksCustomerButton;
 
 /**
  * 【任务详情】
@@ -805,6 +810,7 @@ public class TasksInfoActivity extends BaseActivity {
             dialog.addSheetItem("复制任务", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
+                    UmengAnalytics.umengSend(TasksInfoActivity.this, tasksCopyButton);
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable("data", mTask);
@@ -889,6 +895,7 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_child_add_action)
     void openNewSubTask() {
+        UmengAnalytics.umengSend(this, tasksAddsubtaskButton);
         if (mTask.getStatus() != Task.STATUS_PROCESSING) {
             Toast("当前状态不能添加子任务");
         } else {

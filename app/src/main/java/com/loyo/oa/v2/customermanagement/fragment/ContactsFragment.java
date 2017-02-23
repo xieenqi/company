@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.PermissionTool;
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
@@ -45,6 +46,8 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.app.Activity.RESULT_OK;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerAddcontacts;
+import static com.loyo.oa.common.utils.UmengAnalytics.customerCallButton;
 
 /**
  * Created by EthanGong on 2017/2/9.
@@ -71,6 +74,7 @@ public class ContactsFragment extends CustomerChildFragment
     //@BindView(R.id.contact_list_view)
     PullToRefreshRecyclerView2 listView;
     @OnClick(R.id.contact_add) void addNewContact() {
+        UmengAnalytics.umengSend(MainApp.getMainApp(), customerAddcontacts);
         Bundle bundle = new Bundle();
         bundle.putSerializable("customer", customer);
         bundle.putSerializable(CustomerContractAddActivity.EXTRA_TYPE, CustomerContractAddActivity.EXTRA_TYPE_ADD);

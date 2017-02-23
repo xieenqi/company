@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.UmengAnalytics;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -74,6 +75,15 @@ import java.util.List;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksAddparticipantButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksAddprincipalButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksApproveButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksCustomerButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksDeadlineButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksPhotoButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksProjectButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksRemindButton;
+import static com.loyo.oa.common.utils.UmengAnalytics.tasksRepetitionButton;
 import static com.loyo.oa.v2.R.id.image_upload_grid_view;
 
 /**
@@ -199,6 +209,12 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
         controller.setObserver(this);
         controller.loadView(gridView);
         subscriptions = new CompositeSubscription();
+        switch_approve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UmengAnalytics.umengSend(TasksAddActivity.this, tasksApproveButton);
+            }
+        });
     }
 
     /**
@@ -429,15 +445,18 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
             //重复任务
             case R.id.layout_retask:
                 setRepeatTask();
+                UmengAnalytics.umengSend(this, tasksRepetitionButton);
                 break;
 
             //截至时间
             case R.id.layout_deadline:
                 setDeadLine();
+                UmengAnalytics.umengSend(this, tasksDeadlineButton);
                 break;
 
             //负责人选项
             case R.id.layout_responsiblePerson: {
+                UmengAnalytics.umengSend(this, tasksAddprincipalButton);
                 StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(newUser);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
@@ -455,6 +474,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 
             //参与人选项
             case R.id.tv_toUsers: {
+                UmengAnalytics.umengSend(this, tasksAddparticipantButton);
                 StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
@@ -479,6 +499,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 
             /*所属项目*/
             case R.id.layout_project:
+                UmengAnalytics.umengSend(this, tasksProjectButton);
                 Bundle bundle2 = new Bundle();
                 bundle2.putInt(ProjectSearchOrPickerActivity.EXTRA_STATUS, 1);
                 bundle2.putBoolean(ProjectSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY, true);
@@ -489,8 +510,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 
             /*关联客户*/
             case R.id.layout_mycustomer:
-//                        app.startActivityForResult(TasksAddActivity.this, SelfVisibleCustomerPickerActivity.class,
-//                                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
+                UmengAnalytics.umengSend(this, tasksCustomerButton);
                 Bundle parm = new Bundle();
                 parm.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, 5);
                 parm.putBoolean(CustomerSearchOrPickerActivity.EXTRA_CAN_BE_EMPTY, true);
@@ -505,6 +525,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 
     @Click(R.id.layout_remind)
     void remindonClick() {
+        UmengAnalytics.umengSend(this, tasksRemindButton);
         if (dialog_Product == null) {
             LayoutInflater inflater = getLayoutInflater();
             View layout = inflater.inflate(R.layout.dialog_products_select, null, false);
@@ -829,6 +850,7 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
 
     @Override
     public void onAddEvent(UploadController controller) {
+        UmengAnalytics.umengSend(this, tasksPhotoButton);
         PhotoPicker.builder()
                 .setPhotoCount(9 - controller.count())
                 .setShowCamera(true)
