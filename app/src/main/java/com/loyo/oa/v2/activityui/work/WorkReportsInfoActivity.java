@@ -271,11 +271,13 @@ public class WorkReportsInfoActivity extends BaseActivity {
             tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.user.getName());
             tv_review_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorkReport.reviewer.reviewedAt));
             btn_workreport_review.setVisibility(View.GONE);
-            tv_work_score.setVisibility(mWorkReport.reviewer.newScore.contains("-") ? View.GONE : View.VISIBLE);
+            tv_work_score.setVisibility((TextUtils.isEmpty(mWorkReport.reviewer.newScore)||mWorkReport.reviewer.newScore.contains("-")) ? View.GONE : View.VISIBLE);
             tv_work_score.setText(mWorkReport.reviewer.newScore + "分");
+            edt_content.setEnabled(false);
             if (!StringUtil.isEmpty(mWorkReport.reviewer.comment)) {
                 edt_content.setText(mWorkReport.reviewer.comment);
-                edt_content.setEnabled(false);
+            }else{
+                edt_content.setText("已点评");
             }
             if (mWorkReport.creator.id.equals(MainApp.user.id)) {
                 //显示编辑、删除按钮

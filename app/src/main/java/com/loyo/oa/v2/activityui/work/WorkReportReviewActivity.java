@@ -56,11 +56,7 @@ public class WorkReportReviewActivity extends BaseActivity {
     @Click(R.id.btn_workreport_review)
     void review() {
         String content = edt_content.getText().toString();
-//工作报告点评时，点评内容改为非必填（打分仍然为必填）16.07.22  分数也不是必填项 点评内容又变为必填  16-12-29
-        if (TextUtils.isEmpty(content)) {
-            Toast("点评内容不能为空!");
-            return;
-        }
+        //分数和内容，都可以为空了
         String sorce = et_score.getText().toString();
         HashMap<String, Object> map = new HashMap<>();
         map.put("newScore", TextUtils.isEmpty(sorce) ? "-1" : sorce);
