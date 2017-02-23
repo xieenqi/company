@@ -14,8 +14,6 @@ import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
-import com.loyo.oa.v2.activityui.order.OrderAddActivity;
-import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.api.SaleService;
@@ -34,6 +32,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.order.activity.OrderAddOrEditActivity;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -384,9 +383,11 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
                     mData.customerName = mSaleDetails.cusName;
                     mData.customerId = mSaleDetails.customerId;
                     Bundle mBundle = new Bundle();
-                    mBundle.putInt("fromPage", OrderDetailActivity.ORDER_CREATE);
-                    mBundle.putSerializable("data", mData);
-                    app.startActivityForResult(SaleDetailsActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+                    mBundle.putInt(OrderAddOrEditActivity.KEY_ACTION_TYPE, OrderAddOrEditActivity.ORDER_IMPORT);
+                    mBundle.putSerializable(OrderAddOrEditActivity.KEY_ORDER, mData);
+                    app.startActivityForResult(SaleDetailsActivity.this, OrderAddOrEditActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT,
+                            ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                 }
             });
         }

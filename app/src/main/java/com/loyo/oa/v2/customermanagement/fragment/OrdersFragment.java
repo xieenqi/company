@@ -17,8 +17,8 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
@@ -27,6 +27,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.order.activity.OrderAddOrEditActivity;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -37,7 +38,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.loyo.oa.common.utils.UmengAnalytics.customerContactsDetailCall;
 import static com.loyo.oa.common.utils.UmengAnalytics.customerOrderAdd;
 
 /**
@@ -179,10 +179,12 @@ public class OrdersFragment extends CustomerChildFragment
             if (customerId != null) {
                 Bundle bundle;
                 bundle = new Bundle();
-                bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
-                bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
-                bundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
-                app.startActivityForResult(getActivity(), OrderAddActivity.class,
+                OrderDetail detail = new OrderDetail();
+                detail.customerId = customerId;
+                detail.customerName = customer.name;
+                bundle.putSerializable(OrderAddOrEditActivity.KEY_ORDER, detail);
+                bundle.putInt(OrderAddOrEditActivity.KEY_ACTION_TYPE, OrderAddOrEditActivity.ORDER_ADD);
+                app.startActivityForResult(getActivity(), OrderAddOrEditActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, 200, bundle);
             }
         }

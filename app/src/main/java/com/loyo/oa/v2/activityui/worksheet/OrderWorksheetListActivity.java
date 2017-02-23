@@ -31,6 +31,8 @@ import java.util.Collection;
 
 public class OrderWorksheetListActivity extends BaseActivity implements View.OnClickListener, OrderWorksheetListView {
 
+    public static final String KEY_SESSION = "OrderWorksheetListActivity.KEY_SESSION";
+    public static final String KEY_LIST = "OrderWorksheetListActivity.KEY_LIST";
     private LinearLayout layout_back;
     private TextView tv_title;
     private RelativeLayout layout_add;
@@ -38,6 +40,7 @@ public class OrderWorksheetListActivity extends BaseActivity implements View.OnC
     private OrderWorksheetListModel mOworssheetList;
     private OrderworksheetListAdapter mAdapter;
     private ArrayList<OrderWorksheetListModel> reWorkSheet = new ArrayList<>();
+    private String sessionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +59,8 @@ public class OrderWorksheetListActivity extends BaseActivity implements View.OnC
     }
 
     public void initUI() {
-        reWorkSheet.addAll((Collection<? extends OrderWorksheetListModel>) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_NAME));
-
+        reWorkSheet.addAll((Collection<? extends OrderWorksheetListModel>) getIntent().getSerializableExtra(KEY_LIST));
+        sessionId = (String)getIntent().getSerializableExtra(KEY_SESSION);
         layout_add = (RelativeLayout) findViewById(R.id.layout_add);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -100,8 +103,9 @@ public class OrderWorksheetListActivity extends BaseActivity implements View.OnC
         super.onBackPressed();
         if (reWorkSheet.size() != 0) {
             OrderAddWorkSheetFinish event = new OrderAddWorkSheetFinish();
+            event.session = sessionId;
             event.bundle = new Bundle();
-            event.bundle.putSerializable(ExtraAndResult.EXTRA_ID, reWorkSheet);
+            event.bundle.putSerializable(KEY_LIST, reWorkSheet);
             AppBus.getInstance().post(event);
         }
         finish();

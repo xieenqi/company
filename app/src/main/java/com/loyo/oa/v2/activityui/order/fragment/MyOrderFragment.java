@@ -148,7 +148,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             //新建
             case R.id.btn_add:
                 mBundle = new Bundle();
-                mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
+                mBundle.putInt(OrderAddOrEditActivity.KEY_ACTION_TYPE, OrderAddOrEditActivity.ORDER_ADD);
                 startActivityForResult(new Intent(getActivity(), OrderAddOrEditActivity.class), getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 UmengAnalytics.umengSend(mActivity, UmengAnalytics.createOrder);

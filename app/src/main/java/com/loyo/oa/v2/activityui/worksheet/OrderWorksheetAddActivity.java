@@ -18,7 +18,6 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.event.OrderWorksheetAddFinish;
@@ -192,13 +191,13 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
             return;
         }
         tv_kind.setText(value);
-        if (TextUtils.isEmpty(et_title.getText().toString())) {
-            if (TextUtils.isEmpty(OrderAddActivity.orderTitle)) {
-                et_title.setText(value);
-            } else {
-                et_title.setText(OrderAddActivity.orderTitle + "-" + value);
-            }
-        }
+//        if (TextUtils.isEmpty(et_title.getText().toString())) {
+//            if (TextUtils.isEmpty(OrderAddActivity.orderTitle)) {
+//                et_title.setText(value);
+//            } else {
+//                et_title.setText(OrderAddActivity.orderTitle + "-" + value);
+//            }
+//        }
 
         mOrderWorksheet.templateName = template.name;
         mOrderWorksheet.templateId = template.id;
