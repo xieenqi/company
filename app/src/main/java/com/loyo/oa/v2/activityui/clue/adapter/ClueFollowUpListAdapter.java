@@ -16,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowUpListModel;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -33,7 +33,6 @@ import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CusGridView;
@@ -91,7 +90,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         final ClueFollowUpListModel model = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_clue_followup_list, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_CustomerAndClue_followup, null);
             holder.iv_heading = (RoundImageView) convertView.findViewById(R.id.iv_heading);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tv_contact = (TextView) convertView.findViewById(R.id.tv_contact);
@@ -102,7 +101,6 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             holder.tv_audio_length = (TextView) convertView.findViewById(R.id.tv_audio_length);
             holder.tv_memo = (TextView) convertView.findViewById(R.id.tv_memo);
             holder.tv_last_time = (TextView) convertView.findViewById(R.id.tv_last_time);
-            holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
             holder.tv_kind = (TextView) convertView.findViewById(R.id.tv_kind);
             holder.iv_comment = (ImageView) convertView.findViewById(R.id.iv_comment);
             holder.layout_gridview = (CusGridView) convertView.findViewById(R.id.layout_gridview);
@@ -111,10 +109,10 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             holder.lv_options = (CustomerListView) convertView.findViewById(R.id.lv_options);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
             holder.layout_address = (LinearLayout) convertView.findViewById(R.id.layout_address);
-            holder.layout_customer = (LinearLayout) convertView.findViewById(R.id.layout_customer);
             holder.layout_lasttime = (LinearLayout) convertView.findViewById(R.id.layout_lasttime);
             holder.layout_phonely = (LinearLayout) convertView.findViewById(R.id.layout_phonely);
             holder.ll_web = (LinearLayout) convertView.findViewById(R.id.ll_web);
+            holder.iv_lasttime = (ImageView) convertView.findViewById(R.id.iv_lasttime);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -126,7 +124,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         holder.tv_address.setText(TextUtils.isEmpty(model.addr) ? "无定位信息" : model.addr);
         holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# " + model.typeName);
-        holder.tv_contact.setText(TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName);
+        holder.tv_contact.setText("姓名: " + (TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName));
 
         /** 电话录音设置 */
         if (null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)) {
@@ -157,21 +155,17 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         /** 下次跟进时间 */
         if (model.remindAt != 0) {
             holder.layout_lasttime.setVisibility(View.VISIBLE);
-//            holder.tv_last_time.setText(DateTool.timet(model.remindAt+"","yyyy-MM-dd HH:mm"));
-            holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.remindAt));
-
+            holder.tv_last_time.setText("下次跟进: " + DateTool.getDateTimeFriendly(model.remindAt));
+            if (DateTool.isMoreCurrentTime(model.remindAt)) {
+                holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.text99));
+                holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li);
+            } else {
+                holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.red1));
+                holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li2);
+            }
         } else {
             holder.layout_lasttime.setVisibility(View.GONE);
         }
-
-        /** 绑定公司(测试说 线索下不需要显示线索名) */
-/*        if(null != model.salesleadCompanyName && !TextUtils.isEmpty(model.salesleadCompanyName)){
-            holder.layout_customer.setVisibility(View.VISIBLE);
-            holder.tv_customer.setText(model.salesleadCompanyName);
-            holder.tv_customer.setOnTouchListener(Global.GetTouch());
-        }else{
-            holder.layout_customer.setVisibility(View.GONE);
-        }*/
 
         /** 设置跟进内容 */
         if (null != model.content && !TextUtils.isEmpty(model.content)) {
@@ -269,7 +263,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         holder.tv_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (null != model.location.loc) {
+                if (model.location != null && null != model.location.loc) {
                     Intent mIntent = new Intent(mContext, MapSingleView.class);
                     mIntent.putExtra("la", Double.valueOf(model.location.loc[0]));
                     mIntent.putExtra("lo", Double.valueOf(model.location.loc[1]));
@@ -278,18 +272,6 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
                 } else {
                     Toast.makeText(mContext, "GPS坐标不全!", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        /** 进入线索详情 */
-        holder.tv_customer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mIntent = new Intent();
-                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-                mIntent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */ model.sealsleadId);
-                mIntent.setClass(mContext, ClueDetailActivity.class);
-                mContext.startActivity(mIntent);
             }
         });
 
@@ -312,7 +294,6 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         RoundImageView iv_heading;
         TextView tv_name;        /*创建人*/
         TextView tv_address;     /*地址*/
-        TextView tv_customer;    /*客户名字*/
         TextView tv_contact;     /*联系人*/
         TextView tv_create_time; /*创建时间*/
         TextView tv_toast;       /*通知人员*/
@@ -325,7 +306,6 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         LinearLayout ll_web;
         LinearLayout layout_comment;
         LinearLayout layout_address;
-        LinearLayout layout_customer;
         LinearLayout layout_lasttime;
         LinearLayout layout_phonely;
         CustomerListView lv_comment; /*评论区*/
@@ -333,6 +313,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         CustomerListView lv_options; /*文件列表区*/
         GridView layout_gridview;    /*图片9宫格区*/
         ImageView iv_comment;        /*评论按钮*/
+        ImageView iv_lasttime;     /*下次跟进图标*/
 
         /**
          * 设置图文混编

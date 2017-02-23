@@ -35,18 +35,12 @@ import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.permission.BusinessOperation;
-import com.loyo.oa.v2.permission.PermissionManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 【我的跟进列表】adapter
@@ -96,7 +90,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         final FollowUpListModel followUpListModel = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customer_followup_list, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_CustomerAndClue_followup, null);
             holder.iv_heading = (RoundImageView) convertView.findViewById(R.id.iv_heading);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tv_contact = (TextView) convertView.findViewById(R.id.tv_contact);
@@ -120,6 +114,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
             holder.ll_web = (LinearLayout) convertView.findViewById(R.id.ll_web);
             holder.iv_lasttime = (ImageView) convertView.findViewById(R.id.iv_lasttime);
             holder.tv_create_time = (TextView) convertView.findViewById(R.id.tv_create_time);
+            holder.ll_contact_tag = (LinearLayout) convertView.findViewById(R.id.ll_contact_tag);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -131,6 +126,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(followUpListModel.avatar, holder.iv_heading);
         holder.tv_name.setText(followUpListModel.creatorName);
         holder.tv_contact.setText("联系人: " + (TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName));
+        holder.ll_contact_tag.setVisibility(View.VISIBLE);
         holder.tv_contact_tag.setText("联系人角色: " + (TextUtils.isEmpty(followUpListModel.contactRole) ? "无" : followUpListModel.contactRole));
         holder.tv_create_time.setText(DateTool.getHourMinute(followUpListModel.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# " + followUpListModel.typeName);
@@ -164,7 +160,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         /** 下次跟进时间 默认是红色 没有提醒过  提醒过就是灰色 */
         if (followUpListModel.remindAt != 0) {
             holder.layout_lasttime.setVisibility(View.VISIBLE);
-            holder.tv_last_time.setText("下次跟进: " + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(followUpListModel.remindAt));
+            holder.tv_last_time.setText("下次跟进: " + DateTool.getDateTimeFriendly(followUpListModel.remindAt));
             if (DateTool.isMoreCurrentTime(followUpListModel.remindAt)) {
                 holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.text99));
                 holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li);
@@ -323,6 +319,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         LinearLayout layout_address;
         LinearLayout layout_lasttime;
         LinearLayout layout_phonely;
+        LinearLayout ll_contact_tag;
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
         CustomerListView lv_options; /*文件列表区*/

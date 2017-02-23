@@ -235,7 +235,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_contact"
                     android:layout_marginTop="@dimen/dimen_8"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/imageView3"
