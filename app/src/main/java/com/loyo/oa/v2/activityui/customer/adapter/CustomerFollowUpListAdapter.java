@@ -90,7 +90,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         final FollowUpListModel followUpListModel = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_CustomerAndClue_followup, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customer_and_clue_followup, null);
             holder.iv_heading = (RoundImageView) convertView.findViewById(R.id.iv_heading);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tv_contact = (TextView) convertView.findViewById(R.id.tv_contact);

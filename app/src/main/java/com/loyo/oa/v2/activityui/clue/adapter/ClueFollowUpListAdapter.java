@@ -90,7 +90,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         final ClueFollowUpListModel model = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_CustomerAndClue_followup, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customer_and_clue_followup, null);
             holder.iv_heading = (RoundImageView) convertView.findViewById(R.id.iv_heading);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tv_contact = (TextView) convertView.findViewById(R.id.tv_contact);
@@ -122,7 +122,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(model.avatar, holder.iv_heading);
         holder.tv_name.setText(model.creatorName);
         holder.tv_address.setText(TextUtils.isEmpty(model.addr) ? "无定位信息" : model.addr);
-        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createAt));
+        holder.tv_create_time.setText(DateTool.getHourMinute(model.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# " + model.typeName);
         holder.tv_contact.setText("姓名: " + (TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName));
 
