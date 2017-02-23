@@ -1,15 +1,11 @@
 package com.loyo.oa.v2.beans;
 
-import com.loyo.oa.common.utils.DateFormatSet;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.tool.DateTool;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 
 
 public class PagingGroupData<T extends BaseBeans> implements Serializable {

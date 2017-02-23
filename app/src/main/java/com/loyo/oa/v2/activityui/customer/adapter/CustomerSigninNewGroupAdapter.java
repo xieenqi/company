@@ -13,7 +13,6 @@ import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerSigninNewListView;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.customview.CustomerListView;
-import com.loyo.oa.v2.tool.DateTool;
 
 import java.util.ArrayList;
 

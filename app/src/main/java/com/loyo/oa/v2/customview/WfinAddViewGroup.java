@@ -19,11 +19,9 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.tool.ClickTool;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -242,33 +240,11 @@ public class WfinAddViewGroup extends LinearLayout {
         @Override
         public void onClick(View v) {
             if (!ClickTool.isDoubleClick()) {
-                DateTool.calendar = Calendar.getInstance();
-//                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(
-//                        textView);
-//                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
-//                    @Override
-//                    public boolean onClick_onDateSet() {
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onClick_onTimeSet() {
-//                        map_Values.put(lstData.get(position).getId(), dateListener.strDate + dateListener.strTime);
-//                        //                        mainApplication.logUtil.d("map_Values.put(" + (int) mListData.get(position).getId() + "," + dateListener.strDate + dateListener.strTime + ")");
-//                        return false;
-//                    }
-//                });
 
                 DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(context, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
-
-//                        String str = year + "-" + String.format("%02d", (month + 1)) + "-"
-//                                + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-//                        textView.setText(str);
-//                        map_Values.put(lstData.get(position).getId(), str);
-
                         long time= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,min,0);
                         textView.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time));
                         map_Values.put(lstData.get(position).getId(), com.loyo.oa.common.utils.DateTool.getDateTimeReal(time));

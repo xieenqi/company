@@ -21,12 +21,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

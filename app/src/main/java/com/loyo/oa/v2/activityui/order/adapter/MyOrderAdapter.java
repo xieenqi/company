@@ -10,8 +10,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.Utils;
 
 import java.util.List;
 
