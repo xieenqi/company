@@ -13,9 +13,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.HttpDiscussItem;
 import com.loyo.oa.v2.activityui.discuss.MyDiscussActivity;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.tool.DateTool;
 
 import java.util.ArrayList;
 import java.util.Date;

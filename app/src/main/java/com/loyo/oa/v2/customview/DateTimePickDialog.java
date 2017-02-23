@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.loyo.oa.common.utils.DateFormatSet;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.tool.DateTool;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

@@ -24,7 +24,6 @@ import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
@@ -33,6 +32,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.order.activity.OrderAddOrEditActivity;
 import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Utils;
@@ -149,7 +149,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             case R.id.btn_add:
                 mBundle = new Bundle();
                 mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
-                startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), getActivity().RESULT_FIRST_USER);
+                startActivityForResult(new Intent(getActivity(), OrderAddOrEditActivity.class), getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 UmengAnalytics.umengSend(mActivity, UmengAnalytics.createOrder);
                 break;

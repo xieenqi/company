@@ -7,10 +7,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.discuss.HttpDiscussItem;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.tool.DateTool;
-
-import java.util.Date;
 
 /**
  * Created by EthanGong on 2016/11/22.

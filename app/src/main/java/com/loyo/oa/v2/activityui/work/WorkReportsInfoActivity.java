@@ -24,7 +24,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
-import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
 import com.loyo.oa.v2.beans.OrganizationalMember;
@@ -271,11 +270,13 @@ public class WorkReportsInfoActivity extends BaseActivity {
             tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.user.getName());
             tv_review_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorkReport.reviewer.reviewedAt));
             btn_workreport_review.setVisibility(View.GONE);
-            tv_work_score.setVisibility(mWorkReport.reviewer.newScore.contains("-") ? View.GONE : View.VISIBLE);
+            tv_work_score.setVisibility((TextUtils.isEmpty(mWorkReport.reviewer.newScore)||mWorkReport.reviewer.newScore.contains("-")) ? View.GONE : View.VISIBLE);
             tv_work_score.setText(mWorkReport.reviewer.newScore + "分");
+            edt_content.setEnabled(false);
             if (!StringUtil.isEmpty(mWorkReport.reviewer.comment)) {
                 edt_content.setText(mWorkReport.reviewer.comment);
-                edt_content.setEnabled(false);
+            }else{
+                edt_content.setText("已点评");
             }
             if (mWorkReport.creator.id.equals(MainApp.user.id)) {
                 //显示编辑、删除按钮
@@ -283,7 +284,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
         } else {
             layout_score.setVisibility(View.GONE);
-            tv_status.setBackgroundResource(R.drawable.common_lable_blue);
+            tv_status.setBackgroundResource(R.drawable.common_label_blue);
             tv_status.setText("待点评");
 
             if (reviewer != null && reviewer.isCurrentUser()) {

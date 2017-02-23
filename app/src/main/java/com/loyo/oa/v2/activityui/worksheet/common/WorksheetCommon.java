@@ -24,7 +24,7 @@ public class WorksheetCommon {
                 break;
             case 3:
                 info = "待审核";
-                bj = R.drawable.common_lable_blue;
+                bj = R.drawable.common_label_blue;
                 break;
             case 4:
                 info = "已完成";

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -14,7 +13,6 @@ import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.tool.DateTool;
 
 /**
  * Created by EthanGong on 16/8/27.

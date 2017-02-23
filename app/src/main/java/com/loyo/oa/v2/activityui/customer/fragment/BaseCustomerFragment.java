@@ -95,8 +95,8 @@ public abstract class BaseCustomerFragment extends BaseFragment implements PullT
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_cus, null);
-            initView(mView);
             initFilterParams();
+            initView(mView);
             loadFilterOptions();
         }
         return mView;

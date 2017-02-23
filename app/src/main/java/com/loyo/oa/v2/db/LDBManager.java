@@ -10,7 +10,6 @@ import com.loyo.oa.common.utils.DateFormatSet;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LocateData;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.DateTool;
 import com.nostra13.universalimageloader.utils.L;
 
 import java.util.ArrayList;

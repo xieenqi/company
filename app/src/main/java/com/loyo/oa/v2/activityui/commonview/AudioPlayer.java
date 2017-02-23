@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Player;
 

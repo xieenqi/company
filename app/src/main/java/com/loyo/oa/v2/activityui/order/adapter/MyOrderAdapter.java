@@ -10,8 +10,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.Utils;
 
 import java.util.List;
 
@@ -58,13 +56,12 @@ public class MyOrderAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder = null;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_order_my_team, null);
+            convertView = inflater.inflate(R.layout.item_order_list_my_and_team, null);
             holder = new Holder();
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
             holder.tv_status = (TextView) convertView.findViewById(R.id.tv_status);
             holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-            holder.tv_money = (TextView) convertView.findViewById(R.id.tv_money);
             holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
             holder.tv_product = (TextView) convertView.findViewById(R.id.tv_product);
             convertView.setTag(holder);
@@ -73,8 +70,7 @@ public class MyOrderAdapter extends BaseAdapter {
         }
         OrderListItem mData = data.get(position);
         holder.tv_title.setText(mData.title);
-        OrderCommon.getOrderDetailsStatus(holder.tv_status, mData.status);
-        holder.tv_money.setText(Utils.setValueDouble(mData.dealMoney));
+        holder.tv_status.setText(OrderCommon.getOrderDetailsStatus(mData.status));
         holder.tv_customer.setText(mData.customerName);
         holder.tv_product.setText(mData.proName);
         holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(mData.createdAt + "")));

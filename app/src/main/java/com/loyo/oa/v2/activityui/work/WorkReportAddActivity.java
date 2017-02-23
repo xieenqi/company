@@ -21,6 +21,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.common.type.LoyoBizType;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -56,7 +57,6 @@ import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.SingleRowWheelView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -388,7 +388,7 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             return;
         }
         isDelayed = false;
-        openDynamic(com.loyo.oa.common.utils.DateTool.getCurrentWeekBeginMillis() / 1000 + "", com.loyo.oa.common.utils.DateTool.getCurrentWeekEndMillis() / 1000 + "");
+        openDynamic(DateTool.getCurrentWeekBeginMillis() / 1000 + "", DateTool.getCurrentWeekEndMillis() / 1000 + "");
         tv_crm.setText("本周工作动态统计");
         beginAt = weeksDialog.getNowBeginandEndAt()[0];
         endAt = weeksDialog.getNowBeginandEndAt()[1];
@@ -406,12 +406,11 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
         }
         isDelayed = false;
         currentValue = pastThreeMonth[0];
-        openDynamic(com.loyo.oa.common.utils.DateTool.getCurrentMonthBeginMillis() / 1000 + "", com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis() / 1000 + "");
+        openDynamic(DateTool.getCurrentMonthBeginMillis() / 1000 + "",DateTool.getCurrentMonthEndMillis() / 1000 + "");
         tv_crm.setText("本月工作动态统计");
-        beginAt = com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis();//DateTool.getBeginAt_ofMonth()
-        endAt = com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis();
-        DateTool.calendar = Calendar.getInstance();
-        tv_time.setText(com.loyo.oa.common.utils.DateTool.getYearMonth(System.currentTimeMillis() / 1000));
+        beginAt = DateTool.getCurrentMonthEndMillis();//DateTool.getBeginAt_ofMonth()
+        endAt = DateTool.getCurrentMonthEndMillis();
+        tv_time.setText(DateTool.getYearMonth(System.currentTimeMillis() / 1000));
         mSelectType = WorkReport.MONTH;
 
     }

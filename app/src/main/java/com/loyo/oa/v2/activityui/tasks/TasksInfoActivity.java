@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -67,7 +66,6 @@ import java.util.List;
 
 import static com.loyo.oa.common.utils.UmengAnalytics.tasksAddsubtaskButton;
 import static com.loyo.oa.common.utils.UmengAnalytics.tasksCopyButton;
-import static com.loyo.oa.common.utils.UmengAnalytics.tasksCustomerButton;
 
 /**
  * 【任务详情】
@@ -452,7 +450,7 @@ public class TasksInfoActivity extends BaseActivity {
                 break;
 
             case 2:
-                tv_status.setBackgroundResource(R.drawable.common_lable_blue);
+                tv_status.setBackgroundResource(R.drawable.common_label_blue);
                 tv_status.setText("待审核");
                 break;
 
