@@ -24,7 +24,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
-import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.work.api.WorkReportService;
 import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
 import com.loyo.oa.v2.beans.OrganizationalMember;
@@ -285,7 +284,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
         } else {
             layout_score.setVisibility(View.GONE);
-            tv_status.setBackgroundResource(R.drawable.common_lable_blue);
+            tv_status.setBackgroundResource(R.drawable.common_label_blue);
             tv_status.setText("待点评");
 
             if (reviewer != null && reviewer.isCurrentUser()) {

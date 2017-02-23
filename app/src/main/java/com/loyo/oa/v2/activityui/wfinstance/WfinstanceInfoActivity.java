@@ -27,7 +27,6 @@ import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
-import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
@@ -36,7 +35,6 @@ import com.loyo.oa.v2.activityui.wfinstance.api.WfinstanceService;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfNodes;
-import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity;
 import com.loyo.oa.v2.activityui.work.adapter.WorkflowNodesListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WfInstance;
@@ -62,8 +60,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static android.R.attr.textColor;
 
 /**
  * 【审批详情】
@@ -513,7 +509,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
             case WfInstance.STATUS_NEW:
                 tv_status.setText("待审批");
-                tv_status.setBackgroundResource(R.drawable.common_lable_blue);
+                tv_status.setBackgroundResource(R.drawable.common_label_blue);
                 break;
             case WfInstance.STATUS_PROCESSING:
                 tv_status.setText("审批中");

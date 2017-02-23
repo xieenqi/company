@@ -9,6 +9,7 @@ import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
+import com.loyo.oa.v2.order.model.WorkflowModel;
 import com.loyo.oa.v2.tool.Config_project;
 
 import java.util.ArrayList;
@@ -191,6 +192,16 @@ public class OrderService {
                         .create(IOrder.class)
                         .updateOwner(map)
                         .compose(RetrofitAdapterFactory.<Object>applySchedulers());
+    }
+
+    public static
+    Observable<ArrayList<WorkflowModel>> getWorkflows(HashMap<String, Object> map) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(Config_project.API_URL())
+                        .create(IOrder.class)
+                        .getWorkflows(map)
+                        .compose(RetrofitAdapterFactory.<ArrayList<WorkflowModel>>applySchedulers());
     }
 
 }

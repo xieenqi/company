@@ -18,7 +18,7 @@ public class OrderCommon {
     public static void getEstimateStatus(TextView view, int status) {
         if (status > 0) {
             String statusText = "";
-            int statusBj = R.drawable.common_lable_blue;
+            int statusBj = R.drawable.common_label_blue;
             switch (status) {
                 case 1:
                     statusText = "待审核";
@@ -26,7 +26,7 @@ public class OrderCommon {
                     break;
                 case 2:
                     statusText = "审批中";
-                    statusBj = R.drawable.common_lable_blue;
+                    statusBj = R.drawable.common_label_blue;
                     break;
                 case 3:
                     statusText = "未通过";
@@ -89,7 +89,7 @@ public class OrderCommon {
         if (status > 0) {
             String statusText = "";
             //资源在res_loyo/order/drawable
-            int statusBj = R.drawable.common_lable_blue;
+            int statusBj = R.drawable.common_label_blue;
             switch (status) {
                 case 1:
                     statusText = "待审批";
@@ -101,7 +101,7 @@ public class OrderCommon {
                     break;
                 case 3:
                     statusText = "进行中";
-                    statusBj = R.drawable.common_lable_blue;
+                    statusBj = R.drawable.common_label_blue;
                     break;
                 case 4:
                     statusText = "已完成";
@@ -117,7 +117,7 @@ public class OrderCommon {
                     break;
                 case 7://审批中
                     statusText = "审批中";
-                    statusBj = R.drawable.common_lable_blue;
+                    statusBj = R.drawable.common_label_blue;
                     break;
             }
             view.setText(statusText);

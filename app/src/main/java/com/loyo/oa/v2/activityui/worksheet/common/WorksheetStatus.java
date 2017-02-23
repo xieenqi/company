@@ -118,7 +118,7 @@ public enum WorksheetStatus implements GroupKey {
         }
 
         public int getStatusBackground() {
-            return R.drawable.common_lable_blue;
+            return R.drawable.common_label_blue;
         }
     },
 

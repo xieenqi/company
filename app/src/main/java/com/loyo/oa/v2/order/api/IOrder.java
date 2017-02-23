@@ -9,6 +9,7 @@ import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.network.model.BaseResponse;
+import com.loyo.oa.v2.order.model.WorkflowModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -130,4 +131,10 @@ public interface IOrder {
      * */
     @PUT("/order/owner")
     Observable<BaseResponse<Object>> updateOwner(@Body HashMap<String, Object> map);
+
+    /**
+     * 获取订单的审批流程接口code：400 订单  500：回款  【get】
+     * */
+    @GET("/wftpl/code")
+    Observable<BaseResponse<ArrayList<WorkflowModel>>> getWorkflows(@QueryMap HashMap<String, Object> map);
 }
