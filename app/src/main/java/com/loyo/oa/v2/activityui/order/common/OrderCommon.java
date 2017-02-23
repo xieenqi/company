@@ -49,6 +49,40 @@ public class OrderCommon {
 
 
     /**
+     * 订单详情审批状态,只返回对应的字符串。
+     */
+    public static String getOrderDetailsStatus(int status) {
+        String statusText = "";
+        if (status > 0) {
+            switch (status) {
+                case 1:
+                    statusText = "待审批";
+                    break;
+                case 2:
+                    statusText = "未通过";
+                    break;
+                case 3:
+                    statusText = "进行中";
+                    break;
+                case 4:
+                    statusText = "已完成";
+                    break;
+                case 5:
+                    statusText = "意外终止";
+                    break;
+                case 6://回款记录的状态
+                    statusText = "--";
+                    break;
+                case 7://审批中
+                    statusText = "审批中";
+                    break;
+            }
+        }
+        return  statusText;
+    }
+
+
+    /**
      * 订单详情审批状态
      */
     public static void getOrderDetailsStatus(TextView view, int status) {
