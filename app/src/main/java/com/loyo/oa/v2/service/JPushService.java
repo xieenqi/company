@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.loyo.oa.v2.activityui.customer.event.RefreshCustomerEvent;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -21,6 +23,8 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static com.loyo.oa.v2.jpush.HttpJpushNotification.JPUSH_SILENT_COMMON_CUSTOMER;
 
 /**
  * 自定义接收器
@@ -54,12 +58,18 @@ public class JPushService extends BroadcastReceiver {
             String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);
             LogUtil.d("【自定义msg】键值数据： " + msg);
             HttpJpushNotification pushMsgData = MainApp.gson.fromJson(msg, HttpJpushNotification.class);
-
-            if (8 == pushMsgData.silentType || 9 == pushMsgData.silentType) {//更新8组织架构与9个人信息
-                if (!getUserInfo(pushMsgData))
-                    pushMsgData.silentType = 8;//更改别人的信息制动转成 更新8组织架构
-                LogUtil.d("更新数据激光推送：更新8组织架构与9个人信息 ");
-                TrackRule.initUserData(MainApp.getMainApp());
+            switch (pushMsgData.silentType) {
+                case HttpJpushNotification.JPUSH_SILENT_ORGANIZATION:
+                case HttpJpushNotification.JPUSH_SILENT_PERSON:
+                    if (!getUserInfo(pushMsgData))
+                        pushMsgData.silentType = 8;//更改别人的信息制动转成 更新8组织架构
+                    TrackRule.initUserData(MainApp.getMainApp());
+                    break;
+                case JPUSH_SILENT_COMMON_CUSTOMER:
+                    RefreshCustomerEvent event = new RefreshCustomerEvent(pushMsgData.changeId);
+                    AppBus.getInstance().post(event);
+                    LogUtil.d("收到 刷新 信息----------");
+                    break;
             }
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");

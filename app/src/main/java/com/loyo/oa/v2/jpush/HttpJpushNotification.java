@@ -17,6 +17,7 @@ public class HttpJpushNotification implements Serializable {
     public int silentType;
     public ArrayList<String> buzzIds;
     public int jumpType;//1.我负责的客户  2.我参与的客户 3.公海客户
+    public String changeId;/*此id可能代表多种id请再此处注释 -->客户id*/
 
     public enum JumpType {
         NUONE(0),
@@ -50,5 +51,10 @@ public class HttpJpushNotification implements Serializable {
     public static final int JPUSH_EDIT_ORDER_RESPONSE = 28;//订单修改负责人
     /*线索修改负责人*/
     public static final int JPUSH_EDIT_CULE_RESPONSE = 29;
+
+
+    public static final int JPUSH_SILENT_PERSON = 9;
+    public static final int JPUSH_SILENT_ORGANIZATION = 8;
+    public static final int JPUSH_SILENT_COMMON_CUSTOMER = 30;
 
 }

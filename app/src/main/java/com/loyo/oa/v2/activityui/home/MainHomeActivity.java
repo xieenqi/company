@@ -285,7 +285,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     if (MainApp.jpushData.jumpType == HttpJpushNotification.JumpType.NUONE.getValue()) {
                         intent.setClass(MainHomeActivity.this, CustomerDetailActivity.class);
                         intent.putExtra(CustomerDetailActivity.KEY_ID, MainApp.jpushData.buzzId);
-//                        intent.putExtra(ExtraAndResult.EXTRA_TYPE, 1);//默认我的客户
                         startActivity(intent);
                     } else {
                         intent.setClass(MainHomeActivity.this, CustomerManagerActivity.class);
@@ -298,7 +297,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 case HttpJpushNotification.JPUSH_EDIT_ORDER_RESPONSE://订单详情
                     if (MainApp.jpushData.jumpType == HttpJpushNotification.JumpType.NUONE.getValue()) {
                         intent.setClass(MainHomeActivity.this, OrderDetailActivity.class);
-//                  mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
                         intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                         startActivity(intent);
                     } else if (MainApp.jpushData.jumpType == HttpJpushNotification.JumpType.MY_RESON.getValue()) {
