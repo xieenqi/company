@@ -159,11 +159,10 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
             holder.layout_phonely.setVisibility(View.GONE);
         }
 
-        /** 下次跟进时间 */
+        /** 下次跟进时间 默认是红色 没有提醒过  提醒过就是灰色 */
         if (followUpListModel.remindAt != 0) {
             holder.layout_lasttime.setVisibility(View.VISIBLE);
-//            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt+"","yyyy-MM-dd HH:mm"));
-            holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(followUpListModel.remindAt));
+            holder.tv_last_time.setText("下次跟进: " + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(followUpListModel.remindAt));
         } else {
             holder.layout_lasttime.setVisibility(View.GONE);
         }
@@ -270,7 +269,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         holder.iv_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewCrol.commentEmbl(followUpListModel.id,parentIndex,position);
+                viewCrol.commentEmbl(followUpListModel.id, parentIndex, position);
             }
         });
 

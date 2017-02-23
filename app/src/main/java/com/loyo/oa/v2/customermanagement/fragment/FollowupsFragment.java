@@ -66,7 +66,6 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
     private Customer mCustomer;
     private boolean canAdd;
     private boolean isPullOrDown;
-    private boolean isChanged;
     private String id;
     private int parent, child;
 
@@ -76,7 +75,6 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
     private int playVoiceSize = 0;
     private AudioPlayerView audioPlayer;
     private TextView lastView;
-    private String lastUrl = "";
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
     private CustomerFollowUpListPresenter mPresenter;
@@ -456,14 +454,12 @@ public class FollowupsFragment extends CustomerChildFragment implements PullToRe
                 LogUtil.dee("另一条");
                 //audioPlayer.onResume(textView);
                 audioPlayer.onStart(audioModel, textView);
-                lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
             LogUtil.dee("第一次播放");
             //audioPlayer.onResume(textView);
             audioPlayer.onStart(audioModel, textView);
-            lastUrl = audioModel.url;
             lastView = textView;
         }
         playVoiceSize++;
