@@ -25,9 +25,8 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dimen_10"
                 android:ellipsize="end"
-                android:maxEms="10"
+                android:layout_weight="1"
                 android:singleLine="true"
                 android:textColor="@color/text33"
                 android:textSize="@dimen/text_sp15" />
@@ -35,10 +34,11 @@
                 android:id="@+id/tv_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="right"
+                android:singleLine="true"
+                android:layout_marginLeft="10dp"
                 android:textColor="@color/text99"
-                android:textSize="@dimen/text_sp12" />
+                android:textSize="@dimen/text_sp13" />
         </LinearLayout>
 
         <LinearLayout

@@ -46,6 +46,7 @@
                     android:layout_gravity="right"
                     android:maxLength="10"
                     android:ellipsize="end"
+                    android:paddingLeft="10dp"
                     android:textColor="#999999"
                     android:textSize="13sp"
                     android:text="test！！" />
