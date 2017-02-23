@@ -86,8 +86,6 @@ public class MyCustomerAdapter extends BaseAdapter {
         tv_content2.setText("跟进时间：" + lastActivityAt);
         if (!(mContext instanceof FollowSelectActivity)){
             CommonMethod.commonCustomerRecycleTime(customer, layout_4, tv_content41);
-        }else{
-            tv_status.setVisibility(View.GONE);
         }
         return convertView;
     }
