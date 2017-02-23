@@ -51,7 +51,7 @@
                     android:paddingTop="@dimen/dimen_5"
                     android:textColor="@color/text66"
                     android:textSize="15sp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginRight="34dp"
                     android:layout_alignParentRight="true"
                     android:layout_toRightOf="@+id/label_name" />
 
@@ -204,7 +204,7 @@
                     android:singleLine="true"
                     android:textColor="@color/text66"
                     android:textSize="15sp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginRight="34dp"
                     android:layout_alignParentRight="true"
                     android:layout_toRightOf="@+id/label_deal_amount"/>
 
@@ -368,7 +368,7 @@
                         android:minHeight="@dimen/dimen_48"
                         android:paddingBottom="@dimen/dimen_5"
                         android:paddingTop="@dimen/dimen_5"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginRight="34dp"
                         android:textColor="@color/text66"
                         android:textSize="15sp"
                         android:layout_centerVertical="true"

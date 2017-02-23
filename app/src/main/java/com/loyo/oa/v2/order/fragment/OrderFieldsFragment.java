@@ -11,27 +11,36 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.LoyoUIThread;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchOrPickerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.order.OrderAttachmentActivity;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
+import com.loyo.oa.v2.activityui.order.event.OrderAddWorkSheetFinish;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.worksheet.OrderWorksheetListActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.order.activity.OrderAddOrEditActivity;
+import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.order.widget.OrderCustomFieldsView;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.StringUtil;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -40,7 +49,10 @@ import butterknife.OnClick;
 
 import static com.loyo.oa.v2.R.id.et_money;
 import static com.loyo.oa.v2.R.id.et_name;
+import static com.loyo.oa.v2.R.id.et_remake;
+import static com.loyo.oa.v2.R.id.tv_customer;
 import static com.loyo.oa.v2.R.id.tv_end_time;
+import static com.loyo.oa.v2.R.id.tv_estimate;
 import static com.loyo.oa.v2.R.id.tv_start_time;
 
 /**
@@ -75,7 +87,7 @@ import static com.loyo.oa.v2.R.id.tv_start_time;
 public class OrderFieldsFragment extends BaseFragment {
 
     public interface ActionListener {
-        void onCommit(Object object);
+        void onCommit(HashMap<String, Object> map);
     }
 
     private WeakReference<ActionListener> listenerRef;
@@ -100,15 +112,19 @@ public class OrderFieldsFragment extends BaseFragment {
     private ArrayList<ContactLeftExtras> requiredCustomFields;
     private ArrayList<ContactLeftExtras> optionalCustomFields;
 
-    public static String orderTitle;
     private String customerName, customerId;
     private ArrayList<SaleIntentionalProduct> productData;//意向产品的数据
     private ArrayList<EstimateAdd> estimateData;          //回款记录数据
     private ArrayList<OrderWorksheetListModel> reWorkSheet = new ArrayList<>();
-    private int attamentSize = 0;
+    private int attachmentSize = 0;
     private String uuid;
     private long startAt;
     private long endAt;
+    private String sessionId = StringUtil.getUUID();
+    public int actionType;
+    public String orderId;
+    public OrderDetail orderDetail;
+    public boolean capitalReturningRecordEdit = true;
 
     @BindView(R.id.img_title_left)  ViewGroup backButton;
     @BindView(R.id.img_title_right) ViewGroup rightButton;
@@ -129,14 +145,14 @@ public class OrderFieldsFragment extends BaseFragment {
     @BindView(R.id.container_remark)     ViewGroup remarkContainer;
 
     @BindView(et_name) EditText nameText;              //订单标题
-    @BindView(R.id.tv_customer) TextView customerText;      //对应客户
+    @BindView(tv_customer) TextView customerText;      //对应客户
     @BindView(R.id.tv_product) TextView productText;        //购买产品
     @BindView(et_money) EditText dealText;             //成交金额
-    @BindView(R.id.tv_estimate) TextView paymentText;       //添加回款
+    @BindView(tv_estimate) TextView paymentText;       //添加回款
     @BindView(R.id.label_attachment) TextView attachmentText;//附件
     @BindView(R.id.tv_worksheet) TextView worksheetText;    //工单
     @BindView(R.id.et_num) EditText numberText;             //订单编号
-    @BindView(R.id.et_remake) EditText remakeText;          //备注
+    @BindView(et_remake) EditText remarkText;          //备注
     @BindView(tv_start_time) TextView startTimeText;   //开始时间
     @BindView(tv_end_time) TextView endTimeText;       //结束时间
 
@@ -150,17 +166,22 @@ public class OrderFieldsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.img_title_right) void onCommit() {
+        HashMap<String, Object> map = orderDataMap();
+        if (map == null) {
+            return;
+        }
         if (listenerRef != null && listenerRef.get() != null) {
-            listenerRef.get().onCommit(null);
+            listenerRef.get().onCommit(map);
         }
     }
 
     @OnClick(R.id.container_customer) void onCustomer() {
-        Bundle b = new Bundle();
-        b.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
-        b.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
-        app.startActivityForResult(getActivity(), CustomerSearchOrPickerActivity.class,
-                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
+        Bundle mBundle = new Bundle();
+        mBundle.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
+        mBundle.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
+        Intent intent = new Intent(getActivity(), CustomerSearchOrPickerActivity.class);
+        intent.putExtras(mBundle);
+        startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_CUSTOMER);
 
     }
 
@@ -169,8 +190,9 @@ public class OrderFieldsFragment extends BaseFragment {
         mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, productData);
         mBundle.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, true);
         mBundle.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, true);
-        app.startActivityForResult(getActivity(), IntentionProductActivity.class,
-                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
+        Intent intent = new Intent(getActivity(), IntentionProductActivity.class);
+        intent.putExtras(mBundle);
+        startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_PRODUCT);
     }
 
     @OnClick(R.id.container_estimate) void onPaymentRecord() {
@@ -181,20 +203,17 @@ public class OrderFieldsFragment extends BaseFragment {
         if (null != estimateData) {
             mBundle.putSerializable("data", estimateData);
         }
-//        mBundle.putString("orderId", mOrderDetail!=null&&mOrderDetail.id!=null?mOrderDetail.id:orderId);
-//        mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, capitalReturningRecordEdit);
-        app.startActivityForResult(getActivity(), OrderEstimateListActivity.class,
-                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
+        mBundle.putString("orderId", orderDetail!=null&&orderDetail.id!=null?orderDetail.id:orderId);
+        mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, capitalReturningRecordEdit);
+        Intent intent = new Intent(getActivity(), OrderEstimateListActivity.class);
+        intent.putExtras(mBundle);
+        startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_SOURCE);
     }
 
     @OnClick(R.id.container_worksheet) void onWorksheet() {
         Intent mIntent = new Intent(getActivity(), OrderWorksheetListActivity.class);
-        if (!TextUtils.isEmpty(nameText.getText().toString())) {
-            orderTitle = nameText.getText().toString();
-        } else {
-            orderTitle = "";
-        }
-        mIntent.putExtra(ExtraAndResult.EXTRA_NAME, reWorkSheet);
+        mIntent.putExtra(OrderWorksheetListActivity.KEY_LIST, reWorkSheet);
+        mIntent.putExtra(OrderWorksheetListActivity.KEY_SESSION, sessionId);
         startActivity(mIntent);
     }
 
@@ -236,8 +255,9 @@ public class OrderFieldsFragment extends BaseFragment {
         Bundle mBundle = new Bundle();
         mBundle.putInt("bizType", 25);
         mBundle.putString("uuid", uuid);
-        app.startActivityForResult(getActivity(), OrderAttachmentActivity.class,
-                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
+        Intent intent = new Intent(getActivity(), OrderAttachmentActivity.class);
+        intent.putExtras(mBundle);
+        startActivityForResult(intent, ExtraAndResult.MSG_WHAT_HIDEDIALOG);
     }
 
     public OrderFieldsFragment(ActionListener listener) {
@@ -270,7 +290,15 @@ public class OrderFieldsFragment extends BaseFragment {
                 put("remark", "备注（必填）");
             }};
 
-            titleView.setText("新建订单");
+            if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
+                titleView.setText("编辑订单");
+            }
+            else if (actionType == OrderAddOrEditActivity.ORDER_COPY) {
+                titleView.setText("复制订单");
+            }
+            else {
+                titleView.setText("新建订单");
+            }
             backButton.setOnTouchListener(Global.GetTouch());
             rightButton.setOnTouchListener(Global.GetTouch());
             getFields();
@@ -292,8 +320,176 @@ public class OrderFieldsFragment extends BaseFragment {
                         setFieldsList(contactLeftExtrasArrayList);
                         updateUIByCheckingSystemField();
                         buildCustomFieldsViews();
+                        getDetailIfNeeded();
+                        bindDataIfNeeded();
                     }
                 });
+    }
+
+    private void getDetailIfNeeded() {
+        if (TextUtils.isEmpty(orderId)) {
+            return;
+        }
+        if (actionType == OrderAddOrEditActivity.ORDER_EDIT
+                || actionType == OrderAddOrEditActivity.ORDER_COPY) {
+            LoyoUIThread.runAfterDelay(new Runnable() {
+                @Override
+                public void run() {
+                    getOrderDetail(orderId);
+                }
+            }, 100);
+        }
+    }
+
+    private void bindDataIfNeeded() {
+        if (orderDetail == null) {
+            return;
+        }
+        /* 机会转订单，从客户详情新建订单，客户等信息可以直接展示 */
+        bindImportOrderData();
+    }
+
+    /**
+     * 获取订单详情
+     * 编辑订单，复制订单需要重新拉取订单详情
+     */
+    private void getOrderDetail(String id) {
+        showLoading2("");
+        HashMap<String, Object> map = new HashMap<>();
+        if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
+            map.put("fetchList", true);
+        }
+        else if (actionType == OrderAddOrEditActivity.ORDER_COPY){
+            map.put("isCopy", true);
+        }
+        OrderService.getSaleDetails(id, map)
+                .subscribe(new DefaultLoyoSubscriber<OrderDetail>(hud) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        getActivity().finish();
+                    }
+
+                    @Override
+                    public void onNext(OrderDetail detail) {
+                        orderDetail = detail;
+                        if (actionType == OrderAddOrEditActivity.ORDER_COPY && orderId != null) {
+                            resetCopyDataAndBind();
+                        } else if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
+                            bindEditData();
+                        }
+                    }
+                });
+    }
+
+    public void bindEditData() {
+
+        if (orderDetail.reWorkSheet == null) {
+            orderDetail.reWorkSheet = new ArrayList<>();
+        }
+
+        uuid = orderDetail.attachmentUUId;
+        customerId = orderDetail.customerId;
+        customerName = orderDetail.customerName;
+        productData = orderDetail.proInfo;
+        estimateData = orderDetail.paymentRecords;
+        reWorkSheet = orderDetail.reWorkSheet;
+
+        nameText.setText(orderDetail.title);
+        customerText.setText(orderDetail.customerName);
+        productText.setText(getIntentionProductName());
+        paymentText.setText(getEstimateName());
+        worksheetText.setText(getWorksheetDisplayValue());
+        dealText.setText(orderDetail.dealMoney + "");
+        numberText.setText(orderDetail.orderNum);
+        remarkText.setText(orderDetail.remark);
+        if (orderDetail.startAt > 0) {
+            startAt = orderDetail.startAt;
+            startTimeText.setText(DateTool.getDateTimeFriendly(orderDetail.startAt));
+        }
+        if (orderDetail.endAt > 0) {
+            endAt = orderDetail.endAt;
+            endTimeText.setText(DateTool.getDateTimeFriendly(orderDetail.endAt));
+        }
+        requiredFieldsView.bindData(orderDetail.extensionDatas);
+        optionalFieldsView.bindData(orderDetail.extensionDatas);
+        unfold();
+
+    }
+
+    private void resetCopyDataAndBind() {
+        uuid = StringUtil.getUUID();
+        if (orderDetail.proInfo == null) {
+            orderDetail.proInfo = new ArrayList<>();
+        }
+
+
+        if (orderDetail.paymentRecords == null) {
+            orderDetail.paymentRecords = new ArrayList<>();
+        }
+
+        for (EstimateAdd capitalReturning : orderDetail.paymentRecords) {
+            capitalReturning.attachmentCount = 0;
+            capitalReturning.attachmentUUId = StringUtil.getUUID();
+            capitalReturning.status = 0;
+            capitalReturning.id = null;
+            capitalReturning.orderId = null;
+        }
+
+        if (orderDetail.reWorkSheet == null) {
+            orderDetail.reWorkSheet = new ArrayList<>();
+        }
+
+        for (OrderWorksheetListModel worksheetListModel : orderDetail.reWorkSheet) {
+            worksheetListModel.uuid = StringUtil.getUUID();
+        }
+
+        orderDetail.attachmentUUId = uuid;
+        customerId = orderDetail.customerId;
+        customerName = orderDetail.customerName;
+        productData = orderDetail.proInfo;
+        estimateData = orderDetail.paymentRecords;
+        reWorkSheet = orderDetail.reWorkSheet;
+
+        nameText.setText(orderDetail.title);
+        customerText.setText(orderDetail.customerName);
+        productText.setText(getIntentionProductName());
+        paymentText.setText(getEstimateName());
+        worksheetText.setText(getWorksheetDisplayValue());
+        dealText.setText(orderDetail.dealMoney + "");
+        numberText.setText(orderDetail.orderNum);
+        remarkText.setText(orderDetail.remark);
+
+        if (orderDetail.startAt > 0) {
+            startAt = orderDetail.startAt;
+            startTimeText.setText(DateTool.getDateTimeFriendly(orderDetail.startAt));
+        }
+        if (orderDetail.endAt > 0) {
+            endAt = orderDetail.endAt;
+            endTimeText.setText(DateTool.getDateTimeFriendly(orderDetail.endAt));
+        }
+        requiredFieldsView.bindData(orderDetail.extensionDatas);
+        optionalFieldsView.bindData(orderDetail.extensionDatas);
+
+        unfold();
+    }
+
+    private void bindImportOrderData() {
+
+        if (actionType != OrderAddOrEditActivity.ORDER_ADD) {
+            unfold();
+        }
+        customerId = orderDetail.customerId;
+        customerName = orderDetail.customerName;
+        customerText.setText(orderDetail.customerName);
+
+        if (orderDetail.proInfo != null) {
+            productData = orderDetail.proInfo;
+            productText.setText(getIntentionProductName());
+        }
+        if (orderDetail.dealMoney != 0) {
+            dealText.setText(orderDetail.dealMoney + "");
+        }
     }
 
     private void setFieldsList(ArrayList<ContactLeftExtras> fieldsList) {
@@ -306,6 +502,7 @@ public class OrderFieldsFragment extends BaseFragment {
                 if (checkFieldNames.contains(field.name)) {
                     needCheckSystemFields.add(field);
                 }
+
             }
             else {
                 if (field.required) {
@@ -343,5 +540,265 @@ public class OrderFieldsFragment extends BaseFragment {
         requiredContainer.addView(requiredFieldsView);
         optionalContainer.addView(optionalFieldsView);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != -1 && null == data) {
+            return;
+        }
+
+        switch (requestCode) {
+
+            //选择客户
+            case ExtraAndResult.REQUEST_CODE_CUSTOMER:
+                Customer customer = (Customer) data.getSerializableExtra("data");
+                if (null != customer) {
+                    customerId = customer.getId();
+                    customerName = customer.name;
+                }
+                customerText.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+                break;
+
+            //选择购买产品
+            case ExtraAndResult.REQUEST_CODE_PRODUCT:
+                productData = (ArrayList<SaleIntentionalProduct>) data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+                productText.setText(getIntentionProductName());
+                if (TextUtils.isEmpty(dealText.getText().toString())) {//成交金额  返显产品的销售总价
+                    String priceInfo = data.getStringExtra("salePrice");
+                    String price = priceInfo.substring(1, priceInfo.length());
+                    dealText.setText("0".equals(price) ? "" : price);
+                }
+                break;
+
+            //选择回款
+            case ExtraAndResult.REQUEST_CODE_SOURCE:
+                if (data == null) {
+                    return;
+                }
+                ArrayList<EstimateAdd> deals = (ArrayList<EstimateAdd>) data.getSerializableExtra("data");
+                if (deals != null) {
+                    estimateData = deals;
+                    paymentText.setText(getEstimateName());
+                }
+                break;
+
+            //附件回调
+            case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
+                uuid = data.getStringExtra("uuid");
+                attachmentSize = data.getIntExtra("size", 0);
+                attachmentText.setText("附件（" + attachmentSize + "）");
+                break;
+
+        }
+    }
+
+    /**
+     * 添加工单数据回调
+     */
+    @Subscribe
+    public void onOrderAddWorkSheetFinish(OrderAddWorkSheetFinish event) {
+        if (!sessionId.equals(event.session)) {
+            return;
+        }
+        reWorkSheet.clear();
+        reWorkSheet.addAll((Collection<? extends OrderWorksheetListModel>)
+                event.bundle.getSerializable(OrderWorksheetListActivity.KEY_LIST));
+        StringBuffer sBuffer = new StringBuffer();
+        for (OrderWorksheetListModel orderWorksheetListModel : reWorkSheet) {
+            if (reWorkSheet.size() > 1) {
+                sBuffer.append(orderWorksheetListModel.title + ",");
+            } else {
+                sBuffer.append(orderWorksheetListModel.title);
+            }
+        }
+        worksheetText.setText(sBuffer.toString());
+    }
+
+    /**
+     * 获取 意向产品的名字
+     *
+     * @return
+     */
+    private String getIntentionProductName() {
+        String productName = "";
+        if (null != productData) {
+            for (SaleIntentionalProduct ele : productData) {
+                productName += ele.name + "、";
+
+            }
+        } else {
+            return "";
+        }
+        return productName.length() > 0 ? productName.substring(0, productName.length() - 1) : "";
+    }
+
+    /**
+     * 获取 回款记录的成交金额
+     */
+    private String getEstimateName() {
+        String estimateName = "";
+        if (estimateData.size() > 0) {
+            estimateName = "￥";
+            for (EstimateAdd est : estimateData) {
+                estimateName += est.receivedMoney + "、";
+            }
+        }
+        return estimateName.length() > 0 ? estimateName.substring(0, estimateName.length() - 1) : "";
+    }
+
+    private String getWorksheetDisplayValue() {
+        StringBuffer sBuffer = new StringBuffer();
+        for (OrderWorksheetListModel orderWorksheetListModel : reWorkSheet) {
+            if (reWorkSheet.size() > 1) {
+                sBuffer.append(orderWorksheetListModel.title + ",");
+            } else {
+                sBuffer.append(orderWorksheetListModel.title);
+            }
+        }
+        return sBuffer.toString();
+    }
+
+    private boolean checkRequiredSystemFields() {
+
+        boolean result = true;
+        for (ContactLeftExtras field : needCheckSystemFields) {
+            if (!field.required) {
+                continue;
+            }
+
+            switch (field.name) {
+                case "paymentRecords":{
+                    if (estimateData == null || estimateData.size() <= 0) {
+                        Toast("请创建回款!");
+                        result = false;
+                    }
+                    break;
+                }
+                case "worksheets":{
+                    if (reWorkSheet == null || reWorkSheet.size() <= 0) {
+                        Toast("请创建工单!");
+                        result = false;
+                    }
+                    break;
+                }
+                case "orderNum":{
+                    if (TextUtils.isEmpty(numberText.getText())) {
+                        Toast("请填写订单编号!");
+                        result = false;
+                    }
+                    break;
+                }
+                case "startAt":{
+                    if (startAt <= 0) {
+                        Toast("请选择开始时间!");
+                        result = false;
+                    }
+                    break;
+                }
+                case "endAt":{
+                    if (endAt <= 0) {
+                        Toast("请选择结束时间!");
+                        result = false;
+                    }
+                    break;
+                }
+                case "attachment":{
+                    if (attachmentSize == 0) {
+                        Toast("请上传附件!");
+                        result = false;
+                    }
+                    break;
+                }
+                case "remark":{
+                    if (TextUtils.isEmpty(remarkText.getText()) ) {
+                        Toast("请填写备注!");
+                        result = false;
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+            if (!result) {
+                break;
+            }
+
+        }
+
+        return result;
+    }
+
+    /**
+     * 提交订单
+     */
+    public HashMap<String, Object> orderDataMap() {
+
+        if (TextUtils.isEmpty(nameText.getText().toString())) {
+            Toast("请填写订单标题!");
+            return null;
+        } else if (TextUtils.isEmpty(customerId)) {
+            Toast("请选择对应客户!");
+            return null;
+        } else if (TextUtils.isEmpty(productText.getText().toString())) {
+            Toast("请选择购买产品!");
+            return null;
+        } else if (TextUtils.isEmpty(dealText.getText().toString())) {
+            Toast("请选择成交金额!");
+            return null;
+        }
+        if (!checkRequiredSystemFields()) {
+            return null;
+        }
+
+        ArrayList<ContactLeftExtras> fieldData = new ArrayList<>();
+        for (ContactLeftExtras extra : requiredFieldsView.getExtras()) {
+            if (!extra.isSystem && extra.required && TextUtils.isEmpty(extra.val)) {
+                Toast(extra.label + "为必填项！");
+                return null;
+            }
+        }
+
+        for (ContactLeftExtras extra : optionalFieldsView.getExtras()) {
+            if (!extra.isSystem && !TextUtils.isEmpty(extra.val)) {
+                fieldData.add(extra);
+            }
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
+            map.put("id", orderId);
+        }
+        map.put("attachmentCount", attachmentSize);
+        map.put("customerId", customerId);
+        map.put("customerName", customerName);
+        map.put("title", nameText.getText().toString());
+        if (null == uuid || TextUtils.isEmpty(uuid)) {
+            map.put("attachmentUUId", StringUtil.getUUID());
+        } else {
+            map.put("attachmentUUId", uuid);
+        }
+        map.put("dealMoney", Float.parseFloat(dealText.getText().toString()));
+        map.put("orderNum", numberText.getText().toString());
+        map.put("remark", remarkText.getText().toString());
+
+        /* 产品 */
+        map.put("proInfo", productData);
+
+        /* 回款 */
+        map.put("paymentRecords", estimateData);
+
+        /* 自定义字段 */
+        map.put("extensionDatas", fieldData);
+        /* 工单 */
+        map.put("reWorkSheet", reWorkSheet);
+        if (startAt > 0) {
+            map.put("startAt", startAt);
+        }
+        if (endAt > 0) {
+            map.put("endAt", endAt);
+        }
+        return map;
     }
 }

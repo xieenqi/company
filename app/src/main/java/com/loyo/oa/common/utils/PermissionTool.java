@@ -49,7 +49,7 @@ public class PermissionTool {
      * @param requestCode        申请编码,在activity或者fragment中onRequestPermissionsResult方法会返回,用来每一次申请
      * @return 全部具有, 那就返回true, 如果有一个或多个不具有, 那就返回false
      */
-    public static boolean requestPermission(Object activityOrFragment, String[] permissions, String rationale, int requestCode) {
+    public static boolean requestPermission(Object activityOrFragment, final String[] permissions, String rationale, final int requestCode) {
         Activity activity = null;
         Fragment fragment = null;
         Context context = null;
@@ -100,6 +100,8 @@ public class PermissionTool {
                 Log.i("", "requestPermission: 弹出提示框框");
                 //弹出提示,向用户解释申请许可的原因
                 final Context finalContext = context;
+                final Activity finalActivity = activity;
+                final Fragment finalFragment = fragment;
                 new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
                         .setTitleText("权限申请")
                         .setContentText(rationale + "\n\n" + "请在”设置”>“应用”>“权限”中配置权限")//解释原因
@@ -111,6 +113,15 @@ public class PermissionTool {
                             public void onClick(SweetAlertDialog sDialog) {
                                 //取消
                                 sDialog.dismissWithAnimation();
+                                //为了点击取消的时候，发生一次失败的回调，方便做没有权限的相关处理。
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    if(null!=finalActivity){
+                                        finalActivity.onRequestPermissionsResult(requestCode,permissions,new int[]{PackageManager.PERMISSION_DENIED });
+                                    }
+                                    if(null!= finalFragment){
+                                        finalFragment.onRequestPermissionsResult(requestCode,permissions,new int[]{PackageManager.PERMISSION_DENIED });
+                                    }
+                                }
                             }
                         })
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {

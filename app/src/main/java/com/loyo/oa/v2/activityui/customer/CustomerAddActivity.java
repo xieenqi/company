@@ -159,6 +159,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private boolean cusMobile = false;//座机权限
     private boolean cusLocation = false;//定位权限
     private boolean cusDetialAdress = false;//客户的详细地址
+    private boolean cusWebUrl = false;//网址
     private boolean isSave = true;
 
     private ArrayList<ContactLeftExtras> mCustomerExtraDatas;
@@ -470,11 +471,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 }
 
                 uuid = StringUtil.getUUID();
-                customer.name = edt_name.getText().toString().trim();
-                Locate loc = new Locate();
-                customer.loc = loc;
+                customer.name     = edt_name.getText().toString().trim();
+                customer.webSite  = edt_customer_weburl.getText().toString().trim();
+                Locate loc        = new Locate();
+                customer.loc      = loc;
                 customer.loc.addr = edit_address_details.getText().toString().trim();
-                customer.summary = edt_content.getText().toString().trim();
+                customer.summary  = edt_content.getText().toString().trim();
                 //联系人
                 Contact firstContact = new Contact();
                 firstContact.setName(edt_contract.getText().toString().trim());
@@ -502,6 +504,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     return;
                 } else if (TextUtils.isEmpty(customer.summary) && cusMemo) {
                     Toast("请填写客户简介!");
+                    return;
+                } else if (TextUtils.isEmpty(customer.webSite) && cusWebUrl) {
+                    Toast("请填写网址!");
                     return;
                 } else if (!testDynamicword()) {
                     Toast("请填写必填字段!");
@@ -617,6 +622,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             } else if (customerJur.label.contains("简介") && customerJur.required) {
                                 cusMemo = true;
                                 edt_content.setHint("客户简介(必填)");
+                            }else if (customerJur.label.contains("网址") && customerJur.required) {
+                                cusWebUrl = true;
+                                edt_customer_weburl.setHint("网址(必填)");
                             }
                         }
                         initExtra(true);

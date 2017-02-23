@@ -34,6 +34,7 @@ import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.customermanagement.activity.CustomerDetailActivity;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.order.activity.OrderAddOrEditActivity;
 import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.order.permission.OrderAction;
 import com.loyo.oa.v2.order.permission.OrderPermission;
@@ -427,11 +428,12 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 public void onClick(int which) {
                     UmengAnalytics.umengSend(OrderDetailActivity.this, orderEdit);
                     mBundle = new Bundle();
-                    mBundle.putInt("fromPage", ORDER_EDIT);
-                    mBundle.putSerializable("data", mData);
-                    mBundle.putSerializable("orderId", mData.id);
-                    mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, capitalReturningRecordCRUD);
-                    app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class,
+                    mBundle.putInt(OrderAddOrEditActivity.KEY_ACTION_TYPE, OrderAddOrEditActivity.ORDER_EDIT);
+                    mBundle.putSerializable(OrderAddOrEditActivity.KEY_ORDER_ID, mData.id);
+                    mBundle.putBoolean(
+                            OrderAddOrEditActivity.KEY_CAPITAL_RETURNING_RECORD_EDIT,
+                            capitalReturningRecordCRUD);
+                    app.startActivityForResult(OrderDetailActivity.this, OrderAddOrEditActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                 }
             });
@@ -452,9 +454,9 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             dismissSweetAlert();
                             mBundle = new Bundle();
-                            mBundle.putInt("fromPage", ORDER_COPY);
-                            mBundle.putSerializable("orderId", mData.id);
-                            app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class,
+                            mBundle.putInt(OrderAddOrEditActivity.KEY_ACTION_TYPE, OrderAddOrEditActivity.ORDER_COPY);
+                            mBundle.putSerializable(OrderAddOrEditActivity.KEY_ORDER_ID, mData.id);
+                            app.startActivityForResult(OrderDetailActivity.this, OrderAddOrEditActivity.class,
                                     MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                         }
                     }, "提示", "复制订单将自动获取最新的产品信息，如产品名称、单价、单位等信息，你确定要复制吗？");

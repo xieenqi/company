@@ -34,10 +34,8 @@ import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
-import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.activityui.product.SelectProductActivity;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
@@ -49,7 +47,6 @@ import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateItem;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -57,7 +54,7 @@ import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.network.LoyoErrorChecker;
+import com.loyo.oa.v2.order.activity.OrderAddOrEditActivity;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.service.AMapService;
@@ -196,8 +193,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 //新建订单
                 case BaseActivity.ORDER_ADD:
                     mBundle = new Bundle();
-                    mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
-                    startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), Activity.RESULT_FIRST_USER);
+                    mBundle.putInt(OrderAddOrEditActivity.KEY_ACTION_TYPE, OrderDetailActivity.ORDER_ADD);
+                    startActivityForResult(new Intent(getActivity(), OrderAddOrEditActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     UmengAnalytics.umengSend(mActivity, UmengAnalytics.homepageQuickstartOrder);
                     break;

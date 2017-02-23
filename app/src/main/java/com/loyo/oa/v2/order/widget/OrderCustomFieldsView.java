@@ -221,7 +221,6 @@ public class OrderCustomFieldsView extends LinearLayout {
                 tv_content.setFocusable(true);
                 tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
-                tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
@@ -235,7 +234,6 @@ public class OrderCustomFieldsView extends LinearLayout {
                 tv_content.setFocusable(true);
                 tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
-                tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER);
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
@@ -249,7 +247,6 @@ public class OrderCustomFieldsView extends LinearLayout {
                 tv_content.setFocusable(true);
                 tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
-                tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
