@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dimen_10"
+            android:paddingRight="14dp"
+            android:paddingTop="@dimen/dimen_10">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_2"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="left|center"
+                    android:maxEms="13"
+                    android:singleLine="true"
+                    android:text="title"
+                    android:textColor="@color/text33"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:layout_gravity="right"
+                    android:maxLength="10"
+                    android:ellipsize="end"
+                    android:text="" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layout_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_14"
+                android:layout_marginTop="@dimen/dimen_6"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_1"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_customer_tag" />
+
+                <TextView
+                    android:id="@+id/tv_content1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_6"
+                    android:gravity="left|center"
+                    android:text="标签"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_14"
+                android:layout_marginTop="@dimen/dimen_6"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_2"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_customer_follow_time" />
+
+                <TextView
+                    android:id="@+id/tv_content2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_6"
+                    android:gravity="left|center"
+                    android:singleLine="false"
+                    android:text="跟进"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layout_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_14"
+                android:layout_marginTop="@dimen/dimen_6"
+                android:gravity="top"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img_4"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_gravity="top"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_customer_remind" />
+
+                <TextView
+                    android:id="@+id/tv_content41"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_4"
+                    android:layout_marginLeft="@dimen/dimen_6"
+                    android:gravity="left|center"
+                    android:maxLines="1"
+                    android:text="无跟进丢公海"
+                    android:textColor="@color/text99"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/include_solid_line_left" />
+</LinearLayout>

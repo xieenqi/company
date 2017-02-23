@@ -71,41 +71,18 @@ public class MyCustomerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Customer customer = mCustomers.get(position);
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_common_customer, null, false);
+            convertView = inflater.inflate(R.layout.item_list_customer, null, false);
         }
 
         TextView tv_title = ViewHolder.get(convertView, R.id.tv_title);
         TextView tv_content1 = ViewHolder.get(convertView, R.id.tv_content1);
         TextView tv_content2 = ViewHolder.get(convertView, R.id.tv_content2);
-//        TextView tv_content3 = ViewHolder.get(convertView, R.id.tv_content3);
-//        TextView tv_content4 = ViewHolder.get(convertView, R.id.tv_distance);
-
         TextView tv_content41 = ViewHolder.get(convertView, R.id.tv_content41);
-
-        ImageView img1 = ViewHolder.get(convertView, R.id.img_1);
-        ImageView img2 = ViewHolder.get(convertView, R.id.img_2);
-//        ImageView img3 = ViewHolder.get(convertView, R.id.img_3);
-        ImageView img_public = ViewHolder.get(convertView, R.id.img_public);
-//        ImageView img_go_where = ViewHolder.get(convertView, R.id.img_go_where);
-
-
-//        ViewGroup layout1 = ViewHolder.get(convertView, R.id.layout_1);
-        ViewGroup layout2 = ViewHolder.get(convertView, R.id.layout_2);
-        ViewGroup layout3 = ViewHolder.get(convertView, R.id.layout_3);
         ViewGroup layout_4 = ViewHolder.get(convertView, R.id.layout_4);
-        ViewGroup layout_go_where = ViewHolder.get(convertView, R.id.layout_go_where);
-
+        TextView tv_status = ViewHolder.get(convertView, R.id.tv_status);//状态
         tv_title.setText(customer.name);
         String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
-
-        img_public.setVisibility(View.GONE);
-        layout_go_where.setVisibility(View.GONE);
-        layout3.setVisibility(View.GONE);
-
-        layout2.setVisibility(View.VISIBLE);
-        img1.setImageResource(R.drawable.icon_customer_tag);
-        img2.setImageResource(R.drawable.icon_customer_follow_time);
-
+        tv_status.setText(customer.statusName+"");//设置状态
         tv_content1.setText("标签：" + customer.displayTagString());
         tv_content2.setText("跟进时间：" + lastActivityAt);
         if (!(mContext instanceof FollowSelectActivity))
