@@ -2,6 +2,7 @@ package com.loyo.oa.common.utils;
 
 import com.loyo.oa.v2.activityui.attendance.model.DataSelect;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -119,7 +120,7 @@ public class DateTool {
      * @return
      */
     private static String getFriendlyTime(long seconds, boolean includeTime) {
-        if(0==seconds||10!=(seconds+"").length()){
+        if (0 == seconds || 10 != (seconds + "").length()) {
             //时间格式不合法
             return "--";
         }
@@ -664,6 +665,14 @@ public class DateTool {
         return DateFormatSet.fileNameSdf.format(System.currentTimeMillis());
     }
 
+    /* 传入是时间是否超过当前时间  超过返回true*/
+    public static boolean isMoreCurrentTime(long time) {
+        LogUtil.d("当前时间：" + System.currentTimeMillis() / 1000);
+        if (time < System.currentTimeMillis() / 1000) {
+            return true;
+        }
+        return false;
+    }
 }
 
 

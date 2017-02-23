@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Created by yyy on 16/11/15.
  */
 
-public class FollowUpListModel implements Serializable{
+public class FollowUpListModel implements Serializable {
 
     public String id;
     public String customerId;
@@ -25,11 +25,11 @@ public class FollowUpListModel implements Serializable{
     public String avatar;
     public int audioLength;
     public long createAt;
-    public int  remindAt;
+    public long remindAt;
     public String content;
     public ArrayList<Attachment> attachments;    //文件
     public ArrayList<Attachment> imgAttachments; //图片
-    public ArrayList<AudioModel>  audioInfo;     //语音录音
+    public ArrayList<AudioModel> audioInfo;     //语音录音
     public ArrayList<String> atUserIds;
     public ArrayList<CommentModel> comments;  //评论内容
     public Location location;                 //位置信息
@@ -38,14 +38,15 @@ public class FollowUpListModel implements Serializable{
     public String contactName;
     public String contactPhone;
     public String atNameAndDepts;   //@的相关人
+    public String contactRole;//联系人角色
 
 
-    public class Creator{
+    public class Creator {
         public String name;
         public String avatar;
     }
 
-    public class Location{
+    public class Location {
         public String addr;
         public String[] loc;
     }
