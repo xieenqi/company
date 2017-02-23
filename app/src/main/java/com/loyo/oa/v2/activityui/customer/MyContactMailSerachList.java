@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.model.ClueSales;
 import com.loyo.oa.v2.activityui.customer.adapter.MyContactInfoSerachAdapter;
 import com.loyo.oa.v2.activityui.customer.model.MyContactInfo;
 import com.loyo.oa.v2.application.MainApp;
@@ -66,7 +67,6 @@ public class MyContactMailSerachList extends BaseActivity implements View.OnClic
 
         img_title_left.setOnTouchListener(Global.GetTouch());
         iv_clean.setOnTouchListener(Global.GetTouch());
-
         edt_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -80,7 +80,7 @@ public class MyContactMailSerachList extends BaseActivity implements View.OnClic
 
             @Override
             public void afterTextChanged(Editable editable) {
-                doSearch(editable);
+                doSearch(editable.toString());
             }
         });
 
@@ -89,9 +89,13 @@ public class MyContactMailSerachList extends BaseActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle mBundle = new Bundle();
-                mBundle.putString(ExtraAndResult.EXTRA_NAME, serachResultName.get(position).getName());
-                mBundle.putString(ExtraAndResult.EXTRA_DATA, serachResultName.get(position).getPhono());
+                ClueSales clueSales=new ClueSales();
+                clueSales.name = contactInfoList.get(position).getName();
+                clueSales.tel  = contactInfoList.get(position).getPhono();
+                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, clueSales);
+                mBundle.putInt(ExtraAndResult.EXTRA_TYPE, CustomerAddActivity.TYPE_NEW_CUSTOMER_FROM_CONTACT);
                 app.startActivity(MyContactMailSerachList.this, CustomerAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, mBundle);
+
             }
         });
     }
@@ -99,10 +103,10 @@ public class MyContactMailSerachList extends BaseActivity implements View.OnClic
     /**
      * 搜索操作
      * */
-    private void doSearch(Editable editable){
+    private void doSearch(String key){
         serachResultName.clear();
         for(MyContactInfo myContactInfo : contactInfoList){
-            if(myContactInfo.getName().contains(editable.toString())){
+            if(myContactInfo.getName().contains(key)){
                 serachResultName.add(myContactInfo);
             }
         }
