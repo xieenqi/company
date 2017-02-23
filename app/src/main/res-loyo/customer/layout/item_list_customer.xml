@@ -46,7 +46,9 @@
                     android:layout_gravity="right"
                     android:maxLength="10"
                     android:ellipsize="end"
-                    android:text="" />
+                    android:textColor="#999999"
+                    android:textSize="13sp"
+                    android:text="test！！" />
             </LinearLayout>
 
 

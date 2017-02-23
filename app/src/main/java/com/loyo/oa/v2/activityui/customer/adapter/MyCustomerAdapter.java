@@ -73,7 +73,6 @@ public class MyCustomerAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_list_customer, null, false);
         }
-
         TextView tv_title = ViewHolder.get(convertView, R.id.tv_title);
         TextView tv_content1 = ViewHolder.get(convertView, R.id.tv_content1);
         TextView tv_content2 = ViewHolder.get(convertView, R.id.tv_content2);
@@ -86,6 +85,7 @@ public class MyCustomerAdapter extends BaseAdapter {
         tv_content1.setText("标签：" + customer.displayTagString());
         tv_content2.setText("跟进时间：" + lastActivityAt);
         if (!(mContext instanceof FollowSelectActivity))
+            tv_status.setVisibility(View.GONE);
             CommonMethod.commonCustomerRecycleTime(customer, layout_4, tv_content41);
         return convertView;
     }
