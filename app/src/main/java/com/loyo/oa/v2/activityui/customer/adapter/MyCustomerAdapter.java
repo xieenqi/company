@@ -84,9 +84,11 @@ public class MyCustomerAdapter extends BaseAdapter {
         tv_status.setText(customer.statusName+"");//设置状态
         tv_content1.setText("标签：" + customer.displayTagString());
         tv_content2.setText("跟进时间：" + lastActivityAt);
-        if (!(mContext instanceof FollowSelectActivity))
-            tv_status.setVisibility(View.GONE);
+        if (!(mContext instanceof FollowSelectActivity)){
             CommonMethod.commonCustomerRecycleTime(customer, layout_4, tv_content41);
+        }else{
+            tv_status.setVisibility(View.GONE);
+        }
         return convertView;
     }
 
