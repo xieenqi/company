@@ -125,7 +125,12 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         holder.setContent(holder.ll_web, followUpListModel.content);
         ImageLoader.getInstance().displayImage(followUpListModel.avatar, holder.iv_heading);
         holder.tv_name.setText(followUpListModel.creatorName);
-        holder.tv_contact.setText("联系人: " + (TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName));
+        String contact = "联系人: " + (TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
+        if (!TextUtils.isEmpty(followUpListModel.contactPhone)) {
+            holder.tv_contact.setText(contact + "(" + followUpListModel.contactPhone + ")");
+        } else {
+            holder.tv_contact.setText(contact);
+        }
         holder.ll_contact_tag.setVisibility(View.VISIBLE);
         holder.tv_contact_tag.setText("联系人角色: " + (TextUtils.isEmpty(followUpListModel.contactRole) ? "无" : followUpListModel.contactRole));
         holder.tv_create_time.setText(DateTool.getHourMinute(followUpListModel.createAt));

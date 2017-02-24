@@ -132,7 +132,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createAt));
 
         String contact = TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName;
-        if (null != model.contactPhone && !TextUtils.isEmpty(model.contactPhone) && !contact.equals("无联系人信息")) {
+        if (!TextUtils.isEmpty(model.contactPhone)) {
             holder.tv_contact.setText(contact + "(" + model.contactPhone + ")");
         } else {
             holder.tv_contact.setText(contact);
@@ -274,7 +274,7 @@ public class FollowUpListAdapter extends BaseAdapter {
             holder.lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    viewCrol.deleteCommentEmbl(finalHolder.lv_comment,position,model.comments.get(position).id);
+                    viewCrol.deleteCommentEmbl(finalHolder.lv_comment, position, model.comments.get(position).id);
                     return false;
                 }
             });
