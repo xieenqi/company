@@ -14,8 +14,6 @@ import java.util.ArrayList;
 public class ClueFollowUpListModel implements Serializable{
 
     public String id;
-    public String sealsleadId;
-    public String salesleadCompanyName;
     public String customerId;
     public String creatorName;
     public long createAt;

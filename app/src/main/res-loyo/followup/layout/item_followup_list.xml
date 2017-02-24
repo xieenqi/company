@@ -275,8 +275,8 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layout_lasttime"
-                    android:layout_width="match_parent"
+                    android:id="@+id/ll_contact_tag"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_contact"
                     android:layout_marginTop="@dimen/dimen_8"
@@ -286,22 +286,38 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_remaind_li" />
+                        android:src="@drawable/icon_contact_tag" />
 
                     <TextView
+                        android:id="@+id/tv_contact_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dp"
-                        android:text="下次跟进: "
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp13" />
+                        android:text=""
+                        android:textColor="@color/text99" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_lasttime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_contact_tag"
+                    android:layout_marginTop="@dimen/dimen_8"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/iv_lasttime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_remaind_li2" />
 
                     <TextView
                         android:id="@+id/tv_last_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/text99"
+                        android:layout_marginLeft="3dp"
+                        android:textColor="@color/red1"
                         android:textSize="@dimen/text_sp13" />
 
                 </LinearLayout>

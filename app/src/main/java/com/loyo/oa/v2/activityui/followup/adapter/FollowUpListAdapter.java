@@ -117,6 +117,9 @@ public class FollowUpListAdapter extends BaseAdapter {
             holder.layout_phonely = (LinearLayout) convertView.findViewById(R.id.layout_phonely);
             holder.layout_customer = (LinearLayout) convertView.findViewById(R.id.layout_customer);
             holder.layout_clue = (LinearLayout) convertView.findViewById(R.id.layout_clue);
+            holder.tv_contact_tag = (TextView) convertView.findViewById(R.id.tv_contact_tag);
+            holder.ll_contact_tag = (LinearLayout) convertView.findViewById(R.id.ll_contact_tag);
+            holder.iv_lasttime = (ImageView) convertView.findViewById(R.id.iv_lasttime);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -166,12 +169,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         }
 
         /** 下次跟进时间 */
-        if (model.remindAt != 0) {
-            holder.layout_lasttime.setVisibility(View.VISIBLE);
-            holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.remindAt));
-        } else {
-            holder.layout_lasttime.setVisibility(View.GONE);
-        }
+        model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
 
         /** 设置跟进内容 */
         if (null != model.content && !TextUtils.isEmpty(model.content)) {
@@ -187,23 +185,10 @@ public class FollowUpListAdapter extends BaseAdapter {
 
         /** 线索 */
         model.setCuleName(holder.tv_clue, holder.layout_clue);
-//        if (null != model.salesleadCompanyName && !TextUtils.isEmpty(model.salesleadCompanyName)) {
-//            holder.layout_clue.setVisibility(View.VISIBLE);
-//            holder.tv_clue.setText("线索: " + model.salesleadCompanyName);
-//            holder.tv_clue.setOnTouchListener(Global.GetTouch());
-//        } else {
-//            holder.layout_clue.setVisibility(View.GONE);
-//        }
-
         /** 客户姓名 */
         model.setCusomerName(holder.tv_customer, holder.layout_customer);
-//        if (null != model.customerName && !TextUtils.isEmpty(model.customerName)) {
-//            holder.layout_customer.setVisibility(View.VISIBLE);
-//            holder.tv_customer.setText("客户: " + model.customerName);
-//            holder.tv_customer.setOnTouchListener(Global.GetTouch());
-//        } else {
-//            holder.layout_customer.setVisibility(View.GONE);
-//        }
+        /*联系人角色 */
+        model.setContactRole(holder.tv_contact_tag, holder.ll_contact_tag);
 
         /** 客户地址 */
         if (null != model.location && null != model.location.addr && !TextUtils.isEmpty(model.location.addr)) {
@@ -213,7 +198,6 @@ public class FollowUpListAdapter extends BaseAdapter {
         } else {
             holder.layout_address.setVisibility(View.GONE);
         }
-
 
         /** @的相关人员 */
         if (null != model.atNameAndDepts) {
@@ -373,6 +357,8 @@ public class FollowUpListAdapter extends BaseAdapter {
         TextView tv_clue;        /*线索*/
         TextView tv_audio_length;/*通话录音时间*/
         TextView iv_phone_call;
+        TextView tv_contact_tag; /*联系角色name */
+        ImageView iv_lasttime;
 
         LinearLayout ll_web;
         LinearLayout layout_comment;
@@ -381,6 +367,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         LinearLayout layout_lasttime;
         LinearLayout layout_clue;
         LinearLayout layout_phonely;
+        LinearLayout ll_contact_tag; /*联系角色*/
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
         CustomerListView lv_options; /*文件列表区*/

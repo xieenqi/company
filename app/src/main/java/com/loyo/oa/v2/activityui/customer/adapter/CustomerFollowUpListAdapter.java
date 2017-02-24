@@ -162,20 +162,8 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
             holder.layout_phonely.setVisibility(View.GONE);
         }
 
-        /** 下次跟进时间 默认是红色 没有提醒过  提醒过就是灰色 */
-        if (followUpListModel.remindAt != 0) {
-            holder.layout_lasttime.setVisibility(View.VISIBLE);
-            holder.tv_last_time.setText("下次跟进: " + DateTool.getDateTimeFriendly(followUpListModel.remindAt));
-            if (DateTool.isMoreCurrentTime(followUpListModel.remindAt)) {
-                holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.text99));
-                holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li);
-            } else {
-                holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.red1));
-                holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li2);
-            }
-        } else {
-            holder.layout_lasttime.setVisibility(View.GONE);
-        }
+        /** 下次跟进时间 */
+        followUpListModel.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
 
         /** 设置跟进内容 */
         if (null != followUpListModel.content && !TextUtils.isEmpty(followUpListModel.content)) {
