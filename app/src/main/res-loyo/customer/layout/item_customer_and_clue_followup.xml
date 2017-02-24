@@ -134,14 +134,14 @@
                 android:numColumns="3"
                 android:verticalSpacing="15dp"
                 android:visibility="gone" />
-
-            <LinearLayout
-                android:id="@+id/layout_enclosure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="59dp"
-                android:layout_marginRight="14dp"
-                android:orientation="vertical"></LinearLayout>
+            <!-- 不知道这个布局要干什么 暂时注释-->
+            <!--<LinearLayout-->
+            <!--android:id="@+id/layout_enclosure"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="59dp"-->
+            <!--android:layout_marginRight="14dp"-->
+            <!--android:orientation="vertical"></LinearLayout>-->
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_options"

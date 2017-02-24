@@ -127,11 +127,10 @@ public class FollowUpListAdapter extends BaseAdapter {
             ImageLoader.getInstance().displayImage(model.creator.avatar, holder.iv_heading);
             holder.tv_name.setText(model.creator.name);
         }
-        holder.tv_customer.setText(model.customerName);
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# " + model.typeName);
         holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createAt));
 
-        String contact = TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName;
+        String contact = "联系人: " + (TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName);
         if (!TextUtils.isEmpty(model.contactPhone)) {
             holder.tv_contact.setText(contact + "(" + model.contactPhone + ")");
         } else {
@@ -169,7 +168,6 @@ public class FollowUpListAdapter extends BaseAdapter {
         /** 下次跟进时间 */
         if (model.remindAt != 0) {
             holder.layout_lasttime.setVisibility(View.VISIBLE);
-//            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt + "", "yyyy-MM-dd HH:mm"));
             holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.remindAt));
         } else {
             holder.layout_lasttime.setVisibility(View.GONE);
@@ -188,22 +186,24 @@ public class FollowUpListAdapter extends BaseAdapter {
         }
 
         /** 线索 */
-        if (null != model.salesleadCompanyName && !TextUtils.isEmpty(model.salesleadCompanyName)) {
-            holder.layout_clue.setVisibility(View.VISIBLE);
-            holder.tv_clue.setText(model.salesleadCompanyName);
-            holder.tv_clue.setOnTouchListener(Global.GetTouch());
-        } else {
-            holder.layout_clue.setVisibility(View.GONE);
-        }
+        model.setCuleName(holder.tv_clue, holder.layout_clue);
+//        if (null != model.salesleadCompanyName && !TextUtils.isEmpty(model.salesleadCompanyName)) {
+//            holder.layout_clue.setVisibility(View.VISIBLE);
+//            holder.tv_clue.setText("线索: " + model.salesleadCompanyName);
+//            holder.tv_clue.setOnTouchListener(Global.GetTouch());
+//        } else {
+//            holder.layout_clue.setVisibility(View.GONE);
+//        }
 
         /** 客户姓名 */
-        if (null != model.customerName && !TextUtils.isEmpty(model.customerName)) {
-            holder.layout_customer.setVisibility(View.VISIBLE);
-            holder.tv_customer.setText(model.customerName);
-            holder.tv_customer.setOnTouchListener(Global.GetTouch());
-        } else {
-            holder.layout_customer.setVisibility(View.GONE);
-        }
+        model.setCusomerName(holder.tv_customer, holder.layout_customer);
+//        if (null != model.customerName && !TextUtils.isEmpty(model.customerName)) {
+//            holder.layout_customer.setVisibility(View.VISIBLE);
+//            holder.tv_customer.setText("客户: " + model.customerName);
+//            holder.tv_customer.setOnTouchListener(Global.GetTouch());
+//        } else {
+//            holder.layout_customer.setVisibility(View.GONE);
+//        }
 
         /** 客户地址 */
         if (null != model.location && null != model.location.addr && !TextUtils.isEmpty(model.location.addr)) {
