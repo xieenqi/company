@@ -20,6 +20,7 @@ import com.loyo.oa.v2.common.Global;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import static com.loyo.oa.v2.R.id.iv_phone_call;
 import static com.loyo.oa.v2.R.id.layout_clue;
 import static com.loyo.oa.v2.R.id.tv_clue;
 
@@ -129,6 +130,45 @@ public class FollowUpListModel implements Serializable {
             }
         } else {
             layout_lasttime.setVisibility(View.GONE);
+        }
+    }
+
+    public void setContactName(TextView tv_contact) {
+        String contact = "联系人: " + (TextUtils.isEmpty(contactName) ? "无联系人信息" : contactName);
+        if (!TextUtils.isEmpty(contactPhone)) {
+            tv_contact.setText(contact + "(" + contactPhone + ")");
+        } else {
+            tv_contact.setText(contact);
+        }
+    }
+
+    /**
+     * 商务电话录音设置
+     */
+    public void setPhoneRecord(ViewGroup layout_phonely, TextView tv_audio_length, TextView iv_phone_call) {
+        if (null != audioUrl && !TextUtils.isEmpty(audioUrl)) {
+            layout_phonely.setVisibility(View.VISIBLE);
+            tv_audio_length.setText(DateTool.int2time(audioLength * 1000));
+            int length = audioLength;
+            if (length > 0 && length <= 60) {
+                iv_phone_call.setText("000");
+            } else if (length > 60 && length <= 300) {
+                iv_phone_call.setText("00000");
+            } else if (length > 300 && length <= 600) {
+                iv_phone_call.setText("0000000");
+            } else if (length > 600 && length <= 1200) {
+                iv_phone_call.setText("00000000");
+            } else if (length > 1200 && length <= 1800) {
+                iv_phone_call.setText("000000000");
+            } else if (length > 1800 && length <= 3600) {
+                iv_phone_call.setText("0000000000");
+            } else if (length > 3600) {
+                iv_phone_call.setText("00000000000");
+            } else {
+                iv_phone_call.setText("");
+            }
+        } else {
+            layout_phonely.setVisibility(View.GONE);
         }
     }
 }

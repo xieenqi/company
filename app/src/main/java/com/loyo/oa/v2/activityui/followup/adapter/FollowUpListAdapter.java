@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -130,43 +131,39 @@ public class FollowUpListAdapter extends BaseAdapter {
             ImageLoader.getInstance().displayImage(model.creator.avatar, holder.iv_heading);
             holder.tv_name.setText(model.creator.name);
         }
+        /*跟进行为*/
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# " + model.typeName);
-        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createAt));
-
-        String contact = "联系人: " + (TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName);
-        if (!TextUtils.isEmpty(model.contactPhone)) {
-            holder.tv_contact.setText(contact + "(" + model.contactPhone + ")");
-        } else {
-            holder.tv_contact.setText(contact);
-        }
-
+        holder.tv_create_time.setText("创建时间: " + DateTool.getDateTimeFriendly(model.createAt));
+        /*联系人*/
+        model.setContactName(holder.tv_contact);
 
         /** 电话录音设置 */
-        if (null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)) {
-            holder.layout_phonely.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(model.audioLength * 1000));
-            int audioLength = model.audioLength;
-            if (audioLength > 0 && audioLength <= 60) {
-                holder.iv_phone_call.setText("000");
-            } else if (audioLength > 60 && audioLength <= 300) {
-                holder.iv_phone_call.setText("00000");
-            } else if (audioLength > 300 && audioLength <= 600) {
-                holder.iv_phone_call.setText("0000000");
-            } else if (audioLength > 600 && audioLength <= 1200) {
-                holder.iv_phone_call.setText("00000000");
-            } else if (audioLength > 1200 && audioLength <= 1800) {
-                holder.iv_phone_call.setText("000000000");
-            } else if (audioLength > 1800 && audioLength <= 3600) {
-                holder.iv_phone_call.setText("0000000000");
-            } else if (audioLength > 3600) {
-                holder.iv_phone_call.setText("00000000000");
-            } else {
-                holder.iv_phone_call.setText("");
-            }
-
-        } else {
-            holder.layout_phonely.setVisibility(View.GONE);
-        }
+        model.setPhoneRecord(holder.layout_phonely,holder.tv_audio_length,holder.iv_phone_call);
+//        if (null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)) {
+//            holder.layout_phonely.setVisibility(View.VISIBLE);
+//            holder.tv_audio_length.setText(DateTool.int2time(model.audioLength * 1000));
+//            int audioLength = model.audioLength;
+//            if (audioLength > 0 && audioLength <= 60) {
+//                holder.iv_phone_call.setText("000");
+//            } else if (audioLength > 60 && audioLength <= 300) {
+//                holder.iv_phone_call.setText("00000");
+//            } else if (audioLength > 300 && audioLength <= 600) {
+//                holder.iv_phone_call.setText("0000000");
+//            } else if (audioLength > 600 && audioLength <= 1200) {
+//                holder.iv_phone_call.setText("00000000");
+//            } else if (audioLength > 1200 && audioLength <= 1800) {
+//                holder.iv_phone_call.setText("000000000");
+//            } else if (audioLength > 1800 && audioLength <= 3600) {
+//                holder.iv_phone_call.setText("0000000000");
+//            } else if (audioLength > 3600) {
+//                holder.iv_phone_call.setText("00000000000");
+//            } else {
+//                holder.iv_phone_call.setText("");
+//            }
+//
+//        } else {
+//            holder.layout_phonely.setVisibility(View.GONE);
+//        }
 
         /** 下次跟进时间 */
         model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);

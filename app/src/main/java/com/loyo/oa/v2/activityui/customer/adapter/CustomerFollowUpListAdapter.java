@@ -125,42 +125,39 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         holder.setContent(holder.ll_web, followUpListModel.content);
         ImageLoader.getInstance().displayImage(followUpListModel.avatar, holder.iv_heading);
         holder.tv_name.setText(followUpListModel.creatorName);
-        String contact = "联系人: " + (TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
-        if (!TextUtils.isEmpty(followUpListModel.contactPhone)) {
-            holder.tv_contact.setText(contact + "(" + followUpListModel.contactPhone + ")");
-        } else {
-            holder.tv_contact.setText(contact);
-        }
+        /*联系人*/
+        followUpListModel.setContactName(holder.tv_contact);
         holder.ll_contact_tag.setVisibility(View.VISIBLE);
         holder.tv_contact_tag.setText("联系人角色: " + (TextUtils.isEmpty(followUpListModel.contactRole) ? "无" : followUpListModel.contactRole));
         holder.tv_create_time.setText(DateTool.getHourMinute(followUpListModel.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# " + followUpListModel.typeName);
 
         /** 电话录音设置 */
-        if (null != followUpListModel.audioUrl && !TextUtils.isEmpty(followUpListModel.audioUrl)) {
-            holder.layout_phonely.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(followUpListModel.audioLength * 1000));
-            int audioLength = followUpListModel.audioLength;
-            if (audioLength > 0 && audioLength <= 60) {
-                holder.iv_phone_call.setText("000");
-            } else if (audioLength > 60 && audioLength <= 300) {
-                holder.iv_phone_call.setText("00000");
-            } else if (audioLength > 300 && audioLength <= 600) {
-                holder.iv_phone_call.setText("0000000");
-            } else if (audioLength > 600 && audioLength <= 1200) {
-                holder.iv_phone_call.setText("000000000");
-            } else if (audioLength > 1200 && audioLength <= 1800) {
-                holder.iv_phone_call.setText("00000000000");
-            } else if (audioLength > 1800 && audioLength <= 3600) {
-                holder.iv_phone_call.setText("00000000000000");
-            } else if (audioLength > 3600) {
-                holder.iv_phone_call.setText("0000000000000000");
-            } else {
-                holder.iv_phone_call.setText("");
-            }
-        } else {
-            holder.layout_phonely.setVisibility(View.GONE);
-        }
+        followUpListModel.setPhoneRecord(holder.layout_phonely,holder.tv_audio_length,holder.iv_phone_call);
+//        if (null != followUpListModel.audioUrl && !TextUtils.isEmpty(followUpListModel.audioUrl)) {
+//            holder.layout_phonely.setVisibility(View.VISIBLE);
+//            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(followUpListModel.audioLength * 1000));
+//            int audioLength = followUpListModel.audioLength;
+//            if (audioLength > 0 && audioLength <= 60) {
+//                holder.iv_phone_call.setText("000");
+//            } else if (audioLength > 60 && audioLength <= 300) {
+//                holder.iv_phone_call.setText("00000");
+//            } else if (audioLength > 300 && audioLength <= 600) {
+//                holder.iv_phone_call.setText("0000000");
+//            } else if (audioLength > 600 && audioLength <= 1200) {
+//                holder.iv_phone_call.setText("000000000");
+//            } else if (audioLength > 1200 && audioLength <= 1800) {
+//                holder.iv_phone_call.setText("00000000000");
+//            } else if (audioLength > 1800 && audioLength <= 3600) {
+//                holder.iv_phone_call.setText("00000000000000");
+//            } else if (audioLength > 3600) {
+//                holder.iv_phone_call.setText("0000000000000000");
+//            } else {
+//                holder.iv_phone_call.setText("");
+//            }
+//        } else {
+//            holder.layout_phonely.setVisibility(View.GONE);
+//        }
 
         /** 下次跟进时间 */
         followUpListModel.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
