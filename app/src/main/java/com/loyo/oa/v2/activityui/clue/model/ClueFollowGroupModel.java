@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.clue.model;
 
+import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
+
 import java.util.ArrayList;
 
 /**
@@ -10,6 +12,6 @@ public class ClueFollowGroupModel {
 
     public String date;
     public String timeStamp;
-    public ArrayList<ClueFollowUpListModel> activities;
+    public ArrayList<FollowUpListModel> activities;
 
 }

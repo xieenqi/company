@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
+import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
@@ -50,7 +51,7 @@ import java.util.ArrayList;
 public class ClueFollowUpListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList<ClueFollowUpListModel> listModel;
+    private ArrayList<FollowUpListModel> listModel;
     private ClueFollowUpListView viewCrol;
     private AudioPlayCallBack audioPlayCallBack;
     private int parentIndex;
@@ -60,7 +61,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
     private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
 
-    public ClueFollowUpListAdapter(Context mContext, ArrayList<ClueFollowUpListModel> listModel,
+    public ClueFollowUpListAdapter(Context mContext, ArrayList<FollowUpListModel> listModel,
                                    ClueFollowUpListView viewCrol, AudioPlayCallBack audioCallBack, int parentIndex) {
         this.mContext = mContext;
         this.listModel = listModel;
@@ -87,7 +88,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        final ClueFollowUpListModel model = listModel.get(position);
+        final FollowUpListModel model = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customer_and_clue_followup, null);

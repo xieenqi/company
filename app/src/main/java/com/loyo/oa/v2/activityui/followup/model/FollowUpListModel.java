@@ -20,10 +20,6 @@ import com.loyo.oa.v2.common.Global;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import static com.loyo.oa.v2.R.id.iv_phone_call;
-import static com.loyo.oa.v2.R.id.layout_clue;
-import static com.loyo.oa.v2.R.id.tv_clue;
-
 /**
  * Created by yyy on 16/11/15.
  */
@@ -49,6 +45,7 @@ public class FollowUpListModel implements Serializable {
     public ArrayList<AudioModel> audioInfo;     //语音录音
     public ArrayList<CommentModel> comments;  //评论内容
     public Location location;                 //位置信息
+    public String addr;
 
     public String typeName;
     public String contactName;
@@ -171,4 +168,5 @@ public class FollowUpListModel implements Serializable {
             layout_phonely.setVisibility(View.GONE);
         }
     }
+
 }
