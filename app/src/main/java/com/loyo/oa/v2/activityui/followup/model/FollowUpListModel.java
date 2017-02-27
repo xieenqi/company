@@ -8,13 +8,19 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
+import com.loyo.oa.v2.activityui.commonview.CommonImageView;
+import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
+import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 
 import java.io.Serializable;
@@ -178,6 +184,7 @@ public class FollowUpListModel implements Serializable {
         }
     }
 
+    /*定位地址设置*/
     public void setAddress(ViewGroup layout_address, TextView tv_address) {
         if (null != addr && !TextUtils.isEmpty(location.addr)) {
             layout_address.setVisibility(View.VISIBLE);
@@ -188,4 +195,35 @@ public class FollowUpListModel implements Serializable {
         }
     }
 
+    /*
+    * 跟进内容展示设置*/
+    public void setContent(LinearLayout ll_web, TextView tv_memo) {
+        if (null != content && !TextUtils.isEmpty(content)) {
+            if (content.contains("<p>")) {
+                setWebContent(ll_web, content);
+                tv_memo.setVisibility(View.GONE);
+            } else {
+                tv_memo.setVisibility(View.VISIBLE);
+                tv_memo.setText(content);
+                ll_web.removeAllViews();
+            }
+        }
+    }
+
+    /**
+     * 设置图文混编
+     */
+    private void setWebContent(LinearLayout layout, String content) {
+        layout.removeAllViews();
+        for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
+            if (ele.type.startsWith("img")) {
+                CommonImageView img = new CommonImageView(MainApp.getMainApp(), ele.data);
+                layout.addView(img);
+            } else {
+                CommonTextVew tex = new CommonTextVew(MainApp.getMainApp(), ele.data);
+                layout.addView(tex);
+            }
+        }
+        layout.setVisibility(View.VISIBLE);
+    }
 }

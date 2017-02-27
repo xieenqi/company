@@ -128,58 +128,22 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
 
         /** 电话录音设置 */
         model.setPhoneRecord(holder.layout_phonely, holder.tv_audio_length, holder.iv_phone_call);
-//        if (null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)) {
-//            holder.layout_phonely.setVisibility(View.VISIBLE);
-//            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(model.audioLength * 1000));
-//            int audioLength = model.audioLength;
-//            if (audioLength > 0 && audioLength <= 60) {
-//                holder.iv_phone_call.setText("000");
-//            } else if (audioLength > 60 && audioLength <= 300) {
-//                holder.iv_phone_call.setText("00000");
-//            } else if (audioLength > 300 && audioLength <= 600) {
-//                holder.iv_phone_call.setText("0000000");
-//            } else if (audioLength > 600 && audioLength <= 1200) {
-//                holder.iv_phone_call.setText("000000000");
-//            } else if (audioLength > 1200 && audioLength <= 1800) {
-//                holder.iv_phone_call.setText("00000000000");
-//            } else if (audioLength > 1800 && audioLength <= 3600) {
-//                holder.iv_phone_call.setText("00000000000000");
-//            } else if (audioLength > 3600) {
-//                holder.iv_phone_call.setText("0000000000000000");
-//            } else {
-//                holder.iv_phone_call.setText("");
-//            }
-//        } else {
-//            holder.layout_phonely.setVisibility(View.GONE);
-//        }
 
         /** 下次跟进时间 */
         model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
-//        if (model.remindAt != 0) {
-//            holder.layout_lasttime.setVisibility(View.VISIBLE);
-//            holder.tv_last_time.setText("下次跟进: " + DateTool.getDateTimeFriendly(model.remindAt));
-//            if (DateTool.isMoreCurrentTime(model.remindAt)) {
-//                holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.text99));
-//                holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li);
-//            } else {
-//                holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.red1));
-//                holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li2);
-//            }
-//        } else {
-//            holder.layout_lasttime.setVisibility(View.GONE);
-//        }
 
         /** 设置跟进内容 */
-        if (null != model.content && !TextUtils.isEmpty(model.content)) {
-            if (model.content.contains("<p>")) {
-                holder.setContent(holder.ll_web, model.content);
-                holder.tv_memo.setVisibility(View.GONE);
-            } else {
-                holder.tv_memo.setVisibility(View.VISIBLE);
-                holder.tv_memo.setText(model.content);
-                holder.ll_web.removeAllViews();
-            }
-        }
+        model.setContent(holder.ll_web,holder.tv_memo);
+//        if (null != model.content && !TextUtils.isEmpty(model.content)) {
+//            if (model.content.contains("<p>")) {
+//                holder.setContent(holder.ll_web, model.content);
+//                holder.tv_memo.setVisibility(View.GONE);
+//            } else {
+//                holder.tv_memo.setVisibility(View.VISIBLE);
+//                holder.tv_memo.setText(model.content);
+//                holder.ll_web.removeAllViews();
+//            }
+//        }
 
         /** 客户地址 */
         model.setAddress(holder.layout_address, holder.tv_address);
@@ -307,21 +271,21 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         ImageView iv_comment;        /*评论按钮*/
         ImageView iv_lasttime;     /*下次跟进图标*/
 
-        /**
-         * 设置图文混编
-         */
-        public void setContent(LinearLayout layout, String content) {
-            layout.removeAllViews();
-            for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
-                if (ele.type.startsWith("img")) {
-                    CommonImageView img = new CommonImageView(mContext, ele.data);
-                    layout.addView(img);
-                } else {
-                    CommonTextVew tex = new CommonTextVew(mContext, ele.data);
-                    layout.addView(tex);
-                }
-            }
-            layout.setVisibility(View.VISIBLE);
-        }
+//        /**
+//         * 设置图文混编
+//         */
+//        public void setContent(LinearLayout layout, String content) {
+//            layout.removeAllViews();
+//            for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
+//                if (ele.type.startsWith("img")) {
+//                    CommonImageView img = new CommonImageView(mContext, ele.data);
+//                    layout.addView(img);
+//                } else {
+//                    CommonTextVew tex = new CommonTextVew(mContext, ele.data);
+//                    layout.addView(tex);
+//                }
+//            }
+//            layout.setVisibility(View.VISIBLE);
+//        }
     }
 }
