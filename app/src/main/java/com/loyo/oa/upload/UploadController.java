@@ -126,6 +126,10 @@ public class UploadController implements ImageCell.ImageCellCallback {
     public void removeAllTask() {
         taskList.clear();
     }
+    public void addAllTask(ArrayList<UploadTask> taskList){
+        this.taskList.clear();
+        this.taskList.addAll(taskList);
+    }
 
     public void startUpload() {
         for (int i = 0; i < taskList.size(); i++) {

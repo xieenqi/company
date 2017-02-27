@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_add"
+    android:layout_width="match_parent"
+    android:background="@color/common_activity_bg"
+    android:layout_height="@dimen/common_line_height">
+    <TextView
+        android:id="@+id/tv_add"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:drawableLeft="@drawable/icon_contact_insert"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="添加工单"
+        android:textColor="#666666"
+        android:textSize="14sp" />
+</FrameLayout>

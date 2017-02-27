@@ -32,14 +32,15 @@
     <RelativeLayout
         android:id="@+id/img_title_right"
         android:layout_width="70dp"
+        android:layout_marginRight="@dimen/common_layout_padding"
         android:layout_height="match_parent"
         android:gravity="center_vertical">
 
         <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:layout_width="@dimen/dimen_20"
             android:layout_height="@dimen/dimen_20"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_other_view"
             android:src="@drawable/right_submit1"/>
 
     </RelativeLayout>

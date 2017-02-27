@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/common_activity_con_bg"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/rl_num"
+        android:background="@color/common_activity_bg"
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/common_layout_padding"
+        android:paddingRight="@dimen/common_layout_padding"
+        android:layout_height="30dp">
+        <TextView
+            android:id="@+id/tv_num_title"
+            android:text="工单1"
+            android:textColor="#666666"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/tv_delete"
+            android:text="删除"
+            android:drawableLeft="@drawable/img_delete"
+            android:drawablePadding="6dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:textColor="#F5625A"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+   <!--
+   这里面是兼容订单管理－新建订单，临时不做了，注释掉
+   <LinearLayout
+        android:id="@+id/ll_order"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_line_height"
+        android:gravity="center_vertical">
+        <TextView
+            style="@style/text_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:minWidth="@dimen/dimen_60"
+            android:text="选择订单"
+            android:textSize="15sp" />
+        <TextView
+            android:id="@+id/tv_order"
+            style="@style/text_item1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:hint="必填"
+            android:textColor="@color/text66"
+            android:textSize="15sp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow" />
+    </LinearLayout>-->
+    <include layout="@layout/include_solid_line_left" />
+    <LinearLayout
+        android:id="@+id/ll_type"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:minWidth="@dimen/dimen_60"
+            android:text="选择工单类型"
+            android:textSize="15sp" />
+        <TextView
+            android:id="@+id/tv_type"
+            style="@style/text_item1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:hint="必填"
+            android:textColor="@color/text66"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow" />
+    </LinearLayout>
+
+    <include layout="@layout/include_solid_line_left" />
+
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:minWidth="@dimen/dimen_60"
+            android:text="工单标题"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/et_title"
+            style="@style/edtText_add_order"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center_vertical|right"
+            android:hint="必填"
+            android:maxEms="30"
+            android:paddingBottom="@dimen/dimen_5"
+            android:paddingTop="@dimen/dimen_5"
+            android:textColor="@color/text66"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow"
+            android:visibility="invisible" />
+    </LinearLayout>
+    <include layout="@layout/include_solid_line_left" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edt_content"
+            style="@style/edtText_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="left|top"
+            android:hint="请输入工单内容(选填)"
+            android:minHeight="50dp"
+            android:paddingBottom="@dimen/dimen_10"
+            android:paddingLeft="14dp"
+            android:paddingRight="@dimen/dimen_14"
+            android:paddingTop="@dimen/dimen_10"
+            android:textColor="@color/text33"
+            android:textColorHint="@color/text99"
+            android:textSize="@dimen/text_sp15" />
+
+        <com.loyo.oa.upload.view.ImageUploadGridView
+            android:id="@+id/image_upload_grid_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="3"
+            android:paddingBottom="@dimen/margin_other_view"
+            android:paddingRight="@dimen/margin_other_view"
+            android:paddingTop="@dimen/margin_other_view"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" />
+    </LinearLayout>
+</LinearLayout>
