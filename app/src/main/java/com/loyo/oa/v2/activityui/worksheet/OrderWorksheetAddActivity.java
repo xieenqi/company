@@ -116,10 +116,10 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
         et_title.setText(mOrderWorksheet.title);
 
 /*        if (TextUtils.isEmpty(et_title.getText().toString())) {
-            if (TextUtils.isEmpty(OrderAddActivity.orderTitle)) {
+            if (TextUtils.isEmpty(OrderAddActivity.orderName)) {
                 et_title.setText(mOrderWorksheet.templateName);
             } else {
-                et_title.setText(OrderAddActivity.orderTitle + "-" + mOrderWorksheet.templateName);
+                et_title.setText(OrderAddActivity.orderName + "-" + mOrderWorksheet.templateName);
             }
         }*/
 
@@ -192,10 +192,10 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
         }
         tv_kind.setText(value);
 //        if (TextUtils.isEmpty(et_title.getText().toString())) {
-//            if (TextUtils.isEmpty(OrderAddActivity.orderTitle)) {
+//            if (TextUtils.isEmpty(OrderAddActivity.orderName)) {
 //                et_title.setText(value);
 //            } else {
-//                et_title.setText(OrderAddActivity.orderTitle + "-" + value);
+//                et_title.setText(OrderAddActivity.orderName + "-" + value);
 //            }
 //        }
 

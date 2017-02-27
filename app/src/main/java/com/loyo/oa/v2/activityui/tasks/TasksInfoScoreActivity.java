@@ -162,7 +162,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
 //
 //        if (isSave) {
 ////            mTask.setScore(Integer.parseInt(et_score.getText().toString()));
-//            String content = edt_content.getText().toString().trim();
+//            String content = et_content.getText().toString().trim();
 //            if (!StringUtil.isEmpty(content)) {
 //                mTask.setTaskComment(content);
 //            }
