@@ -26,41 +26,53 @@ public class WorksheetAddModel implements Cloneable {
 
     /**
      * 实现克隆方法，复制对象
+     *
      * @return
      */
     @Override
-    public WorksheetAddModel clone()  {
-        WorksheetAddModel worksheetAddModel=new WorksheetAddModel();
-        worksheetAddModel.orderName = null == orderName?null:new String (orderName);
-        worksheetAddModel.orderId   = null == orderId?null:new String (orderId);
-        worksheetAddModel.typeName  = null == typeName?null:new String (typeName);
-        worksheetAddModel.typeId    = null == typeId?null:new String (typeId);
-        worksheetAddModel.title     = null == title?null:new String (title);
-        worksheetAddModel.content   = null == content?null:new String (content);
-        worksheetAddModel.uuid      = null == uuid?null:new String (uuid);
+    public WorksheetAddModel clone() {
+        WorksheetAddModel worksheetAddModel = new WorksheetAddModel();
+        worksheetAddModel.orderName = null == orderName ? null : new String(orderName);
+        worksheetAddModel.orderId = null == orderId ? null : new String(orderId);
+        worksheetAddModel.typeName = null == typeName ? null : new String(typeName);
+        worksheetAddModel.typeId = null == typeId ? null : new String(typeId);
+        worksheetAddModel.title = null == title ? null : new String(title);
+        worksheetAddModel.content = null == content ? null : new String(content);
+        worksheetAddModel.uuid = null == uuid ? null : new String(uuid);
         return worksheetAddModel;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof WorksheetAddModel){
-            WorksheetAddModel temp= (WorksheetAddModel) obj;
-            return (TextUtils.equals(orderName,temp.orderName)
-            &&TextUtils.equals(orderId,temp.orderId)
-            &&TextUtils.equals(typeName,temp.typeName)
-            &&TextUtils.equals(typeId,temp.typeId)
-            &&TextUtils.equals(title,temp.title)
-            &&TextUtils.equals(content,temp.content)
-            &&TextUtils.equals(uuid,temp.uuid)
+        if (obj instanceof WorksheetAddModel) {
+            WorksheetAddModel temp = (WorksheetAddModel) obj;
+            return (TextUtils.equals(orderName, temp.orderName)
+                    && TextUtils.equals(orderId, temp.orderId)
+                    && TextUtils.equals(typeName, temp.typeName)
+                    && TextUtils.equals(typeId, temp.typeId)
+                    && TextUtils.equals(title, temp.title)
+                    && TextUtils.equals(content, temp.content)
+                    && TextUtils.equals(uuid, temp.uuid)
             );
 
-        }else{
+        } else {
             return false;
         }
     }
 
     @Override
     public String toString() {
-        return "orderName:"+orderName+",orderId:"+orderId+",typeName:"+typeName+",typeId:"+typeId+",title:"+title+",content:"+content+",uuid:"+uuid;
+        return "orderName:" + orderName + ",orderId:" + orderId + ",typeName:" + typeName + ",typeId:" + typeId + ",title:" + title + ",content:" + content + ",uuid:" + uuid;
+    }
+
+    public boolean isEmpty() {
+        return (
+                TextUtils.isEmpty(orderName) &&
+                        TextUtils.isEmpty(orderId) &&
+                        TextUtils.isEmpty(typeName) &&
+                        TextUtils.isEmpty(typeId) &&
+                        TextUtils.isEmpty(title) &&
+                        TextUtils.isEmpty(content)
+        );
     }
 }
