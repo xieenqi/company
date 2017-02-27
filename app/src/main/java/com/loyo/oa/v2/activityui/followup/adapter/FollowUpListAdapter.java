@@ -142,16 +142,16 @@ public class FollowUpListAdapter extends BaseAdapter {
         model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
         /** 设置跟进内容 */
         model.setContent(holder.ll_web, holder.tv_memo);
-//        if (null != model.content && !TextUtils.isEmpty(model.content)) {
-//            if (model.content.contains("<p>")) {
-//                holder.setContent(holder.ll_web, model.content);
-//                holder.tv_memo.setVisibility(View.GONE);
-//            } else {
-//                holder.tv_memo.setVisibility(View.VISIBLE);
-//                holder.tv_memo.setText(model.content);
-//                holder.ll_web.removeAllViews();
-//            }
-//        }
+        if (null != model.content && !TextUtils.isEmpty(model.content)) {
+            if (model.content.contains("<p>")) {
+                holder.setContent(holder.ll_web, model.content);
+                holder.tv_memo.setVisibility(View.GONE);
+            } else {
+                holder.tv_memo.setVisibility(View.VISIBLE);
+                holder.tv_memo.setText(model.content);
+                holder.ll_web.removeAllViews();
+            }
+        }
 
         /** 线索 */
         model.setCuleName(holder.tv_clue, holder.layout_clue);
@@ -337,18 +337,18 @@ public class FollowUpListAdapter extends BaseAdapter {
         /**
          * 设置图文混编
          */
-//        public void setContent(LinearLayout layout, String content) {
-//            layout.removeAllViews();
-//            for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
-//                if (ele.type.startsWith("img")) {
-//                    CommonImageView img = new CommonImageView(mContext, ele.data);
-//                    layout.addView(img);
-//                } else {
-//                    CommonTextVew tex = new CommonTextVew(mContext, ele.data);
-//                    layout.addView(tex);
-//                }
-//            }
-//            layout.setVisibility(View.VISIBLE);
-//        }
+        public void setContent(LinearLayout layout, String content) {
+            layout.removeAllViews();
+            for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
+                if (ele.type.startsWith("img")) {
+                    CommonImageView img = new CommonImageView(mContext, ele.data);
+                    layout.addView(img);
+                } else {
+                    CommonTextVew tex = new CommonTextVew(mContext, ele.data);
+                    layout.addView(tex);
+                }
+            }
+            layout.setVisibility(View.VISIBLE);
+        }
     }
 }
