@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.worksheet.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.DhcpInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,10 +45,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * 新建工单
  */
-public class WorksheetAddFragment extends Fragment implements View.OnClickListener {
+public class WorksheetAddFragment extends Fragment implements View.OnClickListener, UploadControllerCallback {
     private static final String WorksheetData = "worksheetData";
     private List<WorksheetAddModel> data;//原始数据，不能修改，保持原来的数据不变
     private List<WorksheetAddModel> copyData;//克隆的数据,可以修改，是最新的数据
@@ -60,8 +63,8 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
     private Activity context;
     private HashMap<String, ArrayList<UploadTask>> taskList = new HashMap<>();//上传任务队列:key是uuid
     private WorksheetAdapter worksheetAdapter;
-    private List<UploadController> controllerList=new ArrayList<>();
-
+    private List<UploadController> controllerList = new ArrayList<>();
+    private UploadController clickPosController;//点击的那个item的controller
 
     public WorksheetAddFragment() {
     }
@@ -73,23 +76,25 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             data = (List<WorksheetAddModel>) getArguments().getSerializable(WorksheetData);
-            if(null==data){
-                data=new ArrayList<>();
+            if (null == data) {
+                data = new ArrayList<>();
             }
-        }else{
-            data=new ArrayList<>();
+        } else {
+            data = new ArrayList<>();
         }
         //复制一个列表，注意，是复制对象，不能在原来的数据上面做修改
-        copyData=new ArrayList<>();
-        for (WorksheetAddModel item :data) {
+        copyData = new ArrayList<>();
+        for (WorksheetAddModel item : data) {
             copyData.add(item.clone());
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == rootView) {
@@ -106,36 +111,46 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
         }
         return rootView;
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 //返回
-                boolean isEdit=false;
+                boolean isEdit = false;
                 //和原来的实体对比，判断是不是修改过
-                if(data.size()==copyData.size()){
-                    int size=data.size();
+                if (data.size() == copyData.size()) {
+                    int size = data.size();
                     for (int i = 0; i < size; i++) {
-                        if(!data.get(i).equals(copyData.get(i))){
+                        if (!data.get(i).equals(copyData.get(i))) {
                             //修改过
-                            isEdit=true;
+                            isEdit = true;
                             break;
                         }
                     }
-                }else{
-                    isEdit=true;
+                } else {
+                    isEdit = true;
                 }
-                Toast.makeText(context,"放弃编辑:"+isEdit,Toast.LENGTH_LONG).show();
-//                mListener.onBack();
+                if (isEdit) {
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                            mListener.onBack();
+                        }
+                    }, "提示", "是否放弃编辑？确定后信息将不会保存。");
+                } else {
+                    mListener.onBack();
+                }
                 break;
             case R.id.img_title_right:
-                int size=copyData.size();
-                for (int i = 0; i < size; i++) {
-                    WorksheetAddModel worksheetAddModel = copyData.get(i);
-                    Log.i("ttttt", "onClick: "+worksheetAddModel.toString());
-                }
-               //替换成编辑以后的实体
-//                mListener.onSubmit(data);
+                //替换成编辑以后的实体
+                mListener.onSubmit(copyData);
                 break;
 
         }
@@ -164,8 +179,8 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                 }
                 holder.tv_type.setText(template.name);
                 WorksheetAddModel worksheetAddModel = copyData.get(position);
-                updateModelByField(worksheetAddModel,"typeId",template.id);
-                updateModelByField(worksheetAddModel,"typeName",template.name);
+                updateModelByField(worksheetAddModel, "typeId", template.id);
+                updateModelByField(worksheetAddModel, "typeName", template.name);
             }
         });
     }
@@ -199,17 +214,17 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                         WorksheetAddModel worksheetAddModel = new WorksheetAddModel();
                         worksheetAddModel.uuid = StringUtil.getUUID();
                         copyData.add(worksheetAddModel);
-                        UploadController controller=new UploadController(context,9);
+                        UploadController controller = new UploadController(context, 9);
                         controllerList.add(controller);//添加到队列
                         //通知插入了一个
-                        notifyItemInserted(getItemCount()-1);
+                        notifyItemInserted(getItemCount() - 1);
                         //等动画完成，刷新整个列表
                         footerHolder.flAdd.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 notifyDataSetChanged();
                             }
-                        },300);
+                        }, 300);
                     }
                 });
             } else {
@@ -232,23 +247,24 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                     public void onClick(View v) {
                         copyData.remove(position);
                         notifyItemRemoved(position);
+                        controllerList.remove(position);//移除选择的附件
                         //等动画完成，刷新整个列表
                         holder.tvDelete.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 notifyDataSetChanged();
                             }
-                        },300);
+                        }, 300);
                     }
                 });
                 UploadController uploadController = controllerList.get(position);
-                uploadController.setObserver(new ControllerObserver());
+                uploadController.setObserver(WorksheetAddFragment.this);
+                holder.gridView.setTag(position + "");//使用tag保存一下绑定数据的位置
                 uploadController.loadView(holder.gridView);
-
                 holder.tvNumTitle.setText("工单" + (position + 1));
                 WorksheetAddModel worksheetAddModel = copyData.get(position);
-                holder.et_title.addTextChangedListener(new FastSaveTextWatcher(worksheetAddModel,"title"));
-                holder.et_content.addTextChangedListener(new FastSaveTextWatcher(worksheetAddModel,"content"));
+                holder.et_title.addTextChangedListener(new FastSaveTextWatcher(worksheetAddModel, "title"));
+                holder.et_content.addTextChangedListener(new FastSaveTextWatcher(worksheetAddModel, "content"));
             }
 
         }
@@ -310,53 +326,85 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    //上传的回调
-    class  ControllerObserver implements UploadControllerCallback{
-        @Override
-        public void onRetryEvent(UploadController controller, UploadTask task) {
-            controller.retry();
-        }
-
-        @Override
-        public void onAddEvent(UploadController controller) {
-            PhotoPicker.builder()
-                    .setPhotoCount(9 - controller.count())
-                    .setShowCamera(true)
-                    .setPreviewEnabled(false)
-                    .start(context);
-        }
-
-        @Override
-        public void onItemSelected(UploadController controller, int index) {
-            ArrayList<UploadTask> taskList = controller.getTaskList();
-            ArrayList<String> selectedPhotos = new ArrayList<>();
-
-            for (int i = 0; i < taskList.size(); i++) {
-                String path = taskList.get(i).getValidatePath();
-                if (path.startsWith("file://")) ;
-                {
-                    path = path.replace("file://", "");
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            /*相册选择 回调*/
+            case PhotoPicker.REQUEST_CODE:
+                if (data != null) {
+                    String s = (String) clickPosController.getGridView().getTag();
+                    int position = Integer.parseInt(s);
+                    WorksheetAddModel worksheetAddModel = copyData.get(position);
+                    List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    for (String path : mSelectPath) {
+                        clickPosController.addUploadTask("file://" + path, null, worksheetAddModel.uuid);
+                    }
+                    clickPosController.reloadGridView();
                 }
-                selectedPhotos.add(path);
-            }
-            PhotoPreview.builder()
-                    .setPhotos(selectedPhotos)
-                    .setCurrentItem(index)
-                    .setShowDeleteButton(true)
-                    .start(context);
-        }
-
-        @Override
-        public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-            int count = controller.failedTaskCount();
-            if (count > 0) {
-                return;
-            }
-            if (taskList.size() > 0) {
-            } else {
-            }
+                break;
+            /*附件删除回调*/
+            case PhotoPreview.REQUEST_CODE:
+                if (data != null) {
+                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0) {
+                        clickPosController.removeTaskAt(index);
+                        clickPosController.reloadGridView();
+                    }
+                }
+                break;
         }
     }
+
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+        clickPosController = controller;
+        PhotoPicker.builder()
+                .setPhotoCount(9 - controller.count())
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(context, WorksheetAddFragment.this);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+        clickPosController = controller;
+
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<String> selectedPhotos = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://")) ;
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
+        }
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(context,WorksheetAddFragment.this);
+        controller.reloadGridView();
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            return;
+        }
+        if (taskList.size() > 0) {
+        } else {
+        }
+    }
+
     /**
      * 反射更新实体的值
      *
@@ -375,6 +423,7 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
 
     /**
      * 获取模型中需要更新的字段
+     *
      * @param worksheetAddModel
      * @param fieldName
      * @return
@@ -406,8 +455,8 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
         private WorksheetAddModel worksheetAddModel;
 
         private FastSaveTextWatcher(WorksheetAddModel worksheetAddModel, String fieldName) {
-           this.worksheetAddModel=worksheetAddModel;
-            field=getField(worksheetAddModel,fieldName);
+            this.worksheetAddModel = worksheetAddModel;
+            field = getField(worksheetAddModel, fieldName);
         }
 
         @Override
@@ -433,19 +482,21 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
     public void onAttach(Context context) {
         super.onAttach(context);
 
-//        if (context instanceof OnFragmentEventListener) {
-//            mListener = (OnFragmentEventListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString() + " must implement OnFragmentEventListener");
-//        }
+        if (context instanceof OnFragmentEventListener) {
+            mListener = (OnFragmentEventListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnFragmentEventListener");
+        }
         this.context = getActivity();
         sweetAlertDialogView = new SweetAlertDialogView(context);
     }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
+
     /**
      * 获取最后的数据
      *
