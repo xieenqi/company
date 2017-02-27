@@ -204,7 +204,7 @@ public class OrderFieldsFragment extends BaseFragment {
             mBundle.putSerializable("data", estimateData);
         }
         mBundle.putString("orderId", orderDetail!=null&&orderDetail.id!=null?orderDetail.id:orderId);
-        mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, capitalReturningRecordEdit);
+        mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
         Intent intent = new Intent(getActivity(), OrderEstimateListActivity.class);
         intent.putExtras(mBundle);
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_SOURCE);
