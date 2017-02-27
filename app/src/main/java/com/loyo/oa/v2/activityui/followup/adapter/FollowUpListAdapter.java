@@ -137,7 +137,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         /*联系人*/
         model.setContactName(holder.tv_contact);
         /** 电话录音设置 */
-        model.setPhoneRecord(holder.layout_phonely,holder.tv_audio_length,holder.iv_phone_call);
+        model.setPhoneRecord(holder.layout_phonely, holder.tv_audio_length, holder.iv_phone_call);
         /** 下次跟进时间 */
         model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
         /** 设置跟进内容 */
@@ -160,21 +160,10 @@ public class FollowUpListAdapter extends BaseAdapter {
         model.setContactRole(holder.tv_contact_tag, holder.ll_contact_tag);
 
         /** 客户地址 */
-        if (null != model.location && null != model.location.addr && !TextUtils.isEmpty(model.location.addr)) {
-            holder.layout_address.setVisibility(View.VISIBLE);
-            holder.tv_address.setText(model.location.addr);
-            holder.tv_address.setOnTouchListener(Global.GetTouch());
-        } else {
-            holder.layout_address.setVisibility(View.GONE);
-        }
+        model.setAddress(holder.layout_address, holder.tv_address);
 
         /** @的相关人员 */
-        if (null != model.atNameAndDepts) {
-            holder.tv_toast.setVisibility(View.VISIBLE);
-            holder.tv_toast.setText("@" + model.atNameAndDepts);
-        } else {
-            holder.tv_toast.setVisibility(View.GONE);
-        }
+        model.setAtPerson(holder.tv_toast);
 
         /** 录音语音 */
         if (null != model.audioInfo) {

@@ -98,7 +98,7 @@ public class FollowUpListModel implements Serializable {
 
     /*salesleadCompanyName customerName 根据此两字段判断是 客户 还是 线索*/
     public boolean isCustomer() {
-        if (null != customerName && !TextUtils.isEmpty(customerName)) {
+        if (!TextUtils.isEmpty(customerName)) {
             return true;
         }
         return false;
@@ -166,6 +166,25 @@ public class FollowUpListModel implements Serializable {
             }
         } else {
             layout_phonely.setVisibility(View.GONE);
+        }
+    }
+
+    /*@相关人员设置*/
+    public void setAtPerson(TextView tv_toast) {
+        if (!TextUtils.isEmpty(atNameAndDepts)) {
+            tv_toast.setText("@" + atNameAndDepts);
+        } else {
+            tv_toast.setVisibility(View.GONE);
+        }
+    }
+
+    public void setAddress(ViewGroup layout_address, TextView tv_address) {
+        if (null != addr && !TextUtils.isEmpty(location.addr)) {
+            layout_address.setVisibility(View.VISIBLE);
+            tv_address.setText(location.addr);
+            tv_address.setOnTouchListener(Global.GetTouch());
+        } else {
+            layout_address.setVisibility(View.GONE);
         }
     }
 

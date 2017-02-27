@@ -87,7 +87,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
         ViewHolder holder = null;
-        final FollowUpListModel followUpListModel = listModel.get(position);
+        final FollowUpListModel model = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customer_and_clue_followup, null);
@@ -122,74 +122,62 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
 
         holder.iv_comment.setOnTouchListener(Global.GetTouch());
 
-        holder.setContent(holder.ll_web, followUpListModel.content);
-        ImageLoader.getInstance().displayImage(followUpListModel.avatar, holder.iv_heading);
-        holder.tv_name.setText(followUpListModel.creatorName);
+        holder.setContent(holder.ll_web, model.content);
+        ImageLoader.getInstance().displayImage(model.avatar, holder.iv_heading);
+        holder.tv_name.setText(model.creatorName);
         /*联系人*/
-        followUpListModel.setContactName(holder.tv_contact);
+        model.setContactName(holder.tv_contact);
         holder.ll_contact_tag.setVisibility(View.VISIBLE);
-        holder.tv_contact_tag.setText("联系人角色: " + (TextUtils.isEmpty(followUpListModel.contactRole) ? "无" : followUpListModel.contactRole));
-        holder.tv_create_time.setText(DateTool.getHourMinute(followUpListModel.createAt));
-        holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# " + followUpListModel.typeName);
+        holder.tv_contact_tag.setText("联系人角色: " + (TextUtils.isEmpty(model.contactRole) ? "无" : model.contactRole));
+        holder.tv_create_time.setText(DateTool.getHourMinute(model.createAt));
+        holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# " + model.typeName);
 
         /** 电话录音设置 */
-        followUpListModel.setPhoneRecord(holder.layout_phonely,holder.tv_audio_length,holder.iv_phone_call);
+        model.setPhoneRecord(holder.layout_phonely,holder.tv_audio_length,holder.iv_phone_call);
 
         /** 下次跟进时间 */
-        followUpListModel.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
+        model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
 
         /** 设置跟进内容 */
-        if (null != followUpListModel.content && !TextUtils.isEmpty(followUpListModel.content)) {
-            if (followUpListModel.content.contains("<p>")) {
-                holder.setContent(holder.ll_web, followUpListModel.content);
+        if (null != model.content && !TextUtils.isEmpty(model.content)) {
+            if (model.content.contains("<p>")) {
+                holder.setContent(holder.ll_web, model.content);
                 holder.tv_memo.setVisibility(View.GONE);
             } else {
                 holder.tv_memo.setVisibility(View.VISIBLE);
-                holder.tv_memo.setText(followUpListModel.content);
+                holder.tv_memo.setText(model.content);
                 holder.ll_web.removeAllViews();
             }
         }
 
         /** 客户地址 */
-        if (null != followUpListModel.location.addr && !TextUtils.isEmpty(followUpListModel.location.addr)) {
-            holder.layout_address.setVisibility(View.VISIBLE);
-            holder.tv_address.setText(followUpListModel.location.addr);
-            holder.tv_address.setOnTouchListener(Global.GetTouch());
-        } else {
-            holder.layout_address.setVisibility(View.GONE);
-        }
-
+        model.setAddress(holder.layout_address, holder.tv_address);
 
         /** @的相关人员 */
-        if (null != followUpListModel.atNameAndDepts && !TextUtils.isEmpty(followUpListModel.atNameAndDepts)) {
-            holder.tv_toast.setVisibility(View.VISIBLE);
-            holder.tv_toast.setText("@" + followUpListModel.atNameAndDepts);
-        } else {
-            holder.tv_toast.setVisibility(View.GONE);
-        }
+        model.setAtPerson(holder.tv_toast);
 
         /** 录音语音 */
-        if (null != followUpListModel.audioInfo) {
+        if (null != model.audioInfo) {
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext, followUpListModel.audioInfo, audioPlayCallBack);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext, model.audioInfo, audioPlayCallBack);
             holder.lv_audio.setAdapter(audioAdapter);
         } else {
             holder.lv_audio.setVisibility(View.GONE);
         }
 
         /** 文件列表 数据绑定 */
-        if (null != followUpListModel.attachments && followUpListModel.attachments.size() > 0) {
+        if (null != model.attachments && model.attachments.size() > 0) {
             holder.lv_options.setVisibility(View.VISIBLE);
-            optionAdapter = new ListOrDetailsOptionsAdapter(mContext, followUpListModel.attachments);
+            optionAdapter = new ListOrDetailsOptionsAdapter(mContext, model.attachments);
             holder.lv_options.setAdapter(optionAdapter);
         } else {
             holder.lv_options.setVisibility(View.GONE);
         }
 
         /** 绑定图片与GridView监听 */
-        if (null != followUpListModel.imgAttachments && followUpListModel.imgAttachments.size() > 0) {
+        if (null != model.imgAttachments && model.imgAttachments.size() > 0) {
             holder.layout_gridview.setVisibility(View.VISIBLE);
-            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, followUpListModel.imgAttachments);
+            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, model.imgAttachments);
             holder.layout_gridview.setAdapter(gridViewAdapter);
 
             /*图片预览*/
@@ -197,7 +185,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("data", followUpListModel.imgAttachments);
+                    bundle.putSerializable("data", model.imgAttachments);
                     bundle.putInt("position", position);
                     bundle.putBoolean("isEdit", false);
                     MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
@@ -209,16 +197,16 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         }
 
         /** 绑定评论数据 */
-        if (null != followUpListModel.comments && followUpListModel.comments.size() > 0) {
+        if (null != model.comments && model.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, followUpListModel.comments, audioPlayCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, model.comments, audioPlayCallBack);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
             holder.lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    viewCrol.deleteCommentEmbl(followUpListModel.comments.get(position).id);
+                    viewCrol.deleteCommentEmbl(model.comments.get(position).id);
                     return false;
                 }
             });
@@ -231,7 +219,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         holder.iv_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewCrol.commentEmbl(followUpListModel.id, parentIndex, position);
+                viewCrol.commentEmbl(model.id, parentIndex, position);
             }
         });
 
@@ -239,11 +227,11 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         holder.tv_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (null != followUpListModel.location.loc) {
+                if (null != model.location.loc) {
                     Intent mIntent = new Intent(mContext, MapSingleView.class);
-                    mIntent.putExtra("la", Double.valueOf(followUpListModel.location.loc[0]));
-                    mIntent.putExtra("lo", Double.valueOf(followUpListModel.location.loc[1]));
-                    mIntent.putExtra("address", followUpListModel.location.addr);
+                    mIntent.putExtra("la", Double.valueOf(model.location.loc[0]));
+                    mIntent.putExtra("lo", Double.valueOf(model.location.loc[1]));
+                    mIntent.putExtra("address", model.location.addr);
                     mContext.startActivity(mIntent);
                 } else {
                     Toast.makeText(mContext, "GPS坐标不全!", Toast.LENGTH_SHORT).show();
@@ -257,8 +245,8 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 AudioModel audioModel = new AudioModel();
-                audioModel.url = followUpListModel.audioUrl;
-                audioModel.length = followUpListModel.audioLength;
+                audioModel.url = model.audioUrl;
+                audioModel.length = model.audioLength;
                 audioPlayCallBack.playVoice(audioModel, iv_phone_call);
             }
         });

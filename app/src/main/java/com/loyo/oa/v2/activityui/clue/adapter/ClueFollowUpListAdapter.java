@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.model.ClueFollowUpListModel;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
@@ -128,45 +127,47 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         holder.tv_contact.setText("姓名: " + (TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName));
 
         /** 电话录音设置 */
-        if (null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)) {
-            holder.layout_phonely.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(model.audioLength * 1000));
-            int audioLength = model.audioLength;
-            if (audioLength > 0 && audioLength <= 60) {
-                holder.iv_phone_call.setText("000");
-            } else if (audioLength > 60 && audioLength <= 300) {
-                holder.iv_phone_call.setText("00000");
-            } else if (audioLength > 300 && audioLength <= 600) {
-                holder.iv_phone_call.setText("0000000");
-            } else if (audioLength > 600 && audioLength <= 1200) {
-                holder.iv_phone_call.setText("000000000");
-            } else if (audioLength > 1200 && audioLength <= 1800) {
-                holder.iv_phone_call.setText("00000000000");
-            } else if (audioLength > 1800 && audioLength <= 3600) {
-                holder.iv_phone_call.setText("00000000000000");
-            } else if (audioLength > 3600) {
-                holder.iv_phone_call.setText("0000000000000000");
-            } else {
-                holder.iv_phone_call.setText("");
-            }
-        } else {
-            holder.layout_phonely.setVisibility(View.GONE);
-        }
+        model.setPhoneRecord(holder.layout_phonely, holder.tv_audio_length, holder.iv_phone_call);
+//        if (null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)) {
+//            holder.layout_phonely.setVisibility(View.VISIBLE);
+//            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(model.audioLength * 1000));
+//            int audioLength = model.audioLength;
+//            if (audioLength > 0 && audioLength <= 60) {
+//                holder.iv_phone_call.setText("000");
+//            } else if (audioLength > 60 && audioLength <= 300) {
+//                holder.iv_phone_call.setText("00000");
+//            } else if (audioLength > 300 && audioLength <= 600) {
+//                holder.iv_phone_call.setText("0000000");
+//            } else if (audioLength > 600 && audioLength <= 1200) {
+//                holder.iv_phone_call.setText("000000000");
+//            } else if (audioLength > 1200 && audioLength <= 1800) {
+//                holder.iv_phone_call.setText("00000000000");
+//            } else if (audioLength > 1800 && audioLength <= 3600) {
+//                holder.iv_phone_call.setText("00000000000000");
+//            } else if (audioLength > 3600) {
+//                holder.iv_phone_call.setText("0000000000000000");
+//            } else {
+//                holder.iv_phone_call.setText("");
+//            }
+//        } else {
+//            holder.layout_phonely.setVisibility(View.GONE);
+//        }
 
         /** 下次跟进时间 */
-        if (model.remindAt != 0) {
-            holder.layout_lasttime.setVisibility(View.VISIBLE);
-            holder.tv_last_time.setText("下次跟进: " + DateTool.getDateTimeFriendly(model.remindAt));
-            if (DateTool.isMoreCurrentTime(model.remindAt)) {
-                holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.text99));
-                holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li);
-            } else {
-                holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.red1));
-                holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li2);
-            }
-        } else {
-            holder.layout_lasttime.setVisibility(View.GONE);
-        }
+        model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
+//        if (model.remindAt != 0) {
+//            holder.layout_lasttime.setVisibility(View.VISIBLE);
+//            holder.tv_last_time.setText("下次跟进: " + DateTool.getDateTimeFriendly(model.remindAt));
+//            if (DateTool.isMoreCurrentTime(model.remindAt)) {
+//                holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.text99));
+//                holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li);
+//            } else {
+//                holder.tv_last_time.setTextColor(mContext.getResources().getColor(R.color.red1));
+//                holder.iv_lasttime.setImageResource(R.drawable.icon_remaind_li2);
+//            }
+//        } else {
+//            holder.layout_lasttime.setVisibility(View.GONE);
+//        }
 
         /** 设置跟进内容 */
         if (null != model.content && !TextUtils.isEmpty(model.content)) {
@@ -181,20 +182,10 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         }
 
         /** 客户地址 */
-        if (null != model.addr && !TextUtils.isEmpty(model.location.addr)) {
-            holder.layout_address.setVisibility(View.VISIBLE);
-            holder.tv_address.setText(model.location.addr);
-            holder.tv_address.setOnTouchListener(Global.GetTouch());
-        } else {
-            holder.layout_address.setVisibility(View.GONE);
-        }
+        model.setAddress(holder.layout_address, holder.tv_address);
 
         /** @的相关人员 */
-        if (null != model.atNameAndDepts && !TextUtils.isEmpty(model.atNameAndDepts)) {
-            holder.tv_toast.setText("@" + model.atNameAndDepts);
-        } else {
-            holder.tv_toast.setVisibility(View.GONE);
-        }
+        model.setAtPerson(holder.tv_toast);
 
         /** 录音语音 */
         if (null != model.audioInfo) {
