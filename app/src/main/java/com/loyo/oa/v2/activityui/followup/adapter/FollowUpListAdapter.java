@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -117,6 +118,9 @@ public class FollowUpListAdapter extends BaseAdapter {
             holder.layout_phonely = (LinearLayout) convertView.findViewById(R.id.layout_phonely);
             holder.layout_customer = (LinearLayout) convertView.findViewById(R.id.layout_customer);
             holder.layout_clue = (LinearLayout) convertView.findViewById(R.id.layout_clue);
+            holder.tv_contact_tag = (TextView) convertView.findViewById(R.id.tv_contact_tag);
+            holder.ll_contact_tag = (LinearLayout) convertView.findViewById(R.id.ll_contact_tag);
+            holder.iv_lasttime = (ImageView) convertView.findViewById(R.id.iv_lasttime);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -127,54 +131,15 @@ public class FollowUpListAdapter extends BaseAdapter {
             ImageLoader.getInstance().displayImage(model.creator.avatar, holder.iv_heading);
             holder.tv_name.setText(model.creator.name);
         }
-        holder.tv_customer.setText(model.customerName);
+        /*跟进行为*/
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# " + model.typeName);
-        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createAt));
-
-        String contact = TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName;
-        if (null != model.contactPhone && !TextUtils.isEmpty(model.contactPhone) && !contact.equals("无联系人信息")) {
-            holder.tv_contact.setText(contact + "(" + model.contactPhone + ")");
-        } else {
-            holder.tv_contact.setText(contact);
-        }
-
-
+        holder.tv_create_time.setText("创建时间: " + DateTool.getDateTimeFriendly(model.createAt));
+        /*联系人*/
+        model.setContactName(holder.tv_contact);
         /** 电话录音设置 */
-        if (null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)) {
-            holder.layout_phonely.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(model.audioLength * 1000));
-            int audioLength = model.audioLength;
-            if (audioLength > 0 && audioLength <= 60) {
-                holder.iv_phone_call.setText("000");
-            } else if (audioLength > 60 && audioLength <= 300) {
-                holder.iv_phone_call.setText("00000");
-            } else if (audioLength > 300 && audioLength <= 600) {
-                holder.iv_phone_call.setText("0000000");
-            } else if (audioLength > 600 && audioLength <= 1200) {
-                holder.iv_phone_call.setText("00000000");
-            } else if (audioLength > 1200 && audioLength <= 1800) {
-                holder.iv_phone_call.setText("000000000");
-            } else if (audioLength > 1800 && audioLength <= 3600) {
-                holder.iv_phone_call.setText("0000000000");
-            } else if (audioLength > 3600) {
-                holder.iv_phone_call.setText("00000000000");
-            } else {
-                holder.iv_phone_call.setText("");
-            }
-
-        } else {
-            holder.layout_phonely.setVisibility(View.GONE);
-        }
-
+        model.setPhoneRecord(holder.layout_phonely, holder.tv_audio_length, holder.iv_phone_call);
         /** 下次跟进时间 */
-        if (model.remindAt != 0) {
-            holder.layout_lasttime.setVisibility(View.VISIBLE);
-//            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt + "", "yyyy-MM-dd HH:mm"));
-            holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.remindAt));
-        } else {
-            holder.layout_lasttime.setVisibility(View.GONE);
-        }
-
+        model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
         /** 设置跟进内容 */
         if (null != model.content && !TextUtils.isEmpty(model.content)) {
             if (model.content.contains("<p>")) {
@@ -188,40 +153,17 @@ public class FollowUpListAdapter extends BaseAdapter {
         }
 
         /** 线索 */
-        if (null != model.salesleadCompanyName && !TextUtils.isEmpty(model.salesleadCompanyName)) {
-            holder.layout_clue.setVisibility(View.VISIBLE);
-            holder.tv_clue.setText(model.salesleadCompanyName);
-            holder.tv_clue.setOnTouchListener(Global.GetTouch());
-        } else {
-            holder.layout_clue.setVisibility(View.GONE);
-        }
-
+        model.setCuleName(holder.tv_clue, holder.layout_clue);
         /** 客户姓名 */
-        if (null != model.customerName && !TextUtils.isEmpty(model.customerName)) {
-            holder.layout_customer.setVisibility(View.VISIBLE);
-            holder.tv_customer.setText(model.customerName);
-            holder.tv_customer.setOnTouchListener(Global.GetTouch());
-        } else {
-            holder.layout_customer.setVisibility(View.GONE);
-        }
+        model.setCusomerName(holder.tv_customer, holder.layout_customer);
+        /*联系人角色 */
+        model.setContactRole(holder.tv_contact_tag, holder.ll_contact_tag);
 
         /** 客户地址 */
-        if (null != model.location && null != model.location.addr && !TextUtils.isEmpty(model.location.addr)) {
-            holder.layout_address.setVisibility(View.VISIBLE);
-            holder.tv_address.setText(model.location.addr);
-            holder.tv_address.setOnTouchListener(Global.GetTouch());
-        } else {
-            holder.layout_address.setVisibility(View.GONE);
-        }
-
+        model.setAddress(holder.layout_address, holder.tv_address);
 
         /** @的相关人员 */
-        if (null != model.atNameAndDepts) {
-            holder.tv_toast.setVisibility(View.VISIBLE);
-            holder.tv_toast.setText("@" + model.atNameAndDepts);
-        } else {
-            holder.tv_toast.setVisibility(View.GONE);
-        }
+        model.setAtPerson(holder.tv_toast);
 
         /** 录音语音 */
         if (null != model.audioInfo) {
@@ -274,7 +216,7 @@ public class FollowUpListAdapter extends BaseAdapter {
             holder.lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    viewCrol.deleteCommentEmbl(finalHolder.lv_comment,position,model.comments.get(position).id);
+                    viewCrol.deleteCommentEmbl(finalHolder.lv_comment, position, model.comments.get(position).id);
                     return false;
                 }
             });
@@ -373,6 +315,8 @@ public class FollowUpListAdapter extends BaseAdapter {
         TextView tv_clue;        /*线索*/
         TextView tv_audio_length;/*通话录音时间*/
         TextView iv_phone_call;
+        TextView tv_contact_tag; /*联系角色name */
+        ImageView iv_lasttime;
 
         LinearLayout ll_web;
         LinearLayout layout_comment;
@@ -381,6 +325,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         LinearLayout layout_lasttime;
         LinearLayout layout_clue;
         LinearLayout layout_phonely;
+        LinearLayout ll_contact_tag; /*联系角色*/
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
         CustomerListView lv_options; /*文件列表区*/

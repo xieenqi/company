@@ -1,8 +1,21 @@
 package com.loyo.oa.v2.activityui.followup.model;
 
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
+import com.loyo.oa.v2.common.Global;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,9 +43,9 @@ public class FollowUpListModel implements Serializable {
     public ArrayList<Attachment> attachments;    //文件
     public ArrayList<Attachment> imgAttachments; //图片
     public ArrayList<AudioModel> audioInfo;     //语音录音
-    public ArrayList<String> atUserIds;
     public ArrayList<CommentModel> comments;  //评论内容
     public Location location;                 //位置信息
+    public String addr;
 
     public String typeName;
     public String contactName;
@@ -49,6 +62,130 @@ public class FollowUpListModel implements Serializable {
     public class Location {
         public String addr;
         public String[] loc;
+    }
+
+    public void setCuleName(TextView tv_clue, ViewGroup layout_clue) {
+        /** 线索 */
+        if (!isCustomer()) {
+            SpannableStringBuilder tt = new SpannableStringBuilder();
+            tt.append("线索: ");
+            tt.append(salesleadCompanyName);
+            ForegroundColorSpan span = new ForegroundColorSpan(Color.parseColor("#2c9dfc"));
+            tt.setSpan(span, 3, tt.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            layout_clue.setVisibility(View.VISIBLE);
+            tv_clue.setText(tt);
+            tv_clue.setOnTouchListener(Global.GetTouch());
+        } else {
+            layout_clue.setVisibility(View.GONE);
+        }
+    }
+
+    public void setCusomerName(TextView tv_customer, ViewGroup layout_customer) {
+        /** 客户 */
+        if (isCustomer()) {
+            SpannableStringBuilder tt = new SpannableStringBuilder();
+            tt.append("客户: ");
+            tt.append(customerName);
+            ForegroundColorSpan span = new ForegroundColorSpan(Color.parseColor("#2c9dfc"));
+            tt.setSpan(span, 3, tt.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            layout_customer.setVisibility(View.VISIBLE);
+            tv_customer.setText(tt);
+            tv_customer.setOnTouchListener(Global.GetTouch());
+        } else {
+            layout_customer.setVisibility(View.GONE);
+        }
+    }
+
+    /*salesleadCompanyName customerName 根据此两字段判断是 客户 还是 线索*/
+    public boolean isCustomer() {
+        if (!TextUtils.isEmpty(customerName)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setContactRole(TextView tv_contact_tag, ViewGroup ll_contact_tag) {
+        if (isCustomer()) {
+            ll_contact_tag.setVisibility(View.VISIBLE);
+            tv_contact_tag.setText("联系人角色: " + (TextUtils.isEmpty(contactRole) ? "无" : contactRole));
+        } else {
+            ll_contact_tag.setVisibility(View.GONE);
+        }
+    }
+
+    /*下次跟进时间的设置  默认是红色 没有提醒过  提醒过就是灰色*/
+    public void setFullowUpTime(TextView tv_last_time, ImageView iv_lasttime, ViewGroup layout_lasttime) {
+        if (remindAt != 0) {
+            layout_lasttime.setVisibility(View.VISIBLE);
+            tv_last_time.setText("下次跟进: " + DateTool.getDateTimeFriendly(remindAt));
+            if (DateTool.isMoreCurrentTime(remindAt)) {
+                tv_last_time.setTextColor(Color.parseColor("#999999"));
+                iv_lasttime.setImageResource(R.drawable.icon_remaind_li);
+            } else {
+                tv_last_time.setTextColor(Color.parseColor("#f5625a"));
+                iv_lasttime.setImageResource(R.drawable.icon_remaind_li2);
+            }
+        } else {
+            layout_lasttime.setVisibility(View.GONE);
+        }
+    }
+
+    public void setContactName(TextView tv_contact) {
+        String contact = "联系人: " + (TextUtils.isEmpty(contactName) ? "无联系人信息" : contactName);
+        if (!TextUtils.isEmpty(contactPhone)) {
+            tv_contact.setText(contact + "(" + contactPhone + ")");
+        } else {
+            tv_contact.setText(contact);
+        }
+    }
+
+    /**
+     * 商务电话录音设置
+     */
+    public void setPhoneRecord(ViewGroup layout_phonely, TextView tv_audio_length, TextView iv_phone_call) {
+        if (null != audioUrl && !TextUtils.isEmpty(audioUrl)) {
+            layout_phonely.setVisibility(View.VISIBLE);
+            tv_audio_length.setText(DateTool.int2time(audioLength * 1000));
+            int length = audioLength;
+            if (length > 0 && length <= 60) {
+                iv_phone_call.setText("000");
+            } else if (length > 60 && length <= 300) {
+                iv_phone_call.setText("00000");
+            } else if (length > 300 && length <= 600) {
+                iv_phone_call.setText("0000000");
+            } else if (length > 600 && length <= 1200) {
+                iv_phone_call.setText("00000000");
+            } else if (length > 1200 && length <= 1800) {
+                iv_phone_call.setText("000000000");
+            } else if (length > 1800 && length <= 3600) {
+                iv_phone_call.setText("0000000000");
+            } else if (length > 3600) {
+                iv_phone_call.setText("00000000000");
+            } else {
+                iv_phone_call.setText("");
+            }
+        } else {
+            layout_phonely.setVisibility(View.GONE);
+        }
+    }
+
+    /*@相关人员设置*/
+    public void setAtPerson(TextView tv_toast) {
+        if (!TextUtils.isEmpty(atNameAndDepts)) {
+            tv_toast.setText("@" + atNameAndDepts);
+        } else {
+            tv_toast.setVisibility(View.GONE);
+        }
+    }
+
+    public void setAddress(ViewGroup layout_address, TextView tv_address) {
+        if (null != addr && !TextUtils.isEmpty(location.addr)) {
+            layout_address.setVisibility(View.VISIBLE);
+            tv_address.setText(location.addr);
+            tv_address.setOnTouchListener(Global.GetTouch());
+        } else {
+            layout_address.setVisibility(View.GONE);
+        }
     }
 
 }
