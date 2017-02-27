@@ -15,9 +15,11 @@ import com.loyo.oa.audio.player.AudioPlayerView;
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
 import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpGroupAdapter;
+import com.loyo.oa.v2.activityui.clue.adapter.FollowUpExpandable;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
@@ -45,6 +47,8 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.loyo.oa.v2.R.id.listView;
+
 /**
  * 【线索下】跟进动态
  * Created by yyy on 16/11/18.
@@ -58,7 +62,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private ViewGroup layout_back;
     private TextView tv_title;
     private TextView voiceView;
-    private PullToRefreshListView listView;
+    private PullToRefreshExpandableListView exp_listview;
     private ViewGroup layout_add;
     private boolean isMyUser;
     private boolean isPullOrDown;
@@ -74,7 +78,6 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private int playVoiceSize = 0;
     private AudioPlayerView audioPlayer;
     private TextView lastView;
-    private String lastUrl = "";
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
     private ClueFollowUpListPresenter mPresenter;
@@ -139,7 +142,6 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         getData(false);
     }
 
-
     private void getIntenData() {//intent.putExtra(ExtraAndResult.RESULT_NAME, data.data.sales.responsorName);
         Intent intent = getIntent();
         clueId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
@@ -160,7 +162,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
-        listView = (PullToRefreshListView) findViewById(R.id.listView_legworks);
+        exp_listview = (PullToRefreshExpandableListView) findViewById(R.id.exp_listview);
         tv_title = (TextView) findViewById(R.id.tv_title);
 
         layout_bottom_voice = (LinearLayout) findViewById(R.id.layout_bottom_voice);
@@ -169,8 +171,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         layout_add.setOnClickListener(this);
         layout_back.setOnClickListener(this);
         layout_back.setOnTouchListener(Global.GetTouch());
-        listView.setMode(PullToRefreshBase.Mode.BOTH);
-        listView.setOnRefreshListener(this);
+//        listView.setMode(PullToRefreshBase.Mode.BOTH);
+        exp_listview.setOnRefreshListener(this);
 
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid, this);
         layout_bottom_menu.addView(msgAudiomMenu);
@@ -182,7 +184,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("跟进动态");
 
-        Utils.btnSpcHideForListViewCus(mContext, listView.getRefreshableView(),
+        Utils.btnSpcHideForListViewCus(mContext, exp_listview.getRefreshableView(),
                 layout_add,
                 layout_bottom_menu, msgAudiomMenu.getEditComment());
 
@@ -233,18 +235,31 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         }
     }
 
+    FollowUpExpandable adapter;
+
     /**
      * 数据绑定
      */
     public void bindData() {
-        if (null == mAdapter) {
+        if (null == adapter) {
             mAdapter = new ClueFollowUpGroupAdapter(mContext, listModel, this, this);
-            listView.setAdapter(mAdapter);
+            FollowUpExpandable adapter = new FollowUpExpandable(mContext, this, this);
+            exp_listview.getRefreshableView().setAdapter(adapter);
+            adapter.setData(listModel);
         } else {
-            mAdapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
         }
+        expand();
     }
 
+    /**
+     * 展开listview
+     */
+    protected void expand() {
+        for (int i = 0; i < listModel.size(); i++) {
+            exp_listview.getRefreshableView().expandGroup(i, false);//true 自动滑到底部
+        }
+    }
 
     /**
      * 评论操作
@@ -281,7 +296,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         layout_bottom_menu.addView(msgAudiomMenu);
         mPagination.setPageIndex(1);
         needToRefresh = true;//如果是增加，或者是修改了，要重新刷新，避免存在老数据
-        onPullDownToRefresh(listView);
+        onPullDownToRefresh(exp_listview);
     }
 
     /**
@@ -330,7 +345,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
 
     @Override
     public void rushListData(boolean shw) {
-        onPullDownToRefresh(listView);
+        onPullDownToRefresh(exp_listview);
     }
 
     /**
@@ -354,7 +369,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
      */
     @Override
     public void getListDataSuccesseEmbl(PaginationX<ClueFollowGroupModel> paginationX) {
-        listView.onRefreshComplete();
+        exp_listview.onRefreshComplete();
         if (isPullOrDown || needToRefresh) {//增加了的，就要清除老数据
             listModel.clear();
             needToRefresh = false;
@@ -371,7 +386,6 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
             dateIndex = model.date;
         }
         bindData();
-        Log.i("httpjie", "getListDataSuccesseEmbl: ");
         ll_loading.setStatus(LoadingLayout.Success);
         if (listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
@@ -382,7 +396,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
      */
     @Override
     public void getListDataErrorEmbl() {
-        listView.onRefreshComplete();
+        exp_listview.onRefreshComplete();
     }
 
     @Override
@@ -427,14 +441,12 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
                 LogUtil.dee("另一条");
                 //audioPlayer.onResume(textView);
                 audioPlayer.onStart(audioModel, textView);
-                lastUrl = audioModel.url;
                 lastView = textView;
             }
         } else {
             LogUtil.dee("第一次播放");
             //audioPlayer.onResume(textView);
             audioPlayer.onStart(audioModel, textView);
-            lastUrl = audioModel.url;
             lastView = textView;
         }
         playVoiceSize++;
@@ -461,4 +473,6 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     public void showMsg(String message) {
         LoyoToast.info(this, message);
     }
+
+
 }

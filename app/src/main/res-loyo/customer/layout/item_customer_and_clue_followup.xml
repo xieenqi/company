@@ -203,7 +203,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/icon_contacter" />
+                android:src="@drawable/icon_contacter" />
 
             <TextView
                 android:id="@+id/tv_contact"
@@ -295,7 +295,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:visibility="gone">
+        >
 
         <include layout="@layout/include_solid_line_left" />
     </LinearLayout>

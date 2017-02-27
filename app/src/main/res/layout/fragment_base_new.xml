@@ -42,36 +42,6 @@
                     android:smoothScrollbar="true"
                     ptr:ptrMode="both" />
             </com.library.module.widget.loading.LoadingLayout>
-            <!--<ViewStub-->
-            <!--android:id="@+id/vs_nodata"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:inflatedId="@+id/layout_nodata"-->
-            <!--android:layout="@layout/item_layout_nodata"/>-->
-
-            <!--<FrameLayout-->
-            <!--android:id="@+id/layout_category"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@android:color/transparent"-->
-            <!--android:paddingLeft="@dimen/dimen_70"-->
-            <!--android:paddingRight="@dimen/dimen_70"-->
-            <!--android:visibility="gone">-->
-
-            <!--<ListView-->
-            <!--android:id="@+id/lv_wftype_category"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@drawable/round_bg_shpe"-->
-            <!--android:cacheColorHint="#00000000"-->
-            <!--android:choiceMode="singleChoice"-->
-            <!--android:divider="@color/lineCC"-->
-            <!--android:dividerHeight="@dimen/dimen_0.5"-->
-            <!--android:padding="@dimen/dimen_0.5"-->
-            <!--android:scrollbars="none">-->
-            <!--</ListView>-->
-
-            <!--</FrameLayout>-->
 
             <Button
                 android:id="@+id/btn_add"
