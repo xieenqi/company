@@ -81,7 +81,8 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
     private ClueFollowUpListPresenter mPresenter;
-    private ClueFollowUpGroupAdapter mAdapter;
+    //    private ClueFollowUpGroupAdapter mAdapter;
+    private FollowUpExpandable adapter;
 
     private ArrayList<ClueFollowGroupModel> listModel = new ArrayList<>();
     private PaginationX<ClueFollowGroupModel> mPagination = new PaginationX<>(20);
@@ -235,15 +236,14 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         }
     }
 
-    FollowUpExpandable adapter;
 
     /**
      * 数据绑定
      */
     public void bindData() {
         if (null == adapter) {
-            mAdapter = new ClueFollowUpGroupAdapter(mContext, listModel, this, this);
-            FollowUpExpandable adapter = new FollowUpExpandable(mContext, this, this);
+//            mAdapter = new ClueFollowUpGroupAdapter(mContext, listModel, this, this);
+            adapter = new FollowUpExpandable(mContext, this, this);
             exp_listview.getRefreshableView().setAdapter(adapter);
             adapter.setData(listModel);
         } else {
@@ -359,7 +359,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
         listModel.get(parent).activities.get(child).comments.add(model);
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 //        isPullOrDown = true;
 //        getData(false);
     }
