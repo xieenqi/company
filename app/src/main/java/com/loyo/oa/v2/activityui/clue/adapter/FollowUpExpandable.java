@@ -20,7 +20,11 @@ import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
+import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
+import com.loyo.oa.v2.activityui.commonview.CommonImageView;
+import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
+import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
@@ -164,17 +168,16 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
 
         /** 设置跟进内容 */
-        model.setContent(holder.ll_web, holder.tv_memo);
-//        if (null != model.content && !TextUtils.isEmpty(model.content)) {
-//            if (model.content.contains("<p>")) {
-//                holder.setContent(holder.ll_web, model.content);
-//                holder.tv_memo.setVisibility(View.GONE);
-//            } else {
-//                holder.tv_memo.setVisibility(View.VISIBLE);
-//                holder.tv_memo.setText(model.content);
-//                holder.ll_web.removeAllViews();
-//            }
-//        }
+        if (null != model.content && !TextUtils.isEmpty(model.content)) {
+            if (model.content.contains("<p>")) {
+                holder.setContent(holder.ll_web, model.content);
+                holder.tv_memo.setVisibility(View.GONE);
+            } else {
+                holder.tv_memo.setVisibility(View.VISIBLE);
+                holder.tv_memo.setText(model.content);
+                holder.ll_web.removeAllViews();
+            }
+        }
 
         /** 客户地址 */
         model.setAddress(holder.layout_address, holder.tv_address);
@@ -302,22 +305,22 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         ImageView iv_comment;        /*评论按钮*/
         ImageView iv_lasttime;     /*下次跟进图标*/
 
-//        /**
-//         * 设置图文混编
-//         */
-//        public void setContent(LinearLayout layout, String content) {
-//            layout.removeAllViews();
-//            for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
-//                if (ele.type.startsWith("img")) {
-//                    CommonImageView img = new CommonImageView(mContext, ele.data);
-//                    layout.addView(img);
-//                } else {
-//                    CommonTextVew tex = new CommonTextVew(mContext, ele.data);
-//                    layout.addView(tex);
-//                }
-//            }
-//            layout.setVisibility(View.VISIBLE);
-//        }
+        /**
+         * 设置图文混编
+         */
+        public void setContent(LinearLayout layout, String content) {
+            layout.removeAllViews();
+            for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
+                if (ele.type.startsWith("img")) {
+                    CommonImageView img = new CommonImageView(mContext, ele.data);
+                    layout.addView(img);
+                } else {
+                    CommonTextVew tex = new CommonTextVew(mContext, ele.data);
+                    layout.addView(tex);
+                }
+            }
+            layout.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
