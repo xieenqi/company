@@ -73,7 +73,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-
         <!-- android:theme="@style/AppStartLoadTranslucent" -->
         <activity
             android:name=".activityui.home.LauncherActivity_"
@@ -380,7 +379,6 @@
             android:name=".activityui.setting.SystemMessageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".customermanagement.activity.CustomerContractAddActivity"
             android:screenOrientation="portrait"
@@ -558,7 +556,6 @@
             android:name=".activityui.wfinstance.WfInEditActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activityui.discuss.MyDiscussActivity"
             android:launchMode="singleTop"
@@ -814,7 +811,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activityui.setting.RenewalMobileTwoActivty"
             android:launchMode="singleTop"
@@ -1024,6 +1020,11 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="ukuaiqi" />
+
+        <activity android:name=".order.activity.WorksheetAddTestActivity"
+            android:enabled="true"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
