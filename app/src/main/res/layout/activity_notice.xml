@@ -8,32 +8,33 @@
 
     <include layout="@layout/include_common_title" />
 
-    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/ll_loading"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:isFirstVisible="true">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ll_loading"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:isFirstVisible="true">
 
             <com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2
                 android:id="@+id/lv_notice"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="false" />
+        </com.library.module.widget.loading.LoadingLayout>
 
-            <Button
-                android:id="@+id/btn_notice_add"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="3dp"
-                android:background="@drawable/bg_btn_circle"
-                android:textColor="@color/white"
-                android:visibility="gone" />
-        </RelativeLayout>
-    </com.library.module.widget.loading.LoadingLayout>
+        <Button
+            android:id="@+id/btn_notice_add"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="3dp"
+            android:background="@drawable/bg_btn_circle"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 </LinearLayout>
