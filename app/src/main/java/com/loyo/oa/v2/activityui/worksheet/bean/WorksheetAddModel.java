@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.tool.StringUtil;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
  * Created by jie on 17/2/24.
  */
 
-public class WorksheetAddModel implements Cloneable {
+public class WorksheetAddModel implements Cloneable,Serializable{
     public String orderName;//订单名字
     public String orderId;//订单id
     public String typeName;//工单类型
@@ -74,5 +75,18 @@ public class WorksheetAddModel implements Cloneable {
                         TextUtils.isEmpty(title) &&
                         TextUtils.isEmpty(content)
         );
+    }
+
+    /**
+     * 验证数据，直接返回错误类型，如果没错，就返回null
+     * @return
+     */
+    public String verify(){
+        if(TextUtils.isEmpty(typeId)){
+            return "工单类型未选择";
+        }else if(TextUtils.isEmpty(title)){
+            return "工单标题未填写";
+        }
+        return null;
     }
 }

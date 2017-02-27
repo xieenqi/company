@@ -11,6 +11,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetAddModel;
 import com.loyo.oa.v2.activityui.worksheet.fragment.WorksheetAddFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorksheetAddTestActivity extends AppCompatActivity implements WorksheetAddFragment.OnFragmentEventListener {
@@ -22,13 +23,25 @@ public class WorksheetAddTestActivity extends AppCompatActivity implements Works
         setContentView(R.layout.activity_worksheet_add_test);
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.test_fl,WorksheetAddFragment.newInstance(null),"add");
+        ArrayList<WorksheetAddModel> list=new ArrayList<>();
+        WorksheetAddModel a=new WorksheetAddModel();
+        a.orderId="dfdsa";
+        a.title="WorksheetAddModel";
+        a.content="asdf";
+        a.typeId="asdf";
+        a.typeName="asdf";
+        list.add(a);
+        WorksheetAddModel b = a.clone();
+        b.title="list.add(a);";
+        list.add(b);
+
+        fragmentTransaction.add(R.id.test_fl,WorksheetAddFragment.newInstance(list),"add");
         fragmentTransaction.commit();
     }
 
     @Override
-    public void onSubmit(List<WorksheetAddModel> data) {
-        Log.i(TAG, "onSubmit: ");
+    public void onWorksheetSubmit(List<WorksheetAddModel> data) {
+        Log.i(TAG, "onWorksheetSubmit: ");
         int size=data.size();
         for (int i = 0; i < size; i++) {
             WorksheetAddModel worksheetAddModel = data.get(i);
@@ -37,14 +50,8 @@ public class WorksheetAddTestActivity extends AppCompatActivity implements Works
     }
 
     @Override
-    public void onBack() {
+    public void onWorksheetBack() {
         Log.i(TAG, "onBack: ");
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "onActivityResult: !!!");
     }
 }

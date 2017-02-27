@@ -1,16 +1,13 @@
 package com.loyo.oa.v2.activityui.worksheet.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.DhcpInfo;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +26,11 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetAddModel;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.PaymentPopView;
-import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 
@@ -43,8 +38,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -128,7 +121,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                             break;
                         }
                     }
-                } else if(data.size()==0) {
+                } else if (data.size() == 0) {
                     //创建新的数据，并且填入的有值
                     int size = copyData.size();
                     for (int i = 0; i < size; i++) {
@@ -149,31 +142,55 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             sweetAlertDialog.dismiss();
-                            mListener.onBack();
+                            mListener.onWorksheetBack();
                         }
                     }, "提示", "是否放弃编辑？确定后信息将不会保存。");
                 } else {
-                    mListener.onBack();
+                    mListener.onWorksheetBack();
                 }
                 break;
             case R.id.img_title_right:
+                //验证数据没有通过
+                if (!verify()) return;
                 //替换成编辑以后的实体
-                UploadController uploaders=new UploadController(mActivity,Integer.MAX_VALUE);
+                UploadController uploaders = new UploadController(mActivity, Integer.MAX_VALUE);
                 for (UploadController uploader : controllerList) {
                     uploaders.addAllTask(uploader.getTaskList());
                 }
-                if(uploaders.getTaskList().size()>0){
+                if (uploaders.getTaskList().size() > 0) {
                     //有附件，需要先上传附件
                     showLoading2("");
                     uploaders.setObserver(this);
                     uploaders.startUpload();
                     uploaders.notifyCompletionIfNeeded();
-                }else{
-                    mListener.onSubmit(copyData);
+                } else {
+                    mListener.onWorksheetSubmit(copyData);
                 }
                 break;
 
         }
+    }
+
+    //验证数据的有效性
+    private boolean verify() {
+        int size = copyData.size();
+        for (int i = 0; i < size; i++) {
+            String verify = copyData.get(i).verify();
+            if (null != verify) {
+                verify = "“工单" + (i + 1) + "”" + verify;
+                Toast.makeText(mActivity, verify, Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+        for (int i = 0; i < size; i++) {
+            for (int j = i+1; j < size; j++) {
+                if (TextUtils.equals(copyData.get(i).title, copyData.get(j).title)) {
+                    Toast.makeText(mActivity, "工单" + (i + 1) + "和" + (j + 1) + "标题重复", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void chooseWorksheetType(final WorksheetAdapter.WorksheetHolder holder, final int position) {
@@ -265,7 +282,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 holder.tvDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(copyData.get(position).isEmpty()&&controllerList.get(position).getTaskList().size()<=0){
+                        if (copyData.get(position).isEmpty() && controllerList.get(position).getTaskList().size() <= 0) {
                             //没有填入数据，并且没有添加图片，直接删除
                             copyData.remove(position);
                             notifyItemRemoved(position);
@@ -277,7 +294,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                                     notifyDataSetChanged();
                                 }
                             }, 300);
-                        }else{
+                        } else {
                             sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -299,11 +316,19 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                                         }
                                     }, 300);
                                 }
-                            },"提示","确定删除“工单"+(position+1)+"”？");
+                            }, "提示", "确定删除“工单" + (position + 1) + "”？");
                         }
                     }
                 });
-                UploadController uploadController = controllerList.get(position);
+
+                UploadController uploadController = null;
+                if (controllerList.size() <= position) {
+                    //如果不存在上传组建，就新建一个
+                    uploadController = new UploadController(mActivity, 9);
+                    controllerList.add(uploadController);//添加到队列
+                } else {
+                    uploadController = controllerList.get(position);
+                }
                 uploadController.setObserver(WorksheetAddFragment.this);
                 holder.gridView.setTag(position + "");//使用tag保存一下绑定数据的位置
                 uploadController.loadView(holder.gridView);
@@ -314,6 +339,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 holder.et_content.addTextChangedListener(new FastSaveTextWatcher(worksheetAddModel, "content"));
             }
         }
+
         @Override
         public int getItemCount() {
             //因为有一个底部按钮，所以＋1
@@ -435,7 +461,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 .setPhotos(selectedPhotos)
                 .setCurrentItem(index)
                 .setShowDeleteButton(true)
-                .start(mActivity,WorksheetAddFragment.this);
+                .start(mActivity, WorksheetAddFragment.this);
         controller.reloadGridView();
     }
 
@@ -447,7 +473,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             LoyoToast.info(mActivity, count + "个附件上传失败，请重试或者删除");
             return;
         }
-        mListener.onSubmit(copyData);
+        mListener.onWorksheetSubmit(copyData);
     }
 
     /**
@@ -553,8 +579,8 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
      * 需要在activity中实现的接口
      */
     public interface OnFragmentEventListener {
-        void onSubmit(List<WorksheetAddModel> data);
+        void onWorksheetSubmit(List<WorksheetAddModel> data);
 
-        void onBack();
+        void onWorksheetBack();
     }
 }
