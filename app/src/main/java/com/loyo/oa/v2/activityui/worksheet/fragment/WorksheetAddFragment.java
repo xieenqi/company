@@ -36,6 +36,7 @@ import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.lang.reflect.Field;
@@ -50,7 +51,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * 新建工单
  */
-public class WorksheetAddFragment extends Fragment implements View.OnClickListener, UploadControllerCallback {
+public class WorksheetAddFragment extends BaseFragment implements View.OnClickListener, UploadControllerCallback {
     private static final String WorksheetData = "worksheetData";
     private List<WorksheetAddModel> data;//原始数据，不能修改，保持原来的数据不变
     private List<WorksheetAddModel> copyData;//克隆的数据,可以修改，是最新的数据
@@ -59,8 +60,6 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
     private ViewGroup img_title_right;
     private View rootView;
     private OnFragmentEventListener mListener;
-    private SweetAlertDialogView sweetAlertDialogView;
-    private Activity context;
     private HashMap<String, ArrayList<UploadTask>> taskList = new HashMap<>();//上传任务队列:key是uuid
     private WorksheetAdapter worksheetAdapter;
     private List<UploadController> controllerList = new ArrayList<>();
@@ -103,7 +102,7 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
             img_title_left = (ViewGroup) rootView.findViewById(R.id.img_title_left);
             img_title_right = (ViewGroup) rootView.findViewById(R.id.img_title_right);
             Global.SetTouchView(img_title_left, img_title_right);
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
             worksheetAdapter = new WorksheetAdapter();
             recyclerView.setAdapter(worksheetAdapter);
             img_title_left.setOnClickListener(this);
@@ -120,7 +119,8 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                 boolean isEdit = false;
                 //和原来的实体对比，判断是不是修改过
                 if (data.size() == copyData.size()) {
-                    int size = data.size();
+                    //对原来的数据进行了编辑
+                    int size = copyData.size();
                     for (int i = 0; i < size; i++) {
                         if (!data.get(i).equals(copyData.get(i))) {
                             //修改过
@@ -128,8 +128,16 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                             break;
                         }
                     }
-                } else {
-                    isEdit = true;
+                } else if(data.size()==0) {
+                    //创建新的数据，并且填入的有值
+                    int size = copyData.size();
+                    for (int i = 0; i < size; i++) {
+                        if (!copyData.get(i).isEmpty()) {
+                            //修改过
+                            isEdit = true;
+                            break;
+                        }
+                    }
                 }
                 if (isEdit) {
                     sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
@@ -150,7 +158,19 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                 break;
             case R.id.img_title_right:
                 //替换成编辑以后的实体
-                mListener.onSubmit(copyData);
+                UploadController uploaders=new UploadController(mActivity,Integer.MAX_VALUE);
+                for (UploadController uploader : controllerList) {
+                    uploaders.addAllTask(uploader.getTaskList());
+                }
+                if(uploaders.getTaskList().size()>0){
+                    //有附件，需要先上传附件
+                    showLoading2("");
+                    uploaders.setObserver(this);
+                    uploaders.startUpload();
+                    uploaders.notifyCompletionIfNeeded();
+                }else{
+                    mListener.onSubmit(copyData);
+                }
                 break;
 
         }
@@ -166,7 +186,7 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
         for (int i = 0; i < types.size(); i++) {
             list[i] = types.get(i).name;
         }
-        final PaymentPopView popViewKind = new PaymentPopView(context, list, "选择工单类型");
+        final PaymentPopView popViewKind = new PaymentPopView(mActivity, list, "选择工单类型");
         popViewKind.show();
         popViewKind.setCanceledOnTouchOutside(true);
         popViewKind.setCallback(new PaymentPopView.VaiueCallback() {
@@ -193,10 +213,10 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (1 == viewType) {
-                View view = LayoutInflater.from(context).inflate(R.layout.item_list_worksheet_add_footer, parent, false);
+                View view = LayoutInflater.from(mActivity).inflate(R.layout.item_list_worksheet_add_footer, parent, false);
                 return new FooterHolder(view);
             } else {
-                View view = LayoutInflater.from(context).inflate(R.layout.item_list_worksheet_add, parent, false);
+                View view = LayoutInflater.from(mActivity).inflate(R.layout.item_list_worksheet_add, parent, false);
                 return new WorksheetHolder(view);
             }
 
@@ -214,7 +234,7 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                         WorksheetAddModel worksheetAddModel = new WorksheetAddModel();
                         worksheetAddModel.uuid = StringUtil.getUUID();
                         copyData.add(worksheetAddModel);
-                        UploadController controller = new UploadController(context, 9);
+                        UploadController controller = new UploadController(mActivity, 9);
                         controllerList.add(controller);//添加到队列
                         //通知插入了一个
                         notifyItemInserted(getItemCount() - 1);
@@ -245,16 +265,42 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                 holder.tvDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        copyData.remove(position);
-                        notifyItemRemoved(position);
-                        controllerList.remove(position);//移除选择的附件
-                        //等动画完成，刷新整个列表
-                        holder.tvDelete.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                notifyDataSetChanged();
-                            }
-                        }, 300);
+                        if(copyData.get(position).isEmpty()&&controllerList.get(position).getTaskList().size()<=0){
+                            //没有填入数据，并且没有添加图片，直接删除
+                            copyData.remove(position);
+                            notifyItemRemoved(position);
+                            controllerList.remove(position);//移除选择的附件
+                            //等动画完成，刷新整个列表
+                            holder.tvDelete.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    notifyDataSetChanged();
+                                }
+                            }, 300);
+                        }else{
+                            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
+                            }, new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                    //没有填入数据，并且没有添加图片，直接删除
+                                    copyData.remove(position);
+                                    notifyItemRemoved(position);
+                                    controllerList.remove(position);//移除选择的附件
+                                    //等动画完成，刷新整个列表
+                                    holder.tvDelete.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            notifyDataSetChanged();
+                                        }
+                                    }, 300);
+                                }
+                            },"提示","确定删除“工单"+(position+1)+"”？");
+                        }
                     }
                 });
                 UploadController uploadController = controllerList.get(position);
@@ -263,12 +309,11 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                 uploadController.loadView(holder.gridView);
                 holder.tvNumTitle.setText("工单" + (position + 1));
                 WorksheetAddModel worksheetAddModel = copyData.get(position);
+                //设置监听器，绑定ui和模型
                 holder.et_title.addTextChangedListener(new FastSaveTextWatcher(worksheetAddModel, "title"));
                 holder.et_content.addTextChangedListener(new FastSaveTextWatcher(worksheetAddModel, "content"));
             }
-
         }
-
         @Override
         public int getItemCount() {
             //因为有一个底部按钮，所以＋1
@@ -368,7 +413,7 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                 .setPhotoCount(9 - controller.count())
                 .setShowCamera(true)
                 .setPreviewEnabled(false)
-                .start(context, WorksheetAddFragment.this);
+                .start(mActivity, WorksheetAddFragment.this);
     }
 
     @Override
@@ -390,19 +435,19 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
                 .setPhotos(selectedPhotos)
                 .setCurrentItem(index)
                 .setShowDeleteButton(true)
-                .start(context,WorksheetAddFragment.this);
+                .start(mActivity,WorksheetAddFragment.this);
         controller.reloadGridView();
     }
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
         int count = controller.failedTaskCount();
+        cancelLoading2();
         if (count > 0) {
+            LoyoToast.info(mActivity, count + "个附件上传失败，请重试或者删除");
             return;
         }
-        if (taskList.size() > 0) {
-        } else {
-        }
+        mListener.onSubmit(copyData);
     }
 
     /**
@@ -487,8 +532,6 @@ public class WorksheetAddFragment extends Fragment implements View.OnClickListen
         } else {
             throw new RuntimeException(context.toString() + " must implement OnFragmentEventListener");
         }
-        this.context = getActivity();
-        sweetAlertDialogView = new SweetAlertDialogView(context);
     }
 
     @Override
