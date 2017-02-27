@@ -61,11 +61,19 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
     public WorksheetAddFragment() {
     }
 
+    /**
+     * 创建fragment
+     * @param data 可以传入默认数据，不需要可以传入null
+     * @return
+     */
+
     public static WorksheetAddFragment newInstance(ArrayList<WorksheetAddModel> data) {
         WorksheetAddFragment fragment = new WorksheetAddFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(WorksheetData, data);
-        fragment.setArguments(args);
+        if(null!=data){
+            Bundle args = new Bundle();
+            args.putSerializable(WorksheetData, data);
+            fragment.setArguments(args);
+        }
         return fragment;
     }
 
