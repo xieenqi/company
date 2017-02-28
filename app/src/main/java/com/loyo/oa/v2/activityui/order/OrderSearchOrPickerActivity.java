@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
@@ -22,8 +22,6 @@ import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.HashMap;
-
-import rx.Observer;
 
 
 public class OrderSearchOrPickerActivity extends BaseSearchActivity<OrderListItem> {
@@ -95,14 +93,13 @@ public class OrderSearchOrPickerActivity extends BaseSearchActivity<OrderListIte
     public View getView(int i, View convertView, ViewGroup viewGroup, OrderListItem item) {
         Holder holder = null;
         if (convertView == null) {
-            convertView = getLayoutInflater().inflate(R.layout.item_order_my_team, null);
+            convertView = getLayoutInflater().inflate(R.layout.item_order_list_my_and_team, null);
             holder = new Holder();
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
             holder.tv_status = (TextView) convertView.findViewById(R.id.tv_status);
             holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tv_money = (TextView) convertView.findViewById(R.id.tv_money);
-            holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
             holder.tv_product = (TextView) convertView.findViewById(R.id.tv_product);
             holder.ll_responsible = (LinearLayout) convertView.findViewById(R.id.ll_responsible);
             convertView.setTag(holder);
@@ -114,17 +111,16 @@ public class OrderSearchOrPickerActivity extends BaseSearchActivity<OrderListIte
 
     }
     class Holder {
-        TextView tv_title, tv_status, tv_time, tv_name, tv_money, tv_customer, tv_product;
+        TextView tv_title, tv_status, tv_time, tv_name, tv_money, tv_product;
         LinearLayout ll_responsible;
         public void setContent(OrderListItem item) {
             ll_responsible.setVisibility(type == OrderType.TEAM_ORDER ? View.VISIBLE : View.GONE);
             tv_title.setText(item.title);
-            OrderCommon.getOrderDetailsStatus(tv_status, item.status);
+            tv_status.setText(OrderCommon.getOrderDetailsStatus(item.status));
             tv_name.setText(item.directorName);
-            tv_money.setText(Utils.setValueDouble(item.dealMoney));
-            tv_customer.setText(item.customerName);
+            tv_money.setText("¥ "+Utils.setValueDouble(item.dealMoney));
             tv_product.setText(item.proName);
-            tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(item.createdAt + "")));
+            tv_time.setText(DateTool.getDateTimeFriendly(Long.valueOf(item.createdAt + "")));
         }
     }
 }
