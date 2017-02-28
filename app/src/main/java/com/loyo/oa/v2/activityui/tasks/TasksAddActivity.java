@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -209,12 +210,16 @@ public class TasksAddActivity extends BaseActivity implements UploadControllerCa
         controller.setObserver(this);
         controller.loadView(gridView);
         subscriptions = new CompositeSubscription();
-        switch_approve.setOnClickListener(new View.OnClickListener() {
+        switch_approve.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                UmengAnalytics.umengSend(TasksAddActivity.this, tasksApproveButton);
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN)
+                    UmengAnalytics.umengSend(TasksAddActivity.this, tasksApproveButton);
+                return false;
             }
         });
+
+
     }
 
     /**
