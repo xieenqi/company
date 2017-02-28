@@ -90,8 +90,8 @@ public class MyContactMailSerachList extends BaseActivity implements View.OnClic
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle mBundle = new Bundle();
                 ClueSales clueSales=new ClueSales();
-                clueSales.name = contactInfoList.get(position).getName();
-                clueSales.tel  = contactInfoList.get(position).getPhono();
+                clueSales.name = serachResultName.get(position).getName();
+                clueSales.tel  = serachResultName.get(position).getPhono();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, clueSales);
                 mBundle.putInt(ExtraAndResult.EXTRA_TYPE, CustomerAddActivity.TYPE_NEW_CUSTOMER_FROM_CONTACT);
                 app.startActivity(MyContactMailSerachList.this, CustomerAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, mBundle);
