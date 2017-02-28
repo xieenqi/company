@@ -800,8 +800,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     }
                     customer.position.loc[1] = positionResultItem.laPosition;
                     customer.position.loc[0] = positionResultItem.loPosition;
+                    customer.position.addr   = positionResultItem.address;
                     et_address.setText(positionResultItem.address);
-                    if(!TextUtils.isEmpty(positionResultItem.address))edit_address_details.setText(positionResultItem.address);
+                    if(!TextUtils.isEmpty(positionResultItem.address)){
+                        edit_address_details.setText(positionResultItem.address);
+                    }
                 }
                 break;
 
