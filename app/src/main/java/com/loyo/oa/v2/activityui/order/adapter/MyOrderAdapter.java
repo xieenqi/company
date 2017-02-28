@@ -71,7 +71,7 @@ public class MyOrderAdapter extends BaseAdapter {
         OrderListItem mData = data.get(position);
         holder.tv_title.setText(mData.title);
         holder.tv_status.setText(OrderCommon.getOrderDetailsStatus(mData.status));
-        holder.tv_customer.setText(mData.customerName);
+        holder.tv_customer.setText("¥ "+mData.dealMoney);
         holder.tv_product.setText(mData.proName);
         holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(mData.createdAt + "")));
         return convertView;
