@@ -76,7 +76,7 @@ public class TeamOrderAdapter extends BaseAdapter {
         OrderListItem mData = data.get(position);
         holder.tv_title.setText(mData.title);
         holder.tv_name.setText(mData.directorName);
-        holder.tv_customer.setText(mData.customerName);
+        holder.tv_customer.setText("¥ "+mData.dealMoney);
         holder.tv_product.setText(mData.proName);
         holder.tv_time.setText(DateTool.getDateTimeFriendly(Long.valueOf(mData.createdAt + "")));
         holder.tv_status.setText(OrderCommon.getOrderDetailsStatus(mData.status));

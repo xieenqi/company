@@ -82,13 +82,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dimen_6"
-                android:src="@drawable/icon_customer" />
+                android:src="@drawable/icon_customer_money" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="对应客户："
+                android:text="成交金额："
                 android:textColor="@color/text99" />
 
             <TextView
