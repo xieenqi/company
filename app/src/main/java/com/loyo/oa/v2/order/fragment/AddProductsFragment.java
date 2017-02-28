@@ -65,15 +65,14 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
     @OnClick(R.id.img_title_left) void onBackPressed() {
 
         ArrayList<ProductDeal> list = adapter.data;
-        boolean hasUncommitedData = false;
-        ArrayList<SaleIntentionalProduct> commitData = new ArrayList<>();
+        boolean hasUnsavedData = false;
         for (ProductDeal deal : list) {
             if (!deal.isEmpty()) {
-                hasUncommitedData = true;
+                hasUnsavedData = true;
                 break;
             }
         }
-        if (hasUncommitedData) {
+        if (hasUnsavedData) {
             sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {

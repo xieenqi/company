@@ -102,29 +102,29 @@ public class ProductDeal {
 
     public SaleIntentionalProduct toSaleIntentionalProduct() {
         SaleIntentionalProduct intentionalProduct = new SaleIntentionalProduct();
-        intentionalProduct.costPrice = this.price;
+        intentionalProduct.salePrice = this.price;
         intentionalProduct.quantity = this.amount;
         intentionalProduct.memo = this.remark;
-        intentionalProduct.discount = this.discount;
+        intentionalProduct.discount = this.discount *100;
         intentionalProduct.totalMoney = this.total;
         intentionalProduct.id = this.product.id;
         intentionalProduct.name = this.product.name;
-        intentionalProduct.salePrice = this.product.unitPrice;
+        intentionalProduct.costPrice = this.product.unitPrice;
         intentionalProduct.unit = this.product.unit;
         intentionalProduct.stock = this.product.stock;
         return intentionalProduct;
     }
 
     public ProductDeal(SaleIntentionalProduct intentionalProduct) {
-        this.price = intentionalProduct.costPrice;
+        this.price = intentionalProduct.salePrice;
         this.amount = intentionalProduct.quantity;
         this.remark = intentionalProduct.memo;
-        this.discount = intentionalProduct.discount;
+        this.discount = intentionalProduct.discount /100;
         this.total = intentionalProduct.totalMoney;
         this.product = new ProductDetails();
         this.product.id = intentionalProduct.id;
         this.product.name = intentionalProduct.name;
-        this.product.unitPrice = (float) intentionalProduct.salePrice;
+        this.product.unitPrice = (float) intentionalProduct.costPrice;
         this.product.unit = intentionalProduct.unit;
         this.product.stock = (float) intentionalProduct.stock;
 
