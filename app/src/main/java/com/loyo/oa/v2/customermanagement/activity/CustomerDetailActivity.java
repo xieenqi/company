@@ -385,8 +385,15 @@ public class CustomerDetailActivity extends BaseFragmentActivity
         if (customer == null || TextUtils.isEmpty(customer.getId())) {
             return;
         }
-        ll_loading.setStatus(LoadingLayout.Loading);
-        getData(customer.getId());
+        ll_loading.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //这里延迟一下，主要是因为服务器是异步计算的丢公海时间，这样做，提高准确率。
+//                ll_loading.setStatus(LoadingLayout.Loading);
+                getData(customer.getId());
+            }
+        },1000);
+
 //        CustomerService.getCustomerDropRemindById(customer.getId())
 //                .subscribe(new DefaultLoyoSubscriber<DropRemind>(hud) {
 //                    @Override
@@ -444,13 +451,18 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 customer.position = updateCus.position;
                 customer.extDatas = updateCus.extDatas;
                 customer.regional = updateCus.regional;
-                customer.statusId = updateCus.statusId;
-                customer.statusName = updateCus.statusName;
                 customer.state = updateCus.state;
                 customer.relationState = updateCus.relationState;
                 customer.setTags(updateCus.tags);
-
-                loadCustomer();
+                //编辑了客户状态，需要重新去拉取丢公海时间
+                if(!TextUtils.equals(customer.statusId,updateCus.statusId)){
+                    customer.statusId = updateCus.statusId;
+                    customer.statusName = updateCus.statusName;
+                    loadCustomer();
+                    refreshDropRemind();
+                }else{
+                    loadCustomer();
+                }
             } else if (MyCustomerRushEvent.EVENT_SUB_CODE_LABEL == event.subCode) {
                 if (!"note".equals(event.request + "")) return;
                 //更新label 
@@ -493,7 +505,6 @@ public class CustomerDetailActivity extends BaseFragmentActivity
                 break;
             //修改状态
             case EXTRA_CUSTOMER_EDIT_STATUS:
-                //TODO 这里有没有直接修改客户状态的接口呀，这样写，太难受了。
 
                 CustomerStatusModel.CustomerStatusItemModel customerStatusItemModel = (CustomerStatusModel.CustomerStatusItemModel) data.getSerializableExtra("data");
                 customer.statusId = customerStatusItemModel.id;
