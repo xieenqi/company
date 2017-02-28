@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.product;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,6 +36,7 @@ import java.util.List;
 
 public class SelectProductActivity extends BaseActivity implements View.OnClickListener {
 
+    public static final String KEY_SESSION = "SelectProductActivity.KEY_SESSION";
     private ImageView img_back;
     private TextView tv_title, tv_add;
     private LinearLayout ll_search;
@@ -50,6 +50,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
     public boolean stockEnabled;
 
     public Boolean loadClassData = false;
+    public String sessionId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,7 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
                 } else {
                     SelectProductEvent event = new SelectProductEvent();
                     event.bundle = new Bundle();
+                    event.session = sessionId;
                     event.bundle.putString("id", products.get(position).id);
                     event.bundle.putBoolean("enable", stockEnabled);
                     AppBus.getInstance().post(event);
@@ -108,6 +110,9 @@ public class SelectProductActivity extends BaseActivity implements View.OnClickL
                 }
             }
         });
+        if (getIntent() != null) {
+            sessionId = (String) getIntent().getSerializableExtra(KEY_SESSION);
+        }
         getProductList();
     }
 

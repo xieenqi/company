@@ -13,6 +13,7 @@ public class SaleIntentionalProduct implements Serializable {
     public double costPrice;
     public double salePrice;
     public double quantity;
+    public double stock;
     public double discount;
     public double totalMoney;
     public String memo;
