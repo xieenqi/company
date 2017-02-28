@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.customer.adapter;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +82,7 @@ public class MyCustomerAdapter extends BaseAdapter {
         TextView tv_status = ViewHolder.get(convertView, R.id.tv_status);//状态
         tv_title.setText(customer.name);
         String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
-        tv_status.setText(customer.statusName+"");//设置状态
+        tv_status.setText(TextUtils.isEmpty(customer.statusName)?"":customer.statusName);//设置状态
         tv_content1.setText("标签：" + customer.displayTagString());
         tv_content2.setText("跟进时间：" + lastActivityAt);
         if (!(mContext instanceof FollowSelectActivity)){
