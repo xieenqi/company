@@ -597,21 +597,21 @@ public class WorkReportAddActivity extends BaseActivity implements UploadControl
             switch (i) {
                 case 0:
                     cl = Calendar.getInstance();
-                    cl.add(Calendar.DAY_OF_MONTH, -30);
+                    cl.add(Calendar.MONTH, -1);
                     month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
 
                 case 1:
                     cl = Calendar.getInstance();
-                    cl.add(Calendar.DAY_OF_MONTH, -60);
+                    cl.add(Calendar.MONTH, -2);
                     month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
 
                 case 2:
                     cl = Calendar.getInstance();
-                    cl.add(Calendar.DAY_OF_MONTH, -90);
+                    cl.add(Calendar.MONTH, -3);
                     month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
