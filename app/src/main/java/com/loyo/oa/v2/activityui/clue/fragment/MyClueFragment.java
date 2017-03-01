@@ -59,9 +59,9 @@ import retrofit.client.Response;
 public class MyClueFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     /* Data */
-    private String field = "";
-    private String order = "";
-    private String statusKey = "";
+    private String field = "lastActAt";
+    private String order = "desc";
+    private String statusKey = "0";
     private Intent mIntent;
 
     private PaginationX<ClueListItem> mPaginationX=new PaginationX<>();

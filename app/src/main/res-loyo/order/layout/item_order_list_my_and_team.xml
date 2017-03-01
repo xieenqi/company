@@ -92,7 +92,7 @@
                 android:textColor="@color/text99" />
 
             <TextView
-                android:id="@+id/tv_customer"
+                android:id="@+id/tv_money"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="80dp"

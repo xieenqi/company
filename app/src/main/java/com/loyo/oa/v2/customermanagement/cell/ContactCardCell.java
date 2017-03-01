@@ -187,11 +187,13 @@ public class ContactCardCell extends RecyclerView.ViewHolder {
         actionView.setImageResource(contact.isDefault() ?
                 R.drawable.icon_default_sel : R.drawable.icon_default);
         for (int i = 0; i < 3; i++) {
+             //清空原来的，避免布局复用的显示问题。
+            phoneTexts.get(i).setText("");
+            telTexts.get(i).setText("");
             if (i < contact.telGroup.size()) {
                 phoneContainers.get(i).setVisibility(View.VISIBLE);
                 phoneTexts.get(i).setText(contact.telGroup.get(i));
                 ((TextView) itemView.findViewById(MainApp.getMainApp().getResources().getIdentifier("tv_phone_name" + (i + 1), "id", MainApp.getMainApp().getPackageName()))).setText("手机" + (i + 1));
-
             } else {
                 phoneContainers.get(i).setVisibility(i == 0 ? View.VISIBLE : View.GONE);
             }
