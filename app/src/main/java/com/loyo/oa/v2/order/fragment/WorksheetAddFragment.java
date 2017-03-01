@@ -29,10 +29,15 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
+import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.PaymentPopView;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -94,7 +99,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
         for (OrderWorksheetListModel item : data) {
             copyData.add(item.clone());
         }
-        Log.i("ttttttttttt", "onCreate: ");
+
     }
 
     @Override
@@ -397,7 +402,6 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 holder.gridView.setTag(position + "");//使用tag保存一下绑定数据的位置
                 uploadController.loadView(holder.gridView);
                 holder.tvNumTitle.setText("工单" + (position + 1));
-                Log.i("tttttttt", "onBindViewHolder: "+worksheet);
                 //设置监听器，绑定ui和模型,如此蛋疼的写，是避免一个editview上面绑定多个watcher
                 FastSaveTextWatcher watcher= (FastSaveTextWatcher) holder.et_title.getTag();
                 if(null!=watcher)holder.et_title.removeTextChangedListener(watcher);
@@ -543,9 +547,53 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             LoyoToast.info(mActivity, count + "个附件上传失败，请重试或者删除");
             return;
         }
-        if (null != worksheetResultCallBack) worksheetResultCallBack.onWorksheetSubmit(copyData);
+        //绑定附件信息
+        postAttaData();
+
     }
 
+
+    /**
+     * 绑定附件
+     */
+    private  ArrayList<AttachmentBatch>  buildAttachment() {
+        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
+        for (int j=0;j<controllerList.size();j++) {
+            UploadController controller=controllerList.get(j);
+            ArrayList<UploadTask> list = controller.getTaskList();
+            for (int i = 0; i < list.size(); i++) {
+                UploadTask task = list.get(i);
+                AttachmentBatch attachmentBatch = new AttachmentBatch();
+                attachmentBatch.UUId = copyData.get(j).uuid;
+                attachmentBatch.bizType = 29;//工单附件的业务id
+                attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+                attachmentBatch.name = task.getKey();
+                attachmentBatch.size = Integer.parseInt(task.size + "");
+                attachment.add(attachmentBatch);
+            }
+        }
+        return  attachment;
+    }
+
+    /**
+     * 上传附件信息
+     */
+    public void postAttaData() {
+        AttachmentService.setAttachementData(buildAttachment())
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true/*dismissOnlyWhenError*/) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        img_title_right.setEnabled(true);
+                    }
+                    @Override
+                    public void onNext(ArrayList<AttachmentForNew> news) {
+                        if (null != worksheetResultCallBack){
+                            worksheetResultCallBack.onWorksheetSubmit(copyData);
+                        }
+                    }
+                });
+    }
     /**
      * 反射更新实体的值
      *
@@ -605,8 +653,6 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             String value = s.toString();
             try {
                 field.set(OrderWorksheetListModel, value);
-                Log.i("tttttttt", "onBindViewHolder: afterTextChanged:"+OrderWorksheetListModel);
-
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
