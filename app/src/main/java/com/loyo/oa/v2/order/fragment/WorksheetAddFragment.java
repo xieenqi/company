@@ -26,6 +26,7 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
@@ -33,6 +34,7 @@ import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customermanagement.fragment.AttachmentsFragment;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -62,6 +64,8 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
     private WorksheetAdapter worksheetAdapter;
     private List<UploadController> controllerList = new ArrayList<>();
     private UploadController clickPosController;//点击的那个item的controller
+    private final int bizType = 29;//业务id
+    private ArrayList<AttachmentForNew> hasAttachment = new ArrayList<>();//上传成功的附件，保存一下，如果要删除的化，用得到
 
     public WorksheetAddFragment() {
     }
@@ -140,12 +144,12 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 }
                 getNotUploadTask();//上传之前，先获取没有上传的，方便等下上传成功后绑定附件
                 //如果有没有上传的附件
-                if(notUploadTask.size()>0){
+                if (notUploadTask.size() > 0) {
                     showLoading2("");
                     uploaders.setObserver(this);
                     uploaders.startUpload();
                     uploaders.notifyCompletionIfNeeded();
-                }else{
+                } else {
                     if (null != worksheetResultCallBack)
                         worksheetResultCallBack.onWorksheetSubmit(copyData);
                 }
@@ -484,10 +488,38 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
                 if (data != null) {
-                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    final int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
                     if (index >= 0) {
-                        clickPosController.removeTaskAt(index);
-                        clickPosController.reloadGridView();
+                        UploadTask rmTask = clickPosController.getTaskList().get(index);
+                        HashMap<String, Object> map = new HashMap<String, Object>();
+                        map.put("bizType", bizType);
+                        map.put("uuid", rmTask.UUID);
+                        String attachmentId = null;
+                        //找到要删的附件的attachmentId
+                        for (AttachmentForNew atta : hasAttachment) {
+                            if (TextUtils.equals(rmTask.UUID, atta.getUUId()) && atta.getName().endsWith(rmTask.name)) {//按照名字和uuid来判断是不是一张图片
+                                attachmentId = atta.getId();
+                                break;
+                            }
+                        }
+                        //发送删除的请求
+                        if (!TextUtils.isEmpty(attachmentId)) {
+                            showLoading2("");
+                            AttachmentService.remove(attachmentId, map)
+                                    .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
+                                        @Override
+                                        public void onNext(Object object) {
+                                            //从本地ui删除
+                                            clickPosController.removeTaskAt(index);
+                                            clickPosController.reloadGridView();
+                                        }
+                                    });
+                        }else{
+                            //说明没有上传，直接在本地删除
+                            clickPosController.removeTaskAt(index);
+                            clickPosController.reloadGridView();
+                        }
+
                     }
                 }
                 break;
@@ -568,11 +600,11 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
      * 构造绑定附件的信息
      */
     private ArrayList<AttachmentBatch> buildAttachment() {
-        ArrayList<AttachmentBatch> attachment=new ArrayList<>();
+        ArrayList<AttachmentBatch> attachment = new ArrayList<>();
         for (UploadTask task : notUploadTask) {
             AttachmentBatch attachmentBatch = new AttachmentBatch();
             attachmentBatch.UUId = task.UUID;
-            attachmentBatch.bizType = 29;//工单附件的业务id
+            attachmentBatch.bizType = bizType;//工单附件的业务id
             attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");
@@ -592,8 +624,10 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                         super.onError(e);
                         e.printStackTrace();
                     }
+
                     @Override
                     public void onNext(ArrayList<AttachmentForNew> news) {
+                        hasAttachment.addAll(news);
                         //绑定完了，就清空原来的列表，避免重复绑定
                         notUploadTask.clear();
                         if (null != worksheetResultCallBack) {
