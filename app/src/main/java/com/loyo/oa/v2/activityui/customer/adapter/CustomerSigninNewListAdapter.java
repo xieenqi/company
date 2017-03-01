@@ -188,7 +188,8 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         /** 绑定图片与GridView监听 */
         if (null != signinNewListModel.imageAttachments && signinNewListModel.imageAttachments.size() > 0) {
             holder.layout_gridview.setVisibility(View.VISIBLE);
-            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, signinNewListModel.imageAttachments);
+            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext);
+            gridViewAdapter.setData(signinNewListModel.imageAttachments);
             holder.layout_gridview.setAdapter(gridViewAdapter);
 
             /*图片预览*/

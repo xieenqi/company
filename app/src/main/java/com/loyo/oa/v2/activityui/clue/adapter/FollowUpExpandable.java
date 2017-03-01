@@ -125,7 +125,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         final FollowUpListModel model = listModel.get(groupPosition).activities.get(childPosition);
         if (null == convertView) {
             holder = new Holder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customer_and_clue_followup, null);
+            convertView = inflater.inflate(R.layout.item_customer_and_clue_followup, null);
             holder.iv_heading = (RoundImageView) convertView.findViewById(R.id.iv_heading);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tv_contact = (TextView) convertView.findViewById(R.id.tv_contact);
@@ -203,7 +203,9 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         /** 绑定图片与GridView监听 */
         if (null != model.imgAttachments && model.imgAttachments.size() > 0) {
             holder.layout_gridview.setVisibility(View.VISIBLE);
-            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, model.imgAttachments);
+            if (gridViewAdapter == null)
+                gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext);
+            gridViewAdapter.setData(model.imgAttachments);
             holder.layout_gridview.setAdapter(gridViewAdapter);
 
             /*图片预览*/

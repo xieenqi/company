@@ -185,7 +185,8 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
             if (null == imageAdapter) {
                 if (null != mSigninDelModel.imageAttachments && mSigninDelModel.imageAttachments.size() > 0)
                     gv_image.setVisibility(View.VISIBLE);
-                imageAdapter = new ListOrDetailsGridViewAdapter(mContext, mSigninDelModel.imageAttachments);
+                imageAdapter = new ListOrDetailsGridViewAdapter(mContext);
+                imageAdapter.setData(mSigninDelModel.imageAttachments);
                 gv_image.setAdapter(imageAdapter);
             } else {
                 imageAdapter.notifyDataSetChanged();
@@ -234,7 +235,7 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访详情");
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid, this);
         layout_bottom_menu.addView(msgAudiomMenu);
         getPageData();
     }
@@ -494,7 +495,7 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
 //                super.failure(error);
 //            }
 //        });
-        SignInService.getSignInDetails(id,map).subscribe(new DefaultLoyoSubscriber<BaseBeanT<SigninNewListModel>>(ll_loading) {
+        SignInService.getSignInDetails(id, map).subscribe(new DefaultLoyoSubscriber<BaseBeanT<SigninNewListModel>>(ll_loading) {
             @Override
             public void onNext(BaseBeanT<SigninNewListModel> signinNewListModel) {
                 ll_loading.setStatus(LoadingLayout.Success);

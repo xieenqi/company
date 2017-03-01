@@ -190,7 +190,8 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
             if (null == imageAdapter) {
                 if (null != mFollowUpDelModel.imgAttachments && mFollowUpDelModel.imgAttachments.size() > 0)
                     gv_image.setVisibility(View.VISIBLE);
-                imageAdapter = new ListOrDetailsGridViewAdapter(mContext, mFollowUpDelModel.imgAttachments);
+                imageAdapter = new ListOrDetailsGridViewAdapter(mContext);
+                imageAdapter.setData(mFollowUpDelModel.imgAttachments);
                 gv_image.setAdapter(imageAdapter);
             } else {
                 imageAdapter.notifyDataSetChanged();
@@ -237,7 +238,7 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("跟进详情");
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid,this);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid, this);
         layout_bottom_menu.addView(msgAudiomMenu);
         getPageData();
     }
@@ -478,7 +479,7 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
                             bindData();
                         }
                     }
-        });
+                });
     }
 
 

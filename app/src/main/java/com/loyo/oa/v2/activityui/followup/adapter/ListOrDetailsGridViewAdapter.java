@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -17,17 +19,21 @@ import java.util.ArrayList;
  * Created by yyy on 16/11/12.
  */
 
-public class ListOrDetailsGridViewAdapter extends BaseAdapter{
+public class ListOrDetailsGridViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<Attachment> attachments;
 
 
-    public ListOrDetailsGridViewAdapter(Context mContext,ArrayList<Attachment> attachments){
+    public ListOrDetailsGridViewAdapter(Context mContext) {
         this.mContext = mContext;
-        this.attachments = attachments;
+        LogUtil.d("附件被创建了好多次？？？？？？？？？？？？？？？？？？？？？？");
     }
 
+    public void setData(ArrayList<Attachment> attachments) {
+        this.attachments = attachments;
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {
@@ -48,21 +54,21 @@ public class ListOrDetailsGridViewAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         Attachment mAttachment = attachments.get(position);
-        if(null == convertView){
+        if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_gridview_dl,null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_gridview_dl, null);
             holder.iv_image = (ImageView) convertView.findViewById(R.id.iv_image);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        ImageLoader.getInstance().displayImage(mAttachment.getUrl(),holder.iv_image);
+        ImageLoader.getInstance().displayImage(mAttachment.getUrl(), holder.iv_image);
 
         return convertView;
     }
 
-    class ViewHolder{
+    class ViewHolder {
         ImageView iv_image;
     }
 

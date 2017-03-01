@@ -177,7 +177,8 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         /** 绑定图片与GridView监听 */
         if (null != model.imgAttachments && model.imgAttachments.size() > 0) {
             holder.layout_gridview.setVisibility(View.VISIBLE);
-            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, model.imgAttachments);
+            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext);
+            gridViewAdapter.setData(model.imgAttachments);
             holder.layout_gridview.setAdapter(gridViewAdapter);
 
             /*图片预览*/
