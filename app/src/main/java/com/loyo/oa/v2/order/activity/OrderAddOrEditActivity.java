@@ -15,6 +15,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.order.api.OrderService;
+import com.loyo.oa.v2.order.fragment.BaseStackFragment;
 import com.loyo.oa.v2.order.fragment.OrderFieldsFragment;
 import com.loyo.oa.v2.order.fragment.OrderWorkflowFragment;
 import com.loyo.oa.v2.order.model.WorkflowModel;
@@ -23,6 +24,7 @@ import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by EthanGong on 2017/2/22.
@@ -231,10 +233,23 @@ public class OrderAddOrEditActivity extends BaseActivity
         fm.popBackStack();
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        //TODO 这里处理物理返回按键，应该先调用fragment的返回事件，由frangment的回调来做出栈操作。
-//        FragmentManager fm = getSupportFragmentManager();
-//
-//    }
+    @Override
+    public void onBackPressed() {
+        //TODO 这里处理物理返回按键，应该先调用fragment的返回事件，由frangment的回调来做出栈操作。
+        FragmentManager fm = getSupportFragmentManager();
+        List<Fragment> fragments = fm.getFragments();
+        if (fragments.size() <= 0) {
+            super.onBackPressed();
+            return;
+        }
+        Fragment topFragment = fragments.get(fragments.size() - 1);
+        if (! (topFragment instanceof BaseStackFragment)) {
+            super.onBackPressed();
+            return;
+        }
+        if(!((BaseStackFragment) topFragment).onBackPressed()) {
+            super.onBackPressed();
+            return;
+        }
+    }
 }

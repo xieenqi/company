@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -14,8 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.common.Global;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,6 +36,14 @@ public class PaymentPopView extends Dialog {
         this.mContext = context;
         inflater = LayoutInflater.from(context);
         this.data = Arrays.asList(data);
+        this.title = title;
+    }
+
+    public PaymentPopView(Context context, ArrayList<String> data, String title) {
+        super(context,cn.pedant.SweetAlert.R.style.alert_dialog);
+        this.mContext = context;
+        inflater = LayoutInflater.from(context);
+        this.data = data;
         this.title = title;
     }
 

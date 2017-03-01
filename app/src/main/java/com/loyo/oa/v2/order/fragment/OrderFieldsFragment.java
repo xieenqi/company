@@ -34,7 +34,6 @@ import com.loyo.oa.v2.order.activity.ActivityFragmentsStackManager;
 import com.loyo.oa.v2.order.activity.OrderAddOrEditActivity;
 import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.order.widget.OrderCustomFieldsView;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -85,7 +84,7 @@ import static com.loyo.oa.v2.R.id.tv_start_time;
     默认选填的选项可能配置为必填，此时需要展示在展开区域，选填部门放在折叠区域
  */
 
-public class OrderFieldsFragment extends BaseFragment {
+public class OrderFieldsFragment extends BaseStackFragment {
 
     public interface ActionListener {
         void onCommit(HashMap<String, Object> map);
@@ -165,11 +164,13 @@ public class OrderFieldsFragment extends BaseFragment {
         loadMore.setVisibility(View.GONE);
     }
 
-    @OnClick(R.id.img_title_left) void onBackPressed() {
+    @OnClick(R.id.img_title_left) void onBack() {
+        hideKeyboard();
         getActivity().onBackPressed();
     }
 
     @OnClick(R.id.img_title_right) void onCommit() {
+        hideKeyboard();
         HashMap<String, Object> map = orderDataMap();
         if (map == null) {
             return;
@@ -180,6 +181,7 @@ public class OrderFieldsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.container_customer) void onCustomer() {
+        hideKeyboard();
         Bundle mBundle = new Bundle();
         mBundle.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
         mBundle.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
@@ -190,6 +192,7 @@ public class OrderFieldsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.container_product) void onProduct() {
+        hideKeyboard();
         if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
             Bundle mBundle = new Bundle();
             mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, productData);
@@ -216,21 +219,40 @@ public class OrderFieldsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.container_estimate) void onPaymentRecord() {
-        Bundle mBundle = new Bundle();
-        if (!TextUtils.isEmpty(dealText.getText().toString())) {
-            mBundle.putString("price", dealText.getText().toString());
+        hideKeyboard();
+        if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
+            Bundle mBundle = new Bundle();
+            if (!TextUtils.isEmpty(dealText.getText().toString())) {
+                mBundle.putString("price", dealText.getText().toString());
+            }
+            if (null != estimateData) {
+                mBundle.putSerializable("data", estimateData);
+            }
+            mBundle.putString("orderId", orderDetail!=null&&orderDetail.id!=null?orderDetail.id:orderId);
+            mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
+            Intent intent = new Intent(getActivity(), OrderEstimateListActivity.class);
+            intent.putExtras(mBundle);
+            startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_SOURCE);
         }
-        if (null != estimateData) {
-            mBundle.putSerializable("data", estimateData);
+        else {
+            AddCapitalReturnFragment addCapitalReturnFragment = new AddCapitalReturnFragment(this.manager);
+            addCapitalReturnFragment.setData(estimateData);
+            addCapitalReturnFragment.callback = new AddCapitalReturnFragment.AddCapitalReturnCallback() {
+                @Override
+                public void onAddCapitalReturn(ArrayList<EstimateAdd> data) {
+                    if (data == null) {
+                        return;
+                    }
+                    estimateData = data;
+                    paymentText.setText(getEstimateName());
+                }
+            };
+            this.manager.push(addCapitalReturnFragment, "add_capital_return");
         }
-        mBundle.putString("orderId", orderDetail!=null&&orderDetail.id!=null?orderDetail.id:orderId);
-        mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
-        Intent intent = new Intent(getActivity(), OrderEstimateListActivity.class);
-        intent.putExtras(mBundle);
-        startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_SOURCE);
     }
 
     @OnClick(R.id.container_worksheet) void onWorksheet() {
+        hideKeyboard();
         if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
             //这里通过EventBus来接受数据
             Intent mIntent = new Intent(getActivity(), OrderWorksheetListActivity.class);
@@ -259,6 +281,7 @@ public class OrderFieldsFragment extends BaseFragment {
 
 
     @OnClick(R.id.container_start_time) void onStartTime() {
+        hideKeyboard();
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(getActivity(), null);
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
@@ -276,6 +299,7 @@ public class OrderFieldsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.container_end_time) void onEndTime() {
+        hideKeyboard();
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(getActivity(), null);
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
@@ -293,6 +317,7 @@ public class OrderFieldsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.container_attachment) void onAttachment() {
+        hideKeyboard();
         Bundle mBundle = new Bundle();
         mBundle.putInt("bizType", 25);
         mBundle.putString("uuid", uuid);

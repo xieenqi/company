@@ -9,6 +9,7 @@ import com.loyo.oa.v2.activityui.worksheet.common.WSRole;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventAction;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
+import com.loyo.oa.v2.order.common.PaymentMethod;
 
 /**
  * Created by EthanGong on 16/8/29.
@@ -38,12 +39,16 @@ public class GsonUtils {
         builder.registerTypeAdapter(WSRole.class,
                 new WSRole.WSRoleSerializer());
 
-        /* 系统消息的类别*/
+        /* 系统消息的类别 */
         builder.registerTypeAdapter(SystemMessageItemType.class,
                 new SystemMessageItemType.SystemMessageSerializer());
-        /*丢公海的类型*/
+        /* 丢公海的类型 */
         builder.registerTypeAdapter(Customer.RecycleType.class,
                 new Customer.RecycleType.RecycleTypeSerializer());
+
+        /* 回款支付方式 */
+        builder.registerTypeAdapter(PaymentMethod.class,
+                new PaymentMethod.EnumSerializer());
         return builder.create();
     }
 }

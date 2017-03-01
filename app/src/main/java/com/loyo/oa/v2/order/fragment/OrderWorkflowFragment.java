@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.order.adapter.WorkflowListAdapter;
 import com.loyo.oa.v2.order.model.WorkflowModel;
-import com.loyo.oa.v2.tool.BaseFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ import butterknife.OnClick;
  * Created by EthanGong on 2017/2/23.
  */
 
-public class OrderWorkflowFragment extends BaseFragment {
+public class OrderWorkflowFragment extends BaseStackFragment {
 
     public interface ActionListener {
         void onSelectWorkflowBack();
@@ -43,7 +42,7 @@ public class OrderWorkflowFragment extends BaseFragment {
     @BindView(R.id.tv_title) TextView titleView;
     @BindView(R.id.recycle_view) RecyclerView recycleView;
 
-    @OnClick(R.id.ll_back) void onBackPressed() {
+    @OnClick(R.id.ll_back) void onBack() {
         if (listenerRef != null && listenerRef.get() != null) {
             listenerRef.get().onSelectWorkflowBack();
         }
@@ -85,5 +84,11 @@ public class OrderWorkflowFragment extends BaseFragment {
 
     public void setData(ArrayList<WorkflowModel> data) {
         this.data = data;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        onBack();
+        return true;
     }
 }
