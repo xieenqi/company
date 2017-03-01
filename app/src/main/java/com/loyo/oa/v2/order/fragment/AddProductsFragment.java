@@ -16,14 +16,12 @@ import com.loyo.oa.v2.activityui.product.api.ProductService;
 import com.loyo.oa.v2.activityui.product.event.SelectProductEvent;
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
-import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.order.activity.ActivityFragmentsStackManager;
 import com.loyo.oa.v2.order.adapter.AddProductAdapter;
 import com.loyo.oa.v2.order.cell.OrderAddBaseCell;
 import com.loyo.oa.v2.order.common.ProductDealValidator;
 import com.loyo.oa.v2.order.model.ProductDeal;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -41,7 +39,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by EthanGong on 2017/2/28.
  */
 
-public class AddProductsFragment extends BaseFragment
+public class AddProductsFragment extends BaseStackFragment
         implements OrderAddBaseCell.ActionListener, OrderAddBaseCell.ProductListener{
 
     public interface ProductPickerCallback {
@@ -61,11 +59,12 @@ public class AddProductsFragment extends BaseFragment
     @BindView(R.id.tv_title_1) TextView titleView;
     @BindView(R.id.recycle_view) RecyclerView recyclerView;
 
-    @BindView(R.id.tv_saleToal) CustomTextView totalText;
-    @BindView(R.id.tv_discount) CustomTextView discountText;
+    @BindView(R.id.tv_saleToal) TextView totalText;
+    @BindView(R.id.tv_discount) TextView discountText;
 
-    @OnClick(R.id.img_title_left) void onBackPressed() {
+    @OnClick(R.id.img_title_left) void onBack() {
 
+        hideKeyboard();
         ArrayList<ProductDeal> list = adapter.data;
         boolean hasUnsavedData = false;
         for (ProductDeal deal : list) {
@@ -94,6 +93,7 @@ public class AddProductsFragment extends BaseFragment
     }
 
     @OnClick(R.id.img_title_right) void onCommit() {
+        hideKeyboard();
         ArrayList<ProductDeal> list = adapter.data;
         ArrayList<SaleIntentionalProduct> commitData = new ArrayList<>();
         boolean canCommit = true;
@@ -165,6 +165,12 @@ public class AddProductsFragment extends BaseFragment
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         adapter.fireListChange();
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        onBack();
+        return true;
     }
 
     /**

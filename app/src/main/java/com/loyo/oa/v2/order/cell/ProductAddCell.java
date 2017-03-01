@@ -129,6 +129,7 @@ public class ProductAddCell extends OrderAddBaseCell {
         }
     };
 
+    private String previousAmountString = null;
     private TextWatcher amountWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -137,7 +138,21 @@ public class ProductAddCell extends OrderAddBaseCell {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            float amount = 0;
+            try {
+                amount = Float.valueOf(s.toString());
+                if (model.product != null && amount > model.product.stock
+                        && actionListener != null
+                        && model.stockEnabled) {
+                    actionListener.toast("库存不足");
+                    amountEditText.setText(previousAmountString);
+                }
+                else {
+                    previousAmountString = s.toString();
+                }
+            }
+            catch (Exception e) {
+            }
         }
 
         @Override
