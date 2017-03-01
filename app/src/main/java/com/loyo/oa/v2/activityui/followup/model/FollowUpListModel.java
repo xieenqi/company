@@ -137,7 +137,7 @@ public class FollowUpListModel implements Serializable {
     }
 
     public void setContactName(TextView tv_contact) {
-        String contact = "联系人: " + (TextUtils.isEmpty(contactName) ? "无联系人信息" : contactName);
+        String contact = (isCustomer() ? "联系人: " : "姓名: ") + (TextUtils.isEmpty(contactName) ? "无联系人信息" : contactName);
         if (!TextUtils.isEmpty(contactPhone)) {
             tv_contact.setText(contact + "(" + contactPhone + ")");
         } else {

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.order.common.PaymentMethod;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.Date;
 
@@ -13,6 +14,8 @@ import java.util.Date;
  */
 
 public class CapitalReturn {
+
+    private String md5;
 
     public long defaultReceivedAt;    //默认回款日期, 默认选中当天
     public long receivedAt;    //回款日期
@@ -24,10 +27,6 @@ public class CapitalReturn {
     public int attachmentCount; //附件个数
     public PaymentMethod payeeMethod;        //付款方式
     public String remark;          //备注
-
-    public CapitalReturn() {
-        defaultReceivedAt = new Date().getTime()/1000;
-    }
 
     public String getReceivedAtString() {
         if (receivedAt <= 0) {
@@ -117,6 +116,7 @@ public class CapitalReturn {
     }
 
     public CapitalReturn(EstimateAdd estimateAdd) {
+        defaultReceivedAt = new Date().getTime()/1000;
         receivedAt = estimateAdd.receivedAt;
         receivedMoney = estimateAdd.receivedMoney;
         billingMoney = estimateAdd.billingMoney;
@@ -132,5 +132,48 @@ public class CapitalReturn {
         attachmentCount = estimateAdd.attachmentCount;
         attachmentUUId = estimateAdd.attachmentUUId;
         remark = estimateAdd.remark;
+
+        md5 = getFingerprint();
+    }
+
+    public CapitalReturn() {
+        defaultReceivedAt = new Date().getTime()/1000;
+        md5 = getFingerprint();
+    }
+
+    private String getFingerprint() {
+        StringBuilder fingerBuilder = new StringBuilder();
+        fingerBuilder.append("receivedAt");
+        fingerBuilder.append(receivedAt);
+        fingerBuilder.append("receivedMoney");
+        fingerBuilder.append(receivedMoney);
+        fingerBuilder.append("billingMoney");
+        fingerBuilder.append(billingMoney);
+
+        fingerBuilder.append("attachmentCount");
+        fingerBuilder.append(attachmentCount);
+        fingerBuilder.append("attachmentUUId");
+        fingerBuilder.append(attachmentUUId);
+        fingerBuilder.append("remark");
+        fingerBuilder.append(remark);
+
+        if (payeeUser != null) {
+            fingerBuilder.append("payeeUser.id");
+            fingerBuilder.append(payeeUser.id);
+            fingerBuilder.append("payeeUser.name");
+            fingerBuilder.append(payeeUser.name);
+            fingerBuilder.append("payeeUser.avatar");
+            fingerBuilder.append(payeeUser.avatar);
+        }
+        String finger = fingerBuilder.toString();
+        return Utils.md5(finger);
+    }
+
+    public boolean hasChanged() {
+        String fingerPrint = getFingerprint();
+        if (md5 != null && md5.equals(fingerPrint)) {
+            return false;
+        }
+        return true;
     }
 }

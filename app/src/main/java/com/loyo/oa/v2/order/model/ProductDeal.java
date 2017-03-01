@@ -11,6 +11,9 @@ import com.loyo.oa.v2.tool.Utils;
  */
 
 public class ProductDeal {
+
+    private String md5;
+
     public double price;
     public double amount;
     public double discount = -1;
@@ -85,11 +88,23 @@ public class ProductDeal {
         return "总金额："+ Utils.setValueDouble(total);
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
     public boolean isEmpty() {
         return product == null
                 && price == 0
                 && amount == 0
                 && TextUtils.isEmpty(remark);
+    }
+
+    public boolean hasChanged() {
+        String fingerPrint = getFingerprint();
+        if (md5 != null && md5.equals(fingerPrint)) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isValidated() {
@@ -129,9 +144,39 @@ public class ProductDeal {
         this.product.unit = intentionalProduct.unit;
         this.product.stock = (float) intentionalProduct.stock;
 
+        md5 = getFingerprint();
+
     }
 
     public ProductDeal() {
+        md5 = getFingerprint();
+    }
 
+    private String getFingerprint() {
+        StringBuilder fingerBuilder = new StringBuilder();
+        fingerBuilder.append("price");
+        fingerBuilder.append(price);
+        fingerBuilder.append("amount");
+        fingerBuilder.append(amount);
+        fingerBuilder.append("remark");
+        fingerBuilder.append(remark);
+        fingerBuilder.append("discount");
+        fingerBuilder.append(discount);
+        fingerBuilder.append("total");
+        fingerBuilder.append(total);
+        if (product != null) {
+            fingerBuilder.append("product.id");
+            fingerBuilder.append(product.id);
+            fingerBuilder.append("product.name");
+            fingerBuilder.append(product.name);
+            fingerBuilder.append("product.unitPrice");
+            fingerBuilder.append(product.unitPrice);
+            fingerBuilder.append("product.unit");
+            fingerBuilder.append(product.unit);
+            fingerBuilder.append("product.stock");
+            fingerBuilder.append(product.stock);
+        }
+        String finger = fingerBuilder.toString();
+        return Utils.md5(finger);
     }
 }

@@ -255,6 +255,7 @@ public class ProductAddCell extends OrderAddBaseCell {
 
         priceEditText.setText(model.getPrice());
         amountEditText.setText(model.getAmount());
+        remarkEditText.setText(model.getRemark());
 
         discountAndTotalContainer.setVisibility(model.showOriginPrice()?View.VISIBLE:View.GONE);
 
