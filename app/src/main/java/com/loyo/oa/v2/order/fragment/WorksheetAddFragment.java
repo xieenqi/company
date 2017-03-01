@@ -98,6 +98,15 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
         } else {
             data = new ArrayList<>();
         }
+        //默认就有一个
+        if(data.size()<=0){
+            OrderWorksheetListModel OrderWorksheetListModel = new OrderWorksheetListModel();
+            OrderWorksheetListModel.uuid = StringUtil.getUUID();
+            data.add(OrderWorksheetListModel);
+            UploadController controller = new UploadController(mActivity, 9);
+            controllerList.add(controller);//添加到队列
+        }
+
         //复制一个列表，注意，是复制对象，不能在原来的数据上面做修改
         copyData = new ArrayList<>();
         for (OrderWorksheetListModel item : data) {
