@@ -12,6 +12,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -26,10 +27,15 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter {
     private ArrayList<CommentModel> commentsl;
     private AudioPlayCallBack audioPlayCallBack;
 
-    public ListOrDetailsCommentAdapter(Context mContext, ArrayList<CommentModel> commentsl, AudioPlayCallBack audioPlayCallBack) {
+    public ListOrDetailsCommentAdapter(Context mContext, AudioPlayCallBack audioPlayCallBack) {
         this.mContext = mContext;
-        this.commentsl = commentsl;
         this.audioPlayCallBack = audioPlayCallBack;
+        LogUtil.d("附件被创建了好多次？？？？？？？？？？？【跟进拜访评论】？？？？？？？？？？？");
+    }
+
+    public void setData(ArrayList<CommentModel> commentsl) {
+        this.commentsl = commentsl;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -49,12 +55,14 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter {
 
     /**
      * 删除评论，从ui上面删除
+     *
      * @param position 评论的position
      */
-    public void remove(int position){
+    public void remove(int position) {
         commentsl.remove(position);
         notifyDataSetChanged();
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
@@ -97,7 +105,7 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter {
                 tv_calls.setText("");
             }
             holder.layout_audio.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(audioLength+"\"");
+            holder.tv_audio_length.setText(audioLength + "\"");
 
         } else {
             holder.layout_audio.setVisibility(View.GONE);

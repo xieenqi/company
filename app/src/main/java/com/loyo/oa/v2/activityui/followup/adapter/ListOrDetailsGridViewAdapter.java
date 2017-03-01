@@ -27,7 +27,6 @@ public class ListOrDetailsGridViewAdapter extends BaseAdapter {
 
     public ListOrDetailsGridViewAdapter(Context mContext) {
         this.mContext = mContext;
-        LogUtil.d("附件被创建了好多次？？？？？？？？？？？？？？？？？？？？？？");
     }
 
     public void setData(ArrayList<Attachment> attachments) {

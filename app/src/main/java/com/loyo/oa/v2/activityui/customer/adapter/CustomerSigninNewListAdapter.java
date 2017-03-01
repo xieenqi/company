@@ -211,7 +211,8 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         /** 绑定评论数据 */
         if (null != signinNewListModel.comments && signinNewListModel.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, signinNewListModel.comments, audioPlayCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, audioPlayCallBack);
+            commentAdapter.setData(signinNewListModel.comments);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -231,7 +232,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         holder.iv_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewCrol.commentEmbl(signinNewListModel.id,parentIndex,position);
+                viewCrol.commentEmbl(signinNewListModel.id, parentIndex, position);
             }
         });
 

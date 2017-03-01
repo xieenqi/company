@@ -215,7 +215,8 @@ public class SigninListAdapter extends BaseAdapter {
         /** 绑定评论数据 */
         if (null != model.comments && model.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, model.comments, audioPlayCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, audioPlayCallBack);
+            commentAdapter.setData(model.comments);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/

@@ -132,13 +132,13 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# " + model.typeName);
 
         /** 电话录音设置 */
-        model.setPhoneRecord(holder.layout_phonely,holder.tv_audio_length,holder.iv_phone_call);
+        model.setPhoneRecord(holder.layout_phonely, holder.tv_audio_length, holder.iv_phone_call);
 
         /** 下次跟进时间 */
         model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
 
         /** 设置跟进内容 */
-        model.setContent(holder.ll_web,holder.tv_memo);
+        model.setContent(holder.ll_web, holder.tv_memo);
         if (null != model.content && !TextUtils.isEmpty(model.content)) {
             if (model.content.contains("<p>")) {
                 holder.setContent(holder.ll_web, model.content);
@@ -200,7 +200,8 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         /** 绑定评论数据 */
         if (null != model.comments && model.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, model.comments, audioPlayCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, audioPlayCallBack);
+            commentAdapter.setData(model.comments);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/

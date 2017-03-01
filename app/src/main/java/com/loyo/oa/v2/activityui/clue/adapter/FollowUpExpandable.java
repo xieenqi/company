@@ -227,7 +227,9 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         /** 绑定评论数据 */
         if (null != model.comments && model.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, model.comments, audioCb);
+            if (commentAdapter == null)
+                commentAdapter = new ListOrDetailsCommentAdapter(mContext, audioCb);
+            commentAdapter.setData(model.comments);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/

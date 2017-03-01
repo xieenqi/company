@@ -166,7 +166,8 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         /*评论数据绑定*/
         if (null != mFollowUpDelModel && null != mFollowUpDelModel.comments && mFollowUpDelModel.comments.size() > 0) {
             if (null == commentAdapter) {
-                commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments, this);
+                commentAdapter = new ListOrDetailsCommentAdapter(mContext, this);
+                commentAdapter.setData(mFollowUpDelModel.comments);
                 lv_comment.setAdapter(commentAdapter);
             } else if (commentAdapter != null) {
                 commentAdapter.notifyDataSetChanged();
@@ -298,7 +299,8 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         /** 绑定评论数据 */
         if (null != mFollowUpDelModel.comments && mFollowUpDelModel.comments.size() > 0) {
             layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments, this);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, this);
+            commentAdapter.setData(mFollowUpDelModel.comments);
             lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/

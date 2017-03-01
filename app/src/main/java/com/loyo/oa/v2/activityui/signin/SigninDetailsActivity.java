@@ -164,7 +164,8 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
 
         /*评论数据绑定*/
         if (null == commentAdapter && mSigninDelModel != null && mSigninDelModel.comments != null) {
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mSigninDelModel.comments, this);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, this);
+            commentAdapter.setData(mSigninDelModel.comments);
             lv_comment.setAdapter(commentAdapter);
         } else if (commentAdapter != null) {
             commentAdapter.notifyDataSetChanged();
@@ -385,7 +386,8 @@ public class SigninDetailsActivity extends BaseLoadingActivity implements View.O
         /** 绑定评论数据 */
         if (null != mSigninDelModel.comments && mSigninDelModel.comments.size() > 0) {
             layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mSigninDelModel.comments, this);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, this);
+            commentAdapter.setData(mSigninDelModel.comments);
             lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
