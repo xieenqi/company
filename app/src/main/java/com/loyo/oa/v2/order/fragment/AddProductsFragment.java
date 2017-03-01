@@ -25,6 +25,7 @@ import com.loyo.oa.v2.order.common.ProductDealValidator;
 import com.loyo.oa.v2.order.model.ProductDeal;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -126,8 +127,8 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
         adapter.callback = new AddProductAdapter.ListChangeCallback() {
             @Override
             public void onListChange(double totalMoney, double totalDiscount) {
-                totalText.setText(totalMoney + "");
-                discountText.setText(totalDiscount*100+"%");
+                totalText.setText(Utils.setValueDouble(totalMoney));
+                discountText.setText(Utils.setValueDouble(totalDiscount*100)+"%");
             }
         };
     }

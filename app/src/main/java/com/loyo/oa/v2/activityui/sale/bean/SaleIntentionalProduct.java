@@ -9,14 +9,14 @@ import java.io.Serializable;
 public class SaleIntentionalProduct implements Serializable {
 
     public String id;
-    public String name;
-    public double costPrice;
-    public double salePrice;
-    public double quantity;
-    public double stock;
-    public double discount;
-    public double totalMoney;
-    public String memo;
-    public String unit;
+    public String name;      /* 产品名称 */
+    public double costPrice; /* 销售价格 */
+    public double salePrice; /* 原价 */
+    public double quantity;  /* 数量 */
+    public double stock;     /* 库存 */
+    public double discount;  /* 折扣，已乘100*/
+    public double totalMoney;/* 总金额，实际销售的总额， 等于 costPrice 乘 quantity */
+    public String memo;      /* 备注 */
+    public String unit;      /* 单位 */
 
 }
