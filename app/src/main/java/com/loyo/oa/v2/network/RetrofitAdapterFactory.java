@@ -79,6 +79,7 @@ public class RetrofitAdapterFactory {
                     request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
                 }
             };
+
             adapter = new RestAdapter.Builder()
                     .setEndpoint(url)
                     .setLogLevel(RestAdapter.LogLevel.FULL)

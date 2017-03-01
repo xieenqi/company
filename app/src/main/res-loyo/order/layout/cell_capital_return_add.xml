@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/common_activity_bg"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/activity_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin_other_view">
+
+        <TextView
+            android:id="@+id/tv_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="回款"
+            android:textColor="@color/text99"
+            android:textSize="@dimen/text_sp15" />
+
+        <LinearLayout
+            android:id="@+id/ll_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/margin_other_view"
+            android:paddingRight="@dimen/dimen_5">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_delete_18" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/red1"
+                android:textSize="13sp"
+                android:text="删除"/>
+        </LinearLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/container_date"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:gravity="center_vertical"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/label_date"
+            style="@style/text_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:minWidth="@dimen/dimen_60"
+            android:text="回款日期"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:tag="value"
+            style="@style/text_item1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:hint="必填"
+            android:textColor="@color/text66"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/label_date"
+            android:layout_toLeftOf="@+id/icon_date"/>
+
+        <ImageView
+            android:id="@+id/icon_date"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+        <View
+            style="@style/view_split"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/margin_side_edge" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/container_money"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/label_money"
+            style="@style/text_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:minWidth="@dimen/dimen_60"
+            android:text="回款金额"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/et_money"
+            android:tag="value"
+            style="@style/edtText_add_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_vertical|right"
+            android:hint="必填"
+            android:maxLength="50"
+            android:minHeight="@dimen/dimen_48"
+            android:paddingBottom="@dimen/dimen_5"
+            android:paddingTop="@dimen/dimen_5"
+            android:textColor="@color/text66"
+            android:textSize="15sp"
+            android:layout_marginRight="34dp"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/label_money" />
+
+        <View
+            style="@style/view_split"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/margin_side_edge" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/container_invoice"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:background="@color/white">
+        <TextView
+            android:id="@+id/label_invoice"
+            style="@style/text_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:minWidth="@dimen/dimen_60"
+            android:text="开票金额"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/et_invoice"
+            android:tag="value"
+            style="@style/edtText_add_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_vertical|right"
+            android:hint="必填"
+            android:maxLength="50"
+            android:minHeight="@dimen/dimen_48"
+            android:paddingBottom="@dimen/dimen_5"
+            android:paddingTop="@dimen/dimen_5"
+            android:textColor="@color/text66"
+            android:textSize="15sp"
+            android:layout_marginRight="34dp"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/label_invoice" />
+
+        <View
+            style="@style/view_split"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/margin_side_edge" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/container_person"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:gravity="center_vertical"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/label_person"
+            style="@style/text_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:minWidth="@dimen/dimen_60"
+            android:text="收款人"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/tv_person"
+            android:tag="value"
+            style="@style/text_item1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:hint="必填"
+            android:textColor="@color/text66"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/label_person"
+            android:layout_toLeftOf="@+id/icon_person"/>
+
+        <ImageView
+            android:id="@+id/icon_person"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+        <View
+            style="@style/view_split"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/margin_side_edge" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/container_pay"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:gravity="center_vertical"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/label_pay"
+            style="@style/text_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:minWidth="@dimen/dimen_60"
+            android:text="付款方式"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/tv_pay"
+            android:tag="value"
+            style="@style/text_item1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:hint=""
+            android:textColor="@color/text66"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/label_pay"
+            android:layout_toLeftOf="@+id/icon_pay"/>
+
+        <ImageView
+            android:id="@+id/icon_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+        <View
+            style="@style/view_split"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/margin_side_edge" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/container_attachment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:gravity="center_vertical"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/label_attachment"
+            style="@style/text_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:minWidth="@dimen/dimen_60"
+            android:text="附件"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/tv_product"
+            android:tag="value"
+            style="@style/text_item1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:hint=""
+            android:textColor="@color/text66"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/label_attachment"
+            android:layout_toLeftOf="@+id/icon_attachment"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:id="@+id/icon_attachment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+        <View
+            style="@style/view_split"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/margin_side_edge" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/container_remark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/et_remake"
+            android:tag="value"
+            style="@style/common_text_line_main"
+            android:paddingLeft="@dimen/common_layout_padding"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/white"
+            android:gravity="top"
+            android:hint="请输入备注（选填）"
+            android:textColorHint="@color/text99"
+            android:singleLine="false"
+            android:maxLines="1000"
+            android:maxLength="500"
+            android:minLines="6"
+            android:paddingBottom="@dimen/dimen_5"
+            android:paddingTop="@dimen/dimen_5" />
+    </RelativeLayout>
+</LinearLayout>
