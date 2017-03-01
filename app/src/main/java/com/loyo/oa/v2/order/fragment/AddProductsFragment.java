@@ -16,7 +16,6 @@ import com.loyo.oa.v2.activityui.product.api.ProductService;
 import com.loyo.oa.v2.activityui.product.event.SelectProductEvent;
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
-import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.order.activity.ActivityFragmentsStackManager;
 import com.loyo.oa.v2.order.adapter.AddProductAdapter;
@@ -60,8 +59,8 @@ public class AddProductsFragment extends BaseStackFragment
     @BindView(R.id.tv_title_1) TextView titleView;
     @BindView(R.id.recycle_view) RecyclerView recyclerView;
 
-    @BindView(R.id.tv_saleToal) CustomTextView totalText;
-    @BindView(R.id.tv_discount) CustomTextView discountText;
+    @BindView(R.id.tv_saleToal) TextView totalText;
+    @BindView(R.id.tv_discount) TextView discountText;
 
     @OnClick(R.id.img_title_left) void onBack() {
 
