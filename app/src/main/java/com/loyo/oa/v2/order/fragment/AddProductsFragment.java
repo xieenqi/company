@@ -25,6 +25,7 @@ import com.loyo.oa.v2.order.common.ProductDealValidator;
 import com.loyo.oa.v2.order.model.ProductDeal;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -65,15 +66,14 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
     @OnClick(R.id.img_title_left) void onBackPressed() {
 
         ArrayList<ProductDeal> list = adapter.data;
-        boolean hasUncommitedData = false;
-        ArrayList<SaleIntentionalProduct> commitData = new ArrayList<>();
+        boolean hasUnsavedData = false;
         for (ProductDeal deal : list) {
             if (!deal.isEmpty()) {
-                hasUncommitedData = true;
+                hasUnsavedData = true;
                 break;
             }
         }
-        if (hasUncommitedData) {
+        if (hasUnsavedData) {
             sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -127,8 +127,8 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
         adapter.callback = new AddProductAdapter.ListChangeCallback() {
             @Override
             public void onListChange(double totalMoney, double totalDiscount) {
-                totalText.setText(totalMoney + "");
-                discountText.setText(totalDiscount*100+"%");
+                totalText.setText(Utils.setValueDouble(totalMoney));
+                discountText.setText(Utils.setValueDouble(totalDiscount*100)+"%");
             }
         };
     }

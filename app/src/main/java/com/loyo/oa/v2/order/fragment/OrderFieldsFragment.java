@@ -342,6 +342,15 @@ public class OrderFieldsFragment extends BaseFragment {
         map.put("bizType", 104);
         CustomerService.getAddCustomerJur(map)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        if (getActivity() != null) {
+                            getActivity().finish();
+                        }
+                    }
+
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         setFieldsList(contactLeftExtrasArrayList);
@@ -394,7 +403,9 @@ public class OrderFieldsFragment extends BaseFragment {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        getActivity().finish();
+                        if (getActivity() != null) {
+                            getActivity().finish();
+                        }
                     }
 
                     @Override
