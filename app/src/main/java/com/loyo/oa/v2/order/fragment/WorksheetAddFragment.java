@@ -58,7 +58,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
     private ViewGroup img_title_right;
     private View rootView;
     private onResultCallBack worksheetResultCallBack;
-    private HashMap<String, ArrayList<UploadTask>> taskList = new HashMap<>();//上传任务队列:key是uuid
+    private ArrayList<UploadTask> notUploadTask = new ArrayList<>();//还没有上传的任务
     private WorksheetAdapter worksheetAdapter;
     private List<UploadController> controllerList = new ArrayList<>();
     private UploadController clickPosController;//点击的那个item的controller
@@ -116,7 +116,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             recyclerView.setAdapter(worksheetAdapter);
             img_title_left.setOnClickListener(this);
             img_title_right.setOnClickListener(this);
-        }else{
+        } else {
             //因为重新走来生命周期，数据是克隆来的，观察者模式失效，所以要重新通知数据改变
             worksheetAdapter.notifyDataSetChanged();
         }
@@ -138,22 +138,16 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 for (UploadController uploader : controllerList) {
                     uploaders.addAllTask(uploader.getTaskList());
                 }
-                boolean submit=true;
-                if (uploaders.getTaskList().size() > 0) {
-                    for (UploadTask uploader : uploaders.getTaskList()) {
-                        //如果有没有上传的任务
-                        if(uploader.getStatus()!=UploadTask.UPLOADED){
-                            submit=false;
-                            showLoading2("");
-                            uploaders.setObserver(this);
-                            uploaders.startUpload();
-                            uploaders.notifyCompletionIfNeeded();
-                            break;
-                        }
-                    }
-                }
-                if(submit){
-                    if (null != worksheetResultCallBack) worksheetResultCallBack.onWorksheetSubmit(copyData);
+                getNotUploadTask();//上传之前，先获取没有上传的，方便等下上传成功后绑定附件
+                //如果有没有上传的附件
+                if(notUploadTask.size()>0){
+                    showLoading2("");
+                    uploaders.setObserver(this);
+                    uploaders.startUpload();
+                    uploaders.notifyCompletionIfNeeded();
+                }else{
+                    if (null != worksheetResultCallBack)
+                        worksheetResultCallBack.onWorksheetSubmit(copyData);
                 }
                 break;
 
@@ -163,7 +157,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
     /**
      * 提供给外部调用，主要是拦截物理back按键，然后调用本方法返回
      */
-    public void back(){
+    public void back() {
         boolean isEdit = false;
         //和原来的实体对比，判断是不是修改过
         if (data.size() == copyData.size()) {
@@ -176,12 +170,12 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                     break;
                 }
             }
-        } else{
+        } else {
             //增加或者删除了工单
-            isEdit=true;
+            isEdit = true;
         }
         //创建新的数据，并且填入的有值
-        if (!isEdit&&data.size() == 0) {
+        if (!isEdit && data.size() == 0) {
             int size = copyData.size();
             for (int i = 0; i < size; i++) {
                 if (!copyData.get(i).isEmpty()) {
@@ -221,7 +215,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                         UploadController uploadController = controllerList.get(i);
                         ArrayList<UploadTask> taskList = uploadController.getTaskList();
                         //在循环中不能删除item，记录下来，统一删除
-                        ArrayList<UploadTask> delTask=new ArrayList<UploadTask>();
+                        ArrayList<UploadTask> delTask = new ArrayList<UploadTask>();
                         for (UploadTask uptask : taskList) {
                             if (uptask.getStatus() != UploadTask.UPLOADED) {
                                 delTask.add(uptask);
@@ -403,12 +397,12 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 uploadController.loadView(holder.gridView);
                 holder.tvNumTitle.setText("工单" + (position + 1));
                 //设置监听器，绑定ui和模型,如此蛋疼的写，是避免一个editview上面绑定多个watcher
-                FastSaveTextWatcher watcher= (FastSaveTextWatcher) holder.et_title.getTag();
-                if(null!=watcher)holder.et_title.removeTextChangedListener(watcher);
+                FastSaveTextWatcher watcher = (FastSaveTextWatcher) holder.et_title.getTag();
+                if (null != watcher) holder.et_title.removeTextChangedListener(watcher);
                 holder.et_title.setTag(new FastSaveTextWatcher(worksheet, "title"));
                 holder.et_title.addTextChangedListener((TextWatcher) holder.et_title.getTag());
-                watcher= (FastSaveTextWatcher) holder.et_content.getTag();
-                if(null!=watcher)holder.et_content.removeTextChangedListener(watcher);
+                watcher = (FastSaveTextWatcher) holder.et_content.getTag();
+                if (null != watcher) holder.et_content.removeTextChangedListener(watcher);
                 holder.et_content.setTag(new FastSaveTextWatcher(worksheet, "content"));
                 holder.et_content.addTextChangedListener((TextWatcher) holder.et_content.getTag());
             }
@@ -554,25 +548,37 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
 
 
     /**
-     * 绑定附件
+     * 获取还没有上传的任务
      */
-    private  ArrayList<AttachmentBatch>  buildAttachment() {
-        ArrayList<AttachmentBatch> attachment = new ArrayList<AttachmentBatch>();
-        for (int j=0;j<controllerList.size();j++) {
-            UploadController controller=controllerList.get(j);
+    private void getNotUploadTask() {
+        for (int j = 0; j < controllerList.size(); j++) {
+            UploadController controller = controllerList.get(j);
             ArrayList<UploadTask> list = controller.getTaskList();
             for (int i = 0; i < list.size(); i++) {
                 UploadTask task = list.get(i);
-                AttachmentBatch attachmentBatch = new AttachmentBatch();
-                attachmentBatch.UUId = copyData.get(j).uuid;
-                attachmentBatch.bizType = 29;//工单附件的业务id
-                attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
-                attachmentBatch.name = task.getKey();
-                attachmentBatch.size = Integer.parseInt(task.size + "");
-                attachment.add(attachmentBatch);
+                if (UploadTask.UPLOADED == task.getStatus()) {
+                    continue;
+                }
+                notUploadTask.add(task);
             }
         }
-        return  attachment;
+    }
+
+    /**
+     * 构造绑定附件的信息
+     */
+    private ArrayList<AttachmentBatch> buildAttachment() {
+        ArrayList<AttachmentBatch> attachment=new ArrayList<>();
+        for (UploadTask task : notUploadTask) {
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = task.UUID;
+            attachmentBatch.bizType = 29;//工单附件的业务id
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+        return attachment;
     }
 
     /**
@@ -584,16 +590,19 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        img_title_right.setEnabled(true);
+                        e.printStackTrace();
                     }
                     @Override
                     public void onNext(ArrayList<AttachmentForNew> news) {
-                        if (null != worksheetResultCallBack){
+                        //绑定完了，就清空原来的列表，避免重复绑定
+                        notUploadTask.clear();
+                        if (null != worksheetResultCallBack) {
                             worksheetResultCallBack.onWorksheetSubmit(copyData);
                         }
                     }
                 });
     }
+
     /**
      * 反射更新实体的值
      *
