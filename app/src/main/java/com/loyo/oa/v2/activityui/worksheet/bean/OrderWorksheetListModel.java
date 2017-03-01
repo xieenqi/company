@@ -55,7 +55,7 @@ public class OrderWorksheetListModel implements Serializable {
 
     @Override
     public String toString() {
-        return "templateName:" + templateName + ",templateId:" + templateId + ",title:" + title + ",content:" + content + ",uuid:" + uuid;
+        return super.toString()+"|templateName:" + templateName + ",templateId:" + templateId + ",title:" + title + ",content:" + content + ",uuid:" + uuid;
     }
 
     public boolean isEmpty() {

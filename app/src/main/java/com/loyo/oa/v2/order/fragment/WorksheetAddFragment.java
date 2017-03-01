@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,10 +94,12 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
         for (OrderWorksheetListModel item : data) {
             copyData.add(item.clone());
         }
+        Log.i("ttttttttttt", "onCreate: ");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //
         if (null == rootView) {
             rootView = inflater.inflate(R.layout.fragment_worksheet_add, container, false);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recycle_view);
@@ -108,6 +111,9 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             recyclerView.setAdapter(worksheetAdapter);
             img_title_left.setOnClickListener(this);
             img_title_right.setOnClickListener(this);
+        }else{
+            //因为重新走来生命周期，数据是克隆来的，观察者模式失效，所以要重新通知数据改变
+            worksheetAdapter.notifyDataSetChanged();
         }
         return rootView;
     }
@@ -391,10 +397,16 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 holder.gridView.setTag(position + "");//使用tag保存一下绑定数据的位置
                 uploadController.loadView(holder.gridView);
                 holder.tvNumTitle.setText("工单" + (position + 1));
-                OrderWorksheetListModel OrderWorksheetListModel = copyData.get(position);
-                //设置监听器，绑定ui和模型
-                holder.et_title.addTextChangedListener(new FastSaveTextWatcher(OrderWorksheetListModel, "title"));
-                holder.et_content.addTextChangedListener(new FastSaveTextWatcher(OrderWorksheetListModel, "content"));
+                Log.i("tttttttt", "onBindViewHolder: "+worksheet);
+                //设置监听器，绑定ui和模型,如此蛋疼的写，是避免一个editview上面绑定多个watcher
+                FastSaveTextWatcher watcher= (FastSaveTextWatcher) holder.et_title.getTag();
+                if(null!=watcher)holder.et_title.removeTextChangedListener(watcher);
+                holder.et_title.setTag(new FastSaveTextWatcher(worksheet, "title"));
+                holder.et_title.addTextChangedListener((TextWatcher) holder.et_title.getTag());
+                watcher= (FastSaveTextWatcher) holder.et_content.getTag();
+                if(null!=watcher)holder.et_content.removeTextChangedListener(watcher);
+                holder.et_content.setTag(new FastSaveTextWatcher(worksheet, "content"));
+                holder.et_content.addTextChangedListener((TextWatcher) holder.et_content.getTag());
             }
         }
 
@@ -593,6 +605,8 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             String value = s.toString();
             try {
                 field.set(OrderWorksheetListModel, value);
+                Log.i("tttttttt", "onBindViewHolder: afterTextChanged:"+OrderWorksheetListModel);
+
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
