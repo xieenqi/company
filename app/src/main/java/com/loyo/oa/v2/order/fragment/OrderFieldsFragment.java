@@ -128,6 +128,8 @@ public class OrderFieldsFragment extends BaseFragment {
     public OrderDetail orderDetail;
     public boolean capitalReturningRecordEdit = true;
 
+    private WorksheetAddFragment addWorksheetFragment;//添加工单的页面
+
     @BindView(R.id.img_title_left)  ViewGroup backButton;
     @BindView(R.id.img_title_right) ViewGroup rightButton;
     @BindView(R.id.tv_title_1)      TextView  titleView;
@@ -196,8 +198,7 @@ public class OrderFieldsFragment extends BaseFragment {
             Intent intent = new Intent(getActivity(), IntentionProductActivity.class);
             intent.putExtras(mBundle);
             startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_PRODUCT);
-        }
-        else {
+        }else {
             AddProductsFragment addProductsFragment = new AddProductsFragment(this.manager);
             addProductsFragment.setData(productData);
             addProductsFragment.callback = new AddProductsFragment.ProductPickerCallback() {
@@ -230,11 +231,32 @@ public class OrderFieldsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.container_worksheet) void onWorksheet() {
-        Intent mIntent = new Intent(getActivity(), OrderWorksheetListActivity.class);
-        mIntent.putExtra(OrderWorksheetListActivity.KEY_LIST, reWorkSheet);
-        mIntent.putExtra(OrderWorksheetListActivity.KEY_SESSION, sessionId);
-        startActivity(mIntent);
+        if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
+            //这里通过EventBus来接受数据
+            Intent mIntent = new Intent(getActivity(), OrderWorksheetListActivity.class);
+            mIntent.putExtra(OrderWorksheetListActivity.KEY_LIST, reWorkSheet);
+            mIntent.putExtra(OrderWorksheetListActivity.KEY_SESSION, sessionId);
+            startActivity(mIntent);
+        }else {
+            //因为addWorksheetFragment，保存了一些状态，所以为空才创建。
+            if(null==addWorksheetFragment){
+                addWorksheetFragment = WorksheetAddFragment.newInstance(reWorkSheet);
+            }
+            addWorksheetFragment.setWorksheetResultCallBack(new WorksheetAddFragment.onResultCallBack() {
+                @Override
+                public void onWorksheetSubmit(ArrayList<OrderWorksheetListModel> data) {
+                    worksheetFinish(data);
+                    manager.pop();
+                }
+                @Override
+                public void onWorksheetBack() {
+                    manager.pop();
+                }
+            });
+            this.manager.push(addWorksheetFragment, "add_worksheet");
+        }
     }
+
 
     @OnClick(R.id.container_start_time) void onStartTime() {
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(getActivity(), null);
@@ -279,6 +301,7 @@ public class OrderFieldsFragment extends BaseFragment {
         startActivityForResult(intent, ExtraAndResult.MSG_WHAT_HIDEDIALOG);
     }
 
+
     public OrderFieldsFragment(ActionListener listener) {
         this.listenerRef = new WeakReference<>(listener);
     }
@@ -288,7 +311,7 @@ public class OrderFieldsFragment extends BaseFragment {
         this.listenerRef = new WeakReference<>(listener);
     }
 
-    private OrderFieldsFragment() {
+    public OrderFieldsFragment() {
     }
 
     @Nullable
@@ -641,9 +664,17 @@ public class OrderFieldsFragment extends BaseFragment {
         if (!sessionId.equals(event.session)) {
             return;
         }
-        reWorkSheet.clear();
-        reWorkSheet.addAll((Collection<? extends OrderWorksheetListModel>)
+        worksheetFinish((Collection<? extends OrderWorksheetListModel>)
                 event.bundle.getSerializable(OrderWorksheetListActivity.KEY_LIST));
+    }
+
+    /**
+     * 更新工单的数据
+     * @param worksheetList
+     */
+    private void worksheetFinish(Collection<? extends OrderWorksheetListModel> worksheetList){
+        reWorkSheet.clear();
+        reWorkSheet.addAll(worksheetList);
         StringBuffer sBuffer = new StringBuffer();
         for (OrderWorksheetListModel orderWorksheetListModel : reWorkSheet) {
             if (reWorkSheet.size() > 1) {
@@ -654,7 +685,6 @@ public class OrderFieldsFragment extends BaseFragment {
         }
         worksheetText.setText(sBuffer.toString());
     }
-
     /**
      * 获取 意向产品的名字
      *

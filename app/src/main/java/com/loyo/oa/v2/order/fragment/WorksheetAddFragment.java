@@ -1,6 +1,5 @@
-package com.loyo.oa.v2.activityui.worksheet.fragment;
+package com.loyo.oa.v2.order.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +25,7 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetAddModel;
+import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.common.Global;
@@ -46,13 +45,13 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class WorksheetAddFragment extends BaseFragment implements View.OnClickListener, UploadControllerCallback {
     private static final String WorksheetData = "worksheetData";
-    private List<WorksheetAddModel> data;//原始数据，不能修改，保持原来的数据不变
-    private List<WorksheetAddModel> copyData;//克隆的数据,可以修改，是最新的数据
+    private ArrayList<OrderWorksheetListModel> data;//原始数据，不能修改，保持原来的数据不变
+    private ArrayList<OrderWorksheetListModel> copyData;//克隆的数据,可以修改，是最新的数据
     private RecyclerView recyclerView;
     private ViewGroup img_title_left;
     private ViewGroup img_title_right;
     private View rootView;
-    private OnFragmentEventListener mListener;
+    private onResultCallBack worksheetResultCallBack;
     private HashMap<String, ArrayList<UploadTask>> taskList = new HashMap<>();//上传任务队列:key是uuid
     private WorksheetAdapter worksheetAdapter;
     private List<UploadController> controllerList = new ArrayList<>();
@@ -63,13 +62,14 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
 
     /**
      * 创建fragment
+     *
      * @param data 可以传入默认数据，不需要可以传入null
      * @return
      */
 
-    public static WorksheetAddFragment newInstance(ArrayList<WorksheetAddModel> data) {
+    public static WorksheetAddFragment newInstance(ArrayList<OrderWorksheetListModel> data) {
         WorksheetAddFragment fragment = new WorksheetAddFragment();
-        if(null!=data){
+        if (null != data) {
             Bundle args = new Bundle();
             args.putSerializable(WorksheetData, data);
             fragment.setArguments(args);
@@ -81,7 +81,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            data = (List<WorksheetAddModel>) getArguments().getSerializable(WorksheetData);
+            data = (ArrayList<OrderWorksheetListModel>) getArguments().getSerializable(WorksheetData);
             if (null == data) {
                 data = new ArrayList<>();
             }
@@ -90,7 +90,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
         }
         //复制一个列表，注意，是复制对象，不能在原来的数据上面做修改
         copyData = new ArrayList<>();
-        for (WorksheetAddModel item : data) {
+        for (OrderWorksheetListModel item : data) {
             copyData.add(item.clone());
         }
     }
@@ -117,45 +117,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
         switch (v.getId()) {
             case R.id.img_title_left:
                 //返回
-                boolean isEdit = false;
-                //和原来的实体对比，判断是不是修改过
-                if (data.size() == copyData.size()) {
-                    //对原来的数据进行了编辑
-                    int size = copyData.size();
-                    for (int i = 0; i < size; i++) {
-                        if (!data.get(i).equals(copyData.get(i))) {
-                            //修改过
-                            isEdit = true;
-                            break;
-                        }
-                    }
-                } else if (data.size() == 0) {
-                    //创建新的数据，并且填入的有值
-                    int size = copyData.size();
-                    for (int i = 0; i < size; i++) {
-                        if (!copyData.get(i).isEmpty()) {
-                            //修改过
-                            isEdit = true;
-                            break;
-                        }
-                    }
-                }
-                if (isEdit) {
-                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
-                        }
-                    }, new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
-                            mListener.onWorksheetBack();
-                        }
-                    }, "提示", "是否放弃编辑？确定后信息将不会保存。");
-                } else {
-                    mListener.onWorksheetBack();
-                }
+                back();
                 break;
             case R.id.img_title_right:
                 //验证数据没有通过
@@ -165,17 +127,105 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 for (UploadController uploader : controllerList) {
                     uploaders.addAllTask(uploader.getTaskList());
                 }
+                boolean submit=true;
                 if (uploaders.getTaskList().size() > 0) {
-                    //有附件，需要先上传附件
-                    showLoading2("");
-                    uploaders.setObserver(this);
-                    uploaders.startUpload();
-                    uploaders.notifyCompletionIfNeeded();
-                } else {
-                    mListener.onWorksheetSubmit(copyData);
+                    for (UploadTask uploader : uploaders.getTaskList()) {
+                        //如果有没有上传的任务
+                        if(uploader.getStatus()!=UploadTask.UPLOADED){
+                            submit=false;
+                            showLoading2("");
+                            uploaders.setObserver(this);
+                            uploaders.startUpload();
+                            uploaders.notifyCompletionIfNeeded();
+                            break;
+                        }
+                    }
+                }
+                if(submit){
+                    if (null != worksheetResultCallBack) worksheetResultCallBack.onWorksheetSubmit(copyData);
                 }
                 break;
 
+        }
+    }
+
+    /**
+     * 提供给外部调用，主要是拦截物理back按键，然后调用本方法返回
+     */
+    public void back(){
+        boolean isEdit = false;
+        //和原来的实体对比，判断是不是修改过
+        if (data.size() == copyData.size()) {
+            //对原来的数据进行了编辑
+            int size = copyData.size();
+            for (int i = 0; i < size; i++) {
+                if (!data.get(i).equals(copyData.get(i))) {
+                    //修改过
+                    isEdit = true;
+                    break;
+                }
+            }
+        } else{
+            //增加或者删除了工单
+            isEdit=true;
+        }
+        //创建新的数据，并且填入的有值
+        if (!isEdit&&data.size() == 0) {
+            int size = copyData.size();
+            for (int i = 0; i < size; i++) {
+                if (!copyData.get(i).isEmpty()) {
+                    //修改过
+                    isEdit = true;
+                    break;
+                }
+            }
+        }
+        //判断是不是有未上传的附件
+        if (!isEdit) {
+            int size = controllerList.size();
+            for (int i = 0; i < size && !isEdit; i++) {
+                UploadController uploadController = controllerList.get(i);
+                ArrayList<UploadTask> taskList = uploadController.getTaskList();
+                for (UploadTask uptask : taskList) {
+                    if (uptask.getStatus() != UploadTask.UPLOADED) {
+                        isEdit = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (isEdit) {
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismiss();
+                    //移除没有保存的附件
+                    int size = controllerList.size();
+                    for (int i = 0; i < size; i++) {
+                        UploadController uploadController = controllerList.get(i);
+                        ArrayList<UploadTask> taskList = uploadController.getTaskList();
+                        //在循环中不能删除item，记录下来，统一删除
+                        ArrayList<UploadTask> delTask=new ArrayList<UploadTask>();
+                        for (UploadTask uptask : taskList) {
+                            if (uptask.getStatus() != UploadTask.UPLOADED) {
+                                delTask.add(uptask);
+                            }
+                        }
+                        for (UploadTask uptask : delTask) {
+                            taskList.remove(uptask);
+                        }
+                        uploadController.reloadGridView();
+                    }
+                    if (null != worksheetResultCallBack) worksheetResultCallBack.onWorksheetBack();
+                }
+            }, "提示", "是否放弃编辑？确定后信息将不会保存。");
+        } else {
+            if (null != worksheetResultCallBack) worksheetResultCallBack.onWorksheetBack();
         }
     }
 
@@ -191,7 +241,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             }
         }
         for (int i = 0; i < size; i++) {
-            for (int j = i+1; j < size; j++) {
+            for (int j = i + 1; j < size; j++) {
                 if (TextUtils.equals(copyData.get(i).title, copyData.get(j).title)) {
                     Toast.makeText(mActivity, "工单" + (i + 1) + "和" + (j + 1) + "标题重复", Toast.LENGTH_LONG).show();
                     return false;
@@ -223,9 +273,9 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                     return;
                 }
                 holder.tv_type.setText(template.name);
-                WorksheetAddModel worksheetAddModel = copyData.get(position);
-                updateModelByField(worksheetAddModel, "typeId", template.id);
-                updateModelByField(worksheetAddModel, "typeName", template.name);
+                OrderWorksheetListModel OrderWorksheetListModel = copyData.get(position);
+                updateModelByField(OrderWorksheetListModel, "templateId", template.id);
+                updateModelByField(OrderWorksheetListModel, "templateName", template.name);
             }
         });
     }
@@ -256,9 +306,9 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 footerHolder.flAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        WorksheetAddModel worksheetAddModel = new WorksheetAddModel();
-                        worksheetAddModel.uuid = StringUtil.getUUID();
-                        copyData.add(worksheetAddModel);
+                        OrderWorksheetListModel OrderWorksheetListModel = new OrderWorksheetListModel();
+                        OrderWorksheetListModel.uuid = StringUtil.getUUID();
+                        copyData.add(OrderWorksheetListModel);
                         UploadController controller = new UploadController(mActivity, 9);
                         controllerList.add(controller);//添加到队列
                         //通知插入了一个
@@ -274,9 +324,9 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 });
             } else {
                 final WorksheetHolder holder = (WorksheetHolder) baseHolder;
-                WorksheetAddModel worksheet = copyData.get(position);
+                OrderWorksheetListModel worksheet = copyData.get(position);
 //                holder.tv_order.setText(worksheet.orderName);
-                holder.tv_type.setText(worksheet.typeName);
+                holder.tv_type.setText(worksheet.templateName);
                 holder.et_title.setText(worksheet.title);
                 holder.et_content.setText(worksheet.content);
                 //选择工单类型
@@ -341,10 +391,10 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 holder.gridView.setTag(position + "");//使用tag保存一下绑定数据的位置
                 uploadController.loadView(holder.gridView);
                 holder.tvNumTitle.setText("工单" + (position + 1));
-                WorksheetAddModel worksheetAddModel = copyData.get(position);
+                OrderWorksheetListModel OrderWorksheetListModel = copyData.get(position);
                 //设置监听器，绑定ui和模型
-                holder.et_title.addTextChangedListener(new FastSaveTextWatcher(worksheetAddModel, "title"));
-                holder.et_content.addTextChangedListener(new FastSaveTextWatcher(worksheetAddModel, "content"));
+                holder.et_title.addTextChangedListener(new FastSaveTextWatcher(OrderWorksheetListModel, "title"));
+                holder.et_content.addTextChangedListener(new FastSaveTextWatcher(OrderWorksheetListModel, "content"));
             }
         }
 
@@ -413,10 +463,10 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 if (data != null) {
                     String s = (String) clickPosController.getGridView().getTag();
                     int position = Integer.parseInt(s);
-                    WorksheetAddModel worksheetAddModel = copyData.get(position);
+                    OrderWorksheetListModel OrderWorksheetListModel = copyData.get(position);
                     List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        clickPosController.addUploadTask("file://" + path, null, worksheetAddModel.uuid);
+                        clickPosController.addUploadTask("file://" + path, null, OrderWorksheetListModel.uuid);
                     }
                     clickPosController.reloadGridView();
                 }
@@ -481,20 +531,20 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             LoyoToast.info(mActivity, count + "个附件上传失败，请重试或者删除");
             return;
         }
-        mListener.onWorksheetSubmit(copyData);
+        if (null != worksheetResultCallBack) worksheetResultCallBack.onWorksheetSubmit(copyData);
     }
 
     /**
      * 反射更新实体的值
      *
-     * @param worksheetAddModel
+     * @param OrderWorksheetListModel
      * @param fieldName
      * @param value
      */
-    private void updateModelByField(WorksheetAddModel worksheetAddModel, String fieldName, String value) {
-        Field field = getField(worksheetAddModel, fieldName);
+    private void updateModelByField(OrderWorksheetListModel OrderWorksheetListModel, String fieldName, String value) {
+        Field field = getField(OrderWorksheetListModel, fieldName);
         try {
-            field.set(worksheetAddModel, value);
+            field.set(OrderWorksheetListModel, value);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -503,13 +553,13 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
     /**
      * 获取模型中需要更新的字段
      *
-     * @param worksheetAddModel
+     * @param OrderWorksheetListModel
      * @param fieldName
      * @return
      */
-    private Field getField(WorksheetAddModel worksheetAddModel, String fieldName) {
+    private Field getField(OrderWorksheetListModel OrderWorksheetListModel, String fieldName) {
         Field field = null;
-        Field[] fs = worksheetAddModel.getClass().getDeclaredFields();
+        Field[] fs = OrderWorksheetListModel.getClass().getDeclaredFields();
         for (int i = 0; i < fs.length; i++) {
             Field f = fs[i];
             f.setAccessible(true); //设置属性是可以访问的
@@ -531,18 +581,18 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
      */
     private class FastSaveTextWatcher implements TextWatcher {
         private Field field;
-        private WorksheetAddModel worksheetAddModel;
+        private OrderWorksheetListModel OrderWorksheetListModel;
 
-        private FastSaveTextWatcher(WorksheetAddModel worksheetAddModel, String fieldName) {
-            this.worksheetAddModel = worksheetAddModel;
-            field = getField(worksheetAddModel, fieldName);
+        private FastSaveTextWatcher(OrderWorksheetListModel OrderWorksheetListModel, String fieldName) {
+            this.OrderWorksheetListModel = OrderWorksheetListModel;
+            field = getField(OrderWorksheetListModel, fieldName);
         }
 
         @Override
         public void afterTextChanged(Editable s) {
             String value = s.toString();
             try {
-                field.set(worksheetAddModel, value);
+                field.set(OrderWorksheetListModel, value);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -557,21 +607,14 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        if (context instanceof OnFragmentEventListener) {
-            mListener = (OnFragmentEventListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentEventListener");
-        }
+    public void setWorksheetResultCallBack(onResultCallBack worksheetResultCallBack) {
+        this.worksheetResultCallBack = worksheetResultCallBack;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        worksheetResultCallBack = null;
     }
 
     /**
@@ -579,15 +622,15 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
      *
      * @return
      */
-    public List<WorksheetAddModel> getData() {
+    public ArrayList<OrderWorksheetListModel> getData() {
         return data;
     }
 
     /**
      * 需要在activity中实现的接口
      */
-    public interface OnFragmentEventListener {
-        void onWorksheetSubmit(List<WorksheetAddModel> data);
+    public interface onResultCallBack {
+        void onWorksheetSubmit(ArrayList<OrderWorksheetListModel> data);
 
         void onWorksheetBack();
     }

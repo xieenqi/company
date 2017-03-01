@@ -1020,11 +1020,6 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="ukuaiqi" />
-
-        <activity android:name=".order.activity.WorksheetAddTestActivity"
-            android:enabled="true"
-            android:exported="true">
-        </activity>
     </application>
 
 </manifest>

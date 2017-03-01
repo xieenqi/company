@@ -130,8 +130,12 @@ public class UploadController implements ImageCell.ImageCellCallback {
     public void removeAllTask() {
         taskList.clear();
     }
+
+    /**
+     * 添加任务，但是不删除原来的。
+     * @param taskList
+     */
     public void addAllTask(ArrayList<UploadTask> taskList){
-        this.taskList.clear();
         this.taskList.addAll(taskList);
     }
 
