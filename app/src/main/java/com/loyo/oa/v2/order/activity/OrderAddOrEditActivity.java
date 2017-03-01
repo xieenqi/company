@@ -230,4 +230,11 @@ public class OrderAddOrEditActivity extends BaseActivity
         FragmentManager fm = getSupportFragmentManager();
         fm.popBackStack();
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        //TODO 这里处理物理返回按键，应该先调用fragment的返回事件，由frangment的回调来做出栈操作。
+//        FragmentManager fm = getSupportFragmentManager();
+//
+//    }
 }
