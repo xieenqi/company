@@ -1,6 +1,7 @@
 package com.loyo.oa.upload;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -50,6 +51,9 @@ public class UploadController implements ImageCell.ImageCellCallback {
 
     public int maxSize;
 
+    public ImageUploadGridView getGridView() {
+        return gridView;
+    }
 
     public UploadController(Activity context, int maxSize) {
         this.context = context;
@@ -125,6 +129,10 @@ public class UploadController implements ImageCell.ImageCellCallback {
 
     public void removeAllTask() {
         taskList.clear();
+    }
+    public void addAllTask(ArrayList<UploadTask> taskList){
+        this.taskList.clear();
+        this.taskList.addAll(taskList);
     }
 
     public void startUpload() {

@@ -30,6 +30,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
+import com.loyo.oa.v2.order.activity.ActivityFragmentsStackManager;
 import com.loyo.oa.v2.order.activity.OrderAddOrEditActivity;
 import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.order.widget.OrderCustomFieldsView;
@@ -91,6 +92,7 @@ public class OrderFieldsFragment extends BaseFragment {
     }
 
     private WeakReference<ActionListener> listenerRef;
+    private ActivityFragmentsStackManager manager;
 
     private static final ArrayList<String> checkFieldNames = new ArrayList<String>(){{
         add("paymentRecords");
@@ -186,13 +188,30 @@ public class OrderFieldsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.container_product) void onProduct() {
-        Bundle mBundle = new Bundle();
-        mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, productData);
-        mBundle.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, true);
-        mBundle.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, true);
-        Intent intent = new Intent(getActivity(), IntentionProductActivity.class);
-        intent.putExtras(mBundle);
-        startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_PRODUCT);
+        if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
+            Bundle mBundle = new Bundle();
+            mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, productData);
+            mBundle.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, true);
+            mBundle.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, true);
+            Intent intent = new Intent(getActivity(), IntentionProductActivity.class);
+            intent.putExtras(mBundle);
+            startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_PRODUCT);
+        }
+        else {
+            AddProductsFragment addProductsFragment = new AddProductsFragment(this.manager);
+            addProductsFragment.setData(productData);
+            addProductsFragment.callback = new AddProductsFragment.ProductPickerCallback() {
+                @Override
+                public void onProductPicked(ArrayList<SaleIntentionalProduct> data, String dealTotal) {
+                    productData = data;
+                    productText.setText(getIntentionProductName());
+                    if (TextUtils.isEmpty(dealText.getText().toString())) {//成交金额  返显产品的销售总价
+                        dealText.setText("0".equals(dealTotal) ? "" : dealTotal);
+                    }
+                }
+            };
+            this.manager.push(addProductsFragment, "add_products");
+        }
     }
 
     @OnClick(R.id.container_estimate) void onPaymentRecord() {
@@ -264,6 +283,14 @@ public class OrderFieldsFragment extends BaseFragment {
         this.listenerRef = new WeakReference<>(listener);
     }
 
+    public OrderFieldsFragment(ActionListener listener, ActivityFragmentsStackManager manager) {
+        this.manager = manager;
+        this.listenerRef = new WeakReference<>(listener);
+    }
+
+    private OrderFieldsFragment() {
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -315,6 +342,15 @@ public class OrderFieldsFragment extends BaseFragment {
         map.put("bizType", 104);
         CustomerService.getAddCustomerJur(map)
                 .subscribe(new DefaultLoyoSubscriber<ArrayList<ContactLeftExtras>>(hud) {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        if (getActivity() != null) {
+                            getActivity().finish();
+                        }
+                    }
+
                     @Override
                     public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
                         setFieldsList(contactLeftExtrasArrayList);
@@ -367,7 +403,9 @@ public class OrderFieldsFragment extends BaseFragment {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        getActivity().finish();
+                        if (getActivity() != null) {
+                            getActivity().finish();
+                        }
                     }
 
                     @Override

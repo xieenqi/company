@@ -62,9 +62,9 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
 
     private String xPath = "";
     private String userId = "";
-    private String field = "";
-    private String order = "";
-    private String statusKey = "";
+    private String field = "lastActAt";
+    private String order = "desc";
+    private String statusKey = "0";
     private PaginationX<ClueListItem> mPaginationX=new PaginationX<>();
     private LoadingLayout ll_loading;
     private PullToRefreshListView lv_list;

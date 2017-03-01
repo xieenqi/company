@@ -179,6 +179,7 @@ public class FollowUpListModel implements Serializable {
     public void setAtPerson(TextView tv_toast) {
         if (!TextUtils.isEmpty(atNameAndDepts)) {
             tv_toast.setText("@" + atNameAndDepts);
+            tv_toast.setVisibility(View.VISIBLE);
         } else {
             tv_toast.setVisibility(View.GONE);
         }

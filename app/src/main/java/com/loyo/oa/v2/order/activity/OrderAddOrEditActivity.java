@@ -3,6 +3,7 @@ package com.loyo.oa.v2.order.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
@@ -18,6 +19,7 @@ import com.loyo.oa.v2.order.fragment.OrderFieldsFragment;
 import com.loyo.oa.v2.order.fragment.OrderWorkflowFragment;
 import com.loyo.oa.v2.order.model.WorkflowModel;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +29,8 @@ import java.util.HashMap;
  */
 
 public class OrderAddOrEditActivity extends BaseActivity
-        implements OrderFieldsFragment.ActionListener, OrderWorkflowFragment.ActionListener {
+        implements OrderFieldsFragment.ActionListener, OrderWorkflowFragment.ActionListener,
+        ActivityFragmentsStackManager {
 
     public static final int ORDER_ADD = 0;    /* 订单新建 */
     public static final int ORDER_IMPORT = 1; /* 机会转订单 */
@@ -59,7 +62,7 @@ public class OrderAddOrEditActivity extends BaseActivity
         setContentView(R.layout.activity_order_add_or_edit);
         getIntentData();
         FragmentManager fm = getSupportFragmentManager();
-        OrderFieldsFragment fragment = new OrderFieldsFragment(this);
+        OrderFieldsFragment fragment = new OrderFieldsFragment(this, this);
         fragment.actionType = actionType;
         fragment.orderDetail = orderDetail;
         fragment.orderId = orderId;
@@ -192,5 +195,39 @@ public class OrderAddOrEditActivity extends BaseActivity
                         }, 2000);
                     }
                 });
+    }
+
+    /**
+     * ActivityFragmentsStackManager
+     */
+
+    @Override
+    public void push(Fragment fragment, String tag) {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.enter_righttoleft, R.anim.exit_righttoleft,
+                        R.anim.enter_righttoleft, R.anim.exit_lefttoright)
+                .add(R.id.fragment_container, fragment)
+                .addToBackStack(tag)
+                .commit();
+    }
+
+    @Override
+    public void push(Fragment fragment) {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.enter_righttoleft, R.anim.exit_righttoleft,
+                        R.anim.enter_righttoleft, R.anim.exit_lefttoright)
+                .add(R.id.fragment_container, fragment)
+                .addToBackStack(StringUtil.getUUID())
+                .commit();
+    }
+
+    @Override
+    public void pop() {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStack();
     }
 }

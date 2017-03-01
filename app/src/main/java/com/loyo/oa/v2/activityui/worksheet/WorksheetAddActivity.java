@@ -12,9 +12,11 @@ import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetAddModel;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
+import com.loyo.oa.v2.activityui.worksheet.fragment.WorksheetAddFragment;
 import com.loyo.oa.v2.activityui.worksheet.fragment.WorksheetAddStep1Fragment;
 import com.loyo.oa.v2.activityui.worksheet.fragment.WorksheetAddStep2Fragment;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -36,7 +38,7 @@ public class WorksheetAddActivity extends BaseFragmentActivity {
     WorksheetAddStep2Fragment step2Fragment;
 
     private int mIndex = -1;
-    private List<BaseFragment> fragments = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>();
 
     private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
 
@@ -69,9 +71,9 @@ public class WorksheetAddActivity extends BaseFragmentActivity {
     private void initChildren() {
 
         Bundle b = new Bundle();
+        ArrayList<WorksheetAddModel> data=new ArrayList<>();
         step1Fragment = (WorksheetAddStep1Fragment) Fragment.instantiate(this, WorksheetAddStep1Fragment.class.getName(), b);
         fragments.add(step1Fragment);
-
         b = new Bundle();
         step2Fragment = (WorksheetAddStep2Fragment) Fragment.instantiate(this, WorksheetAddStep2Fragment.class.getName(), b);
         fragments.add(step2Fragment);
@@ -86,12 +88,10 @@ public class WorksheetAddActivity extends BaseFragmentActivity {
      */
     private void changeChild(int index) {
         if (index != mIndex && fragments.size() > 0) {
-
             boolean push = true;
             if (mIndex > index) {
                 push = false;
             }
-
             mIndex = index;
             try {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

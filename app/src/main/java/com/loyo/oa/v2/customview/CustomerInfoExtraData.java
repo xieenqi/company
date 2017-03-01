@@ -124,9 +124,9 @@ public class CustomerInfoExtraData extends LinearLayout {
                 AlertDialog dialog_follow = initDialog_Wheel_one(tv_content, customerExtra);
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_list(dialog_follow, i));
-//                tv_content.setFocusable(false);
-//                tv_content.setFocusableInTouchMode(false);
-//                tv_content.setOnFocusChangeListener(null);
+                tv_content.setFocusable(false);
+                tv_content.setFocusableInTouchMode(false);
+                tv_content.setOnFocusChangeListener(null);
                 tv_content.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -143,9 +143,9 @@ public class CustomerInfoExtraData extends LinearLayout {
                 LogUtil.dll("long enable:" + properties.isEnabled());
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra));
-//                tv_content.setFocusable(false);
-//                tv_content.setFocusableInTouchMode(false);
-//                tv_content.setOnFocusChangeListener(null);
+                tv_content.setFocusable(false);
+                tv_content.setFocusableInTouchMode(false);
+                tv_content.setOnFocusChangeListener(null);
                 tv_content.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
