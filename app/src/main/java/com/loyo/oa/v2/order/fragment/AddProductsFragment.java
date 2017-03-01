@@ -68,7 +68,7 @@ public class AddProductsFragment extends BaseStackFragment
         ArrayList<ProductDeal> list = adapter.data;
         boolean hasUnsavedData = false;
         for (ProductDeal deal : list) {
-            if (!deal.isEmpty()) {
+            if (deal.hasChanged()) {
                 hasUnsavedData = true;
                 break;
             }

@@ -80,7 +80,7 @@ public class AddCapitalReturnFragment extends BaseStackFragment
         ArrayList<CapitalReturn> list = adapter.data;
         boolean hasUnsavedData = false;
         for (CapitalReturn capitalReturn : list) {
-            if (!capitalReturn.isEmpty()) {
+            if (capitalReturn.hasChanged()) {
                     hasUnsavedData = true;
                     break;
             }
