@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.followup.model;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -25,6 +26,8 @@ import com.loyo.oa.v2.common.Global;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import static com.loyo.oa.v2.R.id.ll_web;
 
 /**
  * Created by yyy on 16/11/15.
@@ -198,10 +201,10 @@ public class FollowUpListModel implements Serializable {
 
     /*
     * 跟进内容展示设置*/
-    public void setContent(LinearLayout ll_web, TextView tv_memo) {
+    public void setContent(Context mContext, LinearLayout ll_web, TextView tv_memo) {
         if (null != content && !TextUtils.isEmpty(content)) {
             if (content.contains("<p>")) {
-                setWebContent(ll_web, content);
+                setWebContent(mContext, ll_web, content);
                 tv_memo.setVisibility(View.GONE);
             } else {
                 tv_memo.setVisibility(View.VISIBLE);
@@ -214,14 +217,14 @@ public class FollowUpListModel implements Serializable {
     /**
      * 设置图文混编
      */
-    private void setWebContent(LinearLayout layout, String content) {
+    private void setWebContent(Context mContext, LinearLayout layout, String content) {
         layout.removeAllViews();
         for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
             if (ele.type.startsWith("img")) {
-                CommonImageView img = new CommonImageView(MainApp.getMainApp(), ele.data);
+                CommonImageView img = new CommonImageView(mContext, ele.data);
                 layout.addView(img);
             } else {
-                CommonTextVew tex = new CommonTextVew(MainApp.getMainApp(), ele.data);
+                CommonTextVew tex = new CommonTextVew(mContext, ele.data);
                 layout.addView(tex);
             }
         }

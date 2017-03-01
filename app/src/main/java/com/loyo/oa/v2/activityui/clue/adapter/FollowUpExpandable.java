@@ -168,16 +168,17 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
 
         /** 设置跟进内容 */
-        if (null != model.content && !TextUtils.isEmpty(model.content)) {
-            if (model.content.contains("<p>")) {
-                holder.setContent(holder.ll_web, model.content);
-                holder.tv_memo.setVisibility(View.GONE);
-            } else {
-                holder.tv_memo.setVisibility(View.VISIBLE);
-                holder.tv_memo.setText(model.content);
-                holder.ll_web.removeAllViews();
-            }
-        }
+        model.setContent(mContext,holder.ll_web,holder.tv_memo);
+//        if (null != model.content && !TextUtils.isEmpty(model.content)) {
+//            if (model.content.contains("<p>")) {
+//                holder.setContent(holder.ll_web, model.content);
+//                holder.tv_memo.setVisibility(View.GONE);
+//            } else {
+//                holder.tv_memo.setVisibility(View.VISIBLE);
+//                holder.tv_memo.setText(model.content);
+//                holder.ll_web.removeAllViews();
+//            }
+//        }
 
         /** 客户地址 */
         model.setAddress(holder.layout_address, holder.tv_address);
@@ -227,8 +228,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         /** 绑定评论数据 */
         if (null != model.comments && model.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            if (commentAdapter == null)
-                commentAdapter = new ListOrDetailsCommentAdapter(mContext, audioCb);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, audioCb);
             commentAdapter.setData(model.comments);
             holder.lv_comment.setAdapter(commentAdapter);
 
@@ -312,19 +312,19 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         /**
          * 设置图文混编
          */
-        public void setContent(LinearLayout layout, String content) {
-            layout.removeAllViews();
-            for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
-                if (ele.type.startsWith("img")) {
-                    CommonImageView img = new CommonImageView(mContext, ele.data);
-                    layout.addView(img);
-                } else {
-                    CommonTextVew tex = new CommonTextVew(mContext, ele.data);
-                    layout.addView(tex);
-                }
-            }
-            layout.setVisibility(View.VISIBLE);
-        }
+//        public void setContent(LinearLayout layout, String content) {
+//            layout.removeAllViews();
+//            for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
+//                if (ele.type.startsWith("img")) {
+//                    CommonImageView img = new CommonImageView(mContext, ele.data);
+//                    layout.addView(img);
+//                } else {
+//                    CommonTextVew tex = new CommonTextVew(mContext, ele.data);
+//                    layout.addView(tex);
+//                }
+//            }
+//            layout.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override
