@@ -133,15 +133,15 @@ public class CapitalReturn {
         attachmentUUId = estimateAdd.attachmentUUId;
         remark = estimateAdd.remark;
 
-        md5 = getMD5();
+        md5 = getFingerprint();
     }
 
     public CapitalReturn() {
         defaultReceivedAt = new Date().getTime()/1000;
-        md5 = getMD5();
+        md5 = getFingerprint();
     }
 
-    private String getMD5() {
+    private String getFingerprint() {
         StringBuilder fingerBuilder = new StringBuilder();
         fingerBuilder.append("receivedAt");
         fingerBuilder.append(receivedAt);
@@ -170,7 +170,7 @@ public class CapitalReturn {
     }
 
     public boolean hasChanged() {
-        String fingerPrint = getMD5();
+        String fingerPrint = getFingerprint();
         if (md5 != null && md5.equals(fingerPrint)) {
             return false;
         }

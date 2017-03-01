@@ -100,7 +100,7 @@ public class ProductDeal {
     }
 
     public boolean hasChanged() {
-        String fingerPrint = getMD5();
+        String fingerPrint = getFingerprint();
         if (md5 != null && md5.equals(fingerPrint)) {
             return false;
         }
@@ -144,15 +144,15 @@ public class ProductDeal {
         this.product.unit = intentionalProduct.unit;
         this.product.stock = (float) intentionalProduct.stock;
 
-        md5 = getMD5();
+        md5 = getFingerprint();
 
     }
 
     public ProductDeal() {
-        md5 = getMD5();
+        md5 = getFingerprint();
     }
 
-    private String getMD5() {
+    private String getFingerprint() {
         StringBuilder fingerBuilder = new StringBuilder();
         fingerBuilder.append("price");
         fingerBuilder.append(price);
