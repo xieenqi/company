@@ -29,7 +29,6 @@ import com.loyo.oa.v2.order.cell.OrderAddBaseCell;
 import com.loyo.oa.v2.order.common.CapitalReturnValidator;
 import com.loyo.oa.v2.order.common.PaymentMethod;
 import com.loyo.oa.v2.order.model.CapitalReturn;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -48,7 +47,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by EthanGong on 2017/2/28.
  */
 
-public class AddCapitalReturnFragment extends BaseFragment
+public class AddCapitalReturnFragment extends BaseStackFragment
         implements OrderAddBaseCell.ActionListener, OrderAddBaseCell.CapitalReturnListener {
 
     public interface AddCapitalReturnCallback {
@@ -75,8 +74,9 @@ public class AddCapitalReturnFragment extends BaseFragment
     @BindView(R.id.tv_aleryprice)TextView tv_aleryprice; //开票总金额
     @BindView(R.id.tv_faileprice) TextView tv_faileprice;  //未回款
 
-    @OnClick(R.id.img_title_left) void onBackPressed() {
+    @OnClick(R.id.img_title_left) void onBack() {
 
+        hideKeyboard();
         ArrayList<CapitalReturn> list = adapter.data;
         boolean hasUnsavedData = false;
         for (CapitalReturn capitalReturn : list) {
@@ -102,10 +102,10 @@ public class AddCapitalReturnFragment extends BaseFragment
         else {
             this.manager.pop();
         }
-        this.manager.pop();
     }
 
     @OnClick(R.id.img_title_right) void onCommit() {
+        hideKeyboard();
         ArrayList<CapitalReturn> list = adapter.data;
         ArrayList<EstimateAdd> commitData = new ArrayList<>();
         boolean canCommit = true;
@@ -227,6 +227,12 @@ public class AddCapitalReturnFragment extends BaseFragment
             capitalReturn.payeeUser = payee;
             adapter.notifyItemChanged(currentPickIndex);
         }
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        onBack();
+        return true;
     }
 
     /**

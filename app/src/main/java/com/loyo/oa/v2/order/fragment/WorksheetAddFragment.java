@@ -49,7 +49,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * 新建工单
  */
-public class WorksheetAddFragment extends BaseFragment implements View.OnClickListener, UploadControllerCallback {
+public class WorksheetAddFragment extends BaseStackFragment implements View.OnClickListener, UploadControllerCallback {
     private static final String WorksheetData = "worksheetData";
     private ArrayList<OrderWorksheetListModel> data;//原始数据，不能修改，保持原来的数据不变
     private ArrayList<OrderWorksheetListModel> copyData;//克隆的数据,可以修改，是最新的数据
@@ -283,6 +283,12 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 updateModelByField(OrderWorksheetListModel, "templateName", template.name);
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        back();
+        return true;
     }
 
 
