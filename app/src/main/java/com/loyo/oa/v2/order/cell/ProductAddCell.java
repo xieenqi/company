@@ -25,7 +25,7 @@ import static com.loyo.oa.v2.R.id.tv_total;
  * Created by EthanGong on 2017/2/28.
  */
 
-public class ProductAddCell extends ProductAddBaseCell {
+public class ProductAddCell extends OrderAddBaseCell {
 
 
 
@@ -45,14 +45,14 @@ public class ProductAddCell extends ProductAddBaseCell {
     @BindView(R.id.et_remake) EditText remarkEditText;
 
     @OnClick(R.id.container_product) void onPickProduct() {
-        if (listener != null) {
-            listener.pickProductForIndex(index);
+        if (productListener != null) {
+            productListener.pickProductForIndex(index);
         }
     }
 
     @OnClick(R.id.ll_delete) void onDelete() {
-        if (listener != null) {
-            listener.deleteProductAtIndex(index);
+        if (actionListener != null) {
+            actionListener.onDeleteAtIndex(index);
         }
     }
 
@@ -172,9 +172,9 @@ public class ProductAddCell extends ProductAddBaseCell {
                 }
                 model.amount = amount;
                 if (model.product != null && model.amount > model.product.stock
-                        && listener != null
+                        && actionListener != null
                         && model.stockEnabled) {
-                    listener.toast("库存不足");
+                    actionListener.toast("库存不足");
                 }
             }
 
@@ -199,6 +199,23 @@ public class ProductAddCell extends ProductAddBaseCell {
         }
     };
 
+    private TextWatcher remarkWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            model.remark = s.toString();
+        }
+    };
+
     public static ProductAddCell instance(ViewGroup parent) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cell_product_add, parent, false);
@@ -210,6 +227,7 @@ public class ProductAddCell extends ProductAddBaseCell {
         ButterKnife.bind(this, itemView);
         priceEditText.addTextChangedListener(priceWatcher);
         amountEditText.addTextChangedListener(amountWatcher);
+        remarkEditText.addTextChangedListener(remarkWatcher);
     }
 
     public void loadModel(ProductDeal model) {

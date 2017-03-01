@@ -216,18 +216,35 @@ public class OrderFieldsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.container_estimate) void onPaymentRecord() {
-        Bundle mBundle = new Bundle();
-        if (!TextUtils.isEmpty(dealText.getText().toString())) {
-            mBundle.putString("price", dealText.getText().toString());
+        if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
+            Bundle mBundle = new Bundle();
+            if (!TextUtils.isEmpty(dealText.getText().toString())) {
+                mBundle.putString("price", dealText.getText().toString());
+            }
+            if (null != estimateData) {
+                mBundle.putSerializable("data", estimateData);
+            }
+            mBundle.putString("orderId", orderDetail!=null&&orderDetail.id!=null?orderDetail.id:orderId);
+            mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
+            Intent intent = new Intent(getActivity(), OrderEstimateListActivity.class);
+            intent.putExtras(mBundle);
+            startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_SOURCE);
         }
-        if (null != estimateData) {
-            mBundle.putSerializable("data", estimateData);
+        else {
+            AddCapitalReturnFragment addCapitalReturnFragment = new AddCapitalReturnFragment(this.manager);
+            addCapitalReturnFragment.setData(estimateData);
+            addCapitalReturnFragment.callback = new AddCapitalReturnFragment.AddCapitalReturnCallback() {
+                @Override
+                public void onAddCapitalReturn(ArrayList<EstimateAdd> data) {
+                    if (data == null) {
+                        return;
+                    }
+                    estimateData = data;
+                    paymentText.setText(getEstimateName());
+                }
+            };
+            this.manager.push(addCapitalReturnFragment, "add_capital_return");
         }
-        mBundle.putString("orderId", orderDetail!=null&&orderDetail.id!=null?orderDetail.id:orderId);
-        mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
-        Intent intent = new Intent(getActivity(), OrderEstimateListActivity.class);
-        intent.putExtras(mBundle);
-        startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_SOURCE);
     }
 
     @OnClick(R.id.container_worksheet) void onWorksheet() {
