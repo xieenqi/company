@@ -128,15 +128,15 @@ public class AddCapitalReturnFragment extends BaseStackFragment
         if (!canCommit) {
             return;
         }
-        if (commitData.size() == 0) {
-            Toast("请填写回款记录");
-        }
-        else {
-            if (callback != null) {
+        if (callback != null) {
+            if (list.size() > 0) {
                 callback.onAddCapitalReturn(commitData);
             }
-            this.manager.pop();
+            else {
+                callback.onAddCapitalReturn(null);
+            }
         }
+        this.manager.pop();
     }
 
     public AddCapitalReturnFragment(ActivityFragmentsStackManager manager, boolean initEmpty) {

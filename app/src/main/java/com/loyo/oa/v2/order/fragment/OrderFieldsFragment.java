@@ -211,9 +211,10 @@ public class OrderFieldsFragment extends BaseStackFragment {
 
                     if (data == null) {
                         showEmptyProduct = true;
-                        return;
                     }
-                    showEmptyProduct = false;
+                    else {
+                        showEmptyProduct = false;
+                    }
                     productData = data;
                     productText.setText(getIntentionProductName());
                     if (TextUtils.isEmpty(dealText.getText().toString())) {//成交金额  返显产品的销售总价
@@ -260,9 +261,10 @@ public class OrderFieldsFragment extends BaseStackFragment {
                 public void onAddCapitalReturn(ArrayList<EstimateAdd> data) {
                     if (data == null) {
                         showEmptyPayment = true;
-                        return;
                     }
-                    showEmptyPayment = false;
+                    else {
+                        showEmptyPayment = false;
+                    }
                     estimateData = data;
                     paymentText.setText(getEstimateName());
                 }

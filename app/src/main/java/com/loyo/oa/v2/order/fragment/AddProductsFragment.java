@@ -40,7 +40,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 
 public class AddProductsFragment extends BaseStackFragment
-        implements OrderAddBaseCell.ActionListener, OrderAddBaseCell.ProductListener{
+        implements OrderAddBaseCell.ActionListener, OrderAddBaseCell.ProductListener {
 
     public interface ProductPickerCallback {
         void onProductPicked(ArrayList<SaleIntentionalProduct> data, String dealTotal);
@@ -114,15 +114,15 @@ public class AddProductsFragment extends BaseStackFragment
         if (!canCommit) {
             return;
         }
-        if (commitData.size() == 0) {
-            Toast("请填写购买产品");
-        }
-        else {
-            if (callback != null) {
+        if (callback != null) {
+            if (list.size() > 0) {
                 callback.onProductPicked(commitData, totalText.getText().toString());
             }
-            this.manager.pop();
+            else {
+                callback.onProductPicked(null, null);
+            }
         }
+        this.manager.pop();
     }
 
     public AddProductsFragment(ActivityFragmentsStackManager manager, boolean initEmpty) {
@@ -244,7 +244,7 @@ public class AddProductsFragment extends BaseStackFragment
                 .subscribe(new DefaultLoyoSubscriber<ProductDetails>(hud) {
                     @Override
                     public void onNext(ProductDetails details) {
-                        adapter.data.get(currentPickIndex).product = details;
+                        adapter.data.get(currentPickIndex).setProduct(details);
                         adapter.data.get(currentPickIndex).stockEnabled = stockEnabled;
                         adapter.notifyItemChanged(currentPickIndex);
                     }
