@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.library.module.widget.nestlistview.NestListView;
+import com.library.module.widget.nestlistview.NestListViewAdapter;
+import com.library.module.widget.nestlistview.NestViewHolder;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
@@ -33,6 +36,7 @@ import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -43,6 +47,9 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+
+import static com.loyo.oa.v2.R.id.layout_audio;
+import static com.loyo.oa.v2.R.id.tv_name;
 
 /**
  * 列表 分组 adapter
@@ -127,7 +134,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
             holder = new Holder();
             convertView = inflater.inflate(R.layout.item_customer_and_clue_followup, null);
             holder.iv_heading = (RoundImageView) convertView.findViewById(R.id.iv_heading);
-            holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+            holder.tv_name = (TextView) convertView.findViewById(tv_name);
             holder.tv_contact = (TextView) convertView.findViewById(R.id.tv_contact);
             holder.tv_create_time = (TextView) convertView.findViewById(R.id.tv_create_time);
             holder.tv_address = (TextView) convertView.findViewById(R.id.tv_address);
@@ -139,7 +146,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
             holder.tv_kind = (TextView) convertView.findViewById(R.id.tv_kind);
             holder.iv_comment = (ImageView) convertView.findViewById(R.id.iv_comment);
             holder.layout_gridview = (CusGridView) convertView.findViewById(R.id.layout_gridview);
-            holder.lv_comment = (CustomerListView) convertView.findViewById(R.id.lv_comment);
+            holder.lv_comment = (NestListView) convertView.findViewById(R.id.lv_comment);
             holder.lv_audio = (CustomerListView) convertView.findViewById(R.id.lv_audio);
             holder.lv_options = (CustomerListView) convertView.findViewById(R.id.lv_options);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
@@ -168,17 +175,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         model.setFullowUpTime(holder.tv_last_time, holder.iv_lasttime, holder.layout_lasttime);
 
         /** 设置跟进内容 */
-        model.setContent(mContext,holder.ll_web,holder.tv_memo);
-//        if (null != model.content && !TextUtils.isEmpty(model.content)) {
-//            if (model.content.contains("<p>")) {
-//                holder.setContent(holder.ll_web, model.content);
-//                holder.tv_memo.setVisibility(View.GONE);
-//            } else {
-//                holder.tv_memo.setVisibility(View.VISIBLE);
-//                holder.tv_memo.setText(model.content);
-//                holder.ll_web.removeAllViews();
-//            }
-//        }
+        model.setContent(mContext, holder.ll_web, holder.tv_memo);
 
         /** 客户地址 */
         model.setAddress(holder.layout_address, holder.tv_address);
@@ -228,16 +225,69 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         /** 绑定评论数据 */
         if (null != model.comments && model.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, audioCb);
-            commentAdapter.setData(model.comments);
-            holder.lv_comment.setAdapter(commentAdapter);
 
-            /*长按删除*/
-            holder.lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            commentAdapter = new ListOrDetailsCommentAdapter(mContext, audioCb);
+//            commentAdapter.setData(model.comments);
+//            holder.lv_comment.setAdapter(commentAdapter);
+//
+//            /*长按删除*/
+//            holder.lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//                @Override
+//                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                    crolView.deleteCommentEmbl(model.comments.get(position).id);
+//                    return false;
+//                }
+//            });
+            holder.lv_comment.setAdapter(new NestListViewAdapter<CommentModel>(R.layout.item_comment, model.comments) {
                 @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    crolView.deleteCommentEmbl(model.comments.get(position).id);
-                    return false;
+                public void onBind(final int pos, final CommentModel ben, NestViewHolder holder) {
+                    holder.setText(R.id.tv_name, ben.creatorName + ": ");
+                    TextView title = holder.getView(R.id.tv_title);
+                    title.setText(ben.title);
+                    final TextView tv_calls = holder.getView(R.id.iv_calls);
+                    LinearLayout layout_audio = holder.getView(R.id.layout_audio);
+                    TextView tv_audio_length = holder.getView(R.id.tv_audio_length);
+                    tv_calls.setOnTouchListener(Global.GetTouch());
+                    /** 如果有语音 */
+                    if (null != ben.audioInfo) {
+                        layout_audio.setVisibility(View.VISIBLE);
+                        long audioLength = ben.audioInfo.length;
+                        if (audioLength > 0 && audioLength <= 10) {
+                            tv_calls.setText("000");
+                        } else if (audioLength > 10 && audioLength <= 20) {
+                            tv_calls.setText("00000");
+                        } else if (audioLength > 20 && audioLength <= 30) {
+                            tv_calls.setText("0000000");
+                        } else if (audioLength > 30 && audioLength <= 40) {
+                            tv_calls.setText("00000000");
+                        } else if (audioLength > 40 && audioLength <= 50) {
+                            tv_calls.setText("000000000");
+                        } else if (audioLength > 50 && audioLength <= 60) {
+                            tv_calls.setText("0000000000");
+                        } else {
+                            tv_calls.setText("");
+                        }
+                        layout_audio.setVisibility(View.VISIBLE);
+                        tv_audio_length.setText(audioLength + "\"");
+
+                    } else {
+                        layout_audio.setVisibility(View.GONE);
+                    }
+
+        /*点击播放录音*/
+                    tv_calls.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            audioCb.playVoice(ben.audioInfo, tv_calls);
+                        }
+                    });
+                    title.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            crolView.deleteCommentEmbl(model.comments.get(pos).id);
+                            return false;
+                        }
+                    });
                 }
             });
 
@@ -302,29 +352,14 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         LinearLayout layout_address;
         LinearLayout layout_lasttime;
         LinearLayout layout_phonely;
-        CustomerListView lv_comment; /*评论区*/
+        NestListView lv_comment; /*评论区*/
+
         CustomerListView lv_audio;   /*语音录音区*/
         CustomerListView lv_options; /*文件列表区*/
         GridView layout_gridview;    /*图片9宫格区*/
         ImageView iv_comment;        /*评论按钮*/
         ImageView iv_lasttime;     /*下次跟进图标*/
 
-        /**
-         * 设置图文混编
-         */
-//        public void setContent(LinearLayout layout, String content) {
-//            layout.removeAllViews();
-//            for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
-//                if (ele.type.startsWith("img")) {
-//                    CommonImageView img = new CommonImageView(mContext, ele.data);
-//                    layout.addView(img);
-//                } else {
-//                    CommonTextVew tex = new CommonTextVew(mContext, ele.data);
-//                    layout.addView(tex);
-//                }
-//            }
-//            layout.setVisibility(View.VISIBLE);
-//        }
     }
 
     @Override
