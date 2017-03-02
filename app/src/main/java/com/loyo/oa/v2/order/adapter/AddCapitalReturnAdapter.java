@@ -48,6 +48,7 @@ public class AddCapitalReturnAdapter extends RecyclerView.Adapter<OrderAddBaseCe
     }
 
     public void fireListChange() {
+        onStatisticsChange(0);
     }
 
     @Override

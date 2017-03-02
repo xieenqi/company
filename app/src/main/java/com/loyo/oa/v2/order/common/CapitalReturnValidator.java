@@ -6,6 +6,8 @@ import android.widget.Toast;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.order.model.CapitalReturn;
 
+import java.util.Date;
+
 /**
  * Created by EthanGong on 2017/2/28.
  */
@@ -25,6 +27,13 @@ public class CapitalReturnValidator {
                 && capitalReturn.defaultReceivedAt == 0) {
             if (needToast) {
                 Toast("“" + title +"”" + "回款日期未填写");
+            }
+            return false;
+        }
+        long timestamp = capitalReturn.receivedAt >0 ?capitalReturn.receivedAt:capitalReturn.defaultReceivedAt;
+        if (timestamp > new Date().getTime()/1000) {
+            if (needToast) {
+                Toast("“" + title +"”" + "回款日期不能选择未来时间");
             }
             return false;
         }

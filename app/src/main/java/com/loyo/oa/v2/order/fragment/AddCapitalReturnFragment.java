@@ -34,6 +34,7 @@ import com.loyo.oa.v2.tool.StringUtil;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -262,7 +263,13 @@ public class AddCapitalReturnFragment extends BaseStackFragment
     @Override
     public void onFundingDateForIndex(int index) {
         currentPickIndex = index;
+        CapitalReturn capitalReturn = adapter.data.get(index);
+
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(getActivity(), null, true);
+        dateTimePickDialog.initTimeStamp =
+                capitalReturn.receivedAt > 0 ?
+                        capitalReturn.receivedAt*1000 :new Date().getTime();
+        dateTimePickDialog.endTimeStamp = new Date().getTime();
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
