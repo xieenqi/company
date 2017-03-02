@@ -66,7 +66,7 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
     private UploadController clickPosController;//点击的那个item的controller
     private final int bizType = 29;//业务id
     private ArrayList<AttachmentForNew> hasAttachment = new ArrayList<>();//上传成功的附件，保存一下，如果要删除的化，用得到
-
+    private boolean createDefault=true;//是否默认创建一个工单
     public WorksheetAddFragment() {
     }
 
@@ -94,23 +94,23 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
             data = (ArrayList<OrderWorksheetListModel>) getArguments().getSerializable(WorksheetData);
             if (null == data) {
                 data = new ArrayList<>();
+
             }
         } else {
             data = new ArrayList<>();
         }
-        //默认就有一个
-        if(data.size()<=0){
-            OrderWorksheetListModel OrderWorksheetListModel = new OrderWorksheetListModel();
-            OrderWorksheetListModel.uuid = StringUtil.getUUID();
-            data.add(OrderWorksheetListModel);
-            UploadController controller = new UploadController(mActivity, 9);
-            controllerList.add(controller);//添加到队列
-        }
-
         //复制一个列表，注意，是复制对象，不能在原来的数据上面做修改
         copyData = new ArrayList<>();
         for (OrderWorksheetListModel item : data) {
             copyData.add(item.clone());
+        }
+        //默认就有一个
+        if(copyData.size()<=0&&createDefault){
+            OrderWorksheetListModel OrderWorksheetListModel = new OrderWorksheetListModel();
+            OrderWorksheetListModel.uuid = StringUtil.getUUID();
+            copyData.add(OrderWorksheetListModel);
+            UploadController controller = new UploadController(mActivity, 9);
+            controllerList.add(controller);//添加到队列
         }
     }
 
@@ -170,6 +170,7 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
      * 提供给外部调用，主要是拦截物理back按键，然后调用本方法返回
      */
     public void back() {
+        createDefault=true;//如果是返回的，下次进来就要创建默认的。
         boolean isEdit = false;
         //和原来的实体对比，判断是不是修改过
         if (data.size() == copyData.size()) {
@@ -182,7 +183,10 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
                     break;
                 }
             }
-        } else {
+        } else if(copyData.size()==1&&copyData.get(0).isEmpty()){
+            //有一个自动创建的空工单也不提示
+            isEdit=false;
+        }else{
             //增加或者删除了工单
             isEdit = true;
         }
@@ -320,6 +324,24 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
 
         }
 
+        //删除一个item
+        private void removeItem(int position){
+            copyData.remove(position);
+            notifyItemRemoved(position);
+            controllerList.remove(position);//移除选择的附件
+            //等动画完成，刷新整个列表
+            recyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                }
+            }, 300);
+            // 如果删除完了，下次进来的时候，也不创建默认的那一条了
+            if(copyData.size()==0){
+                createDefault=false;
+            }
+        }
+
         @Override
         public void onBindViewHolder(final RecyclerView.ViewHolder baseHolder, final int position) {
             if (baseHolder instanceof FooterHolder) {
@@ -365,16 +387,7 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
                     public void onClick(View v) {
                         if (copyData.get(position).isEmpty() && controllerList.get(position).getTaskList().size() <= 0) {
                             //没有填入数据，并且没有添加图片，直接删除
-                            copyData.remove(position);
-                            notifyItemRemoved(position);
-                            controllerList.remove(position);//移除选择的附件
-                            //等动画完成，刷新整个列表
-                            holder.tvDelete.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    notifyDataSetChanged();
-                                }
-                            }, 300);
+                            removeItem(position);
                         } else {
                             sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
@@ -385,17 +398,7 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                                     sweetAlertDialog.dismiss();
-                                    //没有填入数据，并且没有添加图片，直接删除
-                                    copyData.remove(position);
-                                    notifyItemRemoved(position);
-                                    controllerList.remove(position);//移除选择的附件
-                                    //等动画完成，刷新整个列表
-                                    holder.tvDelete.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            notifyDataSetChanged();
-                                        }
-                                    }, 300);
+                                    removeItem(position);
                                 }
                             }, "提示", "确定删除“工单" + (position + 1) + "”？");
                         }

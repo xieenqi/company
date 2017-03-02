@@ -28,21 +28,28 @@ public class AddCapitalReturnAdapter extends RecyclerView.Adapter<OrderAddBaseCe
 
     private static final int PRODUCT_CELL = 0;
     private static final int ADD_CELL     = 1;
+    boolean initEmpty;
 
     public ArrayList<CapitalReturn> data = new ArrayList<CapitalReturn>(){{
         add(new CapitalReturn());
     }};
 
-    public AddCapitalReturnAdapter(OrderAddBaseCell.ActionListener actionListener, OrderAddBaseCell.CapitalReturnListener capitalReturnListener) {
+    public AddCapitalReturnAdapter(OrderAddBaseCell.ActionListener actionListener,
+                                   OrderAddBaseCell.CapitalReturnListener capitalReturnListener,
+                                   boolean initEmpty) {
         setHasStableIds(true);
         this.actionListener = actionListener;
         this.capitalReturnListener = capitalReturnListener;
+        this.initEmpty = initEmpty;
+        if (initEmpty) {
+            data.clear();
+        }
     }
 
     public void setData(ArrayList<CapitalReturn> data) {
         this.data.clear();
         this.data.addAll(data);
-        if (this.data.size() <= 0) {
+        if (this.data.size() <= 0 && !initEmpty) {
             this.data.add(new CapitalReturn());
         }
     }

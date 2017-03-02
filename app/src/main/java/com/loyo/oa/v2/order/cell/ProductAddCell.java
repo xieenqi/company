@@ -84,6 +84,9 @@ public class ProductAddCell extends OrderAddBaseCell {
             if (TextUtils.isEmpty(priceString)) {
                 model.discount = -1;
 
+                if (!autoSettingPrice) {
+                    model.autoSettingPrice = false;
+                }
                 model.price = -1;
             }
             else  {
@@ -95,8 +98,11 @@ public class ProductAddCell extends OrderAddBaseCell {
                     model.discount = -1;
                 }
                 if (!autoSettingPrice) {
-                    model.price = salePrice;
+                    model.autoSettingPrice = false;
                 }
+
+                model.price = salePrice;
+
             }
             if (TextUtils.isEmpty(amountString)) {
                 model.total = -1;

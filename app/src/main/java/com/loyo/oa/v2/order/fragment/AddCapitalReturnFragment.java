@@ -56,6 +56,7 @@ public class AddCapitalReturnFragment extends BaseStackFragment
     }
 
     public AddCapitalReturnCallback callback;
+    public String dealMoney = "0";
 
     View view;
     ActivityFragmentsStackManager manager;
@@ -101,6 +102,9 @@ public class AddCapitalReturnFragment extends BaseStackFragment
             }, "提示", "是否放弃编辑？确定后信息将不会保存");
         }
         else {
+            if (callback != null) {
+                callback.onAddCapitalReturn(null);
+            }
             this.manager.pop();
         }
     }
@@ -124,31 +128,31 @@ public class AddCapitalReturnFragment extends BaseStackFragment
         if (!canCommit) {
             return;
         }
-        if (commitData.size() == 0) {
-            Toast("请填写回款记录");
-        }
-        else {
-            if (callback != null) {
+        if (callback != null) {
+            if (list.size() > 0) {
                 callback.onAddCapitalReturn(commitData);
             }
-            this.manager.pop();
+            else {
+                callback.onAddCapitalReturn(null);
+            }
         }
+        this.manager.pop();
     }
 
-    public AddCapitalReturnFragment(ActivityFragmentsStackManager manager) {
+    public AddCapitalReturnFragment(ActivityFragmentsStackManager manager, boolean initEmpty) {
         this.manager = manager;
-        adapter = new AddCapitalReturnAdapter(this, this);
-        adapter.callback = new AddCapitalReturnAdapter.ListChangeCallback() {
-            @Override
-            public void onListChange(long totalMoney, long totalBilling) {
-                tv_dealprice.setText("￥"+totalMoney);
-                tv_aleryprice.setText("￥"+totalBilling);
-            }
-        };
+        adapter = new AddCapitalReturnAdapter(this, this, initEmpty);
+//        adapter.callback = new AddCapitalReturnAdapter.ListChangeCallback() {
+//            @Override
+//            public void onListChange(long totalMoney, long totalBilling) {
+//                tv_dealprice.setText("￥"+totalMoney);
+//                tv_aleryprice.setText("￥"+totalBilling);
+//            }
+//        };
     }
 
     private AddCapitalReturnFragment() {
-        adapter = new AddCapitalReturnAdapter(this, this);
+        adapter = new AddCapitalReturnAdapter(this, this, false);
     }
 
     public void setData(ArrayList<EstimateAdd> data) {
@@ -178,6 +182,7 @@ public class AddCapitalReturnFragment extends BaseStackFragment
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         adapter.fireListChange();
+        tv_dealprice.setText("￥"+dealMoney);
     }
 
     @Override

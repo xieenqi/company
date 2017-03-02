@@ -95,8 +95,8 @@ public class MainApp extends Application {
 
     MainApplicationHandler handler;
 
-    public double longitude = -1;
-    public double latitude = -1;
+    public double longitude = 0;
+    public double latitude = -90;
     public String cityCode;
     public String address;
     public String message;

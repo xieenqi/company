@@ -40,7 +40,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 
 public class AddProductsFragment extends BaseStackFragment
-        implements OrderAddBaseCell.ActionListener, OrderAddBaseCell.ProductListener{
+        implements OrderAddBaseCell.ActionListener, OrderAddBaseCell.ProductListener {
 
     public interface ProductPickerCallback {
         void onProductPicked(ArrayList<SaleIntentionalProduct> data, String dealTotal);
@@ -88,6 +88,9 @@ public class AddProductsFragment extends BaseStackFragment
             }, "提示", "是否放弃编辑？确定后信息将不会保存");
         }
         else {
+            if (callback != null) {
+                callback.onProductPicked(null, null);
+            }
             this.manager.pop();
         }
     }
@@ -111,20 +114,20 @@ public class AddProductsFragment extends BaseStackFragment
         if (!canCommit) {
             return;
         }
-        if (commitData.size() == 0) {
-            Toast("请填写购买产品");
-        }
-        else {
-            if (callback != null) {
+        if (callback != null) {
+            if (list.size() > 0) {
                 callback.onProductPicked(commitData, totalText.getText().toString());
             }
-            this.manager.pop();
+            else {
+                callback.onProductPicked(null, null);
+            }
         }
+        this.manager.pop();
     }
 
-    public AddProductsFragment(ActivityFragmentsStackManager manager) {
+    public AddProductsFragment(ActivityFragmentsStackManager manager, boolean initEmpty) {
         this.manager = manager;
-        adapter = new AddProductAdapter(this, this);
+        adapter = new AddProductAdapter(this, this, initEmpty);
         adapter.callback = new AddProductAdapter.ListChangeCallback() {
             @Override
             public void onListChange(double totalMoney, double totalDiscount) {
@@ -135,7 +138,7 @@ public class AddProductsFragment extends BaseStackFragment
     }
 
     private AddProductsFragment() {
-        adapter = new AddProductAdapter(this, this);
+        adapter = new AddProductAdapter(this, this, false);
     }
 
     public void setData(ArrayList<SaleIntentionalProduct> data) {
@@ -241,7 +244,7 @@ public class AddProductsFragment extends BaseStackFragment
                 .subscribe(new DefaultLoyoSubscriber<ProductDetails>(hud) {
                     @Override
                     public void onNext(ProductDetails details) {
-                        adapter.data.get(currentPickIndex).product = details;
+                        adapter.data.get(currentPickIndex).setProduct(details);
                         adapter.data.get(currentPickIndex).stockEnabled = stockEnabled;
                         adapter.notifyItemChanged(currentPickIndex);
                     }

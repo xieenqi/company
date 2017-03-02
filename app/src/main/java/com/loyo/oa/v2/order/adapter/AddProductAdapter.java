@@ -49,6 +49,7 @@ public class AddProductAdapter extends RecyclerView.Adapter<OrderAddBaseCell> im
 
     private static final int PRODUCT_CELL = 0;
     private static final int ADD_CELL     = 1;
+    boolean initEmpty;
 
     public ArrayList<ProductDeal> data = new ArrayList<ProductDeal>(){{
         add(new ProductDeal());
@@ -57,17 +58,21 @@ public class AddProductAdapter extends RecyclerView.Adapter<OrderAddBaseCell> im
     private OrderAddBaseCell.ActionListener actionListener;
     private OrderAddBaseCell.ProductListener productListener;
 
-    public AddProductAdapter(OrderAddBaseCell.ActionListener aListener, OrderAddBaseCell.ProductListener pListener) {
+    public AddProductAdapter(OrderAddBaseCell.ActionListener aListener,
+                             OrderAddBaseCell.ProductListener pListener,
+                             boolean initEmpty) {
         setHasStableIds(true);
         this.actionListener = aListener;
         this.productListener = pListener;
-
+        if (initEmpty) {
+            data.clear();
+        }
     }
 
     public void setData(ArrayList<ProductDeal> data) {
         this.data.clear();
         this.data.addAll(data);
-        if (this.data.size() <= 0) {
+        if (this.data.size() <= 0 && !initEmpty) {
             this.data.add(new ProductDeal());
         }
     }
