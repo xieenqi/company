@@ -1,12 +1,19 @@
 package com.loyo.oa.v2.activityui.attachment.bean;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.View;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.OrganizationalMember;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.io.File;
 import java.io.Serializable;
@@ -229,11 +236,24 @@ public class Attachment implements Serializable {
 
 //                long l = DateTool.getDateToTimestamp(lhs.getCreatedAt(), app.df_api_get);
 //                long r = DateTool.getDateToTimestamp(rhs.getCreatedAt(), app.df_api_get);
-                long l= com.loyo.oa.common.utils.DateTool.getSecondStamp(lhs.getCreatedAt());
-                long r= com.loyo.oa.common.utils.DateTool.getSecondStamp(rhs.getCreatedAt());
+                long l = com.loyo.oa.common.utils.DateTool.getSecondStamp(lhs.getCreatedAt());
+                long r = com.loyo.oa.common.utils.DateTool.getSecondStamp(rhs.getCreatedAt());
                 return (l - r) > 0 ? -1 : 1;
             }
         });
         return attachments;
+    }
+
+    public void setPreviewAction(final Context mContext, View convertView) {
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                LogUtil.d(" 预览文件的URL：" + url);
+                //预览文件
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("data", url);
+                MainApp.getMainApp().startActivity((Activity) mContext, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+            }
+        });
     }
 }

@@ -21,6 +21,7 @@ import com.library.module.widget.nestlistview.NestListViewAdapter;
 import com.library.module.widget.nestlistview.NestViewHolder;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -43,12 +44,14 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
 import static com.loyo.oa.v2.R.id.layout_audio;
+import static com.loyo.oa.v2.R.id.tv_image_size;
 import static com.loyo.oa.v2.R.id.tv_name;
 
 /**
@@ -148,7 +151,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
             holder.layout_gridview = (CusGridView) convertView.findViewById(R.id.layout_gridview);
             holder.lv_comment = (NestListView) convertView.findViewById(R.id.lv_comment);
             holder.lv_audio = (CustomerListView) convertView.findViewById(R.id.lv_audio);
-            holder.lv_options = (CustomerListView) convertView.findViewById(R.id.lv_options);
+            holder.lv_options = (NestListView) convertView.findViewById(R.id.lv_options);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
             holder.layout_address = (LinearLayout) convertView.findViewById(R.id.layout_address);
             holder.layout_lasttime = (LinearLayout) convertView.findViewById(R.id.layout_lasttime);
@@ -194,8 +197,20 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
 
         /** 文件列表 数据绑定 */
         if (null != model.attachments && model.attachments.size() > 0) {
-            optionAdapter = new ListOrDetailsOptionsAdapter(mContext, model.attachments);
-            holder.lv_options.setAdapter(optionAdapter);
+            holder.lv_options.setVisibility(View.VISIBLE);
+//            optionAdapter = new ListOrDetailsOptionsAdapter(mContext, model.attachments);
+//            holder.lv_options.setAdapter(optionAdapter);
+            holder.lv_options.setAdapter(new NestListViewAdapter<Attachment>(R.layout.item_dynamic_listorlist, model.attachments) {
+                @Override
+                public void onBind(int pos, Attachment ben, NestViewHolder holder) {
+                    holder.setText(R.id.tv_image_name, ben.getName());
+                    holder.setText(R.id.tv_image_size, "大小:" + Utils.FormetFileSize(Long.valueOf(ben.getSize())));
+                    holder.setImageResource(R.id.iv_image, Global.getAttachmentIcon(ben.originalName));
+                    ben.setPreviewAction(mContext, holder.getConvertView());
+                }
+            });
+        } else {
+            holder.lv_options.setVisibility(View.GONE);
         }
 
         /** 绑定图片与GridView监听 */
@@ -205,7 +220,6 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
                 gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext);
             gridViewAdapter.setData(model.imgAttachments);
             holder.layout_gridview.setAdapter(gridViewAdapter);
-
             /*图片预览*/
             holder.layout_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -222,10 +236,9 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
             holder.layout_gridview.setVisibility(View.GONE);
         }
 
-        /** 绑定评论数据 */
+        /** 绑定评论数据(文字 语音) */
         if (null != model.comments && model.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-
 //            commentAdapter = new ListOrDetailsCommentAdapter(mContext, audioCb);
 //            commentAdapter.setData(model.comments);
 //            holder.lv_comment.setAdapter(commentAdapter);
@@ -247,34 +260,9 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
                     final TextView tv_calls = holder.getView(R.id.iv_calls);
                     LinearLayout layout_audio = holder.getView(R.id.layout_audio);
                     TextView tv_audio_length = holder.getView(R.id.tv_audio_length);
-                    tv_calls.setOnTouchListener(Global.GetTouch());
                     /** 如果有语音 */
-                    if (null != ben.audioInfo) {
-                        layout_audio.setVisibility(View.VISIBLE);
-                        long audioLength = ben.audioInfo.length;
-                        if (audioLength > 0 && audioLength <= 10) {
-                            tv_calls.setText("000");
-                        } else if (audioLength > 10 && audioLength <= 20) {
-                            tv_calls.setText("00000");
-                        } else if (audioLength > 20 && audioLength <= 30) {
-                            tv_calls.setText("0000000");
-                        } else if (audioLength > 30 && audioLength <= 40) {
-                            tv_calls.setText("00000000");
-                        } else if (audioLength > 40 && audioLength <= 50) {
-                            tv_calls.setText("000000000");
-                        } else if (audioLength > 50 && audioLength <= 60) {
-                            tv_calls.setText("0000000000");
-                        } else {
-                            tv_calls.setText("");
-                        }
-                        layout_audio.setVisibility(View.VISIBLE);
-                        tv_audio_length.setText(audioLength + "\"");
-
-                    } else {
-                        layout_audio.setVisibility(View.GONE);
-                    }
-
-        /*点击播放录音*/
+                    ben.setRecordUI(layout_audio, tv_calls, tv_audio_length);
+                     /*点击播放录音*/
                     tv_calls.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -355,7 +343,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         NestListView lv_comment; /*评论区*/
 
         CustomerListView lv_audio;   /*语音录音区*/
-        CustomerListView lv_options; /*文件列表区*/
+        NestListView lv_options; /*文件列表区*/
         GridView layout_gridview;    /*图片9宫格区*/
         ImageView iv_comment;        /*评论按钮*/
         ImageView iv_lasttime;     /*下次跟进图标*/
