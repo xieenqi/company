@@ -27,21 +27,14 @@ public class ProductDealValidator {
             }
             return false;
         }
-        if (deal.price == 0) {
+        if (deal.price < 0) {
             if (needToast) {
-                Toast("“" + title +"”" + "产品价格未填写");
+                Toast("“" + title +"”" + "销售价格未填写");
             }
             return false;
         }
 
-        if (deal.price == 0) {
-            if (needToast) {
-                Toast("“" + title +"”" + "价格未填写");
-            }
-            return false;
-        }
-
-        if (deal.amount == 0) {
+        if (deal.amount <= 0) {
             if (needToast) {
                 Toast("“" + title +"”" + "数量未填写");
             }

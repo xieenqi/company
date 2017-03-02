@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.order.cell;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -143,7 +144,13 @@ public class CapitalReturnAddCell extends OrderAddBaseCell {
 
         @Override
         public void afterTextChanged(Editable s) {
-            model.remark = s.toString();
+            String remark = s.toString();
+            if (!TextUtils.isEmpty(remark)) {
+                model.remark = remark;
+            }
+            else {
+                model.remark = null;
+            }
         }
     };
 

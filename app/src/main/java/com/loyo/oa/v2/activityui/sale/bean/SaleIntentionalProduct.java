@@ -18,5 +18,6 @@ public class SaleIntentionalProduct implements Serializable {
     public double totalMoney;/* 总金额，实际销售的总额， 等于 costPrice 乘 quantity */
     public String memo;      /* 备注 */
     public String unit;      /* 单位 */
+    public boolean stockEnabled = true;
 
 }

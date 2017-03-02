@@ -23,7 +23,7 @@ public class AddProductAdapter extends RecyclerView.Adapter<OrderAddBaseCell> im
             double total = 0;
             double discount = 0;
             for (ProductDeal deal : data) {
-                if (deal.total > 0
+                if (deal.total >= 0
                         && deal.discount >= 0
                         && deal.amount > 0
                         && deal.product != null) {

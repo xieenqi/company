@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
             android:paddingLeft="34dp">
@@ -39,7 +39,7 @@
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:paddingTop="8dp"
+                android:layout_marginTop="8dp"
                 android:text="￥0.00"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_sp13"
@@ -49,13 +49,13 @@
 
         <View
             android:layout_width="@dimen/dimen_0.5"
-            android:layout_height="38dp"
+            android:layout_height="match_parent"
             android:background="@color/white"
             />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
             android:paddingLeft="44dp">
@@ -76,7 +76,7 @@
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:paddingTop="8dp"
+                android:layout_marginTop="8dp"
                 android:text="0.00%"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_sp13"
