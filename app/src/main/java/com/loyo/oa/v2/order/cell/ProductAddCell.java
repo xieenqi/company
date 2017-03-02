@@ -84,7 +84,7 @@ public class ProductAddCell extends OrderAddBaseCell {
             if (TextUtils.isEmpty(priceString)) {
                 model.discount = -1;
 
-                model.price = 0;
+                model.price = -1;
             }
             else  {
                 try {
@@ -94,7 +94,9 @@ public class ProductAddCell extends OrderAddBaseCell {
                     salePrice = 0;
                     model.discount = -1;
                 }
-                model.price = salePrice;
+                if (!autoSettingPrice) {
+                    model.price = salePrice;
+                }
             }
             if (TextUtils.isEmpty(amountString)) {
                 model.total = -1;
@@ -227,7 +229,13 @@ public class ProductAddCell extends OrderAddBaseCell {
 
         @Override
         public void afterTextChanged(Editable s) {
-            model.remark = s.toString();
+            String remark = s.toString();
+            if (!TextUtils.isEmpty(remark)) {
+                model.remark = remark;
+            }
+            else {
+                model.remark = null;
+            }
         }
     };
 
@@ -245,6 +253,8 @@ public class ProductAddCell extends OrderAddBaseCell {
         remarkEditText.addTextChangedListener(remarkWatcher);
     }
 
+    private boolean autoSettingPrice = false;
+
     public void loadModel(ProductDeal model) {
         this.model = model;
         productText.setText(model.getProductName());
@@ -253,7 +263,9 @@ public class ProductAddCell extends OrderAddBaseCell {
         priceText.setText(model.getOriginPrice());
         amountText.setText(model.getStock());
 
+        autoSettingPrice = true;
         priceEditText.setText(model.getPrice());
+        autoSettingPrice = false;
         amountEditText.setText(model.getAmount());
         remarkEditText.setText(model.getRemark());
 

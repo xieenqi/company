@@ -88,6 +88,9 @@ public class AddProductsFragment extends BaseStackFragment
             }, "提示", "是否放弃编辑？确定后信息将不会保存");
         }
         else {
+            if (callback != null) {
+                callback.onProductPicked(null, null);
+            }
             this.manager.pop();
         }
     }
@@ -122,9 +125,9 @@ public class AddProductsFragment extends BaseStackFragment
         }
     }
 
-    public AddProductsFragment(ActivityFragmentsStackManager manager) {
+    public AddProductsFragment(ActivityFragmentsStackManager manager, boolean initEmpty) {
         this.manager = manager;
-        adapter = new AddProductAdapter(this, this);
+        adapter = new AddProductAdapter(this, this, initEmpty);
         adapter.callback = new AddProductAdapter.ListChangeCallback() {
             @Override
             public void onListChange(double totalMoney, double totalDiscount) {
@@ -135,7 +138,7 @@ public class AddProductsFragment extends BaseStackFragment
     }
 
     private AddProductsFragment() {
-        adapter = new AddProductAdapter(this, this);
+        adapter = new AddProductAdapter(this, this, false);
     }
 
     public void setData(ArrayList<SaleIntentionalProduct> data) {
@@ -204,7 +207,7 @@ public class AddProductsFragment extends BaseStackFragment
                 adapter.data.remove(index);
                 adapter.notifyDataSetChanged();
             }
-        }, "提示", "你确定要删除吗？");
+        }, "提示", "你确定要删除“产品"+ (index+1) +"”？");
     }
 
     @Override
