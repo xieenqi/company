@@ -208,11 +208,11 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         TextView address = (TextView) view.findViewById(R.id.tv_address);
         TextView navigation = (TextView) view.findViewById(R.id.tv_navigation);
         name.setText(point.customer.name);
-        address.setText(point.customer.loc.addr);
+        address.setText(point.customer.position.addr);
         navigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {//开始导航
-                Utils.goWhere(NearByCustomersMapActivity.this, point.customer.loc.loc[1], point.customer.loc.loc[0], point.customer.loc.addr);
+                Utils.goWhere(NearByCustomersMapActivity.this, point.customer.position.loc[1], point.customer.position.loc[0], point.customer.position.addr);
             }
         });
         String title = marker.getTitle();
@@ -245,13 +245,13 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         }
         for (int i = 0; i < customers.size(); i++) {
             Customer customer = customers.get(i);
-            if (customer.loc != null && customer.loc.loc != null && customer.loc.loc.length > 1) {
-                Double lat = customer.loc.loc[1];
-                Double lng = customer.loc.loc[0];
-                if(null==lat||null==lng)continue;
+            if (customer.position != null && customer.position.loc != null && customer.position.loc.length > 1) {
+                Double lat = customer.position.loc[1];
+                Double lng = customer.position.loc[0];
+                if (null == lat || null == lng) continue;
                 aMap.addMarker(new MarkerOptions().anchor(0.8f, 0.8f).icon(customerType == 1 ? (i < isMySize ? markMy : markCompany) : markTeam)
                         .position(new LatLng(lat, lng)).title(customer.name)
-                        .snippet(customer.loc.addr).draggable(true));
+                        .snippet(customer.position.addr).draggable(true));
                 OverlayItem item = new OverlayItem();
                 item.latLng = new LatLng(lat, lng);
                 item.customer = customer;
@@ -278,6 +278,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
     protected void onPause() {
         super.onPause();
         mapview.onPause();
+        LogUtil.d("maker对象个数 ：" + aMap.getMapScreenMarkers().size());
     }
 
     @Override
