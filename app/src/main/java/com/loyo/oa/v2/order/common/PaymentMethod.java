@@ -43,14 +43,14 @@ public enum PaymentMethod {
     public static class EnumSerializer implements JsonSerializer<PaymentMethod>,
             JsonDeserializer<PaymentMethod> {
 
-        // 对象转为Json时调用,实现JsonSerializer<WorksheetStatus>接口
+        // 对象转为Json时调用,实现JsonSerializer<PaymentMethod>接口
         @Override
         public JsonElement serialize(PaymentMethod method, Type arg1,
                                      JsonSerializationContext arg2) {
             return new JsonPrimitive(method.code);
         }
 
-        // json转为对象时调用,实现JsonDeserializer<WorksheetStatus>接口
+        // json转为对象时调用,实现JsonDeserializer<PaymentMethod>接口
         @Override
         public PaymentMethod deserialize(JsonElement json, Type typeOfT,
                                            JsonDeserializationContext context) throws JsonParseException {

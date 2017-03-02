@@ -3,7 +3,6 @@ package com.loyo.oa.v2.customview;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
@@ -53,6 +52,10 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
     private String defaultFromat = "yyyy年MM月dd日 HH:mm";
     boolean isVisibilityHour;
 
+    // Added by Ethan on 2017-03-02
+    public long initTimeStamp; /* 初始时间，同initDateTime 毫秒 */
+    public long startTimeStamp;/* 最小时间 毫秒 */
+
     /**
      * 设置默认日期格式
      *
@@ -87,9 +90,15 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
     public void init(DatePicker datePicker, TimePicker timePicker) {
 
         Calendar calendar = Calendar.getInstance(Locale.CHINA);
+
         if (!(null == initDateTime || "".equals(initDateTime))) {
             calendar = this.getCalendarByInintData(initDateTime);
-        } else {
+        }
+        /* 增加通过timestamp设置默认时间 2017-03-02 */
+        else if (initTimeStamp > 0) {
+            calendar.setTimeInMillis(initTimeStamp);
+        }
+        else {
             initDateTime = calendar.get(Calendar.YEAR) + "年"
                     + calendar.get(Calendar.MONTH) + "月"
                     + calendar.get(Calendar.DAY_OF_MONTH) + "日 "
@@ -100,6 +109,12 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
         datePicker.init(calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), this);
+
+        /* 设置最小时间 2017-03-02 */
+        if (startTimeStamp > 0) {
+            datePicker.setMinDate(startTimeStamp);
+        }
+
         timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
         timePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
     }
@@ -176,7 +191,9 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
 
 //        dateTime = sdf.format(calendar.getTime());
         dateTime = DateFormatSet.minuteSdf.format(calendar.getTime());
-        ad.setTitle(dateTime);
+        if (ad != null) {
+            ad.setTitle(dateTime);
+        }
 
     }
 
