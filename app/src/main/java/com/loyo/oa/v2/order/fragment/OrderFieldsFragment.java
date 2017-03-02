@@ -191,6 +191,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
 
     }
 
+    private boolean showEmptyProduct;
     @OnClick(R.id.container_product) void onProduct() {
         hideKeyboard();
         if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
@@ -202,11 +203,17 @@ public class OrderFieldsFragment extends BaseStackFragment {
             intent.putExtras(mBundle);
             startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_PRODUCT);
         }else {
-            AddProductsFragment addProductsFragment = new AddProductsFragment(this.manager);
+            AddProductsFragment addProductsFragment = new AddProductsFragment(this.manager, showEmptyProduct);
             addProductsFragment.setData(productData);
             addProductsFragment.callback = new AddProductsFragment.ProductPickerCallback() {
                 @Override
                 public void onProductPicked(ArrayList<SaleIntentionalProduct> data, String dealTotal) {
+
+                    if (data == null) {
+                        showEmptyProduct = true;
+                        return;
+                    }
+                    showEmptyProduct = false;
                     productData = data;
                     productText.setText(getIntentionProductName());
                     if (TextUtils.isEmpty(dealText.getText().toString())) {//成交金额  返显产品的销售总价
@@ -218,6 +225,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
         }
     }
 
+    private boolean showEmptyPayment;
     @OnClick(R.id.container_estimate) void onPaymentRecord() {
         hideKeyboard();
         if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
@@ -235,14 +243,26 @@ public class OrderFieldsFragment extends BaseStackFragment {
             startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_SOURCE);
         }
         else {
-            AddCapitalReturnFragment addCapitalReturnFragment = new AddCapitalReturnFragment(this.manager);
+
+            String dealMoney = dealText.getText().toString();
+            try {
+                Float.parseFloat(dealMoney);
+            }
+            catch (Exception e) {
+                dealMoney = "0";
+            }
+
+            AddCapitalReturnFragment addCapitalReturnFragment = new AddCapitalReturnFragment(this.manager, showEmptyPayment);
             addCapitalReturnFragment.setData(estimateData);
+            addCapitalReturnFragment.dealMoney = dealMoney;
             addCapitalReturnFragment.callback = new AddCapitalReturnFragment.AddCapitalReturnCallback() {
                 @Override
                 public void onAddCapitalReturn(ArrayList<EstimateAdd> data) {
                     if (data == null) {
+                        showEmptyPayment = true;
                         return;
                     }
+                    showEmptyPayment = false;
                     estimateData = data;
                     paymentText.setText(getEstimateName());
                 }
@@ -251,6 +271,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
         }
     }
 
+    private boolean showWorksheet;
     @OnClick(R.id.container_worksheet) void onWorksheet() {
         hideKeyboard();
         if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
@@ -843,6 +864,14 @@ public class OrderFieldsFragment extends BaseStackFragment {
             return null;
         }
         if (!checkRequiredSystemFields()) {
+            return null;
+        }
+
+        try {
+            float dealMoney = Float.parseFloat(dealText.getText().toString());
+        }
+        catch (Exception e) {
+            Toast("请检查成交金额格式!");
             return null;
         }
 
