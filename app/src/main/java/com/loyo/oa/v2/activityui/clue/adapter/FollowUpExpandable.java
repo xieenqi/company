@@ -20,6 +20,7 @@ import com.library.module.widget.nestlistview.NestListView;
 import com.library.module.widget.nestlistview.NestListViewAdapter;
 import com.library.module.widget.nestlistview.NestViewHolder;
 import com.loyo.oa.common.utils.DateTool;
+import com.loyo.oa.common.utils.DensityUtil;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
@@ -50,6 +51,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import static com.loyo.oa.v2.R.id.iv_calls;
 import static com.loyo.oa.v2.R.id.layout_audio;
 import static com.loyo.oa.v2.R.id.tv_image_size;
 import static com.loyo.oa.v2.R.id.tv_name;
@@ -150,7 +152,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
             holder.iv_comment = (ImageView) convertView.findViewById(R.id.iv_comment);
             holder.layout_gridview = (CusGridView) convertView.findViewById(R.id.layout_gridview);
             holder.lv_comment = (NestListView) convertView.findViewById(R.id.lv_comment);
-            holder.lv_audio = (CustomerListView) convertView.findViewById(R.id.lv_audio);
+            holder.lv_audio = (NestListView) convertView.findViewById(R.id.lv_audio);
             holder.lv_options = (NestListView) convertView.findViewById(R.id.lv_options);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
             holder.layout_address = (LinearLayout) convertView.findViewById(R.id.layout_address);
@@ -189,8 +191,26 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         /** 录音语音 */
         if (null != model.audioInfo) {
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext, model.audioInfo, audioCb);
-            holder.lv_audio.setAdapter(audioAdapter);
+//            audioAdapter = new ListOrDetailsAudioAdapter(mContext, model.audioInfo, audioCb);
+//            holder.lv_audio.setAdapter(audioAdapter);
+            holder.lv_audio.setAdapter(new NestListViewAdapter<AudioModel>(R.layout.item_sigfollw_audio, model.audioInfo) {
+                @Override
+                public void onBind(int pos, final AudioModel ben, NestViewHolder holder) {
+                    final TextView iv_calls = holder.getView(R.id.iv_calls);
+                    TextView tv_audio_length = holder.getView(R.id.tv_audio_length);
+                    ViewGroup layout_audio = holder.getView(R.id.layout_audio);
+                    ben.setRecordUI(layout_audio, iv_calls, tv_audio_length);
+                    //        /*点击播放录音*/
+                    iv_calls.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            audioCb.playVoice(ben, iv_calls);
+                        }
+                    });
+                    layout_audio.setPadding(DensityUtil.px2dp(mContext, 0), DensityUtil.px2dp(mContext, 5),
+                            DensityUtil.px2dp(mContext, 0), DensityUtil.px2dp(mContext, 5));
+                }
+            });
         } else {
             holder.lv_audio.setVisibility(View.GONE);
         }
@@ -257,7 +277,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
                     holder.setText(R.id.tv_name, ben.creatorName + ": ");
                     TextView title = holder.getView(R.id.tv_title);
                     title.setText(ben.title);
-                    final TextView tv_calls = holder.getView(R.id.iv_calls);
+                    final TextView tv_calls = holder.getView(iv_calls);
                     LinearLayout layout_audio = holder.getView(R.id.layout_audio);
                     TextView tv_audio_length = holder.getView(R.id.tv_audio_length);
                     /** 如果有语音 */
@@ -341,8 +361,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         LinearLayout layout_lasttime;
         LinearLayout layout_phonely;
         NestListView lv_comment; /*评论区*/
-
-        CustomerListView lv_audio;   /*语音录音区*/
+        NestListView lv_audio;   /*语音录音区*/
         NestListView lv_options; /*文件列表区*/
         GridView layout_gridview;    /*图片9宫格区*/
         ImageView iv_comment;        /*评论按钮*/
