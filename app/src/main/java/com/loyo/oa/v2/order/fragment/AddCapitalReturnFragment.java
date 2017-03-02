@@ -269,7 +269,7 @@ public class AddCapitalReturnFragment extends BaseStackFragment
         dateTimePickDialog.initTimeStamp =
                 capitalReturn.receivedAt > 0 ?
                         capitalReturn.receivedAt*1000 :new Date().getTime();
-        dateTimePickDialog.startTimeStamp = new Date().getTime();
+        dateTimePickDialog.endTimeStamp = new Date().getTime();
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {

@@ -55,6 +55,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
     // Added by Ethan on 2017-03-02
     public long initTimeStamp; /* 初始时间，同initDateTime 毫秒 */
     public long startTimeStamp;/* 最小时间 毫秒 */
+    public long endTimeStamp; /* 最大时间 毫秒 */
 
     /**
      * 设置默认日期格式
@@ -113,6 +114,10 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
         /* 设置最小时间 2017-03-02 */
         if (startTimeStamp > 0) {
             datePicker.setMinDate(startTimeStamp);
+        }
+        /* 设置最大时间 2017-03-02 */
+        if (endTimeStamp > 0 && endTimeStamp > startTimeStamp) {
+            datePicker.setMaxDate(endTimeStamp);
         }
 
         timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
