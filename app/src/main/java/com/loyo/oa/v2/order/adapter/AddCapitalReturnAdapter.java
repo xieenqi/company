@@ -48,6 +48,15 @@ public class AddCapitalReturnAdapter extends RecyclerView.Adapter<OrderAddBaseCe
     }
 
     public void fireListChange() {
+        if (callback != null) {
+            long total = 0;
+            long billing = 0;
+            for (CapitalReturn capitalReturn : data) {
+                total = total + capitalReturn.receivedMoney;
+                billing = billing + capitalReturn.billingMoney>=0?capitalReturn.billingMoney:0;
+            }
+            callback.onListChange(total,billing);
+        }
     }
 
     @Override
