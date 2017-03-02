@@ -52,7 +52,8 @@ public class AddCapitalReturnFragment extends BaseStackFragment
         implements OrderAddBaseCell.ActionListener, OrderAddBaseCell.CapitalReturnListener {
 
     public interface AddCapitalReturnCallback {
-        void onAddCapitalReturn(ArrayList<EstimateAdd> data);
+        void onAddCapitalReturn(ArrayList<EstimateAdd> data, boolean initEmpty);
+        void onBack(boolean initEmpty);
     }
 
     public AddCapitalReturnCallback callback;
@@ -103,7 +104,7 @@ public class AddCapitalReturnFragment extends BaseStackFragment
         }
         else {
             if (callback != null) {
-                callback.onAddCapitalReturn(null);
+                callback.onBack(list.size() == 0);
             }
             this.manager.pop();
         }
@@ -129,12 +130,7 @@ public class AddCapitalReturnFragment extends BaseStackFragment
             return;
         }
         if (callback != null) {
-            if (list.size() > 0) {
-                callback.onAddCapitalReturn(commitData);
-            }
-            else {
-                callback.onAddCapitalReturn(null);
-            }
+            callback.onAddCapitalReturn(commitData, list.size() == 0);
         }
         this.manager.pop();
     }
@@ -246,9 +242,26 @@ public class AddCapitalReturnFragment extends BaseStackFragment
      */
 
     @Override
-    public void onDeleteAtIndex(int index) {
-        adapter.data.remove(index);
-        adapter.notifyDataSetChanged();
+    public void onDeleteAtIndex(final int index) {
+        CapitalReturn capitalReturn = adapter.data.get(index);
+        if (capitalReturn.isEmpty()) {
+            adapter.data.remove(index);
+            adapter.notifyDataSetChanged();
+            return;
+        }
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismissWithAnimation();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismiss();
+                adapter.data.remove(index);
+                adapter.notifyDataSetChanged();
+            }
+        }, "提示", "你确定要删除“回款记录"+ (index+1) +"”？");
     }
 
     @Override
