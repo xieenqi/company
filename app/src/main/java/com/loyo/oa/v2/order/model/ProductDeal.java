@@ -23,12 +23,21 @@ public class ProductDeal {
     public ProductDetails product;
     public boolean stockEnabled;
 
+    public boolean autoSettingPrice;
+
     public boolean showOriginPrice() {
         return product != null;
     }
 
     public boolean showStock() {
         return product != null && stockEnabled;
+    }
+
+    public void setProduct(ProductDetails product) {
+        this.product = product;
+        if (autoSettingPrice) {
+            this.price = product!= null?-1:product.unitPrice;
+        }
     }
 
     public String getOriginPrice() {
@@ -108,14 +117,14 @@ public class ProductDeal {
         return true;
     }
 
-    public boolean isValidated() {
-        return product != null
-                && price >= 0
-                && amount > 0
-                && discount >= 0
-                && total >= 0
-                && (!stockEnabled || amount <= product.stock);
-    }
+//    public boolean isValidated() {
+//        return product != null
+//                && price >= 0
+//                && amount > 0
+//                && discount >= 0
+//                && total >= 0
+//                && (!stockEnabled || amount <= product.stock);
+//    }
 
     public SaleIntentionalProduct toSaleIntentionalProduct() {
         SaleIntentionalProduct intentionalProduct = new SaleIntentionalProduct();
