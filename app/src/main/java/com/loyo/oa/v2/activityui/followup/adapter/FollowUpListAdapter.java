@@ -60,6 +60,7 @@ public class FollowUpListAdapter extends BaseAdapter {
     private AudioPlayCallBack audioPlayCallBack;
 
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格附件 */
+
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
     private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */

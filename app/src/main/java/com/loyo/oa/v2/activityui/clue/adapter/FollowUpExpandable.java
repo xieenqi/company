@@ -206,7 +206,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
                     holder.setText(R.id.tv_image_name, ben.getName());
                     holder.setText(R.id.tv_image_size, "大小:" + Utils.FormetFileSize(Long.valueOf(ben.getSize())));
                     holder.setImageResource(R.id.iv_image, Global.getAttachmentIcon(ben.originalName));
-                    ben.setPreviewAction(mContext, holder.getConvertView());
+                    ben.setPreviewAction(mContext, holder.getView(R.id.iv_image));
                 }
             });
         } else {
