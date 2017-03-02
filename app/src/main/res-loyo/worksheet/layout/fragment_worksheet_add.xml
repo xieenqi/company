@@ -5,7 +5,7 @@
     android:background="@color/common_activity_bg"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
-    <include layout="@layout/include_item_title" />
+    <include layout="@layout/include_common_title1" />
     <android.support.v7.widget.RecyclerView
         android:background="@color/common_activity_bg"
         android:id="@+id/recycle_view"

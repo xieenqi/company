@@ -147,7 +147,7 @@ public class ProductDeal {
     public ProductDeal(SaleIntentionalProduct intentionalProduct) {
         this.price = intentionalProduct.salePrice;
         this.amount = intentionalProduct.quantity;
-        this.remark = intentionalProduct.memo;
+        this.remark = TextUtils.isEmpty(intentionalProduct.memo)?null:intentionalProduct.memo;
         this.discount = intentionalProduct.discount /100;
         this.total = intentionalProduct.totalMoney;
         this.product = new ProductDetails();
