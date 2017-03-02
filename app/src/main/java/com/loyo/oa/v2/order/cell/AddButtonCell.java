@@ -11,7 +11,7 @@ import com.loyo.oa.v2.R;
  * Created by EthanGong on 2017/2/28.
  */
 
-public class AddButtonCell extends ProductAddBaseCell {
+public class AddButtonCell extends OrderAddBaseCell {
 
     TextView textView;
 
@@ -27,8 +27,8 @@ public class AddButtonCell extends ProductAddBaseCell {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listener != null) {
-                    listener.addProduct();
+                if (actionListener != null) {
+                    actionListener.onAdd();
                 }
             }
         });

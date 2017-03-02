@@ -10,9 +10,9 @@ public class EstimateAdd implements Serializable {
 
     public String id;          //订单id
     public String companyId;   //公司id
-    public int receivedAt;    //回款日期
-    public int receivedMoney;  //回款金额
-    public int billingMoney;   //开票金额
+    public long receivedAt;    //回款日期
+    public long receivedMoney;  //回款金额
+    public long billingMoney;   //开票金额
     public PayeeUser payeeUser = new PayeeUser();  //收款人
 
     public String attachmentUUId;  //附件id
@@ -28,7 +28,7 @@ public class EstimateAdd implements Serializable {
     public String customerName;
 
 
-    public class PayeeUser implements Serializable {
+    public static class PayeeUser implements Serializable {
         public String id;
         public String name;
         public String avatar;

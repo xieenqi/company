@@ -33,7 +33,7 @@ public class UploadTask {
     int status = WAITING;
     double progress;
     String md5;
-    String UUID;
+    public String UUID;
     String filePath;
     String originPath;
     public String name;

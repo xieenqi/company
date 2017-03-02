@@ -503,10 +503,10 @@ public class FollowAddActivity extends BaseActivity implements UploadControllerC
         map.put("location", location);//添加定位相关
         map.put("atDepts", atDepts);
         map.put("atUserIds", atUserIds);
+        map.put("contactRoleId", contactRoleId);
         //新添加
         if (hasEditConOrRole) {
             map.put("isEnableCus", true);
-            map.put("contactRoleId", contactRoleId);
             map.put("statusId", mCustomer.statusId);
             map.put("tags", mCustomer.tags);
 

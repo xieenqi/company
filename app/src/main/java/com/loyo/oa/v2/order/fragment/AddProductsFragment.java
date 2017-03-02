@@ -16,14 +16,12 @@ import com.loyo.oa.v2.activityui.product.api.ProductService;
 import com.loyo.oa.v2.activityui.product.event.SelectProductEvent;
 import com.loyo.oa.v2.activityui.product.model.ProductDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
-import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.order.activity.ActivityFragmentsStackManager;
 import com.loyo.oa.v2.order.adapter.AddProductAdapter;
-import com.loyo.oa.v2.order.cell.ProductAddBaseCell;
+import com.loyo.oa.v2.order.cell.OrderAddBaseCell;
 import com.loyo.oa.v2.order.common.ProductDealValidator;
 import com.loyo.oa.v2.order.model.ProductDeal;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -41,7 +39,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by EthanGong on 2017/2/28.
  */
 
-public class AddProductsFragment extends BaseFragment implements ProductAddBaseCell.ActionListener{
+public class AddProductsFragment extends BaseStackFragment
+        implements OrderAddBaseCell.ActionListener, OrderAddBaseCell.ProductListener{
 
     public interface ProductPickerCallback {
         void onProductPicked(ArrayList<SaleIntentionalProduct> data, String dealTotal);
@@ -60,15 +59,16 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
     @BindView(R.id.tv_title_1) TextView titleView;
     @BindView(R.id.recycle_view) RecyclerView recyclerView;
 
-    @BindView(R.id.tv_saleToal) CustomTextView totalText;
-    @BindView(R.id.tv_discount) CustomTextView discountText;
+    @BindView(R.id.tv_saleToal) TextView totalText;
+    @BindView(R.id.tv_discount) TextView discountText;
 
-    @OnClick(R.id.img_title_left) void onBackPressed() {
+    @OnClick(R.id.img_title_left) void onBack() {
 
+        hideKeyboard();
         ArrayList<ProductDeal> list = adapter.data;
         boolean hasUnsavedData = false;
         for (ProductDeal deal : list) {
-            if (!deal.isEmpty()) {
+            if (deal.hasChanged()) {
                 hasUnsavedData = true;
                 break;
             }
@@ -85,7 +85,7 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
                     sweetAlertDialog.dismiss();
                     manager.pop();
                 }
-            }, "提示", "数据未保存，确定要返回?");
+            }, "提示", "是否放弃编辑？确定后信息将不会保存");
         }
         else {
             this.manager.pop();
@@ -93,6 +93,7 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
     }
 
     @OnClick(R.id.img_title_right) void onCommit() {
+        hideKeyboard();
         ArrayList<ProductDeal> list = adapter.data;
         ArrayList<SaleIntentionalProduct> commitData = new ArrayList<>();
         boolean canCommit = true;
@@ -123,7 +124,7 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
 
     public AddProductsFragment(ActivityFragmentsStackManager manager) {
         this.manager = manager;
-        adapter = new AddProductAdapter(this);
+        adapter = new AddProductAdapter(this, this);
         adapter.callback = new AddProductAdapter.ListChangeCallback() {
             @Override
             public void onListChange(double totalMoney, double totalDiscount) {
@@ -134,7 +135,7 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
     }
 
     private AddProductsFragment() {
-        adapter = new AddProductAdapter(this);
+        adapter = new AddProductAdapter(this, this);
     }
 
     public void setData(ArrayList<SaleIntentionalProduct> data) {
@@ -166,12 +167,25 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
         adapter.fireListChange();
     }
 
+    @Override
+    public boolean onBackPressed() {
+        onBack();
+        return true;
+    }
+
     /**
-     * ProductAddCell.ActionListener
+     * OrderAddBaseCell.ActionListener & OrderAddBaseCell.ProductListener
      */
 
-    public void deleteProductAtIndex(final int index) {
+    public void pickProductForIndex(int index) {
+        currentPickIndex = index;
+        Intent mIntent = new Intent(this.getActivity(), SelectProductActivity.class);
+        mIntent.putExtra(SelectProductActivity.KEY_SESSION, uuid);
+        startActivity(mIntent);
+    }
 
+    @Override
+    public void onDeleteAtIndex(final int index) {
         ProductDeal deal = adapter.data.get(index);
         if (deal.isEmpty()) {
             adapter.data.remove(index);
@@ -190,24 +204,18 @@ public class AddProductsFragment extends BaseFragment implements ProductAddBaseC
                 adapter.data.remove(index);
                 adapter.notifyDataSetChanged();
             }
-        }, "提示", "你确定要删除吗？");
-    }
-
-    public void pickProductForIndex(int index) {
-        currentPickIndex = index;
-        Intent mIntent = new Intent(this.getActivity(), SelectProductActivity.class);
-        mIntent.putExtra(SelectProductActivity.KEY_SESSION, uuid);
-        startActivity(mIntent);
-    }
-
-    public void addProduct() {
-        adapter.data.add(new ProductDeal());
-        adapter.notifyDataSetChanged();
+        }, "提示", "你确定要删除“产品"+ (index+1) +"”？");
     }
 
     @Override
     public void toast(String msg) {
         Toast(msg);
+    }
+
+    @Override
+    public void onAdd() {
+        adapter.data.add(new ProductDeal());
+        adapter.notifyDataSetChanged();
     }
 
     /**

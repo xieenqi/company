@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.loyo.oa.v2.order.cell.AddButtonCell;
-import com.loyo.oa.v2.order.cell.ProductAddBaseCell;
+import com.loyo.oa.v2.order.cell.OrderAddBaseCell;
 import com.loyo.oa.v2.order.cell.ProductAddCell;
 import com.loyo.oa.v2.order.model.ProductDeal;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Created by EthanGong on 2017/2/28.
  */
 
-public class AddProductAdapter extends RecyclerView.Adapter<ProductAddBaseCell> implements ProductAddCell.StatisticsListener {
+public class AddProductAdapter extends RecyclerView.Adapter<OrderAddBaseCell> implements OrderAddBaseCell.StatisticsListener {
 
     @Override
     public void onStatisticsChange(int index) {
@@ -23,7 +23,7 @@ public class AddProductAdapter extends RecyclerView.Adapter<ProductAddBaseCell> 
             double total = 0;
             double discount = 0;
             for (ProductDeal deal : data) {
-                if (deal.total > 0
+                if (deal.total >= 0
                         && deal.discount >= 0
                         && deal.amount > 0
                         && deal.product != null) {
@@ -54,11 +54,14 @@ public class AddProductAdapter extends RecyclerView.Adapter<ProductAddBaseCell> 
         add(new ProductDeal());
     }};
 
-    private ProductAddBaseCell.ActionListener listener;
+    private OrderAddBaseCell.ActionListener actionListener;
+    private OrderAddBaseCell.ProductListener productListener;
 
-    public AddProductAdapter(ProductAddBaseCell.ActionListener listener) {
+    public AddProductAdapter(OrderAddBaseCell.ActionListener aListener, OrderAddBaseCell.ProductListener pListener) {
         setHasStableIds(true);
-        this.listener = listener;
+        this.actionListener = aListener;
+        this.productListener = pListener;
+
     }
 
     public void setData(ArrayList<ProductDeal> data) {
@@ -94,7 +97,7 @@ public class AddProductAdapter extends RecyclerView.Adapter<ProductAddBaseCell> 
     }
 
     @Override
-    public ProductAddBaseCell onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OrderAddBaseCell onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == PRODUCT_CELL) {
             return ProductAddCell.instance(parent);
         }
@@ -104,8 +107,9 @@ public class AddProductAdapter extends RecyclerView.Adapter<ProductAddBaseCell> 
     }
 
     @Override
-    public void onBindViewHolder(ProductAddBaseCell holder, int position) {
-        holder.listener = this.listener;
+    public void onBindViewHolder(OrderAddBaseCell holder, int position) {
+        holder.actionListener = this.actionListener;
+        holder.productListener = this.productListener;
         holder.statisticsListener = this;
         holder.index = position;
         if (position == data.size() && holder instanceof AddButtonCell) {

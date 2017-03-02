@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +26,20 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
+import com.loyo.oa.v2.attachment.api.AttachmentService;
+import com.loyo.oa.v2.beans.AttachmentBatch;
+import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customermanagement.fragment.AttachmentsFragment;
 import com.loyo.oa.v2.customview.PaymentPopView;
+import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -43,7 +51,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * 新建工单
  */
-public class WorksheetAddFragment extends BaseFragment implements View.OnClickListener, UploadControllerCallback {
+public class WorksheetAddFragment extends BaseStackFragment implements View.OnClickListener, UploadControllerCallback {
     private static final String WorksheetData = "worksheetData";
     private ArrayList<OrderWorksheetListModel> data;//原始数据，不能修改，保持原来的数据不变
     private ArrayList<OrderWorksheetListModel> copyData;//克隆的数据,可以修改，是最新的数据
@@ -52,10 +60,12 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
     private ViewGroup img_title_right;
     private View rootView;
     private onResultCallBack worksheetResultCallBack;
-    private HashMap<String, ArrayList<UploadTask>> taskList = new HashMap<>();//上传任务队列:key是uuid
+    private ArrayList<UploadTask> notUploadTask = new ArrayList<>();//还没有上传的任务
     private WorksheetAdapter worksheetAdapter;
     private List<UploadController> controllerList = new ArrayList<>();
     private UploadController clickPosController;//点击的那个item的controller
+    private final int bizType = 29;//业务id
+    private ArrayList<AttachmentForNew> hasAttachment = new ArrayList<>();//上传成功的附件，保存一下，如果要删除的化，用得到
 
     public WorksheetAddFragment() {
     }
@@ -88,6 +98,15 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
         } else {
             data = new ArrayList<>();
         }
+        //默认就有一个
+        if(data.size()<=0){
+            OrderWorksheetListModel OrderWorksheetListModel = new OrderWorksheetListModel();
+            OrderWorksheetListModel.uuid = StringUtil.getUUID();
+            data.add(OrderWorksheetListModel);
+            UploadController controller = new UploadController(mActivity, 9);
+            controllerList.add(controller);//添加到队列
+        }
+
         //复制一个列表，注意，是复制对象，不能在原来的数据上面做修改
         copyData = new ArrayList<>();
         for (OrderWorksheetListModel item : data) {
@@ -97,6 +116,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //
         if (null == rootView) {
             rootView = inflater.inflate(R.layout.fragment_worksheet_add, container, false);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recycle_view);
@@ -108,6 +128,9 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             recyclerView.setAdapter(worksheetAdapter);
             img_title_left.setOnClickListener(this);
             img_title_right.setOnClickListener(this);
+        } else {
+            //因为重新走来生命周期，数据是克隆来的，观察者模式失效，所以要重新通知数据改变
+            worksheetAdapter.notifyDataSetChanged();
         }
         return rootView;
     }
@@ -127,22 +150,16 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 for (UploadController uploader : controllerList) {
                     uploaders.addAllTask(uploader.getTaskList());
                 }
-                boolean submit=true;
-                if (uploaders.getTaskList().size() > 0) {
-                    for (UploadTask uploader : uploaders.getTaskList()) {
-                        //如果有没有上传的任务
-                        if(uploader.getStatus()!=UploadTask.UPLOADED){
-                            submit=false;
-                            showLoading2("");
-                            uploaders.setObserver(this);
-                            uploaders.startUpload();
-                            uploaders.notifyCompletionIfNeeded();
-                            break;
-                        }
-                    }
-                }
-                if(submit){
-                    if (null != worksheetResultCallBack) worksheetResultCallBack.onWorksheetSubmit(copyData);
+                getNotUploadTask();//上传之前，先获取没有上传的，方便等下上传成功后绑定附件
+                //如果有没有上传的附件
+                if (notUploadTask.size() > 0) {
+                    showLoading2("");
+                    uploaders.setObserver(this);
+                    uploaders.startUpload();
+                    uploaders.notifyCompletionIfNeeded();
+                } else {
+                    if (null != worksheetResultCallBack)
+                        worksheetResultCallBack.onWorksheetSubmit(copyData);
                 }
                 break;
 
@@ -152,7 +169,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
     /**
      * 提供给外部调用，主要是拦截物理back按键，然后调用本方法返回
      */
-    public void back(){
+    public void back() {
         boolean isEdit = false;
         //和原来的实体对比，判断是不是修改过
         if (data.size() == copyData.size()) {
@@ -165,12 +182,12 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                     break;
                 }
             }
-        } else{
+        } else {
             //增加或者删除了工单
-            isEdit=true;
+            isEdit = true;
         }
         //创建新的数据，并且填入的有值
-        if (!isEdit&&data.size() == 0) {
+        if (!isEdit && data.size() == 0) {
             int size = copyData.size();
             for (int i = 0; i < size; i++) {
                 if (!copyData.get(i).isEmpty()) {
@@ -210,7 +227,7 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                         UploadController uploadController = controllerList.get(i);
                         ArrayList<UploadTask> taskList = uploadController.getTaskList();
                         //在循环中不能删除item，记录下来，统一删除
-                        ArrayList<UploadTask> delTask=new ArrayList<UploadTask>();
+                        ArrayList<UploadTask> delTask = new ArrayList<UploadTask>();
                         for (UploadTask uptask : taskList) {
                             if (uptask.getStatus() != UploadTask.UPLOADED) {
                                 delTask.add(uptask);
@@ -278,6 +295,12 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 updateModelByField(OrderWorksheetListModel, "templateName", template.name);
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        back();
+        return true;
     }
 
 
@@ -391,10 +414,15 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
                 holder.gridView.setTag(position + "");//使用tag保存一下绑定数据的位置
                 uploadController.loadView(holder.gridView);
                 holder.tvNumTitle.setText("工单" + (position + 1));
-                OrderWorksheetListModel OrderWorksheetListModel = copyData.get(position);
-                //设置监听器，绑定ui和模型
-                holder.et_title.addTextChangedListener(new FastSaveTextWatcher(OrderWorksheetListModel, "title"));
-                holder.et_content.addTextChangedListener(new FastSaveTextWatcher(OrderWorksheetListModel, "content"));
+                //设置监听器，绑定ui和模型,如此蛋疼的写，是避免一个editview上面绑定多个watcher
+                FastSaveTextWatcher watcher = (FastSaveTextWatcher) holder.et_title.getTag();
+                if (null != watcher) holder.et_title.removeTextChangedListener(watcher);
+                holder.et_title.setTag(new FastSaveTextWatcher(worksheet, "title"));
+                holder.et_title.addTextChangedListener((TextWatcher) holder.et_title.getTag());
+                watcher = (FastSaveTextWatcher) holder.et_content.getTag();
+                if (null != watcher) holder.et_content.removeTextChangedListener(watcher);
+                holder.et_content.setTag(new FastSaveTextWatcher(worksheet, "content"));
+                holder.et_content.addTextChangedListener((TextWatcher) holder.et_content.getTag());
             }
         }
 
@@ -474,10 +502,38 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
                 if (data != null) {
-                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    final int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
                     if (index >= 0) {
-                        clickPosController.removeTaskAt(index);
-                        clickPosController.reloadGridView();
+                        UploadTask rmTask = clickPosController.getTaskList().get(index);
+                        HashMap<String, Object> map = new HashMap<String, Object>();
+                        map.put("bizType", bizType);
+                        map.put("uuid", rmTask.UUID);
+                        String attachmentId = null;
+                        //找到要删的附件的attachmentId
+                        for (AttachmentForNew atta : hasAttachment) {
+                            if (TextUtils.equals(rmTask.UUID, atta.getUUId()) && atta.getName().endsWith(rmTask.name)) {//按照名字和uuid来判断是不是一张图片
+                                attachmentId = atta.getId();
+                                break;
+                            }
+                        }
+                        //发送删除的请求
+                        if (!TextUtils.isEmpty(attachmentId)) {
+                            showLoading2("");
+                            AttachmentService.remove(attachmentId, map)
+                                    .subscribe(new DefaultLoyoSubscriber<Object>(hud) {
+                                        @Override
+                                        public void onNext(Object object) {
+                                            //从本地ui删除
+                                            clickPosController.removeTaskAt(index);
+                                            clickPosController.reloadGridView();
+                                        }
+                                    });
+                        }else{
+                            //说明没有上传，直接在本地删除
+                            clickPosController.removeTaskAt(index);
+                            clickPosController.reloadGridView();
+                        }
+
                     }
                 }
                 break;
@@ -531,7 +587,68 @@ public class WorksheetAddFragment extends BaseFragment implements View.OnClickLi
             LoyoToast.info(mActivity, count + "个附件上传失败，请重试或者删除");
             return;
         }
-        if (null != worksheetResultCallBack) worksheetResultCallBack.onWorksheetSubmit(copyData);
+        //绑定附件信息
+        postAttaData();
+
+    }
+
+
+    /**
+     * 获取还没有上传的任务
+     */
+    private void getNotUploadTask() {
+        for (int j = 0; j < controllerList.size(); j++) {
+            UploadController controller = controllerList.get(j);
+            ArrayList<UploadTask> list = controller.getTaskList();
+            for (int i = 0; i < list.size(); i++) {
+                UploadTask task = list.get(i);
+                if (UploadTask.UPLOADED == task.getStatus()) {
+                    continue;
+                }
+                notUploadTask.add(task);
+            }
+        }
+    }
+
+    /**
+     * 构造绑定附件的信息
+     */
+    private ArrayList<AttachmentBatch> buildAttachment() {
+        ArrayList<AttachmentBatch> attachment = new ArrayList<>();
+        for (UploadTask task : notUploadTask) {
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = task.UUID;
+            attachmentBatch.bizType = bizType;//工单附件的业务id
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+        return attachment;
+    }
+
+    /**
+     * 上传附件信息
+     */
+    public void postAttaData() {
+        AttachmentService.setAttachementData(buildAttachment())
+                .subscribe(new DefaultLoyoSubscriber<ArrayList<AttachmentForNew>>(hud, true/*dismissOnlyWhenError*/) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<AttachmentForNew> news) {
+                        hasAttachment.addAll(news);
+                        //绑定完了，就清空原来的列表，避免重复绑定
+                        notUploadTask.clear();
+                        if (null != worksheetResultCallBack) {
+                            worksheetResultCallBack.onWorksheetSubmit(copyData);
+                        }
+                    }
+                });
     }
 
     /**

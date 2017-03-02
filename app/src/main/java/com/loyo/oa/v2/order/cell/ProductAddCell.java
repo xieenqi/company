@@ -25,7 +25,7 @@ import static com.loyo.oa.v2.R.id.tv_total;
  * Created by EthanGong on 2017/2/28.
  */
 
-public class ProductAddCell extends ProductAddBaseCell {
+public class ProductAddCell extends OrderAddBaseCell {
 
 
 
@@ -45,14 +45,14 @@ public class ProductAddCell extends ProductAddBaseCell {
     @BindView(R.id.et_remake) EditText remarkEditText;
 
     @OnClick(R.id.container_product) void onPickProduct() {
-        if (listener != null) {
-            listener.pickProductForIndex(index);
+        if (productListener != null) {
+            productListener.pickProductForIndex(index);
         }
     }
 
     @OnClick(R.id.ll_delete) void onDelete() {
-        if (listener != null) {
-            listener.deleteProductAtIndex(index);
+        if (actionListener != null) {
+            actionListener.onDeleteAtIndex(index);
         }
     }
 
@@ -84,7 +84,7 @@ public class ProductAddCell extends ProductAddBaseCell {
             if (TextUtils.isEmpty(priceString)) {
                 model.discount = -1;
 
-                model.price = 0;
+                model.price = -1;
             }
             else  {
                 try {
@@ -94,7 +94,9 @@ public class ProductAddCell extends ProductAddBaseCell {
                     salePrice = 0;
                     model.discount = -1;
                 }
-                model.price = salePrice;
+                if (!autoSettingPrice) {
+                    model.price = salePrice;
+                }
             }
             if (TextUtils.isEmpty(amountString)) {
                 model.total = -1;
@@ -129,6 +131,7 @@ public class ProductAddCell extends ProductAddBaseCell {
         }
     };
 
+    private String previousAmountString = null;
     private TextWatcher amountWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -137,7 +140,21 @@ public class ProductAddCell extends ProductAddBaseCell {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            float amount = 0;
+            try {
+                amount = Float.valueOf(s.toString());
+                if (model.product != null && amount > model.product.stock
+                        && actionListener != null
+                        && model.stockEnabled) {
+                    actionListener.toast("库存不足");
+                    amountEditText.setText(previousAmountString);
+                }
+                else {
+                    previousAmountString = s.toString();
+                }
+            }
+            catch (Exception e) {
+            }
         }
 
         @Override
@@ -172,9 +189,9 @@ public class ProductAddCell extends ProductAddBaseCell {
                 }
                 model.amount = amount;
                 if (model.product != null && model.amount > model.product.stock
-                        && listener != null
+                        && actionListener != null
                         && model.stockEnabled) {
-                    listener.toast("库存不足");
+                    actionListener.toast("库存不足");
                 }
             }
 
@@ -199,6 +216,29 @@ public class ProductAddCell extends ProductAddBaseCell {
         }
     };
 
+    private TextWatcher remarkWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String remark = s.toString();
+            if (!TextUtils.isEmpty(remark)) {
+                model.remark = remark;
+            }
+            else {
+                model.remark = null;
+            }
+        }
+    };
+
     public static ProductAddCell instance(ViewGroup parent) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cell_product_add, parent, false);
@@ -210,7 +250,10 @@ public class ProductAddCell extends ProductAddBaseCell {
         ButterKnife.bind(this, itemView);
         priceEditText.addTextChangedListener(priceWatcher);
         amountEditText.addTextChangedListener(amountWatcher);
+        remarkEditText.addTextChangedListener(remarkWatcher);
     }
+
+    private boolean autoSettingPrice = false;
 
     public void loadModel(ProductDeal model) {
         this.model = model;
@@ -220,8 +263,11 @@ public class ProductAddCell extends ProductAddBaseCell {
         priceText.setText(model.getOriginPrice());
         amountText.setText(model.getStock());
 
+        autoSettingPrice = true;
         priceEditText.setText(model.getPrice());
+        autoSettingPrice = false;
         amountEditText.setText(model.getAmount());
+        remarkEditText.setText(model.getRemark());
 
         discountAndTotalContainer.setVisibility(model.showOriginPrice()?View.VISIBLE:View.GONE);
 
