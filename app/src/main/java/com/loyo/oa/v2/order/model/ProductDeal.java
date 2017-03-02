@@ -44,6 +44,7 @@ public class ProductDeal {
         if (product == null) {
             return null;
         }
+
         return "单价："+Utils.setValueDouble(product.unitPrice);
     }
 
@@ -60,6 +61,7 @@ public class ProductDeal {
             return Utils.setValueDouble(price);
         }
         else if (product != null) {
+            autoSettingPrice = true;
             return Utils.setValueDouble(product.unitPrice);
         }
         else {
