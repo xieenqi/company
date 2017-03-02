@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.order.model;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -131,7 +132,7 @@ public class CapitalReturn {
         }
         attachmentCount = estimateAdd.attachmentCount;
         attachmentUUId = estimateAdd.attachmentUUId;
-        remark = estimateAdd.remark;
+        remark = TextUtils.isEmpty(estimateAdd.remark)?null:estimateAdd.remark;
 
         md5 = getFingerprint();
     }
@@ -166,6 +167,7 @@ public class CapitalReturn {
             fingerBuilder.append(payeeUser.avatar);
         }
         String finger = fingerBuilder.toString();
+        Log.v("finger", finger);
         return Utils.md5(finger);
     }
 

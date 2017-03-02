@@ -43,7 +43,8 @@ public class AddProductsFragment extends BaseStackFragment
         implements OrderAddBaseCell.ActionListener, OrderAddBaseCell.ProductListener {
 
     public interface ProductPickerCallback {
-        void onProductPicked(ArrayList<SaleIntentionalProduct> data, String dealTotal);
+        void onProductPicked(ArrayList<SaleIntentionalProduct> data, String dealTotal, boolean initEmpty);
+        void onBack(boolean initEmpty);
     }
 
     public ProductPickerCallback callback;
@@ -89,7 +90,7 @@ public class AddProductsFragment extends BaseStackFragment
         }
         else {
             if (callback != null) {
-                callback.onProductPicked(null, null);
+                callback.onBack(list.size() == 0);
             }
             this.manager.pop();
         }
@@ -115,12 +116,7 @@ public class AddProductsFragment extends BaseStackFragment
             return;
         }
         if (callback != null) {
-            if (list.size() > 0) {
-                callback.onProductPicked(commitData, totalText.getText().toString());
-            }
-            else {
-                callback.onProductPicked(null, null);
-            }
+            callback.onProductPicked(commitData, totalText.getText().toString(), list.size() == 0);
         }
         this.manager.pop();
     }

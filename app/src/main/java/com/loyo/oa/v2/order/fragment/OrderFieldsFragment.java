@@ -207,19 +207,18 @@ public class OrderFieldsFragment extends BaseStackFragment {
             addProductsFragment.setData(productData);
             addProductsFragment.callback = new AddProductsFragment.ProductPickerCallback() {
                 @Override
-                public void onProductPicked(ArrayList<SaleIntentionalProduct> data, String dealTotal) {
-
-                    if (data == null) {
-                        showEmptyProduct = true;
-                    }
-                    else {
-                        showEmptyProduct = false;
-                    }
+                public void onProductPicked(ArrayList<SaleIntentionalProduct> data, String dealTotal, boolean initEmpty) {
+                    showEmptyProduct = initEmpty;
                     productData = data;
                     productText.setText(getIntentionProductName());
                     if (TextUtils.isEmpty(dealText.getText().toString())) {//成交金额  返显产品的销售总价
                         dealText.setText("0".equals(dealTotal) ? "" : dealTotal);
                     }
+                }
+
+                @Override
+                public void onBack(boolean initEmpty) {
+                    showEmptyProduct = initEmpty;
                 }
             };
             this.manager.push(addProductsFragment, "add_products");
@@ -258,15 +257,15 @@ public class OrderFieldsFragment extends BaseStackFragment {
             addCapitalReturnFragment.dealMoney = dealMoney;
             addCapitalReturnFragment.callback = new AddCapitalReturnFragment.AddCapitalReturnCallback() {
                 @Override
-                public void onAddCapitalReturn(ArrayList<EstimateAdd> data) {
-                    if (data == null) {
-                        showEmptyPayment = true;
-                    }
-                    else {
-                        showEmptyPayment = false;
-                    }
+                public void onAddCapitalReturn(ArrayList<EstimateAdd> data, boolean initEmpty) {
+                    showEmptyPayment = initEmpty;
                     estimateData = data;
                     paymentText.setText(getEstimateName());
+                }
+
+                @Override
+                public void onBack(boolean initEmpty) {
+                    showEmptyPayment = initEmpty;
                 }
             };
             this.manager.push(addCapitalReturnFragment, "add_capital_return");
@@ -756,7 +755,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
      */
     private String getEstimateName() {
         String estimateName = "";
-        if (estimateData.size() > 0) {
+        if (null != estimateData && estimateData.size() > 0) {
             estimateName = "￥";
             for (EstimateAdd est : estimateData) {
                 estimateName += est.receivedMoney + "、";

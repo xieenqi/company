@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
@@ -34,10 +32,8 @@ import com.loyo.oa.v2.attachment.api.AttachmentService;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customermanagement.fragment.AttachmentsFragment;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.network.DefaultLoyoSubscriber;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -58,6 +54,7 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
     private RecyclerView recyclerView;
     private ViewGroup img_title_left;
     private ViewGroup img_title_right;
+    private TextView titleView;
     private View rootView;
     private onResultCallBack worksheetResultCallBack;
     private ArrayList<UploadTask> notUploadTask = new ArrayList<>();//还没有上传的任务
@@ -128,6 +125,8 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
             recyclerView.setAdapter(worksheetAdapter);
             img_title_left.setOnClickListener(this);
             img_title_right.setOnClickListener(this);
+            titleView = (TextView) rootView.findViewById(R.id.tv_title_1);
+            titleView.setText("添加工单");
         } else {
             //因为重新走来生命周期，数据是克隆来的，观察者模式失效，所以要重新通知数据改变
             worksheetAdapter.notifyDataSetChanged();
