@@ -370,9 +370,6 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
                 final WorksheetHolder holder = (WorksheetHolder) baseHolder;
                 OrderWorksheetListModel worksheet = copyData.get(position);
 //                holder.tv_order.setText(worksheet.orderName);
-                holder.tv_type.setText(worksheet.templateName);
-                holder.et_title.setText(worksheet.title);
-                holder.et_content.setText(worksheet.content);
                 //选择工单类型
                 holder.ll_type.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -425,6 +422,10 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
                 if (null != watcher) holder.et_content.removeTextChangedListener(watcher);
                 holder.et_content.setTag(new FastSaveTextWatcher(worksheet, "content"));
                 holder.et_content.addTextChangedListener((TextWatcher) holder.et_content.getTag());
+
+                holder.tv_type.setText(worksheet.templateName);
+                holder.et_title.setText(worksheet.title);
+                holder.et_content.setText(worksheet.content);
             }
         }
 
