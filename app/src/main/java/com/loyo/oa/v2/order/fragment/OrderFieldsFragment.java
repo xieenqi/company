@@ -884,6 +884,11 @@ public class OrderFieldsFragment extends BaseStackFragment {
             }
         }
 
+        for (ContactLeftExtras extra : requiredFieldsView.getExtras()) {
+            if (!extra.isSystem && !TextUtils.isEmpty(extra.val)) {
+                fieldData.add(extra);
+            }
+        }
         for (ContactLeftExtras extra : optionalFieldsView.getExtras()) {
             if (!extra.isSystem && !TextUtils.isEmpty(extra.val)) {
                 fieldData.add(extra);
