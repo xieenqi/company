@@ -171,6 +171,14 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         controller.loadView(gridView);
     }
 
+    @Override
+    public void refreshLocation() {
+        tv_result.setVisibility(mAttendanceRecord.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK ? View.GONE : View.VISIBLE);
+        String result = mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK ? "您已超出内勤范围,本次打卡将记作外勤!" : "";
+        tv_result.setText(result);
+        tv_address.setText(mAttendanceRecord.getAddress());
+    }
+
     /**
      * 初始化业务数据
      */

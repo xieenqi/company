@@ -25,4 +25,7 @@ public interface AttendanceAddView extends BaseView{
 
     /*打卡超时*/
     void showTimeOutDialog();
+
+    /*刷新打卡位置,主要是更新外勤情况*/
+    void refreshLocation();
 }

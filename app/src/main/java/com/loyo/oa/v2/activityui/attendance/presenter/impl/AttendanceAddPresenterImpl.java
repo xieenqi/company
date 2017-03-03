@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.loyo.oa.hud.progress.LoyoProgressHUD;
+import com.loyo.oa.hud.toast.LoyoToast;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.api.AttendanceService;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
@@ -130,17 +131,15 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
     @Override
     public void refreshLocation(final double longitude, final double latitude, final String address) {
         String originalGPS = longitude + "," + latitude;
-//        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).refreshLocation(originalGPS, new RCallback<Object>() {
-//            @Override
-//            public void success(final Object o, final Response response) {
-//                mAttendanceRecord.setAddress(address);
-//            }
-//        });
 
-        AttendanceService.refreshLocation(originalGPS).subscribe(new DefaultLoyoSubscriber<Object>() {
+        AttendanceService.refreshLocation(originalGPS).subscribe(new DefaultLoyoSubscriber<AttendanceRecord>() {
             @Override
-            public void onNext(Object o) {
+            public void onNext(AttendanceRecord attendanceRecord) {
                 mAttendanceRecord.setAddress(address);
+                //这里必须要更新打卡状态
+                mAttendanceRecord.setOutstate(attendanceRecord.getOutstate());
+                //刷新外勤情况
+                crolView.refreshLocation();
             }
         });
     }
