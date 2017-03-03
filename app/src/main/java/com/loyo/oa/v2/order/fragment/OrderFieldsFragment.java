@@ -441,7 +441,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
                 put("startAt", "必填");
                 put("endAt", "必填");
                 put("attachment", "必填");
-                put("remark", "备注（必填）");
+                put("remark", "请输入备注（必填）");
             }};
 
             if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {

@@ -557,7 +557,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:gravity="top"
-                        android:hint="备注"
+                        android:hint="请输入备注(选填)"
                         android:singleLine="false"
                         android:maxLines="1000"
                         android:maxLength="500"
