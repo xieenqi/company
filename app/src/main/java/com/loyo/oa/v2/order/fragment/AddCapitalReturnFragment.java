@@ -100,7 +100,7 @@ public class AddCapitalReturnFragment extends BaseStackFragment
                     sweetAlertDialog.dismiss();
                     manager.pop();
                 }
-            }, "提示", "是否放弃编辑？确定后信息将不会保存");
+            }, "提示", "退出后填写的信息将被清除，是否退出？");
         }
         else {
             if (callback != null) {
