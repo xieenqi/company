@@ -263,7 +263,7 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
         for (int i = size-1; i >0; i--) {
             for (int j = i - 1; j >= 0; j--) {
                 if (TextUtils.equals(copyData.get(i).title, copyData.get(j).title)) {
-                    Toast.makeText(mActivity, "工单" + (i + 1) + "和" + (j + 1) + "标题重复", Toast.LENGTH_LONG).show();
+                    Toast("工单" + (i + 1) + "和工单" + (j + 1) + "标题重复");
                     return false;
                 }
             }
