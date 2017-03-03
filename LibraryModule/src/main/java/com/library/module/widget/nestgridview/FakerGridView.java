@@ -71,7 +71,6 @@ public class FakerGridView extends ViewGroup {
         int maxHeightPerline = 0;
         int computeHeight = 0;
 
-
         for (int i = 0; i < childCount; i++) {
             child = getChildAt(i);
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
