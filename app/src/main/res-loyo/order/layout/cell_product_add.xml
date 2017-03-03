@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:layout_marginRight="10dp"
             android:paddingLeft="@dimen/margin_other_view"
             android:paddingRight="@dimen/dimen_5">
 
@@ -279,6 +280,7 @@
             android:layout_height="100dp"
             android:background="@color/white"
             android:gravity="top"
+            android:textSize="14sp"
             android:hint="请输入备注（选填）"
             android:textColorHint="@color/text99"
             android:singleLine="false"
