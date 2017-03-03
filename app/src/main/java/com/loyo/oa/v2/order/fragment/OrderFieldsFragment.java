@@ -210,7 +210,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                     getActivity().onBackPressed();
                 }
-            }, "提示", "退出后填写的信息将被清除，是否退出？");
+            }, "提示", "是否放弃编辑？确定后信息将不会保存。");
         } else {
             getActivity().onBackPressed();
         }

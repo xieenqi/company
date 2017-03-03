@@ -245,7 +245,7 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
                     }
                     if (null != worksheetResultCallBack) worksheetResultCallBack.onWorksheetBack();
                 }
-            }, "提示", "退出后填写的信息将被清除，是否退出？");
+            }, "提示", "是否放弃编辑？确定后信息将不会保存。");
         } else {
             if (null != worksheetResultCallBack) worksheetResultCallBack.onWorksheetBack();
         }
