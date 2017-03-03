@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +116,17 @@ public class AddProductsFragment extends BaseStackFragment
         if (!canCommit) {
             return;
         }
+        int size = commitData.size();
+        for (int m = size-1; m >0; m--) {
+            for (int n = m - 1; n >= 0; n--) {
+                if (TextUtils.equals(commitData.get(m).id, commitData.get(n).id)) {
+                    Toast("产品" + (n + 1) + "和产品" + (n + 1) + "重复");
+                    return ;
+                }
+            }
+        }
+
+
         if (callback != null) {
             callback.onProductPicked(commitData, totalText.getText().toString(), list.size() == 0);
         }
