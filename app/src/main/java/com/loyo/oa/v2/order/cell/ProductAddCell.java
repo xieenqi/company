@@ -154,6 +154,9 @@ public class ProductAddCell extends OrderAddBaseCell {
                         && model.stockEnabled) {
                     actionListener.toast("库存不足");
                     amountEditText.setText(previousAmountString);
+                    if(!TextUtils.isEmpty(previousAmountString)) {
+                        amountEditText.setSelection(previousAmountString.length());
+                    }
                 }
                 else {
                     previousAmountString = s.toString();
