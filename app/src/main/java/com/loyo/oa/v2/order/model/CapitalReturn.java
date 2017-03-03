@@ -21,7 +21,7 @@ public class CapitalReturn {
     public long defaultReceivedAt;    //默认回款日期, 默认选中当天
     public long receivedAt;    //回款日期
     public long receivedMoney;  //回款金额
-    public long billingMoney;   //开票金额
+    public long billingMoney = -1;   //开票金额
     public EstimateAdd.PayeeUser payeeUser;  //收款人
 
     public String attachmentUUId;  //附件id
@@ -91,7 +91,7 @@ public class CapitalReturn {
     public boolean isEmpty() {
         return receivedAt == 0
                 && receivedMoney == 0
-                && billingMoney <= 0
+                && billingMoney < 0
                 && payeeUser == null
                 && attachmentUUId == null
                 && payeeMethod == null
