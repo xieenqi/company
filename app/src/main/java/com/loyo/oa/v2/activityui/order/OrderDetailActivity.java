@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.common.ViewOrderDetailsExtra;
 import com.loyo.oa.v2.activityui.product.IntentionProductActivity;
+import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.application.MainApp;
@@ -327,6 +328,24 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
         }
     }
 
+    /**
+     * 获取 意向产品的名字
+     *
+     * @return
+     */
+    private String getIntentionProductName() {
+        String productName = "";
+        if (null != mData && mData.proInfo != null) {
+            for (SaleIntentionalProduct ele : mData.proInfo) {
+                productName += ele.name + "、";
+
+            }
+        } else if(null != mData) {
+            return mData.proName;
+        }
+        return productName.length() > 0 ? productName.substring(0, productName.length() - 1) : "";
+    }
+
     private void getData() {
         ll_loading.setStatus(LoadingLayout.Loading);
         OrderService.getSaleDetails(orderId, new HashMap<String, Object>())
@@ -379,7 +398,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
         tv_title.setText(mData.title);
         tv_customer.setText(mData.customerName);
         tv_money.setText(Utils.setValueDouble(mData.dealMoney));
-        tv_product.setText(mData.proName);
+        tv_product.setText(getIntentionProductName());
         tv_responsible_name.setText(mData.directorName);
         tv_creator_name.setText(mData.creatorName);
         tv_plan.setText("回款计划（" + mData.planNum + "）");
