@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.common.utils.LoyoUIThread;
 import com.loyo.oa.v2.R;
@@ -35,6 +37,7 @@ import com.loyo.oa.v2.order.activity.OrderAddOrEditActivity;
 import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.order.widget.OrderCustomFieldsView;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -46,6 +49,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.loyo.oa.v2.R.id.et_money;
 import static com.loyo.oa.v2.R.id.et_name;
@@ -104,6 +108,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
     }};
 
     View view;
+    String md5;
     OrderCustomFieldsView requiredFieldsView;
     OrderCustomFieldsView optionalFieldsView;
     private HashMap<String, ViewGroup> containerMap;
@@ -166,7 +171,23 @@ public class OrderFieldsFragment extends BaseStackFragment {
 
     @OnClick(R.id.img_title_left) void onBack() {
         hideKeyboard();
-        getActivity().onBackPressed();
+
+        if (md5 != null && !md5.equals(fingerprint())) {
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismissWithAnimation();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    getActivity().onBackPressed();
+                }
+            }, "提示", "是否放弃编辑？确定后信息将不会保存");
+        }
+        else {
+            getActivity().onBackPressed();
+        }
     }
 
     @OnClick(R.id.img_title_right) void onCommit() {
@@ -448,6 +469,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
     }
 
     private void bindDataIfNeeded() {
+        md5 = fingerprint();
         if (orderDetail == null) {
             return;
         }
@@ -523,6 +545,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
         optionalFieldsView.bindData(orderDetail.extensionDatas);
         unfold();
 
+        md5 = fingerprint();
     }
 
     private void resetCopyDataAndBind() {
@@ -580,6 +603,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
         optionalFieldsView.bindData(orderDetail.extensionDatas);
 
         unfold();
+        md5 = fingerprint();
     }
 
     private void bindImportOrderData() {
@@ -851,7 +875,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
      */
     public HashMap<String, Object> orderDataMap() {
 
-        if (TextUtils.isEmpty(nameText.getText().toString())) {
+        if (TextUtils.isEmpty(nameText.getText().toString().trim())) {
             Toast("请填写订单标题!");
             return null;
         } else if (TextUtils.isEmpty(customerId)) {
@@ -901,7 +925,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
         map.put("attachmentCount", attachmentSize);
         map.put("customerId", customerId);
         map.put("customerName", customerName);
-        map.put("title", nameText.getText().toString());
+        map.put("title", nameText.getText().toString().trim());
         if (null == uuid || TextUtils.isEmpty(uuid)) {
             map.put("attachmentUUId", StringUtil.getUUID());
         } else {
@@ -928,5 +952,58 @@ public class OrderFieldsFragment extends BaseStackFragment {
             map.put("endAt", endAt);
         }
         return map;
+    }
+
+    private String fingerprint() {
+        ArrayList<ContactLeftExtras> fieldData = new ArrayList<>();
+
+        for (ContactLeftExtras extra : requiredFieldsView.getExtras()) {
+            if (!extra.isSystem && !TextUtils.isEmpty(extra.val)) {
+                fieldData.add(extra);
+            }
+        }
+        for (ContactLeftExtras extra : optionalFieldsView.getExtras()) {
+            if (!extra.isSystem && !TextUtils.isEmpty(extra.val)) {
+                fieldData.add(extra);
+            }
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
+            map.put("id", orderId);
+        }
+        map.put("attachmentCount", attachmentSize);
+        map.put("customerId", customerId);
+        map.put("customerName", customerName);
+        map.put("title", nameText.getText().toString().trim());
+        if (null == uuid || TextUtils.isEmpty(uuid)) {
+            map.put("attachmentUUId", StringUtil.getUUID());
+        } else {
+            map.put("attachmentUUId", uuid);
+        }
+        map.put("dealMoney", Float.parseFloat(dealText.getText().toString()));
+        map.put("orderNum", numberText.getText().toString());
+        map.put("remark", remarkText.getText().toString());
+
+        /* 产品 */
+        map.put("proInfo", productData);
+
+        /* 回款 */
+        map.put("paymentRecords", estimateData);
+
+        /* 自定义字段 */
+        map.put("extensionDatas", fieldData);
+        /* 工单 */
+        map.put("reWorkSheet", reWorkSheet);
+        if (startAt > 0) {
+            map.put("startAt", startAt);
+        }
+        if (endAt > 0) {
+            map.put("endAt", endAt);
+        }
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(map);
+        Log.v("fingerprint", jsonStr);
+
+        return Utils.md5(jsonStr);
     }
 }
