@@ -7,12 +7,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+
+import static com.loyo.oa.v2.R.id.imageView;
 
 /**
  * 【跟进拜访】详情和列表 图片适配器
@@ -62,8 +66,12 @@ public class ListOrDetailsGridViewAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        ImageLoader.getInstance().displayImage(mAttachment.getUrl(), holder.iv_image);
-
+//        ImageLoader.getInstance().displayImage(mAttachment.getUrl(), holder.iv_image);
+        LogUtil.d("图片展示次数？？？？？？？？？？？？" + mAttachment.name);
+        Glide.with(MainApp.getMainApp()).load(mAttachment.getUrl())
+                .placeholder(R.drawable.default_image)
+                .override(200, 200)
+                .into(holder.iv_image);
         return convertView;
     }
 
