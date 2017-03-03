@@ -215,7 +215,7 @@ public class AddProductsFragment extends BaseStackFragment
                 adapter.data.remove(index);
                 adapter.notifyDataSetChanged();
             }
-        }, "提示", "你确定要删除“产品"+ (index+1) +"”？");
+        }, "提示", "确定要删除“产品"+ (index+1) +"”？");
     }
 
     @Override
