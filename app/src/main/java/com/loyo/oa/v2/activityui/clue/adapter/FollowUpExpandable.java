@@ -269,7 +269,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
 //                            MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
 //                }
 //            });
-
+//此做法在容器中添加 子view（子view少无关紧要）
             holder.layout_gridview.removeAllViews();
             for (int i = 0, c = 0, r = 0; i < model.imgAttachments.size(); i++, c++) {
                 if (c == 3) {
