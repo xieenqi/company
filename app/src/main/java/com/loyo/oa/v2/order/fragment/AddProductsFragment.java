@@ -87,7 +87,7 @@ public class AddProductsFragment extends BaseStackFragment
                     sweetAlertDialog.dismiss();
                     manager.pop();
                 }
-            }, "提示", "是否放弃编辑？确定后信息将不会保存");
+            }, "提示", "是否放弃编辑？确定后信息将不会保存。");
         }
         else {
             if (callback != null) {
@@ -120,7 +120,7 @@ public class AddProductsFragment extends BaseStackFragment
         for (int m = size-1; m >0; m--) {
             for (int n = m - 1; n >= 0; n--) {
                 if (TextUtils.equals(commitData.get(m).id, commitData.get(n).id)) {
-                    Toast("产品" + (n + 1) + "和产品" + (n + 1) + "重复");
+                    Toast("产品" + (m + 1) + "和产品" + (n + 1) + "重复");
                     return ;
                 }
             }
