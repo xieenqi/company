@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.common.utils.LoyoUIThread;
 import com.loyo.oa.v2.R;
@@ -35,6 +37,7 @@ import com.loyo.oa.v2.order.activity.OrderAddOrEditActivity;
 import com.loyo.oa.v2.order.api.OrderService;
 import com.loyo.oa.v2.order.widget.OrderCustomFieldsView;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -46,6 +49,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.loyo.oa.v2.R.id.et_money;
 import static com.loyo.oa.v2.R.id.et_name;
@@ -93,7 +97,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
     private WeakReference<ActionListener> listenerRef;
     private ActivityFragmentsStackManager manager;
 
-    private static final ArrayList<String> checkFieldNames = new ArrayList<String>(){{
+    private static final ArrayList<String> checkFieldNames = new ArrayList<String>() {{
         add("paymentRecords");
         add("worksheets");
         add("orderNum");
@@ -104,6 +108,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
     }};
 
     View view;
+    String md5;
     OrderCustomFieldsView requiredFieldsView;
     OrderCustomFieldsView optionalFieldsView;
     private HashMap<String, ViewGroup> containerMap;
@@ -129,47 +134,90 @@ public class OrderFieldsFragment extends BaseStackFragment {
 
     private WorksheetAddFragment addWorksheetFragment;//添加工单的页面
 
-    @BindView(R.id.img_title_left)  ViewGroup backButton;
-    @BindView(R.id.img_title_right) ViewGroup rightButton;
-    @BindView(R.id.tv_title_1)      TextView  titleView;
+    @BindView(R.id.img_title_left)
+    ViewGroup backButton;
+    @BindView(R.id.img_title_right)
+    ViewGroup rightButton;
+    @BindView(R.id.tv_title_1)
+    TextView titleView;
 
-    @BindView(R.id.optional_zone)                   ViewGroup optionalZone;
-    @BindView(R.id.layout_more)                     ViewGroup loadMore;
-    @BindView(R.id.container_custom_field_required) ViewGroup requiredContainer;
+    @BindView(R.id.optional_zone)
+    ViewGroup optionalZone;
+    @BindView(R.id.layout_more)
+    ViewGroup loadMore;
+    @BindView(R.id.container_custom_field_required)
+    ViewGroup requiredContainer;
 
-    @BindView(R.id.container_estimate)   ViewGroup paymentContainer;
-    @BindView(R.id.container_worksheet)  ViewGroup worksheetContainer;
-    @BindView(R.id.container_number)     ViewGroup numberContainer;
-    @BindView(R.id.container_start_time) ViewGroup startTimeContainer;
-    @BindView(R.id.container_end_time)   ViewGroup endTimeContainer;
+    @BindView(R.id.container_estimate)
+    ViewGroup paymentContainer;
+    @BindView(R.id.container_worksheet)
+    ViewGroup worksheetContainer;
+    @BindView(R.id.container_number)
+    ViewGroup numberContainer;
+    @BindView(R.id.container_start_time)
+    ViewGroup startTimeContainer;
+    @BindView(R.id.container_end_time)
+    ViewGroup endTimeContainer;
 
-    @BindView(R.id.container_custom_field_optional) ViewGroup optionalContainer;
-    @BindView(R.id.container_attachment) ViewGroup attachmentContainer;
-    @BindView(R.id.container_remark)     ViewGroup remarkContainer;
+    @BindView(R.id.container_custom_field_optional)
+    ViewGroup optionalContainer;
+    @BindView(R.id.container_attachment)
+    ViewGroup attachmentContainer;
+    @BindView(R.id.container_remark)
+    ViewGroup remarkContainer;
 
-    @BindView(et_name) EditText nameText;              //订单标题
-    @BindView(tv_customer) TextView customerText;      //对应客户
-    @BindView(R.id.tv_product) TextView productText;        //购买产品
-    @BindView(et_money) EditText dealText;             //成交金额
-    @BindView(tv_estimate) TextView paymentText;       //添加回款
-    @BindView(R.id.label_attachment) TextView attachmentText;//附件
-    @BindView(R.id.tv_worksheet) TextView worksheetText;    //工单
-    @BindView(R.id.et_num) EditText numberText;             //订单编号
-    @BindView(et_remake) EditText remarkText;          //备注
-    @BindView(tv_start_time) TextView startTimeText;   //开始时间
-    @BindView(tv_end_time) TextView endTimeText;       //结束时间
+    @BindView(et_name)
+    EditText nameText;              //订单标题
+    @BindView(tv_customer)
+    TextView customerText;      //对应客户
+    @BindView(R.id.tv_product)
+    TextView productText;        //购买产品
+    @BindView(et_money)
+    EditText dealText;             //成交金额
+    @BindView(tv_estimate)
+    TextView paymentText;       //添加回款
+    @BindView(R.id.label_attachment)
+    TextView attachmentText;//附件
+    @BindView(R.id.tv_worksheet)
+    TextView worksheetText;    //工单
+    @BindView(R.id.et_num)
+    EditText numberText;             //订单编号
+    @BindView(et_remake)
+    EditText remarkText;          //备注
+    @BindView(tv_start_time)
+    TextView startTimeText;   //开始时间
+    @BindView(tv_end_time)
+    TextView endTimeText;       //结束时间
 
-    @OnClick(R.id.layout_more) void unfold() {
+    @OnClick(R.id.layout_more)
+    void unfold() {
         optionalZone.setVisibility(View.VISIBLE);
         loadMore.setVisibility(View.GONE);
     }
 
-    @OnClick(R.id.img_title_left) void onBack() {
+    @OnClick(R.id.img_title_left)
+    void onBack() {
         hideKeyboard();
-        getActivity().onBackPressed();
+
+        if (md5 != null && !md5.equals(fingerprint())) {
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismissWithAnimation();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    getActivity().onBackPressed();
+                }
+            }, "提示", "是否放弃编辑？确定后信息将不会保存");
+        } else {
+            getActivity().onBackPressed();
+        }
     }
 
-    @OnClick(R.id.img_title_right) void onCommit() {
+    @OnClick(R.id.img_title_right)
+    void onCommit() {
         hideKeyboard();
         HashMap<String, Object> map = orderDataMap();
         if (map == null) {
@@ -180,11 +228,12 @@ public class OrderFieldsFragment extends BaseStackFragment {
         }
     }
 
-    @OnClick(R.id.container_customer) void onCustomer() {
+    @OnClick(R.id.container_customer)
+    void onCustomer() {
         hideKeyboard();
         Bundle mBundle = new Bundle();
-        mBundle.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE,5);
-        mBundle.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT,true);
+        mBundle.putInt(CustomerSearchOrPickerActivity.EXTRA_TYPE, 5);
+        mBundle.putBoolean(CustomerSearchOrPickerActivity.EXTRA_LOAD_DEFAULT, true);
         Intent intent = new Intent(getActivity(), CustomerSearchOrPickerActivity.class);
         intent.putExtras(mBundle);
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_CUSTOMER);
@@ -192,7 +241,9 @@ public class OrderFieldsFragment extends BaseStackFragment {
     }
 
     private boolean showEmptyProduct;
-    @OnClick(R.id.container_product) void onProduct() {
+
+    @OnClick(R.id.container_product)
+    void onProduct() {
         hideKeyboard();
         if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
             Bundle mBundle = new Bundle();
@@ -202,7 +253,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
             Intent intent = new Intent(getActivity(), IntentionProductActivity.class);
             intent.putExtras(mBundle);
             startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_PRODUCT);
-        }else {
+        } else {
             AddProductsFragment addProductsFragment = new AddProductsFragment(this.manager, showEmptyProduct);
             addProductsFragment.setData(productData);
             addProductsFragment.callback = new AddProductsFragment.ProductPickerCallback() {
@@ -226,7 +277,9 @@ public class OrderFieldsFragment extends BaseStackFragment {
     }
 
     private boolean showEmptyPayment;
-    @OnClick(R.id.container_estimate) void onPaymentRecord() {
+
+    @OnClick(R.id.container_estimate)
+    void onPaymentRecord() {
         hideKeyboard();
         if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
             Bundle mBundle = new Bundle();
@@ -236,19 +289,17 @@ public class OrderFieldsFragment extends BaseStackFragment {
             if (null != estimateData) {
                 mBundle.putSerializable("data", estimateData);
             }
-            mBundle.putString("orderId", orderDetail!=null&&orderDetail.id!=null?orderDetail.id:orderId);
+            mBundle.putString("orderId", orderDetail != null && orderDetail.id != null ? orderDetail.id : orderId);
             mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
             Intent intent = new Intent(getActivity(), OrderEstimateListActivity.class);
             intent.putExtras(mBundle);
             startActivityForResult(intent, ExtraAndResult.REQUEST_CODE_SOURCE);
-        }
-        else {
+        } else {
 
             String dealMoney = dealText.getText().toString();
             try {
                 Float.parseFloat(dealMoney);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 dealMoney = "0";
             }
 
@@ -273,7 +324,9 @@ public class OrderFieldsFragment extends BaseStackFragment {
     }
 
     private boolean showWorksheet;
-    @OnClick(R.id.container_worksheet) void onWorksheet() {
+
+    @OnClick(R.id.container_worksheet)
+    void onWorksheet() {
         hideKeyboard();
         if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
             //这里通过EventBus来接受数据
@@ -281,9 +334,9 @@ public class OrderFieldsFragment extends BaseStackFragment {
             mIntent.putExtra(OrderWorksheetListActivity.KEY_LIST, reWorkSheet);
             mIntent.putExtra(OrderWorksheetListActivity.KEY_SESSION, sessionId);
             startActivity(mIntent);
-        }else {
+        } else {
             //因为addWorksheetFragment，保存了一些状态，所以为空才创建。
-            if(null==addWorksheetFragment){
+            if (null == addWorksheetFragment) {
                 addWorksheetFragment = WorksheetAddFragment.newInstance(reWorkSheet);
             }
             addWorksheetFragment.setWorksheetResultCallBack(new WorksheetAddFragment.onResultCallBack() {
@@ -292,6 +345,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
                     worksheetFinish(data);
                     manager.pop();
                 }
+
                 @Override
                 public void onWorksheetBack() {
                     manager.pop();
@@ -302,7 +356,8 @@ public class OrderFieldsFragment extends BaseStackFragment {
     }
 
 
-    @OnClick(R.id.container_start_time) void onStartTime() {
+    @OnClick(R.id.container_start_time)
+    void onStartTime() {
         hideKeyboard();
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(getActivity(), null);
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
@@ -320,7 +375,8 @@ public class OrderFieldsFragment extends BaseStackFragment {
         }, true, "取消");
     }
 
-    @OnClick(R.id.container_end_time) void onEndTime() {
+    @OnClick(R.id.container_end_time)
+    void onEndTime() {
         hideKeyboard();
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(getActivity(), null);
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
@@ -338,7 +394,8 @@ public class OrderFieldsFragment extends BaseStackFragment {
         }, true, "取消");
     }
 
-    @OnClick(R.id.container_attachment) void onAttachment() {
+    @OnClick(R.id.container_attachment)
+    void onAttachment() {
         hideKeyboard();
         Bundle mBundle = new Bundle();
         mBundle.putInt("bizType", 25);
@@ -368,7 +425,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
             view = inflater.inflate(R.layout.fragment_order_fields, container, false);
             ButterKnife.bind(this, view);
 
-            containerMap = new HashMap<String, ViewGroup>(){{
+            containerMap = new HashMap<String, ViewGroup>() {{
                 put("paymentRecords", paymentContainer);
                 put("worksheets", worksheetContainer);
                 put("orderNum", numberContainer);
@@ -377,7 +434,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
                 put("attachment", attachmentContainer);
                 put("remark", remarkContainer);
             }};
-            hintMap = new HashMap<String, String>(){{
+            hintMap = new HashMap<String, String>() {{
                 put("paymentRecords", "必填");
                 put("worksheets", "必填");
                 put("orderNum", "必填");
@@ -389,11 +446,9 @@ public class OrderFieldsFragment extends BaseStackFragment {
 
             if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
                 titleView.setText("编辑订单");
-            }
-            else if (actionType == OrderAddOrEditActivity.ORDER_COPY) {
+            } else if (actionType == OrderAddOrEditActivity.ORDER_COPY) {
                 titleView.setText("复制订单");
-            }
-            else {
+            } else {
                 titleView.setText("新建订单");
             }
             backButton.setOnTouchListener(Global.GetTouch());
@@ -448,6 +503,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
     }
 
     private void bindDataIfNeeded() {
+        md5 = fingerprint();
         if (orderDetail == null) {
             return;
         }
@@ -464,8 +520,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
         HashMap<String, Object> map = new HashMap<>();
         if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
             map.put("fetchList", true);
-        }
-        else if (actionType == OrderAddOrEditActivity.ORDER_COPY){
+        } else if (actionType == OrderAddOrEditActivity.ORDER_COPY) {
             map.put("isCopy", true);
         }
         OrderService.getSaleDetails(id, map)
@@ -523,6 +578,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
         optionalFieldsView.bindData(orderDetail.extensionDatas);
         unfold();
 
+        md5 = fingerprint();
     }
 
     private void resetCopyDataAndBind() {
@@ -580,6 +636,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
         optionalFieldsView.bindData(orderDetail.extensionDatas);
 
         unfold();
+        md5 = fingerprint();
     }
 
     private void bindImportOrderData() {
@@ -611,12 +668,10 @@ public class OrderFieldsFragment extends BaseStackFragment {
                     needCheckSystemFields.add(field);
                 }
 
-            }
-            else {
+            } else {
                 if (field.required) {
                     requiredCustomFields.add(field);
-                }
-                else {
+                } else {
                     optionalCustomFields.add(field);
                 }
             }
@@ -630,10 +685,10 @@ public class OrderFieldsFragment extends BaseStackFragment {
                 if (viewGroup == null) {
                     continue;
                 }
-                ((ViewGroup)viewGroup.getParent()).removeView(viewGroup);
+                ((ViewGroup) viewGroup.getParent()).removeView(viewGroup);
                 requiredContainer.addView(viewGroup);
-                TextView valueView = ( TextView)viewGroup.findViewWithTag("value");
-                if (valueView instanceof  TextView) {
+                TextView valueView = (TextView) viewGroup.findViewWithTag("value");
+                if (valueView instanceof TextView) {
                     valueView.setHint(hintMap.get(field.name));
                 }
             }
@@ -717,9 +772,10 @@ public class OrderFieldsFragment extends BaseStackFragment {
 
     /**
      * 更新工单的数据
+     *
      * @param worksheetList
      */
-    private void worksheetFinish(Collection<? extends OrderWorksheetListModel> worksheetList){
+    private void worksheetFinish(Collection<? extends OrderWorksheetListModel> worksheetList) {
         reWorkSheet.clear();
         reWorkSheet.addAll(worksheetList);
         StringBuffer sBuffer = new StringBuffer();
@@ -732,6 +788,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
         }
         worksheetText.setText(sBuffer.toString());
     }
+
     /**
      * 获取 意向产品的名字
      *
@@ -785,50 +842,50 @@ public class OrderFieldsFragment extends BaseStackFragment {
             }
 
             switch (field.name) {
-                case "paymentRecords":{
+                case "paymentRecords": {
                     if (estimateData == null || estimateData.size() <= 0) {
                         Toast("请创建回款!");
                         result = false;
                     }
                     break;
                 }
-                case "worksheets":{
+                case "worksheets": {
                     if (reWorkSheet == null || reWorkSheet.size() <= 0) {
                         Toast("请创建工单!");
                         result = false;
                     }
                     break;
                 }
-                case "orderNum":{
+                case "orderNum": {
                     if (TextUtils.isEmpty(numberText.getText())) {
                         Toast("请填写订单编号!");
                         result = false;
                     }
                     break;
                 }
-                case "startAt":{
+                case "startAt": {
                     if (startAt <= 0) {
                         Toast("请选择开始时间!");
                         result = false;
                     }
                     break;
                 }
-                case "endAt":{
+                case "endAt": {
                     if (endAt <= 0) {
                         Toast("请选择结束时间!");
                         result = false;
                     }
                     break;
                 }
-                case "attachment":{
+                case "attachment": {
                     if (attachmentSize == 0) {
                         Toast("请上传附件!");
                         result = false;
                     }
                     break;
                 }
-                case "remark":{
-                    if (TextUtils.isEmpty(remarkText.getText()) ) {
+                case "remark": {
+                    if (TextUtils.isEmpty(remarkText.getText())) {
                         Toast("请填写备注!");
                         result = false;
                     }
@@ -851,7 +908,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
      */
     public HashMap<String, Object> orderDataMap() {
 
-        if (TextUtils.isEmpty(nameText.getText().toString())) {
+        if (TextUtils.isEmpty(nameText.getText().toString().trim())) {
             Toast("请填写订单标题!");
             return null;
         } else if (TextUtils.isEmpty(customerId)) {
@@ -870,8 +927,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
 
         try {
             float dealMoney = Float.parseFloat(dealText.getText().toString());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Toast("请检查成交金额格式!");
             return null;
         }
@@ -901,7 +957,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
         map.put("attachmentCount", attachmentSize);
         map.put("customerId", customerId);
         map.put("customerName", customerName);
-        map.put("title", nameText.getText().toString());
+        map.put("title", nameText.getText().toString().trim());
         if (null == uuid || TextUtils.isEmpty(uuid)) {
             map.put("attachmentUUId", StringUtil.getUUID());
         } else {
@@ -928,5 +984,61 @@ public class OrderFieldsFragment extends BaseStackFragment {
             map.put("endAt", endAt);
         }
         return map;
+    }
+
+    private String fingerprint() {
+        ArrayList<ContactLeftExtras> fieldData = new ArrayList<>();
+
+        for (ContactLeftExtras extra : requiredFieldsView.getExtras()) {
+            if (!extra.isSystem && !TextUtils.isEmpty(extra.val)) {
+                fieldData.add(extra);
+            }
+        }
+        for (ContactLeftExtras extra : optionalFieldsView.getExtras()) {
+            if (!extra.isSystem && !TextUtils.isEmpty(extra.val)) {
+                fieldData.add(extra);
+            }
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        if (actionType == OrderAddOrEditActivity.ORDER_EDIT) {
+            map.put("id", orderId);
+        }
+        map.put("attachmentCount", attachmentSize);
+        map.put("customerId", customerId);
+        map.put("customerName", customerName);
+        map.put("title", nameText.getText().toString().trim());
+        if (null == uuid || TextUtils.isEmpty(uuid)) {
+            map.put("attachmentUUId", StringUtil.getUUID());
+        } else {
+            map.put("attachmentUUId", uuid);
+        }
+        try {
+            map.put("dealMoney", Float.parseFloat(dealText.getText().toString()));
+        } catch (Exception e) {
+        }
+        map.put("orderNum", numberText.getText().toString());
+        map.put("remark", remarkText.getText().toString());
+
+        /* 产品 */
+        map.put("proInfo", productData);
+
+        /* 回款 */
+        map.put("paymentRecords", estimateData);
+
+        /* 自定义字段 */
+        map.put("extensionDatas", fieldData);
+        /* 工单 */
+        map.put("reWorkSheet", reWorkSheet);
+        if (startAt > 0) {
+            map.put("startAt", startAt);
+        }
+        if (endAt > 0) {
+            map.put("endAt", endAt);
+        }
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(map);
+        Log.v("fingerprint", jsonStr);
+
+        return Utils.md5(jsonStr);
     }
 }

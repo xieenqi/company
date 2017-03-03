@@ -38,9 +38,9 @@ public class AttendanceService {
     }
 
     // 刷新打卡位置
-    public static Observable<Object> refreshLocation(String originalGPS) {
+    public static Observable<AttendanceRecord> refreshLocation(String originalGPS) {
         return RetrofitAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class)
-                        .refreshLocation(originalGPS).compose(RetrofitAdapterFactory.<Object>compatApplySchedulers());
+                        .refreshLocation(originalGPS).compose(RetrofitAdapterFactory.<AttendanceRecord>compatApplySchedulers());
     }
 
     // 确认打卡

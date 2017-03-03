@@ -34,7 +34,7 @@ public interface IAttendance {
      * 刷新打卡位置
      */
     @GET("/attendance/refresh")
-    Observable<Object> refreshLocation(@Query("originalgps") String originalGPS);
+    Observable<AttendanceRecord> refreshLocation(@Query("originalgps") String originalGPS);
 
     /**
      * 确认打卡
