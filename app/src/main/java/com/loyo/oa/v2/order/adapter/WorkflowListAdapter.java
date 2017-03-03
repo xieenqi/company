@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import com.loyo.oa.v2.order.cell.WorkflowCell;
 import com.loyo.oa.v2.order.model.WorkflowModel;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -15,11 +16,18 @@ import java.util.ArrayList;
 
 public class WorkflowListAdapter extends RecyclerView.Adapter<WorkflowCell> {
 
+    public interface ActionListener {
+        void onSelectWorkflow(int index);
+    }
+
+    private WeakReference<ActionListener> listenerRef;
+
     private ArrayList<WorkflowModel> data = new ArrayList<>();
     public int selectedIndex = -1;
 
-    public WorkflowListAdapter(ArrayList<WorkflowModel> data) {
+    public WorkflowListAdapter(ArrayList<WorkflowModel> data, ActionListener listener) {
         this.data.addAll(data);
+        listenerRef = new WeakReference<>(listener);
     }
 
     @Override
@@ -48,6 +56,9 @@ public class WorkflowListAdapter extends RecyclerView.Adapter<WorkflowCell> {
                 WorkflowModel cur = data.get(selectedIndex);
                 cur.isChecked = true;
                 WorkflowListAdapter.this.notifyItemChanged(selectedIndex);
+                if (listenerRef != null && listenerRef.get() != null) {
+                    listenerRef.get().onSelectWorkflow(selectedIndex);
+                }
 
             }
         });

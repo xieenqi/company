@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -24,7 +25,17 @@ import butterknife.OnClick;
  * Created by EthanGong on 2017/2/23.
  */
 
-public class OrderWorkflowFragment extends BaseStackFragment {
+public class OrderWorkflowFragment extends BaseStackFragment implements WorkflowListAdapter.ActionListener {
+
+    @Override
+    public void onSelectWorkflow(int index) {
+        if (adapter.selectedIndex < 0 ||adapter.selectedIndex >= data.size()) {
+            confirmButton.setEnabled(false);
+        }
+        else {
+            confirmButton.setEnabled(true);
+        }
+    }
 
     public interface ActionListener {
         void onSelectWorkflowBack();
@@ -40,6 +51,7 @@ public class OrderWorkflowFragment extends BaseStackFragment {
 
     @BindView(R.id.ll_back)  ViewGroup backButton;
     @BindView(R.id.tv_title) TextView titleView;
+    @BindView(R.id.btn_confirm) Button confirmButton;
     @BindView(R.id.recycle_view) RecyclerView recycleView;
 
     @OnClick(R.id.ll_back) void onBack() {
@@ -50,10 +62,10 @@ public class OrderWorkflowFragment extends BaseStackFragment {
 
     @OnClick(R.id.btn_confirm) void onConfirm() {
 
-        if (adapter.selectedIndex < 0 ||adapter.selectedIndex >= data.size()) {
-            sweetAlertDialogView.alertIcon("提示", "请选择一个审批流程");
-            return;
-        }
+//        if (adapter.selectedIndex < 0 ||adapter.selectedIndex >= data.size()) {
+////            sweetAlertDialogView.alertIcon("提示", "请选择一个审批流程");
+//            return;
+//        }
 
         if (listenerRef != null && listenerRef.get() != null) {
             listenerRef.get().onSelectWorkflowConfirm(data.get(adapter.selectedIndex));
@@ -77,9 +89,10 @@ public class OrderWorkflowFragment extends BaseStackFragment {
     }
 
     private void setup() {
-        adapter = new WorkflowListAdapter(data);
+        adapter = new WorkflowListAdapter(data, this);
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleView.setAdapter(adapter);
+        confirmButton.setEnabled(false);
     }
 
     public void setData(ArrayList<WorkflowModel> data) {

@@ -123,7 +123,7 @@ public class OrderFieldsFragment extends BaseStackFragment {
     private ArrayList<EstimateAdd> estimateData;          //回款记录数据
     private ArrayList<OrderWorksheetListModel> reWorkSheet = new ArrayList<>();
     private int attachmentSize = 0;
-    private String uuid;
+    private String uuid = StringUtil.getUUID();
     private long startAt;
     private long endAt;
     private String sessionId = StringUtil.getUUID();
@@ -1007,11 +1007,11 @@ public class OrderFieldsFragment extends BaseStackFragment {
         map.put("customerId", customerId);
         map.put("customerName", customerName);
         map.put("title", nameText.getText().toString().trim());
-        if (null == uuid || TextUtils.isEmpty(uuid)) {
-            map.put("attachmentUUId", StringUtil.getUUID());
-        } else {
-            map.put("attachmentUUId", uuid);
-        }
+//        if (null == uuid || TextUtils.isEmpty(uuid)) {
+//            map.put("attachmentUUId", StringUtil.getUUID());
+//        } else {
+//            map.put("attachmentUUId", uuid);
+//        }
         try {
             map.put("dealMoney", Float.parseFloat(dealText.getText().toString()));
         } catch (Exception e) {

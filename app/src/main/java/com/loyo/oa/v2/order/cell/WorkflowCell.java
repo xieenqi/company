@@ -39,7 +39,7 @@ public class WorkflowCell extends RecyclerView.ViewHolder {
     public void loadData(WorkflowModel model) {
         this.model = model;
         titleText.setText(model.title);
-        descriptionText.setText(model.content);
+        descriptionText.setText(model.getDescription());
         checkBox.setChecked(model.isChecked);
         descriptionText.setVisibility(model.isChecked ? View.VISIBLE : View.GONE);
     }
