@@ -295,9 +295,14 @@ public class WorksheetAddFragment extends BaseStackFragment implements View.OnCl
                     return;
                 }
                 holder.tv_type.setText(template.name);
-                OrderWorksheetListModel OrderWorksheetListModel = copyData.get(position);
-                updateModelByField(OrderWorksheetListModel, "templateId", template.id);
-                updateModelByField(OrderWorksheetListModel, "templateName", template.name);
+                OrderWorksheetListModel orderWorksheetListModel = copyData.get(position);
+                updateModelByField(orderWorksheetListModel, "templateId", template.id);
+                updateModelByField(orderWorksheetListModel, "templateName", template.name);
+                //如果没有标题就默认用订单类型的标题
+                if(TextUtils.isEmpty(orderWorksheetListModel.title)){
+                    orderWorksheetListModel.title=template.name;
+                    holder.et_title.setText(template.name);
+                }
             }
         });
     }
