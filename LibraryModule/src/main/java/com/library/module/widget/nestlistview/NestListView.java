@@ -2,6 +2,7 @@ package com.library.module.widget.nestlistview;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -11,10 +12,11 @@ import java.util.List;
 
 /**
  * 介绍：完全伸展开的ListView（LinearLayout）
+ * view的复用 动态添加子view
  */
 public class NestListView extends LinearLayout {
     private LayoutInflater mInflater;
-    private List<NestViewHolder> mVHCahces;//缓存ViewHolder,按照add的顺序缓存，
+    private SparseArray<NestViewHolder> mVHCahces;//缓存ViewHolder,按照add的顺序缓存，
     private OnItemClickListener mOnItemClickListener;// 子项点击事件
 
     public NestListView(Context context) {
@@ -32,8 +34,8 @@ public class NestListView extends LinearLayout {
 
     private void init(Context context) {
         mInflater = LayoutInflater.from(context);
-        mVHCahces = new ArrayList<NestViewHolder>();
-        //2016 09 23 for 让本控件能支持水平布局，项目的意外收获= =
+        mVHCahces = new SparseArray<NestViewHolder>();
+        //让本控件能支持水平布局，项目的意外收获= =
         //setOrientation(VERTICAL);
     }
 
@@ -78,7 +80,7 @@ public class NestListView extends LinearLayout {
                         holder = mVHCahces.get(i);
                     } else {
                         holder = new NestViewHolder(getContext(), mInflater.inflate(mAdapter.getItemLayoutId(), this, false));
-                        mVHCahces.add(holder);//inflate 出来后 add进来缓存
+                        mVHCahces.put(i, holder);//inflate 出来后 add进来缓存
                     }
                     mAdapter.onBind(i, holder);
                     //如果View没有父控件 添加

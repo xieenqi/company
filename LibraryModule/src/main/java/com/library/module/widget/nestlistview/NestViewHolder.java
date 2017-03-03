@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 /**
  * NestFullListView 的ViewHolder ，使用者无需关心
+ * 参照 recycleView 的holder
  */
 public class NestViewHolder {
     private SparseArray<View> mViews;
@@ -126,6 +127,9 @@ public class NestViewHolder {
         return this;
     }
 
+    /**
+     * 隐藏item布局中某个view
+     */
     public NestViewHolder setVisible(int viewId, boolean visible) {
         View view = getView(viewId);
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
@@ -138,6 +142,7 @@ public class NestViewHolder {
         return this;
     }
 
+    /* 批量设置字体样式 */
     public NestViewHolder setTypeface(Typeface typeface, int... viewIds) {
         for (int viewId : viewIds) {
             TextView view = getView(viewId);
