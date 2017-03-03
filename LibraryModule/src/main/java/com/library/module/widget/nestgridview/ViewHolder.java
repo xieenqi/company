@@ -30,7 +30,7 @@ public class ViewHolder {
 
     public ViewHolder(View itemView, int itemViewType) {
         if (itemView == null) {
-            throw new IllegalArgumentException("itemView may not be null");
+            throw new IllegalArgumentException("itemView may not be null。itemView不能为空");
         }
         this.itemView = itemView;
         this.itemViewType = itemViewType;

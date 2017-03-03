@@ -18,6 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.library.module.widget.nestgridview.FakerGridView;
+import com.library.module.widget.nestgridview.VGUtil;
+import com.library.module.widget.nestgridview.adapter.SingleAdapter;
 import com.library.module.widget.nestlistview.NestListView;
 import com.library.module.widget.nestlistview.NestListViewAdapter;
 import com.library.module.widget.nestlistview.NestViewHolder;
@@ -57,6 +60,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import static com.loyo.oa.v2.R.id.imageView;
 import static com.loyo.oa.v2.R.id.iv_calls;
 import static com.loyo.oa.v2.R.id.layout_audio;
 import static com.loyo.oa.v2.R.id.tv_image_size;
@@ -98,7 +102,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
 
             @Override
             public ViewGroup getInstance() {
-                return (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.item_img_ct_browse, null);
+                return (ViewGroup) inflater.inflate(R.layout.item_img_ct_browse, null);
             }
         });
     }
@@ -167,7 +171,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
             holder.tv_last_time = (TextView) convertView.findViewById(R.id.tv_last_time);
             holder.tv_kind = (TextView) convertView.findViewById(R.id.tv_kind);
             holder.iv_comment = (ImageView) convertView.findViewById(R.id.iv_comment);
-            holder.layout_gridview = (LYGridLayout) convertView.findViewById(R.id.layout_gridview);
+            holder.layout_gridview = (FakerGridView) convertView.findViewById(R.id.layout_gridview);
             holder.lv_comment = (NestListView) convertView.findViewById(R.id.lv_comment);
             holder.lv_audio = (NestListView) convertView.findViewById(R.id.lv_audio);
             holder.lv_options = (NestListView) convertView.findViewById(R.id.lv_options);
@@ -269,38 +273,59 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
 //                            MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
 //                }
 //            });
-//此做法在容器中添加 子view（子view少无关紧要）
-            holder.layout_gridview.removeAllViews();
-            for (int i = 0, c = 0, r = 0; i < model.imgAttachments.size(); i++, c++) {
-                if (c == 3) {
-                    c = 0;
-                    r++;
+        /*此做法在容器中添加 子view（子view少无关紧要）*/
+//            holder.layout_gridview.removeAllViews();
+//            for (int i = 0, c = 0, r = 0; i < model.imgAttachments.size(); i++, c++) {
+//                if (c == 3) {
+//                    c = 0;
+//                    r++;
+//                }
+//                ViewGroup oImageView = pool.getReusableInstance();
+//                final ImageView imageView = (ImageView) oImageView.findViewById(R.id.imageView);
+//                final Attachment attachment = model.imgAttachments.get(i);
+//                Glide.with(MainApp.getMainApp()).load(attachment.getUrl())
+//                        .placeholder(R.drawable.default_image)
+//                        .override(200, 200)
+//                        .into(imageView);
+//                imageView.setId(i);
+//                imageView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(final View view) {
+//                        Bundle bundle = new Bundle();
+//                        bundle.putSerializable("data", model.imgAttachments);
+//                        bundle.putInt("position", imageView.getId());
+//                        bundle.putBoolean("isEdit", false);
+//                        MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
+//                                MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+//                    }
+//                });
+//                GridLayout.Spec row = GridLayout.spec(r, 1);
+//                GridLayout.Spec colspan = GridLayout.spec(c, 1);
+//                GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, colspan);
+//                holder.layout_gridview.addView(oImageView, gridLayoutParam);
+//            }
+            /* 新做法 缓存item视图 */
+            new VGUtil(holder.layout_gridview, new SingleAdapter<Attachment>(mContext, model.imgAttachments, R.layout.item_img_ct_browse) {
+                @Override
+                public void onBindViewHolder(ViewGroup parent, com.library.module.widget.nestgridview.ViewHolder holder, Attachment data, final int pos) {
+                    ImageView imageView = holder.getView(R.id.imageView);
+                    Glide.with(MainApp.getMainApp()).load(data.getUrl())
+                            .placeholder(R.drawable.default_image)
+                            .override(200, 200)
+                            .into(imageView);
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("data", model.imgAttachments);
+                            bundle.putInt("position", pos);
+                            bundle.putBoolean("isEdit", false);
+                            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
+                                    MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+                        }
+                    });
                 }
-                ViewGroup oImageView = pool.getReusableInstance();
-                final ImageView imageView = (ImageView) oImageView.findViewById(R.id.imageView);
-                final Attachment attachment = model.imgAttachments.get(i);
-                Glide.with(MainApp.getMainApp()).load(attachment.getUrl())
-                        .placeholder(R.drawable.default_image)
-                        .override(200, 200)
-                        .into(imageView);
-                imageView.setId(i);
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View view) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("data", model.imgAttachments);
-                        bundle.putInt("position", imageView.getId());
-                        bundle.putBoolean("isEdit", false);
-                        MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
-                                MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
-                    }
-                });
-                GridLayout.Spec row = GridLayout.spec(r, 1);
-                GridLayout.Spec colspan = GridLayout.spec(c, 1);
-                GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, colspan);
-                holder.layout_gridview.addView(oImageView, gridLayoutParam);
-            }
-
+            }).bind();
         } else {
             holder.layout_gridview.setVisibility(View.GONE);
         }
@@ -412,7 +437,7 @@ public class FollowUpExpandable extends BaseExpandableListAdapter {
         NestListView lv_comment; /*评论区*/
         NestListView lv_audio;   /*语音录音区*/
         NestListView lv_options; /*文件列表区*/
-        LYGridLayout layout_gridview;    /*图片9宫格区*/
+        FakerGridView layout_gridview;    /*图片9宫格区*/
         ImageView iv_comment;        /*评论按钮*/
         ImageView iv_lasttime;     /*下次跟进图标*/
 

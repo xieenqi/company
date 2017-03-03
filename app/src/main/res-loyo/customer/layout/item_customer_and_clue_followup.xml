@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/dimen_10"
@@ -119,15 +120,28 @@
             android:textSize="@dimen/text_sp12" />
     </LinearLayout>
 
-    <com.loyo.oa.common.view.LYGridLayout
+    <com.library.module.widget.nestgridview.FakerGridView
         android:id="@+id/layout_gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_15"
         android:layout_marginLeft="59dp"
         android:layout_marginTop="@dimen/dimen_15"
-        android:animateLayoutChanges="false"
-        android:numColumns="3" />
+        app:horizontalSpacing="10dp"
+        app:numColumns="3"
+        app:verticalSpacing="10dp" />
+
+    <!--<com.loyo.oa.common.view.LYGridLayout-->
+    <!--android:id="@+id/layout_gridview"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="@dimen/dimen_15"-->
+    <!--android:layout_marginLeft="59dp"-->
+    <!--android:layout_marginTop="@dimen/dimen_15"-->
+    <!--android:animateLayoutChanges="false"-->
+    <!--android:numColumns="3" />-->
+
+
     <!--<com.loyo.oa.v2.customview.CusGridView-->
     <!--android:id="@+id/layout_gridview"-->
     <!--android:layout_width="match_parent"-->
